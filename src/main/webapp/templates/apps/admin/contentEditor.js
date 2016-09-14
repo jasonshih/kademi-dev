@@ -130,6 +130,42 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
+                '      <div class="col-md-12">' +
+                '          <label>Padding (in px)</label>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-top form-control" />' +
+                '                  <small>top</small>' +
+                '              </div>' +
+                '          </div>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4">' +
+                '                  <input type="number" value="" class="txt-padding-left form-control" />' +
+                '                  <small>left</small>' +
+                '              </div>' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-right form-control" />' +
+                '                  <small>right</small>' +
+                '              </div>' +
+                '          </div>' +
+                '          <div class="row row-sm text-center">' +
+                '              <div class="col-xs-4 col-xs-offset-4">' +
+                '                  <input type="number" value="" class="txt-padding-bottom form-control" />' +
+                '                  <small>bottom</small>' +
+                '              </div>' +
+                '          </div>' +
+                '      </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Background for</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control select-bg-for">' +
+                '               <option value="container-bg" selected="selected">Container</option>' +
+                '               <option value="container-content-wrapper">Container Content</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
                 '       <div class="col-sm-12">' +
                 '           <label>Background Image</label>' +
                 '           <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="background-image-previewer" /></p>' +
@@ -184,33 +220,6 @@ function initKEditor(body, fileName) {
                 '      </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '      <div class="col-md-12">' +
-                '          <label>Padding (in px)</label>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-top form-control" />' +
-                '                  <small>top</small>' +
-                '              </div>' +
-                '          </div>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4">' +
-                '                  <input type="number" value="" class="txt-padding-left form-control" />' +
-                '                  <small>left</small>' +
-                '              </div>' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-right form-control" />' +
-                '                  <small>right</small>' +
-                '              </div>' +
-                '          </div>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-bottom form-control" />' +
-                '                  <small>bottom</small>' +
-                '              </div>' +
-                '          </div>' +
-                '      </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
                 '       <label for="photo-style" class="col-sm-12">Parallax</label>' +
                 '       <div class="col-sm-12">' +
                 '           <div class="checkbox">' +
@@ -222,6 +231,18 @@ function initKEditor(body, fileName) {
                 '               <div class="parallax-options">' +
                 '               </div>' +
                 '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Extra class</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="text" value="" class="txt-extra-class form-control" />' +
+                '           <em class="help-block text-muted small">These classes will be added to <code>.container-bg</code></em>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-align" class="col-sm-12">Extra class for columns</label>' +
+                '       <div class="col-sm-12 columns-extra-class">' +
                 '       </div>' +
                 '   </div>' +
                 '</form>'
@@ -250,9 +271,9 @@ function initKEditor(body, fileName) {
                 basePath: basePath,
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var container = keditor.getSettingContainer();
-                    var containerBg = container.find('.container-bg');
+                    var target = container.find('.' + form.find('.select-bg-for').val());
                     var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
-                    containerBg.css('background-image', 'url("' + imageUrl + '")');
+                    target.css('background-image', 'url("' + imageUrl + '")');
                     form.find('#background-image-previewer').attr('src', imageUrl);
                 }
             });
@@ -260,9 +281,27 @@ function initKEditor(body, fileName) {
                 e.preventDefault();
 
                 var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-                containerBg.css('background-image', '');
+                var target = container.find('.' + form.find('.select-bg-for').val());
+                target.css('background-image', '');
                 form.find('#background-image-previewer').attr('src', '/static/images/photo_holder.png');
+            });
+
+            form.find('.select-bg-for').on('change', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+                var containerContent = container.find('.container-content-wrapper');
+
+                if (this.value === 'container-bg') {
+                    var backgroundCss = containerContent.css('background');
+                    containerBg.css('background', backgroundCss);
+                    containerContent.css('background', '');
+                    containerBg.addClass('background-for');
+                } else {
+                    var backgroundCss = containerBg.css('background');
+                    containerContent.css('background', backgroundCss);
+                    containerBg.css('background', '');
+                    containerBg.removeClass('background-for');
+                }
             });
 
             var colorPicker = form.find('.color-picker');
@@ -285,34 +324,41 @@ function initKEditor(body, fileName) {
                 }
 
                 var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
+                var target = container.find('.' + form.find('.select-bg-for').val());
 
                 if (colorHex && colorHex !== 'transparent') {
-                    containerBg.css('background-color', colorHex);
+                    target.css('background-color', colorHex);
                 } else {
-                    containerBg.css('background-color', '');
+                    target.css('background-color', '');
                 }
             });
 
             form.find('.select-bg-repeat').on('change', function () {
                 var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
+                var target = container.find('.' + form.find('.select-bg-for').val());
 
-                containerBg.css('background-repeat', this.value);
+                target.css('background-repeat', this.value);
             });
 
             form.find('.select-bg-size').on('change', function () {
                 var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
+                var target = container.find('.' + form.find('.select-bg-for').val());
 
-                containerBg.css('background-size', this.value);
+                target.css('background-size', this.value);
             });
 
             form.find('.select-bg-position').on('change', function () {
                 var container = keditor.getSettingContainer();
+                var target = container.find('.' + form.find('.select-bg-for').val());
+
+                target.css('background-position', this.value);
+            });
+
+            form.find('.txt-extra-class').on('change', function () {
+                var container = keditor.getSettingContainer();
                 var containerBg = container.find('.container-bg');
 
-                containerBg.css('background-position', this.value);
+                containerBg.attr('class', 'container-bg ' + this.value.trim());
             });
 
             form.find('.txt-height').on('change', function () {
@@ -391,10 +437,12 @@ function initKEditor(body, fileName) {
 
             form.find('.select-layout').on('change', function (e) {
                 var container = keditor.getSettingContainer();
+                var containerLayout = container.find('.container-layout');
                 var containerContent = container.find('.container-content-wrapper');
 
+                containerLayout.removeClass('container container-fluid');
                 containerContent.removeClass('container container-fluid');
-                containerContent.addClass(this.value);
+                containerLayout.addClass(this.value);
             });
 
             form.find('.parallax-enabled').on('click', function () {
@@ -441,6 +489,16 @@ function initKEditor(body, fileName) {
                     containerBg.removeAttr('data-' + name);
                 }
             });
+
+            form.on('change', '.txt-extra-class-column', function () {
+                var txt = $(this);
+                var index = txt.attr('data-index');
+                var container = keditor.getSettingContainer();
+                var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
+                var originClasses = keditor.options.getContainerContentClasses(targetContainerContent)[0];
+
+                targetContainerContent.attr('class', originClasses + ' ' + this.value);
+            });
         },
         addDataTransition: function (form, name, value) {
             name = name || '';
@@ -461,9 +519,21 @@ function initKEditor(body, fileName) {
         },
         containerSettingShowFunction: function (form, container, keditor) {
             var containerBg = container.find('.container-bg');
-            var containerContent = container.find('.container-content-wrapper' +
-                '');
+            var containerLayout = container.find('.container-layout');
+            var containerContent = container.find('.container-content-wrapper');
             form.find('.parallax-options').html('');
+
+            if (containerLayout.length === 0) {
+                var layoutClass = '';
+                if (containerContent.hasClass('container')) {
+                    layoutClass = 'container';
+                } else if (containerContent.hasClass('container-fluid')) {
+                    layoutClass = 'container-fluid';
+                }
+                containerContent.wrap('<div class="container-layout ' + layoutClass + '"></div>');
+                containerContent.removeClass('container container-fluid');
+                containerLayout = container.find('.container-layout');
+            }
 
             if (containerBg.hasClass('parallax-skrollr')) {
                 form.find('.parallax-enabled').prop('checked', true);
@@ -480,21 +550,34 @@ function initKEditor(body, fileName) {
                 form.find('.btn-add-data').css('display', 'none');
             }
 
-            var imageUrl = containerBg.css('background-image');
+            var imageUrl;
+            var bgTarget;
+            var bgImageBg = containerBg.css('background-image');
+            var bgImageContent = containerContent.css('background-image');
+            if (containerBg.hasClass('background-for')) {
+                imageUrl = bgImageBg;
+                bgTarget = containerBg;
+                form.find('.select-bg-for').val('container-bg');
+            } else {
+                imageUrl = bgImageContent;
+                bgTarget = containerContent;
+                form.find('.select-bg-for').val('container-content-wrapper');
+            }
+
             imageUrl = imageUrl.replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
             form.find('#background-image-previewer').attr('src', imageUrl !== 'none' ? imageUrl : '/static/images/photo_holder.png');
 
-            form.find('.select-bg-repeat').val(containerBg.css('background-repeat') || 'repeat');
-            form.find('.select-bg-position').val(containerBg.css('background-position') || '0% 0%');
-            form.find('.select-bg-size').val(containerBg.css('background-size') || 'auto');
+            form.find('.select-bg-repeat').val(bgTarget.css('background-repeat') || 'repeat');
+            form.find('.select-bg-position').val(bgTarget.css('background-position') || '0% 0%');
+            form.find('.select-bg-size').val(bgTarget.css('background-size') || 'auto');
 
             var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', containerBg.css('background-color') || '');
+            colorPicker.colorpicker('setValue', bgTarget.css('background-color') || '');
 
             var layout = '';
-            if (containerContent.hasClass('container')) {
+            if (containerLayout.hasClass('container')) {
                 layout = 'container';
-            } else if (containerContent.hasClass('container-fluid')) {
+            } else if (containerLayout.hasClass('container-fluid')) {
                 layout = 'container-fluid';
             }
             form.find('.select-layout').val(layout);
@@ -587,6 +670,48 @@ function initKEditor(body, fileName) {
             form.find('.txt-height').val(height);
 
             form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
+            form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').trim());
+
+            keditor.options.buildExtraClassForColumns(form, container, keditor);
+        },
+
+        getContainerContentClasses: function (containerContent) {
+            var classes = containerContent.attr('class').split(' ');
+            var customClasses = [];
+            var originClasses = [];
+
+            for (var i = 0; i < classes.length; i++) {
+                var _class = classes[i];
+
+                if (_class) {
+                    if(_class.indexOf('col-') !== 0 && (' keditor-container-content ui-droppable ui-sortable ').indexOf(' ' + _class + ' ') === -1) {
+                        customClasses.push(_class);
+                    } else {
+                        originClasses.push(_class);
+                    }
+                }
+            }
+
+            return [originClasses.join(' '), customClasses.join(' ')];
+        },
+
+        buildExtraClassForColumns: function (form, container, keditor) {
+            var htmlStr = '';
+
+            container.find('[data-type=container-content]').each(function (index) {
+                var containerContent = $(this);
+                var customClasses = keditor.options.getContainerContentClasses(containerContent)[1];
+
+                htmlStr += '<div class="clearfix">';
+                if (index !== 0) {
+                    htmlStr += '    <br />';
+                }
+                htmlStr += '    Column #' + (index + 1);
+                htmlStr += '    <input type="text" class="form-control txt-extra-class-column" data-index="' + index + '" value="' + customClasses + '" />';
+                htmlStr += '</div>';
+            });
+
+            form.find('.columns-extra-class').html(htmlStr);
         }
     });
 }
