@@ -17,15 +17,21 @@ body {
    ================================================================================== */
 #keditor-sidebar,
 .keditor-toolbar,
-#keditor-sidebar .form-control {
+#keditor-sidebar .form-control,
+#keditor-sidebar .btn,
+#keditor-sidebar .dropdown-menu {
   font: 14px/1.42857143 "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 #keditor-sidebar small,
 .keditor-toolbar small,
 #keditor-sidebar .form-control small,
+#keditor-sidebar .btn small,
+#keditor-sidebar .dropdown-menu small,
 #keditor-sidebar .small,
 .keditor-toolbar .small,
-#keditor-sidebar .form-control .small {
+#keditor-sidebar .form-control .small,
+#keditor-sidebar .btn .small,
+#keditor-sidebar .dropdown-menu .small {
   font-size: 88% !important;
 }
 #keditor-sidebar .form-control {
