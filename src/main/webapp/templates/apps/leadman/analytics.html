@@ -98,6 +98,7 @@
                                 <tr>
                                     <th>Lead/Prospect</th>
                                     <th>Deal Amount</th>
+                                    <th>Stage</th>
                                     <th>Assigned To</th>
                                     <th></th>
                                 </tr>
@@ -121,6 +122,7 @@
                                         #end
                                     </td>
                                     <td class="text-right">$!hit.fields.get("dealAmount").value</td>
+                                    <td class="text-right">$!hit.fields.get("stageName").value</td>
                                     <td>
                                         #if($hit.fields.get("assignedToProfile.nickName")) $!hit.fields.get("assignedToProfile.nickName").value
                                         #else $!hit.fields.get("assignedToProfile.firstName").value $!hit.fields.get("assignedToProfile.surName").value
