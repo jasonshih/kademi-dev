@@ -7,7 +7,7 @@
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <div class="form-group">
                 <div class="col-md-12">
-                    <label for="groupName">Group - $page.groupName</label>
+                    <label for="groupName">Group</label>
                     <select name="groupName" id="groupName" class="form-control required-if-shown">
                         $formatter.option("", "[Please select]", $page.groupName)
                         #foreach($group in $rootFolder.groups)
