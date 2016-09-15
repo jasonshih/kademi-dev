@@ -36,6 +36,7 @@ $(function () {
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
     });
+    
     $('body').on('loaded.bs.modal', function (e) {
         flog("modal show");
         var modal = $(e.target).closest(".modal");
