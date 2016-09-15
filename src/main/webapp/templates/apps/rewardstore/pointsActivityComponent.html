@@ -19,19 +19,19 @@
 
 <script>
     $(function () {
-        var jsonResp = JSON.parse("$applications.rewardStore.getPointsHistogram($pointsBucket.id, $days)");
+        // Parse JSON
+        #set($bucketId = $pointsBucket.id)
+        #set($daysInt = $formatter.toInteger($days, false))
+        var jsonResp = $applications.rewardStore.getPointsHistogram($bucketId, $daysInt);
 
         function initActivityChart(resp) {
             nv.addGraph(function () {
                 var chart = nv.models.multiBarChart()
                         .margin({top: 0, right: 0, bottom: 0, left: 0})
-                        .useInteractiveGuideline(true)
                         .showControls(false)
                         .showLegend(true)
                         .showYAxis(false)
                         .showXAxis(false);
-
-                chart.interactiveLayer.tooltip.fixedTop(100);
 
                 chart.xAxis     //Chart x-axis settings
                         .axisLabel('Date')
