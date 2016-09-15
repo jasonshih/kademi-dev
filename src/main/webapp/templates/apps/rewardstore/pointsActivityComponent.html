@@ -4,6 +4,8 @@
 #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
 
 #if( $pointsBucket )
+#set($bucketId = $pointsBucket.id)
+#set($daysInt = $formatter.toInteger($days, false))
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-table"></i>
@@ -11,7 +13,7 @@
         $pointsBucket.title
     </div>
     <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        <div id="rewardPointsActivityChart" style="height: 100%;">
+        <div id="rewardPointsActivityChart-${bucketId}" style="height: 100%;">
             <svg></svg>
         </div>
     </div>
@@ -20,8 +22,6 @@
 <script>
     $(function () {
         // Parse JSON
-        #set($bucketId = $pointsBucket.id)
-        #set($daysInt = $formatter.toInteger($days, false))
         var jsonResp = $applications.rewardStore.getPointsHistogram($bucketId, $daysInt);
 
         function initActivityChart(resp) {
@@ -89,7 +89,7 @@
                 active.sort(dynamicSort('x'));
                 expired.sort(dynamicSort('x'));
 
-                d3.select('#rewardPointsActivityChart svg')    //Select the <svg> element you want to render the chart in.
+                d3.select('#rewardPointsActivityChart-${bucketId} svg')    //Select the <svg> element you want to render the chart in.
                         .datum(myData)         //Populate the <svg> element with chart data...
                         .call(chart);          //Finally, render the chart!
 
