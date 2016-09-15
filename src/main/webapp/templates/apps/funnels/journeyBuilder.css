@@ -146,6 +146,10 @@
     padding: 0 20px;
 }
 
+.jsplumb-connector {
+    z-index: 4;
+}
+
 .node .title .node-buttons {
     position: absolute;
     top: 5px;
