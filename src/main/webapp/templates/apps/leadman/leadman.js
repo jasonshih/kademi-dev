@@ -36,7 +36,8 @@ $(function () {
     $('body').on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
     });
-    $('body').on('shown.bs.modal', function (e) {
+    
+    $('body').on('loaded.bs.modal', function (e) {
         flog("modal show");
         var modal = $(e.target).closest(".modal");
         jQuery.timeago.settings.allowFuture = true;
