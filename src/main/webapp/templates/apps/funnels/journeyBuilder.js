@@ -631,7 +631,7 @@ function initJourneyBuilder() {
     initSaveButton();
     initNodeActions();
     initSettingPanel();
-    initBuilderHeightAdjuster();
+    initBuilderHeight();
 }
 
 function initSettingPanel() {
@@ -707,25 +707,15 @@ function updateNode(form) {
     }
 }
 
-function initBuilderHeightAdjuster() {
-    flog('initBuilderHeightAdjuster');
+function initBuilderHeight() {
+    flog('initBuilderHeight');
 
     var builder = $('#builder');
+    var tabbable = builder.closest('.tabbable');
+    var navTabs = tabbable.find('.nav-tabs');
+    var container = builder.closest('.container');
 
-    $('.btn-increase-height').on('click', function (e) {
-        e.preventDefault();
-
-        builder.css('height', (builder.height() + 50) + 'px');
-    });
-
-    $('.btn-decrease-height').on('click', function (e) {
-        e.preventDefault();
-
-        var currentHeight = builder.height();
-        var newHeight = currentHeight - 50;
-
-        builder.css('height', (newHeight <= 500 ? 500 : newHeight) + 'px');
-    });
+    builder.css('height', container.innerHeight() - navTabs.innerHeight());
 }
 
 function initSideBar() {

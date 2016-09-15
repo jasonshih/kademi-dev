@@ -46,6 +46,14 @@
                         form.find('#logo-previewer').attr('src', '/static/images/photo_holder.png');
                     });
 
+                    form.on('click', '.cbb-show-user-menu', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-user-menu', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     var menuItemEditor = form.find('.editMenuItem');
                     var menuEditor = form.find('.menuEditor');
 
@@ -213,6 +221,9 @@
             var imageUrl = dataAttributes['data-logo'];
             form.find('#logo-previewer').attr('src', imageUrl ? imageUrl : '/static/images/photo_holder.png');
             form.find('[name=logo]').val(dataAttributes['data-logo']);
+
+            form.find('.cbb-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
+
 
             var tree = $('.menuTree ol.menuList').not('.rootMenuList');
 
