@@ -47,6 +47,14 @@
                         keditor.initDynamicContent(dynamicElement);
                         form.find('#logo-previewer').attr('src', '/static/images/photo_holder.png');
                     });
+
+                    form.on('click', '.cbb-show-user-menu', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-show-user-menu', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
     
                     form.find('#cbbTriggerSize').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -252,6 +260,8 @@
             form.find('#cbbTriggerColor').val(dataAttributes['data-trigger-color']);
             form.find('#txtTriggerClass').val(dataAttributes['data-trigger-class']);
             form.find('#txtTriggerAlign').val(dataAttributes['data-trigger-align']);
+
+            form.find('.cbb-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
 
             var tree = $('.menuTree ol.menuList').not('.rootMenuList');
 
