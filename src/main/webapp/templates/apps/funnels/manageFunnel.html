@@ -8,27 +8,18 @@
     </head>
     <body>
         <div class="tabbable clearfix">
-            <ul class="nav nav-tabs tab-bricky">
-                <li><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
-                <li><a data-toggle="tab" href="#properties">Properties</a></li>
-                <li><a data-toggle="tab" href="#lead">Leads</a></li>
-            </ul>
+            <div class="clearfix">
+                <p class="pull-right small" style="padding-top: 7px;"><span class="text-muted" id="builder-status"></span></p>
+                <ul class="nav nav-tabs tab-bricky">
+                    <li><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
+                    <li><a data-toggle="tab" href="#properties">Properties</a></li>
+                    <li><a data-toggle="tab" href="#lead">Leads</a></li>
+                </ul>
+            </div>
             <div class="tab-content">
                 <div id="journeyBuilder" class="tab-pane">
                     <div class="well" style="display: none">
                         <code id="funnelJson">$page.funnelJson</code>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p><a href="/repositories/$page.name/" class="btn btn-sm btn-success">Edit funnel as Text editor</a></p>
-                        </div>
-                        <div class="col-xs-6 text-right">
-                            <span class="text-muted" id="builder-status"></span>
-                            <div class="btn-group btn-group-sm">
-                                <button type="button" class="btn btn-default btn-increase-height" title="Increase builder's height"><i class="fa fa-plus"></i></button>
-                                <button type="button" class="btn btn-default btn-decrease-height" title="Decrease builder's height"><i class="fa fa-minus"></i></button>
-                            </div>
-                        </div>
                     </div>
                     <div id="builder">
                         <div class="list-group-item" id="paper"></div>
@@ -60,9 +51,19 @@
                 </div>
                 <div id="properties" class="tab-pane">
                     <form class="form-horizontal form-properties" action="$page.href" method="post">
-                        <p class="text-right">
-                            <button class="btn btn-primary">Save</button>
-                        </p>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div><a href="/repositories/$page.name/" class="btn btn-sm btn-success">Edit funnel as Text editor</a></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="visible-xs">
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                </div>
+                                <div class="text-right hidden-xs">
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </div>
                         <hr />
                         <div class="form-group">
                             <label class="control-label col-sm-3">Title</label>

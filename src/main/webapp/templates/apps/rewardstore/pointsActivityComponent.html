@@ -1,0 +1,25 @@
+#if ( !$height )
+#set ( $height = 100 )
+#end
+#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+
+#if( $pointsBucket )
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i>
+        Points activity in
+        $pointsBucket.title
+    </div>
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+        <div id="rewardPointsActivityChart" style="height: 100%;">
+            <svg></svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    var jsonResp = JSON.parse("$applications.rewardStore.getPointsHistogram($pointsBucket.id, $days)");
+</script>
+#else
+Points bucket not found
+#end

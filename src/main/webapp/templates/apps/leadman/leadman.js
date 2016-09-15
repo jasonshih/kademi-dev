@@ -70,7 +70,7 @@ $(function () {
                 }
             });
         }
-    })
+    });
     $("body").on("click", ".autoFillText", function (e) {
         e.preventDefault();
         var target = $(e.target).closest("a");

@@ -71,68 +71,26 @@ JBNodes['eventGoal'] = {
             '        <label>Condition #4</label>' +
             '        <input type="text" class="form-control condition4" value="" />' +
             '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Stage</label>' +
-            '        <select class="form-control stageName"></select>' +
-            '    </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '    <div class="col-md-12">' +
-            '        <label>Timeout</label>' +
-            '        <div class="input-group">' +
-            '            <input type="number" class="form-control timeout-multiples numeric" />' +
-            '            <div class="input-group-btn">' +
-            '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
-            '                    <span class="caret"></span>' +
-            '                </button>' +
-            '                <input type="hidden" class="timeout-units" value="" />' +
-            '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
-            '                    <li><a href="#" data-value="y">Years</a></li>' +
-            '                    <li><a href="#" data-value="M">Months</a></li>' +
-            '                    <li><a href="#" data-value="w">Weeks</a></li>' +
-            '                    <li><a href="#" data-value="d">Days</a></li>' +
-            '                    <li><a href="#" data-value="h">Hours</a></li>' +
-            '                    <li><a href="#" data-value="m">Minutes</a></li>' +
-            '                </ul>' +
-            '            </div>' +
-            '        </div>' +
-            '    </div>' +
-            '</div>'
+            '</div>' + JBApp.standardGoalSettingControls
         );
 
-        form.find('.timeout-units-selector li').on('click', function (e) {
-            e.preventDefault();
-
-            var a = $(this).find('a');
-            var text = a.text().trim();
-            var value = a.attr('data-value');
-
-            form.find('.timeout-units').val(value);
-            form.find('.timeout-units-preview').html(text);
-        });
+        JBApp.initStandardGoalSettingControls(form);
 
         form.forms({
             allowPostForm: false,
             onValid: function () {
-                var timeoutUnits = form.find('.timeout-units').val();
-                var timeoutMultiples = form.find('.timeout-multiples').val();
                 var triggerTypeId = form.find('.triggerTypeId').val();
                 var condition1 = form.find('.condition1').val();
                 var condition2 = form.find('.condition2').val();
                 var condition3 = form.find('.condition3').val();
                 var condition4 = form.find('.condition4').val();
-                var stageName = form.find('.stageName').val();
-
-                JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
-                JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
                 JBApp.currentSettingNode.triggerTypeId = triggerTypeId || null;
                 JBApp.currentSettingNode.condition1 = condition1 || null;
                 JBApp.currentSettingNode.condition2 = condition2 || null;
                 JBApp.currentSettingNode.condition3 = condition3 || null;
                 JBApp.currentSettingNode.condition4 = condition4 || null;
-                JBApp.currentSettingNode.stageName = stageName || null;
+
+                JBApp.saveStandardGoalSetting(form);
 
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
@@ -141,27 +99,14 @@ JBNodes['eventGoal'] = {
     },
 
     showSettingForm: function (form, node) {
-        if (node.timeoutUnits !== null) {
-            form.find('.timeout-units-selector li a').filter('[data-value=' + node.timeoutUnits + ']').trigger('click');
-        } else {
-            form.find('.timeout-units').val('');
-            form.find('.timeout-units-preview').html('');
-        }
+        JBApp.showStandardGoalSettingControls(form, node);
 
-        var stagesOptionStr = '<option value="">[No stage selected]</option>';
-        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
-            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
-                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
-            }
-        }
-        form.find('.stageName').html(stagesOptionStr).val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
-
-        form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
         form.find('.triggerTypeId').val(node.triggerTypeId !== null ? node.triggerTypeId : '');
         form.find('.condition1').val(node.condition1 !== null ? node.condition1 : '');
         form.find('.condition2').val(node.condition2 !== null ? node.condition2 : '');
         form.find('.condition3').val(node.condition3 !== null ? node.condition3 : '');
         form.find('.condition4').val(node.condition4 !== null ? node.condition4 : '');
+
         JBApp.showSettingPanel(node);
     }
 };

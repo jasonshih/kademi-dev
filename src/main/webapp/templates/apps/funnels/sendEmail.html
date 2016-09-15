@@ -9,6 +9,10 @@
     </head>
     <body>
         #set( $website = $page.website )
+        #set( $websiteId = $website.id )
+        #if(!$websiteId)
+        #set( $websiteId = "" )
+        #end
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
             <div class="form-group">
@@ -24,9 +28,9 @@
                 <div class="col-sm-12">
                     <label for="website">Website</label>
                     <select name="website" id="themeSiteId" class="form-control">
-                        $formatter.option("", "[Website]")
+                        $formatter.option("", "[Website]", $websiteId)
                         #foreach($w in $rootFolder.websites)
-                        $formatter.option($w.id, $w.name, $website.id)
+                        $formatter.option($w.id, $w.name, $websiteId)
                         #end
                     </select>
                     <small>Will be used for domain and theming</small>
@@ -61,11 +65,11 @@
             </div>
         </form>
         #else
-        <form name="frmDetails" action="." method="post" class="form-horizontal">
+        <form name="frmDetails" id="frmDetails" action="$page.href" method="POST" class="form-horizontal">
             <div class="page-validation"></div>
 
             <div class="btn-group pull-right page-action status-tools page-action" style="margin-left: 15px">
-                <button class="btn btn-sm btn-success Draft status-tool">
+                <button type="submit" class="btn btn-sm btn-success">
                     <span class="glyphicon glyphicon-floppy-disk"></span>
                     Save
                 </button>
@@ -130,9 +134,9 @@
                                     <label class="control-label col-md-4" for="website">Website</label>
                                     <div class="col-md-8">
                                         <select name="website" class="form-control required-if-shown">
-                                            $formatter.option("", "[Please select]" )
+                                            $formatter.option("", "[Please select]", $websiteId)
                                             #foreach($website in $rootFolder.websites)
-                                            $formatter.option($website.id, $website.name, $website.id)
+                                            $formatter.option($website.id, $website.name, $websiteId)
                                             #end
                                         </select>
                                     </div>
