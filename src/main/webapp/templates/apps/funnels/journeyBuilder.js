@@ -360,6 +360,109 @@ var JBApp = {
         setTimeout(function () {
             formPanel.find('input:text').first().trigger('focus');
         }, 250);
+    },
+
+    standardGoalSettingControls:
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Stage</label>' +
+        '        <select class="form-control stageName"></select>' +
+        '    </div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Source</label>' +
+        '        <select class="form-control source"></select>' +
+        '    </div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Cost</label>' +
+        '        <input type="number" class="form-control cost" value="" />' +
+        '    </div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Probability</label>' +
+        '        <input type="number" class="form-control probability" value="" />' +
+        '    </div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Timeout</label>' +
+        '        <div class="input-group">' +
+        '            <input type="number" class="form-control timeout-multiples numeric" />' +
+        '            <div class="input-group-btn">' +
+        '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
+        '                    <span class="caret"></span>' +
+        '                </button>' +
+        '                <input type="hidden" class="timeout-units" value="" />' +
+        '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
+        '                    <li><a href="#" data-value="y">Years</a></li>' +
+        '                    <li><a href="#" data-value="M">Months</a></li>' +
+        '                    <li><a href="#" data-value="w">Weeks</a></li>' +
+        '                    <li><a href="#" data-value="d">Days</a></li>' +
+        '                    <li><a href="#" data-value="h">Hours</a></li>' +
+        '                    <li><a href="#" data-value="m">Minutes</a></li>' +
+        '                </ul>' +
+        '            </div>' +
+        '        </div>' +
+        '    </div>' +
+        '</div>',
+    initStandardGoalSettingControls: function (form) {
+        form.find('.timeout-units-selector li').on('click', function (e) {
+            e.preventDefault();
+
+            var a = $(this).find('a');
+            var text = a.text().trim();
+            var value = a.attr('data-value');
+
+            form.find('.timeout-units').val(value);
+            form.find('.timeout-units-preview').html(text);
+        });
+    },
+    saveStandardGoalSetting: function (form) {
+        var timeoutUnits = form.find('.timeout-units').val();
+        var timeoutMultiples = form.find('.timeout-multiples').val();
+        var stageName = form.find('.stageName').val();
+        var source = form.find('.source').val();
+        var cost = form.find('.cost').val();
+        var probability = form.find('.probability').val();
+
+        JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
+        JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
+        JBApp.currentSettingNode.stageName = stageName || null;
+        JBApp.currentSettingNode.source = source || null;
+        JBApp.currentSettingNode.cost = cost || null;
+        JBApp.currentSettingNode.probability = probability || null;
+    },
+    showStandardGoalSettingControls: function (form, node) {
+        if (node.timeoutUnits !== null) {
+            form.find('.timeout-units-selector li a').filter('[data-value=' + node.timeoutUnits + ']').trigger('click');
+        } else {
+            form.find('.timeout-units').val('');
+            form.find('.timeout-units-preview').html('');
+        }
+        form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
+
+        var stagesOptionStr = '<option value="">[No stage selected]</option>';
+        if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
+            for (var i = 0; i < JBApp.funnel.stages.length; i++) {
+                stagesOptionStr += '<option value="' + JBApp.funnel.stages[i].name + '">' + JBApp.funnel.stages[i].desc + '</option>';
+            }
+        }
+        form.find('.stageName').html(stagesOptionStr).val(node.stageName !== null ? node.stageName : '');
+
+        var sourceOptionStr = '<option value="">[No source selected]</option>';
+        if (JBApp.funnel.sources && $.isArray(JBApp.funnel.sources)) {
+            for (var i = 0; i < JBApp.funnel.sources.length; i++) {
+                sourceOptionStr += '<option value="' + JBApp.funnel.sources[i] + '">' + JBApp.funnel.sources[i] + '</option>';
+            }
+        }
+        form.find('.source').html(sourceOptionStr).val(node.source !== null ? node.source : '');
+
+        form.find('.cost').val(node.cost !== null ? node.cost : '');
+        form.find('.probability').val(node.probability !== null ? node.probability : '');
     }
 };
 
