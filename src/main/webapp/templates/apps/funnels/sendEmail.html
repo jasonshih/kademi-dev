@@ -39,20 +39,20 @@
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="form">From</label>
-                    <input type="text" id="form" name="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+                    <input type="text" id="form" name="from" value="$!formatter.htmlEncode( $page.node.from )" placeholder="admin@mybusinessname.com" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="replyTo">Reply to</label>
-                    <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                    <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.node.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
                     <small>Can use MVEL syntax</small>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-12">
                     <label for="to">To</label>
-                    <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                    <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.node.to )" placeholder="admin@mybusinessname.com" class="form-control" />
                     <small>Can use MVEL syntax. Leave blank for the lead profile.</small>
                 </div>
             </div>
@@ -151,21 +151,21 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="from">Email from address</label>
                                     <div class="col-md-8">
-                                        <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.from )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <input type="text" name="from" id="from" value="$!formatter.htmlEncode( $page.node.from )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="replyT">Reply to address</label>
                                     <div class="col-md-8">
-                                        <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <input type="text" name="replyTo" id="replyTo" value="$!formatter.htmlEncode( $page.node.replyTo )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="replyT">To address</label>
                                     <div class="col-sm-8">
-                                        <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.to )" placeholder="admin@mybusinessname.com" class="form-control" />
+                                        <input type="text" id="to" name="to" value="$!formatter.htmlEncode( $page.node.to )" placeholder="admin@mybusinessname.com" class="form-control" />
                                         <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>.</small>
                                     </div>
                                 </div>
