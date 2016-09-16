@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Add To Group Action</title>
+    </head>
+    <body>
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <p>Enter any or all of the below, to assign this lead to a group, team or a sales person</p>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="groupName">Group</label>
+                    <select name="group" id="groupName" class="form-control">
+                        $formatter.option("", "[Please select]", $page.node.group)
+                        #foreach($group in $rootFolder.groups)
+                        $formatter.option($group.name, $group.name, $page.node.group)
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="groupName">Team</label>
+                    <select name="team" id="team" class="form-control">
+                        $formatter.option("", "[Please select]", $page.node.team)
+                        #foreach($org in $page.teams)
+                        $formatter.option($org.orgId, $org.title, $page.node.team)
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="groupName">Sales person</label>
+                    <input type="text" name="profile" class="form-control" value="$!page.node.profile" />
+                    <small>Enter the email or username</small>
+                </div>
+            </div>
+            
+        </form>
+    </body>
+</html>

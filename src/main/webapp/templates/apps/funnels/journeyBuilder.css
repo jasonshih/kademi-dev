@@ -12,7 +12,7 @@
     position: relative;
     overflow: hidden;
     min-height: 500px;
-    margin: 0 0 15px;
+    margin: -17px -13px;
 }
 
 #builder-status {
@@ -144,6 +144,10 @@
 .node.action .inner {
     text-align: center;
     padding: 0 20px;
+}
+
+.jsplumb-connector {
+    z-index: 4;
 }
 
 .node .title .node-buttons {
