@@ -2,7 +2,7 @@
     <div class="form-group">
         <label class="col-sm-12">Points bucket</label>
         <div class="col-sm-12">
-            <select class="form-control pointsActivityBucket">
+            <select class="form-control debitsActivityBucket">
                 <option value="">- None -</option>
                 #foreach ($pointsBucket in $applications.rewardStore.pointsBuckets)
                 <option value="$pointsBucket.name">$pointsBucket.title</option>
@@ -14,7 +14,7 @@
     <div class="form-group">
         <label class="col-sm-12">Days</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control pointsActivityDays"/>
+            <input type="number" class="form-control debitsActivityDays"/>
             <em class="help-block small text-muted">Number of days history to show</em>
         </div>
     </div>
@@ -22,7 +22,7 @@
     <div class="form-group">
         <label class="col-sm-12">Height</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control pointsActivityHeight"/>
+            <input type="number" class="form-control debitsActivityHeight"/>
             <em class="help-block small text-muted">Minimum is 100</em>
         </div>
     </div>
