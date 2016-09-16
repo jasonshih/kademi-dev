@@ -290,3 +290,15 @@ path, .jsplumb-endpoint {
 .choices-wrapper ul {
     padding-left: 20px;
 }
+
+.rules-group-container .btn-primary {
+    opacity: 0.65;
+}
+
+.rules-group-container .btn-primary.active {
+    opacity: 1;
+}
+
+.rules-group-container .btn-primary.disabled {
+    opacity: 0.65;
+}
