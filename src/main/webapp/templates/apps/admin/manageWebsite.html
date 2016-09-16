@@ -257,31 +257,16 @@
                                 <a class="btn btn-blue btn-sm pull-right" href="themeSelect">Browse the theme library <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="logo" class="col-sm-3 control-label">Logo</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control toolbar-Logo" name="logo" id="logo" value="$formatter.htmlAttEncode($page.themeAttributes.logo)" />
-                            </div>
-                        </div>
-                        <!--<div class="form-group">-->
-                            <!--<label for="menu" class="col-sm-3 control-label">Menu</label>-->
-                            <!--<div class="col-sm-6">-->
-                                <!--<textarea id="menu" name="menu" class="form-control limited" rows="5">$!page.themeAttributes.menu</textarea>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        #foreach( $customField in $page.customFields )
-                        <div class="form-group">
-                            <label for="menu" class="col-sm-3 control-label">$customField.text</label>
-                            <div class="col-sm-6">
-                                $customField.html( $page.themeAttributes.get($customField.name) )
-                            </div>
-                        </div>
-                        #end
+
                         <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
-                                <button type="submit" class="btn btn-sm btn-success">Save Changes</button>
+                                <a target="_blank" href="$page.href?goto=&gotoPath=/theme-checker" class="btn btn-sm btn-success">
+                                    <i class="fa fa-check"></i>
+                                    Check theme
+                                </a>
                             </div>
                         </div>
+
                     </form>
                     <hr/>
                     <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link
@@ -296,7 +281,7 @@
                             <tr>
                                 <td>
                                     <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
-                                </td>                            
+                                </td>
                                 <td>$template.description</td>
                                 <td>
                                     #if( $page.isCustomised($template) )
