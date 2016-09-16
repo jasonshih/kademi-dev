@@ -57,7 +57,9 @@
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 var title = p.find('a[data-toggle]').html();
-                p.find('a[data-toggle]').attr('href', '#'+panelCollapseId).html('<div>'+title+'</div>');
+                if (title.indexOf ('<div>') === -1){
+                    p.find('a[data-toggle]').attr('href', '#'+panelCollapseId).html('<div>'+title+'</div>');
+                }
             });
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
