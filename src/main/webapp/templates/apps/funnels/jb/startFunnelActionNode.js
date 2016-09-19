@@ -1,6 +1,6 @@
-JBNodes['grantRewards'] = {
-    title: '<i class="fa fa-gift"></i> <span class="node-type">Grant rewards</span>',
-    previewUrl: '/theme/apps/rewardstore/jb/grantRewardsAction.png',
+JBNodes['startFunnel'] = {
+    title: '<i class="fa fa-gift"></i> <span class="node-type">Start journey</span>',
+    previewUrl: '/theme/apps/funnels/jb/startFunnelsAction.png',
     ports: {
         nextNodeId: {
             label: 'then',
