@@ -497,8 +497,68 @@
                 '           <input type="checkbox" id="photo-fullwidth" />' +
                 '       </div>' +
                 '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-width" class="col-sm-12">Linkable</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="checkbox" id="photo-linkable" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-height" class="col-sm-12">Link</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="text" id="photo-link" class="form-control" disabled="disabled" />' +
+                '           <span class="help-block" style="display: none;">Link is invalid</span>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-height" class="col-sm-12">Open link in</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control" id="photo-target" disabled="disabled">' +
+                '               <option value="" selected="selected">Current tab/window</option>' +
+                '               <option value="_blank">New tab/window</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
                 '</form>'
             );
+
+            var txtLink = form.find('#photo-link');
+            txtLink.on('change', function () {
+                var link = this.value.trim();
+                var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
+                var span = txtLink.next();
+                var formGroup = txtLink.closest('.form-group');
+
+                if (pattern.test(link)) {
+                    keditor.getSettingComponent().find('a').attr('href', link);
+                    span.hide();
+                    formGroup.removeClass('has-error');
+                } else {
+                    span.show();
+                    formGroup.addClass('has-error');
+                }
+            });
+
+            var cbbTarget = form.find('#photo-target');
+            cbbTarget.on('change', function () {
+                keditor.getSettingComponent().find('a').attr('target', this.value);
+            });
+
+            var chkLinkable = form.find('#photo-linkable');
+            chkLinkable.on('click', function () {
+                var img = keditor.getSettingComponent().find('img');
+
+                if (chkLinkable.is(':checked')) {
+                    txtLink.prop('disabled', false);
+                    cbbTarget.prop('disabled', false);
+                    img.wrap('<a href="" style="text-decoration: none;"></a>');
+                    img.css('border', '0');
+                } else {
+                    txtLink.prop('disabled', true);
+                    cbbTarget.prop('disabled', true);
+                    img.unwrap('a');
+                }
+            });
 
             var photoEdit = form.find('#photo-edit');
             var basePath = window.location.pathname.replace('edmeditor', '');
@@ -536,7 +596,6 @@
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "photo" component', component);
 
-            var self = this;
             var img = component.find('img');
 
             var inputAlt = form.find('#photo-alt');
@@ -547,21 +606,46 @@
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.hasClass('full-width'));
+
+            var txtLink = form.find('#photo-link');
+            var cbbTarget = form.find('#photo-target');
+            var chkLinkable = form.find('#photo-linkable');
+
+            txtLink.next().hide();
+            txtLink.closest('.form-group').removeClass('has-error');
+
+            var a = img.parent('a');
+            if (a.length > 0) {
+                chkLinkable.prop('checked', true);
+                txtLink.prop('disabled', false).val(a.attr('href'));
+                cbbTarget.prop('disabled', false).val(a.attr('target'));
+            } else {
+                chkLinkable.prop('checked', false);
+                txtLink.prop('disabled', true).val('');
+                cbbTarget.prop('disabled', true).val('');
+            }
         },
 
         adjustWidthForImg: function (img, isFullWidth) {
             $('<img />').attr('src', img.attr('src')).load(function () {
                 var wrapper = img.parent();
+                if (wrapper.is('a')) {
+                    wrapper = wrapper.parent();
+                }
+
                 img.attr({
                     width: 1,
                     height: 1
                 });
-                var wrapperWidth = wrapper.width();
-                img.attr({
-                    width: isFullWidth ? wrapperWidth : this.width,
-                    height: isFullWidth ? (wrapperWidth * this.height) / this.width : this.height
-                });
-                img[isFullWidth ? 'addClass' : 'removeClass']('full-width');
+
+                setTimeout(function () {
+                    var wrapperWidth = wrapper.width();
+                    img.attr({
+                        width: isFullWidth ? wrapperWidth : this.width,
+                        height: isFullWidth ? (wrapperWidth * this.height) / this.width : this.height
+                    });
+                    img[isFullWidth ? 'addClass' : 'removeClass']('full-width');
+                }, 100);
             });
         }
     };

@@ -1088,6 +1088,11 @@
             var img = componentContent.find('img');
 
             img.css('display', 'inline-block');
+
+            var options = keditor.options;
+            if (typeof options.onComponentReady === 'function') {
+                options.onComponentReady.call(contentArea, component);
+            }
         },
 
         settingEnabled: true,
@@ -1141,6 +1146,28 @@
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
+                '       <label for="photo-width" class="col-sm-12">Linkable</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="checkbox" id="photo-linkable" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-height" class="col-sm-12">Link</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="text" id="photo-link" class="form-control" disabled="disabled" />' +
+                '           <span class="help-block" style="display: none;">Link is invalid</span>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="photo-height" class="col-sm-12">Open link in</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control" id="photo-target" disabled="disabled">' +
+                '               <option value="" selected="selected">Current tab/window</option>' +
+                '               <option value="_blank">New tab/window</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
                 '       <label for="photo-height" class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" id="photo-height" class="form-control" />' +
@@ -1149,6 +1176,43 @@
                 '</form>'
             );
 
+            var txtLink = form.find('#photo-link');
+            txtLink.on('change', function () {
+                var link = this.value.trim();
+                var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
+                var span = txtLink.next();
+                var formGroup = txtLink.closest('.form-group');
+
+                if (pattern.test(link)) {
+                    keditor.getSettingComponent().find('a').attr('href', link);
+                    span.hide();
+                    formGroup.removeClass('has-error');
+                } else {
+                    span.show();
+                    formGroup.addClass('has-error');
+                }
+            });
+
+            var cbbTarget = form.find('#photo-target');
+            cbbTarget.on('change', function () {
+                keditor.getSettingComponent().find('a').attr('target', this.value);
+            });
+
+            var chkLinkable = form.find('#photo-linkable');
+            chkLinkable.on('click', function () {
+                var img = keditor.getSettingComponent().find('img');
+
+                if (chkLinkable.is(':checked')) {
+                    txtLink.prop('disabled', false);
+                    cbbTarget.prop('disabled', false);
+                    img.wrap('<a href=""></a>');
+                } else {
+                    txtLink.prop('disabled', true);
+                    cbbTarget.prop('disabled', true);
+                    img.unwrap('a');
+                }
+            });
+
             var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
             var photoEdit = form.find('#photo-edit');
             photoEdit.mselect({
@@ -1156,7 +1220,7 @@
                 bs3Modal: true,
                 pagePath: basePath,
                 basePath: basePath,
-                onSelectFile: function(url) {
+                onSelectFile: function (url) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', url);
                     self.showSettingForm(form, keditor.getSettingComponent(), options);
@@ -1232,9 +1296,26 @@
             var inputWidth = form.find('#photo-width');
             var inputHeight = form.find('#photo-height');
             var cbbStyle = form.find('#photo-style');
+            var txtLink = form.find('#photo-link');
+            var cbbTarget = form.find('#photo-target');
+            var chkLinkable = form.find('#photo-linkable');
+
+            txtLink.next().hide();
+            txtLink.closest('.form-group').removeClass('has-error');
 
             var panel = component.find('.photo-panel');
             var img = panel.find('img');
+
+            var a = img.parent('a');
+            if (a.length > 0) {
+                chkLinkable.prop('checked', true);
+                txtLink.prop('disabled', false).val(a.attr('href'));
+                cbbTarget.prop('disabled', false).val(a.attr('target'));
+            } else {
+                chkLinkable.prop('checked', false);
+                txtLink.prop('disabled', true).val('');
+                cbbTarget.prop('disabled', true).val('');
+            }
 
             var algin = panel.css('text-align');
             if (algin !== 'right' || algin !== 'center') {
@@ -1256,7 +1337,7 @@
             inputWidth.val(img.width());
             inputHeight.val(img.height());
 
-            $('<img />').attr('src', img.attr('src')).load(function() {
+            $('<img />').attr('src', img.attr('src')).load(function () {
                 self.ratio = this.width / this.height;
                 self.width = this.width;
                 self.height = this.height;
