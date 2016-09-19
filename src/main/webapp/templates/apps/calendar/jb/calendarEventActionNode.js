@@ -15,7 +15,7 @@ JBNodes['calendarEventAction'] = {
         form.append(
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
-            '        <label>Task name</label>' +
+            '        <label>Calendar name</label>' +
             '        <input type="text" class="form-control calendarName" value="" />' +
             '    </div>' +
             '</div>' +

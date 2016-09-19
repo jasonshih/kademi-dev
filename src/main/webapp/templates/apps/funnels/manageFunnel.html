@@ -279,6 +279,7 @@
             <div id="lead" class="tab-pane">
                 <p class="lead">$page.leads.size() leads</p>
                 <p>
+                    
                     <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
                         <span class="glyphicon glyphicon-upload"></span>
                         Upload CSV
@@ -287,6 +288,11 @@
                         <span class="glyphicon glyphicon-download"></span>
                         Export to CSV
                     </a>
+                    <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
+                        <span class="fa fa-refresh"></span>
+                        Refresh leads
+                    </a>
+                    
                 </p>
                 <hr />
                 <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
@@ -546,6 +552,10 @@
                 initUploads();
                 initJourneyBuilder();
                 initManageFunnel();
+                $("body").on("click", ".btn-refresh-leads", function(e) {
+                    e.preventDefault();
+                    $("#lead-tbody").reloadFragment();
+                });
             });
         </script>
 </body>
