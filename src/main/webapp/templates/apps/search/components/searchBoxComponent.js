@@ -8,9 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "searchBox" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/searchBox?settings',
                 type: 'get',
                 dataType: 'HTML',

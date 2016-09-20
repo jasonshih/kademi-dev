@@ -41,7 +41,7 @@
 
             var self = this;
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/pieChart?settings',
                 type: 'get',
                 dataType: 'HTML',

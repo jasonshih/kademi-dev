@@ -6,7 +6,7 @@
         settingEnabled: true,
         settingTitle: 'Recent Points Settings',
         initSettingForm: function (form, keditor) {
-            $.ajax({
+            return $.ajax({
                 url: '_components/recentPoints?settings',
                 type: 'get',
                 dataType: 'HTML',

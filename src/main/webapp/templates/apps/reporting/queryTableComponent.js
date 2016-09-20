@@ -14,7 +14,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "queryTable" component');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/queryTable?settings',
                 type: 'get',
                 dataType: 'HTML',

@@ -10,7 +10,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "contactForm" component');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/contactForm?settings',
                 type: 'get',
                 dataType: 'html',

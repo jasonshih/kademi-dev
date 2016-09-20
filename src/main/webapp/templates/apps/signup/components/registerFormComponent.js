@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "registerForm" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/registerForm?settings',
                 type: 'get',
                 dataType: 'html',

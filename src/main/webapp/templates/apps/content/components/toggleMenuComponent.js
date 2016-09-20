@@ -10,7 +10,7 @@
 
             $.getScriptOnce('/theme/apps/content/toggleMenu.js');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/toggleMenu?settings',
                 type: 'get',
                 dataType: 'HTML',

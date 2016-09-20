@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "modulePagePagination" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/modulePagePagination?settings',
                 type: 'get',
                 dataType: 'html',

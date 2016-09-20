@@ -8,9 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "profileAvatar" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/profileAvatar?settings',
                 type: 'get',
                 dataType: 'HTML',

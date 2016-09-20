@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "myRewardPoints" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/myRewardPoints?settings',
                 type: 'get',
                 dataType: 'html',
