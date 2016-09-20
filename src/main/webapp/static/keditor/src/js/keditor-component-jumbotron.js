@@ -85,6 +85,12 @@
                 '       </div>' +
                 '    </div>' +
                 '    <div class="form-group">' +
+                '       <div class="col-md-12">' +
+                '           <label>Is inverse</label><br />' +
+                '           <input type="checkbox" value="" class="chk-inverse" />' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="form-group">' +
                 '       <label class="col-sm-12">Rounded</label>' +
                 '       <div class="col-sm-12">' +
                 '           <div class="radio"><label><input type="radio" name="rounded" value="true" checked> Yes</label></div>' +
@@ -146,6 +152,11 @@
                 '   </div>' +
                 '</form>'
             );
+
+            form.find('.chk-inverse').on('click', function () {
+                var comp = keditor.getSettingComponent();
+                comp.find('.jumbotron')[this.checked ? 'addClass': 'removeClass']('jumbotron-inverse');
+            });
 
             form.find('[name=rounded]').on('click', function (e) {
                 var comp = keditor.getSettingComponent();
@@ -214,6 +225,7 @@
             });
             form.find('[name=showButton][value=false]').prop('checked', component.find('a').hasClass('hide'));
             form.find('[name=rounded][value=false]').prop('checked', component.find('.jumbotron').css('border-radius').replace('px', '') === '0');
+            form.find('.chk-inverse').prop('checked', component.find('.jumbotron').hasClass('jumbotron-inverse'));
         },
 
         destroy: function (component, keditor) {

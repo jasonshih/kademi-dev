@@ -114,7 +114,7 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Layout</label>' +
+                '       <label class="col-sm-12">Layout</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control select-layout">' +
                 '               <option value="">Auto</option>' +
@@ -124,7 +124,7 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Height</label>' +
+                '       <label class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" value="" class="txt-height form-control" />' +
                 '       </div>' +
@@ -157,7 +157,7 @@ function initKEditor(body, fileName) {
                 '      </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Background for</label>' +
+                '       <label class="col-sm-12">Background for</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control select-bg-for">' +
                 '               <option value="container-bg" selected="selected">Container</option>' +
@@ -174,7 +174,7 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Background repeat</label>' +
+                '       <label class="col-sm-12">Background repeat</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control select-bg-repeat">' +
                 '               <option value="repeat">Repeat</option>' +
@@ -185,7 +185,7 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Background position</label>' +
+                '       <label class="col-sm-12">Background position</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control select-bg-position">' +
                 '               <option value="0% 0%">Top Left</option>' +
@@ -201,7 +201,7 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Background size</label>' +
+                '       <label class="col-sm-12">Background size</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control select-bg-size">' +
                 '               <option value="auto">Auto</option>' +
@@ -220,7 +220,7 @@ function initKEditor(body, fileName) {
                 '      </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-style" class="col-sm-12">Parallax</label>' +
+                '       <label class="col-sm-12">Parallax</label>' +
                 '       <div class="col-sm-12">' +
                 '           <div class="checkbox">' +
                 '               <label>' +
@@ -234,15 +234,21 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Extra class</label>' +
+                '       <label class="col-sm-12">Extra class</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="text" value="" class="txt-extra-class form-control" />' +
                 '           <em class="help-block text-muted small">These classes will be added to <code>.container-bg</code></em>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Extra class for columns</label>' +
-                '       <div class="col-sm-12 columns-extra-class">' +
+                '       <label class="col-sm-12">Is inverse</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="checkbox" value="" class="chk-inverse" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label class="col-sm-12">Columns settings</label>' +
+                '       <div class="col-sm-12 columns-setting">' +
                 '       </div>' +
                 '   </div>' +
                 '</form>'
@@ -359,6 +365,13 @@ function initKEditor(body, fileName) {
                 var containerBg = container.find('.container-bg');
 
                 containerBg.attr('class', 'container-bg ' + this.value.trim());
+            });
+
+            form.find('.chk-inverse').on('click', function () {
+                var container = keditor.getSettingContainer();
+                var containerBg = container.find('.container-bg');
+
+                containerBg[this.checked ? 'addClass': 'removeClass']('container-inverse');
             });
 
             form.find('.txt-height').on('change', function () {
@@ -498,6 +511,15 @@ function initKEditor(body, fileName) {
                 var originClasses = keditor.options.getContainerContentClasses(targetContainerContent)[0];
 
                 targetContainerContent.attr('class', originClasses + ' ' + this.value);
+            });
+
+            form.on('click', '.chk-inverse-column', function () {
+                var chk = $(this);
+                var index = chk.attr('data-index');
+                var container = keditor.getSettingContainer();
+                var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
+
+                targetContainerContent[this.checked ? 'addClass': 'removeClass']('col-inverse');
             });
         },
         addDataTransition: function (form, name, value) {
@@ -701,17 +723,21 @@ function initKEditor(body, fileName) {
             container.find('[data-type=container-content]').each(function (index) {
                 var containerContent = $(this);
                 var customClasses = keditor.options.getContainerContentClasses(containerContent)[1];
+                var isInverse = containerContent.hasClass('col-inverse');
 
                 htmlStr += '<div class="clearfix">';
                 if (index !== 0) {
                     htmlStr += '    <br />';
                 }
                 htmlStr += '    Column #' + (index + 1);
-                htmlStr += '    <input type="text" class="form-control txt-extra-class-column" data-index="' + index + '" value="' + customClasses + '" />';
+                htmlStr += '    <input type="text" class="form-control txt-extra-class-column" placeholder="Extra class" data-index="' + index + '" value="' + customClasses + '" />';
+                htmlStr += '    <label class="checkbox-inline">';
+                htmlStr += '        <input type="checkbox" class="chk-inverse-column" data-index="' + index + '" ' + (isInverse ? 'checked="checked"' : '') + ' /> Is inverse';
+                htmlStr += '    </label>';
                 htmlStr += '</div>';
             });
 
-            form.find('.columns-extra-class').html(htmlStr);
+            form.find('.columns-setting').html(htmlStr);
         }
     });
 }
