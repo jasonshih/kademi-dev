@@ -1,5 +1,5 @@
 #if ($page)
-<ol class="breadcrumb" style="$!style">
+<ol class="breadcrumb #if ($inverse == 'true') breadcrumb-inverse #end" style="$!style">
     #if( $page.parent.title )
     <li>
         <a class="text-muted" href="$page.parent.href">
@@ -8,11 +8,11 @@
     </li>
     #end
     <li class="active">
-        <a class="text-primary" href="$page.href">$formatter.htmlEncode($page.title)</a>
+        <a class="text-muted" href="$page.href">$formatter.htmlEncode($page.title)</a>
     </li>
 </ol>
 #else
-<ol class="breadcrumb" style="$!style">
+<ol class="breadcrumb #if ($inverse == 'true') breadcrumb-inverse #end" style="$!style">
     <li><a href="#">Home</a></li>
     <li class="active"><a href="#">Breadcrumb</a></li>
 </ol>
