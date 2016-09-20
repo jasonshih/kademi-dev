@@ -50,35 +50,42 @@ function initContentEditorPage(fileName) {
     }, 200);
 }
 
-$.keditor.components['text'].options = {
-    skin: editorSkin,
-    allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-    bodyId: 'editor',
-    templates_files: [templatesPath],
-    templates_replaceContent: false,
-    toolbarGroups: toolbarSets['Default'],
-    extraPlugins: 'embed_video,fuse-image,sourcedialog',
-    removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
-    removeButtons: 'Find,Replace,SelectAll,Scayt',
-    enterMode: 'P',
-    forceEnterMode: true,
-    filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-    filebrowserUploadUrl: '/uploader/upload',
-    format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-    format_p2: {
-        element: 'p',
-        attributes: {
-            'class': 'lessSpace'
-        }
-    },
-    minimumChangeMilliseconds: 100,
-    stylesSet: 'myStyles:' + stylesPath
-};
-
 function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
+    var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
+
+    if (themeCss.length > 0) {
+        themeCssFiles.push(themeCss.attr('href'));
+    }
+
+    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
 
     contentArea.keditor({
+        ckeditorOptions: {
+            skin: editorSkin,
+            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+            bodyId: 'editor',
+            contentsCss: themeCssFiles,
+            templates_files: [templatesPath],
+            templates_replaceContent: false,
+            toolbarGroups: toolbarSets['Default'],
+            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
+            removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
+            enterMode: 'P',
+            forceEnterMode: true,
+            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+            filebrowserUploadUrl: '/uploader/upload',
+            format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
+            format_p2: {
+                element: 'p',
+                attributes: {
+                    'class': 'lessSpace'
+                }
+            },
+            minimumChangeMilliseconds: 100,
+            stylesSet: 'myStyles:' + stylesPath
+        },
         tabContainersText: '<i class="fa fa-columns"></i>',
         tabComponentsText: '<i class="fa fa-files-o"></i>',
         snippetsUrl: '_components?fileName=' + fileName,
@@ -693,6 +700,7 @@ function initKEditor(body, fileName) {
 
             form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
             form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').trim());
+            form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
 
             keditor.options.buildExtraClassForColumns(form, container, keditor);
         },

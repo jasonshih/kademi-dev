@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "quizPage" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/quizPage?settings',
                 type: 'get',
                 dataType: 'html',

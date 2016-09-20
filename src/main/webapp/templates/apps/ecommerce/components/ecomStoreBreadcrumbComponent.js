@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "ecomStoreBreadcrumb" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/ecomStoreBreadcrumb?settings',
                 type: 'get',
                 dataType: 'html',

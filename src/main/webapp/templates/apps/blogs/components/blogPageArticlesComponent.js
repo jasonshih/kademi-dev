@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "blogPageArticles" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/blogPageArticles?settings',
                 type: 'get',
                 dataType: 'html',

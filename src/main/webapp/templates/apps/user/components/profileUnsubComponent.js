@@ -11,9 +11,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "profileUnsub" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/profileUnsub?settings',
                 type: 'get',
                 dataType: 'HTML',

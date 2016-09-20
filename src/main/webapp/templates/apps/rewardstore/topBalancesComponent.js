@@ -6,7 +6,7 @@
         settingEnabled: true,
         settingTitle: 'Top Balances Settings',
         initSettingForm: function (form, keditor) {
-            $.ajax({
+            return $.ajax({
                 url: '_components/topBalances?settings',
                 type: 'get',
                 dataType: 'HTML',

@@ -11,9 +11,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "profileOptins" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/profileOptins?settings',
                 type: 'get',
                 dataType: 'HTML',

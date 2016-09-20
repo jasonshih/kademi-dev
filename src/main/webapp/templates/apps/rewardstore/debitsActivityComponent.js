@@ -6,7 +6,7 @@
         settingEnabled: true,
         settingTitle: 'Debits Activity Settings',
         initSettingForm: function (form, keditor) {
-            $.ajax({
+            return $.ajax({
                 url: '_components/debitsActivity?settings',
                 type: 'get',
                 dataType: 'HTML',
