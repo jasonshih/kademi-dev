@@ -52,8 +52,12 @@ function initContentEditorPage(fileName) {
 
 function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
+    var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
 
-    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap.min.css');
+    if (themeCss.length > 0) {
+        themeCssFiles.push(themeCss.attr('href'));
+    }
+
     themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
 
     contentArea.keditor({
