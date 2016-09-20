@@ -6,7 +6,7 @@
         settingEnabled: true,
         settingTitle: 'Points Activity Settings',
         initSettingForm: function (form, keditor) {
-            $.ajax({
+            return $.ajax({
                 url: '_components/pointsActivity?settings',
                 type: 'get',
                 dataType: 'HTML',

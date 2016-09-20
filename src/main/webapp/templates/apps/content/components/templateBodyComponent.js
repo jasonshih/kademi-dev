@@ -8,9 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "templateBody" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/templateBody?settings',
                 type: 'get',
                 dataType: 'HTML',

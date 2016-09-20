@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "calendarEventEDM" component');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/calendarEventEDM?settings',
                 type: 'get',
                 dataType: 'html',

@@ -693,6 +693,7 @@ function initKEditor(body, fileName) {
 
             form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
             form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').trim());
+            form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
 
             keditor.options.buildExtraClassForColumns(form, container, keditor);
         },

@@ -9,7 +9,7 @@
         initSettingForm: function (form, keditor) {
             var self = this;
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/socialMedias?settings',
                 type: 'get',
                 dataType: 'HTML',

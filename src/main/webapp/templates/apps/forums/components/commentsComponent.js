@@ -8,9 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "comments" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/comments?settings',
                 type: 'get',
                 dataType: 'HTML',

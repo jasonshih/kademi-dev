@@ -8,7 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "breadcrumb" component');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/breadcrumb?settings',
                 type: 'get',
                 dataType: 'HTML',

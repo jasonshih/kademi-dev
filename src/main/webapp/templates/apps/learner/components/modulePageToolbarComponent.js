@@ -13,7 +13,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "modulePageToolbar" component', form, keditor);
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/modulePageToolbar?settings',
                 type: 'get',
                 dataType: 'html',

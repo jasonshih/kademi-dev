@@ -39,7 +39,7 @@
 
             var self = this;
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/dateHistogram?settings',
                 type: 'get',
                 dataType: 'HTML',

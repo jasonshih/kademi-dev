@@ -50,7 +50,7 @@
 
             var self = this;
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/kpiVis?settings',
                 type: 'get',
                 dataType: 'HTML',

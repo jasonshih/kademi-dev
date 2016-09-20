@@ -7,10 +7,7 @@
         settingTitle: 'Alerts Settings',
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "pageBody" component');
-
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/alerts?settings',
                 type: 'get',
                 dataType: 'HTML',

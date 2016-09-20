@@ -11,9 +11,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "profileMemberships" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/profileMemberships?settings',
                 type: 'get',
                 dataType: 'HTML',

@@ -8,7 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "menu" component');
 
-            $.ajax({
+            return $.ajax({
                 url: '_components/menu?settings',
                 type: 'get',
                 dataType: 'HTML',

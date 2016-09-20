@@ -8,9 +8,7 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "pageTitle" component');
 
-            var self = this;
-
-            $.ajax({
+            return $.ajax({
                 url: '_components/pageTitle?settings',
                 type: 'get',
                 dataType: 'HTML',
