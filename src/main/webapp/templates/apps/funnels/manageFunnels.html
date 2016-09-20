@@ -3,9 +3,22 @@
         <title>Manage Funnels</title>
     </head>
     <body>
-        <p>
-            <button type="button" class="btn btn-sm btn-primary addFunnel" data-toggle="modal" data-target="#addFunnel"><i class="fa fa-plus"></i> Create a funnel</button>
-        </p>
+
+        <button type="button" class="btn btn-sm btn-primary addFunnel" data-toggle="modal" data-target="#addFunnel"><i class="fa fa-plus"></i> Create a funnel</button>
+
+        <div class="btn-group">
+            <a href="notes.csv" class="btn btn-sm btn-success"><i class="fa fa-download"></i> Export Notes</a>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="#" data-toggle="modal" data-target="#uploadNotes">Upload CSV</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <br/><br/>
 
         <div class="panel panel-default">
             <div class="panel-body">
@@ -71,6 +84,27 @@
             </div>
         </div>
 
+        <div id="uploadNotes" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Upload Notes</h4>
+            </div>
+            <div class="modal-body">
+                <form action="notes.csv" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="rewardName">CSV</label>
+                        <div class="col-md-8">
+                            <input type="file" name="file" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+            </div>
+        </div>
+
         <script type="text/javascript">
             $(function () {
                 var modal = $("#addFunnel");
@@ -104,6 +138,19 @@
                         }
                     });
                 }
+            });
+
+            $(function () {
+                var modal = $("#uploadNotes");
+                var form = modal.find("form");
+
+                form.forms({
+                    callback: function (resp) {
+                        flog("done", resp);
+                        modal.modal('hide');
+                        Msg.success("Uploaded successfully");
+                    }
+                });
             });
         </script>
     </body>
