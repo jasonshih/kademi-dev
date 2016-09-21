@@ -1,6 +1,6 @@
 JBNodes['testSplit'] = {
     title: '<i class="fa fa-flask"></i> <span class="node-type">Split Test</span>',
-    previewUrl: '/theme/apps/funnels/jb/splitTestNode.png',
+    previewUrl: '/theme/apps/funnels/jb/testSplitNode.png',
     ports: {
         nextNodeId: {
             label: 'normally',
