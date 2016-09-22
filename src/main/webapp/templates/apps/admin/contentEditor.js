@@ -54,11 +54,13 @@ function initKEditor(body, fileName) {
     var contentArea = $('#content-area');
     var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
 
-    if (themeCss.length > 0) {
-        themeCssFiles.push(themeCss.attr('href'));
+    if( typeof themeCssFiles !== 'undefined' ) {
+        
+        if (themeCss.length > 0) {
+            themeCssFiles.push(themeCss.attr('href'));
+        }    
+        themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
-
-    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
 
     contentArea.keditor({
         ckeditorOptions: {

@@ -5,6 +5,7 @@
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/jquery.fullscreen-0.4.1.min.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/textEditor.js">//</script>
+        <script type="text/javascript" src="manageQuery.js">//</script>
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
@@ -65,93 +66,5 @@
                 </pre>
             </div>
         </div>
-        <script type="text/javascript">
-            $(document).ready(function () {
-                var editor = ace.edit("queryText");
-                editor.setTheme("ace/theme/monokai");
-                editor.getSession().setMode("ace/mode/javascript");
-
-                function save(callback) {
-                    var json = editor.getValue();
-                    $.ajax({
-                        type: 'POST',
-                        data: {
-                            query: json
-                        },
-                        dataType: "json",
-                        url: "",
-                        success: function (data) {
-                            Msg.info("Saved");
-                            if (callback) {
-                                callback();
-                            }
-                        },
-                        error: function (resp) {
-                            Msg.error("An error occured while saving");
-                        }
-                    });
-                }
-
-
-                var heightUpdateFunction = function () {
-
-                    // http://stackoverflow.com/questions/11584061/
-                    var newHeight =
-                            editor.getSession().getScreenLength()
-                            * editor.renderer.lineHeight
-                            + editor.renderer.scrollBar.getWidth();
-
-                    $('#queryText').height(newHeight.toString() + "px");
-
-                    // This call is required for the editor to fix all of
-                    // its inner structure for adapting to a change in size
-                    editor.resize();
-                };
-
-                // Set initial size to match initial content
-                heightUpdateFunction();
-
-                // Whenever a change happens inside the ACE editor, update
-                // the size again
-                editor.getSession().on('change', heightUpdateFunction);
-
-                $("body").on("click", ".runQuery", function (e) {
-                    save(function () {
-                        var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
-                        Msg.info("Running..", newHref);
-                        $("#queryResults").reloadFragment({
-                            url: newHref,
-                            whenComplete: function () {
-                                Msg.info("Query executed");
-                            }
-                        });
-                    });
-                });
-
-                $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                    flog("page date changed", startDate, endDate);
-                    var dateOptions = {
-                        startDate: startDate,
-                        endDate: endDate
-                    };
-                    var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
-                    Msg.info("Running..", newHref);
-                    $("#queryResults").reloadFragment({
-                        url: newHref,
-                        whenComplete: function () {
-                            Msg.info("Query executed");
-                        }
-                    });
-                });
-
-
-
-                $("body").on("click", ".saveQuery", function (e) {
-                    save();
-                });
-
-
-            });
-        </script>
     </body>
 </html>

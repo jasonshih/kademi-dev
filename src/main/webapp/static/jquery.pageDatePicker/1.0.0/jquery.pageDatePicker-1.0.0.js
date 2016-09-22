@@ -303,3 +303,11 @@
     };
 
 })(jQuery);
+
+function getPageDateRange() {
+    return {
+        start : $.cookie('pageDatePicker-startDate'),
+        end : $.cookie('pageDatePicker-endDate')
+    };
+}
+
