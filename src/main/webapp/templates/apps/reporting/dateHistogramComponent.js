@@ -95,6 +95,16 @@
                             self.initDateAgg();
                         });
                     });
+
+                    form.find('.txt-title').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-title', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
                 }
             });
         },
@@ -135,7 +145,8 @@
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.query-height').val(dataAttributes['data-height']);
-            
+            form.find('.txt-title').val(dataAttributes['data-title']);
+
             var aggsSelect = form.find(".select-agg");
             self.initSelect(aggsSelect, selectedQuery, selectedAgg);
         }
