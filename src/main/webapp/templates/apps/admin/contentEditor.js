@@ -141,6 +141,7 @@ function initKEditor(body, fileName) {
                 '               <option value="middle">Middle</option>' +
                 '               <option value="bottom">Bottom</option>' +
                 '           </select>' +
+                '           <em class="help-block text-muted small">When dock type is <code>Middle</code>, please remove <code>Height</code> setting of container.</em>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
@@ -594,7 +595,7 @@ function initKEditor(body, fileName) {
             form.find('.select-bg-size').val(bgTarget.get(0).style.backgroundSize || 'auto');
 
             var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', bgTarget.get(0).style.backgroundColor || '');
+            colorPicker.colorpicker('setValue', bgTarget.get(0).style.backgroundColor || 'transparent');
 
             var layout = '';
             if (containerLayout.hasClass('container')) {
