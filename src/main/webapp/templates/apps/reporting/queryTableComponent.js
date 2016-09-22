@@ -52,6 +52,14 @@
                         component.attr('data-height', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.txt-title').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-title', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -63,6 +71,7 @@
             form.find('.select-query').val(dataAttributes['data-query']);
             form.find('.select-items-per-page').val(dataAttributes['data-items-per-page']);
             form.find('.query-height').val(dataAttributes['data-height']);
+            form.find('.txt-title').val(dataAttributes['data-title']);
         }
     };
 
