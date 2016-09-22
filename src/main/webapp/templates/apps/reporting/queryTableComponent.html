@@ -2,6 +2,10 @@
     #set( $height = 200 )
 #end
 
+#if( !$title )
+#set( $title = "Query Table" )
+#end
+
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
 #set ($queryCompId = "query-component-" + $formatter.randomGuid)
 #if ($params.from)
@@ -15,7 +19,7 @@
 
 <div class="panel panel-default panel-query-table" id="$queryCompId">
     <div class="panel-heading">
-        <i class="fa fa-table"></i> Query Table
+        <i class="fa fa-table"></i> $title
         #set( $queryBean = $applications.Reporting.getQuery($query))
         #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
     </div>
