@@ -53,30 +53,4 @@
     </div>
 </div>
 
-<script src="/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"></script>
-<script>
-    $(function(){
-        $(document).on('click', '#$queryCompId a', function(e){
-            e.preventDefault();
 
-            var href = $(this).attr('href');
-            if (href.indexOf('/_components/queryTable/') === -1){
-                href = '/_components/queryTable'+ href;
-            }
-            var id = '#$queryCompId';
-            var comp = $(id);
-            var query = comp.parents('[data-type=component-queryTable]').attr('data-query');
-            var perPage = comp.parents('[data-type=component-queryTable]').attr('data-items-per-page');
-            var height = comp.parents('[data-type=component-queryTable]').attr('data-height');
-            href += '&data-query='+encodeURI(query);
-            href += '&data-items-per-page='+encodeURI(perPage);
-            href += '&data-height='+encodeURI(height);
-            comp.reloadFragment({
-                url: href,
-                whenComplete: function(resp){
-                    comp.find('.panel-body').html($(resp).find('.panel-body').html());
-                }
-            });
-        });
-    });
-</script>
