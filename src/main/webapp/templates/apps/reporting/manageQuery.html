@@ -18,7 +18,7 @@
                 <li><a href="#">Select a site</a></li>
                 <li role="separator" class="divider"></li>
                 #foreach( $website in $rootFolder.websites )
-                <li><a href="$page.href?contenteditor=&website=$website.name">$website.name</a></li>
+                <li><a target="_blank" href="$page.href?contenteditor=&website=$website.name">$website.name</a></li>
                 #end
             </ul>
         </div>

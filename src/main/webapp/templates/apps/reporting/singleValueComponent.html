@@ -24,7 +24,16 @@
                 <div class="col-xs-9 text-right">
                     <h2>
                         #if( $results )
-                        $results.aggregations.get($agg).value
+                        #set( $aggr = $results.aggregations.get($agg) )
+                        #if( $aggr )
+                        $aggr.value
+                        #else
+                        #if( $agg )
+                        Couldnt find aggregation $agg
+                        #else
+                        Please enter an aggretation
+                        #end
+                        #end
                         #else
                         No current results
                         #end

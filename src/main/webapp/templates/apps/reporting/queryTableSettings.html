@@ -10,7 +10,7 @@
         <label class="col-sm-12">Query</label>
         <div class="col-sm-12">
             <select class="form-control select-query">
-                <option value="">- None -</option>
+                <option value="">- None/Default -</option>
                 #foreach ($query in $applications.Reporting.queries )
                     <option value="$query.sourceFileName">$query.sourceFileName</option>
                 #end

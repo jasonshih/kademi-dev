@@ -713,7 +713,8 @@ function initSaving(body, fileName) {
             type: 'POST',
             data: {
                 body: fileContent
-            },
+            },            
+            dataType: 'json',
             success: function () {
                 if (isEmbeddedIframe) {
                     doPostMessage({

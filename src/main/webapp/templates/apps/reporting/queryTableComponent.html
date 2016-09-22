@@ -17,11 +17,14 @@
 #set ($from = $formatter.toInteger($from))
 #set ($itemsPerPage = $formatter.toInteger($itemsPerPage))
 
+#set( $queryBean = $page.queryBean )
+#set( $queryBean = $applications.Reporting.getQuery($query))
+#set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
+
 <div class="panel panel-default panel-query-table" id="$queryCompId">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
-        #set( $queryBean = $applications.Reporting.getQuery($query))
-        #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
+
     </div>
     <div class="panel-body">
         <div class="table-responsive" style="height: $!{height}px; min-height: 0;">
