@@ -133,6 +133,17 @@ function initKEditor(body, fileName) {
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
+                '       <label class="col-sm-12">Dock type</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control select-dock-type">' +
+                '               <option value=""> - None - </option>' +
+                '               <option value="top">Top</option>' +
+                '               <option value="middle">Middle</option>' +
+                '               <option value="bottom">Bottom</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
                 '       <label class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" value="" class="txt-height form-control" />' +
@@ -143,23 +154,23 @@ function initKEditor(body, fileName) {
                 '          <label>Padding (in px)</label>' +
                 '          <div class="row row-sm text-center">' +
                 '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-top form-control" />' +
+                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingTop" />' +
                 '                  <small>top</small>' +
                 '              </div>' +
                 '          </div>' +
                 '          <div class="row row-sm text-center">' +
                 '              <div class="col-xs-4">' +
-                '                  <input type="number" value="" class="txt-padding-left form-control" />' +
+                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingLeft" />' +
                 '                  <small>left</small>' +
                 '              </div>' +
                 '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-right form-control" />' +
+                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingRight" />' +
                 '                  <small>right</small>' +
                 '              </div>' +
                 '          </div>' +
                 '          <div class="row row-sm text-center">' +
                 '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding-bottom form-control" />' +
+                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingBottom" />' +
                 '                  <small>bottom</small>' +
                 '              </div>' +
                 '          </div>' +
@@ -228,13 +239,6 @@ function initKEditor(body, fileName) {
                 '              <input type="text" value="" class="txt-bg-color form-control" />' +
                 '          </div>' +
                 '      </div>' +
-                '   </div>' +
-                '   <hr />' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Is dock container</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="checkbox" value="" class="chk-dockable" />' +
-                '       </div>' +
                 '   </div>' +
                 '   <hr />' +
                 '   <div class="form-group">' +
@@ -318,13 +322,21 @@ function initKEditor(body, fileName) {
                 var containerContent = container.find('.container-content-wrapper');
 
                 if (this.value === 'container-bg') {
-                    var backgroundCss = containerContent.css('background');
-                    containerBg.css('background', backgroundCss);
+                    var style = containerContent.prop('style');
+                    containerBg.css('background', style.backgroundColor);
+                    containerBg.css('background', style.backgroundImage);
+                    containerBg.css('background', style.backgroundRepeat);
+                    containerBg.css('background', style.backgroundPosition);
+                    containerBg.css('background', style.backgroundSize);
                     containerContent.css('background', '');
                     containerBg.addClass('background-for');
                 } else {
-                    var backgroundCss = containerBg.css('background');
-                    containerContent.css('background', backgroundCss);
+                    var style = containerBg.prop('style');
+                    containerContent.css('background', style.backgroundColor);
+                    containerContent.css('background', style.backgroundImage);
+                    containerContent.css('background', style.backgroundRepeat);
+                    containerContent.css('background', style.backgroundPosition);
+                    containerContent.css('background', style.backgroundSize);
                     containerBg.css('background', '');
                     containerBg.removeClass('background-for');
                 }
@@ -406,66 +418,25 @@ function initKEditor(body, fileName) {
                 containerBg.css('height', height);
             });
 
-            var txtPaddingTop = form.find('.txt-padding-top');
-            var txtPaddingBottom = form.find('.txt-padding-bottom');
-            var txtPaddingLeft = form.find('.txt-padding-left');
-            var txtPaddingRight = form.find('.txt-padding-right');
-            txtPaddingTop.on('change', function () {
-                var paddingValue = this.value || '';
-                var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content-wrapper');
+            form.find('.txt-padding').each(function () {
+                var txt = $(this);
+                var styleName = txt.attr('data-style-name');
 
-                if (paddingValue.trim() === '') {
-                    containerContent.css('padding-top', '');
-                } else {
-                    if (isNaN(paddingValue)) {
-                        paddingValue = 0;
-                        this.value = paddingValue;
-                    }
-                    containerContent.css('padding-top', paddingValue + 'px');
-                }
-            });
-            txtPaddingBottom.on('change', function () {
-                var paddingValue = this.value || '';
-                var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content-wrapper');
+                txt.on('change', function () {
+                    var paddingValue = this.value || '';
+                    var container = keditor.getSettingContainer();
+                    var containerContent = container.find('.container-content-wrapper').get(0);
 
-                if (paddingValue.trim() === '') {
-                    containerContent.css('padding-bottom', '');
-                } else {
-                    if (isNaN(paddingValue)) {
-                        paddingValue = 0;
+                    if (paddingValue.trim() === '') {
+                        containerContent.style[styleName] = '';
+                    } else {
+                        if (isNaN(paddingValue)) {
+                            paddingValue = 0;
+                            this.value = paddingValue;
+                        }
+                        containerContent.style[styleName] = paddingValue + 'px';
                     }
-                    containerContent.css('padding-bottom', paddingValue + 'px');
-                }
-            });
-            txtPaddingLeft.on('change', function () {
-                var paddingValue = this.value || '';
-                var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content-wrapper');
-
-                if (paddingValue.trim() === '') {
-                    containerContent.css('padding-left', '');
-                } else {
-                    if (isNaN(paddingValue)) {
-                        paddingValue = 0;
-                    }
-                    containerContent.css('padding-left', paddingValue + 'px');
-                }
-            });
-            txtPaddingRight.on('change', function () {
-                var paddingValue = this.value || '';
-                var container = keditor.getSettingContainer();
-                var containerContent = container.find('.container-content-wrapper');
-
-                if (paddingValue.trim() === '') {
-                    containerContent.css('padding-right', '');
-                } else {
-                    if (isNaN(paddingValue)) {
-                        paddingValue = 0;
-                    }
-                    containerContent.css('padding-right', paddingValue + 'px');
-                }
+                });
             });
 
             form.find('.select-layout').on('change', function (e) {
@@ -541,6 +512,15 @@ function initKEditor(body, fileName) {
 
                 targetContainerContent[this.checked ? 'addClass': 'removeClass']('col-inverse');
             });
+
+            form.find('.select-dock-type').on('change', function () {
+                var containerBg = keditor.getSettingContainer().find('.container-bg');
+
+                containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
+                if (this.value !== '') {
+                    containerBg.addClass('navbar-fixed-' + this.value);
+                }
+            });
         },
         addDataTransition: function (form, name, value) {
             name = name || '';
@@ -594,8 +574,8 @@ function initKEditor(body, fileName) {
 
             var imageUrl;
             var bgTarget;
-            var bgImageBg = containerBg.css('background-image');
-            var bgImageContent = containerContent.css('background-image');
+            var bgImageBg = containerBg.get(0).style.backgroundImage;
+            var bgImageContent = containerContent.get(0).style.backgroundImage;
             if (containerBg.hasClass('background-for')) {
                 imageUrl = bgImageBg;
                 bgTarget = containerBg;
@@ -606,15 +586,15 @@ function initKEditor(body, fileName) {
                 form.find('.select-bg-for').val('container-content-wrapper');
             }
 
-            imageUrl = imageUrl.replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
+            imageUrl = (imageUrl || '').replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
             form.find('#background-image-previewer').attr('src', imageUrl !== 'none' ? imageUrl : '/static/images/photo_holder.png');
 
-            form.find('.select-bg-repeat').val(bgTarget.css('background-repeat') || 'repeat');
-            form.find('.select-bg-position').val(bgTarget.css('background-position') || '0% 0%');
-            form.find('.select-bg-size').val(bgTarget.css('background-size') || 'auto');
+            form.find('.select-bg-repeat').val(bgTarget.get(0).style.backgroundRepeat || 'repeat');
+            form.find('.select-bg-position').val(bgTarget.get(0).style.backgroundPosition || '0% 0%');
+            form.find('.select-bg-size').val(bgTarget.get(0).style.backgroundSize || 'auto');
 
             var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', bgTarget.css('background-color') || '');
+            colorPicker.colorpicker('setValue', bgTarget.get(0).style.backgroundColor || '');
 
             var layout = '';
             if (containerLayout.hasClass('container')) {
@@ -624,96 +604,28 @@ function initKEditor(body, fileName) {
             }
             form.find('.select-layout').val(layout);
 
-            var styleInline = containerContent.attr('style') || '';
-            var styleRules = styleInline.split(';');
-            var paddingTop = '';
-            var paddingLeft = '';
-            var paddingRight = '';
-            var paddingBottom = '';
+            form.find('.txt-padding').each(function () {
+                var txt = $(this);
+                var styleName = txt.attr('data-style-name');
 
-            for (var i = 0; i < styleRules.length; i++) {
-                var rule = styleRules[i];
+                txt.val((containerContent.get(0).style[styleName] || '').replace('px', ''));
+            });
 
-                if (rule) {
-                    rule = rule.split(':');
-
-                    var ruleName = rule[0].trim();
-                    var ruleValue = rule[1].trim();
-
-                    if (ruleName === 'padding-top') {
-                        paddingTop = ruleValue.replace('px', '').trim();
-                    }
-
-                    if (ruleName === 'padding-left') {
-                        paddingLeft = ruleValue.replace('px', '').trim();
-                    }
-
-                    if (ruleName === 'padding-right') {
-                        paddingRight = ruleValue.replace('px', '').trim();
-                    }
-
-                    if (ruleName === 'padding-bottom') {
-                        paddingBottom = ruleValue.replace('px', '').trim();
-                    }
-
-                    if (ruleName === 'padding') {
-                        ruleValue = ruleValue.split(' ');
-
-                        switch (ruleValue.length) {
-                            case 1:
-                                paddingTop = ruleValue[0].replace('px', '').trim();
-                                paddingLeft = ruleValue[0].replace('px', '').trim();
-                                paddingRight = ruleValue[0].replace('px', '').trim();
-                                paddingBottom = ruleValue[0].replace('px', '').trim();
-                                break;
-
-                            case 2:
-                                paddingTop = ruleValue[0].replace('px', '').trim();
-                                paddingBottom = ruleValue[0].replace('px', '').trim();
-                                paddingRight = ruleValue[1].replace('px', '').trim();
-                                paddingLeft = ruleValue[1].replace('px', '').trim();
-                                break;
-
-                            case 3:
-                                paddingTop = ruleValue[0].replace('px', '').trim();
-                                paddingRight = ruleValue[1].replace('px', '').trim();
-                                paddingLeft = ruleValue[1].replace('px', '').trim();
-                                paddingBottom = ruleValue[2].replace('px', '').trim();
-                                break;
-
-                            case 4:
-                                paddingTop = ruleValue[0].replace('px', '').trim();
-                                paddingRight = ruleValue[1].replace('px', '').trim();
-                                paddingBottom = ruleValue[2].replace('px', '').trim();
-                                paddingLeft = ruleValue[3].replace('px', '').trim();
-                                break;
-                        }
-                    }
-                }
-            }
-
-            form.find('.txt-padding-top').val(paddingTop);
-            form.find('.txt-padding-bottom').val(paddingBottom);
-            form.find('.txt-padding-left').val(paddingLeft);
-            form.find('.txt-padding-right').val(paddingRight);
-
-            styleInline = containerBg.attr('style') || '';
-            styleRules = styleInline.split(';');
-            var height = '';
-            for (var i = 0; i < styleRules.length; i++) {
-                var rule = styleRules[i];
-                rule = rule.split(':');
-
-                if (rule[0].trim() === 'height') {
-                    height = rule[1] || '';
-                    height = height.replace('px', '').trim();
-                }
-            }
-            form.find('.txt-height').val(height);
+            form.find('.txt-height').val(containerBg.get(0).style.height || '');
 
             form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
             form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').trim());
             form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
+
+            var dockType = '';
+            if (containerBg.hasClass('navbar-fixed-top')) {
+                dockType = 'top';
+            } else if (containerBg.hasClass('navbar-fixed-middle')) {
+                dockType = 'middle';
+            } else if (containerBg.hasClass('navbar-fixed-bottom')) {
+                dockType = 'bottom';
+            }
+            form.find('.select-dock-type').val(dockType);
 
             keditor.options.buildExtraClassForColumns(form, container, keditor);
         },
