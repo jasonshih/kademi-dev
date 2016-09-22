@@ -107,6 +107,16 @@
                             self.initPieChart();
                         });
                     });
+
+                    form.find('.txt-title').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-title', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
                 }
             });
         },
@@ -148,6 +158,7 @@
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.select-position').val(dataAttributes['data-legend-position']);
             form.find('.query-height').val(dataAttributes['data-height']);
+            form.find('.txt-title').val(dataAttributes['data-title']);
 
             if (selectedQuery) {
                 var aggsSelect = form.find(".select-agg");

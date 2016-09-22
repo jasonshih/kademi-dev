@@ -2,9 +2,13 @@
     #set( $height = 200 )
 #end
 
+#if( !$title )
+    #set( $title = "Pie Chart" )
+#end
+
 <div class="panel panel-default panel-pie-chart">
     <div class="panel-heading">
-        <i class="fa fa-pie-chart"></i> Pie Chart
+        <i class="fa fa-pie-chart"></i> $title
     </div>
     <div class="panel-body">
         <div style="height: $!{height}px" class="query-pie-chart">

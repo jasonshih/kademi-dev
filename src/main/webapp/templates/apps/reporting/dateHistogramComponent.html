@@ -1,9 +1,14 @@
 #if( !$height )
     #set( $height = 200 )
 #end
+
+#if( !$title )
+    #set( $title = "Date Histogram" )
+#end
+
 <div class="panel panel-default panel-date-histogram">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> Date Histogram
+        <i class="fa fa-bar-chart"></i> $title
     </div>
     <div class="panel-body">
         <div style="height: $!{height}px" class="query-data-histogram">
