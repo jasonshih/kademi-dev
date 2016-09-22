@@ -163,6 +163,7 @@ function initKEditor(body, fileName) {
                 '          </div>' +
                 '      </div>' +
                 '   </div>' +
+                '   <hr />' +
                 '   <div class="form-group">' +
                 '       <label class="col-sm-12">Background for</label>' +
                 '       <div class="col-sm-12">' +
@@ -226,6 +227,14 @@ function initKEditor(body, fileName) {
                 '          </div>' +
                 '      </div>' +
                 '   </div>' +
+                '   <hr />' +
+                '   <div class="form-group">' +
+                '       <label class="col-sm-12">Is dock container</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="checkbox" value="" class="chk-dockable" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <hr />' +
                 '   <div class="form-group">' +
                 '       <label class="col-sm-12">Parallax</label>' +
                 '       <div class="col-sm-12">' +
@@ -240,6 +249,7 @@ function initKEditor(body, fileName) {
                 '           </div>' +
                 '       </div>' +
                 '   </div>' +
+                '   <hr />' +
                 '   <div class="form-group">' +
                 '       <label class="col-sm-12">Extra class</label>' +
                 '       <div class="col-sm-12">' +
@@ -253,6 +263,7 @@ function initKEditor(body, fileName) {
                 '           <input type="checkbox" value="" class="chk-inverse" />' +
                 '       </div>' +
                 '   </div>' +
+                '   <hr />' +
                 '   <div class="form-group">' +
                 '       <label class="col-sm-12">Columns settings</label>' +
                 '       <div class="col-sm-12 columns-setting">' +
