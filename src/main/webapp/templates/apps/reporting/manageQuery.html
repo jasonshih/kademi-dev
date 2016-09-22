@@ -9,6 +9,20 @@
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
     </head>
     <body>
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-pencil"></i>
+                Edit default page <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">Select a site</a></li>
+                <li role="separator" class="divider"></li>
+                #foreach( $website in $rootFolder.websites )
+                <li><a href="$page.href?contenteditor=&website=$website.name">$website.name</a></li>
+                #end
+            </ul>
+        </div>
+
         <h2>Query: $page.name</h2>
         <p class="">
             <b>Indexes: </b>
