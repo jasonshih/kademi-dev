@@ -114,7 +114,7 @@
 
                         component.attr('data-title', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initDateAgg();
+                            self.initPieChart();
                         });
                     });
                 }
