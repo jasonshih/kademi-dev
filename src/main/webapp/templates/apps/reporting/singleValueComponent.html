@@ -1,33 +1,39 @@
 #if( !$height )
 #set( $height = 200 )
 #end
+
+#set( $queryBean = $page.queryBean )
 #set( $queryBean = $applications.Reporting.getQuery($query))
+
 #set( $results = $applications.Reporting.runQuery($queryBean) )
 
-#if( !$title )
-    #set( $title = "Pie Chart" )
+#if( !$label )
+#set( $label = $queryBean.name )
 #end
 
+#set( $detailHref = "#" )
+#set( $detailHref = "$link" )
 
-<div class="ktile">
-    <div class="ktile-inner">
-        <div class="ktile-body">
-            <div class="ktile-front">
-                <div class="ktile-content">
-                    <div style="margin: 0" class="row">
-                        <a class="c-white" href="/manageUsers">
-                            <div class="col-xs-3">
-                                <i class="fa fa-user fa-4x"></i>
-                            </div>
-                            <div class="col-xs-9 text-right">
-                                <div class="huge">24</div>
-                                <div>$title</div>
-                            </div>
-                        </a>
-                    </div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <a class="c-white" href="$detailHref">
+                <div class="col-xs-3">
+                    <i class="fa $icon fa-4x"></i>
                 </div>
-            </div>
+                <div class="col-xs-9 text-right">
+                    <h2>
+                        #if( $results )
+                        $results.aggregations.get($agg).value
+                        #else
+                        No current results
+                        #end
+                    </h2>
+                </div>
+            </a>
         </div>
     </div>
+    <div class="panel-footer text-center">
+        <span class="">$label</span>        
+    </div>
 </div>
-

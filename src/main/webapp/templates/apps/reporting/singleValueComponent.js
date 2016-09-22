@@ -3,8 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['singleValue'] = {
-        
-        
         initSingleValue: function () {
             flog('initSingleValue');
 
@@ -16,12 +14,9 @@
                     queryData.addClass('initialized-pieChart');
                 }
             });
-        },        
-        
+        },
         settingEnabled: true,
-
         settingTitle: 'Single Value Settings',
-
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "singleValue" component');
 
@@ -39,58 +34,53 @@
 
                         component.attr('data-query', selectedQuery);
                         keditor.initDynamicContent(dynamicElement);
-                        
-                        if (selectedQuery) {
-                            component.attr('data-query', selectedQuery);
-                            var aggsSelect = form.find(".select-agg");
-                            self.initSelect(aggsSelect, selectedQuery, null);
 
-                            keditor.initDynamicContent(dynamicElement).done(function () {
-                                self.initPieChart();
-                            });
-                        } else {
-                            dynamicElement.html('<p>Please select Query</p>');
-                        }                        
                     });
 
                     form.find('.select-agg').on('change', function () {
                         var selectedAgg = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-agg', selectedAgg);
 
-                        if (selectedAgg) {
-                            component.attr('data-agg', selectedAgg);
-                            keditor.initDynamicContent(dynamicElement).done(function () {
-                                self.initPieChart();
-                            });
-                        } else {
-                            dynamicElement.html('<p>Please select a data histogram aggregation</p>');
-                        }
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.query-height').on('change', function () {
-                        var number = this.value;
+                    form.find('.value-label').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-label', this.value);
 
-                        if (isNaN(number) || number < 200) {
-                            number = 200;
-                            this.value = number;
-                        }
+                        keditor.initDynamicContent(dynamicElement);
+                    });
 
-                        component.attr('data-height', number);
+                    form.find('.value-icon').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-icon', this.value);
+
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.value-link').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-link', this.value);
+
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
             });
         },
-
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "queryTable" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-query').val(dataAttributes['data-query']);
-            form.find('.query-height').val(dataAttributes['data-height']);
+            form.find('.select-agg').val(dataAttributes['data-agg']);
+            form.find('.value-label').val(dataAttributes['data-label']);
+            form.find('.value-icon').val(dataAttributes['data-icon']);
+            form.find('.value-link').val(dataAttributes['data-link']);
         }
     };
 

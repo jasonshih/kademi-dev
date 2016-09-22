@@ -3,32 +3,42 @@
         <label class="col-sm-12">Query</label>
         <div class="col-sm-12">
             <select class="form-control select-query">
-                <option value="">- None -</option>
+                <option value="">- None/Default -</option>
                 #foreach ($query in $applications.Reporting.queries )
-                    <option value="$query.sourceFileName">$query.sourceFileName</option>
+                <option value="$query.sourceFileName">$query.sourceFileName</option>
                 #end
             </select>
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-12">Height</label>
+        <label class="col-sm-12">Aggregation</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control query-height"/>
-            <em class="help-block small text-muted">Minimum is 200</em>
+            <input type="text" class="form-control select-agg" value=""/>
+
         </div>
     </div>
 
     <div class="form-group">
-        <label class="col-sm-12">Item per page</label>
+        <label class="col-sm-12">Label</label>
         <div class="col-sm-12">
-            <select class="form-control select-items-per-page">
-                <option value="10">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100" selected="selected">100</option>
-            </select>
+            <input type="text" class="form-control value-label" value=""/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Icon</label>
+        <div class="col-sm-12">
+            <!-- TODO: use this - https://itsjaviaguilar.com/fontawesome-iconpicker/ -->
+            <input class="form-control icp icp-auto value-icon" value="" type="text" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Details page</label>
+        <div class="col-sm-12">
+            <!-- TODO: allow the user to select a page, either a query or a html file -->
+            <input class="form-control value-link" value="" type="text" />
         </div>
     </div>
 </form>
