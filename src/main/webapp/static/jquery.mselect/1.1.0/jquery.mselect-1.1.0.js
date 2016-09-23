@@ -137,6 +137,9 @@
     function initSelectContainer(container, config, onOk) {
         flog('[jquery.mselect] initSelectContainer', container, config);
 
+        config.basePath = config.basePath.replace(/\/\//g, '/');
+        config.pagePath = config.pagePath.replace(/\/\//g, '/');
+
         var tree = container.find('div.milton-tree-wrapper');
         var previewContainer = container.find('.milton-preview');
         var mtreeOptions = {

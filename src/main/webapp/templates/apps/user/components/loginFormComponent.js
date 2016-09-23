@@ -15,7 +15,7 @@
                 success: function (resp) {
                     form.html(resp);
 
-                    var basePath = window.location.pathname.replace('contenteditor', '').replace('//', '/');
+                    var basePath = window.location.pathname.replace('contenteditor', '');
                     if (keditor.options.basePath) {
                         basePath = keditor.options.basePath;
                     }
