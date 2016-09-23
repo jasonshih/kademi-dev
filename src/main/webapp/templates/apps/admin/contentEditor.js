@@ -113,413 +113,255 @@ function initKEditor(body, fileName) {
         },
         containerSettingEnabled: true,
         containerSettingInitFunction: function (form, keditor) {
-            form.append(
-                '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
-                '       <div class="col-sm-12">' +
-                '           <label>Available for groups</label>' +
-                '           <select class="form-control select-groups selectpicker" multiple="multiple" title=" - Select Groups - ">' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Layout</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-layout">' +
-                '               <option value="">Auto</option>' +
-                '               <option value="container-fluid">Wide</option>' +
-                '               <option value="container">Box</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Dock type</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-dock-type">' +
-                '               <option value=""> - None - </option>' +
-                '               <option value="top">Top</option>' +
-                '               <option value="middle">Middle</option>' +
-                '               <option value="bottom">Bottom</option>' +
-                '           </select>' +
-                '           <em class="help-block text-muted small">When dock type is <code>Middle</code>, please remove <code>Height</code> setting of container.</em>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" value="" class="txt-height form-control" />' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '      <div class="col-md-12">' +
-                '          <label>Padding (in px)</label>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingTop" />' +
-                '                  <small>top</small>' +
-                '              </div>' +
-                '          </div>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4">' +
-                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingLeft" />' +
-                '                  <small>left</small>' +
-                '              </div>' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingRight" />' +
-                '                  <small>right</small>' +
-                '              </div>' +
-                '          </div>' +
-                '          <div class="row row-sm text-center">' +
-                '              <div class="col-xs-4 col-xs-offset-4">' +
-                '                  <input type="number" value="" class="txt-padding form-control" data-style-name="paddingBottom" />' +
-                '                  <small>bottom</small>' +
-                '              </div>' +
-                '          </div>' +
-                '      </div>' +
-                '   </div>' +
-                '   <hr />' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Background for</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-bg-for">' +
-                '               <option value="container-bg" selected="selected">Container</option>' +
-                '               <option value="container-content-wrapper">Container Content</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <div class="col-sm-12">' +
-                '           <label>Background Image</label>' +
-                '           <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="background-image-previewer" /></p>' +
-                '           <button type="button" class="btn btn-block btn-primary" id="background-image-edit">Change Background Image</button>' +
-                '           <button type="button" class="btn btn-block btn-xs btn-danger" id="background-image-delete">Remove Background Image</button>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Background repeat</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-bg-repeat">' +
-                '               <option value="repeat">Repeat</option>' +
-                '               <option value="no-repeat" selected="selected">No Repeat</option>' +
-                '               <option value="repeat-x">Repeat horizontal</option>' +
-                '               <option value="repeat-y">Repeat vertical</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Background position</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-bg-position">' +
-                '               <option value="0% 0%">Top Left</option>' +
-                '               <option value="50% 0%">Top Ceter</option>' +
-                '               <option value="100% 0%">Top Right</option>' +
-                '               <option value="0% 50%">Middle Left</option>' +
-                '               <option value="50% 50%">Middle Center</option>' +
-                '               <option value="100% 50%">Middle Right</option>' +
-                '               <option value="0% 100%">Bottom Left</option>' +
-                '               <option value="50% 100%">Bottom Center</option>' +
-                '               <option value="100% 100%">Bottom Right</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Background size</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control select-bg-size">' +
-                '               <option value="auto">Auto</option>' +
-                '               <option value="contain">Contain</option>' +
-                '               <option value="cover">Cover</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '      <div class="col-md-12">' +
-                '          <label>Background Color</label>' +
-                '          <div class="input-group color-picker">' +
-                '              <span class="input-group-addon"><i></i></span>' +
-                '              <input type="text" value="" class="txt-bg-color form-control" />' +
-                '          </div>' +
-                '      </div>' +
-                '   </div>' +
-                '   <hr />' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Parallax</label>' +
-                '       <div class="col-sm-12">' +
-                '           <div class="checkbox">' +
-                '               <label>' +
-                '                   <input type="checkbox" class="parallax-enabled" /> <button type="button" class="btn btn-xs btn-success btn-add-data" style="display: none;">Add data transition</button>' +
-                '               </label>' +
-                '           </div>' +
-                '           <div class="parallax-options-wrapper" style="display: none;">' +
-                '               <div class="parallax-options">' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '   <hr />' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Extra class</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="text" value="" class="txt-extra-class form-control" />' +
-                '           <em class="help-block text-muted small">These classes will be added to <code>.container-bg</code></em>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Is inverse</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="checkbox" value="" class="chk-inverse" />' +
-                '       </div>' +
-                '   </div>' +
-                '   <hr />' +
-                '   <div class="form-group">' +
-                '       <label class="col-sm-12">Columns settings</label>' +
-                '       <div class="col-sm-12 columns-setting">' +
-                '       </div>' +
-                '   </div>' +
-                '</form>'
-            );
+            $.ajax({
+                url: '/theme/apps/admin/contentEditorContainerSetting.html',
+                type: 'get',
+                success: function (resp) {
+                    form.html(resp);
 
-            var groupsOptions = '';
-            for (var name in allGroups) {
-                groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
-            }
-
-            form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-
-                containerBg.attr('data-groups', $(this).selectpicker('val').join(','));
-            });
-
-            var basePath = window.location.pathname.replace('contenteditor', '');
-            if (keditor.options.basePath) {
-                basePath = keditor.options.basePath;
-            }
-            form.find('#background-image-edit').mselect({
-                contentTypes: ['image'],
-                bs3Modal: true,
-                pagePath: basePath,
-                basePath: basePath,
-                onSelectFile: function (url, relativeUrl, fileType, hash) {
-                    var container = keditor.getSettingContainer();
-                    var target = container.find('.' + form.find('.select-bg-for').val());
-                    var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
-                    target.css('background-image', 'url("' + imageUrl + '")');
-                    form.find('#background-image-previewer').attr('src', imageUrl);
-                }
-            });
-            form.find('#background-image-delete').on('click', function (e) {
-                e.preventDefault();
-
-                var container = keditor.getSettingContainer();
-                var target = container.find('.' + form.find('.select-bg-for').val());
-                target.css('background-image', '');
-                form.find('#background-image-previewer').attr('src', '/static/images/photo_holder.png');
-            });
-
-            form.find('.select-bg-for').on('change', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-                var containerContent = container.find('.container-content-wrapper');
-
-                if (this.value === 'container-bg') {
-                    var style = containerContent.prop('style');
-                    containerBg.css('background', style.backgroundColor);
-                    containerBg.css('background', style.backgroundImage);
-                    containerBg.css('background', style.backgroundRepeat);
-                    containerBg.css('background', style.backgroundPosition);
-                    containerBg.css('background', style.backgroundSize);
-                    containerContent.css('background', '');
-                    containerBg.addClass('background-for');
-                } else {
-                    var style = containerBg.prop('style');
-                    containerContent.css('background', style.backgroundColor);
-                    containerContent.css('background', style.backgroundImage);
-                    containerContent.css('background', style.backgroundRepeat);
-                    containerContent.css('background', style.backgroundPosition);
-                    containerContent.css('background', style.backgroundSize);
-                    containerBg.css('background', '');
-                    containerBg.removeClass('background-for');
-                }
-            });
-
-            var colorPicker = form.find('.color-picker');
-            var input = colorPicker.find('input');
-            var previewer = colorPicker.find('.input-group-addon i');
-            colorPicker.colorpicker({
-                format: 'hex',
-                container: colorPicker.parent(),
-                component: '.input-group-addon',
-                align: 'left',
-                colorSelectors: {
-                    'transparent': 'transparent'
-                }
-            }).on('changeColor.colorpicker', function (e) {
-                var colorHex = e.color.toHex();
-
-                if (!input.val() || input.val().trim().length === 0) {
-                    colorHex = '';
-                    previewer.css('background-color', '');
-                }
-
-                var container = keditor.getSettingContainer();
-                var target = container.find('.' + form.find('.select-bg-for').val());
-
-                if (colorHex && colorHex !== 'transparent') {
-                    target.css('background-color', colorHex);
-                } else {
-                    target.css('background-color', '');
-                }
-            });
-
-            form.find('.select-bg-repeat').on('change', function () {
-                var container = keditor.getSettingContainer();
-                var target = container.find('.' + form.find('.select-bg-for').val());
-
-                target.css('background-repeat', this.value);
-            });
-
-            form.find('.select-bg-size').on('change', function () {
-                var container = keditor.getSettingContainer();
-                var target = container.find('.' + form.find('.select-bg-for').val());
-
-                target.css('background-size', this.value);
-            });
-
-            form.find('.select-bg-position').on('change', function () {
-                var container = keditor.getSettingContainer();
-                var target = container.find('.' + form.find('.select-bg-for').val());
-
-                target.css('background-position', this.value);
-            });
-
-            form.find('.txt-extra-class').on('change', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-
-                containerBg.attr('class', 'container-bg ' + this.value.trim());
-            });
-
-            form.find('.chk-inverse').on('click', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-
-                containerBg[this.checked ? 'addClass': 'removeClass']('container-inverse');
-            });
-
-            form.find('.txt-height').on('change', function () {
-                var height = this.value || '';
-                if (isNaN(height)) {
-                    height = '';
-                }
-
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-
-                containerBg.css('height', height);
-            });
-
-            form.find('.txt-padding').each(function () {
-                var txt = $(this);
-                var styleName = txt.attr('data-style-name');
-
-                txt.on('change', function () {
-                    var paddingValue = this.value || '';
-                    var container = keditor.getSettingContainer();
-                    var containerContent = container.find('.container-content-wrapper').get(0);
-
-                    if (paddingValue.trim() === '') {
-                        containerContent.style[styleName] = '';
-                    } else {
-                        if (isNaN(paddingValue)) {
-                            paddingValue = 0;
-                            this.value = paddingValue;
-                        }
-                        containerContent.style[styleName] = paddingValue + 'px';
+                    var groupsOptions = '';
+                    for (var name in allGroups) {
+                        groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
                     }
-                });
-            });
 
-            form.find('.select-layout').on('change', function (e) {
-                var container = keditor.getSettingContainer();
-                var containerLayout = container.find('.container-layout');
-                var containerContent = container.find('.container-content-wrapper');
+                    form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
 
-                containerLayout.removeClass('container container-fluid');
-                containerContent.removeClass('container container-fluid');
-                containerLayout.addClass(this.value);
-            });
+                        containerBg.attr('data-groups', $(this).selectpicker('val').join(','));
+                    });
 
-            form.find('.parallax-enabled').on('click', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-                var parallaxOptionsWrapper = form.find('.parallax-options-wrapper');
-                var parallaxBtn = form.find('.btn-add-data');
-
-                if (this.checked) {
-                    parallaxOptionsWrapper.css('display', 'block');
-                    parallaxBtn.css('display', 'block');
-                    containerBg.addClass('parallax-skrollr');
-                } else {
-                    parallaxOptionsWrapper.css('display', 'none');
-                    form.find('.parallax-options').html('');
-                    parallaxBtn.css('display', 'none');
-                    containerBg.removeClass('parallax-skrollr');
-                    $.each(containerBg.get(0).attributes, function (index, attr) {
-                        if (attr.name.indexOf('data-') === 0) {
-                            containerBg.removeAttr(attr.name);
+                    var basePath = window.location.pathname.replace('contenteditor', '');
+                    if (keditor.options.basePath) {
+                        basePath = keditor.options.basePath;
+                    }
+                    form.find('#background-image-edit').mselect({
+                        contentTypes: ['image'],
+                        bs3Modal: true,
+                        pagePath: basePath,
+                        basePath: basePath,
+                        onSelectFile: function (url, relativeUrl, fileType, hash) {
+                            var container = keditor.getSettingContainer();
+                            var target = container.find('.' + form.find('.select-bg-for').val());
+                            var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                            target.css('background-image', 'url("' + imageUrl + '")');
+                            form.find('#background-image-previewer').attr('src', imageUrl);
                         }
                     });
-                }
-            });
+                    form.find('#background-image-delete').on('click', function (e) {
+                        e.preventDefault();
 
-            form.find('.btn-add-data').on('click', function (e) {
-                e.preventDefault();
+                        var container = keditor.getSettingContainer();
+                        var target = container.find('.' + form.find('.select-bg-for').val());
+                        target.css('background-image', '');
+                        form.find('#background-image-previewer').attr('src', '/static/images/photo_holder.png');
+                    });
 
-                keditor.options.addDataTransition(form);
-            });
+                    form.find('.select-bg-for').on('change', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+                        var containerContent = container.find('.container-content-wrapper');
 
-            form.find('.parallax-options-wrapper').on('change', '.txt-data-name, .txt-data-value', function () {
-                var container = keditor.getSettingContainer();
-                var containerBg = container.find('.container-bg');
-                var inputGroup = $(this).closest('.checkbox');
-                var name = inputGroup.find('.txt-data-name').val() || '';
-                name = name.trim();
-                var value = inputGroup.find('.txt-data-value').val() || '';
-                value = value.trim();
+                        if (this.value === 'container-bg') {
+                            var style = containerContent.prop('style');
+                            containerBg.get(0).style.backgroundColor = style.backgroundColor;
+                            containerBg.get(0).style.backgroundImage = style.backgroundImage;
+                            containerBg.get(0).style.backgroundRepeat = style.backgroundRepeat;
+                            containerBg.get(0).style.backgroundPosition = style.backgroundPosition;
+                            containerBg.get(0).style.backgroundSize = style.backgroundSize;
+                            containerContent.css('background', '');
+                            containerBg.addClass('background-for');
+                        } else {
+                            var style = containerBg.prop('style');
+                            containerContent.get(0).style.backgroundColor = style.backgroundColor;
+                            containerContent.get(0).style.backgroundImage = style.backgroundImage;
+                            containerContent.get(0).style.backgroundRepeat = style.backgroundRepeat;
+                            containerContent.get(0).style.backgroundPosition = style.backgroundPosition;
+                            containerContent.get(0).style.backgroundSize = style.backgroundSize;
+                            containerBg.css('background', '');
+                            containerBg.removeClass('background-for');
+                        }
+                    });
 
-                if (name !== '' && value !== '') {
-                    containerBg.attr('data-' + name, value);
-                } else {
-                    containerBg.removeAttr('data-' + name);
-                }
-            });
+                    var colorPicker = form.find('.color-picker');
+                    var input = colorPicker.find('input');
+                    var previewer = colorPicker.find('.input-group-addon i');
+                    colorPicker.colorpicker({
+                        format: 'hex',
+                        container: colorPicker.parent(),
+                        component: '.input-group-addon',
+                        align: 'left',
+                        colorSelectors: {
+                            'transparent': 'transparent'
+                        }
+                    }).on('changeColor.colorpicker', function (e) {
+                        var colorHex = e.color.toHex();
 
-            form.on('change', '.txt-extra-class-column', function () {
-                var txt = $(this);
-                var index = txt.attr('data-index');
-                var container = keditor.getSettingContainer();
-                var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
-                var originClasses = keditor.options.getContainerContentClasses(targetContainerContent)[0];
+                        if (!input.val() || input.val().trim().length === 0) {
+                            colorHex = '';
+                            previewer.css('background-color', '');
+                        }
 
-                targetContainerContent.attr('class', originClasses + ' ' + this.value);
-            });
+                        var container = keditor.getSettingContainer();
+                        var target = container.find('.' + form.find('.select-bg-for').val());
 
-            form.on('click', '.chk-inverse-column', function () {
-                var chk = $(this);
-                var index = chk.attr('data-index');
-                var container = keditor.getSettingContainer();
-                var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
+                        if (colorHex && colorHex !== 'transparent') {
+                            target.css('background-color', colorHex);
+                        } else {
+                            target.css('background-color', '');
+                        }
+                    });
 
-                targetContainerContent[this.checked ? 'addClass': 'removeClass']('col-inverse');
-            });
+                    form.find('.select-bg-repeat').on('change', function () {
+                        var container = keditor.getSettingContainer();
+                        var target = container.find('.' + form.find('.select-bg-for').val());
 
-            form.find('.select-dock-type').on('change', function () {
-                var containerBg = keditor.getSettingContainer().find('.container-bg');
+                        target.css('background-repeat', this.value);
+                    });
 
-                containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
-                if (this.value !== '') {
-                    containerBg.addClass('navbar-fixed-' + this.value);
+                    form.find('.select-bg-size').on('change', function () {
+                        var container = keditor.getSettingContainer();
+                        var target = container.find('.' + form.find('.select-bg-for').val());
+
+                        target.css('background-size', this.value);
+                    });
+
+                    form.find('.select-bg-position').on('change', function () {
+                        var container = keditor.getSettingContainer();
+                        var target = container.find('.' + form.find('.select-bg-for').val());
+
+                        target.css('background-position', this.value);
+                    });
+
+                    form.find('.txt-extra-class').on('change', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+
+                        containerBg.attr('class', 'container-bg ' + (containerBg.hasClass('background-for') ? 'background-for': '') + this.value.trim());
+                    });
+
+                    form.find('.chk-inverse').on('click', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+
+                        containerBg[this.checked ? 'addClass': 'removeClass']('container-inverse');
+                    });
+
+                    form.find('.txt-height').on('change', function () {
+                        var height = this.value || '';
+                        if (isNaN(height)) {
+                            height = '';
+                        }
+
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+
+                        containerBg.css('height', height);
+                    });
+
+                    form.find('.txt-padding').each(function () {
+                        var txt = $(this);
+                        var styleName = txt.attr('data-style-name');
+
+                        txt.on('change', function () {
+                            var paddingValue = this.value || '';
+                            var container = keditor.getSettingContainer();
+                            var containerContent = container.find('.container-content-wrapper').get(0);
+
+                            if (paddingValue.trim() === '') {
+                                containerContent.style[styleName] = '';
+                            } else {
+                                if (isNaN(paddingValue)) {
+                                    paddingValue = 0;
+                                    this.value = paddingValue;
+                                }
+                                containerContent.style[styleName] = paddingValue + 'px';
+                            }
+                        });
+                    });
+
+                    form.find('.select-layout').on('change', function (e) {
+                        var container = keditor.getSettingContainer();
+                        var containerLayout = container.find('.container-layout');
+                        var containerContent = container.find('.container-content-wrapper');
+
+                        containerLayout.removeClass('container container-fluid');
+                        containerContent.removeClass('container container-fluid');
+                        containerLayout.addClass(this.value);
+                    });
+
+                    form.find('.parallax-enabled').on('click', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+                        var parallaxOptionsWrapper = form.find('.parallax-options-wrapper');
+                        var parallaxBtn = form.find('.btn-add-data');
+
+                        if (this.checked) {
+                            parallaxOptionsWrapper.css('display', 'block');
+                            parallaxBtn.css('display', 'block');
+                            containerBg.addClass('parallax-skrollr');
+                        } else {
+                            parallaxOptionsWrapper.css('display', 'none');
+                            form.find('.parallax-options').html('');
+                            parallaxBtn.css('display', 'none');
+                            containerBg.removeClass('parallax-skrollr');
+                            $.each(containerBg.get(0).attributes, function (index, attr) {
+                                if (attr.name.indexOf('data-') === 0) {
+                                    containerBg.removeAttr(attr.name);
+                                }
+                            });
+                        }
+                    });
+
+                    form.find('.btn-add-data').on('click', function (e) {
+                        e.preventDefault();
+
+                        keditor.options.addDataTransition(form);
+                    });
+
+                    form.find('.parallax-options-wrapper').on('change', '.txt-data-name, .txt-data-value', function () {
+                        var container = keditor.getSettingContainer();
+                        var containerBg = container.find('.container-bg');
+                        var inputGroup = $(this).closest('.checkbox');
+                        var name = inputGroup.find('.txt-data-name').val() || '';
+                        name = name.trim();
+                        var value = inputGroup.find('.txt-data-value').val() || '';
+                        value = value.trim();
+
+                        if (name !== '' && value !== '') {
+                            containerBg.attr('data-' + name, value);
+                        } else {
+                            containerBg.removeAttr('data-' + name);
+                        }
+                    });
+
+                    form.on('change', '.txt-extra-class-column', function () {
+                        var txt = $(this);
+                        var index = txt.attr('data-index');
+                        var container = keditor.getSettingContainer();
+                        var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
+                        var originClasses = keditor.options.getContainerContentClasses(targetContainerContent)[0];
+
+                        targetContainerContent.attr('class', originClasses + ' ' + this.value);
+                    });
+
+                    form.on('click', '.chk-inverse-column', function () {
+                        var chk = $(this);
+                        var index = chk.attr('data-index');
+                        var container = keditor.getSettingContainer();
+                        var targetContainerContent = container.find('[data-type=container-content]').eq(+index);
+
+                        targetContainerContent[this.checked ? 'addClass': 'removeClass']('col-inverse');
+                    });
+
+                    form.find('.select-dock-type').on('change', function () {
+                        var containerBg = keditor.getSettingContainer().find('.container-bg');
+
+                        containerBg.removeClass('navbar-fixed-top navbar-fixed-bottom navbar-fixed-middle');
+                        if (this.value !== '') {
+                            containerBg.addClass('navbar-fixed-' + this.value);
+                        }
+                    });
                 }
             });
         },
@@ -615,7 +457,7 @@ function initKEditor(body, fileName) {
             form.find('.txt-height').val(containerBg.get(0).style.height || '');
 
             form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
-            form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').trim());
+            form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
             form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
 
             var dockType = '';
