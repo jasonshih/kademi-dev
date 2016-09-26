@@ -4,28 +4,14 @@
 #else
 #set( $cartDisplay = "none" )
 #end
-<span id="cart-link">
-    <a href="/storeCheckout/" class="pull-right btn-sm btn btn-primary">
-        <span class="glyphicon glyphicon-shopping-cart"></span>
-        $cart.numItems Items
-    </a>
-</span>
-<style>
-    #cart-link a{
-        margin-left: 15px;
-        margin-right: 15px;
-        padding: 10px 15px;
-        display: $cartDisplay;
-    }
-    @media (max-width: 767px) {
-        #cart-link{
-            display: block;
-            min-height: 1px;
-        }
-        #cart-link a{
-            float: none !important;
-            margin-left: 0 !important;
-            margin-top: 15px;
-        }
-    }
-</style>
+
+
+<li id="cart-link">
+    <span style="display: $cartDisplay">
+        <a href="/storeCheckout/" class="btn-sm btn-block btn btn-primary">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            <span class="visible-xs-inline">Shopping cart </span>
+            $cart.numItems Items
+        </a>
+    </span>
+</li>
