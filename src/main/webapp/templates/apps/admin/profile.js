@@ -17,15 +17,11 @@ function initProfile() {
         e.preventDefault();
         e.stopPropagation();
         if (confirm("Are you sure you want to delete this group membership?")) {
-            var isLastMembership = $('#user-membership .membership').length === 1;
-
-            if (!isLastMembership || confirm('WARNING!!! \nThis is the last membership, deleting it will remove the profile from your account. Do you want to continue?')) {
-                var a = $(this);
-                var href = a.attr("href");
-                deleteFile(href, function () {
-                    a.closest("span.membership").remove();
-                });
-            }
+            var a = $(this);
+            var href = a.attr("href");
+            deleteFile(href, function () {
+                a.closest("span.membership").remove();
+            });
         }
     });
 
@@ -113,14 +109,14 @@ function initEnableDisable() {
     $("body").on("click", ".profileDisable", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if( confirm("Are you sure you want to disable this profile? This will remove the profile from user lists, but it can be re-enabled later") ) {
+        if (confirm("Are you sure you want to disable this profile? This will remove the profile from user lists, but it can be re-enabled later")) {
             setProfileEnabled(window.location.href, false);
         }
     });
     $("body").on("click", ".profileEnable", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if( confirm("Are you sure you want to enable this profile? This will include the profile in user lists") ) {
+        if (confirm("Are you sure you want to enable this profile? This will include the profile in user lists")) {
             setProfileEnabled(window.location.href, true);
         }
     });
