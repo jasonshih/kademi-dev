@@ -13,12 +13,9 @@
         </style>
     </head>
     <body>
-        <div class="alert alert-info">
-            This page shows you recent shopping carts from your customers.
-        </div>
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-shopping-cart"></i> Shopping Carts
+                <i class="fa fa-shopping-cart"></i> Shopping Carts - showing $page.searchResults.size()
             </div>
             <div class="panel-body">
                 <div class="row">
@@ -33,7 +30,7 @@
                         </div>
                     </div>
                     <div class="col-md-6 text-right">
-                        <a href="carts.csv" id="cartUploadCsv" class="btn btn-sm btn-info"><i class="fa fa-upload"></i> Upload CSV</a>
+                        <a href="#" data-toggle="modal" data-target="#modalUploadCsv" class="btn btn-sm btn-info"><i class="fa fa-upload"></i> Upload CSV</a>
                         <a href="carts.csv" download="carts.csv" id="cartCSV" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download CSV</a>
                         <div class="btn-group">
                             <a role="button" href="#" class="btn btn-success btn-sm markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
@@ -87,26 +84,84 @@
             </div>
         </div>
 
+        <div id="modalUploadCsv" class="modal fade modal-lg">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Upload Orders CSV</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row upload">
+                    <div class="col-sm-12">
+                        <p>
+                            Please upload a CSV file with the following columns
+                        </p>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>Cart Id</td>
+                                <td>Date</td>
+                                <td>Profile</td>
+                                <td>Fulfilment State</td>
+                                <td>Product</td>
+                                <td>Quantity</td>
+                                <td>Unit cost</td>
+                                <td>Currency Id</td>
+                                <td>Ordered For Org</td>
+                            </tr>
+                        </table>
+                        <div class="input uploadCsv" id="doUploadCsv"></div>
+                        <div class="results" style="display: none">
+                            <p>
+                                <strong>Num inserted:</strong>
+                                <span class="numInserted">-</span>
+                                <strong>Num updated:</strong>
+                                <span class="numUpdated">-</span>
+                                <strong>Unmatched rows:</strong>
+                                <span class="numUnmatched">-</span>
+                            </p>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
                 initManageShoppingCarts();
             });
         </script>
         #macro(genStatus $v)
-            #set($statusMsg = $v.cart.fulfilmentState)
-            #set($statusClass = false)
-            #if($statusMsg == "N")
-                #set($statusMsg = "Not fulfilled")
-                #set($statusClass = "fa fa-exclamation text-info")
-            #elseif($statusMsg == "C")
-                #set($statusMsg = "Fulfilled")
-                #set($statusClass = "fa fa-check-circle text-success")
+        #set($statusMsg = $v.cart.fulfilmentState)
+        #set($statusClass = false)
+        #if($statusMsg == "N")
+        #set($statusMsg = "Not fulfilled")
+        #set($statusClass = "fa fa-exclamation text-info")
+        #elseif($statusMsg == "C")
+        #set($statusMsg = "Fulfilled")
+        #set($statusClass = "fa fa-check-circle text-success")
+        #end
+        <td class="icon clickable" data-href="$v.href" title="$statusMsg">
+            #if($statusClass)
+            <i class="$statusClass"></i>
             #end
-            <td class="icon clickable" data-href="$v.href" title="$statusMsg">
-                #if($statusClass)
-                <i class="$statusClass"></i>
-                #end
-            </td>
+        </td>
         #end
     </body>
 </html>

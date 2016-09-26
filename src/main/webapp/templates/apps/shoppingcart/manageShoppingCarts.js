@@ -8,6 +8,43 @@ function initManageShoppingCarts() {
     initHistorySearch();
     initButtons();
     $("abbr.timeago").timeago();
+    initUploadOrdersCsv();
+}
+
+function initUploadOrdersCsv() {
+    $("#doUploadCsv").mupload({
+        buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
+        url: "carts.csv",
+        useJsonPut: false,
+        oncomplete: function (data, name, href) {
+            log("oncomplete:", data.result.data, name, href);
+            if (data.result.status) {
+                $(".results .numUpdated").text(data.result.data.numUpdated);
+                $(".results .numInserted").text(data.result.data.numInserted);
+                $(".results .numUnmatched").text(data.result.data.unmatched.length);
+                showUnmatched(data.result.data.unmatched);
+                $(".results").show();
+                Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+            } else {
+                Msg.error("Uploading failed: " + data.result.messages);
+            }
+        }
+    });
+}
+
+function showUnmatched(unmatched) {
+    var unmatchedTable = $(".results table");
+    var tbody = unmatchedTable.find("tbody");
+    tbody.html("");
+    $.each(unmatched, function (i, row) {
+        log("unmatched", row);
+        var tr = $("<tr>");
+        $.each(row, function (ii, field) {
+            tr.append("<td>" + field + "</td>");
+        });
+        tbody.append(tr);
+    });
+    unmatchedTable.show();
 }
 
 function initButtons() {
