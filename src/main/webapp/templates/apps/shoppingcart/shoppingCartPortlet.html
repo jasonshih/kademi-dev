@@ -4,9 +4,13 @@
 #else
     #set( $cartDisplay = "none" )
 #end
-<span id="cart-link">
-<a style="margin-left: 15px; margin-right: 15px; padding: 10px 15px; display: $cartDisplay" href="/checkout/" class="pull-right btn-sm btn btn-primary">
-    <span class="glyphicon glyphicon-shopping-cart"></span>
-    $cart.numItems
-</a>
-</span>
+
+<li id="cart-link">
+    <span style="display: $cartDisplay">
+        <a href="/checkout/" class="btn-sm btn-block btn btn-primary">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            <span class="visible-xs-inline">Shopping cart </span>
+            $cart.numItems
+        </a>
+    </span>
+</li>

@@ -26,7 +26,6 @@
 
 
         <div class="navbar-collapse collapse navbar-main-collapse">
-            #portlets("shoppingCart")
             <ul class="nav navbar-nav navbar-right">
                 #foreach($item in $menu.visible)
                     #showMenuItem( $item )                
@@ -35,6 +34,8 @@
                 <li>
                     #portlets("searchInput")
                 </li>
+
+                #portlets("shoppingCart")
 
                 #if ($showUserMenu == true)
                     #if($user)
