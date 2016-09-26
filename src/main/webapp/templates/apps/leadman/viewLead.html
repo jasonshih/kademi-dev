@@ -874,7 +874,7 @@
         <span class="membership alert alert-info">
             <i class="fa fa-tag"></i>
             <span class="block-name" title="$g.name">
-                $g.name
+                $formatter.firstNotNull($g.title, $g.name)
             </span>
             &nbsp;<a href="$m.name" class="close btn-delete-tag" title="Delete tag">&times;</a>
         </span>
