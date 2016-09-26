@@ -1,16 +1,13 @@
 #if ($page)
-<div class="productPrice">
-    <div id="addToCartSection">
-        <span class="label label-success priceLabel">
+    <p class="product-price" id="product-price">
+        <span class="label label-success">
             #set( $opts = $page.selectedParameterOptions )
             #set( $price = $page.getPurchaseAmount($opts) )
             #if( $price )
             $price.amount Points
             #end
         </span>
-    </div>
-</div>
-
+    </p>
 #else
-<div class="alert alert-warning">Product price goes here</div>
+    <div class="alert alert-warning">Product price goes here</div>
 #end

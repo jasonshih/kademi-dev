@@ -1,25 +1,27 @@
 <div class="addToCartContainer">
-    #foreach( $param in $page.parameters)
-    #if( $param.options.size() > 0 )
-    <div class='form-group'>
-        <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
-        <div class="col-sm-8">
-            <select name="param-$param.name" class='form-control productParameterSelect'>
-                <option value="">[ $param.title ]</option>
-                #foreach( $opt in $param.options)
-                <option value="$opt.name">$opt.title</option>
-                #end
-            </select>
+    <div class="form-horizontal">
+        #foreach( $param in $page.parameters)
+            #if( $param.options.size() > 0 )
+                <div class="form-group">
+                    <label for="param-$param.name" class="col-sm-3 control-label variant-name">$param.title</label>
+                    <div class="col-sm-5">
+                        <select name="param-$param.name" class="form-control productParameterSelect">
+                            <option value="">[ $param.title ]</option>
+                            #foreach( $opt in $param.options)
+                                $formatter.option( $opt.name, $opt.title, $page.selectedParameterOptions.get($param.name) )
+                            #end
+                        </select>
+                    </div>
+                </div>
+            #end
+        #end
+        <div class="form-group" style="margin-top: 20px">
+            <div class="col-sm-12">
+                <a href="$page.href" class="btn-lg btn btn-primary btn-add-to-cart">
+                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                    Add to cart
+                </a>
+            </div>
         </div>
     </div>
-    #end
-    #end
-    <br style='clear: both'/>
-    <div class='form-group' style="margin-top: 20px">
-        <a href="$page.href" class="pull-right btn-lg btn btn-primary cart-add">
-            <span class="glyphicon glyphicon-shopping-cart"></span>
-            Add to cart
-        </a>
-    </div>
-    <br style='clear: both'/>
 </div>
