@@ -4,6 +4,7 @@
 
 #content-area .navbar-fixed-top {
     top: 50px;
+    z-index: 5;
 }
 
 .keditor-component .keditor-toolbar {
