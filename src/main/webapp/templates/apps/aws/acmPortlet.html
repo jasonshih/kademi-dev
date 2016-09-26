@@ -25,8 +25,12 @@
     </div>
     #if($certificate.status == "PENDING_VALIDATION")
     <a href="#" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#resendValidationEmailModal"><i class="fa fa-plus"></i> Resend validation email</a>
+    <button class="btn btn-sm btn-danger btn-acm-delcert"><i class="fa fa-trash"></i> Delete Certificate</button>
     #elseif($certificate.status == "ISSUED" && $certificate.inUseBy.size() == 0)
-    <a href="#" class="btn btn-sm btn-primary btn-acm-usecert"><i class="fa fa-check"></i> Use Certificate</a>
+    <button class="btn btn-sm btn-primary btn-acm-usecert"><i class="fa fa-check"></i> Use Certificate</button>
+    <button class="btn btn-sm btn-danger btn-acm-delcert"><i class="fa fa-trash"></i> Delete Certificate</button>
+    #elseif($certificate.status == "ISSUED" && $certificate.inUseBy.size() > 0)
+    <button class="btn btn-sm btn-danger btn-acm-delcert"><i class="fa fa-trash"></i> Delete Certificate</button>
     #end
     #else
     <a href="#" class="btn btn-sm btn-primary btn-acm-newcert"><i class="fa fa-plus"></i> Request a certificate</a>
@@ -71,7 +75,7 @@
     </div><!-- /.modal -->
 </div>
 
-<script>
+<script type="text/javascript">
     $(function () {
         $('body').on('click', '.btn-acm-newcert', function (e) {
             e.preventDefault();
@@ -109,6 +113,32 @@
                     },
                     success: function (data) {
                         $('#aws-certificate-manager').reloadFragment();
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('Error!', jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        });
+
+        $('body').on('click', '.btn-acm-delcert', function (e) {
+            e.preventDefault();
+
+            if (confirm('Are you sure you want to delete this certificate?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/awsAcm/',
+                    dataType: 'json',
+                    data: {
+                        deleteCert: true,
+                        websiteId: $website.id
+                    },
+                    success: function (data) {
+                        if (data.status) {
+                            $('#aws-certificate-manager').reloadFragment();
+                        } else {
+                            Msg.error('Error deleting certificate');
+                        }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         flog('Error!', jqXHR, textStatus, errorThrown);
