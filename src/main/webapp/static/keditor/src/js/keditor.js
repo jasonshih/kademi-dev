@@ -685,19 +685,24 @@
                         settingForm.append(loadingText);
 
                         flog('Initializing setting form for component type "' + componentType + '"');
-                        componentData.initSettingForm.call(componentData, settingForm, self).done(function () {
-                            flog('Initialized setting form for component type "' + componentType + '"');
 
+                        var initFunction = componentData.initSettingForm.call(componentData, settingForm, self);
+                        if (initFunction) {
+                            initFunction.done(function () {
+                                flog('Initialized setting form for component type "' + componentType + '"');
+
+                                setTimeout(function () {
+                                    if (typeof componentData.showSettingForm === 'function') {
+                                        flog('Show setting form of component type "' + componentType + '"');
+                                        componentData.showSettingForm.call(componentData, settingForm, target, self);
+                                    } else {
+                                        flog('"showSettingForm" function of component type "' + componentType + '" does not exist');
+                                    }
+                                }, 100);
+                            });
+                        } else {
                             loadingText.remove();
-                            setTimeout(function () {
-                                if (typeof componentData.showSettingForm === 'function') {
-                                    flog('Show setting form of component type "' + componentType + '"');
-                                    componentData.showSettingForm.call(componentData, settingForm, target, self);
-                                } else {
-                                    flog('"showSettingForm" function of component type "' + componentType + '" does not exist');
-                                }
-                            }, 100);
-                        });
+                        }
                     } else {
                         flog('"initSettingForm" function of component type "' + componentType + '" does not exist');
                     }
