@@ -1,4 +1,4 @@
-#set($fromRange = 0)
+]#set($fromRange = 0)
 #if($params.fromRange)
 #set($fromRange = $formatter.toInteger($params.fromRange))
 #end
@@ -44,7 +44,7 @@
 </div>
 
 #if ($page)
-    <div id="inifiniteLoader">
+<div id="inifiniteLoader text-center">
         <span class="alert alert-success">
             <img src="/templates/ajax-loader.gif" />
         </span>
