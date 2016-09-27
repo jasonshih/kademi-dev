@@ -20,26 +20,16 @@
     };
 
     $.fn.pieChartAgg = function (options) {
-        var container = this;
+        var containers = this;
 
-        flog("pieChartAgg", container);
-        container.each(function (i, n) {
-            var cont = $(n);
-            flog("init pie chart events", cont);
+        flog("pieChartAgg", containers);
+        containers.each(function (i, n) {
+            var cont = $(n);            
             var config = $.extend({}, DEFAULT_PIECHART_OPTIONS, options);
 
-            var opts = {
-                startDate: config.startDate,
-                endDate: config.endDate
-            };
-
-            $(document).on('pageDateChange', function () {
-                flog("piechart date change");
-            });
-
             var queryHref = null;
-            var aggName = null;
-            var component = container.closest('[data-type^="component-"]');
+            var aggName = null;            
+            var component = cont.closest('[data-type^="component-"]');
             if (component.length > 0) {
                 queryHref = "/queries/" + component.attr("data-query");
                 aggName = component.attr("data-agg");
@@ -49,7 +39,7 @@
             }
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                flog("piechart date change", e, startDate, endDate);
+                flog("piechart date change", aggName, cont, startDate, endDate);
 
                 loadGraphData(queryHref, aggName, {
                     startDate: startDate,

@@ -10,15 +10,15 @@
     };
 
     $.fn.dateAgg = function (options) {
-        var container = this;
+        var containers = this;
 
-        container.each(function (i, n) {
+        containers.each(function (i, n) {
             var cont = $(n);
             var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
 
             var queryHref = null;
             var aggName = null;
-            var component = container.closest('[data-type^="component-"]');
+            var component = cont.closest('[data-type^="component-"]');
             if (component.length > 0) {
                 queryHref = "/queries/" + component.attr("data-query");
                 aggName = component.attr("data-agg");
