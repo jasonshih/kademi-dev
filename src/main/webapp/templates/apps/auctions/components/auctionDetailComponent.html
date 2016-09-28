@@ -1,9 +1,34 @@
-<div class="well">
-    <div class="details">
-        <h4>$page.title</h4>
-        <legend style="font-size: 0.8em">Created By <a href="$page.createdBy.href">$page.createdBy.name</a></legend>
-        <div class="clearfix">
-            $!page.body
+<div class="auction-detail">
+    <div class="page-header">
+        <h2>$page.title <br />
+            <small>Created By <a href="$page.createdBy.href">$page.createdBy.name</a></small>
+        </h2>
+    </div>
+
+    <div class="auction-images">
+        #if( $page.images.size() > 0 )
+        <div id="carousel-auction-image" class="carousel slide" data-interval="5000">
+            <div class="carousel-inner" role="listbox">
+                #set($numReg = 0)
+                #foreach ($img in $page.images)
+                <div class="item #if( $numReg == 0 ) active #end">
+                    <img class="img-responsive" src="/_hashes/files/$img.hash/alt-600-400.png" alt="" />
+                </div>
+                #set($numReg = $numReg + 1)
+                #end
+            </div>
+
+            #if( 1 < $numReg)
+            <a class="left carousel-control" href="#carousel-auction-image" role="button" data-slide="prev"><i class="fa fa-angle-left"></i></a>
+            <a class="right carousel-control" href="#carousel-auction-image" role="button" data-slide="next"><i class="fa fa-angle-right"></i></a>
+            #end
         </div>
+        #else
+        <img src="/theme/img/photo_holder.png" width="100%" height="" />
+        #end
+    </div>
+
+    <div class="clearfix auction-body">
+        $!page.body
     </div>
 </div>
