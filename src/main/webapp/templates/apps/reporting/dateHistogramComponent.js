@@ -28,9 +28,11 @@
 
                 if (!queryData.hasClass('initialized-dateAgg')) {
                     queryData.addClass('initialized-dateAgg');
-                    queryData.dateAgg();
+                    queryData.dateAgg();                    
                 }
             });
+            flog("initDateAgg: trigger date changed");
+            $(document.body).trigger('pageDateChanged', ["1/1/2016", "1/1/2017", "This year", null]);
         },
         settingEnabled: true,
         settingTitle: 'Date Histogram Settings',
@@ -64,7 +66,7 @@
                             dynamicElement.html('<p>Please select Query</p>');
                         }
                     });
-                    
+
                     form.find('.select-agg').on('change', function () {
                         var selectedAgg = this.value;
                         var component = keditor.getSettingComponent();
@@ -79,6 +81,50 @@
                             dynamicElement.html('<p>Please select a data histogram aggregation</p>');
                         }
                     });
+
+                    form.find('.sub-agg').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-sub-agg', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
+
+                    form.find('.show-stacked').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this);
+                        component.attr('data-stacked', inp.prop("checked"));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
+
+                    form.find('.show-controls').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this);
+                        component.attr('data-controls', inp.prop("checked"));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
+
+                    form.find('.show-legend').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this);
+                        component.attr('data-legend', inp.prop("checked"));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
+
 
                     form.find('.query-height').on('change', function () {
                         var number = this.value;
@@ -144,6 +190,12 @@
 
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
+            form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
+
+            form.find('.show-stacked').prop("checked", toBool(dataAttributes['data-stacked']));
+            form.find('.show-controls').prop("checked", toBool(dataAttributes['data-controls']));
+            form.find('.show-legend').prop("checked", toBool(dataAttributes['data-legend']));
+
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
 
@@ -152,4 +204,10 @@
         }
     };
 
+    function toBool(v) {
+        if (v == true) {
+            return true;
+        }
+        return false;
+    }
 })(jQuery);

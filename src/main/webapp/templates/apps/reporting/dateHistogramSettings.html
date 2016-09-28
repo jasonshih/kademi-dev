@@ -12,7 +12,7 @@
             <select class="form-control select-query">
                 <option value="">- None -</option>
                 #foreach ($query in $applications.Reporting.queries )
-                    <option value="$query.name">$query.name</option>
+                <option value="$query.name">$query.name</option>
                 #end
             </select>
         </div>
@@ -26,12 +26,30 @@
             </select>
         </div>
     </div>
-    
+
     <div class="form-group">
-        <label class="col-sm-12">Height</label>
+        <label class="col-sm-12">Sub-aggregation</label>
         <div class="col-sm-12">
-            <input type="number" class="form-control query-height"/>
-            <em class="help-block small text-muted">Minimum is 200</em>
+            <input type="text" class="form-control sub-agg"/>
+            <em class="help-block small text-muted">For displaying multiple series</em>
         </div>
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" class="show-stacked" value="true"/> Stacked
+        </label>
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" class="show-controls" value="true"/> Show controls
+        </label>
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" class="show-legend" value="true"/> Show legend
+        </label>
     </div>
 </form>
