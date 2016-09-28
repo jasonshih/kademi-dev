@@ -205,9 +205,10 @@
     };
 
     function toBool(v) {
-        if (v == true) {
+        if (v === true) {
             return true;
         }
-        return false;
+        var b = (v === 'true');
+        return b;
     }
 })(jQuery);
