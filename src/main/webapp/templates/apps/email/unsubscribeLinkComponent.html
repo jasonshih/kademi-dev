@@ -1,0 +1,7 @@
+<a href="http://${rootFolder.domainName}${formatter.portString}/profile/?edmid=${page.edmId}&amp;${page.model.login}">
+    #if($message && $message.length() > 0)
+    $message
+    #else
+    To unsubscribe please login to your profile page
+    #end
+</a>
