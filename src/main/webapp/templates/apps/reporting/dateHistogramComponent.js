@@ -162,7 +162,7 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function (resp) {
-                    flog('resp', resp);
+                    flog('initSelect resp', resp);
 
                     var aggsHtml = '<option value""> - None - </option>';
                     var aggs = resp.aggregations;
