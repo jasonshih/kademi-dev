@@ -50,6 +50,7 @@
 
     function loadAnalytics() {
         flog('Loading email analytics...');
+        $('#export-stats').attr('href', 'emailStats.csv?' + $.param(searchData));
         var href = "?analytics&" + $.param(searchData);
         $.ajax({
             type: "GET",
