@@ -1,48 +1,63 @@
-<div id="BidInfo">
+<div id="BidInfo" class="auction-bid-info">
     #if(!$page.auctionClosed)
-    <div id="bidFromDiv" class="details well">
-        <h4>Current Bid</h4>
-        <form id="bidForm" method="POST" action=".">
-            <div class="row">
-                <div class="col-sm-4">
-                    <input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue"data-regex="^[0-9-.]+$"/>
-                </div>
-                <div class="col-sm-4">
-                    <button data-type="form-submit" class="btn btn-md btn-primary">
-                        Place Bid
-                    </button>
-                </div>
+    <div id="bidFromDiv" class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Current Bid</div>
             </div>
-        </form>
-        <div>
-            #if($page.currentBidValue)
-            Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
-            #else
-            Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
-            #end
-            <br/>
-            Bid Count: <span id="bidCount">$page.auctionBidCount</span>
-            <br/>
-            End Date: <span>$formatter.formatDateTime($page.auctionEndDate)</span>
+        <div class="panel-body">
+            <form id="bidForm" method="POST" action="." class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-8">
+                        <input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" />
+                    </div>
+                    <div class="col-sm-4">
+                        <button data-type="form-submit" class="btn btn-md btn-primary">
+                            Place Bid
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <p><i class="fa fa-dollar fa-fw"></i>
+                #if($page.currentBidValue)
+                Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+                #else
+                Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+                #end
+            </p>
+
+            <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">$page.auctionBidCount</span></p>
+
+            <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$page.auctionEndDate</abbr></p>
         </div>
-    </div>
+        </div>
     #end
-    <div class="details well">
-        <h4>Bid History</h4>
-        <table id="bidHistory" class="table">
-            <tbody>
-            #foreach($c in $page.bidHistory)
-            <tr>
-                <td>$c.bidValue</td>
-                <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
-                <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
-            </tr>
-            #end
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Bid History</div>
+        </div>
+        <table id="bidHistory" class="table table-hover table-striped">
+            <tbody class="small">
+                #if ($page.bidHistory.size() > 0)
+                #foreach($c in $page.bidHistory)
+                <tr>
+                    <td>$c.bidValue</td>
+                    <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                    <td><a href="$c.changeBy.href">$c.changedBy.name</a></td>
+                </tr>
+                #end
+                #else
+                <tr>
+                    <td colspan="99">No bid history</td>
+                </tr>
+                #end
             </tbody>
         </table>
     </div>
 </div>
-<script>
+
+<script type="text/javascript">
     $(function () {
         initViewAuction("$page.wSUri");
     });

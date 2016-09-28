@@ -19,6 +19,8 @@
         var source = $("#email-template").html();
         var template = Handlebars.compile(source);
 
+        $('#export-history').attr('href', 'emailItems.csv?' + $.param(searchData));
+
         var href = "?history&" + $.param(searchData);
         $.ajax({
             type: "GET",
