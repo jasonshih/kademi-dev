@@ -53,6 +53,28 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.show-headers').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this);
+                        component.attr('data-headers', inp.prop("checked"));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            //self.initDateAgg();
+                        });
+                    });
+
+                    form.find('.show-paginator').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        var inp = $(this);
+                        component.attr('data-showpaginator', inp.prop("checked"));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            //self.initDateAgg();
+                        });
+                    });
+                    
                     form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -72,7 +94,17 @@
             form.find('.select-items-per-page').val(dataAttributes['data-items-per-page']);
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
+            form.find('.show-headers').prop("checked", toBool(dataAttributes['data-headers']));
+            form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
+            
         }
     };
 
+    function toBool(v) {
+        if (v === true) {
+            return true;
+        }
+        var b = (v === 'true');
+        return b;
+    }
 })(jQuery);

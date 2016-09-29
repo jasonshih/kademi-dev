@@ -37,7 +37,7 @@
             flog("graphopts1", graphOptions.stacked, component, component.attr("data-stacked"));
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                flog("page date changed", cont);
+                flog("dateAgg: page date changed", cont);
                 loadGraphData(queryHref, graphOptions, {
                     startDate: startDate,
                     endDate: endDate

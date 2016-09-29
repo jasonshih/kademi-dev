@@ -8,7 +8,7 @@
     $.fn.queryTable = function (options) {
         var container = this;
 
-        flog("queryTable", container);
+        flog("queryTable", container.length);
         container.each(function (i, n) {
             var cont = $(n);
             flog("init queryTable chart events", cont);
@@ -20,7 +20,7 @@
             };
 
             $(document).on('pageDateChange', function () {
-                flog("piechart date change");
+                flog("queryTable date change");
             });
 
             var queryHref = null;
@@ -34,27 +34,37 @@
                 config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
             }
 
+            flog("queryTable: listen for date change");
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog("queryTable date change", e, startDate, endDate);
 
-                loadGraphData(queryHref, aggName, {
-                    startDate: startDate,
-                    endDate: endDate
-                }, cont, config);
+                var href = '/_components/queryTable?';
+                var query = cont.parents('[data-type=component-queryTable]').attr('data-query');
+                var perPage = cont.parents('[data-type=component-queryTable]').attr('data-items-per-page');
+                var height = cont.parents('[data-type=component-queryTable]').attr('data-height');
+                href += 'data-query=' + encodeURI(query);
+                href += '&data-items-per-page=' + encodeURI(perPage);
+                href += '&data-height=' + encodeURI(height);
+
+                var tbody = cont.find("tbody");
+                flog("reload queryTable", href);
+                tbody.reloadFragment({
+                    url: href,
+                    whenComplete: function (resp) {
+                        flog("reloaded queryTable");
+                        comp.find('.panel-body').html($(resp).find('.panel-body').html());
+                    }
+                });
             });
 
             cont.on('click', 'a', function (e) {
                 e.preventDefault();
 
-                var href = '/_components/queryTable';
-//                var href = $(this).attr('href');                
-//                if (href.indexOf('/_components/queryTable/') === -1) {
-//                    href = '/_components/queryTable' + href;
-//                }
+                var href = '/_components/queryTable?';
                 var query = cont.parents('[data-type=component-queryTable]').attr('data-query');
                 var perPage = cont.parents('[data-type=component-queryTable]').attr('data-items-per-page');
                 var height = cont.parents('[data-type=component-queryTable]').attr('data-height');
-                href += '&data-query=' + encodeURI(query);
+                href += 'data-query=' + encodeURI(query);
                 href += '&data-items-per-page=' + encodeURI(perPage);
                 href += '&data-height=' + encodeURI(height);
                 
