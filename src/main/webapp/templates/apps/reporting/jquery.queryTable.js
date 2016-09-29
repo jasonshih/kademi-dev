@@ -47,17 +47,22 @@
                 href += '&data-height=' + encodeURI(height);
 
                 var tbody = cont.find("tbody");
-                flog("reload queryTable", href);
-                tbody.reloadFragment({
-                    url: href,
-                    whenComplete: function (resp) {
-//                        flog("reloaded queryTable", resp);
-//                        var newContent = $(resp).find('.panel-body').html();                        
-//                        var panelBody = cont;
-//                        flog("reloaded queryTable", panelBody, newContent);
-//                        panelBody.html(newContent);
-                    }
+                flog("reload queryTable", tbody, tbody.attr("id"));
+                $.get(href, {}, function (resp, status, xhr) {
+                    var newContent = $(resp).find('.panel-body').html();  
+                    var panelBody = cont;
+                    panelBody.html(newContent);
                 });
+//                tbody.reloadFragment({
+//                    url: href,
+//                    whenComplete: function (resp) {
+////                        flog("reloaded queryTable", resp);
+////                        var newContent = $(resp).find('.panel-body').html();                        
+////                        var panelBody = cont;
+////                        flog("reloaded queryTable", panelBody, newContent);
+////                        panelBody.html(newContent);
+//                    }
+//                });
             });
 
             cont.on('click', 'a', function (e) {
