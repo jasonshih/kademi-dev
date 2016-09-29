@@ -39,9 +39,9 @@
                 flog("queryTable date change", e, startDate, endDate);
 
                 var href = '/_components/queryTable?';
-                var query = cont.parents('[data-type=component-queryTable]').attr('data-query');
-                var perPage = cont.parents('[data-type=component-queryTable]').attr('data-items-per-page');
-                var height = cont.parents('[data-type=component-queryTable]').attr('data-height');
+                var query = component.attr('data-query');
+                var perPage = component.attr('data-items-per-page');
+                var height = component.attr('data-height');
                 href += 'data-query=' + encodeURI(query);
                 href += '&data-items-per-page=' + encodeURI(perPage);
                 href += '&data-height=' + encodeURI(height);
@@ -51,8 +51,11 @@
                 tbody.reloadFragment({
                     url: href,
                     whenComplete: function (resp) {
-                        flog("reloaded queryTable");
-                        comp.find('.panel-body').html($(resp).find('.panel-body').html());
+//                        flog("reloaded queryTable", resp);
+//                        var newContent = $(resp).find('.panel-body').html();                        
+//                        var panelBody = cont;
+//                        flog("reloaded queryTable", panelBody, newContent);
+//                        panelBody.html(newContent);
                     }
                 });
             });

@@ -1,5 +1,5 @@
 #if( !$height )
-    #set( $height = 200 )
+#set( $height = 200 )
 #end
 
 #if( !$title )
@@ -26,43 +26,53 @@
         <i class="fa fa-table"></i> $title
 
     </div>
-    <div class="panel-body query-table">
-        <div class="table-responsive" style="height: $!{height}px; min-height: 0;">
-            <table class="table table-striped">
-                #if( $formatter.toBool($headers) )
-                <thead>
-                    <tr>
-                        #foreach( $field in $fields)
-                        <th>$field</th>
-                        #end
-                    </tr>
-                </thead>
+
+    <div class="panel-body" style="height: $!{height}px; min-height: 0;">
+            
+    #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
+    #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
+    <table class="table table-striped">
+        #if( $formatter.toBool($headers) )
+        <thead>
+            <tr>
+                #foreach( $field in $fields)
+                <th>$field</th>
                 #end
-                
-                <tbody id="${queryTableId}">
-                #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
-                #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
-                    #set ($r = $paginator.totalRecords($formatter.toInteger($results.hits.totalHits)))
-                    #set ($hitList = $formatter.newArrayList())
-                    #foreach($row in $results.hits.hits )
-                        #set ($r = $hitList.add($row))
-                    #end
-                    #foreach($row in $paginator.records($hitList))
-                    <tr>
-                        #foreach( $field in $fields)
-                        <td>$!row.fields.get($field).value</td>
-                        #end
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
-        #if( $formatter.toBool($showpaginator) )
-        <nav class="queryTablePaginator">
-            $!paginator.html
-        </nav>
+            </tr>
+        </thead>
         #end
-    </div>
+
+        <tbody id="${queryTableId}" class="query-table">
+
+            #if( $results.hits.totalHits == 0 )
+            <tr>
+                <td colspan="$fields.size()" class="text-center">No results</td>
+            </tr>                    
+            #else                    
+            #set ($r = $paginator.totalRecords($formatter.toInteger($results.hits.totalHits)))
+            #set ($hitList = $formatter.newArrayList())
+            #foreach($row in $results.hits.hits )
+            #set ($r = $hitList.add($row))
+            #end
+            #foreach($row in $paginator.records($hitList))
+            <tr>
+                #foreach( $field in $fields)
+                <td>$!row.fields.get($field).value</td>
+                #end
+            </tr>
+            #end
+            #end
+        </tbody>
+    </table>
+
+    #if( $formatter.toBool($showpaginator) )
+    <div class="panel-footer">Panel footer</div>        
+    <nav class="queryTablePaginator">
+        $!paginator.html
+    </nav>
+</div>
+#end
+
 </div>
 
 
