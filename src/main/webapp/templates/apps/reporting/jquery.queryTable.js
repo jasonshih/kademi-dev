@@ -46,12 +46,16 @@
                 href += '&data-items-per-page=' + encodeURI(perPage);
                 href += '&data-height=' + encodeURI(height);
 
-                var tbody = cont.find("tbody");
-                flog("reload queryTable", tbody, tbody.attr("id"));
+                var tbody = cont;
+                flog("reload queryTable", cont, tbody);
                 $.get(href, {}, function (resp, status, xhr) {
-                    var newContent = $(resp).find('.panel-body').html();  
-                    var panelBody = cont;
-                    panelBody.html(newContent);
+                    var newDom = $(resp);
+                    flog("queryTable resp", newDom, newDom.find('tbody'));
+                    
+                    var newContent = newDom.find('tbody').html();  
+                    
+                    flog("replace conetnt", tbody, newContent);
+                    tbody.html(newContent);
                 });
 //                tbody.reloadFragment({
 //                    url: href,
