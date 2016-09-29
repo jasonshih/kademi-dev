@@ -23,7 +23,8 @@
             </div>
 
             #if ($reward != "")
-            #set( $pointsBucket = $applications.rewardStore.findPointsBucket($reward) )
+            #set( $rewardPath = "/rewards/" + $reward )
+            #set( $pointsBucket = $rootFolder.find($rewardPath) )
             #set($totalPoints = $formatter.formatCurrency($pointsBucket.myAvailableBalance, false))
             <div class="user-total-points bg-primary text-center">
                 <h1>
