@@ -26,9 +26,10 @@
         <i class="fa fa-table"></i> $title
 
     </div>
-    <div class="panel-body">
+    <div class="panel-body query-table">
         <div class="table-responsive" style="height: $!{height}px; min-height: 0;">
             <table class="table table-striped">
+                #if( $formatter.toBool($headers) )
                 <thead>
                     <tr>
                         #foreach( $field in $fields)
@@ -36,6 +37,8 @@
                         #end
                     </tr>
                 </thead>
+                #end
+                
                 <tbody id="${queryTableId}">
                 #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
                 #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
@@ -54,9 +57,11 @@
                 </tbody>
             </table>
         </div>
+        #if( $formatter.toBool($showpaginator) )
         <nav class="queryTablePaginator">
             $!paginator.html
         </nav>
+        #end
     </div>
 </div>
 
