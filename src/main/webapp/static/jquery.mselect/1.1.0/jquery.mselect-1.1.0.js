@@ -39,6 +39,7 @@
         init: function (options) {
             var config = $.extend({}, $.fn.mselect.DEFAULT, options);
             var target = this;
+
             var f = function () {
                 flog('[jquery.mselect] Initializing mselect', config, target);
                 if (config.useModal) {

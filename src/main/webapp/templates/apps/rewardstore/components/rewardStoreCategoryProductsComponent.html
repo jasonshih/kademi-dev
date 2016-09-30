@@ -27,8 +27,10 @@
                         <span class="embed-responsive-item" style="background-image: url($bg);"></span>
                     </div>
                 </a>
+
                 <div class="caption">
                     <h3 class="product-title" title="$p.fields.title.value"><a href="$p.fields.product.value">$p.fields.title.value</a></h3>
+
                     <p><span class="label label-default">$p.fields.finalPoints.value Pts</span></p>
 
                     <div class="product-content">$!p.fields.content.value</div>
@@ -36,23 +38,18 @@
                         <a href="${page.href}$p.fields.product.value" class="btn btn-default btn-sm" role="button">View</a>
                         <a href="${page.href}$p.fields.product.value" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to cart</a>
                     </div>
+                    </div>
                 </div>
             </div>
-        </div>
         #end
-    </div>
+        </div>
+    <p id="inifiniteLoader" class="text-center" style="display: none;"><img src="/templates/ajax-loader.gif" /></p>
     #end
 </div>
 
-#if ($page)
-<div id="inifiniteLoader text-center">
-        <span class="alert alert-success">
-            <img src="/templates/ajax-loader.gif" />
-        </span>
-    </div>
-#else
+#if (!$page)
     <div class="alert alert-warning">Products go here</div>
-    <script>
+<script type="text/javascript">
         var contentEditing = true;
     </script>
 #end

@@ -85,6 +85,10 @@ body.opened-keditor-sidebar #edm-area {
     content: "EDM Footer";
 }
 
+.keditor-component .keditor-toolbar {
+    text-align: left;
+}
+
 /* ==================================================================================
    EDM Setting
    ================================================================================== */
