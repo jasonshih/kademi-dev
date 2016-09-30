@@ -28,20 +28,24 @@
             var config = $.extend({}, DEFAULT_PIECHART_OPTIONS, options);
 
             var queryHref = null;
-            var aggName = null;            
+            var graphOptions = {
+                aggName: null,
+                subAgg: null,                
+                showLegend: false
+            };
+            
             var component = cont.closest('[data-type^="component-"]');
             if (component.length > 0) {
                 queryHref = "/queries/" + component.attr("data-query");
-                aggName = component.attr("data-agg");
-                flog("pieChart params", queryHref, aggName, component);
-
+                graphOptions.aggName = component.attr("data-agg");
+                graphOptions.showLegend = toBool(component.attr("data-legend"));
                 config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
             }
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                flog("piechart date change", aggName, cont, startDate, endDate);
+                flog("piechart date change", graphOptions, cont, startDate, endDate);
 
-                loadGraphData(queryHref, aggName, {
+                loadGraphData(queryHref, graphOptions, {
                     startDate: startDate,
                     endDate: endDate
                 }, cont, config);
@@ -49,22 +53,22 @@
         });
     };
 
-    function loadGraphData(href, aggName, opts, container, config) {
+    function loadGraphData(href, graphOptions, opts, container, config) {
         href = href + "?run&" + $.param(opts);
 
-        flog("loadGraphData", container, aggName, href);
+        flog("loadGraphData", container, graphOptions.aggName, href);
         $.ajax({
             type: "GET",
             url: href,
             dataType: 'json',
             success: function (resp) {
-                showPieChart(resp, container, aggName, config);
+                showPieChart(resp, container, graphOptions, config);
             }
         });
     }
 
-    function showPieChart(resp, container, aggName, config) {
-        var aggr = resp.aggregations[aggName];
+    function showPieChart(resp, container, graphOptions, config) {
+        var aggr = resp.aggregations[graphOptions.aggName];
         var svg = container.find("svg");
         svg.empty();
 
@@ -78,7 +82,7 @@
 
             var chart = nv.models.pieChart()
                 .x(function (d) {
-                    return config.xLabel(d, aggName);
+                    return config.xLabel(d, graphOptions.aggName);
                 })
                 .y(function (d) {
                     return d.doc_count;
@@ -90,7 +94,8 @@
                 .labelType("percent")
                 .donutRatio(0.35)
                 .showLabels(true)
-                .showLegend(true)
+                .margin({"top":0,"bottom":0, "left":0, "right":0})
+                .showLegend(graphOptions.legend)
                 .legendPosition(config.legendPosition);
 
             flog("select data", chart, svg.get(0));
@@ -106,5 +111,11 @@
         });
         flog("done show pieChart");
     }
-
+    function toBool(v) {
+        if (v === true) {
+            return true;
+        }
+        var b = (v === 'true');
+        return b;
+    }
 })(jQuery);

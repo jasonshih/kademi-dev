@@ -21,7 +21,7 @@
 #set( $queryBean = $applications.Reporting.getQuery($query))
 #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
 
-<div class="panel panel-default panel-query-table" id="$queryCompId"  style="height: $!{height}px; min-height: 0;">
+<div class="panel panel-default panel-query-table" id="$queryCompId"  style="height: $!{height}px; min-height: 0; overflow: hidden">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
 
@@ -55,7 +55,7 @@
             #foreach($row in $paginator.records($hitList))
             <tr>
                 #foreach( $field in $fields)
-                <td>$!row.fields.get($field).value</td>
+                <td>$formatter.format($!row.fields.get($field))</td>
                 #end
             </tr>
             #end
