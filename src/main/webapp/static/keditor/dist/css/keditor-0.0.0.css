@@ -163,7 +163,6 @@ body.highlighted-container-content .keditor-container-content:before {
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  float: left;
   background: #fff;
   margin: 0 5px 10px;
   -webkit-user-select: none;
@@ -173,6 +172,8 @@ body.highlighted-container-content .keditor-container-content:before {
 }
 .keditor-snippet img {
   display: block;
+  width: 100%;
+  height: auto;
 }
 .keditor-snippet:last-child {
   margin-bottom: 0;

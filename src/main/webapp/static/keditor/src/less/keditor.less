@@ -182,13 +182,14 @@ body.highlighted-container-content {
     border: 1px solid @snippet-border-color;
     cursor: move;
     .transition(all @animation-duration);
-    float: left;
     background: @snippet-bg;
     margin: 0 5px 10px;
     .user-select(none);
 
     img {
         display: block;
+        width: 100%;
+        height: auto;
     }
 
     &:last-child {
