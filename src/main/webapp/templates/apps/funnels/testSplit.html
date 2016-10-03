@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Split test settings</title>
+    </head>
+    <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="testPercentage">Test %</label>
+                    <input type="numeric" name="testPercentage" class="form-control" value="$!page.node.testPercentage" />
+                    <small>Enter the percentage of leads which should use the test branch, eg 5 to test 5%</small>
+
+                </div>
+            </div>
+            #set( $counts = $page.testSplitCounts )
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Counts</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach( $row in $counts.entrySet() )
+                    <tr>
+                        <td>$row.key</td>
+                        <td>$row.value</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+
+        </form>
+        #else
+        <form method="POST" action="$page.path" class="form-horizontal">
+            <button class="btn btn-success" type="submit">Save</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="testPercentage">Test %</label>
+                        <div class="col-md-8">
+                            <input type="numeric" name="testPercentage" class="form-control" value="$!page.node.testPercentage" />
+                            <small>Enter the percentage of leads which should use the test branch, eg 5 to test 5%</small>                            
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </form>
+        #end
+    </body>
+</html>
