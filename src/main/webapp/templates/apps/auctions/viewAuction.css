@@ -1,6 +1,6 @@
 #auctions-list .auction-item .embed-responsive-item {
     background: no-repeat 50% 50%;
-    background-size: cover;
+    background-size: contain;
 }
 
 .auction-detail .page-header {

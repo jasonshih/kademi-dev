@@ -1,6 +1,6 @@
 .panel-coming-up-auction .embed-responsive-item {
     background: no-repeat 50% 50%;
-    background-size: cover;
+    background-size: contain;
 }
 
 .panel-coming-up-auction .auction-countdown .countdown {
