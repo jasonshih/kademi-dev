@@ -1,6 +1,6 @@
-JBNodes['begin'] = {
-    title: '<i class="fa fa-play-circle"></i> <span class="node-type">Begin</span>',
-    previewUrl: '/theme/apps/funnels/jb/beginNode.png',
+JBNodes['cancelLead'] = {
+    title: '<i class="fa fa-pencil-square-o"></i> <span class="node-type">Cancel lead</span>',
+    previewUrl: '/theme/apps/funnels/jb/cancelLeadNode.png',
     ports: {
         nextNodeId: {
             label: 'then',
@@ -9,7 +9,7 @@ JBNodes['begin'] = {
         }
     },
 
-    settingEnabled: true,    
+    settingEnabled: true,
 
     initSettingForm: function (form) {
         form.forms({
