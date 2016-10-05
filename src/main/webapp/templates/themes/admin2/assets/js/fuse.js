@@ -130,7 +130,7 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
-    
+
     $('.date-picker').exist(function () {
         var datePicker = this;
 
@@ -164,7 +164,12 @@ function initDatePicker() {
     });
 
     $('.date-time-picker').exist(function () {
-        this.datetimepicker();
+        flog('Found date-time-picker', this);
+        var options = {};
+        if (this.data('format')) {
+            options.format = this.data('format');
+        }
+        this.datetimepicker(options);
     });
 }
 
