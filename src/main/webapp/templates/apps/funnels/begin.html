@@ -7,7 +7,8 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="onePerProfile"/> One per profile
+                        $formatter.checkbox("onePerProfile", $page.node.onePerProfile)
+                        One per profile
                     </label>
                 </div>                
                 <small class="text-muted help-block">Set this if you want only one lead to be created for each profile</small>
