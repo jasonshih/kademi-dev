@@ -178,25 +178,28 @@
         },
 
         adjustWidthForImg: function (img, isFullWidth) {
+            flog('adjustWidthForImg', img, isFullWidth);
+
+            img.css('display', 'none');
+
             $('<img />').attr('src', img.attr('src')).load(function () {
+                var realWidth = this.width;
+                var realHeight = this.height;
+                var ratio = realWidth / realHeight;
                 var wrapper = img.parent();
                 if (wrapper.is('a')) {
                     wrapper = wrapper.parent();
                 }
-
-                img.attr({
-                    width: 1,
-                    height: 1
-                });
+                var wrapperWidth = wrapper.width();
 
                 setTimeout(function () {
-                    var wrapperWidth = wrapper.width();
                     img.attr({
-                        width: isFullWidth ? wrapperWidth : this.width,
-                        height: isFullWidth ? (wrapperWidth * this.height) / this.width : this.height
+                        width: isFullWidth ? wrapperWidth : realWidth,
+                        height: isFullWidth ? wrapperWidth / ratio : realHeight
                     });
-                    img[isFullWidth ? 'addClass' : 'removeClass']('full-width');
-                }, 100);
+
+                    img.css('display', 'block');
+                }, 200);
             });
         }
     };

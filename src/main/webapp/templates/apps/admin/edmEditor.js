@@ -287,9 +287,12 @@ function initKEditor(fileName, stylesData) {
                 });
             }
 
-            var img = component.find('img');
-            if (img && img.length > 0) {
-                $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
+            if (!component.hasClass('existing-component')) {
+                var img = component.find('img');
+
+                if (img.length > 0) {
+                    $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
+                }
             }
         },
         onContentChanged: function () {
@@ -308,11 +311,12 @@ function initKEditor(fileName, stylesData) {
         onReady: function () {
             initSettingPanel();
 
-            $('[data-dynamic-href]').each(function () {
-                keditor.initDynamicContent($(this));
-            });
-
             adjustColWidth($('.keditor-container'));
+
+            $('#edm-area [data-type="component-photo"]').find('img').each(function () {
+                var img = $(this);
+                $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
+            });
 
             hideLoadingIcon();
         },
