@@ -106,7 +106,13 @@
                 #if($dueLeads.size() > 0)
                 #foreach($d in $dueLeads)
                 <tr>
-                    <td>$formatter.formatDateTime($d.timerDate, $page.organisation.timezone)</td>
+                    <td>
+                        #if( $d.timerDate )
+                        $formatter.formatDateTime($d.timerDate, $page.organisation.timezone)
+                        #else
+                        No timer
+                        #end
+                    </td>
                     <td>
                         #if($d.profile)
                         <a href="/manageUsers/$d.profile.id">$d.profile.formattedName</a>

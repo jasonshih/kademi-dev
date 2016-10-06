@@ -18,7 +18,9 @@
         <table class="table table-striped">
             <tr>
                 <td>Created</td>
-                <td>$lead.createDate</td>
+                <td>
+                    $formatter.formatDateTime($lead.createDate, $page.organisation.timezone)
+                </td>
             </tr>
             <tr>
                 <td>Stage</td>
@@ -28,7 +30,7 @@
                 <td>Source</td>
                 <td>$!lead.source</td>
             </tr>
-            
+
             <tr>
                 <td>Assigned to group</td>
                 <td>$!lead.assignedToGroup.name</td>
@@ -68,15 +70,20 @@
             <tr>
                 <td>Timer</td>
                 <td>
-                    $!lead.timerDate
+                    #if( $lead.timerDate )
+                    $formatter.formatDateTime($lead.timerDate, $page.organisation.timezone)
 
-                    (time now: $formatter.now)
+                    <i class="text-muted">time now: $formatter.formatDateTime($formatter.now, $page.organisation.timezone))</i>
+                    #else
+                    No current timer
+                    #end
                 </td>
             </tr>
 
             <tr>
                 <td>Timer processing</td>
                 <td>
+                    #if( $lead.processingStartedAt || $lead.completedProcessingAt || $lead.numAttempts )
                     <table class="table">
                         <tr>
                             <th>Started</th>
@@ -84,14 +91,18 @@
                             <th>Attempts</th>
                         </tr>
                         <tr>
-                            <td>$!lead.processingStartedAt</td>
-                            <td>$!lead.completedProcessingAt</td>
-                            <td>$!lead.numAttempts</td>                        
+                            <td>$formatter.formatDateTime($formatter.processingStartedAt, $page.organisation.timezone))</td>
+                            <td>$formatter.formatDateTime($formatter.completedProcessingAt, $page.organisation.timezone))</td>
+                            <td>$formatter.formatDateTime($formatter.numAttempts, $page.organisation.timezone))</td>
                         </tr>
                     </table>
+                    #else
+                    No timer processing information
+                    #end
                 </td>
             </tr>
-            
+
+
         </table>
 
         <table class="table table-striped">
