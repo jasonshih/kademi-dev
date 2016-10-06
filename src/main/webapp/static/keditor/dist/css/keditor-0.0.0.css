@@ -15,20 +15,20 @@ body {
 /* ==================================================================================
    KEditor base
    ================================================================================== */
-#keditor-sidebar,
 .keditor-toolbar,
+#keditor-sidebar,
 #keditor-sidebar .form-control,
 #keditor-sidebar .btn,
 #keditor-sidebar .dropdown-menu {
   font: 14px/1.42857143 "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
-#keditor-sidebar small,
 .keditor-toolbar small,
+#keditor-sidebar small,
 #keditor-sidebar .form-control small,
 #keditor-sidebar .btn small,
 #keditor-sidebar .dropdown-menu small,
-#keditor-sidebar .small,
 .keditor-toolbar .small,
+#keditor-sidebar .small,
 #keditor-sidebar .form-control .small,
 #keditor-sidebar .btn .small,
 #keditor-sidebar .dropdown-menu .small {

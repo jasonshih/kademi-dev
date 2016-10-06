@@ -28,6 +28,36 @@
     min-width: 680px;
 }
 
+#edm-area h1,
+#edm-area h2,
+#edm-area h3,
+#edm-area h4,
+#edm-area h5,
+#edm-area h6 {
+    padding: 0;
+    margin: 0;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 125%;
+}
+
+#edm-area h1 {
+    font-size: 26px;
+}
+
+#edm-area h2 {
+    font-size: 22px;
+}
+
+#edm-area h3 {
+    font-size: 20px;
+}
+
+#edm-area h4 {
+    font-size: 20px;
+}
+
+
 body.opened-keditor-sidebar #edm-area {
     margin-right: 260px;
 }
