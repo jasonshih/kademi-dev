@@ -150,6 +150,10 @@
     z-index: 4;
 }
 
+.jsplumb-overlay {
+    z-index: 5;
+}
+
 .node .title .node-buttons {
     position: absolute;
     top: 5px;
