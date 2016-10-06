@@ -321,6 +321,7 @@
                 initManageFiles();
                 initPjax();
             });
+
             function initPjax() {
                 var filesContainer = $("#filesContainer");
                 var files = $("#files");
@@ -328,9 +329,11 @@
                 filesContainer.on("click", "a.pjax", function (e) {
                     flog("click pjax");
                     e.preventDefault();
-                    var href = $(e.target).closest("a").attr("href");
-                    var name = $(e.target).closest("a").text();
-                    flog($(e.target).closest("a"));
+
+                    var a = $(this);
+                    var href = a.attr("href");
+                    var name = a.text();
+
                     files.reloadFragment({
                         url: href,
                         whenComplete: function (response, status, xhr) {

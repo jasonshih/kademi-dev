@@ -126,7 +126,9 @@ function initCRUDFiles() {
 
 function reloadFileList() {
     flog('reloadFileList');
+
     $('#table-files-body').reloadFragment({
+        url: window.location.href,
         whenComplete: function () {
             //initPseudoClasses();
             initFilesLayout();
