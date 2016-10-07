@@ -16,7 +16,7 @@ JBNodes['calendarEventAction'] = {
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Calendar name</label>' +
-            '        <input type="text" class="form-control calendarName" value="" />' +
+            '        <select class="form-control calendarName"></select>' +
             '    </div>' +
             '</div>' +
             '<div class="form-group">' +
@@ -41,6 +41,21 @@ JBNodes['calendarEventAction'] = {
             '    </div>' +
             '</div>'
         );
+
+
+        $.ajax({
+            url: '/Calendars/_DAV/PROPFIND?fields=name',
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                var optionsStr = '<option value="">[No calendar selected]</option>';
+                for (var i = 1; i < resp.length; i++) {
+                    optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name + '</option>';
+                }
+
+                form.find('.calendarName').html(optionsStr);
+            }
+        });
 
         form.forms({
             allowPostForm: false,
