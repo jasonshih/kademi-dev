@@ -202,6 +202,11 @@ ol.menuTree li.placeholder:before {
     background: #fff;
 }
 
+.menuEditor div.menuItem[data-hidden="true"] {
+    color: #bbb;
+    font-style: italic;
+}
+
 .menuEditor div.menuItem .btn-group {
     position: absolute;
     right: 3px;

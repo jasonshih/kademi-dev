@@ -1,33 +1,9 @@
+#parse("/theme/apps/content/components/menuMacros.html")
+
 <form class="form-horizontal">
     <div class="menuEditor">
-        <div class="form-group">
-            <div class="col-sm-12">
-                <label>Logo</label>
-                <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" id="logo-previewer" /></p>
-                <button type="button" class="btn btn-block btn-primary" id="logo-edit">Change Logo</button>
-                <button type="button" class="btn btn-block btn-xs btn-danger" id="logo-delete">Remove Logo</button>
-                <input type="hidden" name="logo" class="form-control" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <label>Show user menu or not</label><br />
-                <input type="checkbox" class="cbb-show-user-menu" />
-            </div>
-        </div>
-        <hr />
-        <label>Menu Items</label>
-        <div class="menuTree clearfix">
-            #set( $myMenu = $menuManager.rootMenuItem )
-            <ol class="menuList rootMenuList">
-                #showMenu( $myMenu true )
-            </ol>
+        #defaultMenuControls()
 
-            <button class="btn btn-primary saveMenu btn-block">
-                <span class="fa fa-check"></span>
-                Save menu
-            </button>
-        </div>
         <hr />
         <div class="form-group">
             <label class="col-sm-12"><strong>Show button align</strong></label>
@@ -71,76 +47,5 @@
         </div>
     </div>
 
-
-    <div class="editMenuItem" style="display: none">
-        <h4 style="margin-top: 0;">Edit menu item</h4>
-
-        <div class="form-group">
-            <label class="col-sm-12"><strong>Path</strong></label>
-
-            <div class="col-sm-12">
-                <input type="text" name="href" class="form-control input-sm" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-12"><strong>Text</strong></label>
-
-            <div class="col-sm-12">
-                <input type="text" name="text" class="form-control input-sm" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-12">
-                <button class="editMenuItemOk btn btn-sm btn-success">
-                    <span class="fa fa-check"></span>
-                </button>
-
-                <button class="editMenuItemHide btn btn-sm btn-info" title="Toggle visibility">
-                    <span class="fa fa-eye-slash"></span>
-                </button>
-                
-                <button class="editMenuItemDelete btn btn-sm btn-danger" title="Delete">
-                    <span class="fa fa-times"></span>
-                </button>
-
-                <button class="editMenuItemCancel btn btn-xs btn-default" title="Cancel">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
+    #editMenuItemForm()
 </form>
-
-#macro( showMenu $menuItem $isRootMenuItem )
-    <li #if ($isRootMenuItem) class="rootMenuItem" #end>
-        <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
-            <span class="btn-group btn-group-xs small">
-                <a class="btn btn-success btnAddMenuItem" href="#">
-                    <span class="fa fa-plus small"></span>
-                </a>
-                #if (!$isRootMenuItem)
-                    <a class="btn btn-info btnSortMenuItem" href="#">
-                        <span class="fa fa-sort small"></span>
-                    </a>
-                #end
-                #if (!$isRootMenuItem)
-                <a class="btn btn-primary btnEditMenuItem" href="#">
-                    <span class="fa fa-pencil small"></span>
-                </a>
-                #end
-            </span>
-
-            <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
-        </div>
-
-        #showMenuList($menuItem)
-    </li>
-#end
-
-#macro( showMenuList $menuItem )
-    <ol class="menuList" data-id="$menuItem.id">
-        #foreach($item in $menuItem.items)
-            #showMenu( $item false )
-        #end
-    </ol>
-#end
