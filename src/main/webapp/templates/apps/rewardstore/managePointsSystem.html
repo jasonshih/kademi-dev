@@ -213,7 +213,9 @@
                                 </tr>
                             </thead>
                             <tbody id="tablePointsBody">
-                                #foreach($points in $page.history)
+                                #set($pointsHistory = $page.history)
+                                #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(10))
+                                #foreach($points in $pointsPaginator.records($pointsHistory))
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
@@ -227,6 +229,11 @@
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
                                 #end
+                                <tr>
+                                    <td>
+                                        $!pointsPaginator.html
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -386,7 +393,8 @@
         </span>
         #end
 
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script src="/static/uri/1.15.1/URI.js" type="text/javascript">//</script>
         <script type="text/javascript">
             $(function () {
                 initManagePointsSystem();

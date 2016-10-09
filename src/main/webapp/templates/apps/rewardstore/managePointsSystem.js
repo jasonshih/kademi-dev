@@ -5,7 +5,7 @@ var searchOptions = {
 
 function initManagePointsSystem() {
     flog("initManagePointsSystem");
-    
+
     showHidePointsOrgType();
     initGroupEditing();
     initFormPointsSystem();
@@ -16,7 +16,7 @@ function initManagePointsSystem() {
     initClearAllDebits();
     initLeaderboardSearch();
     initDebitsPjax();
-    
+
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
     });
@@ -137,10 +137,10 @@ function setGroupRecipient(name, groupType, isRecip) {
                             groupIcon = "fa fa-envelope";
                         }
                         var newBtn = $('<span id="group_' + name + '" class="group-list ' + groupClass + '">'
-                            + '<i class="' + groupIcon + '"></i>'
-                            + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
-                            + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
-                            + '</span>');
+                                + '<i class="' + groupIcon + '"></i>'
+                                + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
+                                + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
+                                + '</span>');
                         $(".GroupList").append(newBtn);
                         flog("appended to", $(".GroupList"));
                     } else {
@@ -255,21 +255,20 @@ function doHistorySearch() {
     flog('doHistorySearch');
     Msg.info("Doing search...", 2000);
 
-    var data = {
-        startDate: searchOptions.startDate,
-        finishDate: searchOptions.endDate,
-        dataQuery: $('#data-query').val()
-    };
-    flog("data", data);
+    var dataQuery = $('#data-query').val();
+
+    var uri = URI(location.search);
+    uri.addSearch('startDate', searchOptions.startDate);
+    uri.addSearch('finishDate', searchOptions.endDate);
+    uri.addSearch('dataQuery', dataQuery);
 
     var target = $("#tablePointsBody");
     target.load();
 
     $.ajax({
         type: "GET",
-        url: window.location.pathname,
+        url: window.location.pathname + uri.search(),
         dataType: 'html',
-        data: data,
         success: function (content) {
             flog('response', content);
             Msg.success("Search complete", 2000);
