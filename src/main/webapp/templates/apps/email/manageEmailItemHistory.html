@@ -21,16 +21,6 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="input-group search-user input-group-sm">
-                            <input type="text" id="email-query" class="form-control" placeholder="Search by recipient, subject or domain" value="" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#email-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
                         <div class="input-group date-range">
                             <label for="report-range" class="input-group-addon">Time</label>
                             <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
@@ -102,9 +92,8 @@
                             </tr>
                         </thead>
                         <tbody id="history-table-body">
-                            #set($paginator = $formatter.paginator())
-                            #set($results = $page.getSearchResults($paginator.start, $paginator.pageSize))
-                            #set($paginator = $paginator.totalRecords($results.totalHits))
+                            #set($results = $page.searchResults)
+                            #set($paginator = $formatter.paginator().totalRecords($results.totalHits))
                             #set($records = $paginator.records($results.beans))
                             #foreach($e in $records)
                             <tr>
@@ -149,14 +138,14 @@
                             </tr>
                             #end
                             <tr>
-                                <td colspan="5">
+                                <td colspan="5" class="text-center">
                                     $!paginator.html
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                #if( $page.searchResults.size() >= 100 )
+                #if( $results.totalHits >= 100 )
                 <p class="label label-warning">Displaying maximum results</p>
                 #end
             </div>
