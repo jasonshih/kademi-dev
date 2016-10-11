@@ -29,79 +29,81 @@
                 <col />
             </colgroup>
             <thead>
-            <tr>
-                <th>Name</th>
-                <th>Modified</th>
-                <th class="size">Size</th>
-                <th class="text-center">Actions</th>
-            </tr>
+                <tr>
+                    <th>Name</th>
+                    <th>Modified</th>
+                    <th class="size">Size</th>
+                    <th class="text-center">Actions</th>
+                </tr>
             </thead>
             <tbody>
-            #if($isMyfilesHomepage)
-            #set($url = '/users/'+$user.name+'/')
-            #set ($userFolder = $page.find($url))
-            #set ($folders = $userFolder.children.dirs)
-            #set ($pageHref = $url)
-            #else
-            #set ($folders = $page.subFolders)
-            #set ($files = $page.files)
-            #set ($pageHref = $page.href)
-            #end
-            #foreach($f in $folders)
-            <tr class="folder">
-                <td class="left">
-                    <a href="${f.href}">
-                        <span class="glyphicon glyphicon-folder-close btn-lg"></span>
-                        $f.name
-                    </a>
-                </td>
-                <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                <td></td>
-                <td class="action text-center">
-                    #if(!$isMyfilesHomepage)
-                    <div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span></button>
-                        <ul class="dropdown-menu pull-right" role="menu">
+                #if($isMyfilesHomepage)
+                #set($url = '/users/'+$user.name+'/')
+                #set ($userFolder = $page.find($url))
+                #set ($folders = $userFolder.children.dirs)
+                #set ($pageHref = $url)
+                #else
+                #set ($folders = $page.subFolders)
+                #set ($files = $page.files)
+                #set ($pageHref = $page.href)
+                #end
+                #foreach($f in $folders)
+                <tr class="folder">
+                    <td class="left">
+                        <a href="${f.href}">
+                            <span class="glyphicon glyphicon-folder-close btn-lg"></span>
+                            $f.name
+                        </a>
+                    </td>
+                    <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                    <td></td>
+                    <td class="action text-center">
+                        #if(!$isMyfilesHomepage)
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
 
-                            <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
-                            <li><a href="${f.path}" class="btn-share" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
-                            <!--<li class="divider"></li>-->
-                            <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
-                            <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
-                            <li class="divider"></li>
-                            <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
-                        </ul>
-                    </div>
-                    #end
-                </td>
-            </tr>
-            #end
+                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
+                                <li><a href="${f.path}" class="btn-share" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                <!--<li class="divider"></li>-->
+                                <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
+                                <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
+                                <li class="divider"></li>
+                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                        #end
+                    </td>
+                </tr>
+                #end
 
-            #foreach($f in $files)
-            <tr>
-                <td class="left">
-                    <span class="glyphicon $f.glyphicon btn-lg"></span>
-                    <a href="$f.href" target="_blank" class="" title="$f.name">$f.name</a>
-                </td>
-                <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
-                <td class="cell-lg">$formatter.formatBytes( $f )</td>
-                <td class="action text-center">
-                    <div class="btn-group btn-group-sm">
-                        <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span></button>
-                        <ul class="dropdown-menu pull-right" role="menu">
-                            <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
-                            <li><a href="${f.path}" download title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
-                            <li><a href="${f.path}" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
-                            <!--<li class="divider"></li>-->
-                            <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
-                            <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
-                            <li class="divider"></li>
-                            <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
-                        </ul>
-                    </div>
-                </td>
-            </tr>
-            #end
+                #foreach($f in $files)
+                <tr>
+                    <td class="left">
+                        <span class="glyphicon $f.glyphicon btn-lg"></span>
+                        <a href="$f.href" target="_blank" class="" title="$f.name">$f.name</a>
+                    </td>
+                    <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                    <td class="cell-lg">$formatter.formatBytes( $f )</td>
+                    <td class="action text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
+                                <li><a href="${f.path}" download title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
+                                <li><a href="${f.path}" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                <!--<li class="divider"></li>-->
+                                <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
+                                <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
+                                <li class="divider"></li>
+                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                #end
             </tbody>
         </table>
     </div>
@@ -124,6 +126,6 @@
 
 </div>
 <script>
-    var pageHref = '$pageHref'.replace('#','');
+    var pageHref = '$pageHref'.replace('#', '');
 </script>
 #end
