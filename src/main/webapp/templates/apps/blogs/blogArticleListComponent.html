@@ -4,7 +4,9 @@
 
 #if( $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
-    #set ($articles = $articles.truncate($numberOfArticles))
+#if ($numberOfArticles > 0)
+#set ($articles = $articles.truncate($numberOfArticles))
+#end
 
     #if ($layout == "grid")
         #set ($clsName = "col-sm-4")
@@ -17,7 +19,6 @@
         #elseif ($itemsPerRow == 4)
             #set ($clsName = "col-sm-3")
         #end
-
 
         <div class="blog-articles-list row" id="blog-article-list-${blogListId}">
             #foreach($article in $articles)
@@ -68,7 +69,7 @@
                 }).trigger('resize');
             });
         </script>
-    #else
+#elseif ($layout == "list")
         <div class="blog-articles-list" id="blog-article-list-${blogListId}">
             #foreach($article in $articles)
                 <div class="media blog-article">
@@ -86,7 +87,7 @@
                             <a href="$article.href">$article.title</a>
                         </h4>
                         <div class="media-content clearfix">
-                            $formatter.toPlain( $!article.brief )
+                            $!formatter.toPlain( $!article.brief )
                         </div>
                         <div class="row">
                             <div class="col-md-4">
@@ -126,6 +127,55 @@
                 <hr />
             #end
         </div>
+#elseif ($layout == "accordion")
+<div class="blog-articles-list panel-group" id="blog-article-list-${blogListId}">
+    #foreach($article in $articles)
+    <div class="panel panel-default">
+        <div class="panel-heading" id="headingOne">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#blog-article-list-${blogListId}" href="#blog-article-list-${blogListId}-${foreach.index}">
+                    $article.title
+                </a>
+            </h4>
+        </div>
+        <div id="blog-article-list-${blogListId}-${foreach.index}" class="panel-collapse panel-body collapse in">
+            <div class="media blog-article">
+                <div class="media-left hidden-sm hidden-xs">
+                    #set($bg = "/static/images/photo_holder.png")
+                    #if( $article.bestSquareImageHref )
+                    #set($bg = "${article.bestSquareImageHref}/alt-300-300.png")
+                    #end
+                    <a href="$article.href">
+                        <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                    </a>
+                </div>
+                <div class="media-body">
+                    <div class="media-content clearfix">
+                        $!formatter.toPlain( $!article.brief )
+                    </div>
+                    <p>
+                        <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                    </p>
+
+                    <p>
+                        #if( $article.category )
+                        <span class="label label-success">$article.category</span>
+                        #end
+                        #foreach($tag in $article.tags)
+                        #if( $article.isSelectedTag( $tag ) )
+                        <span class="label label-success">$tag</span>
+                        #end
+                        #end
+                        #if($article.featured)
+                        <span class="label label-warning">Featured</span>
+                        #end
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+</div>
     #end
 #else
     <p>No blog articles found</p>

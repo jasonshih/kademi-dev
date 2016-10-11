@@ -20,7 +20,7 @@
                     form.find('.number-of-articles').on('change', function () {
                         var number = this.value;
 
-                        if (isNaN(number) || +number <= 0) {
+                        if (isNaN(number) || +number < 0) {
                             number = 1;
                             this.value = number;
                         }
