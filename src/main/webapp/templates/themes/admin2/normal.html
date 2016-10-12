@@ -205,7 +205,9 @@
                                     #if( $profile.photoHash )
                                     <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
-                                    <span class="username">$user.thisProfile.nickName</span>
+                                    <span class="username">
+                                        $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
+                                    </span>
                                     <i class="clip-chevron-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
