@@ -5,12 +5,12 @@
     #set( $cartDisplay = "none" )
 #end
 
-<li id="cart-link" style="display: $cartDisplay">
-    <span>
+<li id="cart-link">
+    <div style="display: $cartDisplay">
         <a href="/checkout/" class="btn-sm btn-block btn btn-primary">
             <span class="glyphicon glyphicon-shopping-cart"></span>
             <span class="visible-xs-inline">Shopping cart </span>
             $cart.numItems
         </a>
-    </span>
+    </div>
 </li>
