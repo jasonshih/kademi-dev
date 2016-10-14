@@ -36,7 +36,7 @@
                 if (data.hits.hits.length > 0) {
                     filterOptions.since = data.hits.hits[0].fields.date[0];
                 }
-                //flog("lastLogDate", filterOptions.since);
+                flog("lastLogDate", filterOptions);
                 $.each(data.hits.hits, function (i, n) {
                     processReceivedLog(n.fields);
                 });
@@ -62,7 +62,7 @@
     }
 
     function processReceivedLog(c) {
-        //flog("log", c);
+
         var dt = moment(c.date[0]);
         var labelType = c.level[0].toLowerCase();
 
