@@ -5,7 +5,7 @@
     KEditor.components['rewardStoreCategoryProducts'] = {
         settingEnabled: true,
 
-        settingTitle: 'Blog Article List Settings',
+        settingTitle: 'Products List Settings',
 
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "rewardStoreCategoryProducts" component');
@@ -40,8 +40,8 @@
             flog('showSettingForm "rewardStoreCategoryProducts" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-sort').val(dataAttributes['data-sort']);
-            form.find('.select-asc').val(dataAttributes['data-asc']);
+            form.find('.select-sort').val(dataAttributes['data-sort'] || 'title');
+            form.find('.select-asc').val(dataAttributes['data-asc'] || 'true');
         }
     };
 
