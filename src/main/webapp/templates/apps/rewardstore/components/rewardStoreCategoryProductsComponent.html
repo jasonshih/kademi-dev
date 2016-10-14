@@ -8,7 +8,23 @@
 #set($toRange = $formatter.toInteger($params.toRange))
 #end
 
-#set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, 'title', null ) )
+#if (!$sort)
+#set($sort = 'title')
+#end
+#if($params.sort)
+#set($sort = $params.sort)
+#end
+
+#if (!$asc)
+#set($asc = false)
+#else
+#set($asc = $formatter.toBool($asc))
+#end
+#if($params.asc)
+#set($asc = $formatter.toBool($params.asc))
+#end
+
+#set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, $sort, $asc ) )
 <div id="products-list" class="rewardStoreCategoryProductsComponent">
     #if( $products.hits.hits.size() == 0 )
     <p class="alert alert-info">No products were found matching the critieria</p>
