@@ -22,13 +22,6 @@ JBNodes['decision'] = {
         form.append(
             '<div class="form-group">' +
             '   <div class="col-md-12">' +
-            '       <label for="expression">Expression</label>' +
-            '       <textarea name="expression" class="form-control expression" rows="5"></textarea>' +
-            '       <small class="text-muted help-block">Enter the expression using MVEL syntax</small>' +
-            '   </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '   <div class="col-md-12">' +
             '       <label for="expression">Choices</label>' +
             '       <div class="choices-wrapper">' +
             '       </div>' +
