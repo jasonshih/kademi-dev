@@ -13,12 +13,11 @@ CKEDITOR.stylesSet.add('myStyles',
         { name: 'Warning text', element: 'p', attributes: { 'class': 'text-warning' } },
         { name: 'Danger text', element: 'p', attributes: { 'class': 'text-danger' } },
 
-// BM: Need themes to be upgraded to bs 3.1.1 to use backgrounds
-//        { name: 'Primary background', element: 'p', attributes: { 'class': 'bg-primary' } },
-//        { name: 'Success background', element: 'p', attributes: { 'class': 'bg-success' } },
-//        { name: 'Info background', element: 'p', attributes: { 'class': 'bg-info' } },
-//        { name: 'Warning background', element: 'p', attributes: { 'class': 'bg-warning' } },
-//        { name: 'Danger background', element: 'p', attributes: { 'class': 'bg-danger' } },
+        {name: 'Primary background', element: 'p', attributes: {'class': 'bg-primary'}},
+        {name: 'Success background', element: 'p', attributes: {'class': 'bg-success'}},
+        {name: 'Info background', element: 'p', attributes: {'class': 'bg-info'}},
+        {name: 'Warning background', element: 'p', attributes: {'class': 'bg-warning'}},
+        {name: 'Danger background', element: 'p', attributes: {'class': 'bg-danger'}},
 
         { name: 'Code', element: 'pre', attributes: { 'class': 'prettyprint' } },
         { name: 'Lead paragraph', element: 'p', attributes: { 'class': 'lead' } },
@@ -32,13 +31,19 @@ CKEDITOR.stylesSet.add('myStyles',
         { name: 'Page header', element: 'div', attributes: { 'class': 'page-header' } },
 
         // Inline Styles
-        { name: 'Alternate heading', element: ["h1","h2","h3","h4","h5"], attributes: { 'class': 'h-alternate' } },        
+        {name: 'Alternate heading', element: ["h1", "h2", "h3", "h4", "h5"], attributes: {'class': 'h-alternate'}},
         { name: 'Defalt label', element: 'span', attributes: { 'class': 'label label-default' } },
         { name: 'Primary label', element: 'span', attributes: { 'class': 'label label-primary' } },
         { name: 'Success label', element: 'span', attributes: { 'class': 'label label-success' } },
         { name: 'Info label', element: 'span', attributes: { 'class': 'label label-info' } },
         { name: 'Warning label', element: 'span', attributes: { 'class': 'label label-warning' } },
         { name: 'Danger label', element: 'span', attributes: { 'class': 'label label-danger' } },
+        {name: 'Muted text', element: 'span', attributes: {'class': 'text-muted'}},
+        {name: 'Primary text', element: 'span', attributes: {'class': 'text-primary'}},
+        {name: 'Success text', element: 'span', attributes: {'class': 'text-success'}},
+        {name: 'Info text', element: 'span', attributes: {'class': 'text-info'}},
+        {name: 'Warning text', element: 'span', attributes: {'class': 'text-warning'}},
+        {name: 'Danger text', element: 'span', attributes: {'class': 'text-danger'}},
 
         { name: 'Badge', element: 'span', attributes: { 'class': 'badge' } },
 
