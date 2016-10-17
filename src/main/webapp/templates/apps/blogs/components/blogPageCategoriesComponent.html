@@ -1,9 +1,8 @@
 #if ($blog)
-#set ($categoryCounts = $rootFolder.find("/blogs").child($blog).$categoryCounts)
+#set ($categoryCounts = $rootFolder.find("/blogs").child($blog).categoryCounts)
 #else
-#set ($categoryCounts = $page.$categoryCounts)
+#set ($categoryCounts = $page.categoryCounts)
 #end
-
 
 #set ($currentCate = $!params.cat)
 #set ($currentTag = $!params.tag)
