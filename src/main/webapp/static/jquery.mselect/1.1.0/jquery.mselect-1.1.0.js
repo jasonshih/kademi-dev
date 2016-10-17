@@ -23,7 +23,7 @@
         basePath: '/',
         pagePath: window.location.pathname,
         bs3Modal: false,
-        zIndex: '',
+        zIndex: 10012,
         showModal: function (modal) {
             modal.modal('show');
         },
@@ -56,7 +56,11 @@
                         }
                         config.showModal(modal);
                         if (config.zIndex) {
-                            modal.parent('.modal-scrollable').css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
+                            if (config.bs3Modal){
+                                modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
+                            } else {
+                                modal.parent('.modal-scrollable').css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
+                            }
                         }
                     });
                 } else {
