@@ -110,6 +110,14 @@ function initKEditor(body, fileName) {
             if (content === '') {
                 contentArea.addClass('empty');
             }
+
+            var unknownContainer = contentArea.children().not('section');
+            unknownContainer.wrap('<div data-type="container-content"></div>');
+
+            return unknownContainer.parent();
+        },
+        onInitContainer: function (container) {
+            return container.children().children().not('section').attr('data-type', 'component-blank');
         },
         containerSettingEnabled: true,
         containerSettingInitFunction: function (form, keditor) {
