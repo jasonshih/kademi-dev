@@ -45,6 +45,7 @@ $(function () {
 
     function initUpload() {
         Dropzone.autoDiscover = false;
+
         $('#modal-upload .dropzone').dropzone({
             paramName: 'file', // The name that will be used to transfer the file
             maxFilesize: 2000.0, // MB
@@ -53,15 +54,18 @@ $(function () {
             uploadMultiple: false,
             acceptedFiles: 'text/csv,.csv,.txt'
         });
-        var dz = Dropzone.forElement('#uploadFileDropzone');
-        flog('dropz', Dropzone, dz, dz.options.url);
-        dz.on('success', function (file) {
-            flog('added file', file);
-            doReloadTasksPage();
-        });
-        dz.on('error', function (file, errorMessage) {
-            Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
-        });
+
+        if ($('#uploadFileDropzone').length > 0) {
+            var dz = Dropzone.forElement('#uploadFileDropzone');
+            flog('dropz', Dropzone, dz, dz.options.url);
+            dz.on('success', function (file) {
+                flog('added file', file);
+                doReloadTasksPage();
+            });
+            dz.on('error', function (file, errorMessage) {
+                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+            });
+        }
     }
 
     initUpload();
