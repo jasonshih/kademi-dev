@@ -104,6 +104,14 @@
                         component.attr('data-thank-you', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('#path').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-path', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -123,6 +131,7 @@
             form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
             form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
             form.find('#thankYou').val(dataAttributes['data-thank-you']);
+            form.find('#path').val(dataAttributes['data-path']);
         }
     };
 
