@@ -7,6 +7,7 @@
 <div class="row">
     <div class="col-sm-12">
         <form action="/contactus" method="POST" class="contactus form-horizontal" role="form">
+            <input type="hidden" name="contactForm" value="$!path">
             #if ($firstName == "true")
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="firstName">First name</label>
@@ -54,6 +55,8 @@
                 </div>
             </div>
             #end
+
+
 
             #if( $contactPage.hasOptins() )
             <div class="form-group">
