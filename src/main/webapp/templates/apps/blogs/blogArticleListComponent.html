@@ -39,7 +39,8 @@
                         <div class="caption">
                             <h4><a title="$article.title" href="$article.href">$article.title</a></h4>
                             <p class="small"><i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr></p>
-                            <p style="word-wrap: break-word;" class="article-brief">$formatter.toPlain( $!article.brief )</p>
+
+                            <p style="word-wrap: break-word;" class="article-brief">$!formatter.toPlain( $!article.brief )</p>
                         </div>
                     </div>
                 </div>

@@ -69,6 +69,16 @@ function initViewEvent() {
             alert("Thank you")
         }
     });
+
+    $(document).on('click', '.guest-view', function(e){
+        e.preventDefault();
+
+        var m = $('.attendees-modal');
+        m.find('.guestName').text($(this).siblings('[name=guestName]').val());
+        m.find('.guestEmail').text($(this).siblings('[name=guestEmail]').val());
+        m.find('.guestOrgName').text($(this).siblings('[name=guestOrgName]').val());
+        m.modal();
+    });
 }
 
 function initFullCalendar() {
@@ -91,10 +101,7 @@ function initRsvpForm() {
             // Check they've selected something
             var option = rsvpForm.find("input[type=radio]:checked");
             if (option.length === 0) {
-                var alert = $("<div class='alert alert-warning'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Please select an option</div>");
-                rsvpForm.prepend(alert);
-                //alert.alert();
-                return false;
+                return {error: 1, errorFields: ['rsvp'], errorMessages: ['Please select an option']};
             }
 
             // re-number guestlist inputs
@@ -118,6 +125,7 @@ function initRsvpForm() {
             // only called when resp.status = true
             rsvpStatus = $("form.rsvp input[name=rsvp]:checked").val();
             showRsvpPanel();
+            $('#attendeesWrap').length && $('#attendeesWrap').reloadFragment();
         },
         errorHandler: function (response, form, valiationMessageSelector, errorCallback) {
             if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
@@ -170,8 +178,8 @@ function initRsvpForm() {
             }
         },
         error: function () {
-            var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
-            rsvpForm.prepend(alert)
+            //var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
+            //rsvpForm.prepend(alert)
         }
     });
 }

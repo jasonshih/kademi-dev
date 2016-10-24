@@ -67,8 +67,10 @@ function initDetailsTab() {
                 format: 'DD/MM/YYYY HH:mm',
                 timePicker: true,
                 timePickerIncrement: 15,
-                timePicker12Hour: false
-
+                timePicker12Hour: false,
+                locale: {
+                    format: 'DD/MM/YYYY HH:mm'
+                }
             },
             function (start, end) {
                 flog('onChange', start, end);

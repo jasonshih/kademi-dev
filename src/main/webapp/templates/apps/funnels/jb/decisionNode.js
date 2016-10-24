@@ -90,6 +90,7 @@ JBNodes['decision'] = {
                                     label: ''
                                 };
 
+                                choiceRules = self.checkRuleType(choiceRules);
                                 self.choices[targetId].query.rules = choiceRules;
                             }
 
@@ -115,6 +116,27 @@ JBNodes['decision'] = {
                 });
             }
         });
+    },
+
+    checkRuleType: function (rules) {
+        var self = this;
+
+        if (rules.condition) {
+            rules.ruleType = 'ruleList';
+            rules.rules = self.checkRuleType(rules.rules);
+        } else {
+            if ($.isArray(rules)) {
+                for (var i = 0; i < rules.length; i++) {
+                    if (rules[i].condition) {
+                        rules[i] = self.checkRuleType(rules[i]);
+                    } else {
+                        rules[i].ruleType = 'rule';
+                    }
+                }
+            }
+        }
+
+        return rules;
     },
 
     showSettingForm: function (form, node) {
@@ -169,6 +191,7 @@ JBNodes['decision'] = {
     },
 
     ruleToString: function (rules) {
+        var self = this;
         var rulesStr = '';
 
         rulesStr += '<ul>';

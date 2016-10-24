@@ -19,15 +19,15 @@ function initMessage(markRead, page) {
 
             // if we've deleted the current page need to go elsewhere
             log("check if deleted current page", deletedHref, window.location.pathname);
-            if( deletedHref == window.location.pathname ) {                
-                if( messages.length == 0 ) {                
+            if (deletedHref == window.location.pathname) {
+                if (messages.length == 0) {
                     $(".nav-menuNotifications span").text("");
                     window.location.href = "/inbox/";
                 } else {
                     $(".nav-menuNotifications span").text(messages.length);
                     if( next.length == 0 ) {
                         next = messages.first();
-                    }                
+                    }
                     var nextHref = next.find("h3 a").attr("href");
                     log("next page", next, nextHref);
                     if( nextHref ) {
@@ -42,11 +42,11 @@ function initMessage(markRead, page) {
     $(".notificationBox div.message").click(function(e) {
         log("click", this);
         e.preventDefault();
-        e.stopPropagation();        
+        e.stopPropagation();
         var href = $(this).find("h3 a").attr("href");
         window.location.href = href;
     });
-        
+
     if(!markRead) {
         return;
     }
@@ -62,5 +62,5 @@ function initMessage(markRead, page) {
             log("Failed to set read flag", resp);
 
         }
-    });                
+    });
 }

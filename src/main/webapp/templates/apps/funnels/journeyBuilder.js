@@ -682,7 +682,7 @@ jsPlumb.ready(function () {
                             if (!nodeData.choices) {
                                 nodeData.choices = {};
                             }
-                            nodeData.choices[connection.targetId] = {constant: {}};
+                            nodeData.choices[connection.targetId] = {};
                         }
                     } else {
                         nodeData[portName] = connection.targetId;
