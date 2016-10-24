@@ -125,7 +125,7 @@ function initTabLazyLoading() {
 }
 
 function loadTab(tabId) {
-    var tab = $("#" + tabId);
+    var tab = $("#" + tabId + ".lazy-load");
     flog("selected tab", tab, tabId);
     if (tab.length > 0) {
         tab.reloadFragment({
