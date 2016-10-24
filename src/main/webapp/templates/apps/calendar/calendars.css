@@ -47,6 +47,12 @@
     width: 60px;
     text-align: center;
 }
+
+.attendees li a.profilePic img{
+    display: block;
+    height: 100%;
+}
+
 .attendees li a.user {
     display: block;
     width: 60px;

@@ -69,6 +69,16 @@ function initViewEvent() {
             alert("Thank you")
         }
     });
+
+    $(document).on('click', '.guest-view', function(e){
+        e.preventDefault();
+
+        var m = $('.attendees-modal');
+        m.find('.guestName').text($(this).siblings('[name=guestName]').val());
+        m.find('.guestEmail').text($(this).siblings('[name=guestEmail]').val());
+        m.find('.guestOrgName').text($(this).siblings('[name=guestOrgName]').val());
+        m.modal();
+    });
 }
 
 function initFullCalendar() {
@@ -115,6 +125,7 @@ function initRsvpForm() {
             // only called when resp.status = true
             rsvpStatus = $("form.rsvp input[name=rsvp]:checked").val();
             showRsvpPanel();
+            $('#attendeesWrap').length && $('#attendeesWrap').reloadFragment();
         },
         errorHandler: function (response, form, valiationMessageSelector, errorCallback) {
             if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
