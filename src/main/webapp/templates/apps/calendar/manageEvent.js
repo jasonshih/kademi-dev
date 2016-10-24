@@ -71,7 +71,6 @@ function initDetailsTab() {
                 locale: {
                     format: 'DD/MM/YYYY HH:mm'
                 }
-
             },
             function (start, end) {
                 flog('onChange', start, end);
