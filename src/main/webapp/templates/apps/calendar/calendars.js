@@ -91,10 +91,7 @@ function initRsvpForm() {
             // Check they've selected something
             var option = rsvpForm.find("input[type=radio]:checked");
             if (option.length === 0) {
-                var alert = $("<div class='alert alert-warning'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Please select an option</div>");
-                rsvpForm.prepend(alert);
-                //alert.alert();
-                return false;
+                return {error: 1, errorFields: ['rsvp'], errorMessages: ['Please select an option']};
             }
 
             // re-number guestlist inputs
@@ -170,8 +167,8 @@ function initRsvpForm() {
             }
         },
         error: function () {
-            var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
-            rsvpForm.prepend(alert)
+            //var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
+            //rsvpForm.prepend(alert)
         }
     });
 }
