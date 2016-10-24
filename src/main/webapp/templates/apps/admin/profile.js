@@ -4,6 +4,7 @@ function initProfile() {
     initOrgSearch();
     initNewMembershipForm();
     initEnableDisable();
+    initTabLazyLoading();
     $(".initProfileForm").forms({
         callback: function (resp, form) {
             Msg.info("Done");
@@ -103,6 +104,37 @@ function initProfile() {
             });
         }
     });
+}
+
+function initTabLazyLoading() {
+    $(document).on('shown.bs.tab', function (e) {
+        var id = $(e.target).attr("href");
+        var tab = $(id);
+        flog("shown", id, tab);
+        var tabId = id.substring(1);
+        loadTab(tabId);
+    });
+
+    // Better load the current tab if one is selected
+    var uri = URI(window.location);
+    var tabId = uri.fragment();
+    // Need to strip off the -tab suffix
+    tabId = tabId.substring(0, tabId.length - 4);
+
+    loadTab(tabId);
+}
+
+function loadTab(tabId) {
+    var tab = $("#" + tabId);
+    flog("selected tab", tab, tabId);
+    if (tab.length > 0) {
+        tab.reloadFragment({
+            url: window.location.pathname + "?showTab=" + tabId,
+            whenComplete: function () {
+                $("abbr.timeago").timeago();
+            }
+        });
+    }
 }
 
 function initEnableDisable() {
