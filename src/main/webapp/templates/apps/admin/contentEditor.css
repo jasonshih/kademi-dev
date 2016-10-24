@@ -2,9 +2,10 @@
     padding-top: 50px !important;
 }
 
-#content-area .navbar-fixed-top {
-    top: 50px;
-    z-index: 5;
+#content-area .navbar-fixed-top,
+#content-area .navbar-fixed-center,
+#content-area .navbar-fixed-bottom {
+    position: static !important;
 }
 
 .keditor-component .keditor-toolbar {
