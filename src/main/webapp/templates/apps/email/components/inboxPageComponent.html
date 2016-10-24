@@ -1,51 +1,60 @@
-<div class="row-fluid row">
-    <div class="">
-        <div class="col-md-4 tabs-left">
-            <ul class="nav nav-tabs nav-stacked span4 messages">
-                #set($messages = $page.inbox.children)
+<div class="row">
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            #set($messages = $page.inbox.children)
 
-                #if($messages.isEmpty())
-                <li>You have no notifications</li>
-                #else
-                <li class=""><h4>Messages</h4></li>
+            #if($messages.isEmpty())
+            <div class="panel-heading">
+                <div class="panel-title" style="padding-top: 0;">
+                    You have no notifications
+                </div>
+            </div>
+            <div class="panel-boby">
+                <br />
+            </div>
+            #else
+            <div class="panel-heading">
+                <div class="panel-title" style="padding-top: 0;">
+                    Messages
+                </div>
+            </div>
+            <ul class="list-group message-titles" style="max-height: 500px; overflow-y: auto;">
                 #foreach($msg in $messages)
                 #set($activeClass = $formatter.ifEqual("active","",$msg.name,$page.name))
-                <li class="$activeClass message">
-                    <a href="$msg.href">
-                        <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($msg.date)">$msg.date</abbr>
-                        <strong class="from">$msg.fromStr</strong>
+                <a class="$activeClass list-group-item" href="$msg.href">
+                    <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($msg.date)">$msg.date</abbr>
+                    <strong class="from">$msg.fromStr</strong>
 
-                        <p>$msg.subject</p>
-                    </a>
-                </li>
-                #end
+                    <p>$msg.subject</p>
+                </a>
                 #end
             </ul>
+            #end
         </div>
-        <div class="tab-content col-md-8">
-            #if($page.is("message"))
-            <div class="well">
+    </div>
+    <div class="col-sm-8">
+        #if($page.is("message"))
+        <div class="panel panel-default">
+            <div class="panel-heading">
                 <h4>$page.subject</h4>
                 <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($page.date)">$formatter.formatDateLong($page.date)</abbr>
                 <small>From: $page.fromStr</small>
             </div>
-            <div class="email-content">
+            <div class="panel-body">
                 #if( $page.html )
                 <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlAttEncode($page.html)"></iframe>
                 #else
                 $!page.text
                 #end
             </div>
-            #end
-        </div>
+            </div>
+        #end
     </div>
-
 </div>
 
 #set($markRead = $page.is("message") and !$page.read)
 <script type="text/javascript">
-    jQuery(document).ready(function () {
-        jQuery("abbr.timeago").timeago();
-        initMessage($markRead, "");
+    $(function () {
+        initMessage($markRead, '');
     });
 </script>
