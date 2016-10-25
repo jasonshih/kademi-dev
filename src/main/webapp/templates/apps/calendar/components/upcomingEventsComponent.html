@@ -1,53 +1,36 @@
 <h3>Upcoming events</h3>
 <div class="calendar-events">
-    #set($upcoming = $page.upcomingEvents)
-    #foreach($event in $upcoming )
-    <article class="calendar-events-item">
-        <header class="calendar-events-header">
-            <h3><a href="$event.name">$event.summary</a></h3>
-            <div class="calendar-event-byline">
-                #if( $event.organisor )
-                <small class="author">By <a href="/users/$event.organisor.name/public">$event.organisor.formattedName</a></small>
-                #end
-                #if( $event.location )
-                <small class="location">At $event.location</small>
-                #end
-                <small>Starts $formatter.formatDate( $event.startDate ) (<abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr>)</small>
-            </div>
-        </header>
-        <div class="calendar-event-text clearfix">
-            <div class="clearfix">$!event.description</div>
-            <a href="$event.name" class="btn btn-sm btn-success pull-right">Register</a>
-        </div>m
-    </article>
+    #if ($page.upcomingEvents)
+        #set($upcoming = $page.upcomingEvents)
+        #foreach($event in $upcoming )
+            #renderUpcoming($event)
+        #end
+    #else
+        #foreach($cal in $page.children)
+            #set($upcoming = $cal.upcomingEvents)
+            #foreach($event in $upcoming )
+                #renderUpcoming($event)
+            #end
+        #end
     #end
 </div>
-<script type="text/javascript">
-    $(function () {
-        initCalendar();
-        $("#new-event").forms({
-            callback: function () {
-                window.location.reload();
-            }
-        });
-
-        var eventRange = $('#event-range');
-        eventRange.exist(function () {
-            flog('init report range');
-            eventRange.daterangepicker(
-                    {
-                        format: 'DD/MM/YYYY HH:mm',
-                        timePicker: true,
-                        timePickerIncrement: 15,
-                        timePicker12Hour: false
-
-                    },
-                    function (start, end) {
-                        flog('onChange', start, end);
-                        $('#startDate').val(formatDateTime(start));
-                        $('#endDate').val(formatDateTime(end));
-                    }
-            );
-        });
-    });
-</script>
+#macro (renderUpcoming $event)
+<article class="calendar-events-item">
+    <header class="calendar-events-header">
+        <h3><a href="/Calendars/${event.calendar.name}/${event.name}">$event.summary</a></h3>
+        <div class="calendar-event-byline">
+            #if( $event.organisor )
+            <small class="author">By <a href="/users/$event.organisor.name/public">$event.organisor.formattedName</a></small>
+            #end
+            #if( $event.location )
+            <small class="location">At $event.location</small>
+            #end
+            <small>Starts $formatter.formatDate( $event.startDate ) (<abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$!event.startDate</abbr>)</small>
+        </div>
+    </header>
+    <div class="calendar-event-text clearfix">
+        <div class="clearfix">$!event.description</div>
+        <a href="/Calendars/${event.calendar.name}/${event.name}" class="btn btn-sm btn-success pull-right">Register</a>
+    </div>
+</article>
+#end

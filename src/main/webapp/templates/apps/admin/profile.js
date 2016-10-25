@@ -42,7 +42,7 @@ function initProfile() {
             $(".form-unsubscribe").trigger('submit');
         }
     });
-    
+
     $(".form-unsubscribe").forms({
         callback: function (resp, form) {
             Msg.info("Unsubscribed. Now going to manage users page");
