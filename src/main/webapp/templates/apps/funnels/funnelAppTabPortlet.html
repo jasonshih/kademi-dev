@@ -91,9 +91,9 @@
                             <th>Attempts</th>
                         </tr>
                         <tr>
-                            <td>$formatter.formatDateTime($formatter.processingStartedAt, $page.organisation.timezone))</td>
-                            <td>$formatter.formatDateTime($formatter.completedProcessingAt, $page.organisation.timezone))</td>
-                            <td>$formatter.formatDateTime($formatter.numAttempts, $page.organisation.timezone))</td>
+                            <td>$!formatter.formatDateTime($formatter.processingStartedAt, $page.organisation.timezone))</td>
+                            <td>$!formatter.formatDateTime($formatter.completedProcessingAt, $page.organisation.timezone))</td>
+                            <td>$!formatter.numAttempts</td>
                         </tr>
                     </table>
                     #else
