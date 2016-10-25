@@ -35,10 +35,15 @@ function initProfile() {
     });
 
 
+    $(".form-unsubscribe button").on('click', function(e){
+        e.preventDefault();
+        var c = confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site");
+        if (c){
+            $(".form-unsubscribe").trigger('submit');
+        }
+    });
+    
     $(".form-unsubscribe").forms({
-        validate: function () {
-            return confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site");
-        },
         callback: function (resp, form) {
             Msg.info("Unsubscribed. Now going to manage users page");
             window.location = "/manageUsers";
