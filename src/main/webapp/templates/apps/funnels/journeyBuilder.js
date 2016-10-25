@@ -408,6 +408,13 @@ var JBApp = {
         '            </div>' +
         '        </div>' +
         '    </div>' +
+        '</div>' +
+        '<div class="form-group">' +
+        '    <div class="col-md-12">' +
+        '        <label>Time</label>' +
+        '        <input type="number" class="form-control time" value="" />' +
+        '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
+        '    </div>' +
         '</div>',
     initStandardGoalSettingControls: function (form) {
         form.find('.timeout-units-selector li').on('click', function (e) {
@@ -428,6 +435,7 @@ var JBApp = {
         var source = form.find('.source').val();
         var cost = form.find('.cost').val();
         var probability = form.find('.probability').val();
+        var time = form.find('.time').val();
 
         JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
         JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
@@ -435,6 +443,7 @@ var JBApp = {
         JBApp.currentSettingNode.source = source || null;
         JBApp.currentSettingNode.cost = cost || null;
         JBApp.currentSettingNode.probability = probability || null;
+        JBApp.currentSettingNode.timerTime = time || null;
     },
     showStandardGoalSettingControls: function (form, node) {
         if (node.timeoutUnits !== null) {
@@ -463,6 +472,7 @@ var JBApp = {
 
         form.find('.cost').val(node.cost !== null ? node.cost : '');
         form.find('.probability').val(node.probability !== null ? node.probability : '');
+        form.find('.time').val(node.timerTime !== null ? node.timerTime : '');
     }
 };
 
