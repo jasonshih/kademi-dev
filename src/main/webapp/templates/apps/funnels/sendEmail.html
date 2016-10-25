@@ -5,6 +5,18 @@
             #chart_histogram svg, .myPie svg {
                 height: 220px;
             }
+
+            #modalEditMessage iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            #message iframe {
+                border: 1px solid #ddd;
+            }
         </style>
     </head>
     <body>
@@ -93,7 +105,7 @@
                 <ul class="nav nav-tabs tab-bricky">
                     <li class=""><a data-toggle="tab" href="#summary">Summary</a></li>
                     <li class=""><a data-toggle="tab" href="#sendInfo">Send information</a></li>
-                    <li class=""><a data-toggle="tab" href="#messages">Message</a></li>
+                    <li class=""><a data-toggle="tab" href="#message">Message</a></li>
                     <li class=""><a data-toggle="tab" href="#history">History</a></li>
                 </ul>
 
@@ -131,7 +143,7 @@
 
                     <div id="sendInfo" class="tab-pane">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 col-md-push-6">
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="website">Website</label>
                                     <div class="col-md-8">
@@ -150,6 +162,8 @@
                                         <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.subject )</textarea>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-md-6 col-md-pull-6">
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="from">Email from address</label>
                                     <div class="col-md-8">
@@ -175,9 +189,11 @@
                         </div>
                     </div>
 
-                    <div id="messages" class="tab-pane">
-                        <iframe id="rawBody" frameBorder="0" class="" style="width: 100%; height: 500px; overflow-y: auto" src="edmeditor?fileName=${page.name}-content.html&useHash=true" >
-                        </iframe>
+                    <!-- Start content of Message tab -->
+                    <div id="message" class="tab-pane">
+                        <a href="#modalEditMessage" data-toggle="modal" class="btn btn-sm btn-warning">Edit Message</a>
+                        <hr />
+                        <iframe width="100%" height="500" src="${page.name}-content.html"></iframe>
                     </div>
 
                     <!-- Start content of History tab -->
@@ -247,6 +263,15 @@
             </div>
         </div>
 
+        <div id="modalEditMessage" class="modal modal-full fade" tabindex="-1">
+            <div class="modal-body">
+                <iframe src="edmeditor?fileName=${page.name}-content.html&useHash=true"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-sm btn-default">Close</button>
+            </div>
+        </div>
+
         <script id="email-template" type="text/html">
             {{\#if .}}
             {{#each .}}
@@ -283,6 +308,11 @@
                     onSuccess: function () {
                         Msg.info("Saved");
                     }
+                });
+
+                var iframe = $('#message iframe').get(0);
+                $('#modalEditMessage').on('hide.bs.modal', function () {
+                    iframe.src = iframe.src;
                 });
             });
         </script>

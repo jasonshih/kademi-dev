@@ -319,8 +319,13 @@ html .modal-lg {
     height: 100%;
 }
 
-.modal-full .modal-body {
+.modal-full .modal-header + .modal-body {
     height: calc(100% - 56px - 61px);
+    position: relative;
+}
+
+.modal-full .modal-body {
+    height: calc(100% - 61px);
     position: relative;
 }
 
