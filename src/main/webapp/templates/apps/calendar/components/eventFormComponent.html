@@ -1,3 +1,4 @@
+#if ($page)
 <style>
     .well-rsvp {
         display: none;
@@ -149,3 +150,7 @@
         initViewEvent();
     });
 </script>
+
+#else
+<div class="alert alert-warning">Event form component will go here</div>
+#end

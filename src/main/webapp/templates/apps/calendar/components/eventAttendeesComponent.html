@@ -1,3 +1,4 @@
+#if ($page)
 #if( !$page.attendees.isEmpty() )
 <div class='attendees' id="attendeesWrap">
     <h3>$page.attendees.size() attending</h3>
@@ -42,4 +43,7 @@
         </div>
     </div>
 </div>
+#end
+#else
+<div class="alert alert-warning">Event attendees component will go here</div>
 #end

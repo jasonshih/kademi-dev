@@ -1,3 +1,4 @@
+#if ($page)
 <h3>$page.title</h3>
 
 <div class="calendar-event-byline">
@@ -16,3 +17,6 @@
 <div class='calendar-event-content'>
     $!page.description
 </div>
+#else
+<div class="alert alert-warning">Event detail component will go here</div>
+#end
