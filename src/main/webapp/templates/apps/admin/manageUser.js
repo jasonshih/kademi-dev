@@ -414,11 +414,11 @@ function initNewUserForm() {
         validate: function () {
             var newUserEmail = $('#newUserEmail');
             var newUserEmailStr = newUserEmail.val();
-            
-            if( newUserEmailStr == null || newUserEmailStr == "" ) {
+
+            if (newUserEmailStr == null || newUserEmailStr == "") {
                 return true; // blank is ok now!
             }
-            
+
             var error = 0;
 
             if (!validateFuseEmail(newUserEmailStr)) {
@@ -568,9 +568,17 @@ function doAddUsersToGroup(groupName, checkBoxes) {
 }
 
 function doRemoveUsers(checkBoxes) {
+    var ids = [];
+
+    checkBoxes.each(function (a, item) {
+        ids.push($(item).val());
+    });
+
     $.ajax({
         type: 'POST',
-        data: checkBoxes,
+        data: {
+            toRemoveId: ids
+        },
         dataType: 'json',
         url: '',
         success: function (data) {
