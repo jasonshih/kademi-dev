@@ -1,19 +1,31 @@
+#if ($page)
 <h3>Upcoming events</h3>
 <div class="calendar-events">
-    #if ($page.upcomingEvents)
-        #set($upcoming = $page.upcomingEvents)
-        #foreach($event in $upcoming )
-            #renderUpcoming($event)
+    #if ($calendar)
+        #set ($calendars = $page.find('/Calendars/'))
+        #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
+        #foreach($event in $upcomingEvents )
+        #renderUpcoming($event)
         #end
     #else
-        #foreach($cal in $page.children)
-            #set($upcoming = $cal.upcomingEvents)
+        #if ($page.upcomingEvents)
+            #set($upcoming = $page.upcomingEvents)
             #foreach($event in $upcoming )
-                #renderUpcoming($event)
+            #renderUpcoming($event)
+            #end
+        #else
+            #foreach($cal in $page.children)
+                #set($upcoming = $cal.upcomingEvents)
+                #foreach($event in $upcoming )
+                    #renderUpcoming($event)
+                #end
             #end
         #end
     #end
 </div>
+#else
+<div class="alert alert-warning">Upcoming events component will go here</div>
+#end
 #macro (renderUpcoming $event)
 <article class="calendar-events-item">
     <header class="calendar-events-header">
