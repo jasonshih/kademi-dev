@@ -847,7 +847,7 @@ function mAssignTo(name, href, blockId) {
         dataType: 'json',
         success: function (resp) {
             if (resp && resp.status) {
-                Msg.info("The assignment has been changed!");
+                Msg.info("The assignment has been changed.");
                 $("#" + blockId).reloadFragment({
                     url: href || window.location.pathname
                 });
@@ -862,7 +862,7 @@ function mAssignTo(name, href, blockId) {
         },
         error: function (resp) {
             flog('error', resp);
-            Msg.error('Sorry couldnt set the visibility ' + resp);
+            Msg.error('Sorry couldnt change the assigned person ' + resp);
         }
     });
 }
