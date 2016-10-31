@@ -270,14 +270,14 @@
         });
     }
 
-    function initJobTitleSearch(){
+    function initJobTitleSearch() {
         var jobTitleSearch = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
                 url: window.location.pathname + '?jobTitle&q=%QUERY',
                 wildcard: '%QUERY',
-                transform: function(resp){
+                transform: function (resp) {
                     return resp.data;
                 }
             }
@@ -460,6 +460,73 @@
         $('#membershipsContainer').reloadFragment();
     }
 
+    function initLeadTimerControls() {
+        flog("initLeadTimerControls");
+        $("body").on("click", ".timer-btn-stop", function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "timerCmd": "stop"
+                },
+                success: function () {
+                    Msg.info("Stopped timer. Reloading page");
+                    window.location.reload();
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong');
+                }
+            });
+        });
+
+
+        $("body").on("click", ".timer-btn-do-resched", function (e) {
+            e.preventDefault();
+            var btn = $(e.target).closest("button");
+            var modal = btn.closest(".modal");
+            var dateControl = modal.find(".date-time");
+            
+            var timerDate = dateControl.val();
+            flog("reschdule", dateControl, timerDate);
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "timerCmd": "resched",
+                    "timerDate": timerDate
+                },
+                success: function () {
+                    Msg.info("Recheduled timer. Reloading page");
+                    window.location.reload();
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong');
+                }
+            });
+        });
+
+        $("body").on("click", ".timer-btn-go-next", function (e) {
+            e.preventDefault();
+            var btn = $(e.target).closest("a");
+            var nextNodeId = btn.attr("href");
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "timerCmd": "go",
+                    "nextNodeId": nextNodeId
+                },
+                success: function () {
+                    Msg.info("Done. Reloading page");
+                    window.location.reload();
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong');
+                }
+            });
+        });
+    }
     // Run init functions
     $(function () {
         initNewTaskModal();
@@ -472,5 +539,6 @@
         initAddTag();
         initDeleteTag();
         initJobTitleSearch();
+        initLeadTimerControls();
     });
 })();
