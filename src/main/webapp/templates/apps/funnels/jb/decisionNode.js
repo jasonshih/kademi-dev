@@ -205,7 +205,7 @@ JBNodes['decision'] = {
             if (rule.condition) {
                 rulesStr += self.ruleToString(rule);
             } else {
-                rulesStr += rule.field + ' ' + rule.operator + ' ' + rule.value;
+                rulesStr += rule.id + ' ' + rule.operator + ' ' + rule.value;
             }
             rulesStr += '</li>';
         }
