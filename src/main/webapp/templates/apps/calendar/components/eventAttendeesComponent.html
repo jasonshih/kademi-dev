@@ -1,9 +1,16 @@
 #if ($page)
-#if( !$page.attendees.isEmpty() )
-<div class='attendees' id="attendeesWrap">
-    <h3>$page.attendees.size() attending</h3>
+#if ($calendar && $event)
+#set ($eventPath = "/Calendars/$calendar/$event")
+#set( $calendarEvent = $rootFolder.find($eventPath) )
+#elseif ($page.attendees)
+#set( $calendarEvent = $page )
+#end
+
+#if($calendarEvent && $calendarEvent.attendees && !$calendarEvent.attendees.isEmpty() )
+<div class='attendees attendeesWrap clearfix' id="attendeesWrap-${calendarEvent.calendar.name}-$!calendarEvent.name">
+    <h3>$calendarEvent.attendees.size() attending</h3>
     <ul class='attendees'>
-        #foreach($profile in $page.attendees)
+        #foreach($profile in $calendarEvent.attendees)
         <li>
             <a href="$profile.href" class="profilePic guest-view">
                 #if( $profile.photoHash )

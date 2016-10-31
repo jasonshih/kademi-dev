@@ -1,1 +1,5 @@
-<div id="calendar" class="calendar-container" style=""></div>
+#if ($page)
+<div data-calendar="$!calendar" class="calendar-container" style=""></div>
+#else
+<div class="alert alert-warning">Calendar widget component will go here</div>
+#end

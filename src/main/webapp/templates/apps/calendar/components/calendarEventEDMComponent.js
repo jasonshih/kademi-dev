@@ -1,6 +1,3 @@
-/**
- * Created by Anh on 8/1/2016.
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
