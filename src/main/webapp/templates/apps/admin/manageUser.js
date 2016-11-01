@@ -577,7 +577,7 @@ function doRemoveUsers(checkBoxes) {
     $.ajax({
         type: 'POST',
         data: {
-            toRemoveId: ids
+            toRemoveId: ids.join(',')
         },
         dataType: 'json',
         url: '',

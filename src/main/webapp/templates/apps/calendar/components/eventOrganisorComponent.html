@@ -1,30 +1,43 @@
+#if ($page)
+#if ($calendar && $event)
+#set ($eventPath = "/Calendars/$calendar/$event")
+#set( $calendarEvent = $rootFolder.find($eventPath) )
+#elseif ($page.startDate)
+#set( $calendarEvent = $page )
+#end
+#if ($calendarEvent)
+
 <table class="table">
     <tbody>
-    #if( $page.organisor )
+    #if( $calendarEvent.organisor )
     <tr>
         <td>Organiser</td>
-        <td>$page.organisor.formattedName</td>
+        <td>$calendarEvent.organisor.formattedName</td>
     </tr>
     #end
 
-    #if( $page.location )
+    #if( $calendarEvent.location )
     <tr>
         <td>Location</td>
-        <td>$page.location</td>
+        <td>$calendarEvent.location</td>
     </tr>
     #end
 
     <tr>
         <td>Start</td>
         <td>
-            $formatter.formatDateTime(  $page.startDate, $page.timezone )
+            $formatter.formatDateTime(  $calendarEvent.startDate, $calendarEvent.timezone )
         </td>
     </tr>
     <tr>
         <td>Finish</td>
-        <td>$formatter.formatDateTime( $page.endDate, $page.timezone )</td>
+        <td>$formatter.formatDateTime( $calendarEvent.endDate, $calendarEvent.timezone )</td>
     </tr>
 
 
     </tbody>
 </table>
+#end
+#else
+<div class="alert alert-warning">Event organisor component will go here</div>
+#end
