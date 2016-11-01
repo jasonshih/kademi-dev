@@ -202,7 +202,7 @@ body.highlighted-container-content .keditor-container-content:before {
 #keditor-setting-header {
   height: 42px;
   border-bottom: 1px solid #ddd;
-  padding: 10px 30px 10px 15px;
+  padding: 10px 25px 10px 10px;
   position: absolute;
   top: 0;
   left: 0;
@@ -226,7 +226,7 @@ body.highlighted-container-content .keditor-container-content:before {
   position: absolute;
   top: 10px;
   bottom: 10px;
-  right: 10px;
+  right: 5px;
   width: 21px;
   text-align: center;
   line-height: 21px;
