@@ -60,7 +60,7 @@ function initAddPageModal() {
         clearForm(form);
         $('.meta-wrapper').html('');
         $('.param-wrapper').html('');
-        txtNewFileNameHidden.val('index.html');
+        txtNewFileNameHidden.val('index');
         form.find('.fileNameTrigger').trigger('click');
     });
 
@@ -99,13 +99,6 @@ function initAddPageModal() {
     });
 
     form.forms({
-        validate: function(form, config){
-            var txtNewFileName = form.find(".newFileName[type=text]");
-            if (!txtNewFileName.prop('disabled') && !/^[\w\d_.-]+.html$/g.test(txtNewFileName.val())){
-                return {error: 1, errorFields: [txtNewFileName], errorMessages: ['Filename should have .html extension']};
-            }
-            return true;
-        },
         beforePostForm: function (form, config, data) {
             var pageName = form.find('[name=pageName]').val();
             if (pageName.length === 0) {
@@ -113,6 +106,7 @@ function initAddPageModal() {
             } else {
                 form.attr('action', pageName);
             }
+
             return data;
         },
         onSuccess: function (resp) {
