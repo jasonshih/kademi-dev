@@ -8,8 +8,8 @@
                         <tr>
                             <td class="text-wrapper">
                                 <strong>
-                                    #if ($title && $title != "")
-                                    $title
+                                    #if ($titleText && $titleText != "")
+                                    $titleText
                                     #else
                                     Shipping Address
                                     #end
@@ -17,7 +17,8 @@
                                 <ul>
                                     <li>Name: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName</li>
                                     <li>Phone: $!event.attributes.shoppingCart.phone</li>
-                                    <li>Address: $!event.attributes.shoppingCart.addressLine1 <br /> $!event.attributes.shoppingCart.addressLine2</li>
+                                    <li>Address: $!event.attributes.shoppingCart.addressLine1</li>
+                                    <li>Address Lin2: $!event.attributes.shoppingCart.addressLine2</li>
                                     <li>State: $!event.attributes.shoppingCart.addressState</li>
                                     <li>Postcode: $!event.attributes.shoppingCart.postcode</li>
                                 </ul>
@@ -39,8 +40,8 @@
                         <tr>
                             <td class="text-wrapper">
                                 <strong>
-                                    #if ($title && $title != "")
-                                    $title
+                                    #if ($titleText && $titleText != "")
+                                    $titleText
                                     #else
                                     Shipping Address
                                     #end
@@ -48,7 +49,8 @@
                                 <ul>
                                     <li>Name: Jame Bond</li>
                                     <li>Phone: +61 01 2345 6789</li>
-                                    <li>Address: 200 Broadway Av <br /> WEST BEACH</li>
+                                    <li>Address: 200 Broadway Av</li>
+                                    <li>Address Line 2:WEST BEACH</li>
                                     <li>State: SA</li>
                                     <li>Postcode: 5024</li>
                                 </ul>

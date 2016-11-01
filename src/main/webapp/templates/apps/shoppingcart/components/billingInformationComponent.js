@@ -4,8 +4,8 @@
     
     KEditor.components['billingInformation'] = {
         settingEnabled: true,
-        
-        settingTitle: 'Blog Tags Settings',
+
+        settingTitle: 'Billing Information Settings',
         
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "billingInformation" component');
@@ -21,7 +21,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-title', this.value);
+                        component.attr('data-title-text', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -32,7 +32,7 @@
             flog('showSettingForm "billingInformation" component');
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.txt-title').val(dataAttributes['data-title']);
+            form.find('.txt-title').val(dataAttributes['data-title-text']);
         }
     };
     
