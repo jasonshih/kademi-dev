@@ -12,18 +12,18 @@ var JBApp = {
 
         return null;
     },
-    getNodeType: function (node, typeName) {
-        var nodeType = JBNodes[typeName];
-        if (nodeType == null) {
-            flog('getNodeType by "nodeType" property', node.nodeType);
+    getNodeDef: function (node, typeName) {
+        var nodeDef = JBNodes[typeName];
+        if (nodeDef == null) {
+            flog('getNodeDef by "nodeType" property', node.nodeType);
             if (node.nodeType) {
-                nodeType = JBNodes[node.nodeType];
+                nodeDef = JBNodes[node.nodeType];
             }
         }
-
-        flog("getNodeType", node, typeName, "nodeType=" + nodeType);
-
-        return nodeType;
+        
+        flog("getNodeDef", node, typeName, nodeDef);
+        
+        return nodeDef;
     },
     getNodeInfoById: function (id) {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -191,13 +191,13 @@ var JBApp = {
             grid: [10, 10]
         });
 
-        var nodeType = JBApp.getNodeType(node, type);
-        if (nodeType == null) {
-            flog('WARN: Could not find node type=' + type, 'node=', node);
+        var nodeDef = JBApp.getNodeDef(node, type);
+        if (nodeDef == null) {
+            flog('WARN: Could not find definition of node type=' + type, 'node=', node);
             return;
         }
 
-        for (var portName in nodeType.ports) {
+        for (var portName in nodeDef.ports) {
             JBApp.jspInstance.makeSource(nodeDiv, {
                 filter: '[data-name=' + portName + ']',
                 connectorStyle: JBApp.getConnectorStyle(portName),
@@ -220,12 +220,12 @@ var JBApp = {
     initConnection: function (node, type) {
         flog('initConnection', node, type);
 
-        var nodeType = JBApp.getNodeType(node, type);
-        if (nodeType == null) {
+        var nodeDef = JBApp.getNodeDef(node, type);
+        if (nodeDef == null) {
             return null;
         }
 
-        for (var portName in nodeType.ports) {
+        for (var portName in nodeDef.ports) {
             var connectionType = portName;
 
             if (portName === 'decisionChoices') {
@@ -302,15 +302,14 @@ var JBApp = {
             var nodeType = nodeInfo[0];
 
             if (nodeData.nodeId === connection.sourceId) {
-                if (nodeType === 'decision') {
-                    if (connection.hasType('decisionDefault')) {
-                        nodeData.nextNodeId = '';
-                    } else if (connection.hasType('decisionChoices')) {
-                        if (nodeData.choices.hasOwnProperty(connection.targetId)) {
-                            delete nodeData.choices[connection.targetId];
-                        }
-                    }
+                var nodeDef = JBApp.getNodeDef(node, nodeType);
+                var portData = nodeDef.ports[portName];
+
+                if (typeof portData.onDeleteConnection === 'function') {
+                    flog('Call "onDeleteConnection" handler of "' + portName + '" port of "' + nodeDef + '" node');
+                    portData.onDeleteConnection.call(null, connection, nodeData);
                 } else {
+                    flog('Use default handler when deleting connection');
                     nodeData[portName] = '';
                 }
 
@@ -361,61 +360,60 @@ var JBApp = {
             formPanel.find('input:text').first().trigger('focus');
         }, 250);
     },
-
-    standardGoalSettingControls:
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Stage</label>' +
-        '        <select class="form-control stageName"></select>' +
-        '    </div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Source</label>' +
-        '        <select class="form-control source"></select>' +
-        '    </div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Cost</label>' +
-        '        <input type="number" class="form-control cost" value="" />' +
-        '    </div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Probability</label>' +
-        '        <input type="number" class="form-control probability" value="" />' +
-        '    </div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Timeout</label>' +
-        '        <div class="input-group">' +
-        '            <input type="number" class="form-control timeout-multiples numeric" />' +
-        '            <div class="input-group-btn">' +
-        '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
-        '                    <span class="caret"></span>' +
-        '                </button>' +
-        '                <input type="hidden" class="timeout-units" value="" />' +
-        '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
-        '                    <li><a href="#" data-value="y">Years</a></li>' +
-        '                    <li><a href="#" data-value="M">Months</a></li>' +
-        '                    <li><a href="#" data-value="w">Weeks</a></li>' +
-        '                    <li><a href="#" data-value="d">Days</a></li>' +
-        '                    <li><a href="#" data-value="h">Hours</a></li>' +
-        '                    <li><a href="#" data-value="m">Minutes</a></li>' +
-        '                </ul>' +
-        '            </div>' +
-        '        </div>' +
-        '    </div>' +
-        '</div>' +
-        '<div class="form-group">' +
-        '    <div class="col-md-12">' +
-        '        <label>Time</label>' +
-        '        <input type="number" class="form-control time" value="" />' +
-        '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
-        '    </div>' +
-        '</div>',
+    
+    standardGoalSettingControls: '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Stage</label>' +
+    '        <select class="form-control stageName"></select>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Source</label>' +
+    '        <select class="form-control source"></select>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Cost</label>' +
+    '        <input type="number" class="form-control cost" value="" />' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Probability</label>' +
+    '        <input type="number" class="form-control probability" value="" />' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Timeout</label>' +
+    '        <div class="input-group">' +
+    '            <input type="number" class="form-control timeout-multiples numeric" />' +
+    '            <div class="input-group-btn">' +
+    '                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="timeout-units-preview"></span>' +
+    '                    <span class="caret"></span>' +
+    '                </button>' +
+    '                <input type="hidden" class="timeout-units" value="" />' +
+    '                <ul class="dropdown-menu dropdown-menu-right timeout-units-selector">' +
+    '                    <li><a href="#" data-value="y">Years</a></li>' +
+    '                    <li><a href="#" data-value="M">Months</a></li>' +
+    '                    <li><a href="#" data-value="w">Weeks</a></li>' +
+    '                    <li><a href="#" data-value="d">Days</a></li>' +
+    '                    <li><a href="#" data-value="h">Hours</a></li>' +
+    '                    <li><a href="#" data-value="m">Minutes</a></li>' +
+    '                </ul>' +
+    '            </div>' +
+    '        </div>' +
+    '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Time</label>' +
+    '        <input type="number" class="form-control time" value="" />' +
+    '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
+    '    </div>' +
+    '</div>',
     initStandardGoalSettingControls: function (form) {
         form.find('.timeout-units-selector li').on('click', function (e) {
             e.preventDefault();
@@ -478,7 +476,7 @@ var JBApp = {
 
 jsPlumb.ready(function () {
     JBApp.parseFunnel();
-
+    
     // setup some defaults for jsPlumb.
     var instance = jsPlumb.getInstance({
         Endpoint: ['Dot', {
@@ -537,7 +535,7 @@ jsPlumb.ready(function () {
         Container: 'paper'
     });
     JBApp.jspInstance = instance;
-
+    
     // Load connection types position from JBNodes
     for (var nodeName in JBNodes) {
         var index = 0;
@@ -573,7 +571,7 @@ jsPlumb.ready(function () {
             index++;
         });
     }
-
+    
     // Register connection types
     for (var typeName in JBApp.connectionTypes) {
         var outPortPosition = JBApp.connectionTypes[typeName];
@@ -583,7 +581,7 @@ jsPlumb.ready(function () {
             connector: 'StateMachine'
         });
     }
-
+    
     instance.bind('click', function (connection) {
         if (connection && connection.getParameter('clickedButtonX') === true) {
             var clickedButtonXCancelled = connection.getParameter('clickedButtonXCancelled');
@@ -596,35 +594,34 @@ jsPlumb.ready(function () {
             }
         }
     });
-
+    
     instance.bind('mouseover', function (connection) {
         if (connection.getOverlay('buttonX')) {
             connection.getOverlay('buttonX').show();
         }
     });
-
+    
     instance.bind('mouseout', function (connection) {
         if (connection.getOverlay('buttonX')) {
             connection.getOverlay('buttonX').hide();
         }
     });
-
+    
     instance.bind('connection', function (info) {
         var type = info.source.getAttribute('data-type');
         var portName = info.sourceEndpoint.connectionType;
         var div = $(info.source);
         var nodeId = div.attr("id");
         var node = JBApp.getNodeInfoById(nodeId)[1];
-
-        var nodeType = JBApp.getNodeType(node, type);
-        flog("bind connection", nodeType);
-        var portData = nodeType.ports[portName];
+        
+        var nodeDef = JBApp.getNodeDef(node, type);
+        var portData = nodeDef.ports[portName];
         var label = portData.label;
         var maxConnections = portData.maxConnections;
         var connection = info.connection;
-
+        
         flog('In connection, nodeType: ' + type + ', portName: ' + portName + ', label: ' + label + ', maxConnections: ' + maxConnections, info, connection);
-
+        
         // Check limitation of connections
         if (maxConnections !== -1) {
             var existingConnections = 0;
@@ -646,7 +643,7 @@ jsPlumb.ready(function () {
                 return;
             }
         }
-
+        
         // Check connection between 2 nodes
         existingConnections = 0;
         instance.select({
@@ -661,51 +658,44 @@ jsPlumb.ready(function () {
                 return;
             }
         });
-
+        
         if (existingConnections > 1) {
             Msg.warning('Connection between these nodes exists');
             instance.detach(connection);
             return;
         }
-
+        
         // Set label
         if (label) {
             connection.getOverlay('label').setLabel(label);
             $(connection.getOverlay('label').canvas).addClass('showed');
         }
-
+        
         if (JBApp.initialized) {
             flog('New connection was made', info.connection);
-
+            
             for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                 var node = JBApp.funnel.nodes[i];
                 var nodeInfo = JBApp.getNodeInfo(node);
                 var nodeData = nodeInfo[1];
-
+                
                 if (nodeData.nodeId === connection.sourceId) {
-                    if (nodeInfo[0] === 'decision') {
-                        flog('Started from a decision node');
-
-                        if (connection.hasType('decisionDefault')) {
-                            nodeData.nextNodeId = connection.targetId;
-                        } else if (connection.hasType('decisionChoices')) {
-                            if (!nodeData.choices) {
-                                nodeData.choices = {};
-                            }
-                            nodeData.choices[connection.targetId] = {};
-                        }
+                    if (typeof portData.onConnected === 'function') {
+                        flog('Call "onConnected" handler of "' + portName + '" port of "' + nodeDef + '" node');
+                        portData.onConnected.call(null, connection, nodeData);
                     } else {
+                        flog('Use default handler when connected');
                         nodeData[portName] = connection.targetId;
                     }
-
+                    
                     break;
                 }
             }
-
+            
             JBApp.saveFunnel();
         }
     });
-
+    
     // suspend drawing and initialise.
     instance.batch(function () {
         if (JBApp.funnel && JBApp.funnel.nodes && JBApp.funnel.nodes.length > 0) {
@@ -732,14 +722,14 @@ jsPlumb.ready(function () {
             }).trigger('click');
         }
     });
-
+    
     JBApp.initialized = true;
     flog('JBApp init done');
 });
 
 function initJourneyBuilder() {
     flog('initJourneyBuilder');
-
+    
     initSideBar();
     initSaveButton();
     initNodeActions();
@@ -749,25 +739,25 @@ function initJourneyBuilder() {
 
 function initSettingPanel() {
     flog('initSettingPanel');
-
+    
     var panelSetting = $('.panel-setting');
     var panelSettingBody = panelSetting.find('.panel-body');
-
+    
     panelSetting.find('.btn-close-setting').on('click', function (e) {
         e.preventDefault();
-
+        
         JBApp.hideSettingPanel();
     });
-
+    
     panelSetting.find('.btn-save-setting').on('click', function (e) {
         e.preventDefault();
-
+        
         panelSettingBody.find('form.active').trigger('submit');
     });
-
+    
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
-
+        
         if (nodeDef.settingEnabled) {
             if (typeof nodeDef.initSettingForm === 'function') {
                 var form = $('<form class="panel-setting-' + nodeType + ' panel-edit-details"></form>');
@@ -778,13 +768,13 @@ function initSettingPanel() {
             }
         }
     }
-
+    
     initTitleForm();
 }
 
 function initTitleForm() {
     flog('initTitleForm');
-
+    
     var form = $('form.panel-edit-title');
     form.on('submit', function (e) {
         e.preventDefault();
@@ -795,7 +785,7 @@ function initTitleForm() {
 
 function updateNode(form) {
     flog('updateNode', form);
-
+    
     var sourceId = form.find('[name=sourceId]').val();
     var title = form.find('[name=title]').val();
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
@@ -822,20 +812,20 @@ function updateNode(form) {
 
 function initBuilderHeight() {
     flog('initBuilderHeight');
-
+    
     var builder = $('#builder');
     var tabbable = builder.closest('.tabbable');
     var navTabs = tabbable.find('.nav-tabs');
     var container = builder.closest('.container');
-
+    
     builder.css('height', container.innerHeight() - navTabs.innerHeight());
 }
 
 function initSideBar() {
     flog('initSideBar');
-
+    
     var rightPanel = $('.right-panel');
-
+    
     var snippetsStr = '';
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
@@ -845,7 +835,7 @@ function initSideBar() {
         snippetsStr += '</li>';
     }
     rightPanel.find('.list-group').html(snippetsStr);
-
+    
     rightPanel.find('.list-group, .panel-body').niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
@@ -858,13 +848,13 @@ function initSideBar() {
         cursorborder: '',
         disablemutationobserver: true
     });
-
+    
     rightPanel.find('.list-group-item').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
         helper: 'clone'
     });
-
+    
     var paper = $('#paper');
     paper.droppable({
         drop: function (event, ui) {
@@ -894,7 +884,7 @@ function initSideBar() {
 
 function showTitleForm(node) {
     flog('showTitleForm', node);
-
+    
     var title = node.title || '';
     var form = $('form.panel-edit-title');
     form.find('[name=title]').val(title);
@@ -904,10 +894,10 @@ function showTitleForm(node) {
 
 function initNodeActions() {
     flog('initNodeActions');
-
+    
     $(document.body).on('click', '.btnNodeEdit', function (e) {
         e.preventDefault();
-
+        
         var nodeId = $(this).closest('.node').attr('id');
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
@@ -919,27 +909,27 @@ function initNodeActions() {
             }
         }
     });
-
+    
     $(document.body).on('click', '.btnNodeDetails', function (e) {
         e.preventDefault();
-
+        
         var domElement = $(this).closest('.node');
         var id = domElement.attr('id');
         var type = domElement.attr('data-type');
         var nodeData = JBApp.getNodeInfoById(id)[1];
-
+        
         if (typeof JBNodes[type].showSettingForm === 'function') {
             JBNodes[type].showSettingForm($('.panel-setting-' + type), nodeData);
         } else {
             $.error('"showSettingForm" method of ' + type + ' does not exist!');
         }
     });
-
+    
     $(document.body).on('click', '.btnNodeDelete', function (e) {
         e.preventDefault();
-
+        
         var nodeDiv = $(this).closest('.node');
-
+        
         if (confirm('Are you sure you want to delete this node?')) {
             var id = nodeDiv.attr('id');
             deleteNode(id);
@@ -952,7 +942,7 @@ function initNodeActions() {
 
 function deleteNode(nodeId) {
     flog('deleteNode', nodeId);
-
+    
     var index = -1;
     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
         var node = JBApp.funnel.nodes[i];
@@ -963,10 +953,10 @@ function deleteNode(nodeId) {
             }
         }
     }
-
+    
     if (index > -1) {
         JBApp.funnel.nodes.splice(index, 1);
-
+        
         // Remove connection which deleted node is source
         JBApp.jspInstance.select({
             source: nodeId
@@ -974,7 +964,7 @@ function deleteNode(nodeId) {
             JBApp.deleteConnection(connection);
             JBApp.jspInstance.detach(connection);
         });
-
+        
         // Remove connection which deleted node is target
         JBApp.jspInstance.select({
             target: nodeId
@@ -987,10 +977,10 @@ function deleteNode(nodeId) {
 
 function initSaveButton() {
     flog('initSaveButton');
-
+    
     $('#btnSave').on('click', function (e) {
         e.preventDefault();
-
+        
         JBApp.saveFunnel();
     });
 }

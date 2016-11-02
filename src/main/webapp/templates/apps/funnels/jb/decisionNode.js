@@ -5,12 +5,29 @@ JBNodes['decision'] = {
         decisionDefault: {
             label: 'default',
             title: 'Default next action',
-            maxConnections: 1
+            maxConnections: 1,
+            onConnected: function (connection, sourceNodeData) {
+                sourceNodeData.nextNodeId = connection.targetId;
+            },
+            onDeleteConnection: function (connection, sourceNodeData) {
+                sourceNodeData.nextNodeId = '';
+            }
         },
         decisionChoices: {
             label: '',
             title: 'Make new choice',
-            maxConnections: -1
+            maxConnections: -1,
+            onConnected: function (connection, sourceNodeData) {
+                if (!sourceNodeData.choices) {
+                    sourceNodeData.choices = {};
+                }
+                sourceNodeData.choices[connection.targetId] = {};
+            },
+            onDeleteConnection: function (connection, sourceNodeData) {
+                if (sourceNodeData.choices.hasOwnProperty(connection.targetId)) {
+                    delete sourceNodeData.choices[connection.targetId];
+                }
+            }
         }
     },
 
