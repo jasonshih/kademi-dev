@@ -77,8 +77,13 @@
     right: 0;
 }
 
+#builder .right-panel .panel-setting .panel-heading + .panel-footer {
+    border-top: 0;
+    border-bottom: 1px solid #ddd;
+}
+
 #builder .right-panel .panel-setting .panel-body {
-    height: calc(100% - 36px - 51px);
+    height: calc(100% - 36px - 51px - 51px);
 }
 
 #builder .right-panel .panel-setting .panel-heading > *,
