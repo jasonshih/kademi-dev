@@ -226,21 +226,14 @@ var JBApp = {
         }
 
         for (var portName in nodeDef.ports) {
+            var portData = nodeDef.ports[portName];
             var connectionType = portName;
 
-            if (portName === 'decisionChoices') {
-                for (var key in node.choices) {
-                    JBApp.jspInstance.connect({
-                        source: node.nodeId,
-                        target: key,
-                        type: connectionType
-                    });
-                }
+            if (typeof portData.onInitConnection === 'function') {
+                flog('Call "onInitConnection" handler of "' + portName + '" port of "' + type + '" node');
+                portData.onInitConnection.call(null, node);
             } else {
-                if (portName === 'decisionDefault') {
-                    portName = 'nextNodeId';
-                    connectionType = 'decisionDefault';
-                }
+                flog('Use default handler when initializing existing connection');
 
                 if (node[portName]) {
                     JBApp.jspInstance.connect({

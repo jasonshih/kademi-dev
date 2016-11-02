@@ -6,6 +6,13 @@ JBNodes['decision'] = {
             label: 'default',
             title: 'Default next action',
             maxConnections: 1,
+            onInitConnection: function (node) {
+                JBApp.jspInstance.connect({
+                    source: node.nodeId,
+                    target: node['nextNodeId'],
+                    type: 'decisionDefault'
+                });
+            },
             onConnected: function (connection, sourceNodeData) {
                 sourceNodeData.nextNodeId = connection.targetId;
             },
@@ -17,6 +24,15 @@ JBNodes['decision'] = {
             label: '',
             title: 'Make new choice',
             maxConnections: -1,
+            onInitConnection: function (node) {
+                for (var key in node.choices) {
+                    JBApp.jspInstance.connect({
+                        source: node.nodeId,
+                        target: key,
+                        type: 'decisionChoices'
+                    });
+                }
+            },
             onConnected: function (connection, sourceNodeData) {
                 if (!sourceNodeData.choices) {
                     sourceNodeData.choices = {};
