@@ -7,11 +7,13 @@ JBNodes['decision'] = {
             title: 'Default next action',
             maxConnections: 1,
             onInitConnection: function (node) {
-                JBApp.jspInstance.connect({
-                    source: node.nodeId,
-                    target: node['nextNodeId'],
-                    type: 'decisionDefault'
-                });
+                if (node['nextNodeId']) {
+                    JBApp.jspInstance.connect({
+                        source: node.nodeId,
+                        target: node['nextNodeId'],
+                        type: 'decisionDefault'
+                    });
+                }
             },
             onConnected: function (connection, sourceNodeData) {
                 sourceNodeData.nextNodeId = connection.targetId;

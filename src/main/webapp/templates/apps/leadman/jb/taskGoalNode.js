@@ -7,17 +7,57 @@ JBNodes['taskGoal'] = {
             title: 'When timeout',
             maxConnections: 1
         },
-        nextNodeId: {
-            label: 'then',
-            title: 'When completed',
-            maxConnections: 1
+        taskOutcomes: {
+            label: 'outcome',
+            title: 'Outcome ',
+            maxConnections: -1,
+            onInitConnection: function (node) {
+                if (node.taskOutcomes && $.isArray(node.taskOutcomes)) {
+                    for (var i = 0; i < node.taskOutcomes.length; i++) {
+                        JBApp.jspInstance.connect({
+                            source: node.nodeId,
+                            target: node.taskOutcomes[i].nextNodeId,
+                            type: 'taskOutcomes'
+                        });
+                    }
+                }
+            },
+            onConnected: function (connection, sourceNodeData) {
+                if (!sourceNodeData.taskOutcomes) {
+                    sourceNodeData.taskOutcomes = [];
+                }
+
+                sourceNodeData.taskOutcomes.push({
+                    'id': 'outcome-' + JBApp.uuid(),
+                    'nextNodeId': connection.targetId,
+                    'title': '',
+                    'fields': null
+                });
+            },
+            onDeleteConnection: function (connection, sourceNodeData) {
+                for (var i = 0; i < sourceNodeData.taskOutcomes.length; i++) {
+                    var outcome = sourceNodeData.taskOutcomes[i];
+                    if (outcome.nextNodeId === connection.targetId) {
+                        sourceNodeData.taskOutcomes.splice(i, 1);
+                        break;
+                    }
+                }
+            }
         }
     },
-
+    
     settingEnabled: true,
-
+    
     initSettingForm: function (form) {
         form.append(
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Outcomes</label>' +
+            '       <div class="outcomes-wrapper">' +
+            '       </div>' +
+            '    </div>' +
+            '</div>' +
+            '<hr />' +
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Task name</label>' +
@@ -82,20 +122,20 @@ JBNodes['taskGoal'] = {
             '    </div>' +
             '</div>' + JBApp.standardGoalSettingControls
         );
-
+        
         JBApp.initStandardGoalSettingControls(form);
-
+        
         form.find('.frequency-selector li').on('click', function (e) {
             e.preventDefault();
-
+            
             var a = $(this).find('a');
             var text = a.text().trim();
             var value = a.attr('data-value');
-
+            
             form.find('.frequency').val(value);
             form.find('.frequency-preview').html(text);
         });
-
+        
         form.forms({
             allowPostForm: false,
             onValid: function () {
@@ -117,6 +157,12 @@ JBNodes['taskGoal'] = {
                 JBApp.currentSettingNode.titleMvel = titleMvel || null;
                 JBApp.currentSettingNode.descriptionMvel = descriptionMvel || null;
 
+                for (var i = 0; i < JBApp.currentSettingNode.taskOutcomes.length; i++) {
+                    var outcomesDev = $('#' + JBApp.currentSettingNode.taskOutcomes[i].id);
+                    JBApp.currentSettingNode.taskOutcomes[i].title = outcomesDev.find('input:text').val().trim();
+                    JBApp.currentSettingNode.taskOutcomes[i].fields = outcomesDev.find('select').val() || null;
+                }
+                
                 JBApp.saveStandardGoalSetting(form);
 
                 JBApp.saveFunnel('Funnel is saved');
@@ -124,17 +170,17 @@ JBNodes['taskGoal'] = {
             }
         });
     },
-
+    
     showSettingForm: function (form, node) {
         JBApp.showStandardGoalSettingControls(form, node);
-
+        
         if (node.frequency !== null) {
             form.find('.frequency-selector li a').filter('[data-value=' + node.frequency + ']').trigger('click');
         } else {
             form.find('.frequency').val('');
             form.find('.frequency-preview').html('');
         }
-
+        
         form.find('.periodMultiples').val(node.periodMultiples !== null ? node.periodMultiples : '');
         form.find('.runHour').val(node.runHour !== null ? node.runHour : '');
         form.find('.taskName').val(node.taskName !== null ? node.taskName : '');
@@ -143,6 +189,55 @@ JBNodes['taskGoal'] = {
         form.find('.titleMvel').val(node.titleMvel !== null ? node.titleMvel : '');
         form.find('.descriptionMvel').val(node.descriptionMvel !== null ? node.descriptionMvel : '');
 
+        this.outcomes = $.extend({}, node.taskOutcomes);
+        this.showOutcomes(form, node);
         JBApp.showSettingPanel(node);
+    },
+
+    showOutcomes: function (form, node) {
+        var self = this;
+        var outcomesStr = '';
+
+        flog('showOutcomes', self.outcomes);
+
+        for (var i in self.outcomes) {
+            var outcome = self.outcomes[i];
+            var toText = '';
+            var target = $('#' + outcome.nextNodeId);
+
+            if (target.length === 0) {
+                break;
+            }
+
+            target = target.clone();
+            target.find('.title span').remove();
+            toText = target.find('.title').html().trim() + ' ';
+
+            var targetTitle = target.find('.node-title-inner').html().trim();
+            if (targetTitle !== 'Enter title') {
+                toText += targetTitle;
+            }
+            flog('To text: ' + toText);
+
+            outcomesStr += '<div class="outcome" id="' + outcome.id + '">';
+            outcomesStr += '     <p><strong>To:</strong> ' + toText + '</p>';
+            outcomesStr += '     <p><strong>Title</strong></p>';
+            outcomesStr += '     <p><input type="text" class="form-control required" value="' + (outcome.title || '') + '" /></p>';
+            outcomesStr += '     <p><strong>Fields</strong></p>';
+            outcomesStr += '     <p><select class="form-control" multiple>';
+            if (JBApp.funnel.extraFields && $.isArray(JBApp.funnel.extraFields)) {
+                for (var j = 0; j < JBApp.funnel.extraFields.length; j++) {
+                    var extraField = JBApp.funnel.extraFields[j];
+                    var isSelected = $.inArray(extraField.name, outcome.fields) !== -1;
+
+                    outcomesStr += '<option value="' + extraField.name + '" ' + (isSelected ? 'selected="selected"' : '') + '>' + extraField.title + '</option>';
+                }
+            }
+            outcomesStr += '     </select></p>';
+            outcomesStr += '</div>';
+            outcomesStr += '<hr />';
+        }
+
+        form.find('.outcomes-wrapper').html(outcomesStr);
     }
 };

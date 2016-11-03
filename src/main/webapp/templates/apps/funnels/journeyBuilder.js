@@ -464,6 +464,12 @@ var JBApp = {
         form.find('.cost').val(node.cost !== null ? node.cost : '');
         form.find('.probability').val(node.probability !== null ? node.probability : '');
         form.find('.time').val(node.timerTime !== null ? node.timerTime : '');
+    },
+    uuid: function () {
+        return ('xxxxxx'.replace(/[xy]/g, function (c) {
+            var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        }));
     }
 };
 
@@ -853,7 +859,7 @@ function initSideBar() {
         drop: function (event, ui) {
             var type = ui.draggable.attr('data-type');
             var node = {
-                nodeId: type + '-' + uuid(),
+                nodeId: type + '-' + JBApp.uuid(),
                 nodeType: type,
                 x: ui.offset.left - paper.offset().left + paper.scrollLeft(),
                 y: ui.offset.top - paper.offset().top + paper.scrollTop()
@@ -976,11 +982,4 @@ function initSaveButton() {
         
         JBApp.saveFunnel();
     });
-}
-
-function uuid() {
-    return ('xxxxxx'.replace(/[xy]/g, function (c) {
-        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    }));
 }
