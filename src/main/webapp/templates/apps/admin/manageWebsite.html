@@ -648,7 +648,7 @@
                                     </td>
                                     <td>
                                         #if( $page.hasSettings($app) )
-                                        <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
+                                        <button class="btn btn-primary btn-sm settings" $formatter.ifTrue($app.core, 'style="display: inline-block;"', '') data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
                                         #end
                                     </td>
                                 </tr>
