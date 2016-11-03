@@ -2,65 +2,79 @@
     #set ($layout = "horizontal")
 #end
 
-#if ($page)
-    #if( $userResource )
-        <h1>Sorry, you dont have permission to view this page</h1>
+<div class="panel panel-default">
+    <div class="panel-body">
+        #if ($page)
+        #if( $userResource )
+        <h1>Sorry, you don't have permission to view this page</h1>
         <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
-    #else
+        #else
         #renderLoginForm($layout)
-    #end
-    <script type="text/javascript">
-        $(function () {
-            jQuery(".login-container").user({
-                afterLoginUrl: window.location.pathname,
-                valiationMessageSelector: "p.login.message"
-            }); // setup login and logout
-        });
-    </script>
-#else
-    #renderLoginForm($layout)
-#end
+        #end
+        <script type="text/javascript">
+            $(function () {
+                jQuery(".login-container").user({
+                    afterLoginUrl: window.location.pathname,
+                    valiationMessageSelector: "p.login.message"
+                }); // setup login and logout
+            });
+        </script>
+        #else
+        #renderLoginForm($layout)
+        #end
+    </div>
+</div>
 
 #macro (renderLoginForm $layout)
-    #set ($colClass = "col-md-6")
     #if ($layout != "horizontal")
         #set ($colClass = "col-md-12")
+#else
+#if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
+#set ($colClass = "col-md-12")
+#else
+#set ($colClass = "col-md-6")
+#end
     #end
 
-    <div class="row" style="margin-bottom: 50px">
+<div class="row">
         <div class="$colClass">
-            <h1>Please login to view this page</h1>
-            <p>You must login to access this page</p>
             <div class="login-container">
                 #if ($logo)
                     <p><img src="$logo" class="img-responsive" /></p>
+                #else
+                <h1>Please login to view this page</h1>
+
+                <p>You must login to access this page</p>
                 #end
                 <form class="login form-horizontal" method="POST" role="form">
                     <p class="login message" style="display: none">.</p>
                     <div class="form-group">
-                        <label for="email" class="control-label col-md-4">Email</label>
-                        <div class="col-md-8">
-                            <input type="text"  autocapitalize="off" autocorrect="off" class="form-control" required="true" name="email" id="email" title="Email address" placeholder="Enter your email address" />
+                        <div class="col-md-12">
+                            <label for="email" class="sr-only">Email</label>
+                            <input type="text" autocapitalize="off" autocorrect="off" class="form-control input-lg" required="true" name="email" id="email" title="Email address" placeholder="Enter your email address" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="password" class="control-label col-md-4">Password</label>
-                        <div class="col-md-8">
-                            <input type="password" class="form-control" required="true" name="password" id="password" title="Password" placeholder="Enter your password" />
+                        <div class="col-md-12">
+                            <label for="password" class="sr-only">Password</label>
+                            <input type="password" class="form-control input-lg" required="true" name="password" id="password" title="Password" placeholder="Enter your password" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-4 col-md-8">
-                            <label>
-                                <input type="checkbox" class="" name="keepLoggedIn" value="true" />
-                                Keep me logged in
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-offset-4 col-md-8">
-                            <button type="submit" class="btn Btn btn-sm btn-primary"><span>Login</span></button>
-                            <a class="Forgot" title="Forgotten password" href="/password-reset">Forgotten password</a>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                <label>
+                                    <input type="checkbox" class="" name="keepLoggedIn" value="true" />
+                                    Keep me logged in
+                                </label>
+                            </p>
+
+                            <p>
+                                <button type="submit" class="btn btn-block btn-lg btn-primary"><span>Login</span></button>
+                            </p>
+                            <div class="text-center small">
+                                <a class="small" title="Forgotten password" href="/password-reset">Forgotten password</a>
+                            </div>
                         </div>
                     </div>
                 </form>
