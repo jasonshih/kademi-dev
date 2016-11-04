@@ -82,19 +82,24 @@
     #if($page.isWritable())
     <script src="/static/ktoolbar/ktoolbar.js">//</script>
     <div id="ktoolbar">
-        <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
-        <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
-        <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
-        <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/repositories/${rootFolder.websiteName}/${rootFolder.branch.name}/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
-        <a title="Edit pages" class="btn btn-sm btn-link" href="http://$website.adminDomainName/pages/${rootFolder.websiteName}/${rootFolder.branch.name}/" target="_blank"><i class="fa fa-pencil"></i> Pages</a>
-        <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
+        <div class="ktoolbarWrap">
+            <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
+            <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
+            <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
+            <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/repositories/${rootFolder.websiteName}/${rootFolder.branch.name}/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
+            <a title="Edit pages" class="btn btn-sm btn-link" href="http://$website.adminDomainName/pages/${rootFolder.websiteName}/${rootFolder.branch.name}/" target="_blank"><i class="fa fa-pencil"></i> Pages</a>
+            <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
 
-        <a target="_blank" href="http://docs.kademi.co/ref/templating/${templater.getClassName($page)}.html" class="pull-right btn btn-sm btn-link"><i class="fa fa-question"></i> Docs</a>
-        <a target="_blank" href="/?editTemplate=$templateName" class="pull-right btn btn-sm btn-link"><i class="fa fa-pencil"></i> Edit Template</a>
-        <a target="_blank" href="$templateName?viewAsRaw" class="pull-right btn btn-sm btn-link"><i class="fa fa-file"></i> View Template</a>
-        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Edit Page</a>
-        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-done hide"><i class="fa fa-check-circle"></i> Done</a>
-        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-save hide"><i class="fa fa-save"></i> Save</a>
+            <a target="_blank" href="http://docs.kademi.co/ref/templating/${templater.getClassName($page)}.html" class="pull-right btn btn-sm btn-link"><i class="fa fa-question"></i> Docs</a>
+            <a target="_blank" href="/?editTemplate=$templateName" class="pull-right btn btn-sm btn-link"><i class="fa fa-pencil"></i> Edit Template</a>
+            <a target="_blank" href="$templateName?viewAsRaw" class="pull-right btn btn-sm btn-link"><i class="fa fa-file"></i> View Template</a>
+            <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Edit Page</a>
+            <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-done hide"><i class="fa fa-check-circle"></i> Done</a>
+            <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-save hide"><i class="fa fa-save"></i> Save</a>
+        </div>
+        <div class="text-center ktoolbarToggleWrap">
+            <a class=" btn btn-default btn-sm ktoolbarToggle" href="#"><i class="fa fa-cog"></i></a>
+        </div>
     </div>
     #end
     <div class="navbar navbar-fixed-top navbar-default" id="nav-top" role="navigation">
