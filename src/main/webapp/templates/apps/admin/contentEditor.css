@@ -126,10 +126,13 @@ body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
 }
 
 .colorpicker {
-    top: 60px !important;
     right: auto;
     left: 15px !important;
     padding: 5px !important;
+}
+
+label + .input-group + .colorpicker {
+    top: 60px !important;
 }
 
 .carouselImageWrap {
@@ -213,4 +216,25 @@ ol.menuTree li.placeholder:before {
     right: 3px;
     top: 50%;
     transform: translate(0, -50%);
+}
+
+[class*="border-style"] {
+    border-bottom: 3px #555;
+    margin: 10px 0;
+}
+
+.border-style-solid {
+    border-bottom-style: solid;
+}
+
+.border-style-dotted {
+    border-bottom-style: dotted;
+}
+
+.border-style-dashed {
+    border-bottom-style: dashed;
+}
+
+.border-style-double {
+    border-bottom-style: double;
 }
