@@ -67,6 +67,15 @@ $(function () {
 //        $.getScriptOnce('/static/nicescroll/3.6.8/jquery.nicescroll.min.js', f);
 //    });
 
+    var ktoolbarToggleWrap = ktoolbar.find('.ktoolbarToggleWrap');
+    var ktoolbarToggle = ktoolbar.find('.ktoolbarToggle');
+
+    ktoolbarToggle.on('click', function (e) {
+        e.preventDefault();
+
+        ktoolbar.toggleClass('show');
+    });
+
     btnSave.on('click', function(e){
         e.preventDefault();
 

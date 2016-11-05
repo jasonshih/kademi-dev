@@ -22,7 +22,9 @@
                 <tbody>
                 #foreach($company in $page.companyMemberships)
                 <tr>
-                    <td>$!company.org.formattedName</td>
+                    <td>
+                        <a href="/companies/$company.org.id">$!company.org.formattedName</a>
+                    </td>
                     <td>$!company.org.email</td>
                     <td>$!company.org.phone</td>
                     <td>$!company.org.address</td>

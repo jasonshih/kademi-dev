@@ -126,6 +126,7 @@ function initSend() {
     $('body').on('click', '.btn-send-sms', function (e) {
         e.preventDefault();
         doSendSms();
+        $(this).prop('disabled', true);
     });
 }
 
