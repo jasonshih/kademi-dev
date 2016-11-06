@@ -1,4 +1,10 @@
 <div class="panel panel-default" style="padding: 40px 30px 0">
+
+    #if( $page.teamViewer )
+    #else
+    <div class="alert alert-warning">You do not have the team viewer role, so will only see lead information assigned to yourself</div>
+    #end
+
     <div data-closedSales="#ee145b" data-cancelledSales="#3e3e3e" id="histo" style="margin-bottom: 30px">
         <svg style="width: 100%; height: 220px"></svg>
     </div>

@@ -274,7 +274,7 @@
                             <ul>
                                 <li>Delay: Specified in minutes, this replaces the delays on timers and goal timeouts. Eg use "1" for 1 minute</li>
                                 <li>Accelerator: Divides the amount of time calculated for timers and goal timeouts. Eg use "100" to make 100 times faster</li>
-                            </ul>                                
+                            </ul>
                             </div>
                         </div>
                     </div>
@@ -283,7 +283,7 @@
             <div id="lead" class="tab-pane">
                 <p class="lead">$page.leads.size() leads</p>
                 <p>
-                    
+
                     <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
                         <span class="glyphicon glyphicon-upload"></span>
                         Upload CSV
@@ -296,7 +296,7 @@
                         <span class="fa fa-refresh"></span>
                         Refresh leads
                     </a>
-                    
+
                 </p>
                 <hr />
                 <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
@@ -421,7 +421,7 @@
                                 <th>Email</th>
                                 <th>Last attained</th>
                                 <th>Awaiting goal</th>
-                                <th>Timer</th>                                
+                                <th>Timer</th>
                                 <th>Created date</th>
                                 <th>Last attained date</th>
                                 <th>Stage</th>
@@ -429,6 +429,9 @@
                                 <th>Funnel version</th>
                                 <th>Team</th>
                                 <th>Assigned to</th>
+                                <th>Deleted date</th>
+                                <th>Closed date</th>
+                                <th>Cancelled</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -452,7 +455,7 @@
                                     ($lead.currentGoal)
                                     #end
                                 </td>
-                                <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>                                
+                                <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
                                 <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
                                 <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
                                 <td>$!lead.stageName</td>
@@ -460,6 +463,9 @@
                                 <td>$!lead.funnelBranch</td>
                                 <td>$!lead.assignedToOrg.formattedName</td>
                                 <td>$!lead.assignedToProfile.formattedName</td>
+                                <td>$!lead.deletedDate</td>
+                                <td>$!lead.closedDate</td>
+                                <td>$!lead.cancelled</td>
                                 <td>
                                     <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -472,25 +478,25 @@
                                 <td></td>
                                 <td>
                                     #if( $lead.processingStartedAt )
-                                    Processing started at: 
+                                    Processing started at:
                                     <br/>
-                                    <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>                                    
-                                    #end                                    
-                                </td>   
+                                    <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>
+                                    #end
+                                </td>
                                 <td>
                                     #if( $lead.completedProcessingAt )
                                     Completed
                                     <br/>
-                                    <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>                                    
-                                    #end                                    
+                                    <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>
+                                    #end
                                 </td>
                                 <td>
                                     #if( $lead.numAttempts )
                                     Num attempts
                                     <br/>
                                     $lead.numAttempts
-                                    #end                                    
-                                </td>                                                                    
+                                    #end
+                                </td>
                             </tr>
                             #end
                             #end
