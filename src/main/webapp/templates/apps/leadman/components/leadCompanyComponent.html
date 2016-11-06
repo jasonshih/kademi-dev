@@ -15,7 +15,10 @@
                             <div class="col-md-8">
                                 <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" />
                             </div>
-                            <a href="/companies/$leadOrg.id">Company</a>
+                            #if( $page.is("company") )
+                            #else
+                            <a href="/companies/$leadOrg.id">Company details</a>
+                            #end
                         </div>
 
                         <div class="form-group">
@@ -54,6 +57,18 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label for="country" class="control-label col-md-2">Country</label>
+                            <div class="col-md-8">
+                                <select name="country" class="form-control chosen-select" id="country">
+                                    <option value="">[No country selected]</option>
+                                    #foreach($cc in $formatter.countryCodes.list)
+                                    $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+
 
                         #if( $page.completed)
                         #else
@@ -66,6 +81,7 @@
                         #end
                     </div>
                 </form>
+
             </div>
         </div>
     </div>
