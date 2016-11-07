@@ -2,7 +2,7 @@
     #foreach($auction in $page.childrenWithPermission)
     #set($bg = "/theme/img/photo_holder.png")
     #if( $auction.bestSquareImageHref )
-    #set($bg = $auction.bestSquareImageHref)
+    #set($bg = "/_hashes/files/" + $auction.bestSquareImageHash + "/alt-300-300.png")
     #end
 
     <div class="col-sm-6 col-md-4 auction-item">
