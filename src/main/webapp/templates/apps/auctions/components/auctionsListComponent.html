@@ -1,8 +1,8 @@
 <div class="row" id="auctions-list">
     #foreach($auction in $page.childrenWithPermission)
     #set($bg = "/theme/img/photo_holder.png")
-    #if( $auction.bestSquareImageHash )
-    #set($bg = "/_hashes/files/" + $auction.bestSquareImageHash + "/alt-600-400.png")
+    #if( $auction.bestSquareImageHref )
+    #set($bg = $auction.bestSquareImageHref)
     #end
 
     <div class="col-sm-6 col-md-4 auction-item">
