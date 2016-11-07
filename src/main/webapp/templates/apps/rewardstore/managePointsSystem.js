@@ -16,6 +16,7 @@ function initManagePointsSystem() {
     initClearAllDebits();
     initLeaderboardSearch();
     initDebitsPjax();
+    initExpireFields();
 
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
@@ -55,6 +56,15 @@ function initManagePointsSystem() {
     });
 }
 
+function initExpireFields(){
+    $('[name=validForDays]').on('input', function(){
+        if (this.value){
+            $('[name=expiryDate]').prop('disabled', true).val('');
+        } else {
+            $('[name=expiryDate]').prop('disabled', false);
+        }
+    }).trigger('input');
+}
 function initExpireAllPoints() {
     $(document.body).on('click', '.btnExpireAll', function (e) {
         e.preventDefault();
