@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Reward</title>
-        <link rel="stylesheet" type="text/css" href="manageReward.css" />
+        <!--<link rel="stylesheet" type="text/css" href="manageReward.css" />-->
         <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css"  />
        	<script type="text/javascript" src="managePointsSystem.js">//</script>
         <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
@@ -103,8 +103,8 @@
                                     <td>
                                         <div class="form-group">
                                             <div class="col-sm-4">
-                                                <input type="text" name="validForDays" placeholder="" value="$!page.reward.validForDays" class="form-control" />
-                                                <i>if specified, points awarded will expire in a set number of days</i>
+                                                <input type="number" name="validForDays" placeholder="" value="$!page.reward.validForDays" class="form-control" />
+                                                <i>if specified, points awarded will expire in a set number of days, and Choose an expiry date will be disabled and has empty value. Clear value of this field should enable Choose an expiry date</i>
                                             </div>
                                         </div>
                                     </td>

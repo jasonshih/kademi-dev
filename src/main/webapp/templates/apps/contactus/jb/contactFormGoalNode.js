@@ -1,5 +1,5 @@
 JBNodes['contactFormGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Contact Form</span>',
+    title: '<i class="fa fa-trophy"></i> <span class="node-type">Contact Form Goal</span>',
     previewUrl: '/theme/apps/contactus/jb/contactFormGoalNode.png',
     ports: {
         timeoutNode: {
