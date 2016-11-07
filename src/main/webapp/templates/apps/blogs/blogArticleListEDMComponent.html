@@ -30,8 +30,8 @@
                                                 <tr>
                                                     <td>
                                                         #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                        #if( $article.bestSquareImageHref )
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/${article.bestSquareImageHref}/alt-600-400.png")
+                                                        #if( $article.bestSquareImageHash )
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/_hashes/files/${article.bestSquareImageHash}/alt-600-400.png")
                                                         #end
                                                         <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
                                                             <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
@@ -78,8 +78,8 @@
                                             <tr>
                                                 <td>
                                                     #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                    #if( $article.bestSquareImageHref )
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/${article.bestSquareImageHref}/alt-600-400.png")
+                                                    #if( $article.bestSquareImageHash )
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}/_hashes/files/${article.bestSquareImageHash}/alt-600-400.png")
                                                     #end
                                                     <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
                                                         <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />

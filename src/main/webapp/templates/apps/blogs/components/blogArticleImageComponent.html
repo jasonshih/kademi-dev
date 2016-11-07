@@ -13,12 +13,12 @@
     }
 </style>
 #if ($orientation == 'horizontal')
-#set($image = $page.horizontalImageHref)
+#set($image = $page.horizontalImageHash)
 #elseif ($orientation == 'vertical')
-#set($image = $page.verticalImageHref)
+#set($image = $page.verticalImageHash)
 #end
 #if($image)
 <div class="horiz-image-container">
-    <img src="$image" class="img-responsive horiz-image" />
+    <img src="/_hashes/files/$image" class="img-responsive horiz-image" />
 </div>
 #end

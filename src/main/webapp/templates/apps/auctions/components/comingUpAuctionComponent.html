@@ -10,8 +10,8 @@
     #if($auction.isInGroup() && $auction.auctionState == "open")
     <div class="panel-body">
         #set($bg = "/theme/img/photo_holder.png")
-        #if( $auction.bestSquareImageHref )
-        #set($bg = $auction.bestSquareImageHref)
+        #if( $auction.bestSquareImageHash )
+        #set($bg = "/_hashes/files/" + $auction.bestSquareImageHash + "/alt-600-400.png")
         #end
 
         <div class="embed-responsive embed-responsive-4by3">
