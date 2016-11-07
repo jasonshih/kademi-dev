@@ -13,7 +13,7 @@
 #foreach($article in $articles)
 <div class="hero thumbnail col-md-12">
     #set($image = false)
-    #set($image = $article.bestSquareImageHref)
+    #set($image = $article.bestSquareImageHash)
     #if( $image )
     #set($bg = "background-image: url('${image}/alt-300-300.png')")
     <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>

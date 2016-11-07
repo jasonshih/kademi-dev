@@ -51,7 +51,7 @@
             html += '       data-controls="' + wrapper.attr('data-controls') + '" />';
             wrapper.html(html);
 
-            return component.html();
+            return component.find('.keditor-component-content').html();
         },
 
         settingEnabled: true,
