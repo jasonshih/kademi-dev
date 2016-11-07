@@ -6,6 +6,7 @@
     #if ($prods.size() > $numberOfProducts)
         #set( $prods =  $prods.subList(0, $numberOfProducts))
     #end
+
     #if ($layout == "grid")
         #set ($clsName = "col-sm-4")
         #if ($itemsPerRow == 1)
@@ -20,10 +21,11 @@
 
         <div class="row products-list" id="products-list-${prodsListId}">
             #foreach($p in $prods)
+
                 #set ($prodUrl = "/$store/$category/$p.name")
             #set($bg = "/static/images/photo_holder.png")
-            #if( $p.primaryImageId )
-            #set($bg = $prodUrl + "/${p.primaryImageId}")
+            #if( $p.primaryImageHref )
+            #set($bg = $p.primaryImageHref)
             #end
             <div class="$clsName product-item">
                 <div class="thumbnail product">
@@ -78,8 +80,8 @@
                 <div class="media prod">
                     <div class="media-left hidden-sm hidden-xs">
                         #set($bg = "/static/images/photo_holder.png")
-                        #if( $p.primaryImageId )
-                            #set($bg = $prodUrl + "/${p.primaryImageId}")
+                        #if( $p.primaryImageHref )
+                        #set($bg = $p.primaryImageHref)
                         #end
                         <a href="$prodUrl">
                             <img class="media-object" alt="$p.title" src="$bg" width="200" height="" />
