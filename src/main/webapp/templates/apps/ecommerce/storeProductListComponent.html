@@ -25,8 +25,8 @@
                     <div class="thumbnail">
                         <div class="embed-responsive embed-responsive-16by9">
                             #set($bg = "/static/images/photo_holder.png")
-                            #if( $p.primaryImageId )
-                                #set($bg = $prodUrl + "/${p.primaryImageId}")
+                            #if( $p.primaryImageHref )
+                            #set($bg = $p.primaryImageHref)
                             #end
                             <a title="$p.title" href="$prodUrl" class="embed-responsive-item" style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
                                 <span class="sr-only">$p.title</span>
@@ -76,8 +76,8 @@
                 <div class="media prod">
                     <div class="media-left hidden-sm hidden-xs">
                         #set($bg = "/static/images/photo_holder.png")
-                        #if( $p.primaryImageId )
-                            #set($bg = $prodUrl + "/${p.primaryImageId}")
+                        #if( $p.primaryImageHref )
+                        #set($bg = $p.primaryImageHref)
                         #end
                         <a href="$prodUrl">
                             <img class="media-object" alt="$p.title" src="$bg" width="200" height="" />
