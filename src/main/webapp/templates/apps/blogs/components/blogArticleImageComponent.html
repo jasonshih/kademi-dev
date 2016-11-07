@@ -1,5 +1,5 @@
 <hr/>
-<style>
+<style type="text/css">
     .horiz-image-container {
         margin-left: auto;
         margin-right: auto;
@@ -13,12 +13,12 @@
     }
 </style>
 #if ($orientation == 'horizontal')
-#set($image = $page.horizontalImageHash)
+#set($image = $page.horizontalImageHref)
 #elseif ($orientation == 'vertical')
-#set($image = $page.verticalImageHash)
+#set($image = $page.verticalImageHref)
 #end
 #if($image)
 <div class="horiz-image-container">
-    <img src="/_hashes/files/$image" class="img-responsive horiz-image" />
+    <img src="$image" class="img-responsive horiz-image" />
 </div>
 #end

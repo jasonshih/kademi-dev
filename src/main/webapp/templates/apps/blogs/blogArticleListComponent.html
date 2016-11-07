@@ -26,8 +26,8 @@
                     <div class="thumbnail">
                         <div class="embed-responsive embed-responsive-16by9">
                             #set($bg = "/static/images/photo_holder.png")
-                            #if( $article.bestSquareImageHash )
-                            #set($bg = "/_hashes/files/" + $article.bestSquareImageHash + "/alt-600-400.png")
+                            #if( $article.bestSquareImageHref )
+                            #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
                             #end
                             <a title="$article.title" href="$article.href" class="embed-responsive-item" style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
                                 <span class="sr-only">$article.title</span>
@@ -76,8 +76,8 @@
                 <div class="media blog-article">
                     <div class="media-left hidden-sm hidden-xs">
                         #set($bg = "/static/images/photo_holder.png")
-                        #if( $article.bestSquareImageHash )
-                        #set($bg = "/_hashes/files/" + $article.bestSquareImageHash + "/alt-600-400.png")
+                        #if( $article.bestSquareImageHref )
+                        #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
                         #end
                         <a href="$article.href">
                             <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
@@ -143,8 +143,8 @@
             <div class="media blog-article">
                 <div class="media-left hidden-sm hidden-xs">
                     #set($bg = "/static/images/photo_holder.png")
-                    #if( $article.bestSquareImageHash )
-                    #set($bg = "/_hashes/files/" + $article.bestSquareImageHash + "/alt-600-400.png")
+                    #if( $article.bestSquareImageHref )
+                    #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
                     #end
                     <a href="$article.href">
                         <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />

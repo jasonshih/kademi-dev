@@ -378,7 +378,7 @@ function initManageArticleImage() {
             upcropZone.find('.orientation select').val('');
         },
         onContinue: function (data, name) {
-            setAddImageFormData(data, name, true);
+            setAddImageFormData(data, name, false);
         },
         onCropComplete: setAddImageFormData,
         onReady: function (upcropContainer) {
