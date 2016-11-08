@@ -77,11 +77,11 @@
                     '</div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile(
-                        '<div>'
-                        + '<div>{{name}}</div>'
-                        + '<div>{{phone}}</div>'
-                        + '<div>{{email}}</div>'
-                        + '</div><hr>')
+                    '<div>'
+                    + '<div>{{name}}</div>'
+                    + '<div>{{phone}}</div>'
+                    + '<div>{{email}}</div>'
+                    + '</div><hr>')
             }
         });
 
@@ -231,19 +231,19 @@
                     '</div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile(
-                        '<div>'
-                        + '<strong>{{title}}</strong>'
-                        + '</br>'
-                        + '<span>{{phone}}</span>'
-                        + '</br>'
-                        + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                        + '</div>')
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
             }
         });
 
         $('#orgTitleSearch').bind('typeahead:select', function (ev, sug) {
             var inp = $(this);
-            var form = inp.closest('form');
+            var form = inp.closest('.form-horizontal');
 
             form.find('input[name=email]').val(sug.email);
             form.find('input[name=phone]').val(sug.phone);
@@ -527,6 +527,38 @@
             });
         });
     }
+
+    function initEditCompany() {
+        flog('initEditCompany');
+
+        var btnEditCompany = $('.btn-edit-company');
+        if (btnEditCompany.length > 0) {
+            var modal = $('#modalEditCompany');
+            var modalBody = modal.find('.modal-body');
+            var form = modal.find('form');
+            var btnCompanyDetails = btnEditCompany.closest('.form-horizontal').find('.btn-company-details');
+
+            form.forms({
+                onSuccess: function () {
+                    $('#leadOrgDetailsPreview').reloadFragment({
+                        whenComplete: function () {
+                            Msg.success('Company details is saved!');
+                            modal.modal('hide');
+                        }
+                    });
+                }
+            });
+
+            btnEditCompany.on('click', function (e) {
+                e.preventDefault();
+
+                modal.modal('show');
+                modalBody.html('Loading...');
+                modalBody.load(btnCompanyDetails.attr('href') + ' #leadOrgDetails > *')
+            });
+        }
+    }
+
     // Run init functions
     $(function () {
         initNewTaskModal();
@@ -540,5 +572,6 @@
         initDeleteTag();
         initJobTitleSearch();
         initLeadTimerControls();
+        initEditCompany();
     });
 })();
