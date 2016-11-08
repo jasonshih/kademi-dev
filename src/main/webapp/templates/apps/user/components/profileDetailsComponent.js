@@ -58,7 +58,7 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('#extraFields').on('click', function () {
+                    form.find('#extraFields').on('blur', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         var extraFields = this.value;
