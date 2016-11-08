@@ -217,8 +217,13 @@
                 wildcard: '%QUERY'
             }
         });
+        var orgTitleSearch = $('#orgTitleSearch');
+        var form = orgTitleSearch.closest('.form-horizontal');
+        var btnCompanyDetails = form.find('.btn-company-details');
+        var btnEditCompany = form.find('.btn-edit-company');
+        var btnCreateCompany = form.find('.btn-create-company');
 
-        $('#orgTitleSearch').typeahead({
+        orgTitleSearch.typeahead({
             highlight: true
         }, {
             display: 'title',
@@ -241,10 +246,46 @@
             }
         });
 
-        $('#orgTitleSearch').bind('typeahead:select', function (ev, sug) {
-            var inp = $(this);
-            var form = inp.closest('.form-horizontal');
+        var timer;
+        orgTitleSearch.bind('typeahead:render', function (ev) {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var ttMenu = orgTitleSearch.siblings('.tt-menu');
+                var isSuggestionAvailable = ttMenu.find('.empty-message').length === 0;
 
+                flog('typeahead:render Is suggestion available: ' + isSuggestionAvailable, ttMenu.find('.empty-message'));
+
+                if (isSuggestionAvailable) {
+                    btnCompanyDetails.css('display', 'inline');
+                    btnEditCompany.css('display', 'inline-block');
+                    btnCreateCompany.css('display', 'none');
+                    form.find('input[name=email]').prop('disabled', true);
+                    form.find('input[name=phone]').prop('disabled', true);
+                    form.find('input[name=address]').prop('disabled', true);
+                    form.find('input[name=addressLine2]').prop('disabled', true);
+                    form.find('input[name=addressState]').prop('disabled', true);
+                    form.find('input[name=postcode]').prop('disabled', true);
+                    form.find('input[name=leadOrgId]').prop('disabled', true);
+                    form.find('[name=notes]').prop('disabled', true);
+                    form.find('select[name=country]').prop('disabled', true);
+                } else {
+                    btnCompanyDetails.css('display', 'none');
+                    btnEditCompany.css('display', 'none');
+                    btnCreateCompany.css('display', 'inline-block');
+                    form.find('input[name=email]').prop('disabled', false);
+                    form.find('input[name=phone]').prop('disabled', false);
+                    form.find('input[name=address]').prop('disabled', false);
+                    form.find('input[name=addressLine2]').prop('disabled', false);
+                    form.find('input[name=addressState]').prop('disabled', false);
+                    form.find('input[name=postcode]').prop('disabled', false);
+                    form.find('input[name=leadOrgId]').prop('disabled', false);
+                    form.find('[name=notes]').prop('disabled', false);
+                    form.find('select[name=country]').prop('disabled', false);
+                }
+            }, 50);
+        });
+
+        orgTitleSearch.bind('typeahead:select', function (ev, sug) {
             form.find('input[name=email]').val(sug.email);
             form.find('input[name=phone]').val(sug.phone);
             form.find('input[name=address]').val(sug.address);
@@ -254,9 +295,8 @@
             form.find('input[name=leadOrgId]').val(sug.orgId);
         });
 
-        $('#orgTitleSearch').on({
+        orgTitleSearch.on({
             input: function () {
-                var form = $(this).closest('form');
                 if (!this.value) {
                     form.find('input[name=email]').val('');
                     form.find('input[name=phone]').val('');
@@ -265,6 +305,8 @@
                     form.find('input[name=addressState]').val('');
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
+                    form.find('[name=notes]').val('');
+                    form.find('[name=country]').val('');
                 }
             }
         });
@@ -360,7 +402,18 @@
 
         $('#leadOrgDetails').forms({
             callback: function (resp) {
-                Msg.info('Saved');
+                $('#leadOrgDetailsPreview').reloadFragment({
+                    whenComplete: function () {
+                        Msg.info('Saved');
+
+                        var btnEditCompany = $('.btn-edit-company');
+                        var btnCreateCompany = $('.btn-create-company');
+                        if (btnEditCompany.length > 0) {
+                            btnEditCompany.css('display', 'inline-block');
+                            btnCreateCompany.css('display', 'none');
+                        }
+                    }
+                });
             }
         });
 
