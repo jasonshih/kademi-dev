@@ -15,9 +15,17 @@
                 </div>
             #end
         #end
-        <div class="form-group" style="margin-top: 20px">
+        #set ($variantsQuery = "")
+        #foreach($paramName in $page.selectedParameterOptions.keySet())
+        #if ($variantsQuery == "")
+        #set ($variantsQuery = "?param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+        #else
+        #set ($variantsQuery = "&param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+        #end
+        #end
+        <div class="form-group" style="margin-top: 20px" id="btn-add-to-cart-wrapper">
             <div class="col-sm-12">
-                <a href="$page.href" class="btn-lg btn btn-primary btn-add-to-cart">
+                <a href="$page.href$!variantsQuery" class="btn-lg btn btn-primary btn-add-to-cart">
                     <span class="glyphicon glyphicon-shopping-cart"></span>
                     Add to cart
                 </a>
