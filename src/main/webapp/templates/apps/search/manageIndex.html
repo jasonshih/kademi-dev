@@ -24,6 +24,10 @@
                 </div>
                 <div role="tabpanel" class="tab-pane active" id="query">
                     #set( $resp = $page.query($params.query) )
+                    
+                    #if( $page.physicalIndexName )
+                    <p class="lead">Physical index: $page.physicalIndexName</p>
+                    #end
 
                     <textarea id="queryText" style="width: 100%; height: 200px" name="query">
 $page.queryJson
