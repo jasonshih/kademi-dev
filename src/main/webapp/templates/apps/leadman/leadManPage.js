@@ -27,9 +27,9 @@
             table: '#leadTable',
             idSrc: 'leadId',
             fields: [{
-                    label: 'Deal Amount',
-                    name: 'dealAmount'
-                },
+                label: 'Deal Amount',
+                name: 'dealAmount'
+            },
                 {
                     label: 'Stage',
                     name: 'stageName',
@@ -259,16 +259,16 @@
     }
 
     function initDropdownFilter() {
-        $('.leadDropFilter ul li').on('click', function(e){
+        $('.leadDropFilter ul li').on('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             var filterName = $(this).find('a').attr('data-filter');
             $(this).find('a').toggleClass('filterSelected');
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');
-            if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])){
+            if (searchOptions.hasOwnProperty(filterName) && Array.isArray(searchOptions[filterName])) {
                 var index = searchOptions[filterName].indexOf(groupId);
-                if ($(this).find('a').hasClass('filterSelected')){
+                if ($(this).find('a').hasClass('filterSelected')) {
                     if (index === -1) {
                         searchOptions[filterName].push(groupId);
                     }
@@ -283,19 +283,19 @@
         });
     }
 
-    function initSearchFromQuery(){
-        if (w.searchOptions){
+    function initSearchFromQuery() {
+        if (w.searchOptions) {
             searchOptions.query = w.searchOptions.query;
-            if (w.searchOptions.tags){
+            if (w.searchOptions.tags) {
                 searchOptions.tags = w.searchOptions.tags.split(',');
             }
-            if (w.searchOptions.sources){
+            if (w.searchOptions.sources) {
                 searchOptions.sources = w.searchOptions.sources.split(',');
             }
-            if (w.searchOptions.team){
+            if (w.searchOptions.team) {
                 searchOptions.team = w.searchOptions.team.split(',');
             }
-            if (w.searchOptions.assignedTo){
+            if (w.searchOptions.assignedTo) {
                 searchOptions.assignedTo = w.searchOptions.assignedTo.split(',');
             }
             if (w.searchOptions.leadType) {
@@ -306,9 +306,9 @@
         }
     }
 
-    function updateUrl(){
+    function updateUrl() {
         var uri = URI(w.location);
-        for(var key in searchOptions){
+        for (var key in searchOptions) {
             uri.setSearch(key, searchOptions[key]);
         }
 
@@ -354,19 +354,19 @@
             url: window.location.pathname + '?sLead&' + $.param(searchOptions),
             dataType: 'JSON',
             success: function (resp, textStatus, jqXHR) {
-                if (resp.data.aggrs && resp.data.aggrs.aggregations.states.buckets){
+                if (resp.data.aggrs && resp.data.aggrs.aggregations.states.buckets) {
                     var states = resp.data.aggrs.aggregations.states.buckets;
                     var activeCount = 0; // Active
                     var closedCount = 0; // Won
                     var cancelledCount = 0; // Lost
-                    for(var i = 0; i < states.length; i++){
-                        if (states[i].key === 'Active'){
+                    for (var i = 0; i < states.length; i++) {
+                        if (states[i].key === 'Active') {
                             activeCount = states[i].doc_count;
                         }
-                        if (states[i].key === 'Won'){
+                        if (states[i].key === 'Won') {
                             closedCount = states[i].doc_count;
                         }
-                        if (states[i].key === 'Lost'){
+                        if (states[i].key === 'Lost') {
                             cancelledCount = states[i].doc_count;
                         }
                     }
@@ -415,12 +415,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                    ;
+                ;
 
             d3.select("#sourcesPie svg")
-                    .datum(buckets)
-                    .transition().duration(350)
-                    .call(chart);
+                .datum(buckets)
+                .transition().duration(350)
+                .call(chart);
 
             return chart;
         });
@@ -449,12 +449,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                    ;
+                ;
 
             d3.select("#stagesPie svg")
-                    .datum(buckets)
-                    .transition().duration(350)
-                    .call(chart);
+                .datum(buckets)
+                .transition().duration(350)
+                .call(chart);
 
             return chart;
         });

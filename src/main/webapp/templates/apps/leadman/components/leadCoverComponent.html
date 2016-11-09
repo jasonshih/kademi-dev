@@ -85,13 +85,13 @@
 
                 <div class="btn-group dropdown">
                     <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
-                                    <span>
-                                        #if( $page.assignedTo )
-                                        Assigned to: $!page.assignedTo.thisUser.formattedName
-                                        #else
-                                        Not assigned
-                                        #end
-                                    </span>
+                        <span>
+                            #if( $page.assignedTo )
+                                Assigned to: $!page.assignedTo.thisUser.formattedName
+                            #else
+                                Not assigned
+                            #end
+                        </span>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" id="assignToMenu" role="menu">
