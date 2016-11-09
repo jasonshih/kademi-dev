@@ -219,9 +219,7 @@
         });
         var orgTitleSearch = $('#orgTitleSearch');
         var form = orgTitleSearch.closest('.form-horizontal');
-        var btnCompanyDetails = form.find('.btn-company-details');
-        var btnEditCompany = form.find('.btn-edit-company');
-        var btnCreateCompany = form.find('.btn-create-company');
+        var btnSaveCompany = form.find('.btn-save-company');
 
         orgTitleSearch.typeahead({
             highlight: true
@@ -255,32 +253,10 @@
 
                 flog('typeahead:render Is suggestion available: ' + isSuggestionAvailable, ttMenu.find('.empty-message'));
 
-                if (isSuggestionAvailable) {
-                    btnCompanyDetails.css('display', 'inline');
-                    btnEditCompany.css('display', 'inline-block');
-                    btnCreateCompany.css('display', 'none');
-                    form.find('input[name=email]').prop('disabled', true);
-                    form.find('input[name=phone]').prop('disabled', true);
-                    form.find('input[name=address]').prop('disabled', true);
-                    form.find('input[name=addressLine2]').prop('disabled', true);
-                    form.find('input[name=addressState]').prop('disabled', true);
-                    form.find('input[name=postcode]').prop('disabled', true);
-                    form.find('input[name=leadOrgId]').prop('disabled', true);
-                    form.find('[name=notes]').prop('disabled', true);
-                    form.find('select[name=country]').prop('disabled', true);
-                } else {
-                    btnCompanyDetails.css('display', 'none');
-                    btnEditCompany.css('display', 'none');
-                    btnCreateCompany.css('display', 'inline-block');
-                    form.find('input[name=email]').prop('disabled', false);
-                    form.find('input[name=phone]').prop('disabled', false);
-                    form.find('input[name=address]').prop('disabled', false);
-                    form.find('input[name=addressLine2]').prop('disabled', false);
-                    form.find('input[name=addressState]').prop('disabled', false);
-                    form.find('input[name=postcode]').prop('disabled', false);
-                    form.find('input[name=leadOrgId]').prop('disabled', false);
-                    form.find('[name=notes]').prop('disabled', false);
-                    form.find('select[name=country]').prop('disabled', false);
+                if (!isSuggestionAvailable) {
+                    btnSaveCompany.html('Create new company');
+                    form.find('.btn-company-details').css('display', 'none');
+                    form.find('input[name=leadOrgId]').val('');
                 }
             }, 50);
         });
@@ -293,6 +269,9 @@
             form.find('input[name=addressState]').val(sug.state);
             form.find('input[name=postcode]').val(sug.postcode);
             form.find('input[name=leadOrgId]').val(sug.orgId);
+            form.find('[name=country]').val(sug.country);
+            form.find('.btn-company-details').css('display', 'inline').attr('href', '/companies/' + sug.id);
+            btnSaveCompany.html('Save details');
         });
 
         orgTitleSearch.on({
@@ -305,7 +284,6 @@
                     form.find('input[name=addressState]').val('');
                     form.find('input[name=postcode]').val('');
                     form.find('input[name=leadOrgId]').val('');
-                    form.find('[name=notes]').val('');
                     form.find('[name=country]').val('');
                 }
             }
@@ -400,17 +378,22 @@
             setLeadDescription(val);
         });
 
-        $('#leadOrgDetails').forms({
+        var leadOrgDetailsForm = $('#leadOrgDetails');
+        leadOrgDetailsForm.forms({
             callback: function (resp) {
-                $('#leadOrgDetailsPreview').reloadFragment({
-                    whenComplete: function () {
-                        Msg.info('Saved');
+                var btnSaveCompany = $('.btn-save-company');
 
-                        var btnEditCompany = $('.btn-edit-company');
-                        var btnCreateCompany = $('.btn-create-company');
-                        if (btnEditCompany.length > 0) {
-                            btnEditCompany.css('display', 'inline-block');
-                            btnCreateCompany.css('display', 'none');
+                $('#leadOrgDetailsPreview, #btn-company-details-wrapper').reloadFragment({
+                    whenComplete: function () {
+                        if (btnSaveCompany.text().trim() === 'Create new company') {
+                            btnSaveCompany.html('Save details');
+                            Msg.success('New company is created');
+                        } else {
+                            Msg.success('Company details is saved')
+                        }
+
+                        if (leadOrgDetailsForm.find('[name=title]').val() === '') {
+                            form.find('.btn-unlink-company').css('display', 'none');
                         }
                     }
                 });
@@ -515,7 +498,7 @@
 
     function initLeadTimerControls() {
         flog("initLeadTimerControls");
-        $("body").on("click", ".timer-btn-stop", function (e) {
+        $(document.body).on("click", ".timer-btn-stop", function (e) {
             e.preventDefault();
             $.ajax({
                 type: 'POST',
@@ -534,7 +517,7 @@
         });
 
 
-        $("body").on("click", ".timer-btn-do-resched", function (e) {
+        $(document.body).on("click", ".timer-btn-do-resched", function (e) {
             e.preventDefault();
             var btn = $(e.target).closest("button");
             var modal = btn.closest(".modal");
@@ -559,7 +542,7 @@
             });
         });
 
-        $("body").on("click", ".timer-btn-go-next", function (e) {
+        $(document.body).on("click", ".timer-btn-go-next", function (e) {
             e.preventDefault();
             var btn = $(e.target).closest("a");
             var nextNodeId = btn.attr("href");
@@ -581,35 +564,26 @@
         });
     }
 
-    function initEditCompany() {
-        flog('initEditCompany');
+    function initUnlinkCompany() {
+        flog('initUnlinkCompany');
 
-        var btnEditCompany = $('.btn-edit-company');
-        if (btnEditCompany.length > 0) {
-            var modal = $('#modalEditCompany');
-            var modalBody = modal.find('.modal-body');
-            var form = modal.find('form');
-            var btnCompanyDetails = btnEditCompany.closest('.form-horizontal').find('.btn-company-details');
+        $(document.body).on('click', '.btn-unlink-company', function (e) {
+            e.preventDefault();
 
-            form.forms({
-                onSuccess: function () {
-                    $('#leadOrgDetailsPreview').reloadFragment({
-                        whenComplete: function () {
-                            Msg.success('Company details is saved!');
-                            modal.modal('hide');
-                        }
-                    });
-                }
-            });
+            var form = $(this).closest('.form-horizontal');
+            form.find('input[name=title]').val('');
+            form.find('input[name=email]').val('');
+            form.find('input[name=phone]').val('');
+            form.find('input[name=address]').val('');
+            form.find('input[name=addressLine2]').val('');
+            form.find('input[name=addressState]').val('');
+            form.find('input[name=postcode]').val('');
+            form.find('input[name=leadOrgId]').val('');
+            form.find('[name=country]').val('');
+            form.find('.btn-company-details').css('display', 'none');
 
-            btnEditCompany.on('click', function (e) {
-                e.preventDefault();
-
-                modal.modal('show');
-                modalBody.html('Loading...');
-                modalBody.load(btnCompanyDetails.attr('href') + ' #leadOrgDetails > *')
-            });
-        }
+            form.trigger('submit');
+        });
     }
 
     // Run init functions
@@ -625,6 +599,6 @@
         initDeleteTag();
         initJobTitleSearch();
         initLeadTimerControls();
-        initEditCompany();
+        initUnlinkCompany();
     });
 })();

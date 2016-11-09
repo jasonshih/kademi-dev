@@ -7,30 +7,32 @@
                 <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
 
                 <div class="panel-body">
-                    <div id="leadOrgDetailsPreview">
-                        #set( $leadOrg = $page.leadOrg )
-                        <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
+                    #set( $leadOrg = $page.leadOrg )
+                    <div class="form-group">
+                        <label class="control-label col-md-2" for="">Company</label>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="">Company</label>
-
-                            <div class="col-md-8">
-                                <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" autocomplete="off" />
-                            </div>
-                            #if( $page.is("company") )
-                            #else
-                            <a href="/companies/$leadOrg.id" class="btn-company-details">Company details</a>
-                            #end
+                        <div class="col-md-8">
+                            <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" autocomplete="off" />
                         </div>
+                        #if( $page.is("company") )
+                        #else
+                            <span id="btn-company-details-wrapper">
+                                <a href="/companies/$!leadOrg.id" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end>Company details</a>
+                            </span>
+                        #end
+                    </div>
+
+                    <div id="leadOrgDetailsPreview">
+                        <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
 
                         <div class="form-group">
                             <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
 
                             <div class="col-md-5">
-                                <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" #if(!$page.is('company')) disabled="disabled" #end />
+                                <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
                             </div>
                             <div class="col-md-5">
-                                <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" #if(!$page.is('company')) disabled="disabled" #end />
+                                <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
                             </div>
                         </div>
 
@@ -38,27 +40,19 @@
                             <label class="control-label col-md-2" for="newUserEmail">Address</label>
 
                             <div class="col-md-5">
-                                <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" #if(!$page.is('company')) disabled="disabled" #end />
+                                <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
                             </div>
                             <div class="col-md-5">
-                                <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" #if(!$page.is('company')) disabled="disabled" #end />
+                                <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <div class="col-md-offset-2 col-md-5">
-                                <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" #if(!$page.is('company')) disabled="disabled" #end />
+                                <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
                             </div>
                             <div class="col-md-5">
-                                <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" #if(!$page.is('company')) disabled="disabled" #end />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="notes">Notes</label>
-
-                            <div class="col-md-10">
-                                <textarea name="notes" class="form-control" style="height: 100px" #if(!$page.is('company')) disabled="disabled" #end>$!leadOrg.notes</textarea>
+                                <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
                             </div>
                         </div>
 
@@ -66,7 +60,7 @@
                             <label for="country" class="control-label col-md-2">Country</label>
 
                             <div class="col-md-8">
-                                <select name="country" class="form-control chosen-select" id="country" #if(!$page.is('company')) disabled="disabled" #end>
+                                <select name="country" class="form-control chosen-select" id="country">
                                 <option value="">[No country selected]</option>
                                 #foreach($cc in $formatter.countryCodes.list)
                                 $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
@@ -74,21 +68,17 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
 
-                    #if( $page.completed)
-                    #else
-                    <div class="form-group">
-                        <div class="col-md-10 col-md-offset-2">
-                            #if( $page.is("company") )
-                            <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
-                            #else
-                            <button class="btn btn-primary btn-edit-company" type="button">Edit details</button>
-                            <button class="btn btn-primary btn-create-company" style="display: none;" type="submit">Create new company</button>
-                            #end
+                        #if( $page.completed)
+                        #else
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-2">
+                                <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
+                                <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
+                            </div>
                         </div>
+                        #end
                     </div>
-                    #end
                 </div>
             </form>
         </div>
