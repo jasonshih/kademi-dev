@@ -10,7 +10,7 @@
  * @option {Boolean} isCompletable User has permission for complete this module
  * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
  * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
- * @option {Function} onPageLoeaded Callback will be called a module page is loaded, Argument is 'pageIndex'
+ * @option {Function} modulePageLoad Callback will be called a module page is loaded, Argument is 'pageIndex'
  * @option {Function} onQuizSubmit Callback will be called after clicking on Submit button on Quiz page. Argument is 'quizForm'
  * @option {Function} onQuizSuccess Callback will be called after Quiz is submitted successfully. Arguments are 'quizForm' and 'response'
  * @option {Function} onQuizError Callback will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Arguments are 'quizForm' and 'response'
@@ -37,7 +37,7 @@
         isCompletable: false,
         onPreviousPage: null,
         onNextPage: null,
-        onPageLoeaded: null,
+        modulePageLoad: null,
         onQuizSubmit: null,
         onQuizSuccess: null,
         onQuizError: null
@@ -306,14 +306,15 @@
                 flog('[jquery.module] Fire modulePageLoad event');
 
                 $('body').trigger('modulePageLoad');
+                if (typeof self.getOptions().modulePageLoad === 'function'){
+                    self.getOptions().modulePageLoad(currentPageIndex);
+                }
             }, 50);
 
             $('html, body').animate({
                 scrollTop: 0
             }, 'slow');
-            if (typeof self.getOptions().onPageLoeaded === 'function'){
-                self.getOptions().onPageLoeaded(currentPageIndex);
-            }
+
         },
 
         doRestoreFields: function () {
