@@ -1,9 +1,8 @@
-(function(CKEDITOR) {
+(function (CKEDITOR) {
     var required_string = '<sup style="color: #ff4000">*</sup>';
 
     CKEDITOR.plugins.add('modal', {
-        init: function(editor) {
-            
+        init: function (editor) {
             editor.element.getDocument().appendStyleSheet('/static/jqte/jquery-te-1.4.0.css');
             CKEDITOR.scriptLoader.load(CKEDITOR.getUrl('/static/jqte/jquery-te-1.4.0.js'));
             
@@ -16,55 +15,64 @@
                 icon: this.path + 'images/modal.png'
             });
 
-            editor.on('selectionChange', function(evt) {
+            editor.on('selectionChange', function (evt) {
                 if (editor.readOnly) {
                     return;
                 }
 
                 var command = editor.getCommand('insertModalLink'),
-                        element = evt.data.path.lastElement && evt.data.path.lastElement.getAscendant('a', true);
+                    element = evt.data.path.lastElement && evt.data.path.lastElement.getAscendant('a', true);
 
-                if (element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount() && element.$.className === 'anchor-modal') {
+                if (element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount() && element.getAttribute('data-toggle') === 'modal') {
                     command.setState(CKEDITOR.TRISTATE_ON);
                 } else {
                     command.setState(CKEDITOR.TRISTATE_OFF);
                 }
             });
 
-            editor.on('doubleclick', function(evt) {
+            editor.on('doubleclick', function (evt) {
                 var element = CKEDITOR.plugins.link.getSelectedLink(editor) || evt.data.element;
 
                 if (!element.isReadOnly()) {
-                    if (element.is('a') && element.$.className === 'anchor-modal') {
+                    if (element.is('a') && element.getAttribute('data-toggle') === 'modal') {
                         evt.data.dialog = 'modalLinkDialog';
                         editor.getSelection().selectElement(element);
                     }
                 }
             });
 
-            CKEDITOR.dialog.add('modalLinkDialog', function(editor) {
-                var default_width = 350;
-
-                var parseModalLink = function(editor, element) {                    
+            CKEDITOR.dialog.add('modalLinkDialog', function (editor) {
+                var parseModalLink = function (editor, element) {
                     var href = element.getAttribute('href').replace('#', '');
                     var modal = editor.document.getById(href);
-                    log("parseModalLink", modal);
+                    flog('parseModalLink', modal);
 
                     this._.selectedElement = element;
                     if (modal !== null) {
+                        var size = 'modal-md';
+                        var modalDialog = modal.findOne('.modal-dialog');
+                        if (modalDialog.$.className.indexOf('modal-sm') !== -1) {
+                            size = 'modal-sm';
+                        } else if (modalDialog.$.className.indexOf('modal-lg') !== -1) {
+                            size = 'modal-lg';
+                        }
+
                         return {
                             text: element.getHtml(),
-                            content: modal.getHtml(),
-                            width: modal.getStyle('width').replace('px', ''),
-                            height: modal.getStyle('height').replace('px', '')
+                            title: modal.findOne('.modal-title').getHtml(),
+                            content: modal.findOne('.modal-body').getHtml(),
+                            size: size,
+                            okText: ''
                         };
                     } else {
-                        log("no modal");
+                        flog('parseModalLink | no modal');
+
                         return {
                             text: element.getHtml(),
-                            content: "",
-                            width: "500px",
-                            height: "300px"
+                            title: '',
+                            content: '',
+                            size: 'modal-md',
+                            okText: 'OK'
                         };
 
                     }
@@ -72,119 +80,137 @@
 
                 return {
                     title: 'Modal Properties',
-                    minWidth: 400,
-                    minHeight: 250,
+                    minWidth: 600,
                     contents: [{
-                            id: 'general',
-                            label: 'Settings',
-                            elements: [{
-                                    type: 'text',
-                                    id: 'text',
-                                    label: 'Displayed Text' + required_string,
-                                    validate: CKEDITOR.dialog.validate.notEmpty('The Displayed Text cannot be empty!'),
-                                    required: true,
-                                    setup: function(data) {
-                                        log("setup text", data);
-                                        if (data.text) {
-                                            this.setValue(data.text);
-                                        }
-                                    },
-                                    commit: function(data) {
-                                        data.text = this.getValue();
-                                    }
-                                }, {
-                                    type: 'textarea',
-                                    id: 'content',
-                                    onShow: function() {
-                                        log("onshow......");
-                                    },
-                                    onLoad: function() {
-                                        log("onLoad1");
-                                        text = $("#" + this.domId + " textarea");
-                                        text.jqte({
-                                            strike: false,
-                                            rule: false,
-                                            sub: false,
-                                            sup: false,
-                                            right: false,
-                                            center: false,
-                                            left: false,
-                                            remove: false,
-                                            fsize: false
-                                        });
-                                        log("onLoad2");
-                                    },
-                                    label: 'Modal Content' + required_string,
-                                    validate: CKEDITOR.dialog.validate.notEmpty('The Modal Content cannot be empty!'),
-                                    required: true,
-                                    setup: function(data) {
-                                        log("setup content", data);
-                                        if (data.content) {
-                                            text = $("#" + this.domId + " textarea");
-                                            text.jqteVal(data.content);
-                                            this.setValue(data.content);
-                                        } else {
-                                            text.jqteVal("");
-                                        }
-                                    },
-                                    commit: function(data) {
-                                        data.content = this.getValue();
-                                    }
-                                }, {
-                                    type: 'text',
-                                    id: 'width',
-                                    default: "400",
-                                    label: 'Width',
-                                    setup: function(data) {
-                                        if (data.width) {
-                                            this.setValue(+data.width + 50); // Add 50px of padding left and right
-                                        }
-                                    },
-                                    validate: function() {
-                                        var value = this.getValue();
+                        id: 'general',
+                        label: 'Settings',
+                        elements: [{
+                            type: 'text',
+                            id: 'text',
+                            label: 'Display Text' + required_string,
+                            validate: CKEDITOR.dialog.validate.notEmpty('Display Text cannot be empty!'),
+                            required: true,
+                            setup: function (data) {
+                                flog('setup text', data);
+                                if (data.text) {
+                                    this.setValue(data.text);
+                                }
+                            },
+                            commit: function (data) {
+                                data.text = this.getValue();
+                            }
+                        }, {
+                            type: 'text',
+                            id: 'title',
+                            label: 'Modal Title' + required_string,
+                            validate: CKEDITOR.dialog.validate.notEmpty('Modal Title cannot be empty!'),
+                            required: true,
+                            setup: function (data) {
+                                flog('setup title', data);
+                                if (data.title) {
+                                    this.setValue(data.title);
+                                }
+                            },
+                            commit: function (data) {
+                                data.title = this.getValue();
+                            }
+                        }, {
+                            type: 'textarea',
+                            id: 'content',
+                            onLoad: function () {
+                                flog('onLoad1');
+                                var text = $('#' + this.domId + ' textarea');
+                                text.ckeditor({
+                                    toolbarGroups: [
+                                        {name: 'document', groups: ['mode', 'document', 'doctools']},
+                                        {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+                                        {name: 'forms', groups: ['forms']},
+                                        {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+                                        {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+                                        {name: 'links', groups: ['links']},
+                                        {name: 'insert', groups: ['insert']}
+                                    ],
+                                    title: false,
+                                    allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes: allowed through
+                                    bodyId: 'editor',
+                                    templates_replaceContent: false,
+                                    enterMode: 'P',
+                                    forceEnterMode: true,
+                                    format_tags: 'p;h1;h2;h3;h4;h5;h6',
+                                    removePlugins: 'table,magicline,tabletools',
+                                    removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,BGColor,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
+                                    minimumChangeMilliseconds: 100
+                                });
+                                flog('onLoad2');
+                            },
+                            label: 'Modal Content' + required_string,
+                            validate: function () {
+                                var ckeditor = CKEDITOR.instances[this._.inputId];
+                                var value = ckeditor.getData();
 
-                                        if (this.getValue()) {
-                                            if (isNaN(value)) {
-                                                Msg.error('The Width must be digits!');
-                                                return false;
-                                            }
-                                        }
-                                    },
-                                    commit: function(data) {
-                                        data.width = this.getValue();
-                                    }
-                                }, {
-                                    type: 'text',
-                                    id: 'height',
-                                    default: '400',
-                                    label: 'Height',
-                                    setup: function(data) {
-                                        if (data.height) {
-                                            this.setValue(data.height);
-                                        }
-                                    },
-                                    validate: function() {
-                                        var value = this.getValue();
+                                if (value.trim() === '') {
+                                    alert('');
+                                    return false;
+                                }
+                            },
+                            required: true,
+                            setup: function (data) {
+                                flog('setup content', data);
 
-                                        if (this.getValue()) {
-                                            if (isNaN(value)) {
-                                                Msg.error('The Height must be digits!');
-                                                return false;
-                                            }
-                                        }
-                                    },
-                                    commit: function(data) {
-                                        data.height = this.getValue();
-                                    }
-                                }]
-                        }],
-                    onShow: function() {
-                        log("onShow-modal 1");
+                                var ckeditor = CKEDITOR.instances[this._.inputId];
+                                if (data.content) {
+                                    ckeditor.setData(data.content);
+                                } else {
+                                    ckeditor.setData('');
+                                }
+                            },
+                            commit: function (data) {
+                                var ckeditor = CKEDITOR.instances[this._.inputId];
+                                data.content = ckeditor.getData();
+                            }
+                        }, {
+                            type: 'select',
+                            id: 'size',
+                            default: 'modal-md',
+                            label: 'Modal Size',
+                            items: [
+                                ['Small', 'modal-sm'],
+                                ['Medium', 'modal-md'],
+                                ['Large', 'modal-lg']
+                            ],
+                            setup: function (data) {
+                                if (data.size) {
+                                    this.setValue(data.size);
+                                }
+                            },
+                            commit: function (data) {
+                                data.size = this.getValue();
+                            }
+                        }, {
+                            type: 'text',
+                            id: 'okText',
+                            default: 'Ok',
+                            label: 'Ok Text' + required_string,
+                            validate: CKEDITOR.dialog.validate.notEmpty('Ok Text cannot be empty!'),
+                            required: true,
+                            setup: function (data) {
+                                if (data.okText) {
+                                    this.setValue(data.okText);
+                                }
+                            },
+                            commit: function (data) {
+                                data.okText = this.getValue();
+                            }
+                        }]
+                    }],
+                    onShow: function () {
+                        flog('Modal plugin | onShow');
+
                         var editor = this.getParentEditor();
                         var selection = editor.getSelection();
-                        var element = null;
                         var text = selection.getSelectedText();
-                        log("text=", text, "selected", this._.selectedElement);
+                        var element = null;
+                        flog('Modal plugin | text=' + text, 'selected', this._.selectedElement);
 
                         if ((element = CKEDITOR.plugins.modalLink.getSelectedLink(editor)) && element.hasAttribute('href')) {
                             selection.selectElement(element);
@@ -202,72 +228,79 @@
                                 })
                             }
                         }
-                        log("onShow-modal 2");
                     },
-                    onOk: function() {
-                        log("onOk 1");
-                        var dialog = this;
+                    onOk: function () {
+                        flog('Modal plugin | onOk', this._.selectedElement);
                         var data = {};
-                        var id;
 
                         this.commitContent(data);
-                        log("onOk 2", this._.selectedElement);
+                        flog('Selected element=', this._.selectedElement);
 
                         if (this._.selectedElement) {
-                            log("onOk 3");
                             var target = this._.selectedElement;
                             var id = target.getAttribute('href').replace('#', '');
                             var modal = editor.document.getById(id);
-                            if (modal === null) {
-                                modal = editor.document.createElement('div');
-                                div.setAttributes({
-                                    'id': id,
-                                    'class': 'linked-modal'
-                                });
-                            }
-                            style = 'display: none;';
-                            width = (data.width || default_width) - 50; // Subtract 25px from padding left and right
-                            style += 'width: ' + width + 'px;';
-
-                            if (data.height) {
-                                style += 'height: ' + data.height + 'px;';
-                            }
-
                             target.setHtml(data.text);
 
-                            modal.setHtml(data.content);
-                            modal.setAttribute('style', style);
-                        } else {                            
-                            var link = editor.document.createElement('a');
-                            var div = editor.document.createElement('div');
-                            log("create new modal", link, div);
+                            if (modal === null) {
+                                modal = editor.document.createElement('div');
+                                modal.setAttributes({
+                                    'id': id,
+                                    'class': 'modal fade'
+                                });
+                                editor.insertElement(modal);
+                                editor.insertElement(target);
+                            }
 
-                            id = 'modal_' + Math.round(Math.random() * 1000000).toString();
+                            modal.setHtml(
+                                '<div class="modal-dialog ' + data.size + '">' +
+                                '    <div class="modal-content">' +
+                                '        <div class="modal-header">' +
+                                '            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
+                                '            <h4 class="modal-title">' + data.title + '</h4>' +
+                                '        </div>' +
+                                '        <div class="modal-body">' + data.content + '</div>' +
+                                '        <div class="modal-footer">' +
+                                '            <button type="button" class="btn btn-default" data-dismiss="modal">' + data.okText + '</button>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>'
+                            );
+                        } else {
+                            var link = editor.document.createElement('a');
+                            var modal = editor.document.createElement('div');
+                            var id = 'modal-' + Math.round(Math.random() * 1000000).toString() + '-' + (new Date()).getTime();
+                            flog('Create new modal with id=' + id, link, modal);
 
                             link.setHtml(data.text);
                             link.setAttributes({
                                 'href': '#' + id,
-                                'class': 'anchor-modal'
+                                'data-toggle': 'modal'
                             });
 
-                            var style = 'display: none;';
-                            var width = (data.width || this.defaults.width) - 50; // Subtract 25px from padding left and right						
-                            style += 'width: ' + width + 'px;';
-                            if (data.height) {
-                                style += 'height: ' + data.height + 'px;';
-                            }
-                            div.setHtml(data.content);
-                            div.setAttributes({
+                            modal.setAttributes({
                                 'id': id,
-                                'style': style,
-                                'class': 'linked-modal'
+                                'class': 'modal fade'
                             });
+                            modal.setHtml(
+                                '<div class="modal-dialog ' + data.size + '">' +
+                                '    <div class="modal-content">' +
+                                '        <div class="modal-header">' +
+                                '            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
+                                '            <h4 class="modal-title">' + data.title + '</h4>' +
+                                '        </div>' +
+                                '        <div class="modal-body">' + data.content + '</div>' +
+                                '        <div class="modal-footer">' +
+                                '            <button type="button" class="btn btn-default" data-dismiss="modal">' + data.okText + '</button>' +
+                                '        </div>' +
+                                '    </div>' +
+                                '</div>'
+                            );
 
                             editor.insertElement(link);
-                            var b = editor.document;
-                            var el = b.getElementsByTag("body").getItem(0);
-                            el.append(div);
-                            log("appended new div", div);
+                            editor.insertElement(modal);
+
+                            flog('Appended new div', modal);
                         }
                     }
                 };
@@ -276,16 +309,16 @@
     });
 
     CKEDITOR.plugins.modalLink = {
-        getSelectedLink: function(editor) {
+        getSelectedLink: function (editor) {
             try {
                 var selection = editor.getSelection();
                 if (selection.getType() == CKEDITOR.SELECTION_ELEMENT) {
                     var selectedElement = selection.getSelectedElement();
-                    if (selectedElement.is('a') && selectedElement.$.className === 'anchor-modal')
+                    if (selectedElement.is('a') && selectedElement.$.getAttribute('data-toggle') === 'modal')
                         return selectedElement;
                 }
 
-                var range = selection.getRanges(true)[ 0 ];
+                var range = selection.getRanges(true)[0];
                 range.shrink(CKEDITOR.SHRINK_TEXT);
                 var root = range.getCommonAncestor();
                 return root.getAscendant('a', true);
