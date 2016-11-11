@@ -48,6 +48,12 @@ function initContentEditorPage(fileName) {
     setTimeout(function () {
         hideLoadingIcon();
     }, 200);
+
+    $(document.body).on('click', '.keditor-component-content a', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+    });
 }
 
 function initKEditor(body, fileName) {
@@ -71,7 +77,7 @@ function initKEditor(body, fileName) {
             templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets['Default'],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal',
             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
             enterMode: 'P',
@@ -555,6 +561,7 @@ function initSaving(body, fileName) {
         e.preventDefault();
 
         showLoadingIcon();
+        $('[contenteditable]').blur();
         var fileContent = $('#content-area').keditor('getContent');
         var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
 
