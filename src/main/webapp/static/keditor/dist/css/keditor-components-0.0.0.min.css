@@ -1,2 +1,50 @@
-.audio-wrapper{margin-left:auto;margin-right:auto;max-width:100%;width:500px;text-align:center}.audio-wrapper>div{display:inline-block!important;max-width:100%}div.cke_float[id*=cke_keditor-component-content-]{padding:0}div.cke_float[id*=cke_keditor-component-content-] .cke_top{padding:3px 3px 0}body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-]{margin-right:287px}.video-wrapper{margin-left:auto;margin-right:auto;width:640px;max-width:100%}
+.audio-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+    width: 500px;
+    text-align: center
+}
+
+.audio-wrapper > div {
+    display: inline-block !important;
+    max-width: 100%
+}
+
+div.cke_float[id*=cke_keditor-component-content-] {
+    padding: 0;
+    left: 50px !important;
+    right: 50px;
+    margin-top: -24px
+}
+
+div.cke_float[id*=cke_keditor-component-content-] .cke_top {
+    padding: 3px 3px 0
+}
+
+div.cke_float[id*=cke_keditor-component-content-] .cke_toolbox {
+    display: block !important;
+    overflow-x: auto;
+    overflow-y: hidden
+}
+
+div.cke_float[id*=cke_keditor-component-content-] .cke_toolbar {
+    float: none !important;
+    display: inline-block !important
+}
+
+div.cke_float[id*=cke_keditor-component-content-] .cke_toolbar_break {
+    display: none !important
+}
+
+body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
+    right: 255px
+}
+
+.video-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 640px;
+    max-width: 100%
+}
 /*# sourceMappingURL=keditor-components-0.0.0.min.css.map */
