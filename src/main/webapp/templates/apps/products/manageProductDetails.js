@@ -1,11 +1,20 @@
 function initProductDetails() {
     jQuery("form.updateProduct").forms({
-        callback: function () {
+        callback: function (resp) {
+            flog(resp)
             $('#relatedAppWrap').reloadFragment({
                 whenComplete: function (dom) {
                 }
             });
             Msg.success("Successfully updated product!");
+
+            var webNameInput = $('form.updateProduct [name=webName]');
+            var origWebname = webNameInput.data('orig')
+            var newWebname = webNameInput.val();
+
+            if (origWebname != newWebname && resp.status) {
+                window.location.href = resp.nextHref;
+            }
         }
     });
     $("#variants").on("click", ".add-variant-type", function (e) {
