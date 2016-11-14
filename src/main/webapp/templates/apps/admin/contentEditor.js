@@ -486,7 +486,18 @@ function initKEditor(body, fileName) {
 
             form.find('.txt-height').val(containerBg.get(0).style.height || '');
 
-            form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
+            var selectedGroups = containerBg.attr('data-groups') || '';
+            var cbbGroups = form.find('.select-groups');
+            var cbbGroupsOptions = cbbGroups.find('option');
+            cbbGroups.selectpicker('val', selectedGroups.split(','));
+            if (selectedGroups) {
+                cbbGroupsOptions.filter('[value=Anonymous]').prop('disabled', selectedGroups !== 'Anonymous');
+                cbbGroupsOptions.not('[value=Anonymous]').prop('disabled', selectedGroups === 'Anonymous');
+            } else {
+                cbbGroupsOptions.prop('disabled', false);
+            }
+            cbbGroups.selectpicker('refresh');
+
             form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
             form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
 
