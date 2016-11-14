@@ -62,6 +62,52 @@
                         component.attr('data-items-per-row', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('[name=filter]').on('change', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-filter', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-order').on('change', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-order-by', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.select-sort').on('change', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-sort-by', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('[name=categories]').on('click', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var categories = [];
+                        form.find('[name=categories]:checked').each(function (index, item) {
+                            categories.push(this.value);
+                        });
+                        component.attr('data-categories', categories.join(','));
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('[name=tags]').on('click', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var categories = [];
+                        form.find('[name=tags]:checked').each(function (index, item) {
+                            categories.push(this.value);
+                        });
+                        component.attr('data-tags', categories.join(','));
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -72,8 +118,21 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.number-of-articles').val(dataAttributes['data-number-of-articles']);
             form.find('.select-blog').val(dataAttributes['data-blog']);
+            form.find('.select-order').val(dataAttributes['data-order-by']);
+            form.find('.select-sort').val(dataAttributes['data-sort-by']);
             form.find('.select-layout').val(dataAttributes['data-layout']).trigger('change');
             form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || 3);
+            form.find('[name=filter]').val(dataAttributes['data-filter']);
+            form.find('[name=categories]').each(function (index, item) {
+                if (dataAttributes['data-categories'].indexOf(this.value) !== -1) {
+                    this.checked = true;
+                }
+            });
+            form.find('[name=tags]').each(function (index, item) {
+                if (dataAttributes['data-tags'].indexOf(this.value) !== -1) {
+                    this.checked = true;
+                }
+            })
         }
     };
 

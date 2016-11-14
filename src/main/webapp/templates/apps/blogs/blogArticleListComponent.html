@@ -1,6 +1,35 @@
+#if ($blog)
 #set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
-#set( $articles = $blogFolder.articles.sortByDate )
+#set( $articles = $blogFolder.articles )
+#else
+#set ($articles = $page.articles)
+#end
 #set ($blogListId = $formatter.randomGuid)
+#if ($filter == "featured")
+#set ($articles = $articles.featured)
+#elseif ($filter == "nonFeatured")
+#set ($articles = $articles.notFeatured)
+#end
+#if ($formatter.isNotNull($categories))
+#set ($articles = $articles.ofTypeOr($categories))
+#end
+#if ($formatter.isNotNull($tags))
+#set ($articles = $articles.ofTypeOr($tags))
+#end
+
+#if(!$sortBy)
+#set ($sortBy = "articleDate")
+#end
+
+#if(!$orderBy)
+#set ($orderBy = "asc")
+#end
+
+#set ($articles = $formatter.sortByProperty($articles, $sortBy))
+
+#if ($orderBy == "desc")
+#set ($articles = $formatter.sortReverse($articles))
+#end
 
 #if( $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
@@ -179,5 +208,9 @@
         </div>
     #end
 #else
-    <p>No blog articles found</p>
+#if (!$blog)
+<div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
+#else
+<p>No blog articles found</p>
+#end
 #end
