@@ -134,15 +134,31 @@ function initKEditor(body, fileName) {
                     form.html(resp);
 
                     var groupsOptions = '';
+                    groupsOptions += '<option value="Anonymous">Anonymous</option>';
                     for (var name in allGroups) {
                         groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
                     }
 
-                    form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
+                    var cbbGroups = form.find('select.select-groups');
+                    cbbGroups.html(groupsOptions).selectpicker();
+
+                    var cbbGroupsOptions = cbbGroups.find('option');
+                    cbbGroups.on('changed.bs.select', function () {
                         var container = keditor.getSettingContainer();
                         var containerBg = container.find('.container-bg');
 
-                        containerBg.attr('data-groups', $(this).selectpicker('val').join(','));
+                        var selectedVal = cbbGroups.selectpicker('val');
+                        selectedVal = selectedVal ? selectedVal.join(',') : '';
+
+                        if (selectedVal) {
+                            cbbGroupsOptions.filter('[value=Anonymous]').prop('disabled', selectedVal !== 'Anonymous');
+                            cbbGroupsOptions.not('[value=Anonymous]').prop('disabled', selectedVal === 'Anonymous');
+                        } else {
+                            cbbGroupsOptions.prop('disabled', false);
+                        }
+                        cbbGroups.selectpicker('refresh');
+
+                        containerBg.attr('data-groups', selectedVal);
                     });
 
                     var basePath = window.location.pathname.replace('contenteditor', '');
