@@ -62,7 +62,7 @@
                             title: modal.findOne('.modal-title').getHtml(),
                             content: modal.findOne('.modal-body').getHtml(),
                             size: size,
-                            okText: ''
+                            okText: modal.findOne('.modal-footer [data-dismiss=modal]').getHtml()
                         };
                     } else {
                         flog('parseModalLink | no modal');
