@@ -123,7 +123,7 @@ function initKEditor(body, fileName) {
             return unknownContainer.parent();
         },
         onInitContainer: function (container) {
-            return container.children().children().not('section').attr('data-type', 'component-blank');
+            return container.children().children().not('section, .container-bg').attr('data-type', 'component-blank');
         },
         containerSettingEnabled: true,
         containerSettingInitFunction: function (form, keditor) {
