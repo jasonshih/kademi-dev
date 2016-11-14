@@ -31,7 +31,7 @@
 #set ($articles = $formatter.sortReverse($articles))
 #end
 
-#if( $articles.size() > 0 )
+#if( $articles && $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
 #if ($numberOfArticles > 0)
 #set ($articles = $articles.truncate($numberOfArticles))
@@ -208,9 +208,9 @@
         </div>
     #end
 #else
-#if (!$blog)
-<div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
-#else
+#if ($blog && $blog != "")
 <p>No blog articles found</p>
+#else
+<div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
 #end
 #end
