@@ -22,7 +22,7 @@
                             <th>SKU</th>
                         </tr>
                     </thead>
-                    <tbody id="categoriesTableBody">
+                    <tbody id="productsTableBody">
                         #foreach($product in $page.products)
                         #foreach($variant in $page.variants($product))
                         <tr>
@@ -31,7 +31,7 @@
                             <th>$!variant.value($pp)</th>
                             #end
                             <td>
-                                <input class="input-sku" type="text" name="variant-$variant.id" value="$!variant.sku" />
+                                <input class="input-sku" type="text" data-product="$product.id" data-options="$variant.options" value="$!variant.sku" />
                             </td>
                         </tr>
                         #end
@@ -44,8 +44,32 @@
 
         <script type="text/javascript">
             $(function () {
-
+                $("#productsTableBody").on("change", ".input-sku", function (e) {
+                    var target = $(e.target);
+                    var newSku = target.val();
+                    var productId = target.data("product");
+                    var options = target.data("options");
+                    updateSku(productId, options, newSku);
+                });
             });
+            function updateSku(productId, options, newSku) {
+                $.ajax({
+                    type: 'POST',
+                    url: window.href,
+                    data: {
+                        productId : productId,
+                        options : options,
+                        sku : newSku
+                    },
+                    dataType: "json",
+                    success: function (resp) {
+                        Msg.info("updated");
+                    },
+                    error: function (resp) {
+                        Msg.error("An error occured setting the SKU");
+                    }
+                });
+            }
         </script>
     </body>
 </html>
