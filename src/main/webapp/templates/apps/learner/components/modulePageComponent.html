@@ -1,53 +1,56 @@
 <div class=''>
     <div class="module-container">
         <div class="contentForm panelBox">
-            <div class="module-labels">
-                #if( $folder.complete )
-                <div class="alert alert-success">
-                    <span class="glyphicon glyphicon-ok"></span>
-                    You have completed this module.
-                </div>
-                #elseif ( $folder.percentComplete )
+            #if (!$folder.complete && $folder.completable && $folder.startable)
+            #else
+                <div class="module-labels">
+                    #if( $folder.complete )
+                        <div class="alert alert-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            You have completed this module.
+                        </div>
+                    #elseif ( $folder.percentComplete )
 
-                #else
-                #if( $folder.completable )
-                #if( $folder.startable )
+                    #else
+                        #if( $folder.completable )
+                            #if( $folder.startable )
 
-                #else
-                <acronym title="You have not completed prequisites">
-                    <div class="alert alert-warning">
-                        <span class="glyphicon glyphicon-lock"></span>
-                        This module is locked because you have not completed the pre-requisites:
-                        <ul>
-                            #foreach($module in $folder.unmetPrerequisites)
-                            <li>
-                                <a href="$module.href">$module.title</a>
-                                -
-                                #if( $module.inProgress )
-                                #if( $module.percentComplete == 100 )
-                                on last page
-                                #else
-                                $module.percentComplete
-                                #end
-                                #else
-                                not started
-                                #end
-                            </li>
+                            #else
+                                <acronym title="You have not completed prequisites">
+                                    <div class="alert alert-warning">
+                                        <span class="glyphicon glyphicon-lock"></span>
+                                        This module is locked because you have not completed the pre-requisites:
+                                        <ul>
+                                            #foreach($module in $folder.unmetPrerequisites)
+                                                <li>
+                                                    <a href="$module.href">$module.title</a>
+                                                    -
+                                                    #if( $module.inProgress )
+                                                        #if( $module.percentComplete == 100 )
+                                                            on last page
+                                                        #else
+                                                            $module.percentComplete
+                                                        #end
+                                                    #else
+                                                        not started
+                                                    #end
+                                                </li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </acronym>
                             #end
-                        </ul>
-                    </div>
-                </acronym>
-                #end
-                #else
-                <acronym title="You do not have an enrolement for this module">
-                    <div class="alert alert-warning">
-                        <span class="glyphicon glyphicon-lock"></span>
-                        This module is view-only. You do not have an enrolement for this module.
-                    </div>
-                </acronym>
-                #end
-                #end
-            </div>
+                        #else
+                            <acronym title="You do not have an enrolement for this module">
+                                <div class="alert alert-warning">
+                                    <span class="glyphicon glyphicon-lock"></span>
+                                    This module is view-only. You do not have an enrolement for this module.
+                                </div>
+                            </acronym>
+                        #end
+                    #end
+                </div>
+            #end
 
             <div class="htmleditor" id="body">
                 $!page.body
@@ -61,6 +64,6 @@
 
 #set($viewMode = !$rc.child.editMode && !$request.params.print )
 #if($viewMode)
-#portlets("userDataModal")
-#portlets("modulePageBottom")
+    #portlets("userDataModal")
+    #portlets("modulePageBottom")
 #end
