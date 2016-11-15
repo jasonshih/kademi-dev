@@ -20,7 +20,7 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody id="categoriesTableBody">
+                    <tbody>
                         #foreach($pil in $page.children.ofType.productInLocation)
                         <tr data-href="$pil.href" data-stock="$!pil.stock">
                             <td>$!pil.product.name</td>
