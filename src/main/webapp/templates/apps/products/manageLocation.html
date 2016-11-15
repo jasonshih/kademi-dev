@@ -25,7 +25,13 @@
                         <tr data-href="$pil.href" data-stock="$!pil.stock">
                             <td>$!pil.product.name</td>
                             <td>$!pil.sku</td>
-                            <td>$!pil.stock</td>
+                            <td>
+                                #if($pil.stock)
+                                $pil.stock
+                                #else
+                                Unlimited Stock
+                                #end
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-info pull-right adjustStock">
                                     <i class="glyphicon glyphicon-pencil"></i> Adjust Stock
