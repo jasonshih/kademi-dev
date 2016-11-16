@@ -30,6 +30,7 @@
                 queryHref = "/queries/" + component.attr("data-query");
                 graphOptions.aggName = component.attr("data-agg");
                 graphOptions.subAgg = component.attr("data-sub-agg");
+                graphOptions.type = component.attr('data-chart-type');
                 graphOptions.stacked = toBool(component.attr("data-stacked"));
                 graphOptions.showControls = toBool(component.attr("data-controls"));
                 graphOptions.showLegend = toBool(component.attr("data-legend"));
@@ -133,14 +134,24 @@
             }
 
             flog("graph opts", graphOptions);
-            var chart = nv.models.multiBarChart()
-                    .margin({right: 50, left: 0, bottom: 30, top: 0})
-                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                    .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                    .showLegend(graphOptions.showLegend)
-                    .stacked(graphOptions.stacked)
-                    .showYAxis(true)
-                    .clipEdge(true);
+            var chart = null;
+            if (graphOptions.type == 'line') {
+                chart = nv.models.lineChart()
+                        .margin({right: 50, left: 0, bottom: 30, top: 0})
+                        .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                        .showLegend(graphOptions.showLegend)
+                        .showYAxis(true)
+                        .clipEdge(true);
+            } else {
+                chart = nv.models.multiBarChart()
+                        .margin({right: 50, left: 0, bottom: 30, top: 0})
+                        .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                        .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                        .showLegend(graphOptions.showLegend)
+                        .stacked(graphOptions.stacked)
+                        .showYAxis(true)
+                        .clipEdge(true);
+            }
 
             chart.xAxis.tickFormat(function (d) {
                 return d3.time.format('%e %b')(new Date(d))
