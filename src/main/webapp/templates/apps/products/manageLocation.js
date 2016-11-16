@@ -11,7 +11,7 @@
 
             var newStock = prompt('Please enter new stock level', stock);
 
-            var newStockInt = parseint(newStock);
+            var newStockInt = parseInt(newStock);
             $.ajax({
                 url: href,
                 type: 'POST',
@@ -22,6 +22,7 @@
                 success: function (resp) {
                     if (resp.status) {
                         Msg.success('Successfully updated stock level');
+                        $('#productsTableContainer').reloadFragment();
                     } else {
                         Msg.error('Error updating stock level: ' + textStatus);
                     }
