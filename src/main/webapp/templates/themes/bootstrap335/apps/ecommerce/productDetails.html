@@ -78,7 +78,7 @@
                         <div class='form-group'>
                             <label for="param-$param.name" class='col-sm-4 control-label'>$param.title</label>
                             <div class="col-sm-8">
-                                <select name="param-$param.name" class='form-control productParameterSelect'>
+                                <select name="param-$param.name" class="form-control productParameterSelect #if($useInventoryControl)required#end" #if($useInventoryControl)required#end>
                                     <option value="">[ $param.title ]</option>
                                     #foreach( $opt in $param.options)
                                     <option value="$opt.name">$opt.title</option>

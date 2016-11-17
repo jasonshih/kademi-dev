@@ -4,6 +4,7 @@
         <title></title>
     </head>
     <body>
+        #set($useInventoryControl = $applications.ecommerce.getuseInventoryControl($rootFolder.organisation, $rootFolder.branch))
         #macro(rightSidebar $store $categories)
             #script()
                 <script>
@@ -48,7 +49,7 @@
                 <a href="#" class="list-group-item active">
                     Categories
                 </a>
-                                                
+
                 #foreach($cat in $categories.buckets)
                     #set( $catFolder = $page.closest("store").category( $cat.key ) )
                     <a href="$catFolder.href" class="list-group-item">$catFolder.categoryTitle ($cat.docCount)</a>
@@ -116,7 +117,7 @@
             #if ($isRelated)
                 #set ($cls = "col-sm-6 col-md-3")
             #end
-            
+
             #if( $category )
                 #set( $prodHref = $category.href + $p.fields.product.value )
             #else
@@ -140,7 +141,11 @@
                         <p class="product-content">$!p.fields.content.value</p>
                         <div class="product-actions">
                             <a href="$prodHref" class="btn btn-default btn-sm" role="button">View</a>
+                            #if($useInventoryControl && ( $formatter.isNull($p.fields.variantCount.value) || $p.fields.variantCount.value == 0))
                             <a href="$prodHref" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            #elseif(!$useInventoryControl)
+                            <a href="$prodHref" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            #end
                         </div>
                     </div>
                 </div>
