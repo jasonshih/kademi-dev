@@ -126,7 +126,26 @@ function initAddToCart() {
         var quantity = +$('.txt-quantity').val().trim();
 
         flog('add item', href);
-        var params = target.closest(".product-details").find(".productParameterSelect").serialize();
+
+        var paramElems = target.closest(".product-details").find(".productParameterSelect").toArray();
+
+        var paramsObj = {};
+
+        for (var i in paramElems) {
+            var elem = $(paramElems[i]);
+            if (elem.is(':required')) {
+                if (elem.val() == null || elem.val().length < 1) {
+                    Msg.error('Field ' + elem.attr('name') + ' is required');
+                    return false;
+                } else {
+                    paramsObj[elem.attr("name")] = elem.val();
+                }
+            } else {
+                paramsObj[elem.attr("name")] = elem.val();
+            }
+        }
+
+        var params = $.param(paramsObj);
         flog("selected params", params);
         href += "?" + params;
         doAddToCart(href, quantity);

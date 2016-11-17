@@ -12,7 +12,7 @@
             updateSku(productId, options, skuId, newSku);
         });
 
-        $("#productsTableBody").on("keypress", ".input-sku", function (e) {
+        $("#productsTableBody").on("keyup", ".input-sku", function (e) {
             if ((e.keyCode || e.which) == keymap.ENTER) {
                 var target = $(e.target);
                 var newSku = target.val();
@@ -36,7 +36,7 @@
             updateSkuTitle(skuId, newSkuTitle);
         });
 
-        $("#productsTableBody").on("keypress", ".input-sku-Title", function (e) {
+        $("#productsTableBody").on("keyup", ".input-sku-Title", function (e) {
             if ((e.keyCode || e.which) == keymap.ENTER) {
                 var target = $(e.target);
                 var newSkuTitle = target.val();
@@ -316,6 +316,7 @@
                 }
             },
             error: function (resp) {
+                flog('Error', resp);
                 Msg.error("An error occured removing the SKU Image");
             }
         });
