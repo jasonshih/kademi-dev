@@ -80,7 +80,7 @@
             form.append(
                 '<form class="form-horizontal" onsubmit="return false;">' +
                 '   <div class="form-group">' +
-                '       <label class="col-sm-12">State</label>' +
+                '       <label class="col-sm-12">Section</label>' +
                 '       <div class="col-sm-12">' +
                 '           <select class="form-control state">' +
                 '               <option value="AU-QLD">Queensland</option>' +
@@ -94,8 +94,9 @@
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group embed">' +
+                '       <label class="col-sm-12">Section Message</label>' +
                 '       <div class="col-sm-12">' +
-                '           <textarea class="form-control stateMessage" placeholder="State Message"></textarea>' +
+                '           <textarea rows="2" class="form-control stateMessage" placeholder="State Message"></textarea>' +
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
