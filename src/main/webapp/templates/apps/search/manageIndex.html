@@ -24,7 +24,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane active" id="query">
                     #set( $resp = $page.query($params.query) )
-                    
+
                     #if( $page.physicalIndexName )
                     <p class="lead">Physical index: $page.physicalIndexName</p>
                     #end

@@ -48,6 +48,12 @@ function initContentEditorPage(fileName) {
     setTimeout(function () {
         hideLoadingIcon();
     }, 200);
+
+    $(document.body).on('click', '.keditor-component-content a', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+    });
 }
 
 function initKEditor(body, fileName) {
@@ -71,7 +77,7 @@ function initKEditor(body, fileName) {
             templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets['Default'],
-            extraPlugins: 'embed_video,fuse-image,sourcedialog',
+            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal',
             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
             enterMode: 'P',
@@ -117,7 +123,7 @@ function initKEditor(body, fileName) {
             return unknownContainer.parent();
         },
         onInitContainer: function (container) {
-            return container.children().children().not('section').attr('data-type', 'component-blank');
+            return container.children().children().not('section, .container-bg').attr('data-type', 'component-blank');
         },
         containerSettingEnabled: true,
         containerSettingInitFunction: function (form, keditor) {
@@ -128,15 +134,31 @@ function initKEditor(body, fileName) {
                     form.html(resp);
 
                     var groupsOptions = '';
+                    groupsOptions += '<option value="Anonymous">Anonymous</option>';
                     for (var name in allGroups) {
                         groupsOptions += '<option value="' + name + '">' + allGroups[name] + '</option>';
                     }
 
-                    form.find('.select-groups').html(groupsOptions).selectpicker().on('changed.bs.select', function () {
+                    var cbbGroups = form.find('select.select-groups');
+                    cbbGroups.html(groupsOptions).selectpicker();
+
+                    var cbbGroupsOptions = cbbGroups.find('option');
+                    cbbGroups.on('changed.bs.select', function () {
                         var container = keditor.getSettingContainer();
                         var containerBg = container.find('.container-bg');
 
-                        containerBg.attr('data-groups', $(this).selectpicker('val').join(','));
+                        var selectedVal = cbbGroups.selectpicker('val');
+                        selectedVal = selectedVal ? selectedVal.join(',') : '';
+
+                        if (selectedVal) {
+                            cbbGroupsOptions.filter('[value=Anonymous]').prop('disabled', selectedVal !== 'Anonymous');
+                            cbbGroupsOptions.not('[value=Anonymous]').prop('disabled', selectedVal === 'Anonymous');
+                        } else {
+                            cbbGroupsOptions.prop('disabled', false);
+                        }
+                        cbbGroups.selectpicker('refresh');
+
+                        containerBg.attr('data-groups', selectedVal);
                     });
 
                     var basePath = window.location.pathname.replace('contenteditor', '');
@@ -464,7 +486,18 @@ function initKEditor(body, fileName) {
 
             form.find('.txt-height').val(containerBg.get(0).style.height || '');
 
-            form.find('.select-groups').selectpicker('val', (containerBg.attr('data-groups') || '').split(','));
+            var selectedGroups = containerBg.attr('data-groups') || '';
+            var cbbGroups = form.find('.select-groups');
+            var cbbGroupsOptions = cbbGroups.find('option');
+            cbbGroups.selectpicker('val', selectedGroups.split(','));
+            if (selectedGroups) {
+                cbbGroupsOptions.filter('[value=Anonymous]').prop('disabled', selectedGroups !== 'Anonymous');
+                cbbGroupsOptions.not('[value=Anonymous]').prop('disabled', selectedGroups === 'Anonymous');
+            } else {
+                cbbGroupsOptions.prop('disabled', false);
+            }
+            cbbGroups.selectpicker('refresh');
+
             form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
             form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
 
@@ -555,6 +588,7 @@ function initSaving(body, fileName) {
         e.preventDefault();
 
         showLoadingIcon();
+        $('[contenteditable]').blur();
         var fileContent = $('#content-area').keditor('getContent');
         var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
 

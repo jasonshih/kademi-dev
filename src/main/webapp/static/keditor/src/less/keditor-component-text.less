@@ -17,12 +17,30 @@
    ================================================================================== */
 div.cke_float[id*="cke_keditor-component-content-"] {
     padding: 0;
+    left: 50px !important;
+    right: 50px;
+    margin-top: -24px;
 
     .cke_top {
         padding: 3px 3px 0;
     }
 
+    .cke_toolbox {
+        display: block !important;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .cke_toolbar {
+        float: none !important;
+        display: inline-block !important;
+    }
+
+    .cke_toolbar_break {
+        display: none !important;
+    }
+
     body.opened-keditor-sidebar & {
-        margin-right: 287px;
+        right: 255px;
     }
 }

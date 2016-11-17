@@ -23,11 +23,8 @@ body {
 /* ==================================================================================
    KEditor base
    ================================================================================== */
-.keditor-toolbar,
 #keditor-sidebar,
-#keditor-sidebar .form-control,
-#keditor-sidebar .btn,
-#keditor-sidebar .dropdown-menu {
+.keditor-toolbar {
     font: 14px/1.42857143 "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 
     small,
@@ -36,20 +33,12 @@ body {
     }
 }
 
-#keditor-sidebar .form-control {
-    height: 34px;
-}
-
 /* ==================================================================================
    opened-keditor-sidebar
    ================================================================================== */
 body.opened-keditor-sidebar {
     .keditor-content-area {
         margin-right: 260px;
-    }
-
-    div.cke_float[id*="cke_keditor-component-content-"] {
-        margin-right: 287px;
     }
 
     #keditor-sidebar {
@@ -182,15 +171,13 @@ body.highlighted-container-content {
     border: 1px solid @snippet-border-color;
     cursor: move;
     .transition(all @animation-duration);
+    float: left;
     background: @snippet-bg;
     margin: 0 5px 10px;
     .user-select(none);
 
     img {
         display: block;
-        width: 100%;
-        height: auto;
-        max-height: 200px;
     }
 
     &:last-child {
@@ -222,7 +209,7 @@ body.highlighted-container-content {
     height: 42px;
     border-bottom: 1px solid @border-color;
     .clearfix;
-    padding: 10px 25px 10px 10px;
+    padding: 10px 30px 10px 15px;
     position: absolute;
     top: 0;
     left: 0;
@@ -240,7 +227,7 @@ body.highlighted-container-content {
     position: absolute;
     top: 10px;
     bottom: 10px;
-    right: 5px;
+    right: 10px;
     width: 21px;
     text-align: center;
     line-height: 21px;

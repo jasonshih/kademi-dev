@@ -49,10 +49,6 @@
     top: 50px;
 }
 
-body.opened-keditor-sidebar div.cke_float[id*=cke_keditor-component-content-] {
-    margin-right: 400px;
-}
-
 /* Embedded iframe */
 .embedded-iframe {
     padding: 0 !important;

@@ -28,7 +28,7 @@
 
                 if (!queryData.hasClass('initialized-dateAgg')) {
                     queryData.addClass('initialized-dateAgg');
-                    queryData.dateAgg();                    
+                    queryData.dateAgg();
                 }
             });
             flog("initDateAgg: trigger date changed");
@@ -87,6 +87,16 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-sub-agg', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });
+
+                    form.find('.chart-type').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-chart-type', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initDateAgg();
                         });
@@ -191,6 +201,7 @@
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
+            form.find('.chart-type').val(dataAttributes['data-chart-type']);
 
             form.find('.show-stacked').prop("checked", toBool(dataAttributes['data-stacked']));
             form.find('.show-controls').prop("checked", toBool(dataAttributes['data-controls']));

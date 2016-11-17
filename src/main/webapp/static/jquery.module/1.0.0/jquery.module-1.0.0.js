@@ -10,7 +10,7 @@
  * @option {Boolean} isCompletable User has permission for complete this module
  * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
  * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
- * @option {Function} modulePageLoad Callback will be called a module page is loaded, Argument is 'pageIndex'
+ * @option {Function} onModulePageLoad Callback will be called a module page is loaded, Argument is 'pageIndex'
  * @option {Function} onQuizSubmit Callback will be called after clicking on Submit button on Quiz page. Argument is 'quizForm'
  * @option {Function} onQuizSuccess Callback will be called after Quiz is submitted successfully. Arguments are 'quizForm' and 'response'
  * @option {Function} onQuizError Callback will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Arguments are 'quizForm' and 'response'
@@ -37,7 +37,7 @@
         isCompletable: false,
         onPreviousPage: null,
         onNextPage: null,
-        modulePageLoad: null,
+        onModulePageLoad: null,
         onQuizSubmit: null,
         onQuizSuccess: null,
         onQuizError: null
@@ -303,11 +303,11 @@
             // Need to delay, because this script might be running before other scripts
             // have had time to register for the event
             window.setTimeout(function () {
-                flog('[jquery.module] Fire modulePageLoad event');
+                flog('[jquery.module] Fire onModulePageLoad event');
 
-                $('body').trigger('modulePageLoad');
-                if (typeof self.getOptions().modulePageLoad === 'function'){
-                    self.getOptions().modulePageLoad(currentPageIndex);
+                $('body').trigger('onModulePageLoad');
+                if (typeof self.getOptions().onModulePageLoad === 'function') {
+                    self.getOptions().onModulePageLoad(currentPageIndex);
                 }
             }, 50);
 
@@ -1053,84 +1053,88 @@
             flog('[jquery.module] quizErrorHandler', quiz, response, e);
 
             var self = this;
-            var options = self.options;
-            var modal = $('#modal-quiz-error');
-            if (modal.length === 0) {
-                modal = $(
-                    '<div id="modal-quiz-error" class="modal fade">' +
-                    '   <div class="modal-dialog">' +
-                    '       <div class="modal-content panel-danger">' +
-                    '           <div class="modal-header panel-heading">' +
-                    '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
-                    '               <h4 class="modal-title"></h4>' +
-                    '           </div>' +
-                    '           <div class="modal-body">' +
-                    '               <p class="error-text"></p>' +
-                    '           </div>' +
-                    '           <div class="modal-footer">' +
-                    '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
-                    '           </div>' +
-                    '       </div>' +
-                    '   </div>' +
-                    '</div>'
-                );
+            if (response.data) {
+                var options = self.options;
+                var modal = $('#modal-quiz-error');
+                if (modal.length === 0) {
+                    modal = $(
+                        '<div id="modal-quiz-error" class="modal fade">' +
+                        '   <div class="modal-dialog">' +
+                        '       <div class="modal-content panel-danger">' +
+                        '           <div class="modal-header panel-heading">' +
+                        '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+                        '               <h4 class="modal-title"></h4>' +
+                        '           </div>' +
+                        '           <div class="modal-body">' +
+                        '               <p class="error-text"></p>' +
+                        '           </div>' +
+                        '           <div class="modal-footer">' +
+                        '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+                        '           </div>' +
+                        '       </div>' +
+                        '   </div>' +
+                        '</div>'
+                    );
 
-                modal.appendTo(document.body);
-            }
+                    modal.appendTo(document.body);
+                }
 
-            var modalTitle = modal.find('.modal-title');
-            var errorText = modal.find('.error-text');
-            var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
+                var modalTitle = modal.find('.modal-title');
+                var errorText = modal.find('.error-text');
+                var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
 
-            if (response.data.numAttempts >= response.data.maxAttempts) {
-                flog('[jquery.module] Reached maximum attempts');
+                if (response.data.numAttempts && response.data.numAttempts >= response.data.maxAttempts) {
+                    flog('[jquery.module] Reached maximum attempts');
 
-                modalTitle.html('Reached maximum attempts');
-                errorText.html('You answered quiz incorrectly! <br />' + response.messages[0]);
-                btnDismiss.html('Close and continue');
+                    modalTitle.html('Reached maximum attempts');
+                    errorText.html('You answered quiz incorrectly! <br />' + response.messages[0]);
+                    btnDismiss.html('Close and continue');
 
-                modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-                    self.quizSuccessHandler(quiz, e);
-                });
-            } else {
-                flog('[jquery.module] Answered this quiz incorrectly');
-
-                modalTitle.html('Please try again');
-                errorText.html('Your score was <b>' + response.data.thisAttemptScore + '</b>%. You need <b>' + response.data.requiredPassmarkPerc + '</b>% to pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
-                btnDismiss.html('See error answers');
-
-                var isBatched = quiz.hasClass('batched-quiz');
-                modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-                    if (isBatched) {
-                        flog('[jquery.module] Looks like we have another batch...', response.data.nextQuizBatch);
-
-                        var btnSubmitQuiz = $('.quizSubmit .nextBtn');
-                        var btnReAttempt = $('.btn-quiz-reattempt');
-
-                        quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
-                        btnReAttempt.show();
-                        btnSubmitQuiz.hide();
-
-                        btnReAttempt.off('click').on('click', function (e) {
-                            e.preventDefault();
-
-                            flog('[jquery.module] Re-attempt quiz');
-                            quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
-                            self.tidyUpQuiz();
-
-                            btnReAttempt.remove();
-                            btnSubmitQuiz.show();
-                        });
-                    }
-
-                    $.each(response.fieldMessages, function (i, n) {
-                        var inp = quiz.find('li.' + n.field);
-                        inp.addClass('error');
+                    modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+                        self.quizSuccessHandler(quiz, e);
                     });
-                });
-            }
+                } else {
+                    flog('[jquery.module] Answered this quiz incorrectly');
 
-            modal.modal('show');
+                    modalTitle.html('Please try again');
+                    errorText.html('Your score was <b>' + response.data.thisAttemptScore + '</b>%. You need <b>' + response.data.requiredPassmarkPerc + '</b>% to pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
+                    btnDismiss.html('See error answers');
+
+                    var isBatched = quiz.hasClass('batched-quiz');
+                    modal.off('hide.bs.modal').on('hide.bs.modal', function () {
+                        if (isBatched) {
+                            flog('[jquery.module] Looks like we have another batch...', response.data.nextQuizBatch);
+
+                            var btnSubmitQuiz = $('.quizSubmit .nextBtn');
+                            var btnReAttempt = $('.btn-quiz-reattempt');
+
+                            quiz.find('ol.quiz li').find('input, textarea').prop('disabled', true);
+                            btnReAttempt.show();
+                            btnSubmitQuiz.hide();
+
+                            btnReAttempt.off('click').on('click', function (e) {
+                                e.preventDefault();
+
+                                flog('[jquery.module] Re-attempt quiz');
+                                quiz.find('ol.quiz').replaceWith(response.data.nextQuizBatch);
+                                self.tidyUpQuiz();
+
+                                btnReAttempt.remove();
+                                btnSubmitQuiz.show();
+                            });
+                        }
+
+                        $.each(response.fieldMessages, function (i, n) {
+                            var inp = quiz.find('li.' + n.field);
+                            inp.addClass('error');
+                        });
+                    });
+                }
+
+                modal.modal('show');
+            } else {
+                self.showApology('check your answers');
+            }
 
             if (typeof options.onQuizError === 'function') {
                 options.onQuizError.call(quiz, quiz, response);
