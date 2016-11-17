@@ -85,6 +85,7 @@
                 '           <select class="form-control state">' +
                 '               <option value="AU-QLD">Queensland</option>' +
                 '               <option value="AU-NSW">New South Wales</option>' +
+                '               <option value="AU-ACT">Australia Capital Territory</option>' +
                 '               <option value="AU-VIC">Victoria</option>' +
                 '               <option value="AU-TAS">Tasmania</option>' +
                 '               <option value="AU-SA">South Australia</option>' +
