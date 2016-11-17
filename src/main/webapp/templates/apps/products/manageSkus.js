@@ -165,7 +165,7 @@
         $('.btn-option-img-upload').each(function (i, item) {
             var btn = $(item);
             var row = btn.closest('tr');
-            var skuId = row.data("skuid");
+            var skuId = row.data('skuid');
 
             btn.upcropImage({
                 buttonContinueText: 'Save',
@@ -325,7 +325,7 @@
     function reloadSkuTable() {
         $("#productsTableBody").reloadFragment({
             whenComplete: function () {
-                initSkuImgUpload();
+                //initSkuImgUpload();
             }
         });
     }
@@ -336,7 +336,7 @@
         initUpdateSkuTitle();
         initUpdateBaseCost();
         initUploadSkuImage();
-        initSkuImgUpload();
+        //initSkuImgUpload();
         initUpdateSkuStock();
     });
 
