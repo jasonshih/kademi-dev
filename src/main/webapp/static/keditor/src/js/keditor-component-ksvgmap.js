@@ -58,10 +58,12 @@
             flog('getContent "svgmap" component', component);
             var componentContent = component.children('.keditor-component-content');
             var script = '<script>$(function(){$(document.body).hasClass("content-editor-page")||$.getScriptOnce("/static/jquery-jvectormap/jquery-jvectormap-2.0.3.min.js",function(){$.getScriptOnce("/static/jquery-jvectormap/jquery-jvectormap-au-mill.js",function(){$(".ksvgmap").each(function(){var a=$(this).parents("[data-type=component-ksvgmap]");a.hasClass("ksvgInit")||(a.addClass("ksvgInit"),$(this).vectorMap({map:"au_mill",backgroundColor:"#fff",zoomButtons:!1,scale:5,regionStyle:{initial:{fill:"#efefef"},hover:{fill:"#00aa90"}},onRegionTipShow:function(b,c,d){a.attr("data-"+d)&&c.html(c.html()+" - "+a.attr("data-"+d))}}))})})})});</script>';
+            var css = '<link rel="stylesheet" href="/static/jquery-jvectormap/jquery-jvectormap-2.0.3.css">';
             component.find('.jvectormap-container').remove();
             var arr = $(document.body).find('[data-type="component-ksvgmap"]:not(.keditor-snippet)');
             if (arr.length > 0){
                 if ($(arr[arr.length-1]).attr('id') === component.attr('id')){
+                    $(css).insertBefore(component.find('.ksvgmap'));
                     $(script).insertAfter(component.find('.ksvgmap'));
                 }
             }
