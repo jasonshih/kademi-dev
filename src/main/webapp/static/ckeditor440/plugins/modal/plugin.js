@@ -56,13 +56,14 @@
                         } else if (modalDialog.$.className.indexOf('modal-lg') !== -1) {
                             size = 'modal-lg';
                         }
+                        var btnOk = modal.findOne('.modal-footer [data-dismiss=modal]');
 
                         return {
                             text: element.getHtml(),
                             title: modal.findOne('.modal-title').getHtml(),
                             content: modal.findOne('.modal-body').getHtml(),
                             size: size,
-                            okText: modal.findOne('.modal-footer [data-dismiss=modal]').getHtml()
+                            okText: btnOk ? btnOk.getHtml() : ''
                         };
                     } else {
                         flog('parseModalLink | no modal');
@@ -189,10 +190,8 @@
                         }, {
                             type: 'text',
                             id: 'okText',
-                            default: 'Ok',
-                            label: 'Ok Text' + required_string,
-                            validate: CKEDITOR.dialog.validate.notEmpty('Ok Text cannot be empty!'),
-                            required: true,
+                            default: '',
+                            label: 'Ok Text <span class="small text-mute">(When blank, modal footer will be removed)</span>',
                             setup: function (data) {
                                 if (data.okText) {
                                     this.setValue(data.okText);
@@ -236,6 +235,22 @@
                         this.commitContent(data);
                         flog('Selected element=', this._.selectedElement);
 
+                        var modalString = '';
+                        modalString += '<div class="modal-dialog ' + data.size + '">';
+                        modalString += '    <div class="modal-content">';
+                        modalString += '        <div class="modal-header">';
+                        modalString += '            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>';
+                        modalString += '            <h4 class="modal-title">' + data.title + '</h4>';
+                        modalString += '        </div>';
+                        modalString += '        <div class="modal-body">' + data.content + '</div>';
+                        if (data.okText) {
+                            modalString += '    <div class="modal-footer">';
+                            modalString += '        <button type="button" class="btn btn-default" data-dismiss="modal">' + data.okText + '</button>';
+                            modalString += '    </div>';
+                        }
+                        modalString += '    </div>';
+                        modalString += '</div>';
+
                         if (this._.selectedElement) {
                             var target = this._.selectedElement;
                             var id = target.getAttribute('href').replace('#', '');
@@ -252,20 +267,7 @@
                                 editor.insertElement(target);
                             }
 
-                            modal.setHtml(
-                                '<div class="modal-dialog ' + data.size + '">' +
-                                '    <div class="modal-content">' +
-                                '        <div class="modal-header">' +
-                                '            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
-                                '            <h4 class="modal-title">' + data.title + '</h4>' +
-                                '        </div>' +
-                                '        <div class="modal-body">' + data.content + '</div>' +
-                                '        <div class="modal-footer">' +
-                                '            <button type="button" class="btn btn-default" data-dismiss="modal">' + data.okText + '</button>' +
-                                '        </div>' +
-                                '    </div>' +
-                                '</div>'
-                            );
+                            modal.setHtml(modalString);
                         } else {
                             var link = editor.document.createElement('a');
                             var modal = editor.document.createElement('div');
@@ -282,20 +284,7 @@
                                 'id': id,
                                 'class': 'modal fade'
                             });
-                            modal.setHtml(
-                                '<div class="modal-dialog ' + data.size + '">' +
-                                '    <div class="modal-content">' +
-                                '        <div class="modal-header">' +
-                                '            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>' +
-                                '            <h4 class="modal-title">' + data.title + '</h4>' +
-                                '        </div>' +
-                                '        <div class="modal-body">' + data.content + '</div>' +
-                                '        <div class="modal-footer">' +
-                                '            <button type="button" class="btn btn-default" data-dismiss="modal">' + data.okText + '</button>' +
-                                '        </div>' +
-                                '    </div>' +
-                                '</div>'
-                            );
+                            modal.setHtml(modalString);
 
                             editor.insertElement(link);
                             editor.insertElement(modal);
