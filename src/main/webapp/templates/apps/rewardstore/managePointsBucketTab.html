@@ -20,7 +20,13 @@
         #foreach($p in $allPoints.get($reward))
         <tr>
             <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
-            <td>$p.description</td>
+            <td>
+                $p.description
+                #if( $p.related )
+                - from 
+                <i>$p.related</i>
+                #end
+            </td>
             <td>
                 #if( $p.txType == "C" )
                 <span class="label label-success">$p.numPoints</span>

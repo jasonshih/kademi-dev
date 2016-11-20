@@ -8,6 +8,7 @@
         <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
+        <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
         <style>
             .group-list{
                 margin-bottom: 5px;
@@ -193,7 +194,7 @@
                         </div>
                         <hr/>
 
-                        <table class="table table-bordered table-striped" id="tablePoints">
+                        <table class="table table-bordered table-striped pagination-container" id="tablePoints">
                             <colgroup>
                                 <col />
                                 <col />
@@ -212,7 +213,7 @@
                                     <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
-                            <tbody id="tablePointsBody">
+                            <tbody id="tablePointsBody" class="pagination-results">
                                 #set($pointsHistory = $page.history)
                                 #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(10))
                                 #foreach($points in $pointsPaginator.records($pointsHistory))
@@ -229,12 +230,14 @@
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
                                 #end
+                            </tbody>
+                            <tfoot>
                                 <tr>
-                                    <td>
+                                    <td colspan="6">
                                         $!pointsPaginator.html
                                     </td>
-                                </tr>
-                            </tbody>
+                                </tr>                                
+                            </tfoot>
                         </table>
                     </div>
 
@@ -244,6 +247,11 @@
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Debits CSV
                             </a>
+                            <button class="btn btn-sm btn-warning btnReconcile" >
+                                <span class="fa fa-exclamation-circle"></span>
+                                Reconcile
+                            </button>
+
                             <div class="btn-group">
                                 <button class="btnRemoveDebits btn btn-danger btn-sm" type="button"><i class="fa fa-remove"></i> Remove</button>
                                 <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -257,49 +265,59 @@
                         <hr />
 
                         <div class="debitsTableWrap">
-                        <table class="table table-bordered table-striped" id="table-debits">
-                            <colgroup>
-                                <col />
-                                <col />
-                                <col />
-                                <col />
-                                <col width="25px;"/>
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>Points</th>
-                                    <th>Issued Date</th>
-                                    <th>Rewarded To</th>
-                                    <th>Reason</th>
-                                    <th><input type="checkbox" name="removeDebitsId" class="chk-all" value="" /></th>
-                                </tr>
-                            </thead>
-                            <tbody class="debitsTableBody">
-                                #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
-                                #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
-                                <tr>
-                                    <td>$debit.numPoints</td>
-                                    <td>$formatter.formatDateTime($debit.issuedDate)</td>
-                                    <td>
-                                        #if( $debit.issuedTo )
-                                        #if( $debit.issuedTo.asProfile() )
-                                        <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
-                                        #else
-                                        <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
-                                        #end
-                                        #else
-                                        $debit.points.issuedTo.formattedName
-                                        #end
-                                    </td>
-                                    <td>$!debit.reason</td>
-                                    <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
-                        <nav class="debitsPaginator">
-                            $!paginator.html
-                        </nav>
+                            <table class="table table-bordered table-striped pagination-container" id="table-debits">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col width="25px;"/>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Points</th>
+                                        <th>Issued Date</th>
+                                        <th>Rewarded To</th>
+                                        <th>Reason</th>
+                                        <th>Reconciled</th>
+                                        <th><input type="checkbox" name="removeDebitsId" class="chk-all" value="" /></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="debitsTableBody" class="pagination-results">
+                                    #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
+                                    #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
+                                    <tr>
+                                        <td>$debit.numPoints</td>
+                                        <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                        <td>
+                                            #if( $debit.issuedTo )
+                                            #if( $debit.issuedTo.asProfile() )
+                                            <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
+                                            #else
+                                            <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
+                                            #end
+                                            #else
+                                            $debit.points.issuedTo.formattedName
+                                            #end
+                                        </td>
+                                        <td>$!debit.reason</td>
+                                        <td>
+                                            #if( $debit.points )
+                                            <span class="fa fa-check-circle fa-2x text-success"></span>
+                                            $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
+                                            #else
+                                            <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
+                                            #end
+                                        </td>
+                                        <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
+                                    </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                            <nav class="debitsPaginator">
+                                $!paginator.html
+                            </nav>
                         </div>
                     </div>
 
@@ -398,6 +416,34 @@
         <script type="text/javascript">
             $(function () {
                 initManagePointsSystem();
+                
+                $(".pagination").paginator();
+                
+                $(".btnReconcile").click(function (e) {
+                    e.preventDefault();
+                    if (confirm("Are you sure you want to reconcile debits? This will look for debit records which have not been reconciled, and attempt to link them to credit records")) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                reconcile : true
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                flog("success", data);
+                                if (data.status) {
+                                    $('#tablePointsBody').reloadFragment();
+                                    Msg.success("Reconciliation completed");
+                                } else {
+                                    Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems");
+                                }
+                            },
+                            error: function (resp) {
+                                Msg.error("An error occurred removing points. You might not have permission to do this");
+                            }
+                        });
+                    }
+                });
             });
         </script>
     </body>
