@@ -76,7 +76,7 @@
                             </table>
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Emails</h3>
@@ -95,11 +95,11 @@
                                     <th>failedEmailsToday</th>
                                     <td>$page.failedEmailsToday</td>
                                 </tr>
-                                
+
                             </table>
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Web hits</h3>
@@ -113,22 +113,22 @@
                             </table>
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Recent errors</h3>
                         </div>
                         <div class="panel-body">
-                            #foreach( $event in $page.mostRecentEvents)                            
-                            <h4>                            
+                            #foreach( $event in $page.mostRecentEvents)
+                            <h4>
                                 $event.logEvent.level - $event.logEvent.message
                                 #if( $event.request.method )
                                 <a href="http://${event.request.host}${event.request.href}">$event.request.method - ${event.request.host}${event.request.href}</a>
                                 #end
                             </h4>
-                            
-                            <p class="lead">$event.logEvent.userName - $event.logEvent.userHref</p>                            
-                            
+
+                            <p class="lead">$event.logEvent.userName - $event.logEvent.userHref</p>
+
                             #if( $event.request.headers.size() > 0 )
                             <h5>Headers</h5>
                             <table class="table table-striped">
@@ -140,7 +140,7 @@
                                 #end
                             </table>
                             #end
-                            
+
                             #if( $event.request.parameters.size() > 0 )
                             <h5>Parameters</h5>
                             <table class="table table-striped">
@@ -152,7 +152,7 @@
                                 #end
                             </table>
                             #end
-                            
+
                             <ul>
                             #foreach( $line in $event.logEvent.stackTrace )
                             <li>$line</li>
@@ -162,7 +162,7 @@
                             #end
                         </div>
                     </article>
-                    
+
                 </div>
                 <div id="utils" class="tab-pane">
                     <article class="panel panel-default">
@@ -176,7 +176,7 @@
                             </form>
                         </div>
                     </article>
-                    
+
                     <article class="panel panel-default">
                         <div class="panel-heading">
                             <h3 class="panel-title">Bulk delete group memberships</h3>
@@ -233,6 +233,23 @@
                             <form method="POST" action="maint" class="maintForm" >
                                 <input type="hidden" name="checkPaymentScheduler" value="true" />
                                 <input type="checkbox" name="enablePaymentScheduler" value="schedule" $page.paymentSchedulerEnabled />
+                                &nbsp;
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                                <label for="schedule"></label>
+                            </form>
+                        </div>
+                    </article>
+
+                    <article class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Points Expiry Processor</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>Turn the points expiry processor on or off. (Checked equals ON.)</p>
+                            <br/>
+                            <form method="POST" action="maint" class="maintForm" >
+                                <input type="hidden" name="checkExpiryProcessor" value="true" />
+                                <input type="checkbox" name="enableExpiryProcessor" value="true" #if($page.expiryProcessorEnabled)checked="checked"#end />
                                 &nbsp;
                                 <button class="btn-sm btn btn-warning">Submit</button>
                                 <label for="schedule"></label>
@@ -337,7 +354,7 @@
                             </form>
                         </div>
                     </article>
-                </div>                                
+                </div>
             </div>
         </div>
 
