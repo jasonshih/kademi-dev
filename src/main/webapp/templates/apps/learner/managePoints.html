@@ -83,7 +83,7 @@
                 <hr/>
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover" id="pointsTable">
+                    <table class="table table-striped table-hover paginator-container" id="pointsTable">
                         <thead>
                             <tr>
                                 <th>Reward</th>
@@ -101,13 +101,15 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="pointsBody">
-                            #if( $page.recentPoints.isEmpty() )
+                        <tbody id="pointsBody" class="paginator-result">
+                            #set( $pointsHistory = $page.history )
+                            #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(10))
+                            #if( $pointsHistory.isEmpty() )
                             <tr>
                                 <td colspan="6">There are no recent results</td>
                             </tr>
                             #else
-                            #foreach($p in $page.history)
+                            #foreach($p in $pointsPaginator.records($pointsHistory))
                             <tr>
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td><a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a></td>
@@ -135,6 +137,14 @@
                             #end
                             #end
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    $!pointsPaginator.html
+                                </td>
+                            </tr>                                
+                        </tfoot>
+
                     </table>
                 </div>
             </div>
@@ -369,6 +379,7 @@
         <script type="text/javascript">
             $(function () {
                 initManagePoints();
+                $(".pagination").paginator();
             });
         </script>
     </body>
