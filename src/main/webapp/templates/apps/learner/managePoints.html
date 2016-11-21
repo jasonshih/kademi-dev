@@ -3,6 +3,7 @@
         <title>Manage Rewards</title>
         <link href="manageReward.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageReward.js">//</script>
+        <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
         <style type="text/css">
             #doUploadCsv form {
                 width: 155px;
@@ -83,7 +84,7 @@
                 <hr/>
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover paginator-container" id="pointsTable">
+                    <table class="table table-striped table-hover pagination-container" id="pointsTable">
                         <thead>
                             <tr>
                                 <th>Reward</th>
@@ -101,9 +102,9 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="pointsBody" class="paginator-result">
+                        <tbody id="pointsBody" class="pagination-results">
                             #set( $pointsHistory = $page.history )
-                            #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(10))
+                            #set($pointsPaginator = $formatter.paginator().totalRecords($page.historyNumRecs).pageSize(10))
                             #if( $pointsHistory.isEmpty() )
                             <tr>
                                 <td colspan="6">There are no recent results</td>
@@ -379,7 +380,7 @@
         <script type="text/javascript">
             $(function () {
                 initManagePoints();
-                $(".pagination").paginator();
+                $("body").paginator();
             });
         </script>
     </body>

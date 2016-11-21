@@ -72,16 +72,16 @@ function initManagePoints() {
     });
 
     $("#new-points-form").forms({
-            callback: function (resp) {
-                if (resp.status) {
-                    Msg.info("Assigned points OK");
-                    $('#modal-new-points').modal('hide');
-                    $('#pointsBody').reloadFragment();
-                } else {
-                    alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
-                }
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.info("Assigned points OK");
+                $('#modal-new-points').modal('hide');
+                $('#pointsBody').reloadFragment();
+            } else {
+                alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
             }
         }
+    }
     );
 
     $("#doUploadCsv").mupload({
@@ -378,9 +378,9 @@ function sortBy(type, asc) {
     var _list = {};
     var sortObject = function (obj) {
         var sorted = {},
-            array = [],
-            key,
-            l;
+                array = [],
+                key,
+                l;
 
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
@@ -573,19 +573,34 @@ function doHistorySearch() {
 
     $('.btn-export-points').attr('href', 'points.csv?' + $.param(data));
 
-    var target = $("#pointsBody");
+    var target = $("#pointsTable");
     target.load();
 
+    var serialize = function (obj, prefix) {
+        var str = [], p;
+        for (p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
+                str.push((v !== null && typeof v === "object") ?
+                        serialize(v, k) :
+                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
+            }
+        }
+        return str.join("&");
+    }
+
+    var link = window.location.pathname + "?" + serialize(data);
+    flog("new link", link);
     $.ajax({
         type: "GET",
-        url: window.location.pathname,
+        url: link,
         dataType: 'html',
-        data: data,
         success: function (content) {
             flog('response', content);
             Msg.success("Search complete", 2000);
-            var newBody = $(content).find("#pointsBody");
+            var newBody = $(content).find("#pointsTable");
             target.replaceWith(newBody);
+            history.pushState(null, null, link);
             $("abbr.timeago").timeago();
         }
     });
