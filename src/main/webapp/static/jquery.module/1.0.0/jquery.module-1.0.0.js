@@ -305,7 +305,7 @@
             window.setTimeout(function () {
                 flog('[jquery.module] Fire onModulePageLoad event');
 
-                $('body').trigger('onModulePageLoad');
+                $('body').trigger('modulePageLoad');
                 if (typeof self.getOptions().onModulePageLoad === 'function') {
                     self.getOptions().onModulePageLoad(currentPageIndex);
                 }
