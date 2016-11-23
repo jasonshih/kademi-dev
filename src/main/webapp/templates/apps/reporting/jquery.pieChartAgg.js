@@ -24,16 +24,16 @@
 
         flog("pieChartAgg", containers);
         containers.each(function (i, n) {
-            var cont = $(n);            
+            var cont = $(n);
             var config = $.extend({}, DEFAULT_PIECHART_OPTIONS, options);
 
             var queryHref = null;
             var graphOptions = {
                 aggName: null,
-                subAgg: null,                
+                subAgg: null,
                 showLegend: false
             };
-            
+
             var component = cont.closest('[data-type^="component-"]');
             if (component.length > 0) {
                 queryHref = "/queries/" + component.attr("data-query");
@@ -81,28 +81,28 @@
             }
 
             var chart = nv.models.pieChart()
-                .x(function (d) {
-                    return config.xLabel(d, graphOptions.aggName);
-                })
-                .y(function (d) {
-                    return d.doc_count;
-                })
-                .valueFormat(function (val) {
-                    return round((val / total * 100), 2) + "% (" + val + ")";
-                })
-                .donut(true)
-                .labelType("percent")
-                .donutRatio(0.35)
-                .showLabels(true)
-                .margin({"top":0,"bottom":0, "left":0, "right":0})
-                .showLegend(graphOptions.legend)
-                .legendPosition(config.legendPosition);
+                    .x(function (d) {
+                        return config.xLabel(d, graphOptions.aggName);
+                    })
+                    .y(function (d) {
+                        return d.doc_count;
+                    })
+                    .valueFormat(function (val) {
+                        return round((val / total * 100), 2) + "% (" + val + ")";
+                    })
+                    .donut(true)
+                    .labelType("percent")
+                    .donutRatio(0.35)
+                    .showLabels(true)
+                    .showLegend(graphOptions.showLegend)
+                    .legendPosition(config.legendPosition)
+                    .margin({top: 0, right: 0, bottom: 0, left: 0});
 
             flog("select data", chart, svg.get(0));
             d3.select(svg.get(0))
-                .datum(aggr.buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(aggr.buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
 
             nv.utils.windowResize(chart.update);
