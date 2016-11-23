@@ -1053,8 +1053,9 @@
             flog('[jquery.module] quizErrorHandler', quiz, response, e);
 
             var self = this;
+            var options = self.getOptions();
+
             if (response.data) {
-                var options = self.options;
                 var modal = $('#modal-quiz-error');
                 if (modal.length === 0) {
                     modal = $(
