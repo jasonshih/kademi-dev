@@ -239,7 +239,7 @@ function initFormDetailEmail() {
             var subjectStr = subject.val();
             var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
 
-            flog('isEmailEnabled: ' + isEmailEnabled);
+            flog('manageEmail.js: isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
                 if (fromAddressStr) {
@@ -259,9 +259,12 @@ function initFormDetailEmail() {
                         showMessage('Email address is invalid!', form);
                     }
                 } else {
-                    if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
-                        error++;
-                        showErrorField(replyToAddress);
+                    if (replyToAddressStr != "") {
+                        if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
+                            flog("replyto invalid");
+                            error++;
+                            showErrorField(replyToAddress);
+                        }
                     }
                 }
 
@@ -278,8 +281,10 @@ function initFormDetailEmail() {
             }
 
             if (error === 0) {
+                flog("valid");
                 return true;
             } else {
+                flog("invalid");
                 return false;
             }
         },
