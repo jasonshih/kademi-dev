@@ -14,6 +14,7 @@
             <th>Date</th>
             <th>Reason</th>
             <th>Credits</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -23,7 +24,7 @@
             <td>
                 $p.description
                 #if( $p.related )
-                - from 
+                - from
                 <i>$p.related</i>
                 #end
             </td>
@@ -35,6 +36,9 @@
                 #end
             </td>
             <td>
+                #if( $p.completelyUsed )
+                <span class="label label-info">Used</span>
+                #end
                 #if( $p.expired )
                 <span class="label label-warning">Expired</span>
                 #end
@@ -50,6 +54,7 @@
             <td colspan="2">
                 <strong>$current</strong>
             </td>
+            <td></td>
         </tr>
         #set( $avail = $rs.availableBalance($page.profile) )
         #if($current != $avail)
@@ -61,6 +66,7 @@
             <td colspan="2">
                 <strong>$avail</strong>
             </td>
+            <td></td>
         </tr>
         #end
     </tbody>
