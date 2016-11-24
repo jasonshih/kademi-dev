@@ -215,16 +215,33 @@
                             </thead>
                             <tbody id="tablePointsBody" class="pagination-results">
                                 #set($pointsHistory = $page.history)
-                                #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(10))
+                                #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(100))
                                 #foreach($points in $pointsPaginator.records($pointsHistory))
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
-                                    <td>$points.issuedTo.formattedName</td>
+                                    <td>
+                                        #if( $points.issuedTo )
+                                        #if( $points.issuedTo.asProfile() )
+                                        <a href="/manageUsers/$points.issuedTo.id">$points.issuedTo.formattedName</a>
+                                        #else
+                                        <a href="/organisations/$points.issuedTo.id/edit">$points.issuedTo.formattedName</a>
+                                        #end
+                                        #else
+                                        $points.points.issuedTo.formattedName
+                                        #end
+                                    </td>                                    
                                     <td>$!points.reason</td>
                                     <td>
                                         #if( $points.expired )
                                         $formatter.formatDateTime($points.expiryDate)
+                                        #else
+                                            #if( $points.debits )
+                                                #foreach( $debit in $points.debits )
+                                                <span class="label label-info">$debit.numPoints on $debit.issuedDate</span>
+                                                #end
+                                            #end
+                                            
                                         #end
                                     </td>
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
@@ -416,16 +433,16 @@
         <script type="text/javascript">
             $(function () {
                 initManagePointsSystem();
-                
+
                 $(".pagination").paginator();
-                
+
                 $(".btnReconcile").click(function (e) {
                     e.preventDefault();
                     if (confirm("Are you sure you want to reconcile debits? This will look for debit records which have not been reconciled, and attempt to link them to credit records")) {
                         $.ajax({
                             type: 'POST',
                             data: {
-                                reconcile : true
+                                reconcile: true
                             },
                             dataType: "json",
                             url: "",
