@@ -32,14 +32,18 @@ function loadQuizEditor(modal, data) {
                 input.val(data[prop]); // set answer on textboxes, selects and textareas
                 flog('restored input', input, data[prop]);
             } else {
-                var radios = li.find('input[type=radio]');
+                var radios = li.find('input[type=radio],input[type=checkbox]');
                 flog('radios', radios);
-                radios.attr('checked', '');
+                radios.prop('checked',false);
                 var val = data[prop];
-                var radio = radios.filter('[value=' + val + ']');
-                flog('radio val', val, radio);
-                radio.prop('checked', true); // set radio buttons
-                flog('restored radio', radio);
+                var arr = val.split(",");
+                for( var i=0; i<arr.length; i++) {
+                    var thisVal = arr[i];
+                    var radio = radios.filter('[value=' + thisVal + ']');
+                    flog('input val', thisVal, radio);
+                    radio.prop('checked', true); // set radio buttons
+                    flog('restored radio', radio);
+                }
             }
         }
     }
@@ -134,16 +138,8 @@ function prepareQuizForSave(quizWrapper, data) {
 
 function pushAnswer(data, name, val) {
     if( data[name]) {
-        // treat as a list;
-        var cur = data[name];
-        if( Object.prototype.toString.call( cur ) === '[object Array]' ) {
-            cur.push(val);
-        } else {
-            var arr = new Array();
-            arr.push(cur);
-            arr.push(val);
-            data[name] = arr;
-        }
+        // append as csv
+        data[name] = data[name] + "," + val;
     } else {
         data[name] = val;
     }

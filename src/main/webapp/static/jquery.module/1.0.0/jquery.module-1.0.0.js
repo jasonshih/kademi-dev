@@ -476,14 +476,15 @@
                 flog('[jquery.module] Found hidden sections', hiddenSections);
                 return false;
             }
+            flog("incompleteInputs2", incompleteInputs, incompleteInputs.length);
 
             if (incompleteInputs.length > 0) {
-                flog('[jquery.module] Found incomplete input', incompleteInputs);
+                flog('[jquery.module] Found incomplete input3', incompleteInputs);
                 self.showNextPopup(incompleteInputs);
 
                 return false;
             }
-
+            flog('[jquery.module] Validation passed');
             return true;
         },
 
@@ -507,10 +508,13 @@
             popout.show(100);
         },
 
-        findIncompleteInputs: function () {
-            flog('[jquery.module] findIncompleteInputs');
+        findIncompleteInputs: function () {            
 
-            return $('.panelBox').find('input.required, select.required, textarea.required').not('.no-validate').filter(function () {
+            var inputs = $('.panelBox').find('input.required, select.required, textarea.required').not('.no-validate')
+            
+            flog('[jquery.module] findIncompleteInputs', inputs);
+            
+            return inputs.filter(function () {
                 var val = $(this).val() || '';
 
                 return (val.trim() === '');
@@ -1190,7 +1194,7 @@
             var hasError = false;
             quiz.find('ol.quiz > li').each(function () {
                 var li = $(this);
-                var inputs = li.find('textarea, input:radio:checked');
+                var inputs = li.find('textarea, input:radio:checked, input:checkbox:checked');
 
                 if (inputs.length === 0) {
                     flog('[jquery.module] Found incomplete input', li);
