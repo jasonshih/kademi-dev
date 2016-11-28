@@ -1,5 +1,5 @@
-#if (!$tag)
-#set ($tag = 'h1')
+#if (!$tag ||  $tag == "")
+    #set ($tag = 'h1')
 #end
 #if ($page)
 <$tag>$page.title</$tag>
