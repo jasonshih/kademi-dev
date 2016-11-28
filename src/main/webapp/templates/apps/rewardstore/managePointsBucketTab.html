@@ -1,7 +1,10 @@
 #foreach($reward in $allPoints.keySet() )
 #set( $rs = $page.find("/points-buckets/").child($reward.name) )
 
-<h2><a href="/points-buckets/$reward.name">$reward.title</a></h2>
+<h2>
+    <button data-href="/points-buckets/$reward.name/" data-userid="$page.profile.id" type="button" class="btn btn-info pull-right btn-refresh-pb">Refresh Points Balance</button>
+    <a href="/points-buckets/$reward.name/">$reward.title</a>
+</h2>
 
 <table class="table table-striped">
     <colgroup>
@@ -25,8 +28,8 @@
                 $p.description
                 #if( $p.related )
                 <i>
-                - used 
-                $p.related</i>
+                    - used
+                    $p.related</i>
                 #end
             </td>
             <td>
@@ -79,8 +82,8 @@
 <h2><a href="/points-buckets/">Points</a></h2>
 
 <p>This shows all points which have been issued for the current user. Note that this
-is sometimes different to points issued to a user as shown in the table above, such
-as when team points are being used.</p>
+    is sometimes different to points issued to a user as shown in the table above, such
+    as when team points are being used.</p>
 
 <div class="table-responsive">
     <table class="table table-striped table-hover">
@@ -128,3 +131,43 @@ as when team points are being used.</p>
         </tbody>
     </table>
 </div>
+
+<script>
+    $(function () {
+        initPointsBucketTab();
+    });
+
+    function initPointsBucketTab() {
+        flog('initPointsBucketTab');
+
+        $('body').on('click', '.btn-refresh-pb', function (e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to refresh the points balance for this bucket?')) {
+                var btn = $(this);
+                var href = btn.data('href');
+                var userid = btn.data('userid');
+
+                $.ajax({
+                    url: href,
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        updateUserPointsBalance: userid
+                    },
+                    success: function (resp, textStatus) {
+                        flog('success', resp, textStatus);
+                        if (resp.status) {
+                            Msg.success(resp.messages);
+                        } else {
+                            Msg.warning(resp.messages);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('error', jqXHR, textStatus, errorThrown);
+                        Msg.error(resp.messages);
+                    }
+                });
+            }
+        });
+    }
+</script>

@@ -32,14 +32,18 @@ function loadQuizEditor(modal, data) {
                 input.val(data[prop]); // set answer on textboxes, selects and textareas
                 flog('restored input', input, data[prop]);
             } else {
-                var radios = li.find('input[type=radio]');
+                var radios = li.find('input[type=radio],input[type=checkbox]');
                 flog('radios', radios);
-                radios.attr('checked', '');
+                radios.prop('checked',false);
                 var val = data[prop];
-                var radio = radios.filter('[value=' + val + ']');
-                flog('radio val', val, radio);
-                radio.prop('checked', true); // set radio buttons
-                flog('restored radio', radio);
+                var arr = val.split(",");
+                for( var i=0; i<arr.length; i++) {
+                    var thisVal = arr[i];
+                    var radio = radios.filter('[value=' + thisVal + ']');
+                    flog('input val', thisVal, radio);
+                    radio.prop('checked', true); // set radio buttons
+                    flog('restored radio', radio);
+                }
             }
         }
     }
@@ -112,24 +116,33 @@ function prepareQuizForSave(quizWrapper, data) {
     });
 
     // Find all inputs and add them to the data object
-    var inputs = quiz.find('input[type=text],select,textarea,input[type=radio]:checked').not('.newQuestionType,input[name=pageTitle],input[name=pageName]');
+    var inputs = quiz.find('input[type=text],select,textarea,input[type=radio]:checked,input[type=checkbox]:checked').not('.newQuestionType,input[name=pageTitle],input[name=pageName]');
     flog('add inputs', inputs);
     inputs.each(function(i, n) {
         var inp = $(n);
         var name = inp.attr('name');
         var val = inp.val();
-        data[name] = val;
+        pushAnswer(data, name, val);
         flog('set data att', name, val);
     });
 
     // remove any 'temp' elements that have been added as part of editing
     quizWrapper.find('.temp').remove();
     quiz.find('input[type=radio]').removeAttr('checked');
-    removeEmptyRadios(quiz.find('ol ol'));
+    removeEmpty(quiz.find('ol ol'));
 
     data.body = quiz.html();
-    flog('html', data.body);
+    flog('data to save', data);
     return data;
+}
+
+function pushAnswer(data, name, val) {
+    if( data[name]) {
+        // append as csv
+        data[name] = data[name] + "," + val;
+    } else {
+        data[name] = val;
+    }
 }
 
 function initQuizBuilder() {
@@ -225,7 +238,7 @@ function initQuizBuilder() {
 
         var btn = $(this);
         flog('new question', btn);
-        var type = btn.hasClass('btn-multiple') ? 'multi' : 'textbox';
+        var type = btn.data("type");
 
         addQuestion(type);
 
@@ -233,28 +246,36 @@ function initQuizBuilder() {
 
     function addQuestion(type) {
         flog('add question', type);
+        var questions = quizWrapper.find('ol.quiz');
+        var li = createQuestionLi(questions);
         if (type === 'textbox') {
-            addQuestionTextbox();
-        } else if (type === 'multi') {
-            addQuestionMulti();
+            addQuestionTextbox(li, type);
+        } else if (type === 'multiple') {
+            addQuestionMulti(li, type);
+        } else if (type === 'multi-answer') {
+            addQuestionMultiAnswer(li, type);
         }
     }
 
-    function addQuestionTextbox() {
-        var questions = quizWrapper.find('ol.quiz');
-        flog('addQuestionTextbox', questions);
-        var li = createQuestionLi(questions);
+    function addQuestionTextbox(li, type) {        
+        flog('addQuestionTextbox', li);        
         li.append('<textarea class="form-control autoresize" cols="50" rows="1"></textarea>');
     }
 
-    function addQuestionMulti() {
-        var questions = quizWrapper.find('ol.quiz');
-        flog('addQuestionMulti', questions);
-        var li = createQuestionLi(questions);
-        var olRadios = $('<ol></ol>');
+    function addQuestionMulti(li, type) {
+        flog('addQuestionMulti', li);
+        var olRadios = $("<ol class=" + type + "></ol>");
         olRadios.attr('id', 'answers_' + li.attr('id'));
         li.append(olRadios);
         addRadioToMulti(olRadios);
+    }
+
+    function addQuestionMultiAnswer(li, type) {
+        flog('addQuestionMultiAnswer', li);
+        var olChecks = $("<ol class='" + type + "'></ol>");
+        olChecks.attr('id', 'answers_' + li.attr('id'));
+        li.append(olChecks);
+        addCheckToMulti(olChecks);
     }
 
     function createQuestionLi(quizWrapper) {
@@ -271,7 +292,7 @@ function initQuizBuilder() {
     }
 }
 
-function removeEmptyRadios(ol) {
+function removeEmpty(ol) {
     ol.find('li').each(function(i, n) {
         var li = $(n);
         var txt = li.find('label').text().trim()
@@ -283,8 +304,12 @@ function removeEmptyRadios(ol) {
 }
 function ensureOneEmptyRadio(ol) {
     // remove any li"s containing empty labels, then add one empty one
-    removeEmptyRadios(ol);
-    addRadioToMulti(ol);
+    removeEmpty(ol);
+    if( ol.hasClass("multi-answer")) {
+        addCheckToMulti(ol);
+    } else {
+        addRadioToMulti(ol);
+    }
 }
 
 function addRadioToMulti(ol) {
@@ -300,7 +325,22 @@ function addRadioToMulti(ol) {
     var inputs = li.closest("ol").find('input');
     flog("Set name!", inputs, question);
     inputs.attr('name', question); // make the name of all radios the question
+}
 
+
+function addCheckToMulti(ol) {
+    var question = ol.closest('li').attr('class');
+    flog('addQuestionMultiAnswer', ol, question);
+    var answerId = Math.floor(Math.random() * 1000000);
+    var li = $('<li></li>');
+    li.append($('<input type="checkbox" id="answer_' + answerId + '" value="' + answerId + '"/>'));
+    li.append($('<label for="answer_' + answerId + '">[Enter answer text here]</label>'));
+    ol.append(li);
+
+    // Do this after appending
+    var inputs = li.closest("ol").find('input');
+    flog("Set name!", inputs, question);
+    inputs.attr('name', question); // make the name of all radios the question
 }
 
 /**
