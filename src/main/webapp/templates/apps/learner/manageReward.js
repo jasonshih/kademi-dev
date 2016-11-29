@@ -14,7 +14,7 @@ function initManagePoints() {
             }
         }
     });
-    $("#pointsTable").on("click", ".btnEditPoints", function (e) {
+    $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         modalForm.attr("action", href);
@@ -602,6 +602,7 @@ function doHistorySearch() {
             target.replaceWith(newBody);
             history.pushState(null, null, link);
             $("abbr.timeago").timeago();
+            $("#pointsTable").paginator();
         }
     });
 }
