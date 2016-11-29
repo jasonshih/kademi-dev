@@ -14,113 +14,116 @@
 
         settingTitle: 'Button Settings',
 
+        settingFormHtml: (
+            '<form class="form-horizontal">' +
+            '    <div class="form-group">' +
+            '       <div class="col-md-12">' +
+            '           <label>Color</label>' +
+            '           <div class="input-group button-color-picker">' +
+            '               <span class="input-group-addon"><i></i></span>' +
+            '               <input type="text" value="" id="button-color" class="form-control" />' +
+            '           </div>' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label for="button-border-radius" class="col-sm-12">Border Radius</label>' +
+            '       <div class="col-sm-12">' +
+            '           <input type="number" id="button-border-radius" class="form-control" />' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <div class="col-md-12">' +
+            '           <label>Inner Padding (in px)</label>' +
+            '           <div class="row row-sm text-center">' +
+            '               <div class="col-xs-4 col-xs-offset-4">' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingTop" name="padding-top" />' +
+            '                   <small>top</small>' +
+            '               </div>' +
+            '           </div>' +
+            '           <div class="row row-sm text-center">' +
+            '               <div class="col-xs-4">' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingLeft" name="padding-left" />' +
+            '                   <small>left</small>' +
+            '               </div>' +
+            '               <div class="col-xs-4 col-xs-offset-4">' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingRight" name="padding-right" />' +
+            '                   <small>right</small>' +
+            '               </div>' +
+            '           </div>' +
+            '           <div class="row row-sm text-center">' +
+            '               <div class="col-xs-4 col-xs-offset-4">' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingBottom" name="padding-bottom" />' +
+            '                   <small>bottom</small>' +
+            '               </div>' +
+            '           </div>' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label for="button-text" class="col-sm-12">Text</label>' +
+            '       <div class="col-sm-12">' +
+            '           <input type="text" id="button-text" class="form-control" />' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group button-link">' +
+            '       <label for="button-link" class="col-sm-12">Link</label>' +
+            '       <div class="col-sm-12">' +
+            '           <input type="text" id="button-link" class="form-control" />' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <div class="col-md-12">' +
+            '           <label>Text color</label>' +
+            '           <div class="input-group button-color-text-picker">' +
+            '               <span class="input-group-addon"><i></i></span>' +
+            '               <input type="text" value="" id="button-text-color" class="form-control" />' +
+            '           </div>' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label for="button-font-size" class="col-sm-12">Font Size</label>' +
+            '       <div class="col-sm-12">' +
+            '           <input type="number" id="button-font-size" class="form-control" />' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label for="button-font-family" class="col-sm-12">Font Family</label>' +
+            '       <div class="col-sm-12">' +
+            '           <select id="button-font-family" class="form-control">' +
+            '               <option value="">None</option>' +
+            '               <option value="arial,helvetica,sans-serif">Arial</option>' +
+            '               <option value="comic sans ms,cursive">Comic Sans MS</option>' +
+            '               <option value="courier new,courier,monospace">Courier New</option>' +
+            '               <option value="lucida sans unicode,lucida grande,sans-serif">Lucida Sans Unicode</option>' +
+            '               <option value="tahoma,geneva,sans-serif">Tahoma</option>' +
+            '               <option value="times new roman,times,serif">Times New Roman</option>' +
+            '               <option value="trebuchet ms,helvetica,sans-serif">Trebuchet MS</option>' +
+            '               <option value="verdana,geneva,sans-serif">Verdana</option>' +
+            '           </select>' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label class="col-sm-12">Font Style</label>' +
+            '       <div class="col-sm-12">' +
+            '           <button type="button" class="btn btn-sm btn-default btn-style btn-bold" data-value="bold" data-prop="fontWeight" name="font-weight"><i class="fa fa-bold"></i></button>' +
+            '           <button type="button" class="btn btn-sm btn-default btn-style btn-italic" data-value="italic" data-prop="fontStyle" name="font-style"><i class="fa fa-italic"></i></button>' +
+            '       </div>' +
+            '    </div>' +
+            '    <div class="form-group">' +
+            '       <label class="col-sm-12">Alignment</label>' +
+            '       <div class="col-sm-12">' +
+            '           <button type="button" class="btn btn-sm btn-default btn-align" data-value="left"><i class="fa fa-align-left"></i></button>' +
+            '           <button type="button" class="btn btn-sm btn-default btn-align" data-value="center"><i class="fa fa-align-center"></i></button>' +
+            '           <button type="button" class="btn btn-sm btn-default btn-align" data-value="right"><i class="fa fa-align-right"></i></button>' +
+            '           <button type="button" class="btn btn-sm btn-default btn-align" data-value="full"><i class="fa fa-align-justify"></i></button>' +
+            '       </div>' +
+            '    </div>' +
+            '</form>'
+        ),
+
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "button" component');
-            form.append(
-                '<form class="form-horizontal">' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Color</label>' +
-                '           <div class="input-group button-color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="button-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group button-text">' +
-                '       <label for="button-border-radius" class="col-sm-12">Border Radius</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="button-border-radius" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Inner Padding (in px)</label>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="button-inner-padding-top form-control" />' +
-                '                   <small>top</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4">' +
-                '                   <input type="number" value="" class="button-inner-padding-left form-control" />' +
-                '                   <small>left</small>' +
-                '               </div>' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="button-inner-padding-right form-control" />' +
-                '                   <small>right</small>' +
-                '               </div>' +
-                '           </div>' +
-                '           <div class="row row-sm text-center">' +
-                '               <div class="col-xs-4 col-xs-offset-4">' +
-                '                   <input type="number" value="" class="button-inner-padding-bottom form-control" />' +
-                '                   <small>bottom</small>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group button-text">' +
-                '       <label for="button-text" class="col-sm-12">Text</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="text" id="button-text" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group button-text">' +
-                '       <label for="button-text" class="col-sm-12">Link</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="text" id="button-link" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Text color</label>' +
-                '           <div class="input-group button-color-text-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="button-text-color" class="form-control" />' +
-                '           </div>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group button-text">' +
-                '       <label for="button-font-size" class="col-sm-12">Font Size</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="button-font-size" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group button-text">' +
-                '       <label for="button-font-family" class="col-sm-12">Font Family</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select id="button-font-family" class="form-control">' +
-                '               <option value="">None</option>' +
-                '               <option value="arial,helvetica,sans-serif;">Arial</option>' +
-                '               <option value="comic sans ms,cursive;">Comic Sans MS</option>' +
-                '               <option value="courier new,courier,monospace;">Courier New</option>' +
-                '               <option value="lucida sans unicode,lucida grande,sans-serif;">Lucida Sans Unicode</option>' +
-                '               <option value="tahoma,geneva,sans-serif;">Tahoma</option>' +
-                '               <option value="times new roman,times,serif;">Times New Roman</option>' +
-                '               <option value="trebuchet ms,helvetica,sans-serif;">Trebuchet MS</option>' +
-                '               <option value="verdana,geneva,sans-serif;">Verdana</option>' +
-                '           </select>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <label class="col-sm-12">Font Style</label>' +
-                '       <div class="col-sm-12">' +
-                '           <button type="button" class="btn btn-sm btn-default btn-bold"><i class="fa fa-bold"></i></button>' +
-                '           <button type="button" class="btn btn-sm btn-default btn-italic"><i class="fa fa-italic"></i></button>' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <label class="col-sm-12">Alignment</label>' +
-                '       <div class="col-sm-12">' +
-                '           <button type="button" class="btn btn-sm btn-default btn-button-left"><i class="fa fa-align-left"></i></button>' +
-                '           <button type="button" class="btn btn-sm btn-default btn-button-center"><i class="fa fa-align-center"></i></button>' +
-                '           <button type="button" class="btn btn-sm btn-default btn-button-right"><i class="fa fa-align-right"></i></button>' +
-                '           <button type="button" class="btn btn-sm btn-default btn-button-full"><i class="fa fa-align-justify"></i></button>' +
-                '       </div>' +
-                '    </div>' +
-                '</form>'
-            );
+
+            form.append(this.settingFormHtml);
 
             form = form.find('form');
             KEditor.initPaddingControls(keditor, form, 'prepend');
@@ -145,21 +148,15 @@
                 setStyle(keditor.getSettingComponent().find('.button-wrapper'), 'border-radius', this.value + 'px');
             });
 
-            var buttonInnerPaddingTop = form.find('.button-inner-padding-top');
-            var buttonInnerPaddingBottom = form.find('.button-inner-padding-bottom');
-            var buttonInnerPaddingLeft = form.find('.button-inner-padding-left');
-            var buttonInnerPaddingRight = form.find('.button-inner-padding-right');
-            buttonInnerPaddingTop.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-top', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            buttonInnerPaddingBottom.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-bottom', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            buttonInnerPaddingLeft.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-left', (this.value > 0 ? this.value : 0) + 'px');
-            });
-            buttonInnerPaddingRight.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-inner'), 'padding-right', (this.value > 0 ? this.value : 0) + 'px');
+            form.find('.button-inner-padding').each(function () {
+                var input = $(this);
+                var propName = input.attr('data-prop');
+
+                input.on('change', function () {
+                    var value = this.value > 0 ? this.value : 0;
+
+                    keditor.getSettingComponent().find('.button-inner').get(0).style[propName] = value + 'px';
+                });
             });
 
             var txtText = form.find('#button-text');
@@ -169,7 +166,6 @@
 
                 keditor.getSettingComponent().find('.button-wrapper a').text(text);
             });
-
 
             var txtLink = form.find('#button-link');
             txtLink.on('change', function () {
@@ -201,81 +197,46 @@
                 setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-family', this.value);
             });
 
-            var btnBold = form.find('.btn-bold');
-            btnBold.on('click', function (e) {
-                e.preventDefault();
+            form.find('.btn-style').each(function () {
+                var btn = $(this);
+                var name = btn.attr('data-prop');
 
-                var style = '';
-                if (btnBold.hasClass('active')) {
-                    btnBold.removeClass('active');
-                } else {
-                    btnBold.addClass('active');
-                    style = 'bold';
-                }
-                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-weight', style);
+                btn.on('click', function (e) {
+                    e.preventDefault();
+
+                    var value = btn.attr('data-value');
+                    if (btn.hasClass('active')) {
+                        btn.removeClass('active');
+                        value = '';
+                    } else {
+                        btn.addClass('active');
+                    }
+
+                    keditor.getSettingComponent().find('.button-wrapper a').get(0).style[name] = value;
+                });
             });
 
-            var btnItalic = form.find('.btn-italic');
-            btnItalic.on('click', function (e) {
-                e.preventDefault();
+            var btnsAlign = form.find('.btn-align');
+            btnsAlign.each(function () {
+                var btn = $(this);
+                var value = btn.attr('data-value');
 
-                var style = '';
-                if (btnItalic.hasClass('active')) {
-                    btnItalic.removeClass('active');
-                } else {
-                    btnItalic.addClass('active');
-                    style = 'italic';
-                }
-                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-style', style);
-            });
+                btn.on('click', function (e) {
+                    e.preventDefault();
 
-            var btnAlignLeft = form.find('.btn-button-left');
-            var btnAlignCenter = form.find('.btn-button-center');
-            var btnAlignRight = form.find('.btn-button-right');
-            var btnAlignFull = form.find('.btn-button-full');
-            var setAlign = function (trigger, align) {
-                var table = keditor.getSettingComponent().find('.button-wrapper');
+                    if (!btn.hasClass('active')) {
+                        var table = keditor.getSettingComponent().find('.button-wrapper');
 
-                btnAlignLeft.removeClass('active');
-                btnAlignCenter.removeClass('active');
-                btnAlignRight.removeClass('active');
-                btnAlignFull.removeClass('active');
+                        btnsAlign.removeClass('active');
+                        btn.addClass('active');
 
-                trigger.addClass('active');
-                if (align === 'full') {
-                    table.attr('width', '100%').attr('align', 'center');
-                } else {
-                    table.removeAttr('width').attr('align', align);
-                }
-            };
-
-            btnAlignLeft.on('click', function (e) {
-                e.preventDefault();
-
-                if (!btnAlignLeft.hasClass('active')) {
-                    setAlign(btnAlignLeft, 'left');
-                }
-            });
-            btnAlignCenter.on('click', function (e) {
-                e.preventDefault();
-
-                if (!btnAlignCenter.hasClass('active')) {
-                    setAlign(btnAlignCenter, 'center');
-                }
-            });
-            btnAlignRight.on('click', function (e) {
-                e.preventDefault();
-
-                if (!btnAlignRight.hasClass('active')) {
-                    setAlign(btnAlignRight, 'right');
-                }
-            });
-            btnAlignFull.on('click', function (e) {
-                e.preventDefault();
-
-                if (!btnAlignFull.hasClass('active')) {
-                    setAlign(btnAlignFull, 'full');
-                }
+                        if (value === 'full') {
+                            table.attr('width', '100%').attr('align', 'center');
+                        } else {
+                            table.removeAttr('width').attr('align', value);
+                        }
+                    }
+                });
             });
         },
 
@@ -296,21 +257,13 @@
             var borderRadius = buttonWrapper.css('border-radius');
             txtBorderRadius.val(borderRadius ? borderRadius.replace('px', '') : '');
 
-            var buttonInnerPaddingTop = form.find('.button-inner-padding-top');
-            var paddingTop = buttonInner.css('padding-top');
-            buttonInnerPaddingTop.val(paddingTop ? paddingTop.replace('px', '') : '0');
+            form.find('.button-inner-padding').each(function () {
+                var input = $(this);
+                var propName = input.attr('data-prop');
+                var value = buttonInner.get(0).style[propName];
 
-            var buttonInnerPaddingBottom = form.find('.button-inner-padding-bottom');
-            var paddingBottom = buttonInner.css('padding-bottom');
-            buttonInnerPaddingBottom.val(paddingBottom ? paddingBottom.replace('px', '') : '0');
-
-            var buttonInnerPaddingLeft = form.find('.button-inner-padding-left');
-            var paddingLeft = buttonInner.css('padding-left');
-            buttonInnerPaddingLeft.val(paddingLeft ? paddingLeft.replace('px', '') : '0');
-
-            var buttonInnerPaddingRight = form.find('.button-inner-padding-right');
-            var paddingRight = buttonInner.css('padding-right');
-            buttonInnerPaddingRight.val(paddingRight ? paddingRight.replace('px', '') : '0');
+                input.val(value ? value.replace('px', '') : '0');
+            });
 
             var txtText = form.find('#button-text');
             txtText.val(button.text());
@@ -326,7 +279,7 @@
             txtFontSize.val(fontSize ? fontSize.replace('px', '') : '');
 
             var cbbFontFamily = form.find('#button-font-family');
-            cbbFontFamily.val(button.css('font-family'));
+            cbbFontFamily.val(button.css('font-family').toLowerCase().replace(/,\s/g, ','));
 
             var btnBold = form.find('.btn-bold');
             var fontWeight = button.css('font-weight');
@@ -335,32 +288,11 @@
             var btnItalic = form.find('.btn-italic');
             btnItalic[button.css('font-style') === 'italic' ? 'addClass' : 'removeClass']('active');
 
-            var btnAlignLeft = form.find('.btn-button-left');
-            var btnAlignCenter = form.find('.btn-button-center');
-            var btnAlignRight = form.find('.btn-button-right');
-            var btnAlignFull = form.find('.btn-button-full');
-            btnAlignLeft.removeClass('active');
-            btnAlignCenter.removeClass('active');
-            btnAlignRight.removeClass('active');
-            btnAlignFull.removeClass('active');
+            var align = buttonWrapper.attr('align');
             if (buttonWrapper.attr('width') === '100%') {
-                btnAlignFull.addClass('active');
-            } else {
-                var align = buttonWrapper.attr('align');
-                switch (align) {
-                    case 'left':
-                        btnAlignLeft.addClass('active');
-                        break;
-
-                    case 'center':
-                        btnAlignCenter.addClass('active');
-                        break;
-
-                    case 'right':
-                        btnAlignRight.addClass('active');
-                        break;
-                }
+                align = 'full';
             }
+            form.find('.btn-align').removeClass('active').filter('[data-value=' + align + ']').addClass('active');
         }
     };
 
