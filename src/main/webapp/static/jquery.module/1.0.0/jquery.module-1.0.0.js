@@ -298,17 +298,17 @@
                 flog('[jquery.module] Field is changed', field);
                 var fieldName = field.attr('name');
                 var val;
-                if( field.is(":checkbox")) {                    
+                if( field.is(":checkbox")) {
                     var fields = $("input[name=" + fieldName + "]:checked")
                     val = "";
                     fields.each(function(i, n) {
                         if( i > 0) {
-                            val += ",";                            
+                            val += ",";
                         }
                         val += $(n).val();
                     });
                     flog('[jquery.module] Check field is changed', "fields=", fields, "val=", val);
-                } else if(field.is(":radio")) {                    
+                } else if(field.is(":radio")) {
                     if( field.is(":checked")) {
                         val = field.val();
                     } else {
@@ -530,12 +530,12 @@
             popout.show(100);
         },
 
-        findIncompleteInputs: function () {            
+        findIncompleteInputs: function () {
 
             var inputs = $('.panelBox').find('input.required, select.required, textarea.required').not('.no-validate')
-            
+
             flog('[jquery.module] findIncompleteInputs', inputs);
-            
+
             return inputs.filter(function () {
                 var val = $(this).val() || '';
 
@@ -1104,7 +1104,7 @@
                         '               <p class="error-text"></p>' +
                         '           </div>' +
                         '           <div class="modal-footer">' +
-                        '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+                        '               <button type="button" class="btn btn-primary" data-dismiss="modal">Review incorrect answers</button>' +
                         '           </div>' +
                         '       </div>' +
                         '   </div>' +

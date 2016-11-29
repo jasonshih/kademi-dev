@@ -14,7 +14,7 @@ function initManagePoints() {
             }
         }
     });
-    $("#pointsTable").on("click", ".btnEditPoints", function (e) {
+    $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         modalForm.attr("action", href);
@@ -526,7 +526,12 @@ var searchOptions = {
 };
 
 function initHistorySearch() {
-    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
+        flog("initHistorySearch: pageDateChanged", initial);
+        if( initial ) {
+            flog("Ignore initial");
+            return;
+        }
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
         doHistorySearch();
@@ -602,6 +607,7 @@ function doHistorySearch() {
             target.replaceWith(newBody);
             history.pushState(null, null, link);
             $("abbr.timeago").timeago();
+            $("#pointsTable").paginator();
         }
     });
 }

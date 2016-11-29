@@ -83,7 +83,7 @@
 
                 <hr/>
 
-                <div class="table-responsive">
+                <div class="table-responsive" id="pointsContainer">
                     <table class="table table-striped table-hover pagination-container" id="pointsTable">
                         <thead>
                             <tr>
@@ -104,10 +104,10 @@
                         </thead>
                         <tbody id="pointsBody" class="pagination-results">
                             #set( $pointsHistory = $page.history )
-                            #set($pointsPaginator = $formatter.paginator().totalRecords($page.historyNumRecs).pageSize(10))
+                            #set($pointsPaginator = $formatter.paginator().totalRecords($page.historyNumRecs).pageSize(100))
                             #if( $pointsHistory.isEmpty() )
                             <tr>
-                                <td colspan="6">There are no recent results</td>
+                                <td colspan="7">There are no results matching the selected criteria</td>
                             </tr>
                             #else
                             #foreach($p in $pointsPaginator.records($pointsHistory))
@@ -143,7 +143,7 @@
                                 <td colspan="6">
                                     $!pointsPaginator.html
                                 </td>
-                            </tr>                                
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -380,7 +380,6 @@
         <script type="text/javascript">
             $(function () {
                 initManagePoints();
-                $("body").paginator();
             });
         </script>
     </body>

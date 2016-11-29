@@ -2,6 +2,8 @@
     <i class="fa fa-graduation-cap fa-4x"></i>
 </div>
 <div class="col-xs-9 text-right">
+    #set( $moduleStatuses = $applications.learning.getModuleStatuses($page.thisProfile) )
+    #set( $completedStatuses = $applications.learning.getCompletedStatuses($page.thisProfile) )
     <div class="huge">$moduleStatuses.size()</div>
     <div>
         modules started<br/>

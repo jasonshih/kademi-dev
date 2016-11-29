@@ -26,8 +26,12 @@
 <br />
 -->
 <h4>Module Progress</h4>
+
+
+#set( $moduleStatuses = $applications.learning.getModuleStatuses($page.thisProfile) )
+
 <div class="alert alert-info">
-    Reset a module for this user to allow them to resit it.
+    Reset a module for this user to allow them to resit it. $moduleStatuses
 </div>
 <div class="table-responsive">
     <table class="table table-striped table-hover" id="moduleprogress-table">

@@ -214,8 +214,8 @@
             dateRange.click();
         },
 
-        selectRange: function (startDate, endDate, text, trigger) {
-            flog('[jquery.pageDatePicker] selectRange', startDate, endDate, text, trigger);
+        selectRange: function (startDate, endDate, text, trigger, initial) {
+            flog('[jquery.pageDatePicker] selectRange', startDate, endDate, text, trigger, initial);
 
             var self = this;
             var options = self.options;
@@ -250,7 +250,7 @@
             }
 
             flog("fire event");
-            $(document.body).trigger('pageDateChanged', [startDate, endDate, text, self.container]);
+            $(document.body).trigger('pageDateChanged', [startDate, endDate, text, self.container, initial]);
         },
 
         initOriginRange: function () {
@@ -283,7 +283,8 @@
             if (trigger.length > 0) {
                 trigger.trigger('click');
             } else {
-                self.selectRange(startDate, endDate);
+                flog('[jquery.pageDatePicker] Trigger initial page load event');
+                self.selectRange(startDate, endDate, null, null, true);
             }
         }
     };
