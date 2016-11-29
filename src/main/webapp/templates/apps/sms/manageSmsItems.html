@@ -8,7 +8,7 @@
             }
         </style>
     </head>
-    <body>                
+    <body>
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-envelope"></i> SMS history
@@ -41,20 +41,20 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-smsitems">
                             #foreach($e in $page.children.ofType.smsItem)
-                            <tr class="clickable" data-target="" data-href="$e.href">
+                            <tr data-href="$e.href">
                                 <td><a href="/manageUsers/$e.smsRecipient.id/">$e.smsRecipient.formattedName</a></td>
-                                <td>$!e.smsRecipient.phone</td>
-                                <td>$!e.smsMsg</td>
-                                <td>$!e.providerName</td>
-                                <td class="text-center"><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
-                                <td>
+                                <td class="clickable">$!e.smsRecipient.phone</td>
+                                <td class="clickable">$!e.smsMsg</td>
+                                <td class="clickable">$!e.providerName</td>
+                                <td class="text-center clickable"><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
+                                <td class="clickable">
                                     #if( $e.sendStatus == 'r' )
                                     <p class="label label-warning">
                                         <span class="glyphicon glyphicon-repeat"></span>
                                         $e.statusText
-                                        
+
                                         #if( $e.numAttempts )
                                          - $e.numAttempts attempts
                                         #end
@@ -99,12 +99,12 @@
                                         <span class="glyphicon glyphicon-remove"></span>
                                         $e.statusText
                                     </p>
-                                    #end                                    
+                                    #end
                                 </td>
                             </tr>
                             #end
                         </tbody>
-                    </table>                    
+                    </table>
                 </div>
                 #if( $page.smsHistory.size() >= 1000 )
                 <p class="label label-warning">Displaying maximum results</p>
@@ -114,7 +114,17 @@
 
         <script type="text/javascript">
             $(function () {
-                $('abbr.timeago').timeago();               
+                $('abbr.timeago').timeago();
+
+                $('body').on('click', '#table-smsitems .clickable', function(e){
+                    e.preventDefault();
+
+                    var td = $(this);
+                    var tr = td.closest('tr');
+                    var href = tr.data('href');
+
+                    window.location.href = href;
+                });
             });
         </script>
     </body>
