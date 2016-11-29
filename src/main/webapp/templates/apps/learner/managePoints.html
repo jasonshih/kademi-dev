@@ -107,7 +107,7 @@
                             #set($pointsPaginator = $formatter.paginator().totalRecords($page.historyNumRecs).pageSize(100))
                             #if( $pointsHistory.isEmpty() )
                             <tr>
-                                <td colspan="6">There are no recent results</td>
+                                <td colspan="7">There are no results matching the selected criteria</td>
                             </tr>
                             #else
                             #foreach($p in $pointsPaginator.records($pointsHistory))
@@ -143,7 +143,7 @@
                                 <td colspan="6">
                                     $!pointsPaginator.html
                                 </td>
-                            </tr>                                
+                            </tr>
                         </tfoot>
 
                     </table>
@@ -379,7 +379,7 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
-                initManagePoints();                
+                initManagePoints();
             });
         </script>
     </body>

@@ -526,7 +526,12 @@ var searchOptions = {
 };
 
 function initHistorySearch() {
-    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
+        flog("initHistorySearch: pageDateChanged", initial);
+        if( initial ) {
+            flog("Ignore initial");
+            return;
+        }
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
         doHistorySearch();
