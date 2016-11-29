@@ -296,8 +296,30 @@
             formFields.change(function () {
                 var field = $(this);
                 flog('[jquery.module] Field is changed', field);
-
-                self.saveField(field.attr('name'), field.val());
+                var fieldName = field.attr('name');
+                var val;
+                if( field.is(":checkbox")) {                    
+                    var fields = $("input[name=" + fieldName + "]:checked")
+                    val = "";
+                    fields.each(function(i, n) {
+                        if( i > 0) {
+                            val += ",";                            
+                        }
+                        val += $(n).val();
+                    });
+                    flog('[jquery.module] Check field is changed', "fields=", fields, "val=", val);
+                } else if(field.is(":radio")) {                    
+                    if( field.is(":checked")) {
+                        val = field.val();
+                    } else {
+                        val = "";
+                    }
+                    flog('[jquery.module] Radio field is changed', "fieldName=", fieldName, "val=", val);
+                } else {
+                    flog('[jquery.module] Normal field is changed', "fieldName=", fieldName, "val=", val);
+                    val = field.val();
+                }
+                self.saveField(fieldName, val);
             });
 
             // Need to delay, because this script might be running before other scripts
@@ -703,21 +725,29 @@
                         isQualified = true;
                     }
 
-                    flog('[jquery.module] fieldValue: ' + fieldValue + ', fieldName: ' + qualifiedFieldName);
+                    flog('[jquery.module] fieldValue: ' , fieldValue , ', fieldName: ' , qualifiedFieldName);
                     var inputs = formBody.find('[name="' + fieldName + '"]');
-                    var radios = inputs.filter(':radio');
-                    var notRadio = inputs.not(':radio');
+                    var radios = inputs.filter(':radio, :checkbox');
+                    var notRadio = inputs.not(':radio, :checkbox');
                     if (!inputs.hasClass('qualified-set')) {
                         if (isQualified) {
                             inputs.addClass('qualified-set');
                         }
 
                         if (notRadio.length > 0) {
+                            flog('[jquery.module] Set not-radio val', notRadio, fieldValue);
                             notRadio.val(fieldValue);
                         } else {
                             if (radios.length > 0) {
-                                var radio = radios.filter('[value=' + fieldValue + ']');
-                                radio.prop('checked', true); // set radio buttons
+                                var arr = fieldValue.split(",");
+                                for( var i=0; i<arr.length; i++) {
+                                    var fv = arr[i].trim();
+                                    if( fv.length > 0 ) {
+                                        var radio = radios.filter('[value=' + fv + ']');
+                                        flog('[jquery.module] Set checked', radio, fv);
+                                        radio.prop('checked', true); // set radio buttons
+                                    }
+                                }
                             }
                         }
                     }
