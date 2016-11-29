@@ -24,6 +24,16 @@ function initProductDetails() {
             doCreateProductParameter(title);
         }
     });
+    
+    $("#variants").on("click", ".add-field", function (e) {
+        e.preventDefault();
+        var title = prompt("Please enter a name for the field, eg Height");
+        if (title !== null) {
+            doCreateProductField(title);
+        }
+    });
+    
+    
     initHtmlEditors();
     toggleOrderInfo();
     $("#canOrderChk").change(function (event) {
@@ -214,6 +224,29 @@ function doCreateProductParameter(newTitle) {
                 reloadVariantList();
             } else {
                 Msg.error("An error occured creating the variant type");
+            }
+        },
+        error: function () {
+            alert('Sorry, we couldn\'t save.');
+        }
+    });
+}
+
+function doCreateProductField(newTitle) {
+    $.ajax({
+        url: window.location.pathname,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            newProductFieldTitle: newTitle
+        },
+        success: function (resp) {
+            flog("success");
+            if (resp.status) {
+                Msg.info("Done");
+                reloadVariantList();
+            } else {
+                Msg.error("An error occured creating the field");
             }
         },
         error: function () {
