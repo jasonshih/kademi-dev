@@ -248,7 +248,7 @@
                                 </tr>
                                 #end
                             </tbody>
-                            <tfoot>
+                            <tfoot id="pointsFooter">
                                 <tr>
                                     <td colspan="6">
                                         $!pointsPaginator.html
@@ -434,7 +434,9 @@
             $(function () {
                 initManagePointsSystem();
 
-                $(".pagination").paginator();
+                $(".pagination").paginator({
+                    displayingElement: $(".pagination").parent().siblings()
+                });
 
                 $(".btnReconcile").click(function (e) {
                     e.preventDefault();

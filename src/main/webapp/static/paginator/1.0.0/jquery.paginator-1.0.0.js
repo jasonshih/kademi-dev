@@ -16,9 +16,15 @@
             flog("target", target, target.closest(".pagination-container"));
             var results = target.closest(".pagination-container").find(".pagination-results");
             flog("reload page in", results);
-            history.pushState(null, null, link);
+            var hash = window.location.hash;
+            history.pushState(null, null, link + hash);
             results.reloadFragment({
-                url : link
+                url : link,
+                whenComplete: function(target, newDom, resp, status, xhr){
+                    if (config.displayingElement){
+                        config.displayingElement.html($(newDom).find('.pagination-container .pagination').parent().siblings().html());
+                    }
+                }
             });
         });
     };

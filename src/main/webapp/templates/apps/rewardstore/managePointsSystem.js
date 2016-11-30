@@ -268,11 +268,12 @@ function doHistorySearch() {
     var dataQuery = $('#data-query').val();
 
     var uri = URI(location.search);
-    uri.addSearch('startDate', searchOptions.startDate);
-    uri.addSearch('finishDate', searchOptions.endDate);
-    uri.addSearch('dataQuery', dataQuery);
+    uri.setSearch('startDate', searchOptions.startDate);
+    uri.setSearch('finishDate', searchOptions.endDate);
+    uri.setSearch('dataQuery', dataQuery);
 
     var target = $("#tablePointsBody");
+    var pointsFooter = $("#pointsFooter");
     target.load();
 
     $.ajax({
@@ -284,7 +285,14 @@ function doHistorySearch() {
             Msg.success("Search complete", 2000);
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
+            history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
             $("abbr.timeago").timeago();
+            var newFooter = $(content).find("#pointsFooter .pagination").html();
+            var newRightFooter = $(content).find("#pointsFooter .pagination").parent().siblings().html();
+            if (!newFooter) newFooter = '';
+            if (!newRightFooter) newRightFooter = '';
+            pointsFooter.find('.pagination').html(newFooter);
+            pointsFooter.find('.pagination').parent().siblings().html(newRightFooter);
             flog("done insert and timeago", $("abbr.timeago"));
         }
     });
