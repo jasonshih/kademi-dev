@@ -8,7 +8,7 @@ function initManagePoints() {
             if (resp.status) {
                 Msg.success("Points record updated ok");
                 editModal.modal("hide");
-                $("#pointsBody").reloadFragment();
+                $('#pointsBody, #pointsFooter').reloadFragment();
             } else {
                 Msg.error("Sorry, there was a problem updating the points record");
             }
@@ -44,7 +44,7 @@ function initManagePoints() {
             if (resp.status) {
                 Msg.success("Points debit created ok");
                 createDebitModal.modal("hide");
-                $("#pointsBody").reloadFragment();
+                $('#pointsBody, #pointsFooter').reloadFragment();
             } else {
                 Msg.error("Sorry, there was a problem creating the debit record");
             }
@@ -76,7 +76,7 @@ function initManagePoints() {
             if (resp.status) {
                 Msg.info("Assigned points OK");
                 $('#modal-new-points').modal('hide');
-                $('#pointsBody').reloadFragment();
+                $('#pointsBody, #pointsFooter').reloadFragment();
             } else {
                 alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
             }
@@ -96,6 +96,7 @@ function initManagePoints() {
             showUnmatched(data.result.data.unmatched);
             $(".results").show();
             Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+            $('#pointsBody, #pointsFooter').reloadFragment();
         }
     });
 
@@ -494,7 +495,7 @@ function doRemovePoints(checkBoxes) {
             log("success", data)
             if (data.status) {
                 Msg.success("Removed points records");
-                $('#pointsBody').reloadFragment();
+                $('#pointsBody, #pointsFooter').reloadFragment();
             } else {
                 Msg.error("There was a problem removing points records. Please try again and contact the administrator if you still have problems");
             }
