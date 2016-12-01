@@ -279,13 +279,14 @@
                 endDate = now.format(options.dateFormat);
             }
 
-            var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
-            if (trigger.length > 0) {
-                trigger.trigger('click');
-            } else {
+//            var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
+//            if (trigger.length > 0) {
+//                flog('[jquery.pageDatePicker] Trigger click');
+//                trigger.trigger('click');
+//            } else {
                 flog('[jquery.pageDatePicker] Trigger initial page load event');
                 self.selectRange(startDate, endDate, null, null, true);
-            }
+//            }
         }
     };
 

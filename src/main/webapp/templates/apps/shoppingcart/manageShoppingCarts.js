@@ -117,7 +117,12 @@ function markFulfilled(listToFulfill) {
 }
 
 function initHistorySearch() {
-    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
+        if( initial ) {
+            flog("Ignore initial");
+            return;
+        }
+        
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
 
