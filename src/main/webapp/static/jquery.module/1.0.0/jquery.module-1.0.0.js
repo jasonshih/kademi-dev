@@ -652,11 +652,11 @@
                 return;
             }
 
-            var currentPage = getFileName(window.location.href);
+            var currentPage = getFileName(window.location.pathname);
             self.progressPage = currentPage; // update progress page so we can keep track
 
             var data = {};
-            data['statusCurrentPage'] = options.currentUrl;
+            data['statusCurrentPage'] = currentPage;
 
             $.ajax({
                 type: 'POST',
