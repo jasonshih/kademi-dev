@@ -230,7 +230,7 @@
                                         #else
                                         $points.points.issuedTo.formattedName
                                         #end
-                                    </td>                                    
+                                    </td>
                                     <td>$!points.reason</td>
                                     <td>
                                         #if( $points.expired )
@@ -241,7 +241,7 @@
                                                 <span class="label label-info">$debit.numPoints on $debit.issuedDate</span>
                                                 #end
                                             #end
-                                            
+
                                         #end
                                     </td>
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
@@ -253,7 +253,7 @@
                                     <td colspan="6">
                                         $!pointsPaginator.html
                                     </td>
-                                </tr>                                
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -265,7 +265,7 @@
                                 Save Debits CSV
                             </a>
                             <button class="btn btn-sm btn-warning btnReconcile" >
-                                <span class="fa fa-exclamation-circle"></span>
+                                <i class="fa fa-exclamation-circle"></i>
                                 Reconcile
                             </button>
 
@@ -436,32 +436,6 @@
 
                 $(".pagination").paginator({
                     displayingElement: $(".pagination").parent().siblings()
-                });
-
-                $(".btnReconcile").click(function (e) {
-                    e.preventDefault();
-                    if (confirm("Are you sure you want to reconcile debits? This will look for debit records which have not been reconciled, and attempt to link them to credit records")) {
-                        $.ajax({
-                            type: 'POST',
-                            data: {
-                                reconcile: true
-                            },
-                            dataType: "json",
-                            url: "",
-                            success: function (data) {
-                                flog("success", data);
-                                if (data.status) {
-                                    $('#tablePointsBody').reloadFragment();
-                                    Msg.success("Reconciliation completed");
-                                } else {
-                                    Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems");
-                                }
-                            },
-                            error: function (resp) {
-                                Msg.error("An error occurred removing points. You might not have permission to do this");
-                            }
-                        });
-                    }
                 });
             });
         </script>

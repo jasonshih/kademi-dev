@@ -17,6 +17,7 @@ function initManagePointsSystem() {
     initLeaderboardSearch();
     initDebitsPjax();
     initExpireFields();
+    initReconcile();
 
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
@@ -56,9 +57,9 @@ function initManagePointsSystem() {
     });
 }
 
-function initExpireFields(){
-    $('[name=validForDays]').on('input', function(){
-        if (this.value){
+function initExpireFields() {
+    $('[name=validForDays]').on('input', function () {
+        if (this.value) {
             $('[name=expiryDate]').prop('disabled', true).val('');
         } else {
             $('[name=expiryDate]').prop('disabled', false);
@@ -115,6 +116,75 @@ function initFormPointsSystem() {
                 Msg.error("Sorry, couldnt save");
             }
 
+        }
+    });
+}
+
+function initReconcile() {
+    $(".btnReconcile").click(function (e) {
+        e.preventDefault();
+        if (confirm("Are you sure you want to reconcile debits? This will look for debit records which have not been reconciled, and attempt to link them to credit records")) {
+            $.ajax({
+                type: 'POST',
+                data: {
+                    reconcile: true
+                },
+                dataType: "json",
+                url: "",
+                success: function (data) {
+                    flog("success", data);
+                    if (data.status) {
+                        $('#tablePointsBody').reloadFragment();
+                        Msg.success(data.messages);
+                    } else {
+                        Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems");
+                    }
+                    updateReconcileStatus();
+                },
+                error: function (resp) {
+                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    updateReconcileStatus();
+                }
+            });
+        }
+    });
+
+    updateReconcileStatus();
+}
+
+var reconcileCheckTimer = null;
+function updateReconcileStatus() {
+    if (reconcileCheckTimer != null) {
+        clearTimeout(reconcileCheckTimer);
+        reconcileCheckTimer = null;
+    }
+
+    var btn = $('.btnReconcile');
+
+    $.ajax({
+        type: 'GET',
+        url: window.location.pathname + "?pointsReconcileProcessor",
+        dataType: 'json',
+        success: function (resp) {
+            if (resp.status) {
+                if (resp.data.statusInfo.complete) {
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fa fa-exclamation-circle"></i> Reconcile');
+                } else {
+                    btn.prop('disabled', true);
+                    btn.html('<i class="fa fa-exclamation-circle"></i> Reconcile Running: ' + resp.data.status);
+                    reconcileCheckTimer = setTimeout(function () {
+                        updateReconcileStatus()
+                    }, 2000);
+                }
+            } else {
+                btn.prop('disabled', false);
+                btn.html('<i class="fa fa-exclamation-circle"></i> Reconcile');
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            btn.prop('disabled', false);
+            btn.html('<i class="fa fa-exclamation-circle"></i> Reconcile');
         }
     });
 }
@@ -289,8 +359,10 @@ function doHistorySearch() {
             $("abbr.timeago").timeago();
             var newFooter = $(content).find("#pointsFooter .pagination").html();
             var newRightFooter = $(content).find("#pointsFooter .pagination").parent().siblings().html();
-            if (!newFooter) newFooter = '';
-            if (!newRightFooter) newRightFooter = '';
+            if (!newFooter)
+                newFooter = '';
+            if (!newRightFooter)
+                newRightFooter = '';
             pointsFooter.find('.pagination').html(newFooter);
             pointsFooter.find('.pagination').parent().siblings().html(newRightFooter);
             flog("done insert and timeago", $("abbr.timeago"));
