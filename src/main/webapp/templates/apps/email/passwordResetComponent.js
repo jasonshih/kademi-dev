@@ -3,11 +3,11 @@
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
-    KEditor.components['passwordReset'] = $.extend({}, KEditor.components['button'], {
+    KEditor.components['passwordResetLink'] = $.extend({}, KEditor.components['button'], {
         settingTitle: 'Password Reset Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "passwordReset" component');
+            flog('initSettingForm "passwordResetLink" component');
 
             form.append(this.settingFormHtml);
             form.find('.button-link').remove();
@@ -206,7 +206,7 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "passwordReset" component');
+            flog('showSettingForm "passwordResetLink" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 
