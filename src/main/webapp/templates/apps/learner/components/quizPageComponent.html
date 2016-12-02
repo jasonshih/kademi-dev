@@ -4,14 +4,16 @@
             <div class="padded">
                 <hgroup>
                     <h2 class="text-info when-not-complete">Please answer the following quiz:</h2>
+
                     <h2 class="text-info when-complete">This quiz has already been completed</h2>
                 </hgroup>
             </div>
         </div>
 
         <div class="col-md-8">
-            <form class="quiz #if ($folder.isQuizPassed($folder.currentPage)) quiz-passed #end" id="quiz-wrapper">
-                <input type="hidden" name="quiz" value="quiz"/>
+            <form class="quiz #if ($folder.isQuizPassed($page.name)) quiz-passed #end" id="quiz-wrapper">
+                <input type="hidden" name="quiz" value="quiz" />
+
                 <div class="" id="body">
                     $!folder.quizBatch( $page.name )
                 </div>
@@ -28,6 +30,6 @@
 
 #set($viewMode = !$rc.child.editMode && !$request.params.print )
 #if($viewMode)
-#portlets("userDataModal")
-#portlets("modulePageBottom")
+    #portlets("userDataModal")
+    #portlets("modulePageBottom")
 #end
