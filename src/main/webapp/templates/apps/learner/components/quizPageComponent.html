@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-md-8">
-            <form class="quiz #if ($folder.isQuizPassed($folder.currentPage)) quiz-passed #end" id="quiz-wrapper">
+            <form class="quiz #if ($folder.isQuizPassed($page.name)) quiz-passed #end" id="quiz-wrapper">
                 <input type="hidden" name="quiz" value="quiz"/>
                 <div class="" id="body">
                     $!folder.quizBatch( $page.name )
