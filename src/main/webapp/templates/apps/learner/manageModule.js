@@ -577,11 +577,20 @@ function checkEditListsValid() {
                 item.find('select.requiredIf, input.requiredIf').each(function () {
                     var input = $(this);
                     var val = input.val().trim();
+                    flog("check", input, val);
 
                     if (val === '') {
                         isOk = false;
 
                         item.addClass('has-error');
+                    }
+                });
+                item.find('select.requiredIf').each(function () {
+                    var input = $(this);
+                    var val = input.val().trim();
+                    flog("check", input, val);
+
+                    if (val === '') {
                     } else {
                         flog('val', val, values);
 
