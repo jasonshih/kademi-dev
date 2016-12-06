@@ -165,18 +165,18 @@
                     if (typeof options.onNextPage === 'function') {
                         options.onNextPage.call(link, link);
                     }
+
+                    if (!self.isQuizCompleted(e)) {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
                 } else if (clickedIndex < currentIndex) {
                     if (typeof options.onPreviousPage === 'function') {
                         options.onPreviousPage.call(link, link);
                     }
                 } else {
                     flog('[jquery.module] Clicked on current page. Do nothing!');
-                    e.stopPropagation();
-                    e.preventDefault();
-                    return false;
-                }
-
-                if (!self.isQuizCompleted(e)) {
                     e.stopPropagation();
                     e.preventDefault();
                     return false;
