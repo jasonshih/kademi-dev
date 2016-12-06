@@ -5,22 +5,22 @@
 <div class="panel panel-default">
     <div class="panel-body">
         #if ($page)
-        #if( $userResource )
-        <h1>Sorry, you don't have permission to view this page</h1>
-        <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
+            #if( $userResource )
+                <h1>Sorry, you don't have permission to view this page</h1>
+                <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
+            #else
+                #renderLoginForm($layout)
+            #end
+            <script type="text/javascript">
+                $(function () {
+                    jQuery(".login-container").user({
+                        afterLoginUrl: window.location.pathname,
+                        valiationMessageSelector: "p.login.message"
+                    }); // setup login and logout
+                });
+            </script>
         #else
-        #renderLoginForm($layout)
-        #end
-        <script type="text/javascript">
-            $(function () {
-                jQuery(".login-container").user({
-                    afterLoginUrl: window.location.pathname,
-                    valiationMessageSelector: "p.login.message"
-                }); // setup login and logout
-            });
-        </script>
-        #else
-        #renderLoginForm($layout)
+            #renderLoginForm($layout)
         #end
     </div>
 </div>
@@ -28,12 +28,12 @@
 #macro (renderLoginForm $layout)
     #if ($layout != "horizontal")
         #set ($colClass = "col-md-12")
-#else
-#if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
-#set ($colClass = "col-md-12")
-#else
-#set ($colClass = "col-md-6")
-#end
+    #else
+        #if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
+            #set ($colClass = "col-md-12")
+        #else
+            #set ($colClass = "col-md-6")
+        #end
     #end
 
 <div class="row">
@@ -42,12 +42,13 @@
                 #if ($logo)
                     <p><img src="$logo" class="img-responsive" /></p>
                 #else
-                <h1>Please login to view this page</h1>
+                    <h1>Please login to view this page</h1>
 
-                <p>You must login to access this page</p>
+                    <p>You must login to access this page</p>
                 #end
                 <form class="login form-horizontal" method="POST" role="form">
                     <p class="login message" style="display: none">.</p>
+
                     <div class="form-group">
                         <div class="col-md-12">
                             <label for="email" class="sr-only">Email</label>
