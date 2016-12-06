@@ -1,3 +1,4 @@
+<h2>Daily visits - filtered by date range</h2>
 #foreach($website in $page.find("/websites").children.ofType.website)
 <h3>$website.name</h3>
 <table class="table table-bordered table-striped">
@@ -8,7 +9,7 @@
         </tr>
     </thead>
     <tbody>
-        #foreach($visit in $page.userResource.dailyVisits(null,null, $website.website))
+        #foreach($visit in $page.userResource.dailyVisits($website.website))
         <tr>
             <td>$formatter.formatDate($visit.date)</td>
             <td>$visit.count</td>
@@ -17,3 +18,33 @@
     </tbody>
 </table>
 #end
+
+<h2>All page views - filtered by date range</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Website</th>
+            <th>Path</th>
+            <th>Method</th>
+            <th>Result</th>
+            <th>Duration (ms)</th>
+            <th>Size (bytes)</th>
+            <th>Referrer</th>
+        </tr>
+    </thead>
+    <tbody>
+        #set( $history = $page.userResource.searchWebHits(null,null) )
+                        
+        #foreach($hit in $history.hits.hits )
+        <tr>
+            <td>$hit.fields.reqHost.value</td>
+            <td>$hit.fields.url.value</td>
+            <td>$hit.fields.reqMethod.value</td>
+            <td>$!hit.fields.resultCode.value</td>
+            <td>$!hit.fields.durationMs.value</td>
+            <td>$!hit.fields.numBytes.value</td>
+            <td>$!hit.fields.referrer.value</td>
+        </tr>
+        #end
+    </tbody>
+</table>
