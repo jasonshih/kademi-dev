@@ -25,18 +25,18 @@
     // Returns the jQuery object
     $.fn.pjax = function( container, options ) {
         options = optionsFor(container, options)
-        log("fn.pjax", this);
+        flog("fn.pjax", this);
         return this.click(function(event){
             return handleClick(event, options)
         })
-    } 
+    }
     $.fn.pjax2 = function( container, options ) {
         options = optionsFor(container, options)
-        log("fn.pjax2", this);
+        flog("fn.pjax2", this);
         return this.on("click", options.selector,function(event){
             return handleClick(event, options)
         })
-    } 
+    }
     // Public: pjax on click handler
     //
     // Exported as $.pjax.click.
@@ -57,7 +57,7 @@
     //
     // Returns false if pjax runs, otherwise nothing.
     function handleClick(event, container, options) {
-        log("pjax::handleClick", event, event.target);
+        flog("pjax::handleClick", event, event.target);
         options = optionsFor(container, options)
 
         var link = event.currentTarget;
@@ -117,12 +117,12 @@
     // Use it just like $.ajax:
     //
     // var xhr = $.pjax({ url: this.href, container: '#main' })
-    // console.log( xhr.readyState )
+    // console.flog( xhr.readyState )
     //
     // Returns whatever $.ajax returns.
     var pjax = $.pjax = function( options ) {
         var $container = findContainerFor(options.container),
-        success = options.success || $.noop
+            success = options.success || $.noop
 
         // We don't want to let anyone override our success handler.
         delete options.success;
@@ -135,7 +135,8 @@
 
         options.context = $container;
 
-        options.success = function(data){
+        options.success = function (data, status, xhr) {
+            var ajaxArguments = [data, status, xhr];
             var $data = $(data);
 
             // If there's a <title> tag in the response, use it as
@@ -152,7 +153,7 @@
                 if ( $fragment.length ){
                     data = $fragment.children()
                 } else {
-                    log("no fragment: " + options.fragment, $data.find("body"));
+                    flog("no fragment: " + options.fragment, $data.find("body"));
                     return;
                     //return window.location = options.url;
                 }
@@ -165,12 +166,12 @@
             }
 
             // Make it happen.
-            log("pjax:got data", data);
+            flog("pjax:got data", data);
             
             var context = this;
-            var showNewContent = function() {                
+            var showNewContent = function () {
                 flog("context", context);
-                context.data("pjaxHidden", false);            
+                context.data("pjaxHidden", false);
                 context.html(data);
                 var link = $(pjax.options.clickedElement);
                 var slideDir = link.data("pjax-dir"); //  left or right, empty means fade
@@ -181,15 +182,15 @@
                     
                     var effectOptions = {
                         direction : slideDir
-                    };            
+                    };
                     context.show("slide", effectOptions, 400);
                 } else {
                     context.stop(); // stop the fadeout if still in progress
-                    context.css("opacity", 0);            
+                    context.css("opacity", 0);
                     
                     context.animate({opacity: 1}, 1000, function() {
                         // make sure the new content is shown, because Paddy was always getting a display: none
-                        log("pjax: opacity animation done, now show to ensure shown");
+                        flog("pjax: opacity animation done, now show to ensure shown");
                         context.show();
                     });
                 }
@@ -229,7 +230,7 @@
                 }
 
                 // Invoke their success handler if they gave us one.
-                success.apply(context, arguments)
+                success.apply(context, ajaxArguments)
                 
                 
                 $(document).trigger('pjaxComplete');
@@ -384,8 +385,8 @@
                     this.animate({opacity: 0}, 200, function() {
                         context.data("transitionComplete", true);
                     });
-                }                
-                log("pjax: done hide");
+                }
+                flog("pjax: done hide");
             }
         },
         error: function(xhr, textStatus, errorThrown){
@@ -447,9 +448,9 @@
 
     // Is pjax supported by this browser?
     $.support.pjax =
-    window.history && window.history.pushState && window.history.replaceState
-    // pushState isn't reliable on iOS until 5.
-    && !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/)
+        window.history && window.history.pushState && window.history.replaceState
+            // pushState isn't reliable on iOS until 5.
+        && !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/)
 
 
     // Fall back to normalcy for older browsers.

@@ -192,11 +192,11 @@
                 selector: '.pages a',
                 fragment: '.panelBox',
                 timeout: options.pjaxTimeout,
-                success: function () {
-                    flog('[jquery.module] Pjax success!');
+                success: function (data) {
+                    flog('[jquery.module] Pjax success!', data);
 
                     initPrintLink();
-                    self.initPageNav();
+                    self.initPageNav(data);
                 },
                 debug: true
             });
@@ -215,7 +215,7 @@
             });
         },
 
-        initPageNav: function () {
+        initPageNav: function (data) {
             flog('[jquery.module] initPageNav');
 
             var self = this;
@@ -332,10 +332,10 @@
             window.setTimeout(function () {
                 flog('[jquery.module] Fire onModulePageLoad event');
 
-                $('body').trigger('modulePageLoad');
+                $('body').trigger('modulePageLoad', [currentPageIndex, data]);
 
                 if (typeof self.getOptions().onModulePageLoad === 'function') {
-                    self.getOptions().onModulePageLoad(currentPageIndex);
+                    self.getOptions().onModulePageLoad(currentPageIndex, data);
                 }
             }, 50);
 
@@ -1080,11 +1080,11 @@
                     container: '.panelBox',
                     timeout: options.pjaxTimeout,
                     url: currentTarget.prop('href'),
-                    success: function () {
-                        flog('[jquery.module] Pjax success!');
+                    success: function (data) {
+                        flog('[jquery.module] Pjax success!', data);
 
                         initPrintLink(); // called by init-theme
-                        self.initPageNav();
+                        self.initPageNav(data);
                     },
                     debug: true
                 });
