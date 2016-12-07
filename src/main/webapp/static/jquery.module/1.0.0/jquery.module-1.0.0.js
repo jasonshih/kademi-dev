@@ -662,7 +662,7 @@
             self.progressPage = currentPage; // update progress page so we can keep track
 
             var data = {};
-            data['statusCurrentPage'] = options.currentUrl;
+            data['statusCurrentPage'] = currentPage;
 
             $.ajax({
                 type: 'POST',
