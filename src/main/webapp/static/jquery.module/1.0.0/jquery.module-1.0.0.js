@@ -8,12 +8,14 @@
  * @option {Boolean} isCompleted This module is completed or not
  * @option {Boolean} isEditable This module is editable now or not
  * @option {Boolean} isCompletable User has permission for complete this module
+ * @option {Number} pjaxTimeout The Ajax timeout in milliseconds after which a full refresh is forced. Default: 5000
  * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
  * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
  * @option {Function} onModulePageLoad Callback will be called a module page is loaded, Argument is 'pageIndex'
  * @option {Function} onQuizSubmit Callback will be called after clicking on Submit button on Quiz page. Argument is 'quizForm'
  * @option {Function} onQuizSuccess Callback will be called after Quiz is submitted successfully. Arguments are 'quizForm' and 'response'
  * @option {Function} onQuizError Callback will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Arguments are 'quizForm' and 'response'
+ * @option {Function} onModuleStatusSaved Callback will be called after module status is saved.
  */
 (function ($) {
     $.module = function (method) {
@@ -35,12 +37,14 @@
         isCompleted: false,
         isEditable: false,
         isCompletable: false,
+        pjaxTimeout: 5000,
         onPreviousPage: null,
         onNextPage: null,
         onModulePageLoad: null,
         onQuizSubmit: null,
         onQuizSuccess: null,
-        onQuizError: null
+        onQuizError: null,
+        onModuleStatusSaved: null
     };
 
     var Module = {
@@ -187,6 +191,7 @@
             $(document).pjax2('.panelBox', {
                 selector: '.pages a',
                 fragment: '.panelBox',
+                timeout: options.pjaxTimeout,
                 success: function () {
                     flog('[jquery.module] Pjax success!');
 
@@ -328,6 +333,7 @@
                 flog('[jquery.module] Fire onModulePageLoad event');
 
                 $('body').trigger('modulePageLoad');
+
                 if (typeof self.getOptions().onModulePageLoad === 'function') {
                     self.getOptions().onModulePageLoad(currentPageIndex);
                 }
@@ -498,10 +504,11 @@
                 flog('[jquery.module] Found hidden sections', hiddenSections);
                 return false;
             }
-            flog("incompleteInputs2", incompleteInputs, incompleteInputs.length);
+
+            flog('[jquery.module] Total incomplete inputs: ' + incompleteInputs.length, incompleteInputs);
 
             if (incompleteInputs.length > 0) {
-                flog('[jquery.module] Found incomplete input3', incompleteInputs);
+                flog('[jquery.module] Found incomplete input', incompleteInputs);
                 self.showNextPopup(incompleteInputs);
 
                 return false;
@@ -531,7 +538,6 @@
         },
 
         findIncompleteInputs: function () {
-
             var inputs = $('.panelBox').find('input.required, select.required, textarea.required').not('.no-validate')
 
             flog('[jquery.module] findIncompleteInputs', inputs);
@@ -638,7 +644,7 @@
             }
         },
 
-        saveProgress: function (callback) {
+        saveProgress: function () {
             var self = this;
             var options = self.getOptions();
             flog('[jquery.module] saveProgress', 'isCompletable: ' + self.isCompletable + ', userUrl: ' + userUrl);
@@ -652,11 +658,11 @@
                 return;
             }
 
-            var currentPage = getFileName(window.location.pathname);
+            var currentPage = getFileName(window.location.href);
             self.progressPage = currentPage; // update progress page so we can keep track
 
             var data = {};
-            data['statusCurrentPage'] = currentPage;
+            data['statusCurrentPage'] = options.currentUrl;
 
             $.ajax({
                 type: 'POST',
@@ -666,8 +672,8 @@
                     flog('[jquery.module] Saving moduleStatus ok', response);
                     self.restoreFields(response);
 
-                    if (typeof callback === 'function') {
-                        callback();
+                    if (typeof options.onModuleStatusSaved === 'function') {
+                        options.onModuleStatusSaved.call(this);
                     }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
@@ -725,7 +731,7 @@
                         isQualified = true;
                     }
 
-                    flog('[jquery.module] fieldValue: ' , fieldValue , ', fieldName: ' , qualifiedFieldName);
+                    flog('[jquery.module] fieldValue: "' + fieldValue + '"; fieldName: ' + qualifiedFieldName);
                     var inputs = formBody.find('[name="' + fieldName + '"]');
                     var radios = inputs.filter(':radio, :checkbox');
                     var notRadio = inputs.not(':radio, :checkbox');
@@ -1056,6 +1062,7 @@
             flog('[jquery.module] quizSuccessHandler', quiz, e);
 
             var self = this;
+            var options = self.getOptions();
 
             // Fix https://github.com/Kademi/kademi-dev/issues/1331
             var currentTarget = $(e.target);
@@ -1071,6 +1078,7 @@
                     selector: '.pages a',
                     fragment: '.panelBox',
                     container: '.panelBox',
+                    timeout: options.pjaxTimeout,
                     url: currentTarget.prop('href'),
                     success: function () {
                         flog('[jquery.module] Pjax success!');
