@@ -1,0 +1,36 @@
+<div class="form-group">
+    <label for="cloudFrontStatus" class="col-sm-3 control-label">CloudFront status</label>
+    <div class="col-sm-6" id="cfStatus">
+        <div class="label label-info">Loading...</div>
+        <br />
+        <div class="label label-info">
+            Domain: <a target="_blank" href="http://d1e3nt0ursj70d.cloudfront.net">d1e3nt0ursj70d.cloudfront.net</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        function loadCFData() {
+            $.ajax({
+                type: 'GET',
+                url: '/awsCf',
+                dataType: 'json',
+                data: {
+                    CFStatus: $websiteId
+                },
+                success: function (resp) {
+                    if (resp.status) {
+
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        $(function () {
+            loadCFData();
+        });
+    })();
+</script>
