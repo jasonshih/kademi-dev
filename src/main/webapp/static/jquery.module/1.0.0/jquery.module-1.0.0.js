@@ -8,6 +8,7 @@
  * @option {Boolean} isCompleted This module is completed or not
  * @option {Boolean} isEditable This module is editable now or not
  * @option {Boolean} isCompletable User has permission for complete this module
+ * @option {Boolean} isMobileSupported Supports mobile or not
  * @option {Number} pjaxTimeout The Ajax timeout in milliseconds after which a full refresh is forced. Default: 5000
  * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
  * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
@@ -37,6 +38,7 @@
         isCompleted: false,
         isEditable: false,
         isCompletable: false,
+        isMobileSupported: true,
         pjaxTimeout: 5000,
         onPreviousPage: null,
         onNextPage: null,
@@ -69,8 +71,10 @@
             initComments(options.currentUrl);
             initModuleSearch();
 
-            if (!self.isDesktop()) {
-                self.initMobile();
+            if (options.isMobileSupported) {
+                if (!self.isDesktop()) {
+                    self.initMobile();
+                }
             }
         },
 
@@ -270,11 +274,11 @@
 
             flog('[jquery.module] options.isCompleted: ' + options.isCompleted + ', userUrl: ', userUrl);
 
-            var prevUrl = self.getMoveHref(-1);
+            var prevUrl = self.getMoveHref(-1) + '?r=' + (new Date().getTime());
             flog('[jquery.module] prevUrl: ' + prevUrl);
             $('.prevBtn').attr('href', prevUrl);
 
-            var nextUrl = self.getMoveHref(1);
+            var nextUrl = self.getMoveHref(1) + '?r=' + (new Date().getTime());
             flog('[jquery.module] nextUrl: ' + nextUrl);
             $('.nextBtn').attr('href', nextUrl);
 
@@ -658,7 +662,7 @@
                 return;
             }
 
-            var currentPage = getFileName(window.location.href);
+            var currentPage = getFileName(window.location.pathname);
             self.progressPage = currentPage; // update progress page so we can keep track
 
             var data = {};
