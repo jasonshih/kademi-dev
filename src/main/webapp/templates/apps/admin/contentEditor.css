@@ -121,6 +121,16 @@
     padding: 0 2px;
 }
 
+.colorpicker-wrapper {
+    position: relative;
+}
+
+.colorpicker-wrapper .colorpicker {
+    top: 31px !important;
+    right: auto;
+    left: 0px !important;
+}
+
 .colorpicker {
     right: auto;
     left: 15px !important;

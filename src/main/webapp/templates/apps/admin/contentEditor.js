@@ -8,6 +8,36 @@ function doPostMessage(data, url) {
     window.parent.postMessage(dataStr, url);
 }
 
+function initColorPicker(target, onChangeHandle) {
+    target.each(function () {
+        var colorPicker = $(this);
+        var input = colorPicker.find('input');
+        var previewer = colorPicker.find('.input-group-addon i');
+
+        colorPicker.colorpicker({
+            format: 'hex',
+            container: colorPicker.parent(),
+            component: '.input-group-addon',
+            align: 'left',
+            colorSelectors: {
+                'transparent': 'transparent'
+            }
+        }).on('changeColor.colorpicker', function (e) {
+            var colorHex = e.color.toHex();
+
+            if (!input.val() || input.val().trim().length === 0) {
+                colorHex = '';
+                previewer.css('background-color', '');
+            }
+
+            if (typeof onChangeHandle === 'function') {
+                onChangeHandle(colorHex);
+            }
+        });
+
+    });
+}
+
 function initContentEditorPage(fileName) {
     flog('initContentEditorPage', fileName);
 
@@ -214,29 +244,12 @@ function initKEditor(body, fileName) {
                     });
 
                     var colorPicker = form.find('.color-picker');
-                    var input = colorPicker.find('input');
-                    var previewer = colorPicker.find('.input-group-addon i');
-                    colorPicker.colorpicker({
-                        format: 'hex',
-                        container: colorPicker.parent(),
-                        component: '.input-group-addon',
-                        align: 'left',
-                        colorSelectors: {
-                            'transparent': 'transparent'
-                        }
-                    }).on('changeColor.colorpicker', function (e) {
-                        var colorHex = e.color.toHex();
-
-                        if (!input.val() || input.val().trim().length === 0) {
-                            colorHex = '';
-                            previewer.css('background-color', '');
-                        }
-
+                    initColorPicker(colorPicker, function (color) {
                         var container = keditor.getSettingContainer();
                         var target = container.find('.' + form.find('.select-bg-for').val());
 
-                        if (colorHex && colorHex !== 'transparent') {
-                            target.css('background-color', colorHex);
+                        if (color && color !== 'transparent') {
+                            target.css('background-color', color);
                         } else {
                             target.css('background-color', '');
                         }

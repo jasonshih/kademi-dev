@@ -127,9 +127,60 @@
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initPieChart();
                         });
-                    });                    
+                    });
+
+                    var colorPicker = form.find('.color-picker');
+                    initColorPicker(colorPicker);
+
+                    var colorsWrapper = form.find('.colors-wrapper');
+
+                    form.find('.btn-save-colors').on('click', function (e) {
+                        e.preventDefault();
+
+                        var colors = [];
+                        colorsWrapper.find('.color').each(function () {
+                            colors.push($(this).attr('data-color'));
+                        });
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-colors', colors.join(','));
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPieChart();
+                        });
+                    });
+
+                    form.find('.btn-add-color').on('click', function (e) {
+                        e.preventDefault();
+
+                        var color = colorPicker.colorpicker('getValue', '');
+
+                        if (color !== '') {
+                            self.addColor(form, color);
+                            colorPicker.colorpicker('setValue', 'transparent');
+                            colorPicker.find('.txt-bg-color').val('');
+                        }
+                    });
+
+                    form.on('click', '.btn-delete-color', function (e) {
+                        e.preventDefault();
+
+                        $(this).closest('.color').remove();
+                    });
                 }
             });
+        },
+        addColor: function (form, color) {
+            form.find('.colors-wrapper').append(
+                '<div class="input-group input-group-sm color" data-color="' + color + '" style="margin-bottom: 5px;">' +
+                '    <div class="form-control">' +
+                '        <div style="background-color: ' + color + ';">&nbsp;</div>' +
+                '    </div>' +
+                '    <span class="input-group-btn">' +
+                '        <button class="btn btn-danger btn-delete-color" type="button" title="Delete this color"><i class="fa fa-times"></i></button>' +
+                '    </span>' +
+                '</div>'
+            );
         },
         initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
             flog("initSelect", selectedQuery, selectedAgg);
@@ -172,12 +223,22 @@
             form.find('.txt-title').val(dataAttributes['data-title']);
             form.find('.show-legend').prop("checked", toBool(dataAttributes['data-legend']));
 
+            form.find('.colors-wrapper').html('');
+            var dataColors = (dataAttributes['data-colors']).trim();
+            if (dataColors !== '') {
+                $.each(dataColors.split(','), function (i, value) {
+                    self.addColor(form, value);
+                });
+            }
+
+
             if (selectedQuery) {
                 var aggsSelect = form.find(".select-agg");
                 self.initSelect(aggsSelect, selectedQuery, selectedAgg);
             }
         }
     };
+
     function toBool(v) {
         if (v === true) {
             return true;
@@ -185,4 +246,5 @@
         var b = (v === 'true');
         return b;
     }
+
 })(jQuery);

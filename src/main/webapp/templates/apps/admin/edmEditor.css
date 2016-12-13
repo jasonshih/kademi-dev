@@ -138,7 +138,11 @@ body.opened-keditor-sidebar #edm-area {
     padding: 0 2px;
 }
 
-.colorpicker {
+.colorpicker-wrapper {
+    position: relative;
+}
+
+.colorpicker-wrapper .colorpicker {
     top: 50px !important;
     right: auto;
     left: 15px !important;
