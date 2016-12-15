@@ -141,7 +141,7 @@ function initGroupType() {
 
 function showHidePanels() {
     var panels = $('.panel-fields, .panel-optins, .panel-joinorgs, .panel-regomode');
-    panels.hide();
+    panels.addClass('hide');
 
     // show only appropriate
     var type = $('input:radio[name=groupType]:checked').val();
@@ -149,12 +149,12 @@ function showHidePanels() {
 
     if (type == 'P') {
         // primary
-        panels.show();
+        panels.removeClass('hide');
     } else if (type == 'M') {
         // mailing list
     } else if (type == 'S') {
         // subscription
-        $('.panel-fields').show();
+        $('.panel-fields').removeClass('hide');
     }
 }
 
