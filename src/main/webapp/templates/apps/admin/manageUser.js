@@ -538,19 +538,33 @@ function initAddToGroup() {
 
     modal.find('.groups-wrapper a').click(function (e) {
         e.preventDefault();
-        var href = $(e.target).attr('href');
-        flog('add to group', href);
-        var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
-        doAddUsersToGroup(href, checkBoxes);
+        $(this).toggleClass('active');
     });
+
+    modal.find('.btnSaveGroup').on('click', function (e) {
+        var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
+        var selectedGroups = modal.find('.groups-wrapper a.active');
+        if (selectedGroups.length) {
+            selectedGroups.each(function () {
+                checkBoxes = checkBoxes.add('<input name="groupNames" type="checkbox" value="' + $(this).attr('href') + '" />');
+            });
+            doAddUsersToGroup(checkBoxes);
+        } else {
+            Msg.error('Please select group(s) to add users to');
+        }
+    });
+
+    modal.on('hidden.bs.modal', function () {
+        modal.find('.groups-wrapper a').removeClass('active');
+    })
 }
 
-function doAddUsersToGroup(groupName, checkBoxes) {
+function doAddUsersToGroup(data) {
     $.ajax({
         type: 'POST',
-        data: checkBoxes,
+        data: data,
         dataType: 'json',
-        url: '?groupName=' + groupName,
+        url: '?addToGroup',
         success: function (data) {
             flog('success', data);
             $('#modal-add-to-group').modal('hide');
@@ -659,7 +673,7 @@ function initSort() {
 
         var dir = 'asc';
         if (field == getSearchValue(window.location.search, 'sortfield')
-                && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
             dir = 'desc';
         }
         uri.setSearch('sortfield', field);
