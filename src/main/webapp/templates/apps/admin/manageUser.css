@@ -59,6 +59,11 @@
 	float: left;
 	width: 100%;
 	line-height: 23px;
+	text-decoration: none;
+}
+.groups-list li a.active {
+	background: #2196f3;
+	color: #fff;
 }
 
 .select2-close-mask{

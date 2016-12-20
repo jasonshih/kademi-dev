@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default panel-regomode">
+                    <div class="panel panel-default panel-regomode #if ($page.group.groupType == 'S' || $page.group.groupType == 'M') hide #end">
                         <div class="panel-heading">
                             <i class="clip-question"></i> Is this group open to the public?
                         </div>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default panel-joinorgs">
+                    <div class="panel panel-default panel-joinorgs #if ($page.group.groupType == 'S' || $page.group.groupType == 'M') hide #end">
                         <div class="panel-heading">
                             <i class="clip-question"></i> What organisations can users join?
                         </div>
@@ -121,7 +121,7 @@
 
 
 
-                    <div class="panel panel-default panel-fields">
+                    <div class="panel panel-default panel-fields #if ($page.group.groupType == 'M') hide #end">
                         <div class="panel-heading">
                             <i class="clip-question"></i> What extra fields do you want to ask new users?
                         </div>
@@ -166,7 +166,7 @@
                         </div>
                     </div>
 
-                    <div class="panel panel-default panel-fields">
+                    <div class="panel panel-default panel-fields #if ($page.group.groupType == 'M') hide #end">
                         <div class="panel-heading">
                             <i class="clip-question"></i> What password policies should apply to users?
                         </div>
@@ -270,7 +270,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="panel panel-default panel-optins">
+                    <div class="panel panel-default panel-optins #if ($page.group.groupType == 'S' || $page.group.groupType == 'M') hide #end">
                         <div class="panel-heading">
                             <i class="clip-question"></i> Can users opt-in to other mailing lists and groups?
                         </div>

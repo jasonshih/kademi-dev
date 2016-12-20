@@ -12,7 +12,9 @@
  * @option {Number} pjaxTimeout The Ajax timeout in milliseconds after which a full refresh is forced. Default: 5000
  * @option {Function} onPreviousPage Callback will be called when click on previous page, include click on Previous button. Argument is 'clickedElement'
  * @option {Function} onNextPage Callback will be called when click on next page, include click on Next button or Submit button of Quiz page. Argument is 'clickedElement'
- * @option {Function} onModulePageLoad Callback will be called a module page is loaded, Argument is 'pageIndex'
+ * @option {Function} onModulePageLoad Callback will be called when module page is loaded, Argument is 'pageIndex', 'data'
+ * @option {Function} onModuleStarted Callback will be called when module is started, Argument is 'startedDateTime'
+ * @option {Function} onModuleCompleted Callback will be called when module is completed, Argument is 'completedDateTime'
  * @option {Function} onQuizSubmit Callback will be called after clicking on Submit button on Quiz page. Argument is 'quizForm'
  * @option {Function} onQuizSuccess Callback will be called after Quiz is submitted successfully. Arguments are 'quizForm' and 'response'
  * @option {Function} onQuizError Callback will be called after Quiz is error. Maybe blank or wrong answers, or other errors will be occurred. Arguments are 'quizForm' and 'response'
@@ -43,6 +45,8 @@
         onPreviousPage: null,
         onNextPage: null,
         onModulePageLoad: null,
+        onModuleStarted: null,
+        onModuleCompleted: null,
         onQuizSubmit: null,
         onQuizSuccess: null,
         onQuizError: null,
@@ -339,7 +343,7 @@
                 $('body').trigger('modulePageLoad', [currentPageIndex, data]);
 
                 if (typeof self.getOptions().onModulePageLoad === 'function') {
-                    self.getOptions().onModulePageLoad(currentPageIndex, data);
+                    self.getOptions().onModulePageLoad.call(null, currentPageIndex, data);
                 }
             }, 50);
 
@@ -668,6 +672,10 @@
             var data = {};
             data['statusCurrentPage'] = currentPage;
 
+            if (self.getCurrentPageIndex() === 0 && typeof options.onModuleStarted === 'function') {
+                options.onModuleStarted.call(null, new Date());
+            }
+
             $.ajax({
                 type: 'POST',
                 url: options.currentUrl,
@@ -830,6 +838,10 @@
                     if (response.status) {
                         flog('[jquery.module] setStatusComplete completed ok, so show completed message');
                         self.showCompletedMessage();
+
+                        if (typeof options.onModuleCompleted === 'function') {
+                            options.onModuleCompleted.call(null, new Date());
+                        }
                     } else {
                         flog('[jquery.module] setStatusComplete returned false', response.fieldMessages[0]);
 

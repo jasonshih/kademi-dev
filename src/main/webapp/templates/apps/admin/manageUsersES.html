@@ -535,7 +535,7 @@
                 <h4 class="modal-title">Add Users to Group</h4>
             </div>
             <div class="modal-body">
-                <p>Please choose which group to add users to</p>
+                <p>Please choose which groups to add users to and then click Save</p>
                 <div class="groups-wrapper">
                     <ul class="groups-list row" style="margin-left: 20px;">
                         #foreach($group in $page.groups)
@@ -545,6 +545,7 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button class="btn btn-sm btn-primary btnSaveGroup" type="button">Save</button>
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
