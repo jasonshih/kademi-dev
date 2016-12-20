@@ -5,9 +5,11 @@ $(function () {
     var btnSave = ktoolbar.find('.btn-inline-edit-save');
     var btnDone = ktoolbar.find('.btn-inline-edit-done');
     var body = $(document.body);
-    var head = $('head');
 
-    var ktoolbarToggleWrap = ktoolbar.find('.ktoolbarToggleWrap');
+    if (htmleditor.length) {
+        btnEditInline.removeClass('hide');
+    }
+
     var ktoolbarToggle = ktoolbar.find('.ktoolbarToggle');
 
     ktoolbarToggle.on('click', function (e) {
