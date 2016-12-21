@@ -50,13 +50,6 @@ function initManagePoints() {
             }
         }
     });
-    $("#pointsTable").on("click", ".btnAddDebit", function (e) {
-        e.preventDefault();
-        flog("add debit", href);
-        var href = $(e.target).closest("a").attr("href");
-        createDebitForm.attr("action", href);
-        createDebitModal.modal("show");
-    });
 
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
