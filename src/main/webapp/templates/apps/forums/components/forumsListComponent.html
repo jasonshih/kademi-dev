@@ -3,11 +3,15 @@
     <div class="media">
         <div class="media-left">
             <a href="$forum.href">
+                #if ($forum.thumb)
                 <img class="media-object" src="${forum.thumb}" alt="$forum.title">
+                #else
+                <img class="media-object" width="100" src="/theme/img/photo_holder.png" alt="$forum.title">
+                #end
             </a>
         </div>
         <div class="media-body">
-            <h4 class="media-heading">$forum.title</h4>
+            <h4 class="media-heading"><a href="$forum.href">$forum.title</a></h4>
             <abbr title="$formatter.formatDateISO8601($forum.mostRecentPostDate)" class="info timeago">$!forum.mostRecentPostDate</abbr>
             <p>Topics: $!forum.numTopics</p>
             <abbr title="$formatter.formatDateISO8601($forum.mostRecentPostDate)" class="info timeago">$!forum.mostRecentPostDate</abbr>
