@@ -73,6 +73,14 @@
             keditor.initDynamicContent(dynamicElement);
         });
 
+        form.on('click', '.cbb-inverse-menu', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+
+            component.attr('data-inverse-menu', this.checked);
+            keditor.initDynamicContent(dynamicElement);
+        });
+
         var menuItemEditor = form.find('.editMenuItem');
         var menuEditor = form.find('.menuEditor');
 
@@ -219,6 +227,7 @@
         form.find('[name=logo]').val(dataAttributes['data-logo']);
 
         form.find('.cbb-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
+        form.find('.cbb-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
 
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
 
