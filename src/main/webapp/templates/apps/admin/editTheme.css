@@ -1,43 +1,69 @@
-.themes {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.themes-wrapper {
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 20px 20px 0;
+    border: 1px solid #bbb;
+    margin-bottom: 50px;
 }
-.themes li {
-    float: left;
-    width: 300px;
-    border: solid grey 1px;
-    margin: 10px;
-    height: 180px;
+
+.themes-wrapper .row {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.themes-wrapper .theme {
+    padding: 0 10px;
+    margin-bottom: 20px;
     position: relative;
-    margin-left: 0;
-    margin-right: 20px;
-    overflow: hidden;
 }
-.themes li.current-theme {
-    border-bottom: solid green 6px;
-}
-.themes.ajax-loading li {
-    opacity: 0.50;
-}
-.themes li .ajax-loader {
-    display: none;
-}
-.themes li > a img {
-    width: 300px; 
-}
-.themes li h2 {
-    text-align: center;
-    padding-top: 60px;
-    border: none;
-    font-size: 24px;
-}
-.themes li.ajax-loading {
-    opacity: 0.80;
-}
-.themes li.ajax-loading .ajax-loader {
-    left: 130px;
-    top: 90px;
-    position: absolute;
+
+.themes-wrapper .theme .btn-select-theme {
+    border: 1px solid #ddd;
     display: block;
+}
+
+.themes-wrapper .theme .embed-responsive-item {
+    background: no-repeat 50% 50% / cover;
+}
+
+.themes-wrapper .theme.current-theme .btn-select-theme .embed-responsive-item {
+    border-bottom: 3px solid green;
+}
+
+.themes-wrapper .theme h2 {
+    margin: 0;
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 50%;
+    transform: translate(0, -50%);
+    font-size: 24px;
+    text-align: center;
+}
+
+.themes-wrapper.ajax-loading .theme {
+    opacity: 0.7;
+}
+
+.themes-wrapper.ajax-loading .theme .btn-select-theme {
+    cursor: default;
+}
+
+.themes-wrapper .theme.ajax-loading:before {
+    background: rgba(255, 255, 255, .1) url('/static/common/ajax-loader.gif') no-repeat 50% 50%;
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+}
+
+#previewPage {
+    border: 1px solid #bbb;
+    width: 100%;
+    height: 400px;
 }
