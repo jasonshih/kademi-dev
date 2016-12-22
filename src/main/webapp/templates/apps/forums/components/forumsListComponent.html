@@ -1,0 +1,20 @@
+#foreach($forum in $page.children)
+<div class="forumPosts">
+    <div class="media">
+        <div class="media-left">
+            <a href="$forum.href">
+                <img class="media-object" src="${forum.thumb}" alt="$forum.title">
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading">$forum.title</h4>
+            <abbr title="$formatter.formatDateISO8601($forum.mostRecentPostDate)" class="info timeago">$!forum.mostRecentPostDate</abbr>
+            <p>Topics: $!forum.numTopics</p>
+            <abbr title="$formatter.formatDateISO8601($forum.mostRecentPostDate)" class="info timeago">$!forum.mostRecentPostDate</abbr>
+            #if( $forum.notes )
+                <p>$forum.notes</p>
+            #end
+        </div>
+    </div>
+</div>
+#end
