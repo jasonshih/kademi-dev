@@ -1,0 +1,27 @@
+#if ($page)
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="bs-avatar pull-left">
+            <img src="$formatter.profilePicHref($page.poster)" alt="$!post.poster.nickName"  width="50" height="50"/>
+        </div>
+        <h3>$page.title</h3>
+        Asked by <em>$page.poster.nickName</em>
+        <abbr title="$formatter.formatDateISO8601($page.postDate)" class="timeago">$page.postDate</abbr>
+        #if( $page.numReplies > 0 )
+            <i class="fa fa-comments-o"></i>
+            <strong>$page.numReplies</strong> replies
+        #end
+    </div>
+    <div class="panel-body">
+        $page.notes
+    </div>
+</div>
+</div>
+<script>
+$(function(){
+    initMyQuestion();
+});
+</script>
+#else
+    <div class="alert alert-warning">Forum Question component will go here</div>
+#end

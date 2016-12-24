@@ -9,10 +9,15 @@
 #set( $showUserMenu = false )
 #end
 
+#if( $inverseMenu )
+#else
+#set( $inverseMenu = false )
+#end
+
 <div class="toggle-menu-trigger-wrapper $triggerAlign">
     <button class="btn toggle-menu-trigger $triggerSize $triggerColor $!triggerClass" data-menu="#${menuId}" type="button"><i class="fa fa-bars"></i></button>
 </div>
-<div class="navbar navbar-default navbar-fixed-top toggle-menu" id="${menuId}" style="display: none;">
+<div class="navbar #if ($inverseMenu) navbar-inverse #else navbar-default #end navbar-fixed-top toggle-menu" id="${menuId}" style="display: none;">
     <div class="container">
         <div class="navbar-header">
             #if( $logo )

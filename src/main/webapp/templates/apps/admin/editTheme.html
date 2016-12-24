@@ -8,103 +8,112 @@
             <div class="alert alert-warning">
                 Click one of the themes below to update your site. A preview is shown below, or <a target="_blank" href="$page.parent.externalUrl">click here to see your site</a>
             </div>
-            <a href=".." class="btn btn-sm btn-blue">Back to $page.parent.parent.name website <i class="fa fa-arrow-circle-right"></i></a>
-            #set($isLive = $page.parent.live)                        
+            <p>
+                <a href=".." class="btn btn-sm btn-blue">Back to $page.parent.parent.name website <i class="fa fa-arrow-circle-right"></i></a>
+            </p>
+            #set($isLive = $page.parent.live)
             #set($extUrl = $page.parent.externalUrl)
-            <ul class="themes" style="max-height: 400px; overflow-y: scroll">
-                #foreach($theme in $page.allThemes)
-                <li>
-                    <a href="$theme.name" class="selectTheme">
-                        #if( $theme.previewImage )
-                        <img alt="$theme.title" src="/templates/themes/$theme.name/$theme.previewImage" />
-                        #else
-                        <h2>$theme.title</h2>
-                        #end
-                    </a>
-                </li>
-                #end
-            </ul>
 
-            <br/>
-            <br/>
-            <div class="page-header">
-                <h4>Preview </h4>
+            <div class="themes-wrapper">
+                <div class="row">
+                    #foreach($theme in $page.allThemes)
+                    <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12 theme #if($page.currentTheme == $theme.name) current-theme #end">
+                        <a href="$theme.name" class="btn-select-theme">
+                            <div class="embed-responsive embed-responsive-16by9">
+                                <div class="embed-responsive-item" #if( $theme.previewImage ) style="background-image: url('/templates/themes/$theme.name/${theme.previewImage}')" #end>
+                                    #if( $theme.previewImage )
+                                    #else
+                                    <h2>$theme.title</h2>
+                                    #end
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    #end
+                </div>
             </div>
-            <iframe id="previewPage" src="$page.parent.externalUrl" style="width: 1030px; height: 400px"></iframe>
-        </section>        
-        <script type="text/javascript">
 
+            <div class="page-header">
+                <h4>Preview</h4>
+            </div>
+            <iframe id="previewPage" src="$page.parent.externalUrl"></iframe>
+        </section>
+        <script type="text/javascript">
             var isLive = $isLive;
             var first = true;
-            var themeName = "$page.currentTheme";
 
             $(function () {
-                var current = $(".selectTheme[href='" + themeName + "']");
-                current.closest("li").addClass("current-theme");
-                flog("set current", current, themeName);
-                
-                var iframe = $("#previewPage");
-                iframe.load(function() {
-                    var li = $(".themes li.ajax-loading")
-                    li.removeClass("ajax-loading");
-                    li.closest("ul").removeClass("ajax-loading");
-                    li.addClass("current-theme");
-                    flog("add", li);
+                var iframe = $('#previewPage');
+                iframe.load(function () {
+                    var li = $('.themes li.ajax-loading')
+                    li.removeClass('ajax-loading');
+                    li.closest('ul').removeClass('ajax-loading');
+                    li.addClass('current-theme');
+                    flog('add', li);
                 });
-                
-                
-                $(".selectTheme").click(function(e) {
+
+                var themesWrapper = $('.themes-wrapper');
+                var themes = themesWrapper.find('.theme');
+
+                $('.btn-select-theme').click(function (e) {
                     e.preventDefault();
-                    var link = $(e.target).closest("a");
-                    var themeName = link.attr("href");
-                    var li = $(e.target).closest("li");
-                    var ul = li.closest("ul");
-                    if (ul.hasClass("ajax-loading")) {
+
+                    var btn = $(this);
+                    var themeName = btn.attr('href');
+                    var theme = btn.closest('.theme');
+
+                    if (themesWrapper.hasClass('ajax-loading')) {
                         return;
                     }
+
                     if (isLive && first) {
-                        if (!confirm("Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.")) {
+                        if (!confirm('Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.')) {
                             return;
                         }
                     }
                     first = false;
-                    $(".current-theme").removeClass("current-theme");
-                    li.addClass("ajax-loading");
-                    ul.addClass("ajax-loading");
-                    li.append("<img class='ajax-loader' src='/static/common/ajax-loader.gif' />");
+
+                    themesWrapper.addClass('ajax-loading');
+                    themes.filter('.current-theme').removeClass('current-theme');
+                    theme.addClass('ajax-loading');
+
                     $.ajax({
                         type: 'POST',
                         url: window.location.pathname,
                         data: {
                             themeName: themeName
                         },
-                        success: function(data) {
-                            flog("success", data);
-                            li.addClass("current-theme");
-                            updatePreview(li);
+                        success: function (data) {
+                            flog('success', data);
+                            theme.addClass('current-theme');
+                            theme.removeClass('ajax-loading');
+                            themesWrapper.removeClass('ajax-loading');
+                            updatePreview();
                         },
-                        error: function(resp) {
-                            li.removeClass("ajax-loading");
-                            Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                        error: function (resp) {
+                            theme.removeClass('ajax-loading');
+                            themesWrapper.removeClass('ajax-loading');
+                            Msg.error('An error occured doing the user search. Please check your internet connection and try again');
                         }
                     });
                 });
             });
-            
-            function updatePreview(li) {
-                var iframe = $("#previewPage");
-                var src = iframe.attr("src");
-                var i = src.indexOf("?");
-             	
+
+            function updatePreview() {
+                var iframe = $('#previewPage');
+                var src = iframe.attr('src');
+                var i = src.indexOf('?');
+                
                 // chop off any request params
                 if (i > 0) {
                     src = src.substring(0, i);
                 }
-                src += "?rnd=" + Math.floor((Math.random() * 100000) + 1)
-                flog("reload iframe", src);
-                iframe.attr("src", src);
+
+                src += '?rnd=' + Math.floor((Math.random() * 100000) + 1)
+                flog('reload iframe', src);
+                iframe.attr('src', src);
             }
-        </script>               
+        </script>
     </body>
 </html>
 
