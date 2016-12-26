@@ -1,0 +1,21 @@
+<html>
+    #parse("/theme/masterTemplate.html")
+    <head>
+        #@themeHeader( "Directory" )
+        #end
+    </head>
+    <body class="contacts">
+        #@themeBody()
+        <div class="container container-fluid">
+            <h2>My Address books</h2>
+            #foreach($folder in $user.child("AddressBooks").children.ofType.addressBook )
+            <div class="span3">
+                <div class="well">
+                    <h3><a href="$folder.href">$folder.name</a></h3>
+                </div>
+            </div>
+            #end
+        </div>
+        #end
+    </body>
+</html>

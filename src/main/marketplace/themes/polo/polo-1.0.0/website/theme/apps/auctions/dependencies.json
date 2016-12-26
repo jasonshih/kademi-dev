@@ -1,0 +1,46 @@
+{
+  "dependencies": [
+    {
+      "js": {
+        "group": "main",
+        "path": "/static/js/jquery.timeago.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/static/jquery.countdown/2.2.0/jquery.countdown.min.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/auctions/viewAuction.js"
+      }
+    },
+    {
+      "css": {
+        "cssMedia": "all",
+        "path": "/theme/apps/auctions/viewAuction.css"
+      }
+    },
+    {
+      "css": {
+        "cssMedia": "all",
+        "path": "/theme/apps/auctions/comingUpAuction.css"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/auctions/comingUpAuction.js"
+      }
+    }
+  ]
+}

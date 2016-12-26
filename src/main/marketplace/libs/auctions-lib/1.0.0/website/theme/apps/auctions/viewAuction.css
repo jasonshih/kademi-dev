@@ -1,0 +1,16 @@
+#auctions-list .auction-item .embed-responsive-item {
+    background: no-repeat 50% 50%;
+    background-size: contain;
+}
+
+.auction-detail .page-header {
+    margin-top: 0;
+}
+
+.auction-detail .page-header small {
+    font-size: 11px;
+}
+
+.auction-detail .auction-images {
+    padding-bottom: 20px;
+}

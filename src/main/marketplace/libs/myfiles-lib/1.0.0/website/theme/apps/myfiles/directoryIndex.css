@@ -1,0 +1,17 @@
+body.directory #fileupload {
+    margin: 0;
+    padding: 0;
+}
+
+#fileList tbody td:last-child {
+    width: 175px;
+}
+
+a.hidden {
+    display: none;
+}
+
+#table-files{
+    width: 100%;
+    max-width: 100%;
+}

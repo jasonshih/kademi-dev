@@ -1,0 +1,13 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/d3-lib/d3.min.js"
+            }
+        }
+    ]
+}

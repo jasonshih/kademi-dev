@@ -1,0 +1,35 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+    <title>Kademi Feedback</title>
+    <!--<link rel="stylesheet" href="/theme/apps/kfeedback/css/libs.css"/>-->
+    <link rel="stylesheet" href="/theme/apps/kfeedback/css/main.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.13/daterangepicker.min.css">
+
+</head>
+<body>
+<div class="kfeedback" ng-app="App">
+    <section ui-view></section>
+</div>
+
+<script>
+    var fwebsites = [];
+    #set ($wm = $page.find('/websites'))
+    #foreach($w in $wm.websites)
+        #set ($url = "http://${formatter.getDomainName($w)}/")
+        fwebsites.push({name: '$w.name', url: '$url'});
+    #end
+</script>
+
+<script src="http://code.highcharts.com/stock/highstock.src.js"></script>
+<script src="/theme/apps/kfeedback/js/libs.js">//</script>
+<script src="/theme/apps/kfeedback/js/clipboard.min.js">//</script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.13/daterangepicker.min.js">//</script>
+<script src="/theme/apps/kfeedback/js/angular-daterangepicker.js">//</script>
+<script src="/theme/apps/kfeedback/js/app.js?v=$formatter.now.time">//</script>
+</body>
+</html>

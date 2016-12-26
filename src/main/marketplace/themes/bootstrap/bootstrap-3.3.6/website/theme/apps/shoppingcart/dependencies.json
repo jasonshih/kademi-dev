@@ -1,0 +1,28 @@
+{
+    "appDependencies": [
+        {
+            "appId": "shoppingcart-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/shoppingcart/checkout.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/shoppingcart/checkout.js"
+            }
+        }
+    ]
+}

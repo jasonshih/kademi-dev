@@ -1,0 +1,128 @@
+.item-row .btn-remove-item{
+    color: black;
+}
+
+.item-row {
+    margin: 0 !important;
+    padding: 5px 0;
+}
+
+.item-row + .item-row {
+    border-top: 1px solid #dddddd;
+}
+
+.item-row > div {
+    padding: 0 5px;
+    float: left !important;
+}
+
+.item-row .item-photo {
+    width: 90px !important;
+}
+
+.item-row .item-quantity {
+    width: 100px !important;
+}
+
+.item-row .item-quantity .txt-quantity {
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.item-row .item-action {
+    width: 40px !important;
+}
+
+.item-row .item-price {
+    width: 135px !important;
+}
+
+.item-row .item-title {
+    width: calc(100% - 90px - 100px - 40px - 135px) !important;
+}
+
+.item-row .item-photo > div {
+    width: 80px;
+    height: 80px;
+    background: no-repeat 50% 50%;
+    background-size: cover;
+}
+
+@media (max-width: 599px) {
+    .item-row .item-photo {
+        width: 100px !important;
+    }
+
+    .item-row .item-title {
+        width: calc(100% - 100px) !important;
+    }
+
+    .item-row .item-quantity {
+        clear: both;
+    }
+
+    .item-row .item-photo > div {
+        width: 90px;
+        height: 90px;
+    }
+
+    .item-row .item-price {
+        width: calc(100% - 100px - 40px) !important;
+    }
+}
+
+.payment-option{
+    position: relative;
+}
+
+.payment-option > img{
+    position: relative;
+    max-height: 50px;
+    max-width: 100px;
+    z-index: 1;
+}
+
+.payment-option i{
+    position: absolute;
+    left: 25%;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    z-index: 3;
+    display:none;
+}
+
+.payment-option i.active{
+    display:block;
+}
+
+.center-content {
+    height: 80px;
+}
+
+.center-content > div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    padding: 0 5px;
+}
+
+.btn-login {
+    text-align: left !important;
+}
+
+.btn-login i {
+    line-height: 20px;
+}
+
+.cart-total {
+    background: #202020 !important;
+    color: #fff;
+    font-size: 20px;
+}
+
+#loginRegisterModal .row .devider:not(:last-child) {
+    border-right: 1px solid #ccc;
+}

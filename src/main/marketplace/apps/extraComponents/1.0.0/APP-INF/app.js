@@ -1,0 +1,1 @@
+controllerMappings.addComponent("extraComponents", "codeBlock", "html", "Code block", "Extra component");
