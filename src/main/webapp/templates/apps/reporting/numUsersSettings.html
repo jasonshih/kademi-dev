@@ -1,0 +1,36 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Group</label>
+        <div class="col-sm-12">
+            <select class="form-control select-group">
+                <option value="">- None/Default -</option>
+                #foreach ($group in $rootFolder.organisation.groups )
+                <option value="$group.name">$group.name - $!group.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Label</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control value-label" value=""/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Icon</label>
+        <div class="col-sm-12">
+            <!-- TODO: use this - https://itsjaviaguilar.com/fontawesome-iconpicker/ -->
+            <input class="form-control icp icp-auto value-icon" value="" type="text" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Details page</label>
+        <div class="col-sm-12">
+            <!-- TODO: allow the user to select a page, either a query or a html file -->
+            <input class="form-control value-link" value="" type="text" />
+        </div>
+    </div>
+</form>

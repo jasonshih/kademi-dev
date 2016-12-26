@@ -2,39 +2,30 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['singleValue'] = {
+    KEditor.components['numUsers'] = {
         init: function () {
-            flog('initSingleValue');
+            flog('numUsers');
         },
         settingEnabled: true,
-        settingTitle: 'Single Value Settings',
+        settingTitle: 'No. users Settings',
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "singleValue" component');
+            flog('initSettingForm "numUsers" component');
 
             return $.ajax({
-                url: '_components/singleValue?settings',
+                url: '_components/numUsers?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.select-query').on('change', function () {
+                    form.find('.select-group').on('change', function () {
                         var selectedQuery = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-query', selectedQuery);
+                        component.attr('data-group', selectedQuery);
                         keditor.initDynamicContent(dynamicElement);
 
-                    });
-
-                    form.find('.select-agg').on('change', function () {
-                        var selectedAgg = this.value;
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-agg', selectedAgg);
-
-                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     form.find('.value-label').on('change', function () {
@@ -64,11 +55,10 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "queryTable" component');
+            flog('showSettingForm "$group" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-query').val(dataAttributes['data-query']);
-            form.find('.select-agg').val(dataAttributes['data-agg']);
+            form.find('.select-group').val(dataAttributes['data-group']);
             form.find('.value-label').val(dataAttributes['data-label']);
             form.find('.value-icon').val(dataAttributes['data-icon']);
             form.find('.value-link').val(dataAttributes['data-link']);
