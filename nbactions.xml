@@ -11,7 +11,36 @@
                 <goal>compile</goal>
             </goals>
             <activatedProfiles>
-                <activatedProfile>run-grizzly</activatedProfile>
+                <activatedProfile>run-grizzly-test</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-run-local</actionName>
+            <displayName>run-local</displayName>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+            <activatedProfiles>
+                <activatedProfile>run-grizzly-test</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>war</packaging>
+                <packaging>ear</packaging>
+                <packaging>ejb</packaging>
+            </packagings>
+            <goals>
+                <goal>compile</goal>
+            </goals>
+            <properties>
+                <netbeans.deploy.debugmode>true</netbeans.deploy.debugmode>
+                <jpda.listen>maven</jpda.listen>
+                
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>run-grizzly-test</activatedProfile>
             </activatedProfiles>
         </action>
     </actions>

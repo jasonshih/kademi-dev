@@ -1,0 +1,3 @@
+script.disable_dynamic: true
+
+discovery.zen.ping.multicast.enabled: false
