@@ -1,17 +1,17 @@
 #if( !$height )
-#set( $height = 200 )
+    #set( $height = 200 )
 #end
 
 #if( !$title )
-#set( $title = "Query Table" )
+    #set( $title = "Query Table" )
 #end
 
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
 #set ($queryCompId = "query-component-" + $formatter.randomGuid)
 #if ($params.from)
-#set ($from = $params.from)
+    #set ($from = $params.from)
 #else
-#set ($from = 0)
+    #set ($from = 0)
 #end
 
 #set ($from = $formatter.toInteger($from))
@@ -21,7 +21,7 @@
 #set( $queryBean = $applications.Reporting.getQuery($query))
 #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
 
-<div class="panel panel-default panel-query-table" id="$queryCompId"  style="height: $!{height}px; min-height: 0; overflow: hidden">
+<div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow: hidden">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
 
@@ -31,44 +31,44 @@
     #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
     <table class="table table-striped">
         #if( $formatter.toBool($headers) )
-        <thead>
-            <tr>
-                #foreach( $field in $fields)
-                <th>$field</th>
-                #end
-            </tr>
-        </thead>
+            <thead>
+                <tr>
+                    #foreach( $field in $fields)
+                        <th>$field</th>
+                    #end
+                </tr>
+            </thead>
         #end
 
         <tbody id="${queryTableId}" class="query-table">
 
             #if( $results.hits.totalHits == 0 )
-            <tr>
-                <td colspan="$fields.size()" class="text-center">No results</td>
-            </tr>                    
-            #else                    
-            #set ($r = $paginator.totalRecords($formatter.toInteger($results.hits.totalHits)))
-            #set ($hitList = $formatter.newArrayList())
-            #foreach($row in $results.hits.hits )
-            #set ($r = $hitList.add($row))
-            #end
-            #foreach($row in $paginator.records($hitList))
-            <tr>
-                #foreach( $field in $fields)
-                <td>$formatter.format($!row.fields.get($field))</td>
+                <tr>
+                    <td colspan="$fields.size()" class="text-center">No results</td>
+                </tr>
+            #else
+                #set ($r = $paginator.totalRecords($formatter.toInteger($results.hits.totalHits)))
+                #set ($hitList = $formatter.newArrayList())
+                #foreach($row in $results.hits.hits )
+                    #set ($r = $hitList.add($row))
                 #end
-            </tr>
-            #end
+                #foreach($row in $paginator.records($hitList))
+                    <tr>
+                        #foreach( $field in $fields)
+                            <td>$formatter.format($!row.fields.get($field))</td>
+                        #end
+                    </tr>
+                #end
             #end
         </tbody>
     </table>
 
     #if( $formatter.toBool($showpaginator) )
-    <div class="panel-footer">      
-        <nav class="queryTablePaginator">
-            $!paginator.html
-        </nav>
-    </div>
+        <div class="panel-footer">
+            <nav class="queryTablePaginator">
+                $!paginator.html
+            </nav>
+        </div>
     #end
 </div>
 

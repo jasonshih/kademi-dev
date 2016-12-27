@@ -7,10 +7,6 @@
 
         settingTitle: 'Query Table Settings',
 
-        initKpiVis: function () {
-            flog('dateHistogram');
-        },
-
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "queryTable" component');
 
