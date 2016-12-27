@@ -12,7 +12,7 @@
 #else
 #set( $inverseMenu = false )
 #end
-<div class="navbar #if ($inverseMenu) navbar-inverse #else navbar-default #end" role="navigation">
+<div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
