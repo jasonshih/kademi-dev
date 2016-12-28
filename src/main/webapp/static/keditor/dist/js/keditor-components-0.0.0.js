@@ -1227,6 +1227,12 @@
                 '       </div>' +
                 '   </div>' +
                 '   <div class="form-group">' +
+                '       <label for="photo-height" class="col-sm-12">Height</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" id="photo-height" class="form-control" />' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
                 '       <label for="photo-width" class="col-sm-12">Linkable</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="checkbox" id="photo-linkable" />' +
@@ -1246,12 +1252,6 @@
                 '               <option value="" selected="selected">Current tab/window</option>' +
                 '               <option value="_blank">New tab/window</option>' +
                 '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-height" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="photo-height" class="form-control" />' +
                 '       </div>' +
                 '   </div>' +
                 '</form>'
@@ -1301,9 +1301,9 @@
                 bs3Modal: true,
                 pagePath: basePath,
                 basePath: basePath,
-                onSelectFile: function (url) {
+                onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var img = keditor.getSettingComponent().find('img');
-                    img.attr('src', url);
+                    img.attr('src', "/_hashes/files/" + hash);
                     self.showSettingForm(form, keditor.getSettingComponent(), options);
                 }
             });
