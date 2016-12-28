@@ -1,4 +1,4 @@
-
+<!-- orgTransactions.html -->
 #foreach($bucket in $applications.rewardStore.pointsBuckets )
 #if( $bucket.teamBased )
 <div class="panel panel-default">
@@ -7,6 +7,7 @@
         $bucket.title
     </div>    
     <div class="panel-body">
+        #set( $recentPoints = $applications.rewardStore.transactions($page.orgData, $bucket.name, null, null) )
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -16,11 +17,10 @@
                     <th>Reason</th>
                 </tr>
             </thead>
-            <tbody>
-                #set( $recentPoints = $applications.rewardStore.findPointsByLimit($bucket.name, 1000, $page.orgData) )
+            <tbody>                
                 #foreach( $p in $recentPoints )
                 <tr>
-                    <td>$p.date</td>
+                    <td>$formatter.formatDate($p.date)</td>
                     <td>
                         #if( $p.txType == "C" )
                         $p.numPoints
