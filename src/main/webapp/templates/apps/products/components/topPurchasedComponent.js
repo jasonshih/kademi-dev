@@ -84,4 +84,5 @@
         var b = (v === 'true');
         return b;
     }
+
 })(jQuery);

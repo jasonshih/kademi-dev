@@ -67,15 +67,22 @@
         }
     };
 
+    var startDate = templatingContext.params.startDate;
+    var finishDate = templatingContext.params.finishDate;
+    if (startDate && finishDate) {
+
+    }
+
     var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "productorders");
     templatingContext.searchResults = searchResults;
 </script>
 #end
 
-<div class="panel panel-default panel-query-table" #if ($height > 0) style="height: $!{height}px; min-height: 0; overflow: hidden" #end>
+#set ($tableId = "top-purchased-tbody-" + $formatter.randomGuid)
+
+<div class="panel panel-default panel-top-purchased-table" id="${tableId}" #if ($height > 0) style="height: $!{height}px; min-height: 0; overflow: hidden" #end>
     <div class="panel-heading">
         <i class="fa fa-arrow-up"></i> $title
-
     </div>
 
     #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
