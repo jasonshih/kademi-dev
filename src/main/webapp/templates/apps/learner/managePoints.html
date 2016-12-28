@@ -134,10 +134,6 @@
                                     <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
-                                    <a href="$p.id" class="btn btn-danger btnAddDebit" title="Create a debit against this credit record">
-                                        <span class="fa fa-dollar"></span>
-                                    </a>
-
                                 </td>
                             </tr>
                             #end
@@ -353,35 +349,7 @@
                 </div>
             </form>
         </div>
-
-        <div id="modalCreateDebit" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Create points debit record</h4>
-            </div>
-            <form method="post" action="" class="form-horizontal" id="new-points-form">
-                <div class="modal-body">
-                    <p class="lead">Create a debit record against the selected credit</p>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="numDebitPoints">No. debit points</label>
-                        <div class="col-md-9">
-                            <input type="text" name="numDebitPoints" required="true" id="numDebitPoints" class="numeric required form-control" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="reason">Reason</label>
-                        <div class="col-md-9">
-                            <input type="text" name="reason" required="true" id="" class="required form-control" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
-                </div>
-            </form>
-        </div>
+        
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
