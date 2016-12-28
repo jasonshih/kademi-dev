@@ -45,7 +45,7 @@
             pagePath: basePath,
             basePath: basePath,
             onSelectFile: function (url, relativeUrl, fileType, hash) {
-                var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
+                var imageUrl = '/_hashes/files/' + hash;
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
 

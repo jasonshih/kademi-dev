@@ -57,8 +57,8 @@
                         var target = $(id);
 
                         target.html(
-                                newDom.find(id).html()
-                                );
+                            newDom.find(id).html()
+                        );
 
                         if (typeof config.whenComplete === 'function') {
                             config.whenComplete.call(target, newDom, resp, status, xhr);

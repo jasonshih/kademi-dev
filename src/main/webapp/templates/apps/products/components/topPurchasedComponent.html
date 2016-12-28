@@ -69,8 +69,16 @@
 
     var startDate = templatingContext.params.startDate;
     var finishDate = templatingContext.params.finishDate;
-    if (startDate && finishDate) {
 
+    if (startDate && finishDate) {
+        queryJson.query.filtered.filter.bool.must.push({
+            "range": {
+                "orderedDate": {
+                    "gte":  new Date(formatter.formatDateISO8601(startDate)).toISOString(),
+                    "lte": new Date(formatter.formatDateISO8601(finishDate)).toISOString()
+                }
+            }
+        });
     }
 
     var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "productorders");
@@ -78,15 +86,10 @@
 </script>
 #end
 
-#set ($tableId = "top-purchased-tbody-" + $formatter.randomGuid)
-
 <div class="panel panel-default panel-top-purchased-table" id="${tableId}" #if ($height > 0) style="height: $!{height}px; min-height: 0; overflow: hidden" #end>
     <div class="panel-heading">
         <i class="fa fa-arrow-up"></i> $title
     </div>
-
-    #set( $paginator = $formatter.paginator().pageSize($itemsPerPage).skipToStart(false) )
-    #set( $results = $applications.Reporting.runQuery($queryBean, $paginator.start, $paginator.pageSize) )
 
     <table class="table table-striped">
         #if( $formatter.toBool($showHeaders) )

@@ -3,6 +3,14 @@
     var flog = KEditor.log;
     
     KEditor.components['topPurchased'] = {
+        init: function (contentArea, container, component, keditor) {
+            flog('init "topPurchased" component', component);
+
+            if (!component.attr('data-table-id')) {
+                component.attr('data-table-id', keditor.generateId('top-purchased'))
+            }
+        },
+
         settingEnabled: true,
         
         settingTitle: 'Top Purchased Settings',
