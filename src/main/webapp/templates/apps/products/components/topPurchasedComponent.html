@@ -46,6 +46,16 @@
                         "sum": {
                             "field": "quantity"
                         }
+                    },
+                    "productTitleHit": {
+                        "top_hits": {
+                            "_source": {
+                                "includes": [
+                                    "productTitle"
+                                ]
+                            },
+                            "size" : 1
+                        }
                     }
                 }
             }
@@ -110,7 +120,7 @@
 
                 #foreach($row in $searchResults.aggregations.productName.buckets)
                     <tr>
-                        <td>$row.key</td>
+                        <td>$row.aggregations.myProductTitle._source.productTitle.value</td>
                         <td>$formatter.formatCurrency($row.aggregations.quantity.value, false)</td>
                     </tr>
                 #end
