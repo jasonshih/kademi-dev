@@ -1,5 +1,5 @@
 #if( !$height )
-#set( $height = 200 )
+    #set( $height = 200 )
 #end
 
 #set( $queryBean = $page.queryBean )
@@ -8,7 +8,7 @@
 #set( $results = $applications.Reporting.runQuery($queryBean) )
 
 #if( !$label )
-#set( $label = $queryBean.name )
+    #set( $label = $queryBean.name )
 #end
 
 #set( $detailHref = "#" )
@@ -24,18 +24,18 @@
                 <div class="col-xs-9 text-right">
                     <h2>
                         #if( $results )
-                        #set( $aggr = $results.aggregations.get($agg) )
-                        #if( $aggr )
-                        $aggr.value
+                            #set( $aggr = $results.aggregations.get($agg) )
+                            #if( $aggr )
+                                $aggr.value
+                            #else
+                                #if( $agg )
+                                    Couldnt find aggregation $agg
+                                #else
+                                    Please enter an aggretation
+                                #end
+                            #end
                         #else
-                        #if( $agg )
-                        Couldnt find aggregation $agg
-                        #else
-                        Please enter an aggretation
-                        #end
-                        #end
-                        #else
-                        No current results
+                            No current results
                         #end
                     </h2>
                 </div>
@@ -43,6 +43,6 @@
         </div>
     </div>
     <div class="panel-footer text-center">
-        <span class="">$label</span>        
+        <span class="">$label</span>
     </div>
 </div>
