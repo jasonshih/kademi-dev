@@ -1,0 +1,12 @@
+
+#if( $store )
+#set( $balance = $applications.rewardStore.calcPointsBalance( $profile, $store) )
+#if( $balance )
+<h2>$balance points</h2>
+#else
+<i>No points in $store</i>
+#end
+#else
+<i>Please select a store</i>
+#end
+
