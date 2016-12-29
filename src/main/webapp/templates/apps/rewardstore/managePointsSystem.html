@@ -207,9 +207,10 @@
                                 <tr>
                                     <th>Points</th>
                                     <th>Issued Date</th>
+                                    <th>Expiry</th>
                                     <th>Issued To</th>
                                     <th>Reason</th>
-                                    <th>Expired</th>
+                                    <th>Status</th>                                    
                                     <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
@@ -220,6 +221,7 @@
                                 <tr>
                                     <td>$points.numPoints</td>
                                     <td>$formatter.formatDateTime($points.issuedDate)</td>
+                                    <td>$formatter.formatDateTime($points.expiryDate)</td>
                                     <td>
                                         #if( $points.issuedTo )
                                         #if( $points.issuedTo.asProfile() )
@@ -234,15 +236,13 @@
                                     <td>$!points.reason</td>
                                     <td>
                                         #if( $points.expired )
-                                        $formatter.formatDateTime($points.expiryDate)
+                                        <span class="label label-warning">Expired</span>
+                                        #elseif( $points.completelyUsed )
+                                        <span class="label label-info">Used</span>
                                         #else
-                                            #if( $points.debits )
-                                                #foreach( $debit in $points.debits )
-                                                <span class="label label-info">$debit.numPoints on $debit.issuedDate</span>
-                                                #end
-                                            #end
-
+                                        <span class="label label-success">Active</span>
                                         #end
+                                        
                                     </td>
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
