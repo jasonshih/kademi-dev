@@ -1,0 +1,35 @@
+
+#if( $store.length() > 0 )
+#set( $days = $formatter.toInteger($months) * 30 )
+#set($pEndDate = $formatter.addDays($formatter.now, $days))
+#set( $points = $applications.rewardStore.findExpiring( $store, $profile, $pEndDate) )
+#set( $pointsMonths = $points.groupByExpiryMonth )
+
+<table class="table table-striped" id="points-expiring">
+    <tbody>
+        #set($totalExpiring = 0)
+        #if( $pointsMonths.isEmpty() )
+        <tr>
+            <td colspan="2">No points expiring in next $months months</td>
+        </tr>
+        #else
+        #foreach($pg in $pointsMonths.entrySet())
+        <tr class="points-expiring-item">
+            #set($expiringYear = $formatter.getYear($pg.key))
+            #set($totalExpiring = $totalExpiring + $pg.value)
+            <th id="month-1-label">$formatter.formatJodaDate($pg.key, "d MMMM") $expiringYear</th>
+            <td id="month-1-value">$pg.value</td>
+        </tr>
+        #end
+        #end
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Total Points Expiring</th>
+            <td class="total-points-expiring">$totalExpiring</td>
+        </tr>
+    </tfoot>
+</table>
+#else
+<i>Please select a store</i>
+#end
