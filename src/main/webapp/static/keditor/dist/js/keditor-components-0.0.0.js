@@ -1294,7 +1294,10 @@
                 }
             });
 
-            var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
+            var basePath = window.location.pathname.replace('contenteditor', '');
+            if (keditor.options.basePath) {
+                basePath = keditor.options.basePath;
+            }
             var photoEdit = form.find('#photo-edit');
             photoEdit.mselect({
                 contentTypes: ['image'],
