@@ -78,14 +78,14 @@
     };
 
     var startDate = templatingContext.params.startDate;
-    var finishDate = templatingContext.params.finishDate;
+    var endDate = templatingContext.params.endDate;
 
-    if (startDate && finishDate) {
+    if (startDate && endDate) {
         queryJson.query.filtered.filter.bool.must.push({
             "range": {
                 "orderedDate": {
                     "gte":  new Date(formatter.formatDateISO8601(startDate)).toISOString(),
-                    "lte": new Date(formatter.formatDateISO8601(finishDate)).toISOString()
+                    "lte": new Date(formatter.formatDateISO8601(endDate)).toISOString()
                 }
             }
         });
