@@ -2,13 +2,10 @@
 
 <p class="lead">Last visit -  <abbr title="$formatter.formatDateISO8601($page.thisProfile.lastVisit)" class="timeago">$!page.thisProfile.lastVisit</abbr></p>
 
+#set( $results = $applications.Reporting.getDailyHits($profile) )
 
-
-#foreach($website in $page.find("/websites").children.ofType.website)
-#set( $visits = $page.userResource.dailyVisits($website.website) )
-
-<h3>$website.name</h3>
-#if( $visits.size() > 0 )
+#foreach( $entry in $results.entrySet() )
+<h3>$entry.key</h3>
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -17,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        #foreach($visit in $visits)
+        #foreach($visit in $entry.value)
         <tr>
             <td>$formatter.formatDate($visit.date)</td>
             <td>$visit.count</td>
@@ -25,10 +22,8 @@
         #end
     </tbody>
 </table>
-#else
-<i>No visits to website $website.name - $visits</i>
 #end
-#end
+
 
 <h2>All page views - filtered by date range</h2>
 <table class="table table-bordered table-striped">
