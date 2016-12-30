@@ -2,7 +2,7 @@
 
 <p class="lead">Last visit -  <abbr title="$formatter.formatDateISO8601($page.thisProfile.lastVisit)" class="timeago">$!page.thisProfile.lastVisit</abbr></p>
 
-#set( $results = $applications.Reporting.getDailyHits($profile) )
+#set( $results = $applications.Reporting.getDailyHits($page.extProfileBean) )
 
 #foreach( $entry in $results.entrySet() )
 <h3>$entry.key</h3>
