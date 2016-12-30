@@ -7,7 +7,7 @@ $(function () {
         $(document).on('pageDateChanged', function (e, startDate, endDate) {
             var uri = new URI(window.location.pathname + window.location.search);
             uri.addQuery('startDate', startDate);
-            uri.addQuery('finishDate', endDate);
+            uri.addQuery('endDate', endDate);
 
             flog('Page date changed: ' + startDate + ' - ' + endDate);
 
