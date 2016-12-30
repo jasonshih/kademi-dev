@@ -1,11 +1,12 @@
-#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
-#set( $prods = $applications.rewardStore.searchProducts($store, null, $category, 'title', false) )
 #set ($width = $formatter.toInteger($width))
 
-#if( $prods.size() > 0 )
-    #if ($prods.size() > $numberOfProducts)
-        #set( $prods =  $prods.subList(0, $numberOfProducts))
-    #end
+#set( $pointsBucket = $applications.rewardStore.findStore($store).reward )
+#set( $userBalance = $applications.rewardStore.pointsBalance($pointsBucket.name, $user) )
+
+#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+#set( $prods = $applications.rewardStore.productSearch($store, null, $category,$userBalance, 0,$numberOfProducts, 'finalPoints', false) )
+
+#if( $prods.hits.totalHits > 0 )
 
     #if ($layout == "grid")
         #set ($tableWidth = $width / 2)
@@ -21,9 +22,8 @@
             <tbody>
                 <tr>
                     <td>
-                        #foreach($p in $prods)
-                            #set ($prodPath = "/products/" + $p.productId)
-                            #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
+                        #foreach($p in $prods.hits.hits )
+                            #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.fields.product.value")
                             <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
                                 <tbody>
                                     <tr>
@@ -32,26 +32,26 @@
                                                 <tr>
                                                     <td>
                                                         #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                        #if( $p.primaryImageId )
-                                                            #set($bg = $prodUrl + "/${p.primaryImageId}/alt-600-400.png")
+                                                        #if( $p.fields.primaryImageHref.value )
+                                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}")
                                                         #end
-                                                        <a title="$p.title" href="${prodUrl}">
-                                                            <img src="$bg" width="100%" height="auto" alt="$p.title" style="display: block; border: 0;" />
+                                                        <a title="$p.fields.title.value" href="${prodUrl}">
+                                                            <img src="$bg" width="100%" height="auto" alt="$p.fields.title.value" style="display: block; border: 0;" />
                                                         </a>
-                                                        <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
-                                                        <b>Price: $p.finalPoints pts</b>
+                                                        <h4><a href="${prodUrl}">$p.fields.title.value</a></h4>
+                                                        <b>Price: $p.fields.finalPoints.value pts</b>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td height="40" valign="top">
                                                         <p>
-                                                            $!formatter.truncate( $formatter.toPlain( $!p.notes), 100)
+                                                            $!formatter.truncate( $formatter.toPlain( $p.fields.notes.value), 100)
                                                         </p>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <p><a title="$p.title" href="${prodUrl}">View detail</a></p>
+                                                        <p><a href="${prodUrl}">View detail</a></p>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -70,9 +70,8 @@
                 #set ($leftWidth = $width / 3)
                 #set ($rightWidth = $width - $leftWidth)
 
-                #foreach($p in $prods)
-                    #set ($prodPath = "/products/" + $p.productId)
-                    #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
+                #foreach($p in $products.hits.hits )
+                    #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.fields.product.value")
                     <tr>
                         <td valign="top" style="padding-bottom: 15px;">
                             <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
@@ -82,11 +81,11 @@
                                             <tr>
                                                 <td>
                                                     #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                    #if( $p.primaryImageId )
-                                                        #set($bg = $prodUrl + "/${p.primaryImageId}/alt-600-400.png")
+                                                    #if( $p.fields.primaryImageHref.value )
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}")
                                                     #end
-                                                    <a title="$p.title" href="${prodUrl}">
-                                                        <img src="$bg" width="100%" height="auto" alt="$p.title" style="display: block; border: 0;" />
+                                                    <a title="$p.fields.title.value" href="${prodUrl}">
+                                                        <img src="$bg" width="100%" height="auto" alt="$p.fields.title.value" style="display: block; border: 0;" />
                                                     </a>
                                                 </td>
                                             </tr>
@@ -97,14 +96,14 @@
                             <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
                                 <tr>
                                     <td class="wrapper">
-                                        <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
+                                        <h4><a href="${prodUrl}">$p.fields.title.value</a></h4>
                                         <p>
-                                            <b>Price: $p.finalPoints pts</b>
+                                            <b>Price: $p.fields.finalPoints.value pts</b>
                                         </p>
                                         <p>
-                                            $formatter.truncate( $formatter.toPlain( $!p.notes), 100)
+                                            $formatter.truncate( $formatter.toPlain( $p.fields.notes.value), 100)
                                         </p>
-                                        <p><a title="$p.title" href="${prodUrl}">Read more</a></p>
+                                        <p><a href="${prodUrl}">Read more</a></p>
                                     </td>
                                 </tr>
                             </table>
