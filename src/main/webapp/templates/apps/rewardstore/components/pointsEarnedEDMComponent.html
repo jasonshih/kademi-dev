@@ -1,0 +1,11 @@
+
+#if( $store.length() > 0 )
+#set( $months = $formatter.toInteger($months) * -1 )
+#set($startDate = $formatter.addMonths($formatter.now, $months))
+#set( $points = $applications.rewardStore.sumPoints( $profile, $store, $startDate, null) )
+
+<h2>Points earned: $points</h2>
+
+#else
+<i>Please select a store</i>
+#end
