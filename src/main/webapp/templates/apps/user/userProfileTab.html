@@ -1,6 +1,14 @@
 <h2>Daily visits - filtered by date range</h2>
+
+<p class="lead">Last visit -  <abbr title="$formatter.formatDateISO8601($page.thisProfile.lastVisit)" class="timeago">$!page.thisProfile.lastVisit</abbr></p>
+
+
+
 #foreach($website in $page.find("/websites").children.ofType.website)
+#set( $visits = $page.userResource.dailyVisits($website.website) )
+
 <h3>$website.name</h3>
+#if( $visits.size() > 0 )
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
@@ -9,7 +17,7 @@
         </tr>
     </thead>
     <tbody>
-        #foreach($visit in $page.userResource.dailyVisits($website.website))
+        #foreach($visit in $visits)
         <tr>
             <td>$formatter.formatDate($visit.date)</td>
             <td>$visit.count</td>
@@ -17,6 +25,9 @@
         #end
     </tbody>
 </table>
+#else
+<i>No visits to website $website.name - $visits</i>
+#end
 #end
 
 <h2>All page views - filtered by date range</h2>
@@ -34,7 +45,7 @@
     </thead>
     <tbody>
         #set( $history = $page.userResource.searchWebHits(null,null) )
-                        
+
         #foreach($hit in $history.hits.hits )
         <tr>
             <td>$hit.fields.reqHost.value</td>
