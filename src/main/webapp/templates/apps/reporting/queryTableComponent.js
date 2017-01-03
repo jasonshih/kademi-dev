@@ -17,6 +17,20 @@
                 success: function (resp) {
                     form.html(resp);
 
+                    form.find('.queryType').on('click', function () {
+                        var cls = this.value;
+
+                        form.find('.select-query').val('');
+                        form.find('.select-query option').addClass('hide');
+                        form.find('.'+cls).removeClass('hide');
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-query-type', cls);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.select-query').on('change', function () {
                         var selectedQuery = this.value;
                         var component = keditor.getSettingComponent();
@@ -92,7 +106,10 @@
             form.find('.txt-title').val(dataAttributes['data-title']);
             form.find('.show-headers').prop("checked", toBool(dataAttributes['data-headers']));
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
-            
+            form.find('.queryType[value='+dataAttributes['data-query-type']+']').prop("checked", true);
+            form.find('.select-query option').addClass('hide');
+            form.find('.'+dataAttributes['data-query-type']).removeClass('hide');
+
         }
     };
 
