@@ -10,6 +10,9 @@
     </head>
     <body>
         <h2>Query Table: $page.name</h2>
+        <a href="${page.href}?as=json" class="btn btn-info">JSON</a> |
+        <a href="${page.href}?as=csv" class="btn btn-info">CSV</a> |
+        
         <div id="queryTable">
             #set( $resp = $page.records )
 
