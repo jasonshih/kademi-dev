@@ -14,9 +14,8 @@
             #set( $resp = $page.records )
 
             <div id="queryResults">
-                #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.records.numRows) )
+                #set( $paginator = $formatter.paginator().pageSize(20).totalRecords($page.records.numRows) )
                 #set($records = $paginator.records($page.records.rows))
-                recs - $records.size()
                 
                 <table class="table table-responsive">
                     <thead>
