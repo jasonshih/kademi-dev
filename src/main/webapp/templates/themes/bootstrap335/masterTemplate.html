@@ -48,7 +48,8 @@
     <!-- Injected CSS sources -->
     #foreach($groupEntry in $templater.cssSources.entrySet())
     #foreach($cssFile in $groupEntry.value)
-    <link rel="stylesheet" type="text/css" href="$cssFile" />
+
+    <link rel="stylesheet" type="text/css" href="$cssFile" media="$groupEntry.key" />
     #end
     #end
     <!-- End injected CSS sources -->

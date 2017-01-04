@@ -1074,7 +1074,7 @@ function showQuizError(quiz, response, e) {
             '               <p class="error-text"></p>' +
             '           </div>' +
             '           <div class="modal-footer">' +
-            '               <button type="button" class="btn btn-primary" data-dismiss="modal">See error answers</button>' +
+            '               <button type="button" class="btn btn-primary" data-dismiss="modal">Review answers</button>' +
             '           </div>' +
             '       </div>' +
             '   </div>' +
@@ -1102,7 +1102,7 @@ function showQuizError(quiz, response, e) {
 
         modalTitle.html('Please try again');
         errorText.html('Your score was <b>' + response.data.thisAttemptScore + '</b>%. You need <b>' + response.data.requiredPassmarkPerc + '</b>% <to></to> pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
-        btnDismiss.html('See error answers');
+        btnDismiss.html('Review answers');
 
         var isBatched = quiz.hasClass('batched-quiz');
 
