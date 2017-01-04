@@ -22,7 +22,7 @@
     $.fn.pieChartAgg = function (options) {
         var containers = this;
 
-        flog("pieChartAgg", containers);
+        flog('pieChartAgg', containers);
         containers.each(function (i, n) {
             var cont = $(n);
             var config = $.extend({}, DEFAULT_PIECHART_OPTIONS, options);
@@ -31,15 +31,22 @@
             var graphOptions = {
                 aggName: null,
                 subAgg: null,
-                showLegend: false
+                showLegend: false,
+                queryTable: false
             };
 
-            var component = cont.closest('[data-type^="component-"]');
+            var component = cont.closest('[data-type^=component-]');
             if (component.length > 0) {
-                queryHref = "/queries/" + component.attr("data-query");
-                graphOptions.aggName = component.attr("data-agg");
-                graphOptions.showLegend = toBool(component.attr("data-legend"));
-                config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
+                var queryName = component.attr('data-query');
+                if (component.attr('data-query-type') === 'data-query-type') {
+                    graphOptions.queryTable = true;
+                    queryHref = '/queries/' + queryName + '/?as=json';
+                } else {
+                    queryHref = '/queries/' + queryName.replace('.query.json', '') + '/?run';
+                }
+                graphOptions.aggName = component.attr('data-agg');
+                graphOptions.showLegend = toBool(component.attr('data-legend'));
+                config.legendPosition = component.attr('data-legend-position') || config.legendPosition;
 
                 var dataColors = (component.attr('data-colors') || '').trim();
                 if (dataColors !== '') {
@@ -50,7 +57,7 @@
             loadGraphData(queryHref, graphOptions, {}, cont, config);
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
-                flog("piechart date change", graphOptions, cont, startDate, endDate);
+                flog('piechart date change', graphOptions, cont, startDate, endDate);
 
                 loadGraphData(queryHref, graphOptions, {
                     startDate: startDate,
@@ -61,11 +68,12 @@
     };
 
     function loadGraphData(href, graphOptions, opts, container, config) {
-        href = href + "?run&" + $.param(opts);
+        href = href + '?run&' + $.param(opts);
 
-        flog("loadGraphData", container, graphOptions.aggName, href);
+        flog('loadGraphData', container, graphOptions.aggName, href);
+
         $.ajax({
-            type: "GET",
+            type: 'GET',
             url: href,
             dataType: 'json',
             success: function (resp) {
@@ -78,10 +86,10 @@
 
     function showPieChart(resp, container, graphOptions, config) {
         var aggr = resp.aggregations[graphOptions.aggName];
-        var svg = container.find("svg");
+        var svg = container.find('svg');
         svg.empty();
 
-        flog("showPieChart", aggr, svg);
+        flog('showPieChart', aggr, svg);
         nv.addGraph(function () {
             var total = 0;
             for (var i in aggr.buckets) {
@@ -97,10 +105,10 @@
                     return d.doc_count;
                 })
                 .valueFormat(function (val) {
-                    return round((val / total * 100), 2) + "% (" + val + ")";
+                    return round((val / total * 100), 2) + '% (' + val + ')';
                 })
                 .donut(true)
-                .labelType("percent")
+                .labelType('percent')
                 .donutRatio(0.35)
                 .showLabels(true)
                 .showLegend(graphOptions.showLegend)
@@ -111,7 +119,7 @@
                 chart.color(config.colors);
             }
 
-            flog("select data", chart, svg.get(0));
+            flog('select data', chart, svg.get(0));
             d3.select(svg.get(0))
                 .datum(aggr.buckets)
                 .transition().duration(350)
@@ -122,7 +130,7 @@
 
             return chart;
         });
-        flog("done show pieChart");
+        flog('done show pieChart');
     }
 
     function toBool(v) {

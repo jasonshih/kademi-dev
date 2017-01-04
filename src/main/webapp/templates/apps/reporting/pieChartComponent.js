@@ -48,7 +48,23 @@
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.select-query').on('change', function () {
+                    var cbbQuery = form.find('.select-query');
+
+                    form.find('.queryType').on('click', function () {
+                        var cls = this.value;
+
+                        cbbQuery.val('');
+                        cbbQuery.find('option').addClass('hide');
+                        form.find('.' + cls).removeClass('hide');
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-query-type', cls);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    cbbQuery.on('change', function () {
                         var selectedQuery = this.value;
                         flog("selected", selectedQuery);
                         var component = keditor.getSettingComponent();
@@ -222,6 +238,10 @@
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
             form.find('.show-legend').prop("checked", toBool(dataAttributes['data-legend']));
+
+            form.find('.queryType[value=' + dataAttributes['data-query-type'] + ']').prop("checked", true);
+            form.find('.select-query option').addClass('hide');
+            form.find('.' + dataAttributes['data-query-type']).removeClass('hide');
 
             form.find('.colors-wrapper').html('');
             var dataColors = (dataAttributes['data-colors']).trim();
