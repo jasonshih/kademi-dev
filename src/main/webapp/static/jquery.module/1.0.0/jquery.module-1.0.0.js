@@ -1113,35 +1113,35 @@
             var self = this;
             var options = self.getOptions();
 
+            var modal = $('#modal-quiz-error');
+            if (modal.length === 0) {
+                modal = $(
+                    '<div id="modal-quiz-error" class="modal fade">' +
+                    '   <div class="modal-dialog">' +
+                    '       <div class="modal-content panel-danger">' +
+                    '           <div class="modal-header panel-heading">' +
+                    '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
+                    '               <h4 class="modal-title"></h4>' +
+                    '           </div>' +
+                    '           <div class="modal-body">' +
+                    '               <p class="error-text"></p>' +
+                    '           </div>' +
+                    '           <div class="modal-footer">' +
+                    '               <button type="button" class="btn btn-primary" data-dismiss="modal">Review incorrect answers</button>' +
+                    '           </div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>'
+                );
+
+                modal.appendTo(document.body);
+            }
+
+            var modalTitle = modal.find('.modal-title');
+            var errorText = modal.find('.error-text');
+            var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
+
             if (response.data) {
-                var modal = $('#modal-quiz-error');
-                if (modal.length === 0) {
-                    modal = $(
-                        '<div id="modal-quiz-error" class="modal fade">' +
-                        '   <div class="modal-dialog">' +
-                        '       <div class="modal-content panel-danger">' +
-                        '           <div class="modal-header panel-heading">' +
-                        '               <button type="button" data-dismiss="modal" class="close">&times;</button>' +
-                        '               <h4 class="modal-title"></h4>' +
-                        '           </div>' +
-                        '           <div class="modal-body">' +
-                        '               <p class="error-text"></p>' +
-                        '           </div>' +
-                        '           <div class="modal-footer">' +
-                        '               <button type="button" class="btn btn-primary" data-dismiss="modal">Review incorrect answers</button>' +
-                        '           </div>' +
-                        '       </div>' +
-                        '   </div>' +
-                        '</div>'
-                    );
-
-                    modal.appendTo(document.body);
-                }
-
-                var modalTitle = modal.find('.modal-title');
-                var errorText = modal.find('.error-text');
-                var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
-
                 if (response.data.numAttempts && response.data.numAttempts >= response.data.maxAttempts) {
                     flog('[jquery.module] Reached maximum attempts');
 
@@ -1190,6 +1190,13 @@
                     });
                 }
 
+                modal.modal('show');
+            } else if( response.messages) {
+                flog('[jquery.module] we have messages..');
+                modalTitle.html('Quiz invalid');
+                errorText.html('The quiz could not be completed because <b>' + response.messages + '</b>');
+                btnDismiss.html('Close');                                
+                
                 modal.modal('show');
             } else {
                 self.showApology('check your answers');

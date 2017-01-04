@@ -1087,17 +1087,17 @@ function showQuizError(quiz, response, e) {
     var errorText = modal.find('.error-text');
     var btnDismiss = modal.find('.modal-footer button[data-dismiss=modal]');
 
-    if (response.data.numAttempts >= response.data.maxAttempts) {
+    if (response.data && response.data.numAttempts >= response.data.maxAttempts) {
         flog('Reached maximum attempts');
 
-        modalTitle.html('Reached maximum attempts');
+        modalTitle.html('Reached maximum attempts. Please contact the site administrator if you would like to re-attempt the module.');
         errorText.html('You have answered this quiz incorrectly!<br />' + response.messages[0]);
         btnDismiss.html('Close and continue');
 
         modal.off('hide.bs.modal').on('hide.bs.modal', function () {
-            quizSuccessHandle(quiz, e);
+
         });
-    } else {
+    } else if( response.data ) {
         flog('Answered this quiz incorrectly');
 
         modalTitle.html('Please try again');
@@ -1134,6 +1134,12 @@ function showQuizError(quiz, response, e) {
                 inp.addClass('error');
             });
         });
+    } else {
+        flog('Quiz invalid for some other reason');
+        modalTitle.html('Quiz invalid');
+        errorText.html('The quiz could not be completed because <b>' + response.messages + '</b>');
+        btnDismiss.html('Close');
+        
     }
 
     modal.modal('show');
