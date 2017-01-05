@@ -12,6 +12,11 @@
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/manageExtraField.js">//</script>
+        <style>
+            #editor-frame {
+                border: 1px solid #ddd;
+            }
+        </style>        
     </head>
     <body>
         <form action="" method="POST" class="manageRewardForm" role="form">
@@ -268,9 +273,10 @@
                     </div>
 
                     <div class="tab-pane Details" id="rewardContent">
-                        <i>This copy will sit next to the image and tell the user about the competition or reward.</i>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                        </div>
 
-                        <textarea cols="120" name="details" rows="10" class="htmleditor" placeholder="Enter the details here">$formatter.htmlEncode($page.details)</textarea>
 
                         <br/>
                         <i>This copy will be displayed to the winners.</i>
@@ -502,6 +508,7 @@
 
                 initRewardImages();
                 initManageExtraField();
+                initEditorFrame();
             });
 
             function showHidePointsOrgType() {
@@ -510,6 +517,12 @@
                 } else {
                     $(".pointsOrgType").hide();
                 }
+            }
+            function initEditorFrame() {
+                flog('initEditorFrame');
+
+                var editorFrame = $('#editor-frame');
+                editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
             }
 
         </script>
