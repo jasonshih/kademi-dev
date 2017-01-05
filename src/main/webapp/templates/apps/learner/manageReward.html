@@ -16,7 +16,7 @@
             #editor-frame {
                 border: 1px solid #ddd;
             }
-        </style>        
+        </style>
     </head>
     <body>
         <form action="" method="POST" class="manageRewardForm" role="form">
@@ -320,14 +320,6 @@
                     </div>
 
                     <div class="tab-pane" id="entryForm">
-                        <div class="entryFormItem">
-                            $formatter.checkbox("staticMessageEnabled", "staticMessageEnabled", $page.staticMessageEnabled)
-                            <label for="staticMessageEnabled" class="control-label">Display static message</label>
-                            <div class="entryFormItemDetails">
-                                <label for="staticMessage" class="control-label">Please enter the message to display here</label>
-                                <textarea id="staticMessage" class="form-control" name="staticMessage">$!page.staticMessage</textarea>
-                            </div>
-                        </div>
                         <div class="entryFormItem">
                             $formatter.checkbox("userTextEnabled", "userTextEnabled", $page.userTextEnabled)
                             <label for="userTextEnabled" class="control-label">User enters text</label>
