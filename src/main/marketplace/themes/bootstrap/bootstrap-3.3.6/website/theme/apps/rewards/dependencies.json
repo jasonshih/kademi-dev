@@ -1,0 +1,16 @@
+{
+    "appDependencies": [        
+        {
+            "appId": "rewards-lib",
+            "branch": "1.0.0"
+        }
+    ],    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewards/competition.js"
+            }
+        }
+    ]
+}
