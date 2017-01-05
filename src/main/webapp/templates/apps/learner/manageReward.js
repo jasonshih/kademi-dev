@@ -124,7 +124,7 @@ function initManagePoints() {
 
 }
 
-function initEditReward(quiz) {
+function initEditReward() {
 //    try {
         flog("initEditReward1");
         initHtmlEditors($(".htmleditor"));
@@ -174,7 +174,7 @@ function initEditReward(quiz) {
         initEntryFormEditing();
         initQuizBuilder();
         initRestrictions();
-        var quizContainer = $(".quizContainer");
+
         flog("initEditReward9");
 //        loadQuizEditor(quizContainer, quiz);
 //    } catch (e) {
@@ -200,7 +200,7 @@ function initEditorFrame() {
         var data = $.parseJSON(e.originalEvent.data);
         if (data.isSaved) {
             var resp = data.resp;
-            onArticleSaved(resp);
+            Msg.info("Saved content");
         } else {
             iframeUrl = data.url;
         }
@@ -208,7 +208,7 @@ function initEditorFrame() {
 
     var editorFrame = $('#editor-frame');
     editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
-   
+
 }
 
 
