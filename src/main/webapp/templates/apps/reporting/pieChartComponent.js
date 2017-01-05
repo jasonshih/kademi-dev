@@ -244,7 +244,7 @@
             form.find('.' + dataAttributes['data-query-type']).removeClass('hide');
 
             form.find('.colors-wrapper').html('');
-            var dataColors = (dataAttributes['data-colors']).trim();
+            var dataColors = (dataAttributes['data-colors'] || '').trim();
             if (dataColors !== '') {
                 $.each(dataColors.split(','), function (i, value) {
                     self.addColor(form, value);

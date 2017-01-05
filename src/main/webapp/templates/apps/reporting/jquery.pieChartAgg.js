@@ -37,8 +37,9 @@
 
             var component = cont.closest('[data-type^=component-]');
             if (component.length > 0) {
+                flog('Is pieChartComponent', component);
                 var queryName = component.attr('data-query');
-                if (component.attr('data-query-type') === 'data-query-type') {
+                if (component.attr('data-query-type') === 'queryTable') {
                     graphOptions.queryTable = true;
                     queryHref = '/queries/' + queryName + '/?as=json';
                 } else {
@@ -68,7 +69,7 @@
     };
 
     function loadGraphData(href, graphOptions, opts, container, config) {
-        href = href + '?run&' + $.param(opts);
+        href = href + $.param(opts);
 
         flog('loadGraphData', container, graphOptions.aggName, href);
 
