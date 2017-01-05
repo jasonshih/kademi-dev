@@ -1,3 +1,6 @@
+var iframeUrl;
+var win = $(window);
+
 function initManagePoints() {
     initSelectAll();
 
@@ -122,17 +125,32 @@ function initManagePoints() {
 }
 
 function initEditReward(quiz) {
-    try {
+//    try {
+        flog("initEditReward1");
         initHtmlEditors($(".htmleditor"));
+        flog("initEditReward2");
         $("form.manageRewardForm").forms({
             callback: function (resp) {
                 flog("done", resp);
+
+                var editorFrame = $('#editor-frame');
+                flog("save content. editorFrame=", editorFrame);
+                var postData = {
+                    url: window.location.href.split('#')[0],
+                    triggerSave: true,
+                    pageName: getFileName('index.html'),
+                    resp: resp
+                };
+
+                editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+
                 Msg.success("Saved ok");
             },
             error: function () {
                 Msg.error("Some information is not valid. Please check the reward details");
             }
         });
+        flog("initEditReward3");
 
         $("body").on("submitForm", "form", function (e) {
             var form = $(e.target);
@@ -157,11 +175,42 @@ function initEditReward(quiz) {
         initQuizBuilder();
         initRestrictions();
         var quizContainer = $(".quizContainer");
-        loadQuizEditor(quizContainer, quiz);
-    } catch (e) {
-        flog("exception in initEditReward", e);
+        flog("initEditReward9");
+//        loadQuizEditor(quizContainer, quiz);
+//    } catch (e) {
+//        flog("exception in initEditReward", e);
+//    }
+}
+
+function showHidePointsOrgType() {
+    if ($("select.pointsType").val() == "POINTS_ORG") {
+        $(".pointsOrgType").show();
+    } else {
+        $(".pointsOrgType").hide();
     }
 }
+function initEditorFrame() {
+    flog('initEditorFrame');
+
+    flog('initPostMessage');
+
+    win.on('message', function (e) {
+        flog('On got iframe message', e, e.originalEvent);
+
+        var data = $.parseJSON(e.originalEvent.data);
+        if (data.isSaved) {
+            var resp = data.resp;
+            onArticleSaved(resp);
+        } else {
+            iframeUrl = data.url;
+        }
+    });
+
+    var editorFrame = $('#editor-frame');
+    editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
+   
+}
+
 
 function initRestrictions() {
     var form = $(".addRestrictionForm");
@@ -508,7 +557,7 @@ var searchOptions = {
 function initHistorySearch() {
     $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
         flog("initHistorySearch: pageDateChanged", initial);
-        if( initial ) {
+        if (initial) {
             flog("Ignore initial");
             return;
         }

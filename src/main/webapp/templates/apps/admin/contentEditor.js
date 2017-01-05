@@ -1,10 +1,9 @@
 var win = $(window);
 
-function doPostMessage(data, url) {
-    flog('doPostMessage', data);
-
+function doPostMessage(data, url) {    
     data.from = 'keditor';
     var dataStr = JSON.stringify(data);
+    flog('doPostMessage', data, window.parent);
     window.parent.postMessage(dataStr, url);
 }
 
@@ -38,17 +37,18 @@ function initColorPicker(target, onChangeHandle) {
     });
 }
 
-function initContentEditorPage(fileName) {
-    flog('initContentEditorPage', fileName);
+function initContentEditorPage(fileName) {    
 
     var body = $(document.body);
     var url = getParam('url') || '';
     if (url && url !== 'undefined') {
+        flog('initContentEditorPage url=', url);
         body.addClass('embedded-iframe');
         doPostMessage({
             url: window.location.href.split('#')[0]
         }, url);
     } else {
+        flog('initContentEditorPage fileName=', fileName);
         win.on({
             keydown: function (e) {
                 if (e.ctrlKey && e.keyCode === keymap.S) {
@@ -68,7 +68,12 @@ function initContentEditorPage(fileName) {
     win.on('resize', function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
-            $('#content-area .keditor-content-area').css('min-height', win.height() - +body.css('padding-top').replace('px', ''));
+            var bd = $(document.body);
+            var paddingTop = bd.css('padding-top');
+            if( paddingTop ) {
+                paddingTop = paddingTop.replace('px', '');
+                $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
+            }
         }, 100);
     }).trigger('resize');
 

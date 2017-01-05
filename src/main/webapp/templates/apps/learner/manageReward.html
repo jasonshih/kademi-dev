@@ -510,21 +510,6 @@
                 initManageExtraField();
                 initEditorFrame();
             });
-
-            function showHidePointsOrgType() {
-                if ($("select.pointsType").val() == "POINTS_ORG") {
-                    $(".pointsOrgType").show();
-                } else {
-                    $(".pointsOrgType").hide();
-                }
-            }
-            function initEditorFrame() {
-                flog('initEditorFrame');
-
-                var editorFrame = $('#editor-frame');
-                editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
-            }
-
         </script>
     </body>
 </html>
