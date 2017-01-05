@@ -92,7 +92,7 @@
         flog('showPieChart', svg);
         nv.addGraph(function () {
             var total = 0;
-            var data;
+            var data = [];
 
             if (graphOptions.queryTable) {
                 for (var i = 0; i < resp.headers.length; i++) {
@@ -110,6 +110,8 @@
                     total += b.doc_count;
                 }
             }
+
+            flog('Data to rendering pieChart', data);
 
             var chart = nv.models.pieChart()
                 .x(function (d) {
