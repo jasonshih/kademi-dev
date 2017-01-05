@@ -86,16 +86,29 @@
     }
 
     function showPieChart(resp, container, graphOptions, config) {
-        var aggr = resp.aggregations[graphOptions.aggName];
         var svg = container.find('svg');
         svg.empty();
 
-        flog('showPieChart', aggr, svg);
+        flog('showPieChart', svg);
         nv.addGraph(function () {
             var total = 0;
-            for (var i in aggr.buckets) {
-                var b = aggr.buckets[i];
-                total += b.doc_count;
+            var data;
+
+            if (graphOptions.queryTable) {
+                for (var i = 0; i < resp.headers.length; i++) {
+                    data.push({
+                        key: resp.headers[i],
+                        doc_count: resp.rows[0][i]
+                    });
+                }
+                total = resp.numRows;
+            } else {
+                var aggr = resp.aggregations[graphOptions.aggName];
+                data = aggr.buckets;
+                for (var i in data) {
+                    var b = data[i];
+                    total += b.doc_count;
+                }
             }
 
             var chart = nv.models.pieChart()
@@ -122,10 +135,9 @@
 
             flog('select data', chart, svg.get(0));
             d3.select(svg.get(0))
-                .datum(aggr.buckets)
+                .datum(data)
                 .transition().duration(350)
                 .call(chart);
-
 
             nv.utils.windowResize(chart.update);
 
