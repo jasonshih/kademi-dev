@@ -12,6 +12,9 @@
 <div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-queryname="$query" data-querytype="$queryType">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
+        #if($queryType == 'queryTable')
+        <a download="data.csv" href="/queries/${query}?as=csv" class="pull-right"><i class="fa fa-download"></i> CSV</a>
+        #end
     </div>
 
     <table class="table table-striped">
