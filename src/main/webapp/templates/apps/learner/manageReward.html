@@ -11,15 +11,18 @@
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/manageExtraField.js">//</script>
+
         <style>
             #editor-frame {
                 border: 1px solid #ddd;
             }
+            .form-actions {
+                display: none !important;
+            }
         </style>
     </head>
     <body>
-        <form action="" method="POST" class="manageRewardForm" role="form">
+        <form action="" method="POST" class="manageRewardForm" role="form" novalidate="true">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
@@ -55,6 +58,7 @@
                         <li class=""><a href="#entryForm" data-toggle="tab">Entry Form</a></li>
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
                         <li class=""><a href="#entries" data-toggle="tab">Entries</a></li>
+                        <li class=""><a href="#terms" data-toggle="tab">T's and C's</a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -116,32 +120,6 @@
                                     </td>
                                 </tr>
 
-                                <!--<tr>
-                                    <td>Points system</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-4">
-                                                <select name="pointsType" class="pointsType form-control">
-                                                    $formatter.option("", "No points system", $page.reward.pointsType)
-                                                    #foreach($st in $page.pointsOptionsMap.entrySet())
-                                                    $formatter.option($st.key, $st.value, $page.pointsType)
-                                                    #end
-                                                </select>
-                                            </div>
-                                            <div class="col-sm-3">
-                                                <span class="pointsOrgType">To organisation type:</span>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <select name="pointsOrgType" class="pointsOrgType form-control" style="float: none">
-                                                    $formatter.option("", "[Any]", $page.pointsOrgType)
-                                                    #foreach($orgType in $page.orgTypes)
-                                                    $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
-                                                    #end
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>-->
                                 <tr>
                                     <td>One per recipient</td>
                                     <td>
@@ -158,6 +136,22 @@
                                     </td>
                                 </tr>
 
+                                <tr>
+                                    <td>Allow anonymous</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        $formatter.checkbox("allowAnon", $page.allowAnon)
+                                                        <i>Check this if you want to allow non-logged in users to submit entries</i>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
                                 <tr>
                                     <td>Template</td>
                                     <td>
@@ -227,49 +221,7 @@
                                 </tr>
                                 -->
                             </tbody>
-                        </table>
-                        <div class="panel panel-default panel-fields">
-                            <div class="panel-heading">
-                                <i class="clip-question"></i> Custom fields for this reward:
-                            </div>
-                            <div class="panel-body">
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-extra-field"><i class="fa fa-plus"></i> Add custom field</button>
-                                </p>
-                                <table id="table-extra-field" class="table table-hover table-stripled" data-group-href="$page.href">
-                                    <colgroup>
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col />
-                                        <col style="width: 150px" />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Text</th>
-                                            <th></th>
-                                            <th></th>
-                                            <th class="action">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        #foreach($field in $page.extraFields.entrySet())
-                                        <tr class="extra-field">
-                                            <td>
-                                                <input type="hidden" value="$field.key" name="key" />
-                                                <input type="hidden" value="$field.value" name="value" />
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        #end
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        </table>                        
                     </div>
 
                     <div class="tab-pane Details" id="rewardContent">
@@ -321,20 +273,11 @@
 
                     <div class="tab-pane" id="entryForm">
                         <div class="entryFormItem">
-                            $formatter.checkbox("userTextEnabled", "userTextEnabled", $page.userTextEnabled)
-                            <label for="userTextEnabled" class="control-label">User enters text</label>
-                            <div class="entryFormItemDetails">
-                                <label for="userTextMessage" class="control-label">Please enter some instructions for the user</label>
-                                <textarea id="userTextMessage" class="form-control userTextMessage" name="userTextMessage">$!page.userTextMessage</textarea>
-                            </div>
-                        </div>
-
-                        <div class="entryFormItem">
                             $formatter.checkbox("userUploadEnabled", "userUploadEnabled", $page.userUploadEnabled)
                             <label for="userUploadEnabled" class="control-label">User uploads image</label>
                         </div>
 
-                        <div class="entryFormItem">
+                        <div class="entryFormItem" style='min-height: 700px; overflow-y: auto'>
                             $formatter.checkbox("quizEnabled", "quizEnabled", $page.quizEnabled)
                             <label for="quizEnabled" class="control-label">Form</label>
                             <!--
@@ -349,21 +292,10 @@
                             </div>
                             -->
                             <p>Please enter the HTML for the quiz or survey below</p>
-                            <textarea name="quizHtml" class="col-md-12" style="min-height: 200px">$!page.quizHtml</textarea>
-                            <br/>
-                            <h3>Quiz</h3>
-                            <p>If you would like this to be a quiz, please enter answers below. If not provided answers will not be checked.</p>
 
-                            #foreach($i in [1..5])
-                            <div class="form-group">
-                                <label for="answer1" class="col-sm-3 control-label">Answer $i</label>
-                                <div class="col-sm-8">
-                                    #set($answerName = "answer" + $i)
-                                    <input name="$answerName" type="text" class="form-control" id="answer${i}" placeholder="Answer $i" value="$!page.actualAnswers.get($answerName)"/>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            #end
+                            <!-- the forms validate function will set this hidden input with content from the form builder -->
+                            <textarea style="display: none" name="quizHtml" id="quizHtml" >$!page.quizHtml</textarea>
+                            <div id="entryFormBuilder" class="col-md-12"></div>
                         </div>
 
                     </div>
@@ -386,6 +318,10 @@
                         </ul>
                     </div>
 
+                    <div class="tab-pane" id="terms">
+                        <textarea cols="120" name="terms" rows="10" class="htmleditor" >$!page.terms</textarea>
+                    </div>
+                    
                     <div class="tab-pane" id="entries">
                         <div class="well reset-margin-bottom">
                             <table class="entriesLinks">
@@ -453,34 +389,7 @@
                 </div>
             </form>
         </div>
-
-        <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add custom field</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="$page.href" method="POST">
-                    <input id="extra-field-value" type="hidden" name="addFieldValue" />
-                    <div class="form-group">
-                        <label for="extra-field-name" class="control-label col-md-4">Name:</label>
-                        <div class="col-md-8">
-                            <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="extra-field-text" class="control-label col-md-4">Text:</label>
-                        <div class="col-md-8">
-                            <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
-            </div>
-        </div>
+       
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
@@ -499,8 +408,9 @@
                 $('.TabNav a:first').tab('show');
 
                 initRewardImages();
-                initManageExtraField();
                 initEditorFrame();
+
+
             });
         </script>
     </body>

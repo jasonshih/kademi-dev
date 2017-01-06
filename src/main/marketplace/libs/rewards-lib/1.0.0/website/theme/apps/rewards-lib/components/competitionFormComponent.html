@@ -1,5 +1,8 @@
 <div class="competitionForm">
-
+    <div style="display: none" class="thankyou">
+        <h3>Thank you!</h3>
+        <p class="lead">Thank you for entering.</p>
+    </div>
     #if( $page.entriesForUser.size() == 0 )
     <form class="entryForm" method="POST" action="$request.absolutePath">
         <input type="hidden" name="entry" value="true"/>
@@ -9,55 +12,30 @@
         <p class="lead">Submit as $user.formattedName</p>
         #else
 
-        <input type="hidden" name="contactForm" value="$!path">
-        #if ($firstName == "true")
         <div class="form-group">
             <label class="col-sm-3 control-label" for="firstName">First name</label>
             <div class="col-sm-9">
                 <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
             </div>
         </div>
-        #end
-        #if ($surName == "true")
         <div class="form-group">
             <label class="col-sm-3 control-label" for="surName">Surname</label>
             <div class="col-sm-9">
                 <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
             </div>
         </div>
-        #end
-        #if ($email == "true")
         <div class="form-group">
             <label class="col-sm-3 control-label" for="email">Email</label>
             <div class="col-sm-9">
                 <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
             </div>
         </div>
-        #end
-        #if ($company == "true")
-        <div class="form-group">
-            <label class="col-sm-3 control-label" for="company">Company</label>
-            <div class="col-sm-9">
-                <input type="text" name="company" id="company" class="form-control" placeholder="Enter your company name" />
-            </div>
-        </div>
-        #end
-        #if ($phone == "true")
         <div class="form-group">
             <label class="col-sm-3 control-label" for="phone">Phone</label>
             <div class="col-sm-9">
                 <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
             </div>
         </div>
-        #end
-        #if ($message == "true")
-        <div class="form-group">
-            <div class="col-sm-offset-3 col-sm-9">
-                <textarea placeholder="Tell us how we can help" rows="10" class="form-control" name="message"></textarea>
-            </div>
-        </div>
-        #end
-
 
 
         #if( $contactPage.hasOptins() )
@@ -82,21 +60,6 @@
             </div>
         </div>
         #end    
-        #end
-
-
-        #if($page.staticMessageEnabled )
-        <div class="entryFormItem staticTextItem">
-            $!page.staticMessage
-        </div>
-        #end
-
-        #if($page.userTextEnabled )
-        <div class="entryFormItem enterTextItem">
-            <p>$!page.userTextMessage</p>
-
-            <textarea name="message"></textarea>
-        </div>
         #end
 
         #if($page.userUploadEnabled )
@@ -124,14 +87,25 @@
         #end
 
         #if($page.quizEnabled )
-        <div class="entryFormItem quizItem viewQuiz">$!page.quizHtml</div>
+        <div class="entryFormItem quizItem viewQuiz" style='display: none'>$!page.quizHtml</div>
         #end
         #if( $page.isEnterable() )
-        <button class="enter btn btn-success">Submit your entry</button>
+
+        <div class="form-group">            
+            <label for="terms">
+                <input id="terms" name="terms" required="true" class="required" type="checkbox"/>
+                Please check this box to confirm you have read our terms and conditions*                
+                <a href="terms" target="_blank"> Click here to view full terms and conditions. </a>
+            </label>
+            
+        </div>            
+
+        <button class="enter btn btn-success" type="submit">Submit your entry</button>
         #end
     </form>
     #else
     <div class="entered">
+        <p class="lead">Thank you for entering!</p>
         #if($page.userUploadEnabled )
         <div class="entryFormItem uploadItem readOnly">
             <h3>Photo Gallery</h3>
@@ -157,6 +131,7 @@
         #end
     </div>
     <div style="clear: both"></div>
-
     #end
+
+
 </div>

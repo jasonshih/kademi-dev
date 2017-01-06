@@ -3,18 +3,22 @@
  */
 $(function () {
     $("form.entryForm").forms({
-        callback: function() {
-            window.location.reload();
+        onSuccess: function (resp, form) {
+            flog("onSuccess", resp, form);
+            var f = $(form);
+            flog("hide", f);
+            f.hide(1000);
+            f.closest(".competitionForm").find(".thankyou").show(1000);
         }
     });
     $("#myUploaded").mupload({
         url: "uploads/",
         buttonText: "Upload a photo",
-        oncomplete: function(data, name, href) {
+        oncomplete: function (data, name, href) {
             $("form input[name=userAttachmentHash]").val(name);
             var divViewUploaded = $("div.viewUploaded");
             var img = divViewUploaded.find("img");
-            if( img.length == 0 ) {
+            if (img.length == 0) {
                 img = $("<img/>");
                 divViewUploaded.empty();
                 divViewUploaded.append(img);
@@ -23,20 +27,27 @@ $(function () {
             pulseBorder(divViewUploaded);
         }
     });
-    $('.photos a').lightBox({
-        imageLoading: '/static/images/lightbox-ico-loading.gif',
-        imageBtnClose: '/static/images/lightbox-btn-close.gif',
-        imageBtnPrev: '/static/images/lightbox-btn-prev.gif',
-        imageBtnNext: '/static/images/lightbox-btn-next.gif',
-        imageBlank: '/static/images/lightbox-blank.gif',
-        containerResizeSpeed: 350
-    } );
+
+    var rewardQuizes = $(".viewQuiz");
+    rewardQuizes.each(function (i, n) {
+        var quiz = $(n);
+        var json = quiz.text();
+        quiz.text("");
+        quiz.formRender({
+            dataType: 'json',
+            formData: json,
+            labelClasses : "col-sm-3 control-label",
+            inputClasses : "form-control"
+        });
+        quiz.show();
+    });
+
     checkViewUploaded();
 });
 function checkViewUploaded() {
     var div = $(".viewUploaded");
     log("checkViewUploaded", div);
-    if( div.find("img").length == 0 ) {
+    if (div.find("img").length == 0) {
         div.addClass("noImage");
     } else {
         div.removeClass("noImage");

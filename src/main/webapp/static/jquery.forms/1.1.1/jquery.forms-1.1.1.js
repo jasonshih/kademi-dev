@@ -124,6 +124,7 @@
         hrefErrorMessage: 'Please enter valid website address',
         phoneErrorMessage: 'Please enter valid phone number',
         animationDuration: 150,
+        ignoreContainers: null,
         renderMessageWrapper: function (messageContent, type) {
             return '<div class="form-message alert alert-' + type + '" style="display: none"><a class="close" data-dismiss="alert">&times;</a>' + messageContent + '</div>';
         },
@@ -789,21 +790,23 @@ function checkRequiredFields(form, config) {
     // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
     form.find('.required').not('.tt-hint').each(function () {
         var input = $(this);
-        var val = input.val();
-        if (val !== null) {
-            val = val.trim();
-        } else {
-            val = '';
-        }
+        if( !ignoredInput(input, config)) {
+            var val = input.val();
+            if (val !== null) {
+                val = val.trim();
+            } else {
+                val = '';
+            }
 
-        var placeholder = input.attr('placeholder');
-        // note that the watermark can make the value == title
-        if (val.length === 0 || val === placeholder) {
-            flog('[jquery.forms] Field is required', input);
+            var placeholder = input.attr('placeholder');
+            // note that the watermark can make the value == title
+            if (val.length === 0 || val === placeholder) {
+                flog('[jquery.forms] Field is required', input);
 
-            errorFields.push(input);
-            error++;
-            input.attr('error-message', config.requiredErrorMessage);
+                errorFields.push(input);
+                error++;
+                input.attr('error-message', config.requiredErrorMessage);
+            }
         }
     });
 
@@ -811,6 +814,14 @@ function checkRequiredFields(form, config) {
         error: error,
         errorFields: errorFields
     };
+}
+
+function ignoredInput(input, config) {
+    flog("forms: ignoredInput: ", config.ignoreContainers);
+    if( input.closest(config.ignoreContainers).length > 0 ) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -827,7 +838,7 @@ function checkRegexes(form) {
 
     form.find('input.regex').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -870,7 +881,7 @@ function checkPhones(form, config) {
     form.find('.phone, #phone').each(function () {
         flog(this);
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -899,7 +910,10 @@ function checkPhones(form, config) {
  * @param {jQuery} input
  * @returns {Boolean}
  */
-function shouldCheckValue(input) {
+function shouldCheckValue(input, config) {
+    if( ignoredInput(input, config) ) {
+        return false;
+    }
     var shouldCheck = false;
     var isRequired = input.hasClass('required');
     var isRequiredIf = input.hasClass('required-if');
@@ -939,7 +953,7 @@ function checkDates(form, config) {
 
     form.find('input.date, input.datetime').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val().trim();
@@ -1082,7 +1096,7 @@ function checkValidEmailAddress(form, config) {
 
     form.find('#email, input.email').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -1119,7 +1133,7 @@ function checkSimpleChars(form, config) {
 
     form.find('.simpleChars, .simple-chars').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -1156,7 +1170,7 @@ function checkReallySimpleChars(form, config) {
 
     form.find('.reallySimpleChars, .really-simple-chars').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -1213,7 +1227,7 @@ function checkNumbers(form, config) {
 
     form.find('input.numeric').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();
@@ -1251,7 +1265,7 @@ function checkHrefs(form, config) {
 
     form.find('input.href').each(function () {
         var input = $(this);
-        var shouldCheck = shouldCheckValue(input);
+        var shouldCheck = shouldCheckValue(input, config);
 
         if (shouldCheck) {
             var val = input.val();

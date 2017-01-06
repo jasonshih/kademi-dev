@@ -126,56 +126,76 @@ function initManagePoints() {
 
 function initEditReward() {
 //    try {
-        flog("initEditReward1");
-        initHtmlEditors($(".htmleditor"));
-        flog("initEditReward2");
-        $("form.manageRewardForm").forms({
-            callback: function (resp) {
-                flog("done", resp);
+    initHtmlEditors($(".htmleditor"));
+    
+    var entryFormInput = $("#quizHtml");
+    var entryFormBuilderDiv = $("#entryFormBuilder");
+    var formBuilder = entryFormBuilderDiv.formBuilder({
+        dataType: "json",
+        formData : entryFormInput.val(),
+        roles : null,
+        disableFields : ["autocomplete", "button"]
+    }).data('formBuilder');
 
-                var editorFrame = $('#editor-frame');
-                flog("save content. editorFrame=", editorFrame);
-                var postData = {
-                    url: window.location.href.split('#')[0],
-                    triggerSave: true,
-                    pageName: getFileName('index.html'),
-                    resp: resp
-                };
+    $('.form-builder-save').click(function () {
+        var config = formBuilder.formData;
+        flog("save form config", config);
+    });
+    
+    
+    $("form.manageRewardForm").forms({
+        ignoreContainers: "#entryFormBuilder",
+        validate: function() {
+            var config = formBuilder.formData;
+            entryFormInput.val(config);
+            return true;
+        },
+        callback: function (resp) {
+            flog("done", resp);
 
-                editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+            var editorFrame = $('#editor-frame');
+            flog("save content. editorFrame=", editorFrame);
+            var postData = {
+                url: window.location.href.split('#')[0],
+                triggerSave: true,
+                pageName: getFileName('index.html'),
+                resp: resp
+            };
 
-                Msg.success("Saved ok");
-            },
-            error: function () {
-                Msg.error("Some information is not valid. Please check the reward details");
+            editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
+
+            Msg.success("Saved ok");
+        },
+        error: function () {
+            Msg.error("Some information is not valid. Please check the reward details");
+        }
+    });
+    flog("initEditReward3");
+
+    $("body").on("submitForm", "form", function (e) {
+        var form = $(e.target);
+        data = prepareQuizForSave(form);
+        form.find("input.answer").remove();
+        form.find("input[name=quizHtml]").val(data.body);
+        for (var key in data) {
+            if (key.startsWith("answer")) {
+                var inp = $("<input type='hidden' class='answer'/>");
+                inp.attr("name", key);
+                inp.val(data[key]);
+                form.append(inp);
             }
-        });
-        flog("initEditReward3");
+        }
+    });
+    $(".Cancel").click(function () {
+        window.location = "../";
+    });
 
-        $("body").on("submitForm", "form", function (e) {
-            var form = $(e.target);
-            data = prepareQuizForSave(form);
-            form.find("input.answer").remove();
-            form.find("input[name=quizHtml]").val(data.body);
-            for (var key in data) {
-                if (key.startsWith("answer")) {
-                    var inp = $("<input type='hidden' class='answer'/>");
-                    inp.attr("name", key);
-                    inp.val(data[key]);
-                    form.append(inp);
-                }
-            }
-        });
-        $(".Cancel").click(function () {
-            window.location = "../";
-        });
+    initGroupEditing();
+    initEntryFormEditing();
+    initQuizBuilder();
+    initRestrictions();
 
-        initGroupEditing();
-        initEntryFormEditing();
-        initQuizBuilder();
-        initRestrictions();
-
-        flog("initEditReward9");
+    flog("initEditReward9");
 //        loadQuizEditor(quizContainer, quiz);
 //    } catch (e) {
 //        flog("exception in initEditReward", e);
@@ -509,7 +529,7 @@ function initEntryFormEditing() {
     chks.each(function (i, n) {
         var node = $(n);
         node.parent().find("div.entryFormItemDetails").show();
-    })
+    });
 }
 
 
