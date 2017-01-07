@@ -45,9 +45,13 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        if (isNaN(number) || + number < 200) {
-                            number = 200;
-                            this.value = number;
+                        if (number === undefined || number === null || number === '') {
+                            number = '';
+                        } else {
+                            if (isNaN(number) || +number <= 200) {
+                                number = 200;
+                                this.value = number;
+                            }
                         }
 
                         component.attr('data-height', number);
@@ -57,8 +61,9 @@
                     });
 
                     var parts = ['header', 'body', 'footer'];
-                    for (var i = 0; i < parts.length; i++) {
-                        var colorPicker = form.find('.color-picker-' + parts[i]);
+
+                    $.each(['header', 'body', 'footer'], function (_, part) {
+                        var colorPicker = form.find('.color-picker-' + part);
                         initColorPicker(colorPicker, function (color) {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
@@ -68,10 +73,10 @@
                                 bgColor = color;
                             }
 
-                            component.attr('data-' + parts[i] + '-bgcolor', bgColor);
+                            component.attr('data-' + part + '-bgcolor', bgColor);
                             keditor.initDynamicContent(dynamicElement);
                         });
-                    }
+                    });
                 }
             });
         },
