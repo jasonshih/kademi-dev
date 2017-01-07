@@ -24,6 +24,20 @@
                         component.attr('data-store', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    var colorPicker = form.find('.color-picker');
+                    initColorPicker(colorPicker, function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var bgColor = '';
+
+                        if (color && color !== 'transparent') {
+                            bgColor = color;
+                        }
+
+                        component.attr('data-bgcolor', bgColor);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -33,6 +47,8 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-store']);
+            var colorPicker = form.find('.color-picker');
+            colorPicker.colorpicker('setValue', dataAttributes['data-bgcolor'] || 'transparent');
         }
     };
 
