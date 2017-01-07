@@ -266,7 +266,8 @@ function initKEditor(fileName, stylesData) {
             }
         },
         onBeforeDynamicContentLoad: function (dynamicElement, component) {
-            var width = dynamicElement.closest('.keditor-container-inner').width();
+            var containerInner = dynamicElement.closest('[data-type=container-content]');
+            var width = containerInner.width();
 
             component.attr({
                 'data-width': width

@@ -48,8 +48,8 @@
                         if (number === undefined || number === null || number === '') {
                             number = '';
                         } else {
-                            if (isNaN(number) || +number <= 200) {
-                                number = 200;
+                            if (isNaN(number) || +number <= 100) {
+                                number = 100;
                                 this.value = number;
                             }
                         }
