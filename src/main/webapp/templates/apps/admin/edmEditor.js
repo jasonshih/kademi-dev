@@ -335,6 +335,14 @@ function initKEditor(fileName, stylesData) {
                 '           </select>' +
                 '       </div>' +
                 '   </div>' +
+                '   <hr />' +
+                '   <div class="form-group">' +
+                '       <div class="col-sm-12">' +
+                '           <label>Columns settings</label>' +
+                '           <div class="columns-setting">' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
                 '</form>'
             );
 
@@ -349,11 +357,69 @@ function initKEditor(fileName, stylesData) {
 
                 table.attr('data-groups', $(this).selectpicker('val').join(','));
             });
+
+            form.find('.columns-setting').on('change', '.txt-padding', function () {
+                var txt = $(this);
+                var index = +txt.attr('data-index');
+                var propName = txt.attr('data-prop');
+                var container = keditor.getSettingContainer();
+                var column = container.find('[data-type=container-content]').eq(index);
+                var number = txt.val();
+                if (isNaN(number) || +number < 0) {
+                    number = 0;
+                    this.value = number;
+                }
+
+                column.prop('style')[propName] = number + 'px';
+            });
         },
         containerSettingShowFunction: function (form, container, keditor) {
             var table = container.find('.keditor-container-inner > table');
 
             form.find('.select-groups').selectpicker('val', (table.attr('data-groups') || '').split(','));
+
+            var columnsSettings = form.find('.columns-setting');
+            columnsSettings.html('');
+
+            container.find('[data-type=container-content]').each(function (i) {
+                var column = $(this);
+
+                var settingHtml = '';
+                settingHtml += '<div class="form-group">';
+                settingHtml += '   <div class="col-md-12">';
+                settingHtml += '       <p>Padding (in px)</p>';
+                settingHtml += '       <div class="row row-sm text-center">';
+                settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
+                settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingTop'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingTop" data-index="' + i + '" />';
+                settingHtml += '               <small>top</small>';
+                settingHtml += '           </div>';
+                settingHtml += '       </div>';
+                settingHtml += '       <div class="row row-sm text-center">';
+                settingHtml += '           <div class="col-xs-4">';
+                settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingLeft'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingLeft" data-index="' + i + '" />';
+                settingHtml += '               <small>left</small>';
+                settingHtml += '           </div>';
+                settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
+                settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingRight'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingRight" data-index="' + i + '" />';
+                settingHtml += '               <small>right</small>';
+                settingHtml += '           </div>';
+                settingHtml += '       </div>';
+                settingHtml += '       <div class="row row-sm text-center">';
+                settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
+                settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingBottom'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingBottom" data-index="' + i + '" />';
+                settingHtml += '               <small>bottom</small>';
+                settingHtml += '           </div>';
+                settingHtml += '       </div>';
+                settingHtml += '   </div>';
+                settingHtml += '</div>';
+
+                columnsSettings.append(
+                    (i > 0 ? '<hr />' : '') +
+                    '<div class="column-setting">' +
+                    '   <strong>Column #' + (i + 1) + '</strong>' + settingHtml +
+                    '</div>'
+                );
+            });
         }
     });
 }
