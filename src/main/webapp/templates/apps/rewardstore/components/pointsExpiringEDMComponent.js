@@ -24,6 +24,7 @@
                         component.attr('data-store', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
                     form.find('.num-months').on('change', function () {
                         var number = this.value;
 
@@ -39,6 +40,38 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.txt-height').on('change', function () {
+                        var number = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        if (isNaN(number) || + number < 200) {
+                            number = 200;
+                            this.value = number;
+                        }
+
+                        component.attr('data-height', number);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPieChart();
+                        });
+                    });
+
+                    var parts = ['header', 'body', 'footer'];
+                    for (var i = 0; i < parts.length; i++) {
+                        var colorPicker = form.find('.color-picker-' + parts[i]);
+                        initColorPicker(colorPicker, function (color) {
+                            var component = keditor.getSettingComponent();
+                            var dynamicElement = component.find('[data-dynamic-href]');
+                            var bgColor = '';
+
+                            if (color && color !== 'transparent') {
+                                bgColor = color;
+                            }
+
+                            component.attr('data-' + parts[i] + '-bgcolor', bgColor);
+                            keditor.initDynamicContent(dynamicElement);
+                        });
+                    }
                 }
             });
         },
@@ -49,6 +82,11 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-store']);
             form.find('.num-months').val(dataAttributes['data-months']);
+            var parts = ['header', 'body', 'footer'];
+            for (var i = 0; i < parts.length; i++) {
+                var colorPicker = form.find('.color-picker-' + parts[i]);
+                colorPicker.colorpicker('setValue', dataAttributes['data-' + parts[i] + '-bgcolor'] || 'transparent');
+            }
         }
     };
 
