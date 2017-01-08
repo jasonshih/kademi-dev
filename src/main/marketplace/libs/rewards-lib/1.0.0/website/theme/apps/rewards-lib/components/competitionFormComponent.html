@@ -90,17 +90,19 @@
         <div class="entryFormItem quizItem viewQuiz" style='display: none'>$!page.quizHtml</div>
         #end
         #if( $page.isEnterable() )
-
+        #if( $page.hasTerms )
         <div class="form-group">            
             <label for="terms">
                 <input id="terms" name="terms" required="true" class="required" type="checkbox"/>
                 Please check this box to confirm you have read our terms and conditions*                
                 <a href="terms" target="_blank"> Click here to view full terms and conditions. </a>
-            </label>
-            
+            </label>            
         </div>            
+        #end
 
         <button class="enter btn btn-success" type="submit">Submit your entry</button>
+        #else
+        <i>Not enterable</i>
         #end
     </form>
     #else

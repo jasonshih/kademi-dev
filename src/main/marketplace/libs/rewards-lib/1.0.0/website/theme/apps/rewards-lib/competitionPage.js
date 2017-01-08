@@ -36,7 +36,7 @@ $(function () {
         quiz.formRender({
             dataType: 'json',
             formData: json,
-            labelClasses : "col-sm-3 control-label",
+            labelClasses : "control-label",
             inputClasses : "form-control"
         });
         quiz.show();

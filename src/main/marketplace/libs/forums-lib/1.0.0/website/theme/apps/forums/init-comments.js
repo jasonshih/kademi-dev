@@ -1,6 +1,8 @@
 // init-comments.js
 $(function() {
     initComments(window.location.pathname);
+    $('textarea.autoresize').autogrow();
+    
 });
 /**
  *

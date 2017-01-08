@@ -788,7 +788,7 @@ function checkRequiredFields(form, config) {
     }
 
     // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
-    form.find('.required').not('.tt-hint').each(function () {
+    form.find('input.required, textarea.required, select.required').not('.tt-hint').each(function () {
         var input = $(this);
         if( !ignoredInput(input, config)) {
             var val = input.val();

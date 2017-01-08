@@ -47,7 +47,7 @@
                     formData: false,
                     labelClasses: "",
                     inputClasses: "",
-                    inputContainerClass : "col-md-9",
+                    inputContainerClass : "",
                     messages: {
                         formRendered: 'Form Rendered',
                         noFormData: 'No form data.',

@@ -28,10 +28,6 @@ $(function() {
     $(".login").user({
     });
 
-    // setup text box resizing
-    log("textarea resize");
-    jQuery('textarea.autoresize').autogrow();
-
     flog("initTheme: run page init functions", pageInitFunctions.length);
     $.each(pageInitFunctions, function(i, f) {
         log("run function" + i);
