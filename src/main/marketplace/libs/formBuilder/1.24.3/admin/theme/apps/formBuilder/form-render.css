@@ -304,9 +304,6 @@ Author: Kevin Chappell <kevin.b.chappell@gmail.com>
 .rendered-form .pull-left {
   float: left !important; }
 
-.form-group .required {
-  color: #c10000; }
-
 *[tooltip] {
   position: relative; }
 

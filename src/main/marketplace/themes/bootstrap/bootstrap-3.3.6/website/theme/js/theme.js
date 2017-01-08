@@ -55,6 +55,9 @@ $(function() {
         initTablesForCkeditor();
     }
     initContentFeatures();
+    
+    $.timeago.settings.allowFuture = true;
+    $(".timeago").timeago();
 });
 
 
