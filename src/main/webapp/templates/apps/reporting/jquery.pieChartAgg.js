@@ -53,6 +53,8 @@
                 if (dataColors !== '') {
                     config.colors = dataColors.split(',');
                 }
+
+                cont.css('height', '100%');
             }
 
             loadGraphData(queryHref, graphOptions, {}, cont, config);
