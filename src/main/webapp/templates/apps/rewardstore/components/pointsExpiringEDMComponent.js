@@ -55,9 +55,7 @@
                         }
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initPieChart();
-                        });
+                        keditor.initDynamicContent(dynamicElement);
                     });
 
                     var parts = ['header', 'body', 'footer'];
