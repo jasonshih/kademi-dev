@@ -102,8 +102,8 @@
                         key: resp.headers[i],
                         doc_count: resp.rows[0][i]
                     });
+                    total += resp.rows[0][i];
                 }
-                total = resp.numRows;
             } else {
                 var aggr = resp.aggregations[graphOptions.aggName];
                 data = aggr.buckets;
@@ -126,7 +126,7 @@
                     return round((val / total * 100), 2) + '% (' + val + ')';
                 })
                 .donut(true)
-                .labelType('percent')
+                .labelType('value')
                 .donutRatio(0.35)
                 .showLabels(true)
                 .showLegend(graphOptions.showLegend)
