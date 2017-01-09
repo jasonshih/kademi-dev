@@ -40,7 +40,7 @@
                         component.attr('data-layout', this.value);
                         keditor.initDynamicContent(dynamicElement);
 
-                        form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
+                        form.find('.grid-only').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
 
                     form.find('.number-of-products').on('change', function () {
@@ -72,6 +72,20 @@
                         component.attr('data-items-per-row', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    var colorPicker = form.find('.color-picker');
+                    initColorPicker(colorPicker, function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var bgColor = '';
+
+                        if (color && color !== 'transparent') {
+                            bgColor = color;
+                        }
+
+                        component.attr('data-background-item', bgColor);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -85,7 +99,9 @@
             form.find('.select-layout').val(dataAttributes['data-layout']);
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
-            form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
+            form.find('.grid-only').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
+            var colorPicker = form.find('.color-picker');
+            colorPicker.colorpicker('setValue', dataAttributes['data-background-item'] || 'transparent');
         }
     };
 
