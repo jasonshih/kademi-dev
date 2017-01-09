@@ -3,13 +3,33 @@
         {
             "appId": "reporting-lib",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "d3-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.0.0"
         }
     ],
     "dependencies": [
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/nvd3/1.8.2/nv.d3.min.css"
+                "path": "/static/daterangepicker/2.0.11/daterangepicker.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
             }
         },
         {
@@ -21,13 +41,31 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/nvd3/1.8.2/d3.min.js"
+                "path": "/static/daterangepicker/2.0.11/daterangepicker.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/static/nvd3/1.8.2/nv.d3.min.js"
+                "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/jquery.dateAgg.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/jquery.queryTable.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/queryComponents.js"
             }
         },
         {
