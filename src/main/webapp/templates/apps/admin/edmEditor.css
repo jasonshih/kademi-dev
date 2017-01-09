@@ -3,6 +3,13 @@
     padding-top: 50px;
 }
 
+table,
+tr,
+td,
+th {
+    box-sizing: content-box;
+}
+
 .edm-editor-page .navbar-fixed-top a {
     height: 50px;
 }

@@ -31,9 +31,9 @@
                                             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                 <tr>
                                                     <td>
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png/alt-600-400.png")
                                                         #if( $p.fields.primaryImageHref.value )
-                                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}")
+                                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}/alt-600-400.png")
                                                         #end
                                                         <a title="$p.fields.title.value" href="${prodUrl}">
                                                             <img src="$bg" width="100%" height="auto" alt="$p.fields.title.value" style="display: block; border: 0;" />

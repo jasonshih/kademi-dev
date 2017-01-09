@@ -4,7 +4,7 @@
     #set( $points = $applications.rewardStore.findExpiring( $store, $profile, $pEndDate) )
     #set( $pointsMonths = $points.groupByExpiryMonth )
     #if ($height)
-        #set ($height = $formatter.toInteger($height))
+        #set ($height = $formatter.toInteger($height) - 38 - 30 - 15)
     #end
 
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
