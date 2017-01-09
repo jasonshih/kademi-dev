@@ -633,7 +633,7 @@ function validateFormFields(form, config) {
             errorMessages.push(config.numberErrorMessage);
         }
 
-        var resultRegexes = checkRegexes(form);
+        var resultRegexes = checkRegexes(form, config);
         if (resultRegexes.error > 0) {
             error += resultRegexes.error;
             errorFields = errorFields.concat(resultRegexes.errorFields);
@@ -829,7 +829,7 @@ function ignoredInput(input, config) {
  * @param {jQuery} form
  * @returns {{error: Number, errorFields: Array, errorMessages: Array}}
  */
-function checkRegexes(form) {
+function checkRegexes(form, config) {
     flog('[jquery.forms] checkRegexes', form);
 
     var error = 0;
@@ -1720,18 +1720,18 @@ function postForm(form, validationMessageSelector, networkErrorMessage, callback
     doPostForm(form, config, null);
 }
 
-function checkRegex(form) {
+function checkRegex(form, config) {
     flog('=======================================================================');
     flog('checkRegex is DEPRECATED. Please use "checkRegexes" instead of. "checkRegex" will be removed in version 1.2.0');
     flog('=======================================================================');
-    return checkRegexes(form);
+    return checkRegexes(form, config);
 }
 
-function checkRequiredChecks(form) {
+function checkRequiredChecks(form, config) {
     flog('=======================================================================');
     flog('checkRequiredChecks is DEPRECATED. Please use "checkRequiredCheckboxes" instead of. "checkRequiredChecks" will be removed in version 1.2.0');
     flog('=======================================================================');
-    return checkRequiredCheckboxes(form, {});
+    return checkRequiredCheckboxes(form, config);
 }
 
 function showValidation(target, text, form) {
