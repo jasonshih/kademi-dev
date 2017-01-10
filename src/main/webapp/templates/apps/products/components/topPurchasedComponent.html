@@ -37,12 +37,12 @@
                     "size": templatingContext.displayedItems,
                     "order": [
                         {
-                            "_term": "desc"
+                            "totalQuantity": "desc"
                         }
                     ]
                 },
                 "aggs": {
-                    "quantity": {
+                    "totalQuantity": {
                         "sum": {
                             "field": "quantity"
                         }
@@ -121,7 +121,7 @@
                 #foreach($row in $searchResults.aggregations.productName.buckets)
                     <tr>
                         <td>$row.aggregations.productTitleHit.hits.hits.get(0).source.productTitle</td>
-                        <td>$formatter.formatCurrency($row.aggregations.quantity.value, false)</td>
+                        <td>$formatter.formatCurrency($row.aggregations.totalQuantity.value, false)</td>
                     </tr>
                 #end
             #end
