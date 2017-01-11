@@ -4,7 +4,7 @@
         endDate: null,
         xLabel: function (d, aggName) {
             var date = moment(d.key);
-            var aggNameLower = aggName.toLowerCase();
+            var aggNameLower = (aggName || '').toLowerCase();
 
             if (aggNameLower.indexOf('day') !== -1 || aggNameLower.indexOf('date') !== -1) {
                 return date.format('MMMM Do YYYY');
@@ -38,7 +38,7 @@
             var component = cont.closest('[data-type^=component-]');
             if (component.length > 0) {
                 flog('Is pieChartComponent', component);
-                var queryName = component.attr('data-query');
+                var queryName = component.attr('data-query') || '';
                 if (component.attr('data-query-type') === 'queryTable') {
                     graphOptions.queryTable = true;
                     queryHref = '/queries/' + queryName + '/?as=json';
