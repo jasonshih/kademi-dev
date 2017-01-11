@@ -23,6 +23,12 @@
                 "group": "main",
                 "path": "/theme/apps/salesdata/salesdata-dashboard.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/circle-progress.js"
+            }
         }
     ]
 }

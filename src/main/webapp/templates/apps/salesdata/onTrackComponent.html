@@ -1,0 +1,24 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+#set( $kpi = $page.find($href) )
+<div class="panel panel-default panel-kpi-visualisation">
+    <div class="panel-heading">
+        <i class="fa fa-bar-chart"></i> 
+        #if( $kpi )
+        $kpi.title
+        #else
+        Please select a KPI
+        #end
+    </div>
+    <div class="panel-body">
+        #set( $progressPerc = 0 )
+        #set( $progressPerc = $kpi.getProgressOfLevelPerc($level) )
+        <div style="height: $!{height}px" class="kpi-circle" data-value="$progressPerc" data-height="$height">
+            
+        </div>
+        <p class="text-center">
+            <span>$progressPerc %</span>
+        </p>        
+    </div>
+</div>
