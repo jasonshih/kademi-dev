@@ -718,7 +718,12 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                     if (suggestion.fields.userId) {
                         var userId = suggestion.fields.userId[0];
                         var userName = suggestion.fields.userName[0];
-                        var email = suggestion.fields.email[0];
+                        var email;
+                        if( suggestion.fields.email ) {
+                            var email = suggestion.fields.email[0];
+                        } else {
+                            email = "";                            
+                        }
                         var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
                         var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
 
