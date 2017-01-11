@@ -42,13 +42,16 @@
 
 
 function loadSeriesGraph(href, opts, container, visType) {
+    if( container.length == 0 ) {
+        return ;
+    }
     var href = href + "?dateHistogram&" + $.param(opts);
     var svg = container.find("svg");
     if (svg.length === 0) {
         svg = $("<svg></svg>");
         container.append(svg);
     }
-    flog("loadSeriesGraph svg=", svg);
+    flog("loadSeriesGraph container=", container, " svg=", svg);
 
     $.ajax({
         type: "GET",

@@ -15,6 +15,7 @@
     $.fn.kpiVis = function (options) {
         var container = this;
 
+        flog("init kpis", container);
         container.each(function (i, n) {
             var cont = $(n);
             var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
@@ -51,6 +52,11 @@
                     }
                 }
             }
+
+            $(document).on('pageDateChanged', function (e, startDate, endDate) {
+                loadKpiSeriesGraphData(kpiHref, opts, cont, visType, config);
+            });
+
 
             loadKpiSeriesGraphData(kpiHref, opts, cont, visType, config);
         });

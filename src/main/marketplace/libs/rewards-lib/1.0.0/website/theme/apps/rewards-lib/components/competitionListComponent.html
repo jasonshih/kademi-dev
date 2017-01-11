@@ -1,5 +1,9 @@
 #set( $rewards = $applications.rewards.rewardsHome )
 
+#set( $activeRewards = $rewards.activeRewards )
+#if( $activeRewards.isEmpty() )
+<p>Sorry, there are no available rewards at the moment</p>
+#else
 #foreach( $reward in $rewards.activeRewards )
         
         #if( $reward.imageHash )
@@ -32,4 +36,5 @@
                 </div>
             </div>
         </div>
+#end
 #end

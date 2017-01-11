@@ -26,7 +26,8 @@
                         #foreach( $pt in $recentPoints )
                             <tr>
                                 <td>$pt.numPoints</td>
-                                <td>$formatter.formatDateTime($pt.awardedDate, $page.organisation.timezone)</td>
+                                <td>
+                                    $formatter.formatDateTime($pt.issuedDate, $page.organisation.timezone)</td>
                                 <td>$pt.reason</td>
                             </tr>
                         #end
