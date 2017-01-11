@@ -4,7 +4,7 @@
         endDate: null,
         xLabel: function (d, aggName) {
             var date = moment(d.key);
-            var aggNameLower = aggName.toLowerCase();
+            var aggNameLower = (aggName || '').toLowerCase();
 
             if (aggNameLower.indexOf('day') !== -1 || aggNameLower.indexOf('date') !== -1) {
                 return date.format('MMMM Do YYYY');
