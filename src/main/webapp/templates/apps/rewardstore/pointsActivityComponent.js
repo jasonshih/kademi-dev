@@ -3,9 +3,42 @@
     var flog = KEditor.log;
 
     KEditor.components['pointsActivity'] = {
+        init: function (contentArea, container, component, keditor) {
+            flog('init "pieChart component', contentArea, container, component, keditor);
+
+            var self = this;
+
+            if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
+                $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
+            }
+
+            $.getScriptOnce('/static/moment/2.11.2/moment-with-locales.js', function () {
+                $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
+                    $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
+                        $.getScriptOnce('/theme/apps/rewardstore/jquery.pointsActivityChart.js', function () {
+                            self.initPointsActivityChart();
+                        });
+                    });
+                });
+            });
+        },
+        initPointsActivityChart: function () {
+            flog('initPointsActivityChart');
+
+            $('.panel-points-activity-chart').each(function () {
+                var queryData = $(this);
+
+                if (!queryData.hasClass('initialized-pointsActivityChart')) {
+                    queryData.pointsActivityChart();
+                    queryData.addClass('initialized-pointsActivityChart');
+                }
+            });
+        },
         settingEnabled: true,
         settingTitle: 'Points Activity Settings',
         initSettingForm: function (form, keditor) {
+            var self = this;
+
             return $.ajax({
                 url: '_components/pointsActivity?settings',
                 type: 'get',
@@ -14,31 +47,23 @@
                     form.html(resp);
 
                     form.find('.pointsActivityBucket').on('change', function () {
-                        var selectedBucket = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        if (selectedBucket) {
-                            component.attr('data-bucket', selectedBucket);
-                            keditor.initDynamicContent(dynamicElement);
-                        } else {
-                            dynamicElement.html('<p>Please select a points bucket</p>');
-                        }
+                        component.attr('data-bucket', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPointsActivityChart();
+                        });
                     });
 
-                    form.find('.pointsActivityDays').on('change', function () {
-                        var number = this.value;
-
-                        if (isNaN(number) || +number <= 1) {
-                            number = 1;
-                            this.value = number;
-                        }
-
+                    form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-days', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        component.attr('data-title', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPointsActivityChart();
+                        });
                     });
 
                     form.find('.pointsActivityHeight').on('change', function () {
@@ -53,7 +78,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-height', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initPointsActivityChart();
+                        });
                     });
                 }
             });
@@ -63,8 +90,8 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.pointsActivityBucket').val(dataAttributes['data-bucket']);
-            form.find('.pointsActivityDays').val(dataAttributes['data-days']);
             form.find('.pointsActivityHeight').val(dataAttributes['data-height']);
+            form.find('.txt-title').val(dataAttributes['data-title']);
         }
     };
 
