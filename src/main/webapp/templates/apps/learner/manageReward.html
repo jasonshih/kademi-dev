@@ -183,7 +183,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.startDate" class="form-control DateTime" />
+                                                    <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$formatter.formatDate($page.startDate)" class="form-control DateTime" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
@@ -196,7 +196,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$!page.endDate" class="form-control DateTime" />
+                                                    <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$formatter.formatDate($page.endDate)" class="form-control DateTime" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
