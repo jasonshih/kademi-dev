@@ -112,40 +112,80 @@ function initManagePoints() {
                 data: {
                     refreshPointsBalance: true
                 },
-                success: function (data, textStatus, jqXHR) {
+                success: function (data) {
                     Msg.info(data.messages);
+                    updateRefreshPBStatus();
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function () {
                     Msg.error('Oh No! Something went wrong!');
+                    updateRefreshPBStatus();
                 }
             });
         }
     });
 
+    updateRefreshPBStatus();
+}
+
+var refreshPbCheckTimer = null;
+function updateRefreshPBStatus() {
+    if (refreshPbCheckTimer != null) {
+        clearTimeout(refreshPbCheckTimer);
+        refreshPbCheckTimer = null;
+    }
+
+    var btn = $('.btn-refresh-pb');
+
+    $.ajax({
+        type: 'GET',
+        url: "/tasks/refreshPointsBalance",
+        dataType: 'json',
+        success: function (resp) {
+            if (resp.status) {
+                if (resp.data.statusInfo.complete) {
+                    btn.prop('disabled', false);
+                    btn.html('<i class="fa fa-refresh"></i> Refresh Points Balance');
+                } else {
+                    btn.prop('disabled', true);
+                    btn.html('<i class="fa fa-refresh"></i> Refresh Running: ' + resp.data.status);
+                    refreshPbCheckTimer = setTimeout(function () {
+                        updateRefreshPBStatus();
+                    }, 2000);
+                }
+            } else {
+                btn.prop('disabled', false);
+                btn.html('<i class="fa fa-refresh"></i> Refresh Points Balance');
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            btn.prop('disabled', false);
+            btn.html('<i class="fa fa-refresh"></i> Refresh Points Balance');
+        }
+    });
 }
 
 function initEditReward() {
 //    try {
     initHtmlEditors($(".htmleditor"));
-    
+
     var entryFormInput = $("#quizHtml");
     var entryFormBuilderDiv = $("#entryFormBuilder");
     var formBuilder = entryFormBuilderDiv.formBuilder({
         dataType: "json",
-        formData : entryFormInput.val(),
-        roles : null,
-        disableFields : ["autocomplete", "button"]
+        formData: entryFormInput.val(),
+        roles: null,
+        disableFields: ["autocomplete", "button"]
     }).data('formBuilder');
 
     $('.form-builder-save').click(function () {
         var config = formBuilder.formData;
         flog("save form config", config);
     });
-    
-    
+
+
     $("form.manageRewardForm").forms({
         ignoreContainers: "#entryFormBuilder",
-        validate: function() {
+        validate: function () {
             var config = formBuilder.formData;
             entryFormInput.val(config);
             return true;
