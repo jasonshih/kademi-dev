@@ -137,22 +137,6 @@
                                 </tr>
 
                                 <tr>
-                                    <td>Allow anonymous</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-12">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        $formatter.checkbox("allowAnon", $page.allowAnon)
-                                                        <i>Check this if you want to allow non-logged in users to submit entries</i>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
                                     <td>Template</td>
                                     <td>
                                         <div class="form-group">
@@ -279,23 +263,44 @@
 
                         <div class="entryFormItem" style='min-height: 700px; overflow-y: auto'>
                             $formatter.checkbox("quizEnabled", "quizEnabled", $page.quizEnabled)
-                            <label for="quizEnabled" class="control-label">Form</label>
-                            <!--
-                            <div class="entryFormItemDetails quizContainer">
-                                <div class="alert alert-danger pageMessage">.</div>
-                                <select class="form-control newQuestionType">
-                                    <option value="">Add a question</option>
-                                    <option value="multi">Multiple choice</option>
-                                    <option value="textbox">Textbox</option>
-                                </select>
-                                <div id="quiz-questions"></div>
-                            </div>
-                            -->
-                            <p>Please enter the HTML for the quiz or survey below</p>
+                            <label for="quizEnabled" class="control-label">Provide an entry form</label>
+                            <div>
+                                <hr/>
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("allowAnon", $page.allowAnon)
+                                    Anonymous entries. Check this if you want to allow non-logged in users to submit entries
+                                </label>
+                                <br/>
 
-                            <!-- the forms validate function will set this hidden input with content from the form builder -->
-                            <textarea style="display: none" name="quizHtml" id="quizHtml" >$!page.quizHtml</textarea>
-                            <div id="entryFormBuilder" class="col-md-12"></div>
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("selectProduct", $page.selectProduct)
+                                    Select product. Users will be required to select a product.
+                                </label>
+                                <br/>
+                                                                
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("selectOrg", $page.selectOrg)
+                                    Select organisation. Users will select an organisation (eg a store)
+                                </label>
+                                <br/>
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-2 control-label">Organisation type</label>
+                                    <div class="col-sm-10">
+                                        <select name="selectOrgType" class="form-control">
+                                            <option value="">Any type of organisation</option>
+                                            #foreach( $ot in $page.organisation.orgTypes )
+                                            $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>                                
+
+                                <hr/>
+                                <h3>Custom fields:</h3>
+                                <p>If you would like to collect further information drag inputs from the right to the panel below.</p>
+                                <textarea style="display: none" name="quizHtml" id="quizHtml" >$!page.quizHtml</textarea>
+                                <div id="entryFormBuilder" class="col-md-12"></div>
+                            </div>
                         </div>
 
                     </div>
@@ -321,7 +326,7 @@
                     <div class="tab-pane" id="terms">
                         <textarea cols="120" name="terms" rows="10" class="htmleditor" >$!page.terms</textarea>
                     </div>
-                    
+
                     <div class="tab-pane" id="entries">
                         <div class="well reset-margin-bottom">
                             <table class="entriesLinks">
@@ -389,7 +394,7 @@
                 </div>
             </form>
         </div>
-       
+
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
