@@ -31,16 +31,8 @@ function initLeaderboard() {
     flog("drp", drp);
     $("#runLeaderboard").click(function (e) {
         e.preventDefault();
-        var startDate = drp.startDate;
-        var endDate = drp.endDate;
-        flog("drp", drp);
-        var val = leaderboardRange.val();
-        var url;
-        if (val != "") {
-            url = window.location.pathname + "?startDate=" + formatDate(startDate) + "&endDate=" + formatDate(endDate) + "&leaderboard=true";
-        } else {
-            url = window.location.pathname + "?leaderboard=true";
-        }
+        var url = window.location.pathname + "?leaderboard=true";
+
         $("#leaderboardResults").reloadFragment({
             url: url,
             whenComplete: function () {
