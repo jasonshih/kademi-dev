@@ -17,6 +17,11 @@ $(function () {
             position: position
         });
     });
-    
+
     // TODO reporting components which need to update.. eg single value metric
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        $('[data-dynamic-href="_components/singleValue"]').reloadFragment({
+            url: location.pathname + location.search
+        });
+    });
 });

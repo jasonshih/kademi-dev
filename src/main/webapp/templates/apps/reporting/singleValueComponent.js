@@ -3,9 +3,6 @@
     var flog = KEditor.log;
 
     KEditor.components['singleValue'] = {
-        init: function () {
-            flog('initSingleValue');
-        },
         settingEnabled: true,
         settingTitle: 'Single Value Settings',
         initSettingForm: function (form, keditor) {
