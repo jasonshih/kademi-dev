@@ -15,34 +15,26 @@
                     #else
 
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="firstName">First name</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
-                            </div>
+                            <label class="control-label" for="firstName">First name</label>
+                            <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="surName">Surname</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
-                            </div>
+                            <label class="control-label" for="surName">Surname</label>
+                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="email">Email</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
-                            </div>
+                            <label class="control-label" for="email">Email</label>
+                            <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-3 control-label" for="phone">Phone</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
-                            </div>
+                            <label class="control-label" for="phone">Phone</label>
+                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
                         </div>
-
-
+                        
+                        
                         #if( $contactPage.hasOptins() )
                             <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-12">
+                                <div class="col-sm-12">
                                     <div class="checkbox">
                                         #foreach($optin in $contactPage.optins)
                                             <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
@@ -57,13 +49,28 @@
 
                         #if( $contactPage.captchaApp )
                             <div class="form-group">
-                                <div class="col-sm-offset-3 col-sm-9">
+                                <div class="col-sm-9">
                                     #portlets("captcha")
                                 </div>
                             </div>
                         #end
                     #end
 
+                    #if( $page.selectOrg )
+                    <div class="form-group">
+                        <label class="control-label" for="phone">Your store</label>
+                        <input type="text" name="relatedOrg" class="form-control" placeholder="Enter your store id" value="" />
+                    </div>                        
+                    #end
+
+                    #if( $page.selectProduct )
+                    <div class="form-group">
+                        <label class="control-label" for="phone">Product</label>
+                        <input type="text" name="relatedProductSku" class="form-control" placeholder="Enter the product code" value="" />
+                    </div>                        
+                    #end
+                   
+                    
                     #if($page.userUploadEnabled )
                         <div class="entryFormItem uploadItem">
                             <h3>Photo Gallery</h3>
@@ -91,6 +98,7 @@
                     #if($page.quizEnabled )
                         <div class="entryFormItem quizItem viewQuiz" style='display: none'>$!page.quizHtml</div>
                     #end
+                    
                     #if( $page.isEnterable() )
                         #if( $page.hasTerms )
                             <div class="form-group">
