@@ -8,6 +8,8 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "singleValue" component');
 
+            var self = this;
+
             return $.ajax({
                 url: '_components/singleValue?settings',
                 type: 'get',
@@ -65,6 +67,8 @@
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "queryTable" component');
+
+            var self = this;
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             var selectedQuery = dataAttributes['data-query'];
