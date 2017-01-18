@@ -23,6 +23,8 @@
                         component.attr('data-query', selectedQuery);
                         keditor.initDynamicContent(dynamicElement);
 
+                        var aggsSelect = form.find(".select-agg");
+                        self.initSelect(aggsSelect, selectedQuery, null);
                     });
 
                     form.find('.select-agg').on('change', function () {
@@ -60,15 +62,51 @@
                 }
             });
         },
+
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "queryTable" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            var selectedQuery = dataAttributes['data-query'];
+            var selectedAgg = dataAttributes['data-agg'];
+
             form.find('.select-query').val(dataAttributes['data-query']);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.value-label').val(dataAttributes['data-label']);
             form.find('.value-icon').val(dataAttributes['data-icon']);
             form.find('.value-link').val(dataAttributes['data-link']);
+
+            if (selectedQuery) {
+                var aggsSelect = form.find(".select-agg");
+                self.initSelect(aggsSelect, selectedQuery, selectedAgg);
+            }
+        },
+
+        initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
+            flog("initSelect", selectedQuery, selectedAgg);
+
+            $.ajax({
+                url: "/queries/" + selectedQuery + "?run",
+                type: 'GET',
+                dataType: 'json',
+                success: function (resp) {
+                    flog('resp', resp);
+
+                    var aggsHtml = '<option value""> - None - </option>';
+                    var aggs = resp.aggregations;
+                    for (var key in aggs) {
+                        aggsHtml += '<option value="' + key + '">' + key + '</option>';
+                    }
+                    aggsSelect.html(aggsHtml);
+
+                    if (selectedAgg) {
+                        aggsSelect.val(selectedAgg);
+                    }
+                },
+                error: function (e) {
+                    Msg.error(e.status + ': ' + e.statusText);
+                }
+            });
         }
     };
 
