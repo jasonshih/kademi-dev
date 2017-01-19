@@ -4516,112 +4516,112 @@ body.header-default .daterangepicker {
 /* ---------------------------------------------------------------------- */
 /*	Compatibility with font-awesome 3
 /* ---------------------------------------------------------------------- */
-[class^="icon-"],
-[class*=" icon-"] {
-    font-family: FontAwesome;
-    font-weight: normal;
-    font-style: normal;
-    text-decoration: inherit;
-    -webkit-font-smoothing: antialiased;
-    *margin-right: .3em;
-}
-[class^="icon-"]:before,
-[class*=" icon-"]:before {
-    text-decoration: inherit;
-    display: inline-block;
-    speak: none;
-}
-a [class^="icon-"],
-a [class*=" icon-"] {
-    display: inline;
-}
-.icon-magic:before {
-    content: "\f0d0";
-}
-.icon-bold:before {
-    content: "\f032";
-}
-.icon-italic:before {
-    content: "\f033";
-}
-.icon-underline:before {
-    content: "\f0cd";
-}
-.icon-eraser:before {
-    content: "\f12d";
-}
-.icon-font:before {
-    content: "\f031";
-}
-.icon-list-ul:before {
-    content: "\f0ca";
-}
-.icon-list-ol:before {
-    content: "\f0cb";
-}
-.icon-align-left:before {
-    content: "\f036";
-}
-.icon-text-height:before {
-    content: "\f034";
-}
-.icon-table:before {
-    content: "\f0ce";
-}
-.icon-link:before {
-    content: "\f0c1";
-}
-.icon-picture:before {
-    content: "\f03e";
-}
-.icon-fullscreen:before {
-    content: "\f0b2";
-}
-.icon-question:before {
-    content: "\f128";
-}
-.icon-chevron-up:before {
-    content: "\f077";
-}
-.icon-chevron-down:before {
-    content: "\f078";
-}
-.icon-arrow-left:before {
-    content: "\f060";
-}
-.icon-arrow-right:before {
-    content: "\f061";
-}
-.icon-wrench:before {
-    content: "\f0ad";
-}
-.icon-refresh:before {
-    content: "\f021";
-}
-.icon-remove:before {
-    content: "\f00d";
-}
-.icon-resize-full:before {
-    content: "\f065";
-}
-.icon-check-empty:before {
-    content: "\f096";
-}
-.icon-check:before {
-    content: "\f046";
-}
-.icon-ok:before {
-    content: "\f00c";
-}
-.icon-external-link-sign:before {
-    content: "\f14c";
-}
-.icon-double-angle-left:before {
-    content: "\f100";
-}
-.icon-double-angle-right:before {
-    content: "\f101";
-}
+/*[class^="icon-"],*/
+/*[class*=" icon-"] {*/
+    /*font-family: FontAwesome;*/
+    /*font-weight: normal;*/
+    /*font-style: normal;*/
+    /*text-decoration: inherit;*/
+    /*-webkit-font-smoothing: antialiased;*/
+    /**margin-right: .3em;*/
+/*}*/
+/*[class^="icon-"]:before,*/
+/*[class*=" icon-"]:before {*/
+    /*text-decoration: inherit;*/
+    /*display: inline-block;*/
+    /*speak: none;*/
+/*}*/
+/*a [class^="icon-"],*/
+/*a [class*=" icon-"] {*/
+    /*display: inline;*/
+/*}*/
+/*.icon-magic:before {*/
+    /*content: "\f0d0";*/
+/*}*/
+/*.icon-bold:before {*/
+    /*content: "\f032";*/
+/*}*/
+/*.icon-italic:before {*/
+    /*content: "\f033";*/
+/*}*/
+/*.icon-underline:before {*/
+    /*content: "\f0cd";*/
+/*}*/
+/*.icon-eraser:before {*/
+    /*content: "\f12d";*/
+/*}*/
+/*.icon-font:before {*/
+    /*content: "\f031";*/
+/*}*/
+/*.icon-list-ul:before {*/
+    /*content: "\f0ca";*/
+/*}*/
+/*.icon-list-ol:before {*/
+    /*content: "\f0cb";*/
+/*}*/
+/*.icon-align-left:before {*/
+    /*content: "\f036";*/
+/*}*/
+/*.icon-text-height:before {*/
+    /*content: "\f034";*/
+/*}*/
+/*.icon-table:before {*/
+    /*content: "\f0ce";*/
+/*}*/
+/*.icon-link:before {*/
+    /*content: "\f0c1";*/
+/*}*/
+/*.icon-picture:before {*/
+    /*content: "\f03e";*/
+/*}*/
+/*.icon-fullscreen:before {*/
+    /*content: "\f0b2";*/
+/*}*/
+/*.icon-question:before {*/
+    /*content: "\f128";*/
+/*}*/
+/*.icon-chevron-up:before {*/
+    /*content: "\f077";*/
+/*}*/
+/*.icon-chevron-down:before {*/
+    /*content: "\f078";*/
+/*}*/
+/*.icon-arrow-left:before {*/
+    /*content: "\f060";*/
+/*}*/
+/*.icon-arrow-right:before {*/
+    /*content: "\f061";*/
+/*}*/
+/*.icon-wrench:before {*/
+    /*content: "\f0ad";*/
+/*}*/
+/*.icon-refresh:before {*/
+    /*content: "\f021";*/
+/*}*/
+/*.icon-remove:before {*/
+    /*content: "\f00d";*/
+/*}*/
+/*.icon-resize-full:before {*/
+    /*content: "\f065";*/
+/*}*/
+/*.icon-check-empty:before {*/
+    /*content: "\f096";*/
+/*}*/
+/*.icon-check:before {*/
+    /*content: "\f046";*/
+/*}*/
+/*.icon-ok:before {*/
+    /*content: "\f00c";*/
+/*}*/
+/*.icon-external-link-sign:before {*/
+    /*content: "\f14c";*/
+/*}*/
+/*.icon-double-angle-left:before {*/
+    /*content: "\f100";*/
+/*}*/
+/*.icon-double-angle-right:before {*/
+    /*content: "\f101";*/
+/*}*/
 /* ---------------------------------------------------------------------- */
 /*	Animation Page
 /* ---------------------------------------------------------------------- */

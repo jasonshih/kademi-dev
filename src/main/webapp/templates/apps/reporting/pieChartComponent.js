@@ -251,7 +251,6 @@
                 });
             }
 
-
             if (selectedQuery) {
                 var aggsSelect = form.find(".select-agg");
                 self.initSelect(aggsSelect, selectedQuery, selectedAgg);
