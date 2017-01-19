@@ -1,3 +1,44 @@
+#if (!$groups)
+    #set ($groups = '')
+#end
+#set($selectedOrgId = "")
+#foreach($cookie in $request.getCookies())
+    #if ($cookie.getName() eq "selectedOrg")
+        #set($selectedOrgId = $cookie.getValue())
+    #end
+#end
+#if ($user)
+    #set ($orgList = $formatter.newArrayList())
+    #foreach($membership in $user.memberships)
+        #if ($groups.contains($membership.groupEntity.name) && !$orgList.contains($membership.withinOrg))
+            #call($orgList.add($membership.withinOrg))
+            #if ($selectedOrgId == $membership.withinOrg.orgId)
+                #set ($selectedOrg = $membership.withinOrg)
+            #end
+        #end
+    #end
 <div class="org-selector">
-    
+    <div class="dropdown">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuOrgSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            #if( $selectedOrg )
+                $selectedOrg.title
+            #else
+                [No organisation selected]
+            #end
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu orgSelectorWrap" aria-labelledby="dropdownMenuOrgSelector">
+            #foreach( $m in $orgList)
+                #if ($selectedOrg.orgId == $m.orgId)
+                    <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
+                #else
+                    <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
+                #end
+            #end
+        </ul>
+    </div>
 </div>
+#else
+#end
+
+#macro( call $foo )#if($foo)#**##end#end
