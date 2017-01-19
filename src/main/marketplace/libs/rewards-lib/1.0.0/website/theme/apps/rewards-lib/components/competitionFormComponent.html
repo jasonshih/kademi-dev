@@ -1,9 +1,10 @@
 <div class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-body competitionFormWrap">
         <div class="competitionForm">
-            <div style="display: none" class="thankyou">
-                <h3>Thank you!</h3>
-                <p class="lead">Thank you for entering.</p>
+            <div style="display: none" class="thankyou bg-success text-center">
+                <h1><i class="fa fa-thumbs-o-up fa-3x"></i></h1>
+                <h1>Good Work!</h1>
+                <p>Your submission has been received.</p>
             </div>
             #if( $page.entriesForUser.size() == 0 )
                 <form class="entryForm" method="POST" action="$request.absolutePath">
@@ -59,14 +60,16 @@
                     #if( $page.selectOrg )
                     <div class="form-group">
                         <label class="control-label" for="phone">Your store</label>
-                        <input type="text" name="relatedOrg" class="form-control" placeholder="Enter your store id" value="" />
+                        <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your store id" value="" />
+                        <input type="hidden" name="relatedOrg">
                     </div>                        
                     #end
 
                     #if( $page.selectProduct )
                     <div class="form-group">
                         <label class="control-label" for="phone">Product</label>
-                        <input type="text" name="relatedProductSku" class="form-control" placeholder="Enter the product code" value="" />
+                        <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required" placeholder="Enter the product code" value="" />
+                        <input type="hidden" name="relatedProductSku">
                     </div>                        
                     #end
                    
