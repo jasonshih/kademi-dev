@@ -3,9 +3,41 @@
     var flog = KEditor.log;
 
     KEditor.components['orgSelector'] = {
-        init: function (contentArea, container, component, keditor) {
-            var self = this;
+        settingEnabled: true,
+        settingTitle: 'Organisation Selector',
+        initSettingForm: function (form, keditor) {
+            flog('initSettingForm "orgSelector" component', form, keditor);
+
+            return $.ajax({
+                url: '_components/orgSelector?settings',
+                type: 'get',
+                dataType: 'html',
+                success: function (resp) {
+                    form.html(resp);
+
+                    form.find('[name=groups]').on('click', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var groups = [];
+                        form.find('[name=groups]:checked').each(function(){
+                            groups.push(this.value);
+                        });
+                        component.attr('data-groups', groups.join(','));
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                }
+            });
         },
-        settingEnabled: false
+
+        showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "orgSelector" component', form, component, keditor);
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('[name=groups]').each(function(){
+                if (dataAttributes['data-groups'].indexOf(this.value)!==-1){
+                    this.checked = true;
+                }
+            });
+        }
     };
 })(jQuery);

@@ -75,6 +75,12 @@
                 "group": "main",
                 "path": "/theme/apps/reporting/init-reporting.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/reporting/orgSelector.js"
+            }
         }
     ]
 }
