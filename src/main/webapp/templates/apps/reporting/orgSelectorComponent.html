@@ -1,3 +1,4 @@
+
 #if (!$groups)
     #set ($groups = '')
 #end
@@ -28,6 +29,9 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu orgSelectorWrap" aria-labelledby="dropdownMenuOrgSelector">
+            #if( $orgList.isEmpty() )
+            <li>No selections available</li>
+            #else
             #foreach( $m in $orgList)
                 #if ($selectedOrg.orgId == $m.orgId)
                     <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
@@ -35,10 +39,12 @@
                     <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
                 #end
             #end
+            #end
         </ul>
     </div>
 </div>
 #else
 #end
+
 
 #macro( call $foo )#if($foo)#**##end#end

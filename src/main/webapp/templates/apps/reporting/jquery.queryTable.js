@@ -34,7 +34,7 @@
                 config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
             }
 
-            flog("queryTable: listen for date change");
+            flog("queryTable: listen for date change1");
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog("queryTable date change", e, startDate, endDate);
 
@@ -49,6 +49,7 @@
                 var tbody = cont;
                 flog("reload queryTable", cont, tbody);
                 $.get(href, {}, function (resp, status, xhr) {
+                    flog("queryTable data", resp);
                     var newDom = $(resp);
                     flog("queryTable resp", newDom, newDom.find('tbody'));
                     

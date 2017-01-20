@@ -17,10 +17,8 @@
         #end
     </div>
 
-        HELLO1    
     <table class="table table-striped">
         #if($queryType == 'query' && $formatter.toBool($headers) )
-        HELLO2        
             #set( $queryBean = $page.queryBean )
             #set( $queryBean = $applications.Reporting.getQuery($query))
             #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
