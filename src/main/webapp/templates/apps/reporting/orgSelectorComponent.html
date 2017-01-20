@@ -8,13 +8,13 @@
         #set($selectedOrgId = $cookie.getValue())
     #end
 #end
-#if ($user)
+#if ($userResource)
     #set ($orgList = $formatter.newArrayList())
-    #foreach($membership in $user.memberships)
-        #if ($groups.contains($membership.groupEntity.name) && !$orgList.contains($membership.withinOrg))
-            #call($orgList.add($membership.withinOrg))
-            #if ($selectedOrgId == $membership.withinOrg.orgId)
-                #set ($selectedOrg = $membership.withinOrg)
+    #foreach($membership in $userResource.profile.allMemberships())
+        #if ($groups.contains($membership.groupName) && !$orgList.contains($membership.org))
+            #call($orgList.add($membership.org))
+            #if ($selectedOrgId == $membership.org.orgId)
+                #set ($selectedOrg = $membership.org)
             #end
         #end
     #end
