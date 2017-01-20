@@ -61,9 +61,15 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="issueTo">Award To<small>Will apply to everyone if blank.</small></label>
+                            <label class="control-label col-md-3" for="issueTo">Awarded To<small>Will apply to everyone if blank.</small></label>
                             <div class="col-md-8">
-                                <input type="email" name="issueTo" id="issueTo" value="$!page.rule.issueTo.email" placeholder="Email address" class="form-control" />
+                                <input type="text" name="issueTo" id="issueTo" value="$!page.rule.issueTo.entityName" placeholder="User ID or Org ID" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="transferTo">Award To<small>Points will be awarded to this account</small></label>
+                            <div class="col-md-8">
+                                <input type="text" name="transferTo" id="transferTo" value="$!page.rule.transferTo.entityName" placeholder="User ID or Org ID" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
