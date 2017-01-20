@@ -31,6 +31,12 @@
                 "group": "main",
                 "path": "/theme/apps/rewards-lib/competitionPage.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewards-lib/rewardSelector.js"
+            }
         }
     ]
 }
