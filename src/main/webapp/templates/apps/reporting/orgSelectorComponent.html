@@ -8,9 +8,9 @@
         #set($selectedOrgId = $cookie.getValue())
     #end
 #end
-#if ($userResource)
+#if ($profile)
     #set ($orgList = $formatter.newArrayList())
-    #foreach($membership in $userResource.profile.allMemberships())
+    #foreach($membership in $profile.allMemberships())
         #if ($groups.contains($membership.groupName) && !$orgList.contains($membership.org))
             #call($orgList.add($membership.org))
             #if ($selectedOrgId == $membership.org.orgId)
