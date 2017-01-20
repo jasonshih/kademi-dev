@@ -4,7 +4,7 @@
         <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <style>
-            #expressionEditor {
+            .expressionEditor {
                 height: 250px;
                 border: 1px solid #DDD;
                 border-radius: 4px;
@@ -85,10 +85,17 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label class="control-label col-md-3" for="expression2Editor">Reason<small>Mvel expressions allowed</small></label>
+                            <div class="col-md-8">
+                                <textarea class="hide" id="reasonMvel" name="reasonMvel"></textarea>
+                                <div id="expression2Editor" class="expressionEditor" style="display:none;">$formatter.htmlEncode($page.rule.reasonMvel)</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <label class="control-label col-md-3" for="expressionEditor">MVEL Expression</label>
                             <div class="col-md-8">
                                 <textarea class="hide" id="mvelExpression" name="mvelExpression"></textarea>
-                                <div id="expressionEditor" style="display:none;">$formatter.htmlEncode($page.rule.mvelExpression)</div>
+                                <div id="expressionEditor" class="expressionEditor" style="display:none;">$formatter.htmlEncode($page.rule.mvelExpression)</div>
                                 <!--<textarea cols="100" name="mvelExpression" id="mvelExpression" rows="10" placeholder="" class="form-control">$!page.rule.mvelExpression</textarea>-->
                             </div>
                         </div>
@@ -104,40 +111,64 @@
             </div>
         </form>
         <script>
-            $(function () {
-                var editor = ace.edit('expressionEditor');
-                editor.getSession().setMode("ace/mode/javascript");
-                editor.setOptions({
-                    minLines: editor.getSession().$rowLengthCache.length
-                });
-                $('#expressionEditor').show();
+            (function () {
+                var mvelExpressionEditor;
+                var reasonExpressionEditor;
+                function initMvelExpression() {
+                    mvelExpressionEditor = ace.edit('expressionEditor');
+                    mvelExpressionEditor.getSession().setMode("ace/mode/javascript");
+                    mvelExpressionEditor.setOptions({
+                        minLines: mvelExpressionEditor.getSession().$rowLengthCache.length
+                    });
+                    $('#expressionEditor').show();
+                }
 
-                $('#frmDetails').forms({
-                    postUrl: window.location.pathname,
-                    validate: function (form) {
-                        var editorVal = editor.getValue();
-                        $('#mvelExpression').val(editorVal);
-                        return true;
-                    },
-                    callback: function (resp) {
-                        if (resp.status) {
-                            Msg.success(resp.messages[0]);
-                            var originalName = $('#originalName').val();
-                            var newName = resp.nextHref;
-                            if (originalName !== newName) {
-                                window.location.href = newName;
+                function initReasonMvel() {
+                    reasonExpressionEditor = ace.edit('expression2Editor');
+                    reasonExpressionEditor.getSession().setMode("ace/mode/javascript");
+                    reasonExpressionEditor.setOptions({
+                        minLines: reasonExpressionEditor.getSession().$rowLengthCache.length
+                    });
+                    $('#expression2Editor').show();
+                }
+
+                function initForm() {
+                    $('#frmDetails').forms({
+                        postUrl: window.location.pathname,
+                        validate: function (form) {
+                            var editorVal = mvelExpressionEditor.getValue();
+                            $('#mvelExpression').val(editorVal);
+
+                            var reasonMvelVal = reasonExpressionEditor.getValue();
+                            $('#reasonMvel').val(reasonMvelVal);
+                            return true;
+                        },
+                        callback: function (resp) {
+                            if (resp.status) {
+                                Msg.success(resp.messages[0]);
+                                var originalName = $('#originalName').val();
+                                var newName = resp.nextHref;
+                                if (originalName !== newName) {
+                                    window.location.href = newName;
+                                }
                             }
                         }
-                    }
-                });
+                    });
 
-                $(document.body).on('keydown', function (e) {
-                    if (e.ctrlKey && e.keyCode === keymap.S) {
-                        e.preventDefault();
-                        $('#frmDetails').trigger('submit');
-                    }
+                    $(document.body).on('keydown', function (e) {
+                        if (e.ctrlKey && e.keyCode === keymap.S) {
+                            e.preventDefault();
+                            $('#frmDetails').trigger('submit');
+                        }
+                    });
+                }
+
+                $(function () {
+                    initMvelExpression();
+                    initReasonMvel();
+                    initForm();
                 });
-            });
+            })();
         </script>
     </body>
 </html>
