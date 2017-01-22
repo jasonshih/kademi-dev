@@ -90,8 +90,6 @@ function doQuery() {
     Msg.info("Doing search...", 2000);
 
     var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate),
         dataQuery: searchQ
     };
     flog("data", data);

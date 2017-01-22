@@ -173,7 +173,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="aggregation">
+                            <label class="control-label col-md-3" for="startDate">
                                 Start date
                                 <small>Date of the first assessment period</small>
                             </label>
@@ -181,6 +181,20 @@
                                 <div class="col-sm-5">
                                     <div class="input-group">
                                         <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.startDate)" class="form-control DateTime" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="endDate">
+                                End date
+                            </label>
+                            <div class="col-md-8">
+                                <div class="col-sm-5">
+                                    <div class="input-group">
+                                        <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.endDate)" class="form-control DateTime" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
                                 </div>
@@ -215,8 +229,59 @@
                     </div> <!-- end notes -->
 
                     <div id="criteria" class="tab-pane">  <!-- criteria -->
-                        <small>Advanced: additional criteria rules as XML</small>
-                        <textarea cols="100" name="extraCriteria" id="extraCriteria" rows="20" placeholder="" class="form-control">$!page.kpi.extraCriteria</textarea>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="field1">
+                                Field 1
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="field1" value="$!page.kpi.field1" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="field2">
+                                Field 2
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="field2" value="$!page.kpi.field2" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="field3">
+                                Field 3
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="field3" value="$!page.kpi.field3" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="field4">
+                                Field 4
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="field4" value="$!page.kpi.field4" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="field5">
+                                Field 5
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="field5" value="$!page.kpi.field5" class="form-control"/>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="tags">
+                                Tags
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" name="tags" value="$!page.kpi.tags" class="form-control"/>
+                            </div>
+                        </div>
+
+
+
                     </div> <!-- end criteria -->
 
                     <div id="levels" class="tab-pane"> <!-- levels -->
@@ -397,7 +462,7 @@
                                     <td>$formatter.formatDateTime($period.endDate, $page.organisation.timezone)</td>
                                     <td>$formatter.formatDateTime($period.createdDate, $page.organisation.timezone)</td>
                                     <td>
-                                        #if( $period.rewardsIssuedDate )                                        
+                                        #if( $period.rewardsIssuedDate )
                                         $formatter.formatDateTime($period.rewardsIssuedDate, $page.organisation.timezone)
                                         #else
                                         <span class="label label-danger">Rewards not issued</span>
@@ -516,11 +581,6 @@
                     </div>
                     <div id="query" class="tab-pane">
                         <p>Query for progress results for a participant for a given date period</p>
-
-                        <div class="input-group date-range col-md-4 pull-left">
-                            <label for="report-range" class="input-group-addon">Time</label>
-                            <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
-                        </div>
 
                         <div class="input-group col-md-4">
                             <label for="data-query" class="input-group-addon">Search</label>
