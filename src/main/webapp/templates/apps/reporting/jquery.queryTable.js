@@ -1,97 +1,263 @@
 (function ($) {
-    var DEFAULT_PIECHART_OPTIONS = {
-        startDate: null,
-        endDate: null,
-        itemsPerPage: 100
-    };
-
-    $.fn.queryTable = function (options) {
+    $.fn.queryTable = function () {
         var container = this;
 
         flog("queryTable", container.length);
         container.each(function (i, n) {
-            var cont = $(n);
-            flog("init queryTable chart events", cont);
-            var config = $.extend({}, DEFAULT_PIECHART_OPTIONS, options);
-
-            var opts = {
-                startDate: config.startDate,
-                endDate: config.endDate
-            };
-
-            $(document).on('pageDateChange', function () {
-                flog("queryTable date change");
-            });
-
-            var queryHref = null;
-            var aggName = null;
-            var component = container.closest('[data-type^="component-"]');
-            if (component.length > 0) {
-                queryHref = "/queries/" + component.attr("data-query");
-                aggName = component.attr("data-agg");
-                flog("pieChart params", queryHref, aggName, component);
-
-                config.legendPosition = component.attr("data-legend-position") || config.legendPosition;
-            }
-
-            flog("queryTable: listen for date change1");
+            var panel = $(n);
+            initPanel(panel);
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog("queryTable date change", e, startDate, endDate);
-
-                var href = '/_components/queryTable?';
-                var query = component.attr('data-query');
-                var perPage = component.attr('data-items-per-page');
-                var height = component.attr('data-height');
-                href += 'data-query=' + encodeURI(query);
-                href += '&data-items-per-page=' + encodeURI(perPage);
-                href += '&data-height=' + encodeURI(height);
-
-                var tbody = cont;
-                flog("reload queryTable", cont, tbody);
-                $.get(href, {}, function (resp, status, xhr) {
-                    flog("queryTable data", resp);
-                    var newDom = $(resp);
-                    flog("queryTable resp", newDom, newDom.find('tbody'));
-                    
-                    var newContent = newDom.find('tbody').html();  
-                    
-                    flog("replace conetnt", tbody, newContent);
-                    tbody.html(newContent);
-                });
-//                tbody.reloadFragment({
-//                    url: href,
-//                    whenComplete: function (resp) {
-////                        flog("reloaded queryTable", resp);
-////                        var newContent = $(resp).find('.panel-body').html();                        
-////                        var panelBody = cont;
-////                        flog("reloaded queryTable", panelBody, newContent);
-////                        panelBody.html(newContent);
-//                    }
-//                });
+                initPanel(panel);
             });
 
-            cont.on('click', 'a', function (e) {
-                e.preventDefault();
+            function initPanel(panel) {
+                var queryName = panel.data("queryname");
+                var queryType = panel.data("querytype");
+                if (!queryName) {
+                    panel.find('table tbody').html('<tr><td align="center" colspan="999">No result</td></tr>');
+                    return;
+                }
 
-                var href = '/_components/queryTable?';
-                var query = cont.parents('[data-type=component-queryTable]').attr('data-query');
-                var perPage = cont.parents('[data-type=component-queryTable]').attr('data-items-per-page');
-                var height = cont.parents('[data-type=component-queryTable]').attr('data-height');
-                href += 'data-query=' + encodeURI(query);
-                href += '&data-items-per-page=' + encodeURI(perPage);
-                href += '&data-height=' + encodeURI(height);
-                
-                var tbody = cont.find("tbody");
-                tbody.reloadFragment({
-                    url: href,
-                    whenComplete: function (resp) {
-                        comp.find('.panel-body').html($(resp).find('.panel-body').html());
+                if (queryType === 'queryTable') {
+                    loadQueryTable(panel);
+                } else if(queryType === 'query') {
+                    loadQuery(panel);
+                    initRawESCSV(panel);
+                }
+            }
+            function loadQuery(panel){
+                var queryName = panel.attr('data-queryname');
+                var from = panel.attr('data-from');
+                var size = panel.attr('data-items-per-page');
+                if (!from) {
+                    from = 0;
+                }
+                if (!size) {
+                    size = 100;
+                }
+                $.ajax({
+                    url: '/queries/' + queryName.replace('.query.json', '') + '/?run&from='+from+'&size='+size,
+                    dataType: 'json',
+                    success: function (resp) {
+                        var tbody = '';
+                        var hits = resp.hits;
+                        if (hits.total > 0) {
+                            for (var i = 0; i < hits.hits.length; i++) {
+                                tbody += renderRowRawES(hits.hits[i], panel);
+                            }
+                            panel.find('table tbody').html(tbody);
+                            renderPagination(panel, resp, from, size);
+                        }
+                    },
+                    error: function (resp) {
+                        panel.find('table tbody').html('<tr><td align="center" colspan="999">No result</td></tr>');
+                    }
+                })
+            }
+            function loadQueryTable(panel) {
+                var queryName = panel.attr('data-queryname');
+                var from = panel.attr('data-from');
+                var size = panel.attr('data-items-per-page');
+                if (!from) {
+                    from = 0;
+                }
+                if (!size) {
+                    size = 100;
+                }
+                $.ajax({
+                    url: '/queries/' + queryName + '/?as=json&from=' + from + '&size=' + size,
+                    dataType: 'json',
+                    success: function (resp) {
+                        var tbody = '';
+                        var numRows = resp.numRows;
+                        if (numRows > 0) {
+                            for (var i = 0; i < resp.rows.length; i++) {
+                                tbody += renderRow(resp.rows[i]);
+                            }
+                            panel.find('table tbody').html(tbody);
+                            renderPagination(panel, resp, from, size);
+                        }
+                    },
+                    error: function (resp) {
+                        panel.find('table tbody').html('<tr><td align="center" colspan="999">No result</td></tr>');
+                    }
+                })
+            }
+
+            function renderPagination(panel, resp, from, size) {
+                var queryType = panel.data("querytype");
+                var totalPages;
+                if (queryType == 'queryTable') {
+                    if (resp.numRows <= size) {
+                        panel.find('.panel-footer .pagination').html('').parent().addClass('hide');
+                        return;
+                    }
+                    totalPages = Math.ceil(resp.numRows / size);
+                } else if (queryType == 'query'){
+                    if (!resp.hits.total || resp.hits.total <= size){
+                        panel.find('.panel-footer .pagination').html('').parent().addClass('hide');
+                        return;
+                    }
+                    totalPages = Math.ceil(resp.hits.total / size);
+                }
+
+                var maxDisplayPages = 10;
+
+                if (!from) {
+                    from = 0;
+                }
+                var hasNext = false;
+                var hasPrev = false;
+                var currentPage = Math.ceil(from / size + 1);
+                if (totalPages > (currentPage + maxDisplayPages)) {
+                    hasNext = true;
+                }
+
+                if (currentPage > 1) {
+                    hasPrev = true;
+                }
+                var html = '';
+                var to = currentPage + maxDisplayPages;
+                if (to > totalPages) {
+                    to = totalPages + 1;
+                }
+                if (to - currentPage < maxDisplayPages) {
+                    currentPage = to - maxDisplayPages;
+                    if (currentPage < 1) {
+                        currentPage = 1;
+                    }
+                }
+                for (var i = currentPage; i < to; i++) {
+                    if ((i - 1) * size == from) {
+                        html += '<li class="active pageItem"><a data-from="' + ((i - 1) * size) + '" href="#">' + i + '</a></li>';
+                    } else {
+                        html += '<li class="pageItem"><a data-from="' + ((i - 1) * size) + '" href="#">' + i + '</a></li>';
+                    }
+                }
+                if (hasNext) {
+                    html += '<li><a class="next" href="#"><span aria-hidden="true">&raquo;</span></a></li>';
+                }
+                if (hasPrev) {
+                    html = '<li><a class="prev" href="#"><span aria-hidden="true">&laquo;</span></a></li>' + html;
+                }
+                panel.find('.panel-footer .pagination').html(html);
+
+                panel.off('click').on('click', '.pagination a', function (e) {
+                    e.preventDefault();
+
+                    var from = +$(this).attr('data-from');
+                    panel.attr('data-from', $(this).attr('data-from'));
+                    if ($(this).hasClass('next')) {
+                        from = +panel.find('.panel-footer .pagination li.pageItem').last().find('a').attr('data-from');
+                        from += size;
+                        panel.attr('data-from', from);
+                    }
+                    if ($(this).hasClass('prev')) {
+                        from = +panel.find('.panel-footer .pagination li.pageItem').first().find('a').attr('data-from');
+                        from -= size;
+                        if (from < 0) {
+                            from = 0;
+                        }
+                        panel.attr('data-from', from);
+                    }
+                    panel.attr('data-from', from);
+
+                    if (queryType == 'queryTable'){
+                        loadQueryTable(panel);
+                    } else if(queryType == 'query') {
+                        loadQuery(panel);
+                    }
+                })
+            }
+
+            function renderRow(row) {
+                var rowStr = '<tr>';
+                for (var i in row) {
+                    rowStr += '<td>' + row[i] + '</td>';
+                }
+                rowStr += '</tr>';
+                return rowStr;
+            }
+
+            function renderRowRawES(row, panel) {
+                var rowStr = '<tr>';
+                var ths = panel.find('table thead th');
+                ths.each(function () {
+                    var f = $(this).attr('data-field');
+                    if (row.fields[f]) {
+                        rowStr += '<td>' + row.fields[f][0] + '</td>';
+                    } else {
+                        rowStr += '<td>&nbsp;</td>';
                     }
                 });
-            });
+
+                rowStr += '</tr>';
+                return rowStr;
+            }
+
+            function initRawESCSV(panel){
+                panel.find('.btnDownloadCSV').on('click', function(e){
+                    e.preventDefault();
+
+                    var panel = $(this).parents('.panel');
+
+                    var arr = [];
+                    var csvHeader = [];
+                    panel.find('table thead tr th').each(function(){
+                        csvHeader.push($(this).text());
+                    });
+                    arr.push(csvHeader);
+
+                    var url = $(this).attr('href');
+                    url = url.replace('.query.json', '');
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        success: function (resp) {
+                            var hits = resp.hits;
+                            if (hits.total > 0) {
+                                for (var i = 0; i < hits.hits.length; i++) {
+                                    var childArr = [];
+                                    for(var j = 0; j < csvHeader.length; j++){
+                                        var hit = hits.hits[i];
+                                        var field = csvHeader[j];
+                                        if (hit.fields[field] && hit.fields[field].length) {
+                                            childArr.push(hit.fields[field][0]);
+                                        } else {
+                                            childArr.push('');
+                                        }
+                                    }
+                                    arr.push(childArr);
+                                }
+                            }
+                            var csvContent = "data:text/csv;charset=utf-8,";
+                            arr.forEach(function(infoArray, index){
+                                dataString = infoArray.join(",");
+                                csvContent += index < arr.length ? dataString+ "\n" : dataString;
+                            });
+
+                            var encodedUri = encodeURI(csvContent);
+                            var link = document.createElement("a");
+                            link.setAttribute("href", encodedUri);
+                            link.setAttribute("download", "data.csv");
+                            document.body.appendChild(link); // Required for FF
+
+                            link.click(); // This will download the data file named "data.csv".
+                        },
+                        error: function (resp) {
+                            Msg.error('Error when generating CSV content');
+                        }
+                    });
+                })
+            }
         });
     };
 
+    $(function(){
+        var panels = $(".panel-query-table");
+        panels.queryTable();
+    });
 })(jQuery);
 
 
