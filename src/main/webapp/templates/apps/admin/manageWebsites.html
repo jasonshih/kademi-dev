@@ -51,9 +51,8 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Domain</th>
-                                <th>Redirect To</th>
-                                <th>Alias To</th>
-                                <th>Live branch</th>
+                                <th></th>
+                                <th>Live version</th>
                                 <th>Public</th>
                                 <th>Theme</th>
                                 <th class="action"></th>
@@ -63,12 +62,21 @@
                             #foreach($w in $page.websites)
                             <tr>
                                 <td>
-                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" title="ID - $w.id" class="btn btn-sm btn-info repo"><i class="fa fa-eye"></i> $w.name</a>
+                                    <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" title="ID - $w.id" class="btn btn-sm btn-primary repo"><i class="fa fa-globe"></i> $w.name</a>
 
                                 </td>
                                 <td>$!w.domainName</td>
-                                <td>$!w.redirectTo</td>
-                                <td>$!w.aliasTo.name</td>
+                                <td>
+                                    #if( $w.redirectTo.length() > 0 )
+                                    <i>
+                                        Redirect to <b>$w.redirectTo</b>
+                                    </i>
+                                    #elseif( $w.aliasTo )
+                                    <i>
+                                        Alias for <b>$w.aliasTo.name</b>
+                                    </i>
+                                    #end
+                                </td>
                                 <td>$!w.liveBranch</td>
                                 <td class="public">
                                     <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="/repositories/$w.name">
