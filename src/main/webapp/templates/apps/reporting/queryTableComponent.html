@@ -1,5 +1,5 @@
 #if( !$height )
-    #set( $height = 200 )
+    #set( $height = 300 )
 #end
 
 #if( !$title )
@@ -9,40 +9,50 @@
 #set ($queryTableId = "query-component-tbody-" + $formatter.randomGuid)
 #set ($queryCompId = "query-component-" + $formatter.randomGuid)
 
-<div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-queryname="$query" data-querytype="$queryType">
+<div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
     <div class="panel-heading">
         <i class="fa fa-table"></i> $title
         #if($queryType == 'queryTable')
-        <a download="data.csv" href="/queries/${query}?as=csv" class="pull-right"><i class="fa fa-download"></i> CSV</a>
+            <a download="data.csv" href="/queries/${query}?as=csv&from=0&size=10000" class="pull-right"><i class="fa fa-download"></i> CSV</a>
+        #elseif($queryType == 'query')
+            <a href="/queries/${query}?run&from=0&size=10000" class="text-white pull-right btnDownloadCSV"><i class="fa fa-download"></i> CSV</a>
         #end
     </div>
-
-    <table class="table table-striped">
-        #if($queryType == 'query' && $formatter.toBool($headers) )
-            #set( $queryBean = $page.queryBean )
-            #set( $queryBean = $applications.Reporting.getQuery($query))
-            #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
-            <thead>
-                <tr>
-                    #foreach( $field in $fields)
-                        <th data-field="$field">$field</th>
-                    #end
-                </tr>
-            </thead>
-        #elseif($queryType == 'queryTable')
-            #set ($qpath = '/queries/' + $query)
-            #set ($queryTableFolder = $page.find($qpath))
-            <thead>
-            <tr>
-                #foreach( $field in $queryTableFolder.fieldNames)
-                    <th data-field="$field">$field</th>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                #if($queryType == 'query' && $formatter.toBool($headers) )
+                    #set( $queryBean = $page.queryBean )
+                    #set( $queryBean = $applications.Reporting.getQuery($query))
+                    #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
+                    <thead>
+                    <tr>
+                        #foreach( $field in $fields)
+                            <th data-field="$field">$field</th>
+                        #end
+                    </tr>
+                    </thead>
+                #elseif($queryType == 'queryTable')
+                    #set ($qpath = '/queries/' + $query)
+                    #set ($queryTableFolder = $page.find($qpath))
+                    <thead>
+                    <tr>
+                        #foreach( $field in $queryTableFolder.fieldNames)
+                            <th data-field="$field">$field</th>
+                        #end
+                    </tr>
+                    </thead>
                 #end
-            </tr>
-            </thead>
-        #end
-        <tbody id="${queryTableId}" class="query-table">
-        </tbody>
-    </table>
+                <tbody id="${queryTableId}" class="query-table">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <ul class="pagination">
+        </ul>
+    </div>
+
 </div>
 
 

@@ -74,16 +74,16 @@
                         });
                     });
 
-                    form.find('.show-paginator').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        var inp = $(this);
-                        component.attr('data-showpaginator', inp.prop("checked"));
-                        keditor.initDynamicContent(dynamicElement).done(function () {
-                            //self.initDateAgg();
-                        });
-                    });
+                    //form.find('.show-paginator').on('change', function () {
+                    //    var component = keditor.getSettingComponent();
+                    //    var dynamicElement = component.find('[data-dynamic-href]');
+                    //
+                    //    var inp = $(this);
+                    //    component.attr('data-showpaginator', inp.prop("checked"));
+                    //    keditor.initDynamicContent(dynamicElement).done(function () {
+                    //        //self.initDateAgg();
+                    //    });
+                    //});
                     
                     form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
