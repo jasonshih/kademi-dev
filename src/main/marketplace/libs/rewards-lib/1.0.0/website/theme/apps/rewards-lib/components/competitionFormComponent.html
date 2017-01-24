@@ -6,7 +6,7 @@
                 <h1>Good Work!</h1>
                 <p>Your submission has been received.</p>
             </div>
-            #if( $page.entriesForUser.size() == 0 )
+            #if( !$page.onePerRecipient || $page.entriesForUser.size() == 0 )
                 <form class="entryForm" method="POST" action="$request.absolutePath">
                     <input type="hidden" name="entry" value="true"/>
                     <div class="alert alert-danger pageMessage"></div>
@@ -31,8 +31,8 @@
                             <label class="control-label" for="phone">Phone</label>
                             <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
                         </div>
-                        
-                        
+
+
                         #if( $contactPage.hasOptins() )
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -62,7 +62,7 @@
                         <label class="control-label" for="phone">Your store</label>
                         <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your store id" value="" />
                         <input type="hidden" name="relatedOrg">
-                    </div>                        
+                    </div>
                     #end
 
                     #if( $page.selectProduct )
@@ -70,10 +70,10 @@
                         <label class="control-label" for="phone">Product</label>
                         <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required" placeholder="Enter the product code" value="" />
                         <input type="hidden" name="relatedProductSku">
-                    </div>                        
+                    </div>
                     #end
-                   
-                    
+
+
                     #if($page.userUploadEnabled )
                         <div class="entryFormItem uploadItem">
                             <h3>Photo Gallery</h3>
@@ -101,7 +101,7 @@
                     #if($page.quizEnabled )
                         <div class="entryFormItem quizItem viewQuiz" style='display: none'>$!page.quizHtml</div>
                     #end
-                    
+
                     #if( $page.isEnterable() )
                         #if( $page.hasTerms )
                             <div class="form-group">
@@ -112,8 +112,9 @@
                                 </label>
                             </div>
                         #end
-
-                        <button class="enter btn btn-success" type="submit">Submit your entry</button>
+                        <div class="text-right">
+                            <button class="enter btn btn-primary" type="submit"><i class="fa fa-check"></i> Submit your entry</button>
+                        </div>
                     #else
                         <i>Not enterable</i>
                     #end

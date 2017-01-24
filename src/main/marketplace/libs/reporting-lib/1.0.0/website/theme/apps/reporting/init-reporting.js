@@ -21,6 +21,9 @@ $(function () {
                 success: function (resp) {
                     var tbody = '';
                     var numRows = resp.numRows;
+                    if( numRows == 0 ) {
+                        numRows = resp.rows.length;
+                    }
                     if (numRows > 0) {
                         for (var i = 0; i < resp.rows.length; i++) {
                             tbody += renderRow(resp.rows[i]);

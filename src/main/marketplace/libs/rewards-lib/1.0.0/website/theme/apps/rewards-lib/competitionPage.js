@@ -83,10 +83,6 @@ function initOrgSearchPromo() {
             suggestion: Handlebars.compile(
                 '<div>'
                 + '<strong>{{title}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
                 + '</div>')
         }
     });
