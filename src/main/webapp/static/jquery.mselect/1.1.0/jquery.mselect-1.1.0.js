@@ -154,7 +154,7 @@
             onselectFolder: function (n, selectedUrl, hash) {
                 flog('Selected folder', n, selectedUrl, hash);
 
-                $('#milton-btn-upload-file').mupload('setUrl', config.basePath + selectedUrl);
+                $('#milton-btn-upload-file').mupload('setUrl', selectedUrl);
                 //previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>');
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
@@ -162,7 +162,7 @@
             onselectFile: function (n, selectedUrl, hash) {
                 flog('Selected file', n, selectedUrl, hash);
 
-                var newUrl = config.basePath + (selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/');
+                var newUrl = selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/';
                 newUrl = newUrl.replace(/\/\//g, '/');
                 $('#milton-btn-upload-file').mupload('setUrl', newUrl);
 
