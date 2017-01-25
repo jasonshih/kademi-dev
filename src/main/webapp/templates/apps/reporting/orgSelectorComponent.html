@@ -3,11 +3,15 @@
     #set ($groups = '')
 #end
 #set($selectedOrgId = "")
-#foreach($cookie in $request.getCookies())
-    #if ($cookie.getName() eq "selectedOrg")
-        #set($selectedOrgId = $cookie.getValue())
-    #end
+
+#set( $orgCookie = $request.getCookie("selectedOrg") )
+#if( $orgCookie )
+    #set($selectedOrgId = $orgCookie.getValue())
+#else
+
 #end
+
+
 #if ($profile)
     #set ($orgList = $formatter.newArrayList())
     #foreach($membership in $profile.allMemberships())
@@ -24,7 +28,7 @@
             #if( $selectedOrg )
                 $selectedOrg.title
             #else
-                [No organisation selected]
+                [All organisations]
             #end
             <span class="caret"></span>
         </button>
@@ -32,6 +36,7 @@
             #if( $orgList.isEmpty() )
             <li>No selections available</li>
             #else
+            <li><a data-orgId="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i>Clear selection</a></li>
             #foreach( $m in $orgList)
                 #if ($selectedOrg.orgId == $m.orgId)
                     <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>

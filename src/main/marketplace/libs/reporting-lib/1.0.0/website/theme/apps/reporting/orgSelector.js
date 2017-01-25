@@ -5,9 +5,12 @@ $(function(){
 
             var orgId = $(this).attr('data-orgId');
             if(orgId){
-                $.cookie('selectedOrg', orgId);
-                window.location.reload();
+                $.cookie('selectedOrg', orgId, { expires: 360, path: '/' });                
+            } else {
+                $.cookie('selectedOrg', "");
             }
+            //flog("org cookie", $.cookie('selectedOrg'), "reward", $.cookie('selectedReward'));
+            window.location.reload();
         })
     }
 

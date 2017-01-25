@@ -1,24 +1,27 @@
-#set( $rewardsHome = $applications.rewards.rewardsHome )
-#set( $rewards = $rewardsHome.viewableRewards )
-#set($selectedRewardName = "")
-#foreach($cookie in $request.getCookies())
-  #if ($cookie.getName() eq "selectedReward")
-    #set($selectedRewardName = $cookie.getValue())
-  #end
+#set( $rewards = $applications.rewards.allRewards )
+#set( $selectedRewardName = "" )
+#set( $rewardCookie = $request.getCookie("selectedReward") )
+#if( $rewardCookie )
+    #set($selectedRewardName = $rewardCookie.getValue())
+#else
+
 #end
+
 #foreach($reward in $rewards)
   #if ($selectedRewardName == $reward.name)
     #set ($selectedReward = $reward)
     #break
   #end
 #end
+
+
 <div class="reward-selector">
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuRewardSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           #if( $selectedReward )
             $selectedReward.title
           #else
-              [No reward selected]
+              [All promotions]
           #end
             <span class="caret"></span>
         </button>
@@ -26,6 +29,7 @@
           #if( $rewards.isEmpty() )
               <li>No selections available</li>
           #else
+            <li><a data-reward="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> Clear selection</a></li>
             #foreach( $reward in $rewards)
               #if ($reward.name == $selectedRewardName)
                   <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $reward.title</a></li>
