@@ -48,6 +48,25 @@
                 success: function (resp) {
                     form.html(resp);
 
+                    form.find('.queryType').on('click', function () {
+                        var cls = this.value;
+
+                        form.find('.select-query').val('');
+                        form.find('.select-query option').addClass('hide');
+                        form.find('.'+cls).removeClass('hide');
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-querytype', cls);
+                        if (cls === 'queryTable'){
+                            form.find('.aggregation, .sub-aggregation').addClass('hide');
+                        } else {
+                            form.find('.aggregation, .sub-aggregation').removeClass('hide');
+                        }
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.select-query').on('change', function () {
                         var selectedQuery = this.value;
                         flog("selected", selectedQuery);
@@ -55,7 +74,7 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedQuery) {
-                            component.attr('data-query', selectedQuery);
+                            component.attr('data-queryname', selectedQuery);
                             var aggsSelect = form.find(".select-agg");
                             self.initSelect(aggsSelect, selectedQuery, null);
 

@@ -17,6 +17,7 @@
             var config = $.extend({}, DEFAULT_KPI_OPTIONS, options);
 
             var queryHref = null;
+            var queryType = null;
             var graphOptions = {
                 aggName: null,
                 subAgg: null,
@@ -27,7 +28,8 @@
 
             var component = cont.closest('[data-type^="component-"]');
             if (component.length > 0) {
-                queryHref = "/queries/" + component.attr("data-query");
+                queryHref = "/queries/" + component.attr("data-queryname");
+                queryType = component.attr("data-querytype");
                 graphOptions.aggName = component.attr("data-agg");
                 graphOptions.subAgg = component.attr("data-sub-agg");
                 graphOptions.type = component.attr('data-chart-type');
@@ -39,10 +41,18 @@
 
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog("dateAgg: page date changed", cont);
-                loadGraphData(queryHref, graphOptions, {
-                    startDate: startDate,
-                    endDate: endDate
-                }, cont);
+                if (queryType === 'query'){
+                    loadGraphData(queryHref, graphOptions, {
+                        startDate: startDate,
+                        endDate: endDate
+                    }, cont);
+                } else if (queryType === 'queryTable'){
+                    loadGraphDataQueryTable(queryHref, graphOptions, {
+                        startDate: startDate,
+                        endDate: endDate
+                    }, cont);
+                }
+
             });
 
             // Wait for event to be triggered
@@ -68,6 +78,88 @@
         });
     }
 
+    function loadGraphDataQueryTable(href, graphOptions, opts, container){
+        if (!$.contains(document, container[0])) {
+            return;
+        }
+        href = href + "?as=json&" + $.param(opts);
+
+        flog("loadGraphDataQueryTable", container, graphOptions, href);
+        $.ajax({
+            type: "GET",
+            url: href,
+            dataType: 'json',
+            success: function (resp) {
+                showHistogramQueryTable(resp, container, graphOptions);
+            }
+        });
+    }
+
+    function showHistogramQueryTable(resp, container, graphOptions) {
+        var svg = container.find("svg");
+        svg.empty();
+
+        flog("showHistogram", svg);
+        nv.addGraph(function () {
+
+            var myData = [];
+
+            if (resp.headers && resp.headers.length){
+                for (var i = 1; i < resp.headers.length; i++){
+                    var series = {key: resp.headers[i], values: []};
+                    for (var j = 0; j < resp.rows.length; j++){
+                        series.values.push({x: resp.rows[j][0], y: resp.rows[j][i]});
+                    }
+
+                    myData.push(series);
+                }
+            }
+
+            flog("graph opts", graphOptions);
+            var chart = null;
+            if (graphOptions.type == 'line') {
+                chart = nv.models.lineChart()
+                    .margin({right: 50, left: 0, bottom: 30, top: 0})
+                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                    .showLegend(graphOptions.showLegend)
+                    .showYAxis(true)
+                    .clipEdge(true);
+            } else {
+                chart = nv.models.multiBarChart()
+                    .margin({right: 50, left: 0, bottom: 30, top: 0})
+                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                    .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .showLegend(graphOptions.showLegend)
+                    .stacked(graphOptions.stacked)
+                    .showYAxis(true)
+                    .clipEdge(true);
+            }
+
+            chart.xAxis.tickFormat(function (d) {
+                return d3.time.format('%e %b')(new Date(d))
+            });
+
+            chart.yAxis.tickFormat(d3.format(',.2f'));
+
+            chart.x(function (d) {
+                return d.x;
+            });
+            chart.y(function (d) {
+                return d.y;
+            });
+
+
+            flog("select data", myData, chart, svg.get(0));
+            d3.select(svg.get(0))
+                .datum(myData)
+                .call(chart);
+
+            nv.utils.windowResize(chart.update);
+
+            return chart;
+        });
+        flog("done show histo");
+    }
 
     function showHistogram(resp, container, graphOptions) {
 
