@@ -22,8 +22,8 @@
         <div class="table-responsive">
             <table class="table table-striped">
                 #if($queryType == 'query' && $formatter.toBool($headers) )
-                    #set( $queryBean = $page.queryBean )
-                    #set( $queryBean = $applications.Reporting.getQuery($query))
+                    #set ($queryJson = $query + ".query.json")
+                    #set( $queryBean = $applications.Reporting.getQuery($queryJson))
                     #set( $fields = $applications.Reporting.getQueryFieldNames($queryBean) )
                     <thead>
                     <tr>

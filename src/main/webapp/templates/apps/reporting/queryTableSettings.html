@@ -22,7 +22,7 @@
             <select class="form-control select-query">
                 <option value="">- None/Default -</option>
                 #foreach ($query in $applications.Reporting.queries )
-                    <option class="query" value="$query.sourceFileName">$query.sourceFileName</option>
+                    <option class="query" value="$query.name">$query.name</option>
                 #end
                 #foreach ($query in $applications.Reporting.queryTables )
                     <option class="queryTable hide" value="$query.tableId">$query.description</option>
