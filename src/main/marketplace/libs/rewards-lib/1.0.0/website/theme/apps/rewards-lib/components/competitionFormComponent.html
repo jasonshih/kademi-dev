@@ -5,6 +5,9 @@
                 <h1><i class="fa fa-thumbs-o-up fa-3x"></i></h1>
                 <h1>Good Work!</h1>
                 <p>Your submission has been received.</p>
+                #if( !$page.onePerRecipient )
+                <button class="go-again btn btn-lg btn-primary">Submit another</button>
+                #end
             </div>
             #if( !$page.onePerRecipient || $page.entriesForUser.size() == 0 )
                 <form class="entryForm" method="POST" action="$request.absolutePath">
@@ -60,7 +63,7 @@
                     #if( $page.selectOrg )
                     <div class="form-group">
                         <label class="control-label" for="phone">Your store</label>
-                        <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your store id" value="" />
+                        <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your store" value="" />
                         <input type="hidden" name="relatedOrg">
                     </div>
                     #end
@@ -68,8 +71,8 @@
                     #if( $page.selectProduct )
                     <div class="form-group">
                         <label class="control-label" for="phone">Product</label>
-                        <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required" placeholder="Enter the product code" value="" />
-                        <input type="hidden" name="relatedProductSku">
+                        <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required reset-on-resubmit" placeholder="Enter the product code" value="" />
+                        <input type="hidden" class="reset-on-resubmit" name="relatedProductSku">
                     </div>
                     #end
 
@@ -88,7 +91,7 @@
                                     </div>
 
                                     <div class="input" id='myUploaded'></div>
-                                    <input type="hidden" name="userAttachmentHash" value="$!page.userAttachmentHash"/>
+                                    <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash"/>
                                 </li>
                                 #foreach($entry in $page.child("uploads").children)
                                     <li><a href="uploads/$entry.name/alt-600-400.png"><img src="uploads/$entry.name/alt-150-150.png"/></a></li>

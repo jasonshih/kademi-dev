@@ -47,6 +47,14 @@ $(function () {
     initOrgSearchPromo();
     initSkuSearchPromo();
 
+    $(".go-again").click(function(e) {
+        e.preventDefault();
+        var f = $(e.target);
+        var div = f.closest(".competitionForm");
+        div.find(".reset-on-resubmit").val("");
+        div.find(".thankyou").hide(1000);
+        div.find(".entryForm").show(1000);
+    });
 });
 function checkViewUploaded() {
     var div = $(".viewUploaded");
