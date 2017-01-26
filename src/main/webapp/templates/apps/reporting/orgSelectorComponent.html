@@ -44,6 +44,15 @@
                     <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
                 #end
             #end
+            
+            #end            
+
+            #if( $selectedOrg ) 
+                <li role="separator" class="divider"><a href="#">Orgs in $selectedOrg.title</a></li>
+                <li><a href="#">Orgs in $selectedOrg.title</a></li>
+                #foreach( $org in $selectedOrg.childOrgs() )
+                <li><a data-orgId="$org.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $org.title</a></li>
+                #end
             #end
         </ul>
     </div>
