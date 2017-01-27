@@ -1,0 +1,9 @@
+{
+    "appDependencies": [
+        {
+            "appId": "orgsLocator-lib",
+            "branch": "1.0.0"
+        }            
+    ]
+}
+
