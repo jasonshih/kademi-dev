@@ -11,17 +11,16 @@
 
 #end
 
-
 #if ($profile)
     #set ($orgList = $formatter.newArrayList())
     #foreach($membership in $profile.allMemberships())
         #if ($groups.contains($membership.groupName) && !$orgList.contains($membership.org))
             #call($orgList.add($membership.org))
-            #if ($selectedOrgId == $membership.org.orgId)
-                #set ($selectedOrg = $membership.org)
-            #end
         #end
     #end
+
+    #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
+
 <div class="org-selector">
     <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuOrgSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -44,14 +43,17 @@
                     <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
                 #end
             #end
-            
-            #end            
 
-            #if( $selectedOrg ) 
+            #end
+
+            #if( $selectedOrg )
+                #set( $childOrgs = $selectedOrg.childOrgs() )
+                #if( !$childOrgs.isEmpty() )
                 <li role="separator" class="divider"><a href="#">Orgs in $selectedOrg.title</a></li>
                 <li><a href="#">Orgs in $selectedOrg.title</a></li>
-                #foreach( $org in $selectedOrg.childOrgs() )
+                #foreach( $org in $childOrgs )
                 <li><a data-orgId="$org.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $org.title</a></li>
+                #end
                 #end
             #end
         </ul>
