@@ -43,7 +43,6 @@
                             <col width="" />
                             <col width="" />
                             <col width="180px" />
-                            <col width="180px" />
                             <col width="150px" />
                             <col width="180px" />
                         </colgroup>
@@ -77,11 +76,23 @@
                                     </i>
                                     #end
                                 </td>
-                                <td>$!w.liveBranch</td>
+                                <td>
+                                    <a href="/repositories/$w.name/$w.liveBranch/">
+                                    $!w.liveBranch
+                                    </a>
+                                </td>
                                 <td class="public">
-                                    <div data-off="danger" data-on="success" class="make-switch switch-small btn-switch-public" data-link="/repositories/$w.name">
-                                        $formatter.checkbox($w.name, $w.publicContent)
-                                    </div>
+                                    #if( $w.publicContent)
+                                    <span class="label label-success">
+                                        <i class="fa fa-unlock"></i>
+                                        Public
+                                    </span>
+                                    #else
+                                    <span class="label label-warning">
+                                        <i class="fa fa-lock"></i>
+                                        Private
+                                    </span>
+                                    #end
                                 </td>
                                 <td>$!w.liveBranch().publicTheme</td>
                                 <td class="action">
