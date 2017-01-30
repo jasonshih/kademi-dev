@@ -21,44 +21,34 @@
 
     #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 
-<div class="org-selector">
-    <div class="dropdown">
-        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenuOrgSelector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            #if( $selectedOrg )
-                $selectedOrg.title
-            #else
-                [All organisations]
-            #end
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu orgSelectorWrap" aria-labelledby="dropdownMenuOrgSelector">
-            #if( $orgList.isEmpty() )
-            <li>No selections available</li>
-            #else
-            <li><a data-orgId="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i>Clear selection</a></li>
-            #foreach( $m in $orgList)
-                #if ($selectedOrg.orgId == $m.orgId)
-                    <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
-                #else
-                    <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
-                #end
-            #end
-
-            #end
-
-            #if( $selectedOrg )
-                #set( $childOrgs = $selectedOrg.childOrgs() )
-                #if( !$childOrgs.isEmpty() )
-                <li role="separator" class="divider"><a href="#">Orgs in $selectedOrg.title</a></li>
-                <li><a href="#">Orgs in $selectedOrg.title</a></li>
-                #foreach( $org in $childOrgs )
-                <li><a data-orgId="$org.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $org.title</a></li>
-                #end
-                #end
-            #end
-        </ul>
+    <div class="org-selector">
+        <div class="dropdown">
+            <div class="input-group">
+                <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" />
+                <input type="hidden" name="searchOrgId"/>
+                <div class="input-group-btn">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Select
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu orgSelectorWrap" aria-labelledby="dropdownMenuOrgSelector">
+                        #if( $orgList.isEmpty() )
+                        <li>No selections available</li>
+                        #else
+                        <li><a data-orgId="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i>Clear selection</a></li>
+                        #foreach( $m in $orgList)
+                        #if ($selectedOrg.orgId == $m.orgId)
+                        <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
+                        #else
+                        <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
+                        #end
+                        #end
+                        #end
+                    </ul>
+                </div><!-- /btn-group -->
+            </div><!-- /input-group -->
+        </div>
     </div>
-</div>
 #else
 #end
 
