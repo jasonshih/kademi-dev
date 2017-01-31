@@ -108,7 +108,9 @@
                 for (var i = 1; i < resp.headers.length; i++){
                     var series = {key: resp.headers[i], values: []};
                     for (var j = 0; j < resp.rows.length; j++){
-                        series.values.push({x: resp.rows[j][0], y: resp.rows[j][i]});
+                        var value = resp.rows[j][i];
+                        flog("value", value, "x", resp.rows[j][0]);
+                        series.values.push({x: resp.rows[j][0], y: value});
                     }
 
                     myData.push(series);
@@ -200,11 +202,12 @@
                         var subAggBucket = findBucket(sagg.buckets, series.key);
                         var v = 0;
                         if (subAggBucket) {
-                            v = dateBucket.doc_count;
+                            v = subAggBucket.doc_count;
                             if (v == null) {
                                 v = 0;
                             }
                         }
+                        //flog("subAgg", subAgg, "date=", dateBucket.key, "v=", v);
                         series.values.push({x: dateBucket.key, y: v});
                     });
 
