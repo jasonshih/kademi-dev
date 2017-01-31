@@ -60,9 +60,9 @@
 
                         component.attr('data-querytype', cls);
                         if (cls === 'queryTable'){
-                            form.find('.aggregation, .sub-aggregation').addClass('hide');
+                            form.find('.aggregation, .sub-aggregation, .metric-aggregation').addClass('hide');
                         } else {
-                            form.find('.aggregation, .sub-aggregation').removeClass('hide');
+                            form.find('.aggregation, .sub-aggregation, .metric-aggregation').removeClass('hide');
                         }
                         keditor.initDynamicContent(dynamicElement);
                     });
@@ -110,6 +110,16 @@
                             self.initDateAgg();
                         });
                     });
+                    
+                    form.find('.metric-agg').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-metric-agg', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });                    
 
                     form.find('.chart-type').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -220,6 +230,7 @@
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
+            form.find('.metric-agg').val(dataAttributes['data-metric-agg']);
             form.find('.chart-type').val(dataAttributes['data-chart-type']);
 
             form.find('.show-stacked').prop("checked", toBool(dataAttributes['data-stacked']));

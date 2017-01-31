@@ -32,6 +32,7 @@
                 queryType = component.attr("data-querytype");
                 graphOptions.aggName = component.attr("data-agg");
                 graphOptions.subAgg = component.attr("data-sub-agg");
+                graphOptions.metricAgg = component.attr("data-metric-agg");
                 graphOptions.type = component.attr('data-chart-type');
                 graphOptions.stacked = toBool(component.attr("data-stacked"));
                 graphOptions.showControls = toBool(component.attr("data-controls"));
@@ -167,6 +168,7 @@
 
         var aggName = graphOptions.aggName;
         var subAgg = graphOptions.subAgg;
+        var metricAgg = graphOptions.metricAgg;
 
         var aggr = resp.aggregations[aggName];
         var svg = container.find("svg");
@@ -202,10 +204,7 @@
                         var subAggBucket = findBucket(sagg.buckets, series.key);
                         var v = 0;
                         if (subAggBucket) {
-                            v = subAggBucket.doc_count;
-                            if (v == null) {
-                                v = 0;
-                            }
+                            v = findValue(subAggBucket, graphOptions);
                         }
                         //flog("subAgg", subAgg, "date=", dateBucket.key, "v=", v);
                         series.values.push({x: dateBucket.key, y: v});
@@ -220,10 +219,7 @@
                 myData.push(series);
 
                 $.each(aggr.buckets, function (b, dateBucket) {
-                    var v = dateBucket.doc_count;
-                    if (v == null) {
-                        v = 0;
-                    }
+                    var v = findValue( dateBucket, graphOptions );
                     series.values.push({x: dateBucket.key, y: v});
                 });
             }
@@ -272,6 +268,22 @@
             return chart;
         });
         flog("done show histo");
+    }
+
+    function findValue(bucket, options) {
+        var v;
+        if( options.metricAgg ) {
+            var agg = bucket[options.metricAgg];
+            if( agg ) {
+                v = agg.value;
+            }
+        } else {
+            v = bucket.doc_count;
+        }
+        if (v == null) {
+            v = 0;
+        }
+        return v;
     }
 
     function findBucket(buckets, key) {
