@@ -129,6 +129,7 @@
                 .labelType('value')
                 .donutRatio(0.35)
                 .showLabels(true)
+                .labelThreshold(0.10)
                 .showLegend(graphOptions.showLegend)
                 .legendPosition(config.legendPosition)
                 .margin({top: 0, right: 0, bottom: 0, left: 0});
