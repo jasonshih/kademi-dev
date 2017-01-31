@@ -35,7 +35,7 @@
 
         <div class="panel panel-default">
             <div class="panel-body">
-                <div class="table-responsive">
+                <div class="table-responsive" style="padding-bottom: 200px">
                     <table id="website-wrapper" class="table table-striped table-hover">
                         <colgroup>
                             <col width="" />
@@ -62,7 +62,7 @@
                                 #set( $liveBranch = $w.current )
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="http://${page.websiteAddress($w)}${formatter.portString}/" target="_blank" title="ID - $w.id" class="btn btn-sm btn-default repo" style="min-width: 200px; text-align: left"><i class="fa fa-globe"></i> $w.name</a>
+                                        <a href="${page.websiteAddress($w)}" target="_blank" title="ID - $w.id" class="btn btn-sm btn-default repo" style="min-width: 200px; text-align: left"><i class="fa fa-globe"></i> $w.name</a>
                                         <a href="$w.name/" class="btn btn-sm btn-info"><i class="glyphicon glyphicon-cog"></i></a>
                                         <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
