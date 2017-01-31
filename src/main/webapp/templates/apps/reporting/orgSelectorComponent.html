@@ -6,7 +6,7 @@
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
 #if( $orgCookie )
-    #set($selectedOrgId = $orgCookie.getValue())
+    #set( $selectedOrgId = $orgCookie.value )    
 #else
 
 #end
@@ -19,13 +19,17 @@
         #end
     #end
 
-    #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
-
+    #if( $selectedOrgId == $rootFolder.orgData.orgId )
+        #set ($selectedOrg = $rootFolder.orgData )
+    #else
+        #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
+    #end
+    
     <div class="org-selector">
         <div class="dropdown">
             <div class="input-group">
                 <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" />
-                <input type="hidden" name="searchOrgId"/>
+
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Select

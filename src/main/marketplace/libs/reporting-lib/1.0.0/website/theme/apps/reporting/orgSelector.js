@@ -5,11 +5,15 @@ $(function () {
             e.preventDefault();
 
             var orgId = $(this).attr('data-orgId');
+            var orgTitle;
             if (orgId) {
+                orgTitle = $(this).text();                
                 $.cookie('selectedOrg', orgId, {expires: 360, path: '/'});
             } else {
-                $.cookie('selectedOrg', "");
-            }
+                $.cookie('selectedOrg', "", {expires: 360, path: '/'});
+                orgTitle = "";
+            }            
+            $(e.target).closest(".org-selector").find(".selectOrgSearch").val(orgTitle);
             //flog("org cookie", $.cookie('selectedOrg'), "reward", $.cookie('selectedReward'));
             window.location.reload();
         })
