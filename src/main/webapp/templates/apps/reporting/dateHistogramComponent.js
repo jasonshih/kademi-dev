@@ -48,6 +48,25 @@
                 success: function (resp) {
                     form.html(resp);
 
+                    form.find('.queryType').on('click', function () {
+                        var cls = this.value;
+
+                        form.find('.select-query').val('');
+                        form.find('.select-query option').addClass('hide');
+                        form.find('.'+cls).removeClass('hide');
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-querytype', cls);
+                        if (cls === 'queryTable'){
+                            form.find('.aggregation, .sub-aggregation, .metric-aggregation').addClass('hide');
+                        } else {
+                            form.find('.aggregation, .sub-aggregation, .metric-aggregation').removeClass('hide');
+                        }
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.select-query').on('change', function () {
                         var selectedQuery = this.value;
                         flog("selected", selectedQuery);
@@ -55,7 +74,7 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         if (selectedQuery) {
-                            component.attr('data-query', selectedQuery);
+                            component.attr('data-queryname', selectedQuery);
                             var aggsSelect = form.find(".select-agg");
                             self.initSelect(aggsSelect, selectedQuery, null);
 
@@ -91,6 +110,16 @@
                             self.initDateAgg();
                         });
                     });
+                    
+                    form.find('.metric-agg').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-metric-agg', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initDateAgg();
+                        });
+                    });                    
 
                     form.find('.chart-type').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -201,6 +230,7 @@
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
+            form.find('.metric-agg').val(dataAttributes['data-metric-agg']);
             form.find('.chart-type').val(dataAttributes['data-chart-type']);
 
             form.find('.show-stacked').prop("checked", toBool(dataAttributes['data-stacked']));

@@ -5,7 +5,7 @@
             <select class="form-control select-query">
                 <option value="">- None/Default -</option>
                 #foreach ($query in $applications.Reporting.queries )
-                <option value="$query.sourceFileName">$query.sourceFileName</option>
+                <option value="$query.name">$query.name</option>
                 #end
             </select>
         </div>

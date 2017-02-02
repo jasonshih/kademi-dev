@@ -37,7 +37,7 @@
                     size = 100;
                 }
                 $.ajax({
-                    url: '/queries/' + queryName.replace('.query.json', '') + '/?run&from='+from+'&size='+size,
+                    url: '/queries/' + queryName + '/?run&from='+from+'&size='+size,
                     dataType: 'json',
                     success: function (resp) {
                         var tbody = '';
@@ -210,7 +210,6 @@
                     arr.push(csvHeader);
 
                     var url = $(this).attr('href');
-                    url = url.replace('.query.json', '');
                     $.ajax({
                         url: url,
                         dataType: 'json',
