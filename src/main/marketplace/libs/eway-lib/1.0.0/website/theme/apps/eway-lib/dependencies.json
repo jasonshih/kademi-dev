@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/eway-lib/eway-lib.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "https://secure.ewaypayments.com/scripts/eCrypt.js"
+            }
+        }
+    ]
+}
+

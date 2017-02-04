@@ -50,6 +50,7 @@ function initCartForm() {
                 var value = decodeURIComponent(pair[1]).replace(/\+/g, ' ');
                 newData[key] = value;
             }
+            form.trigger("onBeforeCheckout", [newData, form]);
 
             return $.param(newData);
         },

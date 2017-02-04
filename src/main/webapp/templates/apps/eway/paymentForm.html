@@ -1,3 +1,5 @@
+#set( $encKey = $applications.eWayPaymentApp.encryptionKey )
+<input type="hidden" name="encKey" value="$encKey"/>
 <div class="form-group">
     <div class="col-md-12">
         <input type="text" name="cardnumber" class="form-control required-if-shown" value="" placeholder="Credit Card #" />
@@ -55,11 +57,14 @@
         </div>
     </div>
 </div>
+#if( $isMember )
+#else
 <div class="form-group">
     <div class="col-md-12">
         <input type="text" name="phone" class="form-control required-if-shown" value="$!user.phone" placeholder="Phone number" />
     </div>
 </div>
+#end
 <div class="form-group">
     <div class="col-md-12">
         <input type="text" name="addressLine1" class="form-control required-if-shown" value="" placeholder="Address 1" />
@@ -116,14 +121,8 @@
 </div>
 #end
 
-<script src="https://secure.ewaypayments.com/scripts/eCrypt.js">//</script>
 <script>
     $(function () {
-        paymentForm.beforePostForm(function (data) {
-            if (data.paymentProvider === 'eWayPaymentApp') {
-                data.cardnumber = eCrypt.encryptValue(data.cardnumber);
-                data.cardcvn = eCrypt.encryptValue(data.cardcvn);
-            }
-        });
+
     });
 </script>
