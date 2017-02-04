@@ -36,6 +36,22 @@
                         <input type="text" name="addressState" class="form-control required" required="required" value="" placeholder="State/Province" />
                     </div>
                 </div>
+
+                #if( $applications.shoppingCart.cashTopupsEnabled )
+                    #set( $checkoutPage = $page.find("/checkout" ) )
+                    #if( $checkoutPage.balance < $checkoutPage.totalCost )
+                        #set( $amount = $checkoutPage.calcCashTopUpAmount($checkoutPage.balance, $checkoutPage.totalCost) )
+                        #set( $pApp = $applications.shoppingCart.paymentApp )
+
+                        <input type="hidden" name="cashTopUpAmount" value="$amount" />
+                        <h2>Cash top up: $ $amount</h2>
+                <div id="pf-${pApp.instanceId}" class="payment-form">
+                    $pApp.memberPaymentForm
+                </div>
+
+                    #end
+                #end
+
                 <button type="submit" class="btn btn-block btn-danger"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
             </div>
         </div>
