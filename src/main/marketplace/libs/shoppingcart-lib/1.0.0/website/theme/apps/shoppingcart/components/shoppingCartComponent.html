@@ -6,6 +6,16 @@
             </div>
         </div>
         <div class="items-list">
+
+            <div class="promo-codes-container form-group">
+                <div class="input-group">
+                    <input type="text" class="promo-codes form-control" name="promoCodes" value="$formatter.toCsv($applications.shoppingCart.userPromoCodes)" placeholder="Enter promotion codes" />
+                    <span class="input-group-btn">
+                        <button class="apply-promo-codes btn btn-success">Apply</button>
+                    </span>
+                </div>
+            </div>
+
             #set($totalCost = 0)
             #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "href" ) )
 
@@ -30,15 +40,17 @@
                         </div>
                     </div>
                     <div class="col-sm-3 item-quantity center-content">
+                        #if( $item.itemPage )
                         <div class="input-group input-group-sm">
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
                         </span>
-                            <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
+                        <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-increase-quantity" type="button">+</button>
                         </span>
                         </div>
+                        #end
                         <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$formatter.htmlAttEncode($item.href)" />
                     </div>
                     <div class="col-sm-2 item-price center-content">
@@ -52,7 +64,9 @@
                     </div>
                     <div class="col-sm-1 item-action text-right center-content">
                         <div>
+                            #if( $item.itemPage )
                             <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                            #end
                         </div>
                     </div>
                 </div>

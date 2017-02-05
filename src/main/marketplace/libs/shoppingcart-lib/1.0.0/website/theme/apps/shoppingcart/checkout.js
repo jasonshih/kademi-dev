@@ -1,10 +1,33 @@
+$(function () {
+    initCheckout();
+});
+
 function initCheckout() {
     flog('initCheckout');
     initCartForm();
     initItemQuantity();
     initRemoveItem();
+    initCheckoutPanels();
+    initPromoCodes();
 
     $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item').prop('disabled', false);
+}
+
+function initPromoCodes() {
+    $("body").on("click", ".apply-promo-codes", function (e) {
+        e.preventDefault();
+        var cont = $(e.target).closest(".promo-codes-container");
+        var inp = cont.find("input[name=promoCodes]");
+        var codes = inp.val();
+        $.cookie('promoCodes', codes, {expires: 360, path: '/'});
+
+        $('#itemsTable').reloadFragment({
+            whenComplete: function (resp) {
+                Msg.info('Applied promotion codes');
+            }
+        });
+
+    });
 }
 
 function initCartForm() {
@@ -222,3 +245,96 @@ function doRemoveFromCart(href) {
         }
     });
 }
+
+function initCheckoutPanels() {
+    var panels = $("#checkout-panels");
+    var form = $("#checkout-panels form");
+    panels.on("click", ".wizard-btn-1", function (e) {
+        e.preventDefault();
+        var ok = true;
+        form.find(".quantity").each(function (i, n) {
+            var inp = $(n);
+            if (checkNumeric(inp, form)) {
+                var num = inp.val();
+                var tr = inp.closest("tr");
+                var cost = tr.find(".cost").text();
+                var newSubtotal = num * cost;
+                flog("num,cost,sub", num, cost, newSubtotal);
+                tr.find(".subtotal").text(newSubtotal);
+            } else {
+                ok = false;
+            }
+        });
+        if (ok) {
+            $("#confirmTableBody").html($("#itemsTableBody").html());
+            $("#confirmTableBody").find("input.quantity").each(function (i, n) {
+                var node = $(n);
+                var q = node.val();
+                node.replaceWith("<span>" + q + "</span>");
+                flog("q", node)
+            });
+            $("#confirmTableBody").find(".deleteItem, .itemHref").remove();
+
+            var tabs = $('#checkout-tabs a[href="#tab-shipping"]');
+            tabs.parent().removeClass("disabled")
+            tabs.tab("show");
+        } else {
+            Msg.error("Please enter valid quantities");
+        }
+    });
+    panels.on("click", ".wizard-btn-2", function (e) {
+        e.preventDefault();
+        var addr = $(".ship-address");
+        addr.empty();
+        var addr1 = $('#tab-shipping input[name="addressLine1"]').val();
+        var addr2 = $('#tab-shipping input[name="addressLine2"]').val();
+        var postCode = $('#tab-shipping input[name="postcode"]').val();
+        var state = $('#tab-shipping input[name="state"]').val();
+        addr.append(addr1)
+                .append('<br/>')
+                .append(addr2)
+                .append('<br/>')
+                .append(postCode)
+                .append('<br/>')
+                .append(state);
+        resetValidation(form);
+        var tabs = $('#checkout-tabs a[href="#tab-final"]');
+        tabs.parent().removeClass("disabled")
+        tabs.tab("show");
+    });
+
+    panels.on("click", ".wizard-btn-final", function (e) {
+        e.preventDefault();
+        form.submit();
+    });
+    panels.on("click", ".remove", function (e) {
+        var tr = $(e.target).closest("tr");
+        tr.remove();
+        var href = tr.find("input.itemHref").val();
+        doRemoveFromCart(href);
+        Msg.info("Removed item");
+    });
+    panels.on("change", ".quantity", function (e) {
+        flog("q change");
+        var target = $(e.target);
+        if (checkNumeric(target, form)) {
+            var num = target.val();
+            var tr = target.closest("tr");
+            var cost = tr.find(".cost").text();
+            var newSubtotal = num * cost;
+            var href = target.next(".itemHref").val();
+            flog("num,cost,sub,href", num, cost, newSubtotal, href);
+            tr.find(".subtotal").text(newSubtotal);
+            doQuantityUpdate(href, num);
+        } else {
+            Msg.error("Please enter a valid quantity");
+        }
+    });
+    $('#myTabs').on("click", 'a', function (e) {
+        if ($(this.parentNode).hasClass("disabled")) {
+            e.preventDefault();
+            return false;
+        }
+    });
+}
+

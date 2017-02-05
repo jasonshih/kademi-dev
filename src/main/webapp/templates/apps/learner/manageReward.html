@@ -371,7 +371,7 @@
 
                         <hr/>
 
-                        <h3>Select the promotion offer</h3>
+                        <h3>Promotion offer:</h3>
 
                         <p>
                             <label for="" class="control-label">
@@ -385,6 +385,17 @@
 
                             <div class="col-sm-4">
                                 <input name="promoDiscountAmount"  class="form-control" value="$!page.promoDiscountAmount" />
+                            </div>
+                        </div>
+
+                        <h3>Promotion codes</h3>
+
+                        <div class="form-group">
+                            <label for="promoEntryCodes" class="col-sm-2 control-label">Codes</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="promoEntryCodes"  class="form-control">$!page.promoEntryCodes</textarea>
+                                <i>If provided, users will be required to enter a code to activate the promotion</i>
                             </div>
                         </div>
 
