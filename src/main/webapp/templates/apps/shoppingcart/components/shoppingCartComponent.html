@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-sm-3 item-title center-content">
                         <div>
-                            $item.ItemPage.title
+                            $item.title
                             #foreach( $opt in $item.itemPage.optionTitles( $item.selectedParameterOptions ).entrySet() )
                                 <br />
                                 <small class="text-muted">
@@ -45,11 +45,7 @@
                         <div>
                         <span class="lead">
                             #set ($subTotal = 0)
-                            #if ($item.selectedParameterOptions && $item.selectedParameterOptions.size() > 0)
-                                #set ($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.getPurchaseAmount($item.selectedParameterOptions).amount, $item.quantity))
-                            #else
-                                #set ($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
-                            #end
+                            #set ($subTotal = $item.totalAmount)
                             $formatter.formatCurrency($subTotal) Pts
                         </span>
                         </div>

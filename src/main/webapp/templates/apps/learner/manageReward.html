@@ -42,7 +42,7 @@
                                 <li><a>Select a version:</a></li>
                                 <li class="divider"></li>
                                 #foreach($version in $page.parent.branches)
-                                    <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
+                                <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
                                 #end
                             </ul>
                         </div>
@@ -56,10 +56,10 @@
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
                         <li class=""><a href="#rewardContent" data-toggle="tab">Content</a></li>
                         <li class=""><a href="#groups" data-toggle="tab">Groups</a></li>
-                        <li class=""><a href="#entryForm" data-toggle="tab">Entry Form</a></li>
+                        <li class=""><a href="#entryForm" data-toggle="tab">Competition</a></li>
+                        <li class=""><a href="#checkout" data-toggle="tab">Checkout</a></li>
                         <li class=""><a href="#restrictions" data-toggle="tab">Restrictions</a></li>
                         <li class=""><a href="#entries" data-toggle="tab">Entries</a></li>
-                        <li class=""><a href="#terms" data-toggle="tab">T's and C's</a></li>
                     </ul>
                 </div>
                 <div class="tab-content">
@@ -102,16 +102,6 @@
                                                     $formatter.option($st.name, $st.name, $page.website.name)
                                                     #end
                                                 </select>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Product Categories</td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="col-sm-4">
-                                                <input type="text" name="productCategories" class="form-control" value="$!page.productCategories"/>
                                             </div>
                                         </div>
                                     </td>
@@ -241,17 +231,17 @@
                                 <div>
                                     #set($image = $page.imageHref )
                                     #if( $image )
-                                        <div id="reward-image">
-                                            <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
-                                            <!--
-                                        <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
-                                                <span class="fa fa-times"></span>
-                                        </a>
+                                    <div id="reward-image">
+                                        <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
+                                        <!--
+                                    <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
+                                            <span class="fa fa-times"></span>
+                                    </a>
                                         -->
-                                        </div>
-                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
+                                    </div>
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
                                     #else
-                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
                                     #end
                                 </div>
                             </div>
@@ -263,7 +253,7 @@
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                                <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
                             #end
                         </div>
                     </div>
@@ -279,22 +269,37 @@
                             <label for="quizEnabled" class="control-label">Provide an entry form</label>
 
                             <hr />
-                            <p><label for="" class="control-label">
-                                $formatter.checkbox("allowAnon", $page.allowAnon)
-                                Anonymous entries. Check this if you want to allow non-logged in users to submit entries
-                            </label>
+                            <p>
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("allowAnon", $page.allowAnon)
+                                    Anonymous entries.
+                                </label>
+                                <br/>
+                                Check this if you want to allow non-logged in users to submit entries
                             </p>
 
-                            <p><label for="" class="control-label">
-                                $formatter.checkbox("selectProduct", $page.selectProduct)
-                                Select product. Users will be required to select a product.
-                            </label>
+                            <p>
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("selectProduct", $page.selectProduct)
+                                    Select product. Users will be required to select a product.
+                                </label>
                             </p>
 
-                            <p><label for="" class="control-label">
-                                $formatter.checkbox("selectOrg", $page.selectOrg)
-                                Select organisation. Users will select an organisation (eg a store)
-                            </label>
+                            <div class="form-group">
+                                <label for="inputEmail3" class="col-sm-2 control-label">Product categories</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" name="productCategories" class="form-control" value="$!page.productCategories" placeholder="Enter a list of product category codes" />
+                                    <i>If supplied, the user will need to select a product from these categories</i>
+                                </div>
+                            </div>
+
+
+                            <p>
+                                <label for="" class="control-label">
+                                    $formatter.checkbox("selectOrg", $page.selectOrg)
+                                    Select organisation. Users will select an organisation (eg a store)
+                                </label>
                             </p>
 
                             <div class="form-group">
@@ -304,9 +309,10 @@
                                     <select name="selectOrgType" class="form-control">
                                         <option value="">Any type of organisation</option>
                                         #foreach( $ot in $page.organisation.orgTypes )
-                                            $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
+                                        $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
                                         #end
                                     </select>
+                                    <i>If selected, the user will be required to select an organisation of this type, eg "store"</i>
                                 </div>
                             </div>
 
@@ -317,6 +323,69 @@
                             <textarea style="display: none" name="quizHtml" id="quizHtml">$!page.quizHtml</textarea>
 
                             <div id="entryFormBuilder"></div>
+                        </div>
+
+                        <hr/>
+
+                        <h3>Terms and conditions</h3>
+
+                        <textarea cols="120" name="terms" rows="10" class="htmleditor">$!page.terms</textarea>
+                    </div>
+
+                    <div class="tab-pane" id="checkout">
+                        <h2>Checkout promotion</h2>
+                        <p>Allow customers to get discounts and free gifts when they checkout from your store</p>
+
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Select your store</label>
+
+                            <div class="col-sm-10">
+                                <select name="storeName" class="form-control">
+                                    <option value="">No store</option>
+                                    #foreach( $store in $page.stores )
+                                    $formatter.option($store.name, $store.title, $page.storeName)
+                                    #end
+                                </select>
+                                <i>If selected, this checkout promotion will be active for the selected store. Manage <a href="/reward-store/">stores here</a></i>
+                            </div>
+                        </div>
+
+                        <h3>Choose which products and categories to include</h3>
+                        <div class="form-group">
+                            <label for="promoProductCodes" class="col-sm-2 control-label">Product codes</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="promoProductCodes"  class="form-control">$!page.promoProductCodes</textarea>
+                                <i>Note that these are <a href="/products/">product codes</a>, not <a href="/skus/">SKUs</a>.</i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="promoCategoryCodes" class="col-sm-2 control-label">Category codes</label>
+
+                            <div class="col-sm-10">
+                                <textarea name="promoCategoryCodes"  class="form-control">$!page.promoCategoryCodes</textarea>
+                                <i>Manage <a href="/categories/">product categories here</a></i>
+                            </div>
+                        </div>
+
+                        <hr/>
+
+                        <h3>Select the promotion offer</h3>
+
+                        <p>
+                            <label for="" class="control-label">
+                                $formatter.checkbox("promoDiscountEnabled", $page.promoDiscountEnabled)
+                                Discount
+                            </label>
+                        </p>
+
+                        <div class="form-group">
+                            <label for="promoDiscountAmount" class="col-sm-2 control-label">Discount amount</label>
+
+                            <div class="col-sm-4">
+                                <input name="promoDiscountAmount"  class="form-control" value="$!page.promoDiscountAmount" />
+                            </div>
                         </div>
 
                     </div>
@@ -332,19 +401,16 @@
                         <div class="well">Add restrictions which will prevent rewards from being given unless they have been met.</div>
                         <ul class="restrictionList clearfix" style="padding-left: 0px;">
                             #foreach($r in $page.restrictions)
-                                <li>
-                                    $r.description
-                                    <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
-                                    <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
-                                    <button data-dismiss="alert" class="close remove">&times;</button>
-                                </li>
+                            <li>
+                                $r.description
+                                <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
+                                <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
+                                <button data-dismiss="alert" class="close remove">&times;</button>
+                            </li>
                             #end
                         </ul>
                     </div>
 
-                    <div class="tab-pane" id="terms">
-                        <textarea cols="120" name="terms" rows="10" class="htmleditor">$!page.terms</textarea>
-                    </div>
 
                     <div class="tab-pane" id="entries">
                         <div class="well reset-margin-bottom">
@@ -376,12 +442,12 @@
             <div class="modal-body">
                 <div class="ListItem">
                     #foreach($g in $page.allGroups)
-                        <div class="panel panel-default">
-                            <div class="panel-body membership">
-                                <label for="$g.name">$g.name</label>
-                                <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
-                            </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body membership">
+                            <label for="$g.name">$g.name</label>
+                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
                         </div>
+                    </div>
                     #end
                 </div>
             </div>
