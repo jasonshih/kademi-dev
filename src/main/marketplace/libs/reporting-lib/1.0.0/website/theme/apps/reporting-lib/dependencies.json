@@ -19,6 +19,12 @@
         {
             "css": {
                 "cssMedia": "all",
+                "path": "/static/typeahead/0.11.1/typeahead.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"
             }
         },
@@ -44,6 +50,18 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
         {
