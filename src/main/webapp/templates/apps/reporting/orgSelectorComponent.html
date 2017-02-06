@@ -28,9 +28,17 @@
     <div class="org-selector">
         <div class="dropdown">
             <div class="input-group">
-                <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" />
+                <span class="input-group-addon" id="basic-addon1">
+                    <i class="fa fa-search"></i>
+                </span>
+                
+                <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
 
-                <div class="input-group-btn">
+                
+                <div class="input-group-btn">                    
+                    <a data-orgId="" href="javascript:void (0)" class="btn btn-default">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Select
                         <span class="caret"></span>
@@ -39,12 +47,25 @@
                         #if( $orgList.isEmpty() )
                         <li>No selections available</li>
                         #else
-                        <li><a data-orgId="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i>Clear selection</a></li>
                         #foreach( $m in $orgList)
                         #if ($selectedOrg.orgId == $m.orgId)
                         <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
                         #else
                         <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
+                        
+                        #set( $childOrgs = $m.childOrgs() )
+                        #foreach( $childOrg in $childOrgs )
+                        #if( $foreach.count < 5 )
+                        <li><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> - $childOrg.title</a></li>
+                        #else
+                        <li><a href="#"><i>Results truncated. Use search for more</i></a></li>
+                        #break
+                        #end
+                        #end
+                        #if( $childOrgs.size() > 1 )
+                        
+                        #end
+                        
                         #end
                         #end
                         #end
