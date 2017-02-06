@@ -388,6 +388,21 @@
                             </div>
                         </div>
 
+                        <p>
+                            <label for="" class="control-label">
+                                $formatter.checkbox("promoGiftEnabled", $page.promoGiftEnabled)
+                                Gift with purchase
+                            </label>
+                        </p>
+
+                        <div class="form-group">
+                            <label for="promoGiftSku" class="col-sm-2 control-label">Gift SKU</label>
+
+                            <div class="col-sm-4">
+                                <input name="promoGiftSku"  class="form-control" value="$!page.promoGiftSku" />
+                            </div>
+                        </div>                        
+                        
                         <h3>Promotion codes</h3>
 
                         <div class="form-group">
