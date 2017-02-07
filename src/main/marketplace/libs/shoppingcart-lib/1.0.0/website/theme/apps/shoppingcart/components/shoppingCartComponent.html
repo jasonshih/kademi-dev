@@ -18,7 +18,7 @@
 
             #set($totalCost = 0)
             #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "href" ) )
-
+            
             #foreach($item in $items )
                 <div class="row item-row">
                     <div class="col-sm-3 item-photo">
