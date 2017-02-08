@@ -55,7 +55,7 @@
                         
                         #set( $childOrgs = $m.childOrgs() )
                         #foreach( $childOrg in $childOrgs )
-                        #if( $foreach.count < 10 )
+                        #if( $foreach.count < 20 )
                         <li><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> - $childOrg.title</a></li>
                         #else
                         <li><a href="#"><i>Results truncated. Use search for more</i></a></li>
