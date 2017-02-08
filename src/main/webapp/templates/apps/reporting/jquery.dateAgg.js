@@ -34,6 +34,8 @@
                 graphOptions.subAgg = component.attr("data-sub-agg");
                 graphOptions.metricAgg = component.attr("data-metric-agg");
                 graphOptions.type = component.attr('data-chart-type');
+                graphOptions.dateFormat = component.attr('data-date-format') || "%e %b";
+                graphOptions.valueFormat = component.attr('data-value-format') || ",.2f";
                 graphOptions.stacked = toBool(component.attr("data-stacked"));
                 graphOptions.showControls = toBool(component.attr("data-controls"));
                 graphOptions.showLegend = toBool(component.attr("data-legend"));
@@ -139,10 +141,10 @@
             }
 
             chart.xAxis.tickFormat(function (d) {
-                return d3.time.format('%e %b')(new Date(d))
+                return d3.time.format(graphOptions.dateFormat)(new Date(d))
             });
 
-            chart.yAxis.tickFormat(d3.format(',.2f'));
+            chart.yAxis.tickFormat(d3.format(graphOptions.valueFormat));
 
             chart.x(function (d) {
                 return d.x;
@@ -245,10 +247,10 @@
             }
 
             chart.xAxis.tickFormat(function (d) {
-                return d3.time.format('%e %b')(new Date(d))
+                return d3.time.format(graphOptions.dateFormat)(new Date(d))
             });
 
-            chart.yAxis.tickFormat(d3.format(',.2f'));
+            chart.yAxis.tickFormat(d3.format(graphOptions.valueFormat));
 
             chart.x(function (d) {
                 return d.x;
@@ -303,4 +305,9 @@
         var b = (v === 'true');
         return b;
     }
+
+    $(function(){
+        var panels = $(".panel-date-histogram");
+        panels.dateAgg();
+    })
 })(jQuery);

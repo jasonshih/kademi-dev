@@ -149,4 +149,7 @@
         };
     }
 
+    $(function(){
+        $('[data-type="component-pointsActivity"]').pointsActivityChart();
+    });
 })(jQuery);
