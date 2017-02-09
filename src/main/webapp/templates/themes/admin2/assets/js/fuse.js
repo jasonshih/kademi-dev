@@ -61,6 +61,53 @@ $.fn.exist = function (callback_when_exist, callback_when_no_exist) {
     return this;
 };
 
+(function ($) {
+    var oldModal = $.fn.modal;
+
+    $.fn.modal = function (option, _relatedTarget) {
+        var targets = $(this);
+        targets.each(function () {
+            var target = $(this);
+            var modalDialog = target.find('.modal-dialog');
+
+            if (modalDialog.length === 0) {
+                flog('Modal has old structure. Modifying structure...');
+
+                var modalContent = target.html();
+                var sizeClass = 'modal-md';
+                if (target.hasClass('modal-lg')) {
+                    sizeClass = 'modal-lg';
+                    target.removeClass('modal-lg');
+                } else if (target.hasClass('modal-md')) {
+                    sizeClass = 'modal-md';
+                    target.removeClass('modal-md');
+                } else if (target.hasClass('modal-sm')) {
+                    sizeClass = 'modal-sm';
+                    target.removeClass('modal-sm');
+                } else if (target.hasClass('modal-xs')) {
+                    sizeClass = 'modal-xs';
+                    target.removeClass('modal-xs');
+                } else if (target.hasClass('modal-xss')) {
+                    sizeClass = 'modal-xss';
+                    target.removeClass('modal-xss');
+                }
+
+                target.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
+                flog('Modifying structure is DONE');
+
+                target.trigger('modal.bs.done');
+
+                if (console && console.log) {
+                    console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + target.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
+                }
+            }
+        });
+
+        return oldModal.call(targets, option, _relatedTarget);
+    };
+
+})(jQuery);
+
 function initToggled() {
     flog('initToggled');
 
@@ -103,7 +150,7 @@ function doMasonryPanel() {
             flog("onlayout", items);
 
             items.animate({
-                opacity: 1,
+                opacity: 1
             }, 1000, function () {
                 flog("complete");
             });
@@ -328,34 +375,6 @@ function validateFuseEmail(emailAddress) {
 function initFuseModals() {
     flog("initFuseModal");
 
-    $('.modal').each(function () {
-        var target = $(this);
-        var modalDialog = target.find('.modal-dialog');
-
-        if (modalDialog.length === 0) {
-            flog('Modal has old structure. Modifying structure...');
-
-            var content = target.html();
-            var sizeClass = '';
-            if (target.hasClass('modal-lg')) {
-                sizeClass = 'modal-lg';
-                target.removeClass('modal-lg');
-            } else if (target.hasClass('modal-sm')) {
-                sizeClass = 'modal-sm';
-                target.removeClass('modal-sm');
-            } else if (target.hasClass('modal-md')) {
-                sizeClass = 'modal-md';
-                target.removeClass('modal-md');
-            }
-
-            target.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + content + '</div></div>');
-            flog('Modifying structure is DONE');
-
-            target.trigger('modal.bs.done');
-        }
-    });
-
-    flog("init form submit");
     $(document.body).on('click', '[data-type=form-submit]', function (e) {
         e.preventDefault();
         flog("click submit");
@@ -366,71 +385,6 @@ function initFuseModals() {
 function initFuseModal(modal, callback) {
     flog('initFuseModal', modal, callback);
 
-    //if (modal.hasClass('modal-fuse-editor')) {
-    //    var id = modal.attr('id');
-    //
-    //    flog('Add wrapper for fuse modal');
-    //    modal.wrap(
-    //        '<div id="' + id + '-wrapper" class="modal-scrollable hide" style="z-index: 1030;"></div>'
-    //    );
-    //
-    //    var wrapper = modal.parent();
-    //    var backdrop = $('<div id="' + id + '-backdrop" class="modal-backdrop fade hide" style="z-index: 1020;"></div>');
-    //    wrapper.after(backdrop);
-    //
-    //    modal.on('click', '[data-type=modal-dismiss], [data-dismiss=modal]', function (e) {
-    //        e.preventDefault();
-    //        e.stopPropagation();
-    //
-    //        closeFuseModal(modal);
-    //    });
-    //
-    //    wrapper.on('click', function (e) {
-    //        if ($(e.target).is(wrapper)) {
-    //            closeFuseModal(modal);
-    //        }
-    //    });
-    //
-    //    if (typeof callback === 'function') {
-    //        callback.apply(this);
-    //    }
-    //
-    //    wrapper.removeClass('hide');
-    //    wrapper.add(modal).addClass('invi');
-    //    modal.addClass('calculating');
-    //
-    //    var calculate = function () {
-    //        wrapper.add(modal).removeClass('invi');
-    //        wrapper.addClass('hide');
-    //        modal.removeClass('calculating');
-    //    };
-    //
-    //    var editor = modal.find('.htmleditor').get(0);
-    //    var ckEditor = null;
-    //
-    //    for (var key in CKEDITOR.instances) {
-    //        if (CKEDITOR.instances[key].element.$ === editor) {
-    //            ckEditor = CKEDITOR.instances[key];
-    //            break;
-    //        }
-    //    }
-    //
-    //    if (ckEditor) {
-    //        ckEditor.on('instanceReady', function (evt) {
-    //            flog("instanceReady", ckEditor);
-    //            calculate();
-    //        });
-    //    }
-    //
-    //    $(window).resize(function () {
-    //        adjustModal(modal);
-    //    });
-    //} else {
-    //    if (typeof callback === 'function') {
-    //        callback.apply(this);
-    //    }
-    //}
-
     modal.modal({
         show: false
     });
@@ -440,55 +394,8 @@ function initFuseModal(modal, callback) {
     }
 }
 
-function adjustModal(modal) {
-    var height = +modal.attr('data-height');
-    flog("adjustModal: height:", height);
-
-    if ($(window).height() < height) {
-        flog("zero top margin");
-        modal.css('margin-top', 0).addClass('modal-overflow');
-    } else {
-        flog("margin top: ", (height / -2) - 20);
-        modal.css('margin-top', (height / -2) - 20).removeClass('modal-overflow');
-    }
-    flog("finished adjust modal", modal);
-}
-
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
-    //var wrapper = modal.parent();
-    //var backdrop = wrapper.next();
-    //
-    //if (modal.hasClass(('modal-fuse-editor'))) {
-    //    flog("is modal-fuse-editor");
-    //    var height = $(window).height() * 0.9; // 80% height of window
-    //    modal.attr('data-height', height);
-    //
-    //    adjustModal(modal);
-    //    $(document.body).addClass('modal-open');
-    //    wrapper.removeClass('hide');
-    //    backdrop.removeClass('hide');
-    //    flog("modal", modal.show);
-    //    modal.show();
-    //
-    //    setTimeout(function () {
-    //        modal.addClass('in');
-    //        backdrop.addClass('in');
-    //    }, 0);
-    //
-    //    if (typeof callback === 'function') {
-    //        callback.apply(this);
-    //    }
-    //
-    //} else {
-    //    modal.modal({
-    //        backdrop: 'static'
-    //    });
-    //
-    //    if (typeof callback === 'function') {
-    //        callback.apply(this);
-    //    }
-    //}
 
     modal.modal('show');
 
@@ -498,24 +405,6 @@ function openFuseModal(modal, callback, time) {
 }
 
 function closeFuseModal(modal, callback) {
-    //if (modal.hasClass(('modal-fuse-editor'))) {
-    //    var wrapper = modal.parent();
-    //    var backdrop = wrapper.next();
-    //
-    //    backdrop.add(modal).removeClass('in');
-    //
-    //    setTimeout(function () {
-    //        backdrop.addClass('hide');
-    //        modal.hide();
-    //        wrapper.addClass('hide');
-    //        $(document.body).removeClass('modal-open');
-    //    }, 400);
-    //} else {
-    //    modal.modal('hide');
-    //}
-    //
-    //modal.trigger('hidden.modal.fuse');
-
     modal.modal('hide');
 
     if (typeof callback === 'function') {
