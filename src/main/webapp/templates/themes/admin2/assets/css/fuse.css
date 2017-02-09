@@ -286,38 +286,38 @@ fieldset[disabled] .btn-info.active {
 /* ============================================================================
    Modal
    ============================================================================ */
-html .modal-lg {
+.modal-lg {
     width: 1050px;
-    margin-left: -500px;
 }
 
 .modal-md {
     width: 800px;
-    margin-left: -400px;
 }
 
 .modal-sm {
     width: 600px;
-    margin-left: -300px;
 }
 
 .modal-xs {
     width: 400px;
-    margin-left: -200px;
 }
 
 .modal-xxs {
     width: 200px;
-    margin-left: -100px;
 }
 
-.modal-full {
+.modal-full .modal-dialog {
     width: 100%;
-    margin-left: -50%;
-    border-radius: 0;
+    height: 100%;
+    margin: 0;
+}
+
+.modal-full .modal-content {
     border: 0;
+    border-radius: 0;
     height: 100%;
 }
+
 
 .modal-full .modal-header + .modal-body {
     height: calc(100% - 56px - 61px);
@@ -359,7 +359,7 @@ html .modal-lg {
     display: none;
 }
 
-modal.ajax-processing .btn-img[data-type="form-submit"] img,
+.modal.ajax-processing .btn-img[data-type="form-submit"] img,
 .btn-img.loading img {
     display: inline;
 }
@@ -803,8 +803,6 @@ label small {
 
 ul.main-navigation-menu {
     height: calc(100% - 50px);
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
 .navigation-small ul.main-navigation-menu {
@@ -1184,6 +1182,11 @@ ul.main-navigation-menu li > ul.sub-menu > li {
 /* ============================================================================
 Utilities
 ============================================================================ */
+.ps-container {
+    position: relative;
+    overflow: hidden;
+}
+
 .action,
 .center {
     text-align: center;
@@ -1624,6 +1627,16 @@ body.ajax-loading .ajaxLoader {
 
 .tldate span {
 
+}
+
+.row-sm {
+    margin-left: -7.5px;
+    margin-right: -7.5px;
+}
+
+.row-sm [class*="col-"] {
+    padding-left: 7.5px;
+    padding-right: 7.5px;
 }
 
 .tooltip-error .tooltip-inner {

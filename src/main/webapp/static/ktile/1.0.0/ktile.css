@@ -1,17 +1,13 @@
 /* ==================================================================
    Kademi Tile - Ktile
    ================================================================== */
-.ktile-container {
-    margin-left: 0;
-}
-
 .ktile-sizer {
     height: 0 !important;
     min-height: 0 !important;
 }
 
 .ktile-wrapper {
-    padding: 0;
+    margin-bottom: 15px;
 }
 
 .ktile {
@@ -63,8 +59,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    right: 15px;
-    bottom: 15px;
+    right: 0;
+    bottom: 0;
 }
 
 .ktile-front,

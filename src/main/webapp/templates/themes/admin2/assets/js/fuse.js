@@ -328,101 +328,115 @@ function validateFuseEmail(emailAddress) {
 function initFuseModals() {
     flog("initFuseModal");
 
-    $('.modal').exist(function () {
-        this.each(function () {
-            var modal = $(this);
+    $('.modal').each(function () {
+        var target = $(this);
+        var modalDialog = target.find('.modal-dialog');
 
-            var dataWidth = 0;
-            if (modal.hasClass('modal-lg')) {
-                dataWidth = 1000;
-            } else if (modal.hasClass('modal-md')) {
-                dataWidth = 800;
-            } else if (modal.hasClass('modal-sm')) {
-                dataWidth = 600;
-            } else if (modal.hasClass('modal-xs')) {
-                dataWidth = 400;
-            } else {
-                dataWidth = 200;
+        if (modalDialog.length === 0) {
+            flog('Modal has old structure. Modifying structure...');
+
+            var content = target.html();
+            var sizeClass = '';
+            if (target.hasClass('modal-lg')) {
+                sizeClass = 'modal-lg';
+                target.removeClass('modal-lg');
+            } else if (target.hasClass('modal-sm')) {
+                sizeClass = 'modal-sm';
+                target.removeClass('modal-sm');
+            } else if (target.hasClass('modal-md')) {
+                sizeClass = 'modal-md';
+                target.removeClass('modal-md');
             }
 
-            modal.attr('data-witdh', dataWidth)
-        });
+            target.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + content + '</div></div>');
+            flog('Modifying structure is DONE');
 
-        flog("init form submit");
-        $(document.body).on('click', '[data-type=form-submit]', function (e) {
-            e.preventDefault();
-            flog("click submit");
-            $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
-        });
+            target.trigger('modal.bs.done');
+        }
+    });
+
+    flog("init form submit");
+    $(document.body).on('click', '[data-type=form-submit]', function (e) {
+        e.preventDefault();
+        flog("click submit");
+        $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
     });
 }
 
 function initFuseModal(modal, callback) {
     flog('initFuseModal', modal, callback);
 
-    if (modal.hasClass('modal-fuse-editor')) {
-        var id = modal.attr('id');
+    //if (modal.hasClass('modal-fuse-editor')) {
+    //    var id = modal.attr('id');
+    //
+    //    flog('Add wrapper for fuse modal');
+    //    modal.wrap(
+    //        '<div id="' + id + '-wrapper" class="modal-scrollable hide" style="z-index: 1030;"></div>'
+    //    );
+    //
+    //    var wrapper = modal.parent();
+    //    var backdrop = $('<div id="' + id + '-backdrop" class="modal-backdrop fade hide" style="z-index: 1020;"></div>');
+    //    wrapper.after(backdrop);
+    //
+    //    modal.on('click', '[data-type=modal-dismiss], [data-dismiss=modal]', function (e) {
+    //        e.preventDefault();
+    //        e.stopPropagation();
+    //
+    //        closeFuseModal(modal);
+    //    });
+    //
+    //    wrapper.on('click', function (e) {
+    //        if ($(e.target).is(wrapper)) {
+    //            closeFuseModal(modal);
+    //        }
+    //    });
+    //
+    //    if (typeof callback === 'function') {
+    //        callback.apply(this);
+    //    }
+    //
+    //    wrapper.removeClass('hide');
+    //    wrapper.add(modal).addClass('invi');
+    //    modal.addClass('calculating');
+    //
+    //    var calculate = function () {
+    //        wrapper.add(modal).removeClass('invi');
+    //        wrapper.addClass('hide');
+    //        modal.removeClass('calculating');
+    //    };
+    //
+    //    var editor = modal.find('.htmleditor').get(0);
+    //    var ckEditor = null;
+    //
+    //    for (var key in CKEDITOR.instances) {
+    //        if (CKEDITOR.instances[key].element.$ === editor) {
+    //            ckEditor = CKEDITOR.instances[key];
+    //            break;
+    //        }
+    //    }
+    //
+    //    if (ckEditor) {
+    //        ckEditor.on('instanceReady', function (evt) {
+    //            flog("instanceReady", ckEditor);
+    //            calculate();
+    //        });
+    //    }
+    //
+    //    $(window).resize(function () {
+    //        adjustModal(modal);
+    //    });
+    //} else {
+    //    if (typeof callback === 'function') {
+    //        callback.apply(this);
+    //    }
+    //}
 
-        flog('Add wrapper for fuse modal');
-        modal.wrap(
-            '<div id="' + id + '-wrapper" class="modal-scrollable hide" style="z-index: 1030;"></div>'
-        );
+    modal.modal({
+        show: false
+    });
 
-        var wrapper = modal.parent();
-        var backdrop = $('<div id="' + id + '-backdrop" class="modal-backdrop fade hide" style="z-index: 1020;"></div>');
-        wrapper.after(backdrop);
-
-        modal.on('click', '[data-type=modal-dismiss], [data-dismiss=modal]', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            closeFuseModal(modal);
-        });
-
-        wrapper.on('click', function (e) {
-            if ($(e.target).is(wrapper)) {
-                closeFuseModal(modal);
-            }
-        });
-
-        if (typeof callback === 'function') {
-            callback.apply(this);
-        }
-
-        wrapper.removeClass('hide');
-        wrapper.add(modal).addClass('invi');
-        modal.addClass('calculating');
-
-        var calculate = function () {
-            wrapper.add(modal).removeClass('invi');
-            wrapper.addClass('hide');
-            modal.removeClass('calculating');
-        };
-
-        var editor = modal.find('.htmleditor').get(0);
-        var ckEditor = null;
-
-        for (var key in CKEDITOR.instances) {
-            if (CKEDITOR.instances[key].element.$ === editor) {
-                ckEditor = CKEDITOR.instances[key];
-                break;
-            }
-        }
-
-        if (ckEditor) {
-            ckEditor.on('instanceReady', function (evt) {
-                flog("instanceReady", ckEditor);
-                calculate();
-            });
-        }
-
-        $(window).resize(function () {
-            adjustModal(modal);
-        });
-    } else {
-        if (typeof callback === 'function') {
-            callback.apply(this);
-        }
+    if (typeof callback === 'function') {
+        callback.apply(this);
     }
 }
 
@@ -442,60 +456,67 @@ function adjustModal(modal) {
 
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
-    var wrapper = modal.parent();
-    var backdrop = wrapper.next();
+    //var wrapper = modal.parent();
+    //var backdrop = wrapper.next();
+    //
+    //if (modal.hasClass(('modal-fuse-editor'))) {
+    //    flog("is modal-fuse-editor");
+    //    var height = $(window).height() * 0.9; // 80% height of window
+    //    modal.attr('data-height', height);
+    //
+    //    adjustModal(modal);
+    //    $(document.body).addClass('modal-open');
+    //    wrapper.removeClass('hide');
+    //    backdrop.removeClass('hide');
+    //    flog("modal", modal.show);
+    //    modal.show();
+    //
+    //    setTimeout(function () {
+    //        modal.addClass('in');
+    //        backdrop.addClass('in');
+    //    }, 0);
+    //
+    //    if (typeof callback === 'function') {
+    //        callback.apply(this);
+    //    }
+    //
+    //} else {
+    //    modal.modal({
+    //        backdrop: 'static'
+    //    });
+    //
+    //    if (typeof callback === 'function') {
+    //        callback.apply(this);
+    //    }
+    //}
 
-    if (modal.hasClass(('modal-fuse-editor'))) {
-        flog("is modal-fuse-editor");
-        var height = $(window).height() * 0.9; // 80% height of window
-        modal.attr('data-height', height);
+    modal.modal('show');
 
-        adjustModal(modal);
-        $(document.body).addClass('modal-open');
-        wrapper.removeClass('hide');
-        backdrop.removeClass('hide');
-        flog("modal", modal.show);
-        modal.show();
-
-        setTimeout(function () {
-            modal.addClass('in');
-            backdrop.addClass('in');
-        }, 0);
-
-        if (typeof callback === 'function') {
-            callback.apply(this);
-        }
-
-    } else {
-        modal.modal({
-            backdrop: 'static'
-        });
-
-        if (typeof callback === 'function') {
-            callback.apply(this);
-        }
+    if (typeof callback === 'function') {
+        callback.apply(this);
     }
-
 }
 
 function closeFuseModal(modal, callback) {
-    if (modal.hasClass(('modal-fuse-editor'))) {
-        var wrapper = modal.parent();
-        var backdrop = wrapper.next();
+    //if (modal.hasClass(('modal-fuse-editor'))) {
+    //    var wrapper = modal.parent();
+    //    var backdrop = wrapper.next();
+    //
+    //    backdrop.add(modal).removeClass('in');
+    //
+    //    setTimeout(function () {
+    //        backdrop.addClass('hide');
+    //        modal.hide();
+    //        wrapper.addClass('hide');
+    //        $(document.body).removeClass('modal-open');
+    //    }, 400);
+    //} else {
+    //    modal.modal('hide');
+    //}
+    //
+    //modal.trigger('hidden.modal.fuse');
 
-        backdrop.add(modal).removeClass('in');
-
-        setTimeout(function () {
-            backdrop.addClass('hide');
-            modal.hide();
-            wrapper.addClass('hide');
-            $(document.body).removeClass('modal-open');
-        }, 400);
-    } else {
-        modal.modal('hide');
-    }
-
-    modal.trigger('hidden.modal.fuse');
+    modal.modal('hide');
 
     if (typeof callback === 'function') {
         callback.apply(this);
@@ -719,10 +740,10 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         var userId = suggestion.fields.userId[0];
                         var userName = suggestion.fields.userName[0];
                         var email;
-                        if( suggestion.fields.email ) {
+                        if (suggestion.fields.email) {
                             var email = suggestion.fields.email[0];
                         } else {
-                            email = "";                            
+                            email = "";
                         }
                         var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
                         var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
@@ -733,7 +754,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                             suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
                         }
                         suggestionStr += '    </a>';
-                    } else if( suggestion.fields.entityId ) {
+                    } else if (suggestion.fields.entityId) {
                         var id = suggestion.fields.entityId[0];
                         var orgId = suggestion.fields.orgId[0];
                         var orgTitle = suggestion.fields.title[0];
