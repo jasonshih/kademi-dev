@@ -40,11 +40,11 @@
                 #if( $applications.shoppingCart.cashTopupsEnabled )
                     #set( $checkoutPage = $page.find("/checkout" ) )
                     #if( $checkoutPage.balance < $checkoutPage.totalCost )
-                        #set( $amount = $checkoutPage.calcCashTopUpAmount($checkoutPage.balance, $checkoutPage.totalCost) )
+                        #set( $amount = $checkoutPage.calcCashTopUpAmount() )
                         #set( $pApp = $applications.shoppingCart.paymentApp )
 
                         <input type="hidden" name="cashTopUpAmount" value="$amount" />
-                        <h2>Cash top up: $ $amount</h2>
+                        <h2>Cash top up: $ $formatter.formatCurrency($amount)</h2>
                 <div id="pf-${pApp.instanceId}" class="payment-form">
                     $pApp.memberPaymentForm
                 </div>

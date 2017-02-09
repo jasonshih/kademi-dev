@@ -70,7 +70,36 @@
                         </div>
                     </div>
                 </div>
+                
                 #set($totalCost = $totalCost + $subTotal)
+            
+                #if( $item.discountAmount )
+                <div class="row item-row">
+                    <div class="col-sm-3 item-photo">
+                    </div>
+                    <div class="col-sm-3 item-title center-content">
+                        <div>
+                            $item.discountReason
+                        </div>
+                    </div>
+                    <div class="col-sm-3 item-quantity center-content">
+                    </div>
+                    <div class="col-sm-2 item-price center-content">
+                        <div>
+                        <span class="lead">
+                            #set ($subTotal = 0)
+                            #set ($subTotal = $item.discountAmount)
+                            #set($totalCost = $totalCost + $subTotal)
+                            $formatter.formatCurrency($subTotal) Pts
+                        </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 item-action text-right center-content">
+                    </div>
+                </div>                                    
+                #end
+                
+                
             #end
         </div>
         <div class="panel-footer cart-total">
