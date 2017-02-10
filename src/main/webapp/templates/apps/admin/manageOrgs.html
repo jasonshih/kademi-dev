@@ -56,6 +56,7 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
+                                <li><a href="#" class="btn-orgs-merge">Merge selected..</a></li>
                                 <li><a href="#" class="btn-orgs-sort-all-asc">Sort all by ID Asc</a></li>
                                 <li><a href="#" class="btn-orgs-sort-all-desc">Sort all by ID Desc</a></li>
                             </ul>
@@ -109,14 +110,14 @@
                             </thead>
                             <tbody id="searchResults" class="search-results">
                                 #foreach($org in $page.searchResults)
-                                <tr>
-                                    <td>$org.id</td>
-                                    <td>$formatter.htmlEncode($org.title)</td>
+                                <tr data-id="$org.actualId">
+                                    <td class="org-orgid">$org.id</td>
+                                    <td class="org-title">$formatter.htmlEncode($org.title)</td>
                                     <td>$org.orgTypeDisplayNames</td>
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
-                                    <td>$!org.memberCount</td>
+                                    <td class="org-members">$!org.memberCount</td>
                                     <td class="action">
                                         <div class="btn-group btn-group-sm">
                                             <a href="${org.href}edit" class="btn btn-sm btn-primary btn-sm">
@@ -321,6 +322,49 @@
                     <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
                 </div>
             </div>
+
+            <div id="modal-merge-orgs" tabindex="-1" class="modal fade modal-sm" aria-hidden="true">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Merge Organisations</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="" class="form-horizontal">
+                        <p>The organisations will be merged into the one selected here. This will move user memberships to the merge destination organisation, and the other organisations will be deleted</p>
+                        <div class="form-group">
+                            <label for="mergeDest" class="control-label col-md-3">Merge to</label>
+                            <div class="col-md-9">
+                                <select name="mergeDest" class="form-control required">
+                                    <option value="">[None]</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>OrgID</th>
+                                    <th>Title</th>
+                                    <th># members</th>
+                                </tr>
+                            </thead>
+                            <tbody class="orgsMergeTableBody">
+                                <tr>
+                                    <td colspan="2">Please wait..</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <i>Internal ID's to merge</i>
+                        <textarea name="mergeIds" class="form-control required"></textarea>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Merge</button>
+                </div>
+            </div>
+
             <script type="text/javascript">
                 $(function () {
                     initManageOrgs();

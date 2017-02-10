@@ -218,10 +218,71 @@
         initSortById();
         initEditPath();
         initSort();
+        initMerge();
     };
 
 })(jQuery, window, document);
 
+function initMerge() {
+    var modal = $("#modal-merge-orgs");
+
+    modal.find("form").forms({
+        callback : function(resp){
+            if( resp.status) {
+                Msg.info("Merge complete");
+                modal.modal("hide");
+                window.location.reload();
+            } else {
+                Msg.warning("Merge failed. " + resp.messages);
+            }
+        }
+    });
+
+    $("body").on("click", ".btn-orgs-merge", function(e) {
+        e.preventDefault();
+        var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the organisations you want to merge by clicking the checkboxs to the right");
+        }
+
+        var tbody = modal.find(".orgsMergeTableBody");
+        var destSelect = modal.find("select[name=mergeDest]");
+        tbody.html("");
+        var mergeIds = "";
+        checkBoxes.each(function(i, n) {
+            var tr = $("<tr>");
+            var chk = $(n);
+            var selected = chk.closest("tr");
+            var orgid = selected.find(".org-orgid").text();
+            var title =  selected.find(".org-title").text();
+            var numMembers =  selected.find(".org-members").text();
+            var internalId = selected.data("id");
+            mergeIds += internalId + ",";
+
+            var td = $("<td>");
+            td.text(orgid);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(title);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(numMembers + "");
+            tr.append(td);
+
+            tbody.append(tr);
+
+            var opt = $("<option>");
+            opt.attr("value", internalId);
+            opt.text(orgid + " - " + title);
+            destSelect.append(opt);
+        });
+        modal.find("textarea").val(mergeIds);
+
+        modal.modal("show");
+    });
+}
 
 function initSort() {
 	flog('initSort()');
