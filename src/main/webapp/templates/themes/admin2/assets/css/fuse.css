@@ -17,7 +17,6 @@ h2 {
 }
 
 .page-header h1 {
-    font-family: Roboto !important;
     font-weight: 300 !important;
 }
 
@@ -701,7 +700,7 @@ label small {
 
 .fuse-header .navbar-tools > ul > li.fuse-header-item {
     margin: 0;
-    border-left: 1px solid #c8c7cc;
+    border-left: 1px solid #dfeaf1;
 }
 
 .fuse-header .navbar-tools > ul > li.fuse-header-item > a {
