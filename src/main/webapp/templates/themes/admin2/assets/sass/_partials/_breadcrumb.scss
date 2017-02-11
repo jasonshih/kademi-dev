@@ -1,0 +1,20 @@
+﻿/* ---------------------------------------------------------------------- */
+/*	Breadcrumb
+ /* ---------------------------------------------------------------------- */
+.breadcrumb {
+    margin: 0 -15px;
+    border-radius: 0;
+    padding: 15px 45px 15px 30px;
+    border-bottom: 1px solid $panel-border-color;
+    border-top: 1px solid $panel-border-color;
+    position: relative;
+    height: 51px;
+    line-height: 22px;
+    background: #f0f5f8;
+
+    i {
+        color: #cccccc;
+        font-size: 16px;
+        display: inline-block;
+    }
+}

@@ -1,15 +1,17 @@
 var FormElements = function () {
     //function to initiate jquery.inputlimiter
     var runInputLimiter = function () {
-        $('.limited').inputlimiter({
-            remText: 'You only have %n character%s remaining...',
-            remFullText: 'Stop typing! You\'re not allowed any more characters!',
-            limitText: 'You\'re allowed to input %n character%s into this field.'
+        $('.limited').maxlength({
+            threshold: 50,
+            warningClass: "label label-info",
+            limitReachedClass: "label label-warning",
+            message: 'used %charsTyped% of %charsTotal% chars.'
         });
     };
     //function to initiate query.autosize    
     var runAutosize = function () {
-        $("textarea.autosize").autosize();
+        //$(".autosize").autosize();
+        autosize($('.autosize'));
     };
     //function to initiate Select2
     var runSelect2 = function () {
@@ -37,7 +39,8 @@ var FormElements = function () {
     //function to initiate bootstrap-datepicker
     var runDatePicker = function () {
         $('.date-picker').datepicker({
-            autoclose: true
+            autoclose: true,
+            container: '#picker-container'
         });
     };
     //function to initiate bootstrap-timepicker
@@ -49,8 +52,10 @@ var FormElements = function () {
         $('.date-range').daterangepicker();
         $('.date-time-range').daterangepicker({
             timePicker: true,
-            timePickerIncrement: 15,
-            format: 'MM/DD/YYYY h:mm A'
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY h:mm A'
+            }
         });
     };
     //function to initiate bootstrap-colorpicker
@@ -62,13 +67,6 @@ var FormElements = function () {
             format: 'rgba'
         });
         $('.colorpicker-component').colorpicker();
-    };
-    //function to initiate bootstrap-colorpalette
-    var runColorPalette = function () {
-        $('.color-palette').colorPalette()
-            .on('selectColor', function (e) {
-                $('#selected-color1').val(e.color);
-            });
     };
     //function to initiate jquery.tagsinput
     var runTagsInput = function () {
@@ -88,6 +86,31 @@ var FormElements = function () {
         CKEDITOR.disableAutoInline = true;
         $('textarea.ckeditor').ckeditor();
     };
+    //function to initiate fileinput
+    var runFileInput = function () {
+        $("#input-simple").fileinput();
+        $("#input-preview").fileinput();
+        var btnCust = '<button type="button" class="btn btn-default" title="Add picture tags" ' +
+        'onclick="alert(\'Call your custom code here.\')">' +
+        '<i class="glyphicon glyphicon-tag"></i>' +
+        '</button>';
+        $("#avatar").fileinput({
+            overwriteInitial: true,
+            maxFileSize: 2000,
+            showClose: false,
+            showCaption: false,
+            browseLabel: '',
+            removeLabel: '',
+            browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+            removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+            removeTitle: 'Cancel or reset changes',
+            elErrorContainer: '#kv-avatar-errors',
+            msgErrorClass: 'alert alert-block alert-danger',
+            defaultPreviewContent: '<img src="http://www.placehold.it/160x160/EFEFEF/AAAAAA?text=no+image" alt="Your Avatar" >',
+            layoutTemplates: { main2: '{preview} {remove} {browse}' },
+            allowedFileExtensions: ["jpg", "png", "gif"]
+        });
+    };
     return {
         //main function to initiate template pages
         init: function () {
@@ -100,10 +123,10 @@ var FormElements = function () {
             runTimePicker();
             runDateRangePicker();
             runColorPicker();
-            runColorPalette();
             runTagsInput();
             runSummerNote();
             runCKEditor();
+            runFileInput();
         }
     };
 }();

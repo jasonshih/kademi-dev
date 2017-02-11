@@ -1,20 +1,32 @@
-[jQuery Validation Plugin](http://bassistance.de/jquery-plugins/jquery-plugin-validation/) - Form validation made easy
+[jQuery Validation Plugin](http://jqueryvalidation.org/) - Form validation made easy
 ================================
 
-[![Build Status](https://secure.travis-ci.org/jzaefferer/jquery-validation.png)](http://travis-ci.org/jzaefferer/jquery-validation)
+[![Build Status](https://secure.travis-ci.org/jzaefferer/jquery-validation.svg)](http://travis-ci.org/jzaefferer/jquery-validation)
+[![devDependency Status](https://david-dm.org/jzaefferer/jquery-validation/dev-status.svg?theme=shields.io)](https://david-dm.org/jzaefferer/jquery-validation#info=devDependencies)
+[![Join the chat at https://gitter.im/jzaefferer/jquery-validation](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/jzaefferer/jquery-validation)
 
 The jQuery Validation Plugin provides drop-in validation for your existing forms, while making all kinds of customizations to fit your application really easy.
 
-## [Help the project](http://pledgie.com/campaigns/18159)
+## [⚠️ Looking for maintainers ⚠️](https://github.com/jzaefferer/jquery-validation/issues/1569)
 
-[![Help the project](http://www.pledgie.com/campaigns/18159.png?skin_name=chrome)](http://pledgie.com/campaigns/18159)
+This project is looking for one or more maintainers. This mostly involves triaging issues, reviewing pull requests, and occasionally fixing bugs or finishing a feature implementation. If you're interested, [please get in touch](https://github.com/jzaefferer/jquery-validation/issues/1569).
 
-This project is looking for help! [You can donate to the ongoing pledgie campaign](http://pledgie.com/campaigns/18159)
-and help spread the word. If you've used the plugin, or plan to use, consider a donation - any amount will help.
-
-You can find the plan for how to spend the money on the [pledgie page](http://pledgie.com/campaigns/18159).
 
 ## Getting Started
+
+### Downloading the prebuilt files
+
+Prebuilt files can be downloaded from http://jqueryvalidation.org/
+
+### Downloading the latest changes
+
+The unreleased development files can be obtained by:
+
+ 1. [Downloading](https://github.com/jzaefferer/jquery-validation/archive/master.zip) or Forking this repository
+ 2. [Setup the build](CONTRIBUTING.md#build-setup)
+ 3. Run `grunt` to create the built files in the "dist" directory
+
+### Including it on your page
 
 Include jQuery and the plugin on a page. Then select a form to validate and call the `validate` method.
 
@@ -23,19 +35,29 @@ Include jQuery and the plugin on a page. Then select a form to validate and call
 	<input required>
 </form>
 <script src="jquery.js"></script>
-<script src="jquery.validation.js"></script>
+<script src="jquery.validate.js"></script>
 <script>
 $("form").validate();
 </script>
 ```
 
-For more information on how to setup a rules and customizations, [check the documentation](http://docs.jquery.com/Plugins/Validation).
+Alternatively include jQuery and the plugin via requirejs in your module.
 
-## Contributing
-Follow the [jQuery style guide](http://contribute.jquery.com/style-guides/js), even if existing code doesn't. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+```js
+define(["jquery", "jquery.validate"], function( $ ) {
+	$("form").validate();
+});
+```
 
-If you've wrote custom methods that you'd like to contribute to additional-methods.js, create a branch, add the method there and send a pull request for that branch.
+For more information on how to setup a rules and customizations, [check the documentation](http://jqueryvalidation.org/documentation/).
+
+## Reporting issues and contributing code
+
+See the [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+**IMPORTANT NOTE ABOUT EMAIL VALIDATION**. As of version 1.12.0 this plugin is using the same regular expression that the [HTML5 specification suggests for browsers to use](https://html.spec.whatwg.org/multipage/forms.html#valid-e-mail-address). We will follow their lead and use the same check. If you think the specification is wrong, please report the issue to them. If you have different requirements, consider [using a custom method](http://jqueryvalidation.org/jQuery.validator.addMethod/).
+In case you need to adjust the built-in validation regular expression patterns, please [follow the documentation](http://jqueryvalidation.org/jQuery.validator.methods/).
 
 ## License
-Copyright (c) 2013 Jörn Zaefferer
+Copyright &copy; Jörn Zaefferer<br>
 Licensed under the MIT license.

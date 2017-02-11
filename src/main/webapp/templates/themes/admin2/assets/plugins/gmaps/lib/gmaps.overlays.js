@@ -43,6 +43,13 @@ GMaps.prototype.drawOverlay = function(options) {
       })(el, stop_overlay_events[ev]);
     }
 
+    if (options.click) {
+      panes.overlayMouseTarget.appendChild(overlay.el);
+      google.maps.event.addDomListener(overlay.el, 'click', function() {
+        options.click.apply(overlay, [overlay]);
+      });
+    }
+
     google.maps.event.trigger(this, 'ready');
   };
 

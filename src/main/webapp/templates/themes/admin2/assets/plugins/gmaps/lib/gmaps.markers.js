@@ -10,15 +10,15 @@ GMaps.prototype.createMarker = function(options) {
       base_options = {
         position: new google.maps.LatLng(options.lat, options.lng),
         map: null
-      };
+      },
+      marker_options = extend_object(base_options, options);
 
-  delete options.lat;
-  delete options.lng;
-  delete options.fences;
-  delete options.outside;
+  delete marker_options.lat;
+  delete marker_options.lng;
+  delete marker_options.fences;
+  delete marker_options.outside;
 
-  var marker_options = extend_object(base_options, options),
-      marker = new google.maps.Marker(marker_options);
+  var marker = new google.maps.Marker(marker_options);
 
   marker.fences = fences;
 
@@ -59,7 +59,7 @@ GMaps.prototype.createMarker = function(options) {
           if(!me.pixel){
             me.pixel = map.getProjection().fromLatLngToPoint(me.latLng)
           }
-          
+
           options[name].apply(this, [me]);
         });
       }
@@ -140,7 +140,7 @@ GMaps.prototype.addMarkers = function(array) {
 
 GMaps.prototype.hideInfoWindows = function() {
   for (var i = 0, marker; marker = this.markers[i]; i++){
-    if (marker.infoWindow){
+    if (marker.infoWindow) {
       marker.infoWindow.close();
     }
   }
@@ -152,6 +152,10 @@ GMaps.prototype.removeMarker = function(marker) {
       this.markers[i].setMap(null);
       this.markers.splice(i, 1);
 
+      if(this.markerClusterer) {
+        this.markerClusterer.removeMarker(marker);
+      }
+
       GMaps.fire('marker_removed', marker, this);
 
       break;
@@ -161,22 +165,46 @@ GMaps.prototype.removeMarker = function(marker) {
   return marker;
 };
 
-GMaps.prototype.removeMarkers = function(collection) {
-  var collection = (collection || this.markers);
-
-  for (var i = 0;i < this.markers.length; i++) {
-    if(this.markers[i] === collection[i]) {
-      this.markers[i].setMap(null);
-    }
-  }
-
+GMaps.prototype.removeMarkers = function (collection) {
   var new_markers = [];
 
-  for (var i = 0;i < this.markers.length; i++) {
-    if(this.markers[i].getMap() != null) {
-      new_markers.push(this.markers[i]);
-    }
-  }
+  if (typeof collection == 'undefined') {
+    for (var i = 0; i < this.markers.length; i++) {
+      var marker = this.markers[i];
+      marker.setMap(null);
 
-  this.markers = new_markers;
+      GMaps.fire('marker_removed', marker, this);
+    }
+
+    if(this.markerClusterer && this.markerClusterer.clearMarkers) {
+      this.markerClusterer.clearMarkers();
+    }
+
+    this.markers = new_markers;
+  }
+  else {
+    for (var i = 0; i < collection.length; i++) {
+      var index = this.markers.indexOf(collection[i]);
+
+      if (index > -1) {
+        var marker = this.markers[index];
+        marker.setMap(null);
+
+        if(this.markerClusterer) {
+          this.markerClusterer.removeMarker(marker);
+        }
+
+        GMaps.fire('marker_removed', marker, this);
+      }
+    }
+
+    for (var i = 0; i < this.markers.length; i++) {
+      var marker = this.markers[i];
+      if (marker.getMap() != null) {
+        new_markers.push(marker);
+      }
+    }
+
+    this.markers = new_markers;
+  }
 };

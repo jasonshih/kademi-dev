@@ -371,14 +371,9 @@ var Main = function () {
     // function to adapt the Main Content height to the Main Navigation height
     var runContainerHeight = function () {
         var mainContainer = $('.main-content > .container');
-        var mainNavigation = $('.main-navigation');
         var footer = $('.footer');
         var navbar = $('.navbar');
-        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight());
-
-        if (windowWidth < 768) {
-            mainNavigation.css('min-height', windowHeight - $('body > .navbar').outerHeight());
-        }
+        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight() - 1);
 
         var sidebarWrapper = $('#page-sidebar .sidebar-wrapper');
         sidebarWrapper.css('height', windowHeight - $('body > .navbar').outerHeight()).scrollTop(0);

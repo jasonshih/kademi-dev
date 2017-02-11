@@ -761,7 +761,7 @@ $(function () {
 
 $(window).load(function () {
     if ((typeof CKEDITOR != 'undefined')) {
-        $('head link').last().after('<link rel="stylesheet" type="text/css" href="/theme/assets/plugins/jquery-ui/jquery-ui-1.10.3.full.css" />');
+        $('head link').last().after('<link rel="stylesheet" type="text/css" href="/static/jquery-ui/1.12.1/jquery-ui.min.css" />');
     }
 });
 

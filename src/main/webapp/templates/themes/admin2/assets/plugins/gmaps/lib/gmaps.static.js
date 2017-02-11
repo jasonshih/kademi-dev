@@ -33,7 +33,7 @@ GMaps.prototype.toImage = function(options) {
 GMaps.staticMapURL = function(options){
   var parameters = [],
       data,
-      static_root = 'http://maps.googleapis.com/maps/api/staticmap';
+      static_root = (location.protocol === 'file:' ? 'http:' : location.protocol ) + '//maps.googleapis.com/maps/api/staticmap';
 
   if (options.url) {
     static_root = options.url;
@@ -50,6 +50,10 @@ GMaps.staticMapURL = function(options){
     markers = [options.marker];
     delete options.marker;
   }
+
+  var styles = options.styles;
+
+  delete options.styles;
 
   var polyline = options.polyline;
   delete options.polyline;
@@ -85,7 +89,7 @@ GMaps.staticMapURL = function(options){
   }
   parameters.push('size=' + size);
 
-  if (!options.zoom) {
+  if (!options.zoom && options.zoom !== false) {
     options.zoom = 15;
   }
 
@@ -103,25 +107,38 @@ GMaps.staticMapURL = function(options){
   if (markers) {
     var marker, loc;
 
-    for (var i=0; data=markers[i]; i++) {
+    for (var i = 0; data = markers[i]; i++) {
       marker = [];
 
       if (data.size && data.size !== 'normal') {
         marker.push('size:' + data.size);
+        delete data.size;
       }
       else if (data.icon) {
         marker.push('icon:' + encodeURI(data.icon));
+        delete data.icon;
       }
 
       if (data.color) {
         marker.push('color:' + data.color.replace('#', '0x'));
+        delete data.color;
       }
 
       if (data.label) {
         marker.push('label:' + data.label[0].toUpperCase());
+        delete data.label;
       }
 
       loc = (data.address ? data.address : data.lat + ',' + data.lng);
+      delete data.address;
+      delete data.lat;
+      delete data.lng;
+
+      for(var param in data){
+        if (data.hasOwnProperty(param)) {
+          marker.push(param + ':' + data[param]);
+        }
+      }
 
       if (marker.length || i === 0) {
         marker.push(loc);
@@ -132,6 +149,35 @@ GMaps.staticMapURL = function(options){
       else {
         marker = parameters.pop() + encodeURI('|' + loc);
         parameters.push(marker);
+      }
+    }
+  }
+
+  /** Map Styles **/
+  if (styles) {
+    for (var i = 0; i < styles.length; i++) {
+      var styleRule = [];
+      if (styles[i].featureType){
+        styleRule.push('feature:' + styles[i].featureType.toLowerCase());
+      }
+
+      if (styles[i].elementType) {
+        styleRule.push('element:' + styles[i].elementType.toLowerCase());
+      }
+
+      for (var j = 0; j < styles[i].stylers.length; j++) {
+        for (var p in styles[i].stylers[j]) {
+          var ruleArg = styles[i].stylers[j][p];
+          if (p == 'hue' || p == 'color') {
+            ruleArg = '0x' + ruleArg.substring(1);
+          }
+          styleRule.push(p + ':' + ruleArg);
+        }
+      }
+
+      var rule = styleRule.join('|');
+      if (rule != '') {
+        parameters.push('style=' + rule);
       }
     }
   }
@@ -189,6 +235,10 @@ GMaps.staticMapURL = function(options){
     polyline = polyline.join('|');
     parameters.push('path=' + encodeURI(polyline));
   }
+
+  /** Retina support **/
+  var dpi = window.devicePixelRatio || 1;
+  parameters.push('scale=' + dpi);
 
   parameters = parameters.join('&');
   return static_root + parameters;

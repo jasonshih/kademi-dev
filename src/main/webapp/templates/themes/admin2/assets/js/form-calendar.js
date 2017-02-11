@@ -25,9 +25,9 @@ var Calendar = function () {
         var y = date.getFullYear();
         var form = '';
         var calendar = $('#calendar').fullCalendar({
-            buttonText: {
-                prev: '<i class="fa fa-chevron-left"></i>',
-                next: '<i class="fa fa-chevron-right"></i>'
+            themeButtonIcons: {
+                prev: '<i class="fa fa-angle-left"></i>',
+                next: '<i class="fa fa-angle-right"></i>'
             },
             header: {
                 left: 'prev,next today',

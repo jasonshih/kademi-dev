@@ -1,7 +1,9 @@
 {
   "name": "jquery-mockjax",
-  "version": "1.5.2",
-  "main": ["jquery.mockjax.js"],
+  "main": ["dist/jquery.mockjax.js"],
+  "dependencies": {
+    "jquery": "~2.1.3"
+  },
   "ignore": [
     ".editorconfig",
     ".gitignore",

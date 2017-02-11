@@ -11,8 +11,6 @@ http://creativecommons.org/licenses/by-sa/3.0/
 
 ## Getting Started
 
-To see some examples, please visit http://mstratman.github.com/jQuery-Smart-Wizard/
-
 Basic Usage:
 
 ```javascript
@@ -39,12 +37,10 @@ $('#wizard').smartWizard({
     labelPrevious:'Previous', // label for Previous button
     labelFinish:'Finish',  // label for Finish button        
     noForwardJumping:false,
-    ajaxType: 'POST',
   // Events
     onLeaveStep: null, // triggers when leaving a step
     onShowStep: null,  // triggers when showing a step
-    onFinish: null,  // triggers when Finish button is clicked
-    includeFinishButton : true   // Add the finish button
+    onFinish: null  // triggers when Finish button is clicked
 }); 
 ```
 
@@ -64,7 +60,7 @@ To include the files copy and paste the below lines inside the head tag (`<head>
 Make sure the paths to the files are correct with your working environment.
 
 ```html
-<script type="text/javascript" src="jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
 <link href="smart_wizard.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="jquery.smartWizard.js"></script>
 ```
@@ -415,23 +411,6 @@ example:
         <td>Boolean</td>
         <td>false</td>
     </tr>
-    <tr>
-        <td><strong>ajaxType</strong></td>
-        <td>The "type" parameter for ajax requests.</td>
-        <td>String</td>
-        <td>POST</td>
-    </tr>
-     <tr>
-        <td><strong>includeFinishButton</strong></td>
-        <td>If true, adds a finish button</td>
-        <td>
-            true = show
-            <br />
-            false= don't show
-        </td>
-        <td>true</td>
-     </tr>
-
 </table>
  
 ## Event Description:
