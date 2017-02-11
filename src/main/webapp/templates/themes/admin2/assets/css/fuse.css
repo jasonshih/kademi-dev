@@ -335,45 +335,45 @@ label small {
 /* ============================================================================
    Fuse header
    ============================================================================ */
-.fuse-header {
-    /*padding-right: 0;*/
-}
+/*.fuse-header {*/
+    /*/!*padding-right: 0;*!/*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item {
-    margin: 0;
-    border-left: 1px solid #dfeaf1;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item {*/
+    /*margin: 0;*/
+    /*border-left: 1px solid #dfeaf1;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item > a {
-    padding: 8px 15px;
-    color: #666;
-    height: 50px;
-    line-height: 34px;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item > a {*/
+    /*padding: 8px 15px;*/
+    /*color: #666;*/
+    /*height: 50px;*/
+    /*line-height: 34px;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item > a.btn-success {
-    color: white;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item > a.btn-success {*/
+    /*color: white;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item > a.btn-success:hover {
-    background-color: #4eaa96;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item > a.btn-success:hover {*/
+    /*background-color: #4eaa96;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item > a i {
-    color: #666 !important;
-    display: inline-block;
-    text-align: center;
-    width: 1.25em;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item > a i {*/
+    /*color: #666 !important;*/
+    /*display: inline-block;*/
+    /*text-align: center;*/
+    /*width: 1.25em;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item .dropdown-menu .divider {
-    margin: 0;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item .dropdown-menu .divider {*/
+    /*margin: 0;*/
+/*}*/
 
-.fuse-header .navbar-tools > ul > li.fuse-header-item.current-user a > img {
-    max-width: 30px !important;
-    vertical-align: top;
-}
+/*.fuse-header .navbar-tools > ul > li.fuse-header-item.current-user a > img {*/
+    /*max-width: 30px !important;*/
+    /*vertical-align: top;*/
+/*}*/
 
 /* ============================================================================
    TopNav search

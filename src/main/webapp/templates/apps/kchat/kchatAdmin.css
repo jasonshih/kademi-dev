@@ -1,19 +1,6 @@
 /* ---------------------------------------------------------------------- */
 /*	PAGE SIDEBAR
 /* ---------------------------------------------------------------------- */
-#page-sidebar {
-    bottom: 0;
-    position: fixed;
-    right: -270px;
-    top: 49px;
-    transition: right 0.3s ease 0s;
-    -webkit-transition: right 0.3s ease 0s;
-    width: 270px;
-    z-index: 999;
-    background:#F6F6F6;
-    border-left: 1px solid #c8c7cc;
-    border-top: 1px solid #c8c7cc;
-}
 #page-sidebar .sidebar-wrapper {
     overflow: hidden;
     position: relative;

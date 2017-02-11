@@ -651,29 +651,42 @@ a.bricky:hover {
 .header-default .navbar {
   position: relative !important; }
 
+.navbar-tools .navbar-form .input-group-addon {
+  background-color: #f0f5f8; }
+.navbar-tools .navbar-form .input-group-addon,
+.navbar-tools .navbar-form .form-control {
+  border-color: #dfeaf1; }
 .navbar-tools > ul {
   list-style: none; }
   .navbar-tools > ul > li {
+    border-left: 1px solid #dfeaf1;
     float: left; }
-    .navbar-tools > ul > li.dropdown {
-      margin-left: 2px;
-      margin-right: 2px; }
-      .navbar-tools > ul > li.dropdown .dropdown-toggle .badge {
-        -moz-border-radius: 12px 12px 12px 12px !important;
-        -webkit-border-radius: 12px;
-        border-radius: 12px 12px 12px 12px !important;
-        font-size: 11px !important;
-        font-weight: 300;
-        padding: 3px 6px;
-        position: absolute;
-        right: 24px;
-        text-align: center;
-        text-shadow: none !important;
-        top: 8px; }
+    .navbar-tools > ul > li:first-child {
+      border-left: 0; }
+    .navbar-tools > ul > li.dropdown .dropdown-toggle .badge {
+      -moz-border-radius: 12px 12px 12px 12px !important;
+      -webkit-border-radius: 12px;
+      border-radius: 12px 12px 12px 12px !important;
+      font-size: 11px !important;
+      font-weight: 300;
+      padding: 3px 6px;
+      position: absolute;
+      right: 24px;
+      text-align: center;
+      text-shadow: none !important;
+      top: 8px; }
     .navbar-tools > ul > li > a {
-      padding: 15px 15px 9px;
       font-size: 16px;
-      line-height: 26px; }
+      padding: 8px 15px;
+      color: #666;
+      height: 50px;
+      line-height: 34px; }
+      .navbar-tools > ul > li > a:hover {
+        background-color: #f0f5f8; }
+      .navbar-tools > ul > li > a.btn-success {
+        color: white; }
+      .navbar-tools > ul > li > a.btn-success:hover {
+        background-color: #4eaa96; }
 .navbar-tools li.view-all a {
   padding: 8px 8px 6px !important; }
 .navbar-tools .dropdown-menu {
@@ -782,8 +795,6 @@ ul.notifications li, ul.todo li, ul.posts li {
 
 li.dropdown.current-user .dropdown-toggle {
   padding: 10px 4px 7px 9px; }
-li.dropdown.current-user .dropdown-menu li a {
-  border-bottom: none !important; }
 
 .navbar-toggle {
   border: none;
@@ -3816,7 +3827,7 @@ body.lock-screen .user-info {
   bottom: 0;
   position: fixed;
   right: -270px;
-  top: 49px;
+  top: 50px;
   -moz-transition: right 0.3s ease 0s;
   -o-transition: right 0.3s ease 0s;
   -webkit-transition: right 0.3s ease;
@@ -3824,9 +3835,9 @@ body.lock-screen .user-info {
   transition: right 0.3s ease 0s;
   width: 270px;
   z-index: 999;
-  background: #F6F6F6;
-  border-left: 1px solid #c8c7cc;
-  border-top: 1px solid #c8c7cc; }
+  background: #f0f5f8;
+  border-left: 1px solid #dfeaf1;
+  border-top: 1px solid #dfeaf1; }
   #page-sidebar .sidebar-wrapper {
     overflow: hidden;
     position: relative; }
