@@ -1,121 +1,100 @@
 var Animation = function () {
     //function to initiate CSS3 Animation 
     var runAnimation = function () {
-        /*
-				 ENTRANCES
-				 */
+        /* ENTRANCES */
         $('.animation-buttons .btn').click(function (e) {
             e.preventDefault();
         });
         $('#slideUpBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("slideUp");
+                $('#object').addClass("animated slideInUp");
             });
         });
         $('#slideDownBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("slideDown");
+                $('#object').addClass("animated slideInDown");
             });
         });
         $('#slideLeftBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("slideLeft");
+                $('#object').addClass("animated slideInLeft");
             });
         });
         $('#slideRightBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("slideRight");
-            });
-        });
-        $('#slideExpandUpBtn').click(function () {
-            $(this).each(function () {
-                $('#object').removeClass();
-                $('#object').addClass("slideExpandUp");
+                $('#object').addClass("animated slideInRight");
             });
         });
         $('#expandUpBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("expandUp");
+                $('#object').addClass("animated zoomInUp");
             });
         });
         $('#fadeInBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("fadeIn");
+                $('#object').addClass("animated fadeIn");
             });
         });
         $('#expandOpenBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("expandOpen");
+                $('#object').addClass("animated zoomIn");
             });
         });
         $('#bigEntranceBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("bigEntrance");
+                $('#object').addClass("animated zoomIn");
             });
         });
-        $('#hatchBtn').click(function () {
+        $('#flipBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("hatch");
+                $('#object').addClass("animated flip");
             });
         });
-        /*
-				 MISC
-				 */
+
+        /* MISC */
         $('#bounceBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("bounce");
+                $('#object').addClass("animated bounce");
             });
         });
         $('#pulseBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("pulse");
+                $('#object').addClass("animated pulse");
             });
         });
-        $('#floatBtn').click(function () {
+        $('#shakeBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("floating");
+                $('#object').addClass("animated shake");
             });
         });
-        $('#tossingBtn').click(function () {
+        $('#wobbleBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("tossing");
+                $('#object').addClass("animated wobble");
             });
         });
-        $('#pullUpBtn').click(function () {
+        $('#bounceInUpBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("pullUp");
+                $('#object').addClass("animated bounceInUp");
             });
         });
-        $('#pullDownBtn').click(function () {
+        $('#bounceInDownBtn').click(function () {
             $(this).each(function () {
                 $('#object').removeClass();
-                $('#object').addClass("pullDown");
-            });
-        });
-        $('#stretchLeftBtn').click(function () {
-            $(this).each(function () {
-                $('#object').removeClass();
-                $('#object').addClass("stretchLeft");
-            });
-        });
-        $('#stretchRightBtn').click(function () {
-            $(this).each(function () {
-                $('#object').removeClass();
-                $('#object').addClass("stretchRight");
+                $('#object').addClass("animated bounceInDown");
             });
         });
     };
