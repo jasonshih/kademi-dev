@@ -24,14 +24,14 @@
         <form action="" method="POST" class="managePointsSystem" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
-                    <div class="pull-right">
-                        <a href="/rewards/points/" class="btn btn-sm btn-primary">
+                    <div class="btn-group pull-right" style="margin-bottom: 15px">
+                        <a href="/rewards/points/" class="btn btn-sm btn-info">
                             <span class="glyphicon glyphicon-star"></span>
-                            Review Points
+                            Points
                         </a>
                         <a href="pointsBalance.csv" class="btn btn-sm btn-info">
                             <i class="fa fa-download"></i>
-                            Points Balance CSV
+                            Points Balances
                         </a>
                         <button class="btn btn-sm btn-success">
                             <span class="glyphicon glyphicon-floppy-disk"></span>
@@ -210,7 +210,7 @@
                                     <th>Expiry</th>
                                     <th>Issued To</th>
                                     <th>Reason</th>
-                                    <th>Status</th>                                    
+                                    <th>Status</th>
                                     <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
@@ -242,7 +242,7 @@
                                         #else
                                         <span class="label label-success">Active</span>
                                         #end
-                                        
+
                                     </td>
                                     <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
                                 </tr>
@@ -377,7 +377,9 @@
                                     #foreach($point in $myPointsInfo.allMemberPoints)
                                     <tr>
                                         <td>$foreach.count</td>
-                                        <td>$point.member.formattedName()</td>
+                                        <td>
+                                            <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
+                                        </td>
                                         <td>$point.numPoints</td>
                                     </tr>
                                     #end
