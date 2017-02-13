@@ -5,6 +5,14 @@
         <link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="input-group date-range">
+                    <label for="report-range" class="input-group-addon">Date</label>
+                    <input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />
+                </div>
+            </div>
+        </div>
         <ul class="mini-stats col-sm-12" id="searchStats">
             <li class="col-xs-4 totalPlays">
                 <div class="sparkline_bar_good">
@@ -93,7 +101,7 @@
         <div class="row" id="vidStats" style="display: none;">
             <div class="col-md-6" id="videoDiv">
             </div>
-            <div class="col-md-3">                
+            <div class="col-md-3">
                 <svg id="agentDonut" style="height: 300px;"></svg>
             </div>
             <div class="col-md-3">

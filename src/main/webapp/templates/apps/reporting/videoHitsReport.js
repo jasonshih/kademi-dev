@@ -1,9 +1,12 @@
 (function (w) {
+    var searchData = {
+        startDate: null,
+        endDate: null
+    };
+
     function initTotalPlays(totalPlays) {
         var elem = $('.totalPlays');
         elem.find('.values strong').text(totalPlays.doc_count);
-
-        //initTopViews(totalPlays.topViews.buckets);
     }
 
     function initTotalViewTime(data) {
@@ -16,35 +19,6 @@
         var b = totalViewTime.doc_count * 3;
         var elem = $('.avgViewTime');
         elem.find('.values strong').text(round(b / a, 2) + " seconds");
-    }
-
-    function initTopViews(buckets) {
-        var topViews = $('.topViews');
-        var topViewList = topViews.find('.topViewList');
-        topViewList.empty();
-        if (buckets.length > 0) {
-            for (var i in buckets) {
-                var b = buckets[i];
-                var t = '<div class="row">'
-                        + '    <div class="col-md-10">'
-                        + '        <span>' + b.key + '</span>'
-                        + '    </div>'
-                        + '    <div class="col-md-2">'
-                        + '        <span>' + b.doc_count + '</span>'
-                        + '    </div>'
-                        + '</div>';
-
-                topViewList.append(t);
-            }
-        } else {
-            var t = '<div class="row">'
-                    + '    <div class="col-md-12">'
-                    + '        <span>No videos have been viewed</span>'
-                    + '    </div>'
-                    + '</div>';
-
-            topViewList.append(t);
-        }
     }
 
     function initVideoTable(buckets) {
@@ -181,7 +155,7 @@
                 myData.push(s);
             }
 
-            d3.select('#segmentHistogram') //Select the <svg> element you want to render the chart in.   
+            d3.select('#segmentHistogram') //Select the <svg> element you want to render the chart in.
                     .datum(myData)         //Populate the <svg> element with chart data...
                     .call(chart);          //Finally, render the chart!
 
@@ -264,6 +238,30 @@
         });
     }
 
+    function initReportDateRange() {
+        var reportRange = $('#report-range');
+        reportRange.exist(function () {
+            flog("init report range");
+            reportRange.daterangepicker({
+                format: 'DD/MM/YYYY', // YYYY-MM-DD
+                ranges: {
+                    'Last 7 Days': [moment().subtract('days', 6), moment()],
+                    'Last 30 Days': [moment().subtract('days', 29), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
+                    'This Year': [moment().startOf('year'), moment()],
+                },
+            },
+                    function (start, end) {
+                        flog('onChange', start, end);
+                        searchData.startDate = start.format('DD/MM/YYYY');
+                        searchData.endDate = end.format('DD/MM/YYYY');
+                        loadData();
+                    }
+            );
+        });
+    }
+
     function initVideos(hash) {
         $('#videoDiv').html('<img class="video-jw" src="/_hashes/files/' + hash + '/alt-640-360.png" />');
         doInitVideos();
@@ -295,7 +293,7 @@
 
     function loadData() {
         $.ajax({
-            url: window.location.pathname + "?asJson&" + window.location.search.substr(1),
+            url: window.location.pathname + "?asJson&" + $.param(searchData) + "&" + window.location.search.substr(1),
             dataType: 'json',
             success: function (data, textStatus, jqXHR) {
                 flog('success', data, textStatus);
@@ -308,6 +306,7 @@
     }
 
     w.initVideoHitsReport = function () {
+        initReportDateRange();
         loadData();
     };
 })(window);
