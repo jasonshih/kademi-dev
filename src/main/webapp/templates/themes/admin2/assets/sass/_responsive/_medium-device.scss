@@ -52,6 +52,8 @@
 
     ul {
         &.main-navigation-menu {
+            //overflow: visible !important;
+
             & > li {
                 &.active {
                     & > a {
@@ -153,6 +155,8 @@
                         &.sub-menu {
                             display: none !important;
                             padding-bottom: 10px !important;
+                            max-height: 300px;
+                            overflow: auto;
 
                             & > li {
                                 & > a {

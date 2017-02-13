@@ -27,7 +27,7 @@
 
         <link rel="manifest" href="/theme/assets/images/favicon/manifest.json" />
         <meta name="msapplication-TileColor" content="#ffffff" />
-        <meta name="msapplication-TileImage" content="/theme/assets/images/favicon/ms-icon-144x144.png"/>
+        <meta name="msapplication-TileImage" content="/theme/assets/images/favicon/ms-icon-144x144.png" />
         <meta name="theme-color" content="#ffffff" />
         <!-- end: META -->
 
@@ -53,7 +53,7 @@
         <link rel="stylesheet" href="/theme/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css">
         <!--<link rel="stylesheet" href="/theme/assets/css/theme/light.min.css" id="skin_color" />-->
         <link rel="stylesheet" href="/theme/assets/css/k-bootstrap.css?v=8.1.6" />
-        <link rel="stylesheet" href="/theme/assets/css/fuse.css?v=8.1.6" />
+        <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=8.1.6" />
         <!-- end: MAIN CSS -->
 
         <!-- start: MAIN JAVASCRIPTS -->
@@ -98,7 +98,7 @@
         <script type="text/javascript" src="/theme/assets/plugins/iCheck/icheck.min.js">//</script>
         <script type="text/javascript" src="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
-        <script type="text/javascript" src="/theme/assets/js/fuse.js">//</script>
+        <script type="text/javascript" src="/theme/assets/js/kademi.js">//</script>
 
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
@@ -141,21 +141,22 @@
                                     <i class="fa fa-spinner fa-spin" style="font-size: 32px"></i>
                                 </div>
                             </li>
-                            <li class="fuse-header-item fuse-search">
+                            <li>
                                 <form class="navbar-form" role="search">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
 
-                                        <div class="fuse-search-wrapper">
-                                            <input type="text" class="form-control" placeholder="Search for..." id="fuse-search-input" />
-                                            <ul id="fuse-search-suggestions" class="hide"></ul>
+                                        <div class="search-wrapper">
+                                            <input type="text" class="form-control search-input" placeholder="Search for..." id="top-nav-search-input" />
+                                            <ul class="search-suggestions hide" id="top-nav-search-suggestions"></ul>
                                         </div>
                                     </div>
                                 </form>
                             </li>
-                            <li class="dropdown fuse-header-item">
+                            <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    <span class="org_name">Logged into: $page.organisation.formattedName</span>
+                                    <span class="visible-xs"><i class="fa fa-users"></i></span>
+                                    <span class="org_name hidden-xs">Logged into: $page.organisation.formattedName</span>
                                     <i class="clip-chevron-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -170,7 +171,7 @@
                                 </ul>
                             </li>
                             <!-- start: USER DROPDOWN -->
-                            <li class="dropdown current-user fuse-header-item">
+                            <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
                                         <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
@@ -193,7 +194,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="fuse-header-item">
+                            <li>
                                 <a target="_blank" href="http://docs.kademi.co/ref/screens${templateName}" class="btn-success">
                                     <span class="glyphicon glyphicon-question-sign"></span> Help
                                 </a>
@@ -232,7 +233,7 @@
                                     #end
 
                                     #if( $rootItem.active )
-                                        <span class="selected"></span>
+                                        <!--<span class="selected"></span>-->
                                     #end
                                 </a>
 

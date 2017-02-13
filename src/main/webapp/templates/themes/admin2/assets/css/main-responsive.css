@@ -119,7 +119,13 @@
  /* ---------------------------------------------------------------------- */
 @media (max-width: 767px) {
   .main-navigation {
-    max-height: 340px !important; }
+    top: 99px;
+    bottom: auto;
+    max-height: calc(100% - 99px) !important;
+    min-height: 0 !important; }
+
+  .main-navigation-menu {
+    height: auto; }
 
   .layout-boxed > .navbar, .layout-boxed .main-container, .layout-boxed > .footer {
     max-width: none !important; }
@@ -400,7 +406,9 @@
       display: block !important; }
   .navigation-small ul.main-navigation-menu > li > ul.sub-menu {
     display: none !important;
-    padding-bottom: 10px !important; }
+    padding-bottom: 10px !important;
+    max-height: 300px;
+    overflow: auto; }
     .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > a {
       padding-left: 24px !important; }
     .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > a {

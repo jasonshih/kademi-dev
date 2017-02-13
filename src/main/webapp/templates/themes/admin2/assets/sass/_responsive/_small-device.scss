@@ -174,7 +174,15 @@
  /* ---------------------------------------------------------------------- */
 @media (max-width: 767px) {
     .main-navigation {
-        max-height: 340px !important;
+        //max-height: 340px !important;
+        top: 99px;
+        bottom: auto;
+        max-height: calc(100% - 99px) !important;
+        min-height: 0 !important;
+    }
+
+    .main-navigation-menu {
+        height: auto;
     }
 
     .layout-boxed {
@@ -214,7 +222,6 @@
     }
 
     /*** Dropdown and dropdown elements. ***/
-
 
     .nav {
         & > li {
@@ -324,8 +331,6 @@
         }
     }
 
-
-
     .sidebar-search {
         input {
             display: none;
@@ -338,7 +343,6 @@
             }
         }
     }
-
 
     body {
         &.login {
@@ -410,8 +414,6 @@
         }
     }
 
-
-
     /*** Lock Screen ***/
     .main-ls {
         height: auto;
@@ -425,7 +427,6 @@
             text-align: center;
         }
     }
-
 
     body {
         &.lock-screen {
@@ -441,7 +442,6 @@
             }
         }
     }
-
 
     /*** Chart ***/
     #placeholder2 {
@@ -462,7 +462,6 @@
             display: block;
         }
     }
-
 
     /*** User-profile ***/
     .user-left {
@@ -514,8 +513,6 @@
             }
         }
     }
-
-
 
     header {
         .nav {

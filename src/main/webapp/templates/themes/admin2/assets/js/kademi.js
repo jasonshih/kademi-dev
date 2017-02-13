@@ -504,11 +504,11 @@ function initAjaxStatus() {
 function initTopNavSearch() {
     flog('initTopNavSearch');
 
-    var txt = $('#fuse-search-input');
-    var suggestionsWrapper = $('#fuse-search-suggestions');
+    var txt = $('#top-nav-search-input');
+    var suggestionsWrapper = $('#top-nav-search-suggestions');
     var backdrop = $('<div />', {
-        id: 'fuse-search-backdrop',
-        class: 'hide'
+        id: 'top-nav-search-backdrop',
+        class: 'hide search-backdrop'
     }).on('click', function () {
         backdrop.addClass('hide');
         suggestionsWrapper.addClass('hide');
@@ -658,7 +658,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                     suggestionStr += '</li>';
                 }
             } else {
-                suggestionStr = '<li>No result.</li>';
+                suggestionStr = '<li class="search-no-result">No result.</li>';
             }
 
             suggestionsWrapper.html(suggestionStr).removeClass('hide');
