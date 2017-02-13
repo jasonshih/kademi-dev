@@ -1269,7 +1269,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 .panel-tools {
   position: absolute;
   right: 5px;
-  top: 8px; }
+  top: 10px; }
   .panel-tools .btn-link {
     color: #0480BE; }
     .panel-tools .btn-link:hover {
@@ -1290,7 +1290,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
     text-decoration: none;
     outline: 0 !important; }
   .panel-tools .btn {
-    border-style: none; }
+    border-style: none;
+    color: #fff; }
     .panel-tools .btn.expand:before {
       content: "\f077";
       display: inline;
@@ -1308,7 +1309,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
       height: auto;
       text-shadow: none; }
   .panel-tools .btn-link {
-    color: #666666; }
+    color: #fff; }
     .panel-tools .btn-link:hover {
       color: #333333; }
 
@@ -1316,29 +1317,21 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 /*	Panels and panel elements
 /* ---------------------------------------------------------------------- */
 .panel-heading {
-  background-color: #F5F4F9 !important;
-  background-repeat: repeat-x;
-  border-bottom: 1px solid #CDCDCD;
-  -moz-border-radius: 6px 6px 0 0;
-  -webkit-border-radius: 6px;
-  border-radius: 6px 6px 0 0;
-  -moz-box-shadow: 0 1px 0 #ffffff inset;
-  -webkit-box-shadow: 0 1px 0 #ffffff inset;
-  box-shadow: 0 1px 0 #ffffff inset;
-  height: 36px;
-  padding-left: 40px;
-  position: relative; }
+  height: 45px;
+  position: relative;
+  font-size: 16px;
+  padding: 12px 15px 12px 50px;
+  color: #fff !important; }
   .panel-heading > [class^="fa-"], .panel-heading > [class*=" fa-"], .panel-heading > [class^="icon-"], .panel-heading > [class*=" icon-"], .panel-heading > [class^="clip-"], .panel-heading > [class*=" clip-"] {
-    border-right: 1px solid #CDCDCD;
-    -moz-box-shadow: 1px 0 0 0 #ffffff;
-    -webkit-box-shadow: 1px 0 0 0 #ffffff;
-    box-shadow: 1px 0 0 0 #ffffff;
-    opacity: 0.7;
-    padding: 12px 10px 8px;
+    padding: 12px 10px 12px 14px;
     position: absolute;
     left: 0;
     top: 0;
-    height: 36px; }
+    height: 45px;
+    color: #fff;
+    font-size: 20px;
+    width: 50px;
+    text-align: center; }
 
 .panel-white {
   box-shadow: none; }
@@ -1381,13 +1374,15 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   margin-top: 16px;
   position: relative; }
 
-.panel.panel-full-screen {
-  height: 100%;
-  left: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 9998; }
+.panel {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.06); }
+  .panel.panel-full-screen {
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9998; }
 
 .panel-scroll {
   position: relative;
@@ -1396,6 +1391,54 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   width: auto;
   height: 400px;
   overflow: hidden; }
+
+.panel-default,
+.panel-default .panel-heading,
+.panel-default .panel-body,
+.panel-default .panel-footer {
+  border-color: #dfeaf1; }
+.panel-default .panel-heading {
+  background-color: #3988b7; }
+
+.panel-primary,
+.panel-primary .panel-heading,
+.panel-primary .panel-body,
+.panel-primary .panel-footer {
+  border-color: #252836; }
+.panel-primary .panel-heading {
+  background-color: #252836; }
+
+.panel-info,
+.panel-info .panel-heading,
+.panel-info .panel-body,
+.panel-info .panel-footer {
+  border-color: #3988b7; }
+.panel-info .panel-heading {
+  background-color: #3988b7; }
+
+.panel-success,
+.panel-success .panel-heading,
+.panel-success .panel-body,
+.panel-success .panel-footer {
+  border-color: #39b7a1; }
+.panel-success .panel-heading {
+  background-color: #39b7a1; }
+
+.panel-danger,
+.panel-danger .panel-heading,
+.panel-danger .panel-body,
+.panel-danger .panel-footer {
+  border-color: #e31b5c; }
+.panel-danger .panel-heading {
+  background-color: #e31b5c; }
+
+.brand-warning,
+.brand-warning .panel-heading,
+.brand-warning .panel-body,
+.brand-warning .panel-footer {
+  border-color: #e31b5c; }
+.brand-warning .panel-heading {
+  background-color: #e31b5c; }
 
 /* ---------------------------------------------------------------------- */
 /*	Pagination
