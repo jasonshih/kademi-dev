@@ -324,49 +324,53 @@
         </form>
 
         <!-- START OF MODAL ROLES -->
-        <div class="modal modal-sm fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Edit roles</h4>
-            </div>
-            <div class="modal-body">
-                <h5>Role applies to:</h5>
-                <div class="applies-to">
-                    <p>
-                        <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
-                        <label for="appliesToOwnOrg">Their own organistion</label>
-                    </p>
-                    <p>
-                        <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/>
-                        <label for="appliesToRepository">A repository</label>
-                        <select class="hide">
-                            <option value="">-- Select a repository --</option>
-                            #foreach($r in $page.organisation.repositories())
-                            <option value="$r.name">$r.name</option>
+        <div class="modal fade" aria-hidden="true" tabindex="-1" id="modal-edit-roles">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit roles</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Role applies to:</h5>
+                        <div class="applies-to">
+                            <p>
+                                <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
+                                <label for="appliesToOwnOrg">Their own organistion</label>
+                            </p>
+                            <p>
+                                <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/>
+                                <label for="appliesToRepository">A repository</label>
+                                <select class="hide">
+                                    <option value="">-- Select a repository --</option>
+                                    #foreach($r in $page.organisation.repositories())
+                                        <option value="$r.name">$r.name</option>
+                                    #end
+                                </select>
+                            </p>
+                            <p>
+                                <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/>
+                                <label for="appliesToOrg">An organistion</label>
+                                <select class="hide">
+                                    <option value="">-- Select an organisation --</option>
+                                    <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
+                                    #foreach($org in $page.organisation.childOrgs)
+                                        <option value="$org.id">$org.formattedName</option>
+                                    #end
+                                </select>
+                            </p>
+                        </div>
+                        <div class="article-wrapper article-sm showed-action roles">
+                            #foreach($role in $page.parent.allRoles)
+                                <article>
+                                    <span class="article-name">$role</span>
+                                    <aside class="article-action">
+                                        <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
+                                    </aside>
+                                </article>
                             #end
-                        </select>
-                    </p>
-                    <p>
-                        <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/>
-                        <label for="appliesToOrg">An organistion</label>
-                        <select class="hide">
-                            <option value="">-- Select an organisation --</option>
-                            <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
-                            #foreach($org in $page.organisation.childOrgs)
-                            <option value="$org.id">$org.formattedName</option>
-                            #end
-                        </select>
-                    </p>
-                </div>
-                <div class="article-wrapper article-sm showed-action roles">
-                    #foreach($role in $page.parent.allRoles)
-                    <article>
-                        <span class="article-name">$role</span>
-                        <aside class="article-action">
-                            <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
-                        </aside>
-                    </article>
-                    #end
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

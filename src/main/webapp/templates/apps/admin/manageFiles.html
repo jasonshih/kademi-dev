@@ -210,107 +210,123 @@
 
 
         <script src="/theme/assets/plugins/dropzone/downloads/dropzone.min.js"></script>
-        <div id="modal-upload" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload files</h4>
-            </div>
-            <div class="modal-body">
-                <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-        <div id="modal-upload-zip" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload zip files</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" name="uploadZip" value="uploadZip"/>
-                <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadZipDropzone"></form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-        <div id="modal-import" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Import from server</h4>
-            </div>
-            <div class="modal-body">
-                <p class="well">
-                    <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
-                    This will import files and folders from another webdav enabled website
-                </p>
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="importFromUrl" class="label-control col-md-4">Server URL</label>
-                        <div class="col-md-8">
-                            <input type="text" name="importFromUrl" id="importFromUrl" class="form-control" />
-                        </div>
+        <div id="modal-upload" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload files</h4>
                     </div>
-                    <div class="form-group">
-                        <label for="remoteUser" class="label-control col-md-4">Remote username</label>
-                        <div class="col-md-8">
-                            <input type="text" name="user" id="remoteUser" class="form-control" />
-                        </div>
+                    <div class="modal-body">
+                        <form action="${page.href}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
                     </div>
-                    <div class="form-group">
-                        <label for="remotePassword" class="label-control col-md-4">Remote password</label>
-                        <div class="col-md-8">
-                            <input type="password" name="password" id="remotePassword" class="form-control" />
-                        </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
-                    <div class="form-group">
-                        <label class="label-control col-md-4">Import status</label>
-                        <div class="col-md-8">
-                            <p><button class="btn btn-xs btn-success btn-import-status" type="button" title="Refresh the import status"><i class="fa fa-refresh"></i></button></p>
-                            <textarea id="import-status-result" class="form-control" rows="3" readonly></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary btn-import" data-type="form-submit" type="button">Import</button>
-            </div>
-        </div>
-
-        <div id="modal-history" class="modal modal-xs fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">History</h4>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-condensed">
-                        <colgroup>
-                            <col />
-                            <col />
-                            <col />
-                            <col style="width: 70px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>User</th>
-                                <th>Edited</th>
-                                <th>Restore</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-                    </table>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+        </div>
+
+        <div id="modal-upload-zip" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload zip files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="uploadZip" value="uploadZip"/>
+                        <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadZipDropzone"></form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-import" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Import from server</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="well">
+                            <a class="close" role="button" href="#" data-dismiss="alert">&times;</a>
+                            This will import files and folders from another webdav enabled website
+                        </p>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="importFromUrl" class="label-control col-md-4">Server URL</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="importFromUrl" id="importFromUrl" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="remoteUser" class="label-control col-md-4">Remote username</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="user" id="remoteUser" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="remotePassword" class="label-control col-md-4">Remote password</label>
+                                <div class="col-md-8">
+                                    <input type="password" name="password" id="remotePassword" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="label-control col-md-4">Import status</label>
+                                <div class="col-md-8">
+                                    <p><button class="btn btn-xs btn-success btn-import-status" type="button" title="Refresh the import status"><i class="fa fa-refresh"></i></button></p>
+                                    <textarea id="import-status-result" class="form-control" rows="3" readonly></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-primary btn-import" data-type="form-submit" type="button">Import</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-history" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-xs">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">History</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col style="width: 70px" />
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>User</th>
+                                        <th>Edited</th>
+                                        <th>Restore</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
 
