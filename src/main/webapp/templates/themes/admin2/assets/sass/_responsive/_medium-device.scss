@@ -52,8 +52,6 @@
 
     ul {
         &.main-navigation-menu {
-            //overflow: visible !important;
-
             & > li {
                 &.active {
                     & > a {
@@ -87,6 +85,7 @@
         .main-navigation {
             width: 50px !important;
             z-index: 1000;
+            overflow: visible !important;
         }
 
         &.sidebar-fixed {
@@ -97,6 +96,8 @@
 
         ul {
             &.main-navigation-menu {
+                overflow: visible !important;
+
                 & > li {
                     & > a {
                         padding-left: 7px;

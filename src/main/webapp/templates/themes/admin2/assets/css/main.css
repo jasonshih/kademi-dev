@@ -1686,6 +1686,8 @@ ul.main-navigation-menu {
       ul.main-navigation-menu li.open > a > .icon-arrow:before {
         content: "\f0d7";
         font-family: FontAwesome; }
+    ul.main-navigation-menu li.active > a {
+      background: #303443; }
     ul.main-navigation-menu li.active > ul.sub-menu {
       display: block;
       padding: 0; }
@@ -1713,6 +1715,8 @@ ul.main-navigation-menu {
           padding-right: 0;
           padding-top: 5px;
           text-decoration: none; }
+        ul.main-navigation-menu li > ul.sub-menu > li.active > a {
+          background: #252836; }
       ul.main-navigation-menu li > ul.sub-menu li > a .icon-arrow {
         margin-right: 22px; }
       ul.main-navigation-menu li > ul.sub-menu li > ul.sub-menu {

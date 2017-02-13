@@ -370,51 +370,54 @@
     margin-left: 50px !important; }
   .navigation-small .main-navigation {
     width: 50px !important;
-    z-index: 1000; }
+    z-index: 1000;
+    overflow: visible !important; }
   .navigation-small.sidebar-fixed .wrap-menu {
     width: 35px; }
-  .navigation-small ul.main-navigation-menu > li > a {
-    padding-left: 7px; }
-    .navigation-small ul.main-navigation-menu > li > a > .title {
-      display: none; }
-    .navigation-small ul.main-navigation-menu > li > a .icon-arrow {
-      display: none; }
-  .navigation-small ul.main-navigation-menu > li:hover {
-    width: 239px;
-    position: relative; }
-    .navigation-small ul.main-navigation-menu > li:hover .selected {
-      display: none; }
-    .navigation-small ul.main-navigation-menu > li:hover .title {
-      display: inline; }
-    .navigation-small ul.main-navigation-menu > li:hover > a:after {
-      content: "";
-      bottom: -1px;
-      position: absolute;
-      left: 50px;
-      top: -1px;
-      width: 14px;
-      background: url(../images/menu-white-arrow.png) left center no-repeat; }
-    .navigation-small ul.main-navigation-menu > li:hover > a .title {
-      padding-left: 30px; }
-    .navigation-small ul.main-navigation-menu > li:hover > ul.sub-menu {
-      width: 189px;
-      position: absolute;
-      z-index: 1000;
-      left: 50px;
-      margin-top: 0;
-      top: 100%;
-      display: block !important; }
-  .navigation-small ul.main-navigation-menu > li > ul.sub-menu {
-    display: none !important;
-    padding-bottom: 10px !important;
-    max-height: 300px;
-    overflow: auto; }
-    .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > a {
-      padding-left: 24px !important; }
-    .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > a {
-      padding-left: 40px !important; }
-    .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu > li > a {
-      padding-left: 60px !important; }
+  .navigation-small ul.main-navigation-menu {
+    overflow: visible !important; }
+    .navigation-small ul.main-navigation-menu > li > a {
+      padding-left: 7px; }
+      .navigation-small ul.main-navigation-menu > li > a > .title {
+        display: none; }
+      .navigation-small ul.main-navigation-menu > li > a .icon-arrow {
+        display: none; }
+    .navigation-small ul.main-navigation-menu > li:hover {
+      width: 239px;
+      position: relative; }
+      .navigation-small ul.main-navigation-menu > li:hover .selected {
+        display: none; }
+      .navigation-small ul.main-navigation-menu > li:hover .title {
+        display: inline; }
+      .navigation-small ul.main-navigation-menu > li:hover > a:after {
+        content: "";
+        bottom: -1px;
+        position: absolute;
+        left: 50px;
+        top: -1px;
+        width: 14px;
+        background: url(../images/menu-white-arrow.png) left center no-repeat; }
+      .navigation-small ul.main-navigation-menu > li:hover > a .title {
+        padding-left: 30px; }
+      .navigation-small ul.main-navigation-menu > li:hover > ul.sub-menu {
+        width: 189px;
+        position: absolute;
+        z-index: 1000;
+        left: 50px;
+        margin-top: 0;
+        top: 100%;
+        display: block !important; }
+    .navigation-small ul.main-navigation-menu > li > ul.sub-menu {
+      display: none !important;
+      padding-bottom: 10px !important;
+      max-height: 300px;
+      overflow: auto; }
+      .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > a {
+        padding-left: 24px !important; }
+      .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > a {
+        padding-left: 40px !important; }
+      .navigation-small ul.main-navigation-menu > li > ul.sub-menu > li > ul.sub-menu > li > ul.sub-menu > li > a {
+        padding-left: 60px !important; }
   .navigation-small .navigation-toggler .collapsed {
     display: inline-block; }
   .navigation-small .navigation-toggler .opened {

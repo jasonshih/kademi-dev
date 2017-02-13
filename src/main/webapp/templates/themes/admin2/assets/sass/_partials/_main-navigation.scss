@@ -122,6 +122,10 @@ ul.main-navigation-menu {
         }
 
         &.active {
+            > a {
+                background: $navigation-border-color;
+            }
+
             & > ul {
                 &.sub-menu {
                     display: block;
@@ -158,6 +162,12 @@ ul.main-navigation-menu {
                         padding-right: 0;
                         padding-top: 5px;
                         text-decoration: none;
+                    }
+
+                    &.active {
+                        > a {
+                            background: $navigation-bg;
+                        }
                     }
                 }
 
