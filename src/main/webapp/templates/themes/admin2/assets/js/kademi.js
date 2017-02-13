@@ -339,7 +339,7 @@ function initTable() {
 }
 
 function initSwitch() {
-    flog("fuse.js: make switch");
+    flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
 
         $(".make-switch input[type=checkbox], input.make-switch").each(function () {
@@ -505,105 +505,108 @@ function initTopNavSearch() {
     flog('initTopNavSearch');
 
     var txt = $('#top-nav-search-input');
-    var suggestionsWrapper = $('#top-nav-search-suggestions');
-    var backdrop = $('<div />', {
-        id: 'top-nav-search-backdrop',
-        class: 'hide search-backdrop'
-    }).on('click', function () {
-        backdrop.addClass('hide');
-        suggestionsWrapper.addClass('hide');
-    }).appendTo(document.body);
 
-    txt.on({
-        input: function () {
-            typewatch(function () {
-                var text = txt.val().trim();
+    if (txt.length > 0) {
+        var suggestionsWrapper = $('#top-nav-search-suggestions');
+        var backdrop = $('<div />', {
+            id: 'top-nav-search-backdrop',
+            class: 'hide search-backdrop'
+        }).on('click', function () {
+            backdrop.addClass('hide');
+            suggestionsWrapper.addClass('hide');
+        }).appendTo(document.body);
 
-                if (text.length > 0) {
-                    doTopNavSearch(text, suggestionsWrapper, backdrop);
-                } else {
-                    suggestionsWrapper.addClass('hide');
-                    backdrop.addClass('hide');
+        txt.on({
+            input: function () {
+                typewatch(function () {
+                    var text = txt.val().trim();
+
+                    if (text.length > 0) {
+                        doTopNavSearch(text, suggestionsWrapper, backdrop);
+                    } else {
+                        suggestionsWrapper.addClass('hide');
+                        backdrop.addClass('hide');
+                    }
+                }, 500);
+            },
+            keydown: function (e) {
+                switch (e.keyCode) {
+                    case keymap.ESC:
+                        flog('Pressed ESC button');
+
+                        suggestionsWrapper.addClass('hide');
+                        backdrop.addClass('hide');
+
+                        e.preventDefault();
+                        break;
+
+                    case keymap.UP:
+                        flog('Pressed UP button');
+
+                        var suggestions = suggestionsWrapper.find('.suggestion');
+                        if (suggestions.length > 0) {
+                            var actived = suggestions.filter('.active');
+                            var prev = actived.prev();
+
+                            actived.removeClass('active');
+                            if (prev.length > 0) {
+                                prev.addClass('active');
+                            } else {
+                                suggestions.last().addClass('active');
+                            }
+                        }
+
+                        e.preventDefault();
+                        break;
+
+                    case keymap.DOWN:
+                        flog('Pressed DOWN button');
+
+                        var suggestions = suggestionsWrapper.find('.suggestion');
+                        if (suggestions.length > 0) {
+                            var actived = suggestions.filter('.active');
+                            var next = actived.next();
+
+                            actived.removeClass('active');
+                            if (next.length > 0) {
+                                next.addClass('active');
+                            } else {
+                                suggestions.first().addClass('active');
+                            }
+                        }
+
+                        e.preventDefault();
+                        break;
+
+                    case keymap.ENTER:
+                        flog('Pressed DOWN button');
+
+                        var actived = suggestionsWrapper.find('.suggestion').filter('.active');
+                        if (actived.length > 0) {
+                            var link = actived.find('a').attr('href');
+
+                            window.location.href = link;
+                        }
+
+                        e.preventDefault();
+                        break;
+
+                    default:
+                    // Nothing
                 }
-            }, 500);
-        },
-        keydown: function (e) {
-            switch (e.keyCode) {
-                case keymap.ESC:
-                    flog('Pressed ESC button');
-
-                    suggestionsWrapper.addClass('hide');
-                    backdrop.addClass('hide');
-
-                    e.preventDefault();
-                    break;
-
-                case keymap.UP:
-                    flog('Pressed UP button');
-
-                    var suggestions = suggestionsWrapper.find('.suggestion');
-                    if (suggestions.length > 0) {
-                        var actived = suggestions.filter('.active');
-                        var prev = actived.prev();
-
-                        actived.removeClass('active');
-                        if (prev.length > 0) {
-                            prev.addClass('active');
-                        } else {
-                            suggestions.last().addClass('active');
-                        }
-                    }
-
-                    e.preventDefault();
-                    break;
-
-                case keymap.DOWN:
-                    flog('Pressed DOWN button');
-
-                    var suggestions = suggestionsWrapper.find('.suggestion');
-                    if (suggestions.length > 0) {
-                        var actived = suggestions.filter('.active');
-                        var next = actived.next();
-
-                        actived.removeClass('active');
-                        if (next.length > 0) {
-                            next.addClass('active');
-                        } else {
-                            suggestions.first().addClass('active');
-                        }
-                    }
-
-                    e.preventDefault();
-                    break;
-
-                case keymap.ENTER:
-                    flog('Pressed DOWN button');
-
-                    var actived = suggestionsWrapper.find('.suggestion').filter('.active');
-                    if (actived.length > 0) {
-                        var link = actived.find('a').attr('href');
-
-                        window.location.href = link;
-                    }
-
-                    e.preventDefault();
-                    break;
-
-                default:
-                // Nothing
             }
-        }
-    });
+        });
 
-    suggestionsWrapper.on({
-        mouseenter: function () {
-            suggestionsWrapper.find('.suggestion').removeClass('active');
-            $(this).addClass('active');
-        },
-        mouseleave: function () {
-            $(this).removeClass('active');
-        }
-    }, '.suggestion');
+        suggestionsWrapper.on({
+            mouseenter: function () {
+                suggestionsWrapper.find('.suggestion').removeClass('active');
+                $(this).addClass('active');
+            },
+            mouseleave: function () {
+                $(this).removeClass('active');
+            }
+        }, '.suggestion');
+    }
 }
 
 function doTopNavSearch(query, suggestionsWrapper, backdrop) {

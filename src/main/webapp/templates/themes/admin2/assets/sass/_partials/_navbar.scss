@@ -24,6 +24,14 @@
         i {
             font-size: 20px;
         }
+
+        #mainSpinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            display: none;
+        }
     }
 
     &.navbar-inverse {

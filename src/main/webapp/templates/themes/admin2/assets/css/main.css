@@ -640,6 +640,12 @@ a.bricky:hover {
     position: relative; }
     .navbar > .container .navbar-brand i {
       font-size: 20px; }
+    .navbar > .container .navbar-brand #mainSpinner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      display: none; }
   .navbar.navbar-inverse {
     background: rgba(255, 255, 255, 0.9);
     border-color: #dfeaf1; }
@@ -2428,10 +2434,9 @@ body.login {
   body.login .box-login, body.login .box-forgot, body.login .box-register {
     background: #ffffff;
     border-radius: 5px;
-    box-shadow: -30px 30px 50px rgba(0, 0, 0, 0.32);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
-    padding: 15px;
-    display: none; }
+    padding: 15px; }
   body.login .form fieldset {
     border: none;
     margin: 0;
