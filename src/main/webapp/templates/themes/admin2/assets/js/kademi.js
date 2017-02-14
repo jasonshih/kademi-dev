@@ -236,6 +236,7 @@ function initTabbable() {
     $('.tabbable').exist(function () {
         this.each(function () {
             var wrapper = $(this);
+            var isModal = wrapper.closest('.modal').length > 0;
             var tabHeader = wrapper.find('.nav-tabs');
             var links = tabHeader.find('a');
             var hash = window.location.hash;
@@ -245,7 +246,9 @@ function initTabbable() {
                 link.on('click', function (e) {
                     e.preventDefault();
 
-                    window.location.hash = $(this).attr('href') + '-tab';
+                    if (!isModal) {
+                        window.location.hash = $(this).attr('href') + '-tab';
+                    }
                 });
             });
 
