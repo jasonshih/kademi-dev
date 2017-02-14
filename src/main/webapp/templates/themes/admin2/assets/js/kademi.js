@@ -64,47 +64,56 @@ $.fn.exist = function (callback_when_exist, callback_when_no_exist) {
 (function ($) {
     var oldModal = $.fn.modal;
 
+    function checkModal(modal) {
+        var modalDialog = modal.find('.modal-dialog');
+
+        if (modalDialog.length === 0) {
+            flog('Modal has old structure. Modifying structure...');
+
+            var modalContent = modal.html();
+            var sizeClass = 'modal-md';
+            if (modal.hasClass('modal-lg')) {
+                sizeClass = 'modal-lg';
+                modal.removeClass('modal-lg');
+            } else if (modal.hasClass('modal-md')) {
+                sizeClass = 'modal-md';
+                modal.removeClass('modal-md');
+            } else if (modal.hasClass('modal-sm')) {
+                sizeClass = 'modal-sm';
+                modal.removeClass('modal-sm');
+            } else if (modal.hasClass('modal-xs')) {
+                sizeClass = 'modal-xs';
+                modal.removeClass('modal-xs');
+            } else if (modal.hasClass('modal-xss')) {
+                sizeClass = 'modal-xss';
+                modal.removeClass('modal-xss');
+            }
+
+            modal.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
+            flog('Modifying structure is DONE');
+
+            modal.trigger('modal.bs.done');
+
+            if (console && console.log) {
+                console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + modal.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
+            }
+        }
+    }
+
     $.fn.modal = function (option, _relatedTarget) {
         var targets = $(this);
         targets.each(function () {
-            var target = $(this);
-            var modalDialog = target.find('.modal-dialog');
-
-            if (modalDialog.length === 0) {
-                flog('Modal has old structure. Modifying structure...');
-
-                var modalContent = target.html();
-                var sizeClass = 'modal-md';
-                if (target.hasClass('modal-lg')) {
-                    sizeClass = 'modal-lg';
-                    target.removeClass('modal-lg');
-                } else if (target.hasClass('modal-md')) {
-                    sizeClass = 'modal-md';
-                    target.removeClass('modal-md');
-                } else if (target.hasClass('modal-sm')) {
-                    sizeClass = 'modal-sm';
-                    target.removeClass('modal-sm');
-                } else if (target.hasClass('modal-xs')) {
-                    sizeClass = 'modal-xs';
-                    target.removeClass('modal-xs');
-                } else if (target.hasClass('modal-xss')) {
-                    sizeClass = 'modal-xss';
-                    target.removeClass('modal-xss');
-                }
-
-                target.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
-                flog('Modifying structure is DONE');
-
-                target.trigger('modal.bs.done');
-
-                if (console && console.log) {
-                    console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + target.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
-                }
-            }
+            checkModal($(this));
         });
 
         return oldModal.call(targets, option, _relatedTarget);
     };
+
+    $(function () {
+        $('.modal').each(function () {
+            checkModal($(this));
+        });
+    });
 
 })(jQuery);
 
