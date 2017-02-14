@@ -1,13 +1,35 @@
 <script src="/theme/apps/rewardstore/managePointsBucketTab.js">//</script>
 
-#foreach($reward in $allPoints.keySet() )
-#set( $rs = $page.find("/points-buckets/").child($reward.name) )
 
-<h2>
-    <button data-href="/points-buckets/$reward.name/" data-userid="$page.profile.id" type="button" class="btn btn-info pull-right btn-refresh-pb">Refresh Points Balance</button>
-    <a href="/points-buckets/$reward.name/">$reward.title</a>
+#foreach($reward in $applications.rewardStore.pointsBuckets )
+#set( $participants = $applications.rewardStore.findParticipantsForReward($page.profile, $reward) )
+#foreach($participant in $participants )
+<div class="tx-container">
+<div class="btn-group pull-right" role="group">
+    <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-success btn-add-points">
+        <i class="fa fa-plus"></i>
+        Add points
+    </button>
+    <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-warning btn-debit-points">
+        <i class="fa fa-minus"></i>
+        Debit points
+    </button>        
+    <button data-href="/points-buckets/$reward.name/" data-userid="$participant.entityName" type="button" class="btn btn-info btn-refresh-pb">
+        <i class="fa fa-refresh"></i>
+        Refresh balance
+    </button>    
+</div>
+
+
+<h2>    
+    <a href="/points-buckets/$reward.name/">
+        $reward.title 
+        #if( $participants.size() > 1 )
+        ( $participant.formattedName  )
+        #end
+    </a>
 </h2>
-
+    
 <table class="table table-striped">
     <colgroup>
         <col width="250px"/>
@@ -22,8 +44,16 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-        #foreach($p in $allPoints.get($reward))
+    <tbody id="transactions-${participant.id}-${reward.id}">
+        #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
+        #if( $txs.isEmpty() )
+        <tr>
+            <td colspan="4">
+                <i>No transactions :(</i>
+            </td>
+        </tr>
+        #else
+        #foreach($p in $txs)
         <tr>
             <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
             <td>
@@ -51,18 +81,18 @@
             </td>
         </tr>
         #end
+        #end
         <tr>
-            #set( $current = $rs.balance($page.profile) )
             <td></td>
             <td class="text-right">
                 <span>Total Points:</span>
             </td>
             <td colspan="2">
-                <strong>$current</strong>
+                <strong>$!applications.rewardStore.balance($page.profile, $reward)</strong>
             </td>
             <td></td>
         </tr>
-        #set( $avail = $rs.availableBalance($page.profile) )
+        #set( $avail = $applications.rewardStore.availableBalance($page.profile, $reward) )
         #if($current != $avail)
         <tr>
             <td></td>
@@ -77,8 +107,10 @@
         #end
     </tbody>
 </table>
+</div>
 #end
-
+#end
+<!--
 <hr/>
 
 <h2><a href="/points-buckets/">Points</a></h2>
@@ -132,4 +164,99 @@
             #end
         </tbody>
     </table>
+</div>
+-->
+
+
+<div id="modal-new-points" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+        <h4 class="modal-title">Assign points to</h4>
+    </div>
+    <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
+        <div class="modal-body">
+            <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
+
+            <input type="hidden" name="awardToEmail" value=""/>
+            <input type="hidden" name="awardedReward" value=""/>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="awardNumPoints">No. of points</label>
+                <div class="col-md-9">
+                    <input type="text" name="awardNumPoints" required="true" id="awardNumPoints" class="numeric required form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="pointsTag" class="col-md-3 control-label">Tag</label>
+                <div class="col-md-9">
+                    <select name="awardPointsTag" class="form-control input-sm">
+                        <option value="">[None]</option>
+                        #foreach($pointTag in $page.pointTags)
+                        <option value="$pointTag.name">$pointTag.title</option>
+                        #end
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="reason">Reason</label>
+                <div class="col-md-9">
+                    <input type="text" name="reason" class="form-control" />
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+        </div>
+    </form>
+</div>
+
+<div id="modal-debit-points" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-header">
+        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+        <h4 class="modal-title">Debit points from a user</h4>
+    </div>
+    <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
+        
+        <input type="hidden" name="debitPoints" value="debitPoints"/>
+        <input type="hidden" name="email" value=""/>
+        <input type="hidden" name="awardedReward" value=""/>
+        
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="control-label col-md-3" for="numPoints">No. of points</label>
+                <div class="col-md-9">
+                    <input type="text" name="numPoints" required="true" class="numeric required form-control" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-3" for="reason">Reason</label>
+                <div class="col-md-9">
+                    <input type="text" name="reason" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-md-3" for="reasonCode">
+                    Reason Code
+                    <small>
+                        Defaults:
+                        <br/>
+                        Purchase=P
+                        <br/>
+                        Expired=E
+                    </small>
+                </label>                        <div class="col-md-9">
+                    <input type="text" name="reasonCode" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Debit</button>
+        </div>
+    </form>
 </div>
