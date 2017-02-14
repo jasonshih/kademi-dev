@@ -99,7 +99,7 @@ function initDeleteCheckbox() {
         e.preventDefault();
         var listToDelete = [];
         $('body').find(':checkbox.rule-check:checked').each(function () {
-            listToDelete.add($(this).data("ruleid"));
+            listToDelete.push($(this).data("ruleid"));
         });
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " allocation rules?")) {
             $('body').find('.check-all').check(false).change();
