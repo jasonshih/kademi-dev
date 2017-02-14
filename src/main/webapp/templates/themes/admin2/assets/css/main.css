@@ -1756,7 +1756,8 @@ ul.main-navigation-menu {
         line-height: inherit;
         height: 24px;
         display: inline-block;
-        vertical-align: top; }
+        vertical-align: top;
+        font-style: normal; }
       ul.main-navigation-menu > li > a .title {
         top: 2px;
         position: relative;
