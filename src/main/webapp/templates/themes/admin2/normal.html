@@ -156,8 +156,8 @@
                             </li>
                             <li class="dropdown">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    <span class="visible-xs"><i class="fa fa-users"></i></span>
-                                    <span class="org_name hidden-xs">Logged into: $page.organisation.formattedName</span>
+                                    <span><i class="fa fa-users"></i></span>
+                                    <span class="org_name hidden-xs hidden-sm">Logged into: $page.organisation.formattedName</span>
                                     <i class="clip-chevron-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
@@ -177,7 +177,7 @@
                                     #if( $profile.photoHash )
                                         <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
-                                    <span class="username">
+                                    <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
                                     </span>
                                     <i class="clip-chevron-down"></i>
