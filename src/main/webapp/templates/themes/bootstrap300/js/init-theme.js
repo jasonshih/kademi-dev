@@ -133,7 +133,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
             config.width = width;
         }
 
-        config.stylesSet = 'myStyles:/templates/themes/fuse/styles.js'; // TODO: needs to be configurable, based on theme
+        config.stylesSet = 'myStyles:/templates/themes/admin2/styles.js'; // TODO: needs to be configurable, based on theme
         log("create editor", inp, config);
         //var editor = CKEDITOR.instances["body"];
         flog("editor", CKEDITOR.instances);
