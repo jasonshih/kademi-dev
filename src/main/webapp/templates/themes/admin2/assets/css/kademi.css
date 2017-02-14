@@ -626,22 +626,6 @@ body.ajax-loading .ajaxLoader {
     margin-left: 100px;
 }
 
-.panel-primary > .panel-heading {
-    background-color: #337ab7 !important;
-    border-color: #337ab7 !important;
-    color: #fff;
-}
-
-.statCard .panel-heading {
-    border-bottom: 1px solid transparent;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    padding: 10px 15px;
-    height: auto;
-    background-image: none;
-    box-shadow: none;
-}
-
 .medium {
     font-size: 18px;
 }

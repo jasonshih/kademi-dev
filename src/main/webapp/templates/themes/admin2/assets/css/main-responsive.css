@@ -35,10 +35,10 @@
     margin-left: -375px !important; }
 
   .main-content {
-    margin-left: 35px !important; }
+    margin-left: 50px !important; }
 
   .main-navigation {
-    width: 35px !important; }
+    width: 50px !important; }
 
   ul.main-navigation-menu > li:first-child > a {
     border-top: none !important; }
@@ -110,7 +110,8 @@
 
   .breadcrumb {
     height: 41px;
-    padding: 11px; }
+    padding: 11px;
+    line-height: 17px; }
 
   .sidebar-search {
     top: 9px; } }

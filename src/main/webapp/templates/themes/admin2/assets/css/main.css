@@ -1290,8 +1290,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
     text-decoration: none;
     outline: 0 !important; }
   .panel-tools .btn {
-    border-style: none;
-    color: #fff; }
+    border-style: none; }
     .panel-tools .btn.expand:before {
       content: "\f077";
       display: inline;
@@ -1308,10 +1307,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
       font-weight: 300;
       height: auto;
       text-shadow: none; }
-  .panel-tools .btn-link {
-    color: #fff; }
-    .panel-tools .btn-link:hover {
-      color: #333333; }
+  .panel-tools .btn-link:hover {
+    color: #333333; }
 
 /* ---------------------------------------------------------------------- */
 /*	Panels and panel elements
@@ -1320,18 +1317,19 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   height: 45px;
   position: relative;
   font-size: 16px;
-  padding: 12px 15px 12px 50px;
-  color: #fff !important; }
+  padding: 12px 15px 12px 50px; }
   .panel-heading > [class^="fa-"], .panel-heading > [class*=" fa-"], .panel-heading > [class^="icon-"], .panel-heading > [class*=" icon-"], .panel-heading > [class^="clip-"], .panel-heading > [class*=" clip-"] {
     padding: 12px 10px 12px 14px;
     position: absolute;
     left: 0;
     top: 0;
     height: 45px;
-    color: #fff;
     font-size: 20px;
     width: 50px;
     text-align: center; }
+  .statCard .panel-heading {
+    padding: 10px 15px;
+    height: auto; }
 
 .panel-white {
   box-shadow: none; }
@@ -1398,7 +1396,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 .panel-default .panel-footer {
   border-color: #dfeaf1; }
 .panel-default .panel-heading {
-  background-color: #3988b7; }
+  background-color: #f0f5f8; }
 
 .panel-primary,
 .panel-primary .panel-heading,
@@ -1407,6 +1405,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   border-color: #252836; }
 .panel-primary .panel-heading {
   background-color: #252836; }
+.panel-primary.statCard a {
+  color: #252836; }
 
 .panel-info,
 .panel-info .panel-heading,
@@ -1415,6 +1415,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   border-color: #3988b7; }
 .panel-info .panel-heading {
   background-color: #3988b7; }
+.panel-info.statCard a {
+  color: #3988b7; }
 
 .panel-success,
 .panel-success .panel-heading,
@@ -1423,6 +1425,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   border-color: #39b7a1; }
 .panel-success .panel-heading {
   background-color: #39b7a1; }
+.panel-success.statCard a {
+  color: #39b7a1; }
 
 .panel-danger,
 .panel-danger .panel-heading,
@@ -1431,6 +1435,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   border-color: #e31b5c; }
 .panel-danger .panel-heading {
   background-color: #e31b5c; }
+.panel-danger.statCard a {
+  color: #e31b5c; }
 
 .brand-warning,
 .brand-warning .panel-heading,
@@ -1439,6 +1445,50 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   border-color: #e31b5c; }
 .brand-warning .panel-heading {
   background-color: #e31b5c; }
+.brand-warning.statCard a {
+  color: #e31b5c; }
+
+.panel-primary .panel-heading, .panel-primary .panel-heading > [class^="fa-"], .panel-primary .panel-heading > [class*=" fa-"], .panel-primary .panel-heading > [class^="icon-"], .panel-primary .panel-heading > [class*=" icon-"], .panel-primary .panel-heading > [class^="clip-"], .panel-primary .panel-heading > [class*=" clip-"],
+.panel-info .panel-heading,
+.panel-info .panel-heading > [class^="fa-"],
+.panel-info .panel-heading > [class*=" fa-"],
+.panel-info .panel-heading > [class^="icon-"],
+.panel-info .panel-heading > [class*=" icon-"],
+.panel-info .panel-heading > [class^="clip-"],
+.panel-info .panel-heading > [class*=" clip-"],
+.panel-success .panel-heading,
+.panel-success .panel-heading > [class^="fa-"],
+.panel-success .panel-heading > [class*=" fa-"],
+.panel-success .panel-heading > [class^="icon-"],
+.panel-success .panel-heading > [class*=" icon-"],
+.panel-success .panel-heading > [class^="clip-"],
+.panel-success .panel-heading > [class*=" clip-"],
+.panel-danger .panel-heading,
+.panel-danger .panel-heading > [class^="fa-"],
+.panel-danger .panel-heading > [class*=" fa-"],
+.panel-danger .panel-heading > [class^="icon-"],
+.panel-danger .panel-heading > [class*=" icon-"],
+.panel-danger .panel-heading > [class^="clip-"],
+.panel-danger .panel-heading > [class*=" clip-"],
+.panel-danger .panel-heading,
+.panel-danger .panel-heading > [class^="fa-"],
+.panel-danger .panel-heading > [class*=" fa-"],
+.panel-danger .panel-heading > [class^="icon-"],
+.panel-danger .panel-heading > [class*=" icon-"],
+.panel-danger .panel-heading > [class^="clip-"],
+.panel-danger .panel-heading > [class*=" clip-"] {
+  color: #fff; }
+.panel-primary .panel-tools .btn,
+.panel-primary .panel-tools .btn-link,
+.panel-info .panel-tools .btn,
+.panel-info .panel-tools .btn-link,
+.panel-success .panel-tools .btn,
+.panel-success .panel-tools .btn-link,
+.panel-danger .panel-tools .btn,
+.panel-danger .panel-tools .btn-link,
+.panel-danger .panel-tools .btn,
+.panel-danger .panel-tools .btn-link {
+  color: #fff; }
 
 /* ---------------------------------------------------------------------- */
 /*	Pagination
@@ -4760,3 +4810,13 @@ body.lock-screen .user-info {
 
 .tabs-right > .nav-tabs > li {
   float: none; }
+
+/* ---------------------------------------------------------------------- */
+/*	Rows
+/* ---------------------------------------------------------------------- */
+.row {
+  margin-left: -7.5px;
+  margin-right: -7.5px; }
+  .row > [class*="col-"] {
+    padding-left: 7.5px;
+    padding-right: 7.5px; }

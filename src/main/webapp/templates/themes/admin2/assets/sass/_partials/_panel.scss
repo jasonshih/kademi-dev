@@ -47,7 +47,6 @@
 
     .btn {
         border-style: none;
-        color: #fff;
 
         &.expand {
             &:before {
@@ -75,8 +74,6 @@
     }
 
     .btn-link {
-        color: #fff;
-
         &:hover {
             color: $dark-grey;
         }
@@ -97,9 +94,13 @@
     position: relative;
     font-size: 16px;
     padding: 12px 15px 12px 50px;
-    color: #fff !important;
 
-    & > [class^="fa-"], & > [class*=" fa-"], & > [class^="icon-"], & > [class*=" icon-"], & > [class^="clip-"], & > [class*=" clip-"] {
+    & > [class^="fa-"],
+    & > [class*=" fa-"],
+    & > [class^="icon-"],
+    & > [class*=" icon-"],
+    & > [class^="clip-"],
+    & > [class*=" clip-"] {
         //border-right: 1px solid #CDCDCD;
         //@include box-shadow(1px 0 0 0 $white);
         padding: 12px 10px 12px 14px;
@@ -107,10 +108,14 @@
         left: 0;
         top: 0;
         height: 45px;
-        color: #fff;
         font-size: 20px;
         width: 50px;
         text-align: center;
+    }
+
+    .statCard & {
+        padding: 10px 15px;
+        height: auto;
     }
 }
 
@@ -182,7 +187,7 @@
     }
 
     .panel-heading {
-        background-color: $panel-heading-bg;
+        background-color: $panel-bg;
     }
 }
 
@@ -197,6 +202,12 @@
     .panel-heading {
         background-color: $brand-primary;
     }
+
+    &.statCard {
+        a {
+            color: $brand-primary;
+        }
+    }
 }
 
 .panel-info {
@@ -209,6 +220,12 @@
 
     .panel-heading {
         background-color: $brand-info;
+    }
+
+    &.statCard {
+        a {
+            color: $brand-info;
+        }
     }
 }
 
@@ -223,6 +240,12 @@
     .panel-heading {
         background-color: $brand-success;
     }
+
+    &.statCard {
+        a {
+            color: $brand-success;
+        }
+    }
 }
 
 .panel-danger {
@@ -236,6 +259,12 @@
     .panel-heading {
         background-color: $brand-danger;
     }
+
+    &.statCard {
+        a {
+            color: $brand-danger;
+        }
+    }
 }
 
 .brand-warning {
@@ -248,5 +277,31 @@
 
     .panel-heading {
         background-color: $brand-warning;
+    }
+
+    &.statCard {
+        a {
+            color: $brand-warning;
+        }
+    }
+}
+
+.panel-primary,
+.panel-info,
+.panel-success,
+.panel-danger,
+.panel-danger {
+    .panel-heading {
+        &,
+        & > [class^="fa-"], & > [class*=" fa-"], & > [class^="icon-"], & > [class*=" icon-"], & > [class^="clip-"], & > [class*=" clip-"] {
+            color: #fff;
+        }
+    }
+
+    .panel-tools {
+        .btn,
+        .btn-link {
+            color: #fff;
+        }
     }
 }
