@@ -22,7 +22,7 @@
                     <select id="groupName" name="prevAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
-                        <option>$a.title</option>
+                        <option value="$a.name">$a.title</option>
                         #end
                     </select>
                 </div>
@@ -45,7 +45,7 @@
                     <select id="curAutomationName" name="curAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
-                        <option>$a.title</option>
+                        <option value="$a.name">$a.title</option>
                         #end
                     </select>
                 </div>
