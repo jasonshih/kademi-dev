@@ -25,7 +25,7 @@
     },
     libs: {
         files: {
-            '<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.min.css': ['<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.css']
+            //'<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.min.css': ['<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.css']
         }
     },
     libsRtl: {

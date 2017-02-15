@@ -229,163 +229,175 @@
         </div>
         #end
 
-        <div id="programModal" class="modal modal-sm fade" tabindex="-1" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Program Details</h4>
-            </div>
-            <div class="modal-body">
-                <form method="post" action="${parentOrg.path}/programs/" class="form-horizontal">
-                    <input type="hidden" name="originalProgramName" value=""  />
-                    <div class="form-group">
-                        <label for="programTitle" class="control-label col-md-3">Program code</label>
-                        <div class="col-md-8">
-                            <input type="text" name="programName" id="programName" maxlength="30" value="" placeholder="A unique program code" class="form-control required reallySimpleChars" />
-                        </div>
+        <div id="programModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Program Details</h4>
                     </div>
+                    <div class="modal-body">
+                        <form method="post" action="${parentOrg.path}/programs/" class="form-horizontal">
+                            <input type="hidden" name="originalProgramName" value=""  />
+                            <div class="form-group">
+                                <label for="programTitle" class="control-label col-md-3">Program code</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="programName" id="programName" maxlength="30" value="" placeholder="A unique program code" class="form-control required reallySimpleChars" />
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="programTitle" class="control-label col-md-3">Program title</label>
-                        <div class="col-md-8">
-                            <input type="text" name="programTitle" id="programTitle" maxlength="30" value="" placeholder="Title to appear on certificates etc" class="form-control required simpleChars" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="programNotes" class="control-label col-md-3">Author notes</label>
-                        <div class="col-md-8">
-                            <textarea name="programNotes" id="programNotes" placeholder="Author notes" maxlength="255" cols="2" rows="2" class="form-control"></textarea>
-                        </div>
-                    </div>
+                            <div class="form-group">
+                                <label for="programTitle" class="control-label col-md-3">Program title</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="programTitle" id="programTitle" maxlength="30" value="" placeholder="Title to appear on certificates etc" class="form-control required simpleChars" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="programNotes" class="control-label col-md-3">Author notes</label>
+                                <div class="col-md-8">
+                                    <textarea name="programNotes" id="programNotes" placeholder="Author notes" maxlength="255" cols="2" rows="2" class="form-control"></textarea>
+                                </div>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="" class="control-label col-md-3">Search fields</label>
-                    </div>
+                            <div class="form-group">
+                                <label for="" class="control-label col-md-3">Search fields</label>
+                            </div>
 
-                    <div class="form-group">
-                        <label for="itemType" class="control-label col-md-3">Type</label>
-                        <div class="col-md-4">
-                            <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category" />
-                        </div>
-                        <label for="category" class="control-label col-md-2">Category</label>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control"  name="category" id="category" value=""/>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tags" class="control-label col-md-3">Tags</label>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control"  name="tags" id="tags" value=""/>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
-            </div>
-        </div>
-
-        <div id="courseModal" class="modal modal-lg modal-fuse modal-fuse-editor fade" tabindex="-1" aria-hidden="true">
-            <form method="post" action="." class="form-horizontal">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Course Details</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="originalCourseName" value=""  />
-                    <div class="form-group">
-                        <label for="programTitle" class="control-label col-md-2">Course code</label>
-                        <div class="col-md-10">
-                            <input type="text" name="courseName" id="courseName" maxlength="30" value="" placeholder="A unique course code" class="form-control required reallySimpleChars" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="courseTitle" class="control-label col-md-2">Course title</label>
-                        <div class="col-md-10">
-                            <input type="text" name="courseTitle" id="courseTitle" maxlength="30" value="" placeholder="Course title" class="required form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="courseNotes" class="control-label col-md-2">Author notes</label>
-                        <div class="col-md-10">
-                            <textarea name="courseNotes" id="courseNotes" placeholder="Author notes" maxlength="" cols="2" rows="2" class="form-control"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="courseDescription" class="control-label col-md-2">Course description</label>
-                        <div class="col-md-10">
-                            <textarea name="courseDescription" id="courseDescription" placeholder="Displayed to users" maxlength="" cols="4" rows="2" class="form-control  htmleditor"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="control-label col-md-2">Search fields</label>
-
-                        <div class="col-md-10">
                             <div class="form-group">
                                 <label for="itemType" class="control-label col-md-3">Type</label>
-
                                 <div class="col-md-4">
-                                    <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category for search" />
+                                    <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category" />
                                 </div>
                                 <label for="category" class="control-label col-md-2">Category</label>
-
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" name="category" id="category" value="" />
+                                    <input type="text" class="form-control"  name="category" id="category" value=""/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="tags" class="control-label col-md-3">Tags</label>
-
                                 <div class="col-md-9">
-                                    <input type="text" class="form-control" name="tags" id="tags" value="" />
+                                    <input type="text" class="form-control"  name="tags" id="tags" value=""/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="courseModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" action="." class="form-horizontal">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Course Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="originalCourseName" value=""  />
+                            <div class="form-group">
+                                <label for="programTitle" class="control-label col-md-2">Course code</label>
+                                <div class="col-md-10">
+                                    <input type="text" name="courseName" id="courseName" maxlength="30" value="" placeholder="A unique course code" class="form-control required reallySimpleChars" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="courseTitle" class="control-label col-md-2">Course title</label>
+                                <div class="col-md-10">
+                                    <input type="text" name="courseTitle" id="courseTitle" maxlength="30" value="" placeholder="Course title" class="required form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseNotes" class="control-label col-md-2">Author notes</label>
+                                <div class="col-md-10">
+                                    <textarea name="courseNotes" id="courseNotes" placeholder="Author notes" maxlength="" cols="2" rows="2" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="courseDescription" class="control-label col-md-2">Course description</label>
+                                <div class="col-md-10">
+                                    <textarea name="courseDescription" id="courseDescription" placeholder="Displayed to users" maxlength="" cols="4" rows="2" class="form-control  htmleditor"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="" class="control-label col-md-2">Search fields</label>
+
+                                <div class="col-md-10">
+                                    <div class="form-group">
+                                        <label for="itemType" class="control-label col-md-3">Type</label>
+
+                                        <div class="col-md-4">
+                                            <input type="text" id="itemType" class="form-control" name="itemType" value="" placeholder="Top level category for search" />
+                                        </div>
+                                        <label for="category" class="control-label col-md-2">Category</label>
+
+                                        <div class="col-md-3">
+                                            <input type="text" class="form-control" name="category" id="category" value="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tags" class="control-label col-md-3">Tags</label>
+
+                                        <div class="col-md-9">
+                                            <input type="text" class="form-control" name="tags" id="tags" value="" />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <div id="moduleModal" class="modal modal-sm fade" tabindex="-1" aria-hidden="true">
-            <form method="post" action="." class="form-horizontal">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Module Details</h4>
-                </div>
-                <div class="modal-body">
+        <div id="moduleModal" class="modal fade" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <form method="post" action="." class="form-horizontal">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Module Details</h4>
+                        </div>
+                        <div class="modal-body">
 
-                    <input type="hidden" name="originalModuleName" value=""  />
-                    <div class="form-group">
-                        <label for="moduleName" class="control-label col-md-3">Module code</label>
-                        <div class="col-md-8">
-                            <input type="text" name="moduleName" id="moduleName" maxlength="30" value="" placeholder="Module code" class="required form-control reallySimpleChars" />
+                            <input type="hidden" name="originalModuleName" value=""  />
+                            <div class="form-group">
+                                <label for="moduleName" class="control-label col-md-3">Module code</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="moduleName" id="moduleName" maxlength="30" value="" placeholder="Module code" class="required form-control reallySimpleChars" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="moduleTitle" class="control-label col-md-3">Module title</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control required" placeholder="Module title" value="" maxlength="60" id="moduleTitle" name="moduleTitle" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="moduleNotes" class="control-label col-md-3">Author notes</label>
+                                <div class="col-md-8">
+                                    <textarea name="moduleNotes" id="moduleNotes" placeholder="Author notes" maxlength="255" cols="4" rows="2" class="form-control"></textarea>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="moduleTitle" class="control-label col-md-3">Module title</label>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control required" placeholder="Module title" value="" maxlength="60" id="moduleTitle" name="moduleTitle" />
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="moduleNotes" class="control-label col-md-3">Author notes</label>
-                        <div class="col-md-8">
-                            <textarea name="moduleNotes" id="moduleNotes" placeholder="Author notes" maxlength="255" cols="4" rows="2" class="form-control"></textarea>
-                        </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
 
         #set($programs = $page.closest("programs"))

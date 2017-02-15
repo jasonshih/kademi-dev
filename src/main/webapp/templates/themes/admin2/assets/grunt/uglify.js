@@ -57,8 +57,8 @@
     },
     libs: {
         files: {
-            '<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.js'],
-            '<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.js']
+            //'<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.js'],
+            //'<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.js']
         }
     },
     libsRtl: {
