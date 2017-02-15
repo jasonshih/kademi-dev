@@ -27,44 +27,10 @@
             '<%= pathAssetsAdminTpl %>/js/min/form-dropzone.min.js': ['<%= pathAssetsAdminTpl %>/js/form-dropzone.js']            
         }
     },
-    layoutAdminRtl: {
-        files: {
-            '<%= pathAssetsAdminRtlTpl %>/js/min/main.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/main.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/index.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/index.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-elements.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-elements.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-buttons.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-buttons.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-animation.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-animation.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-modals.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-modals.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-sliders.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-sliders.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-treeview.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-treeview.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/ui-nestable.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/ui-nestable.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/table-data.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/table-data.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/table-export.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/table-export.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-elements.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-elements.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-wizard.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-wizard.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-validation.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-validation.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/login.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/login.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/pages-user-profile.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/pages-user-profile.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/pages-gallery.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/pages-gallery.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-calendar.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-calendar.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/utility-error404.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/utility-error404.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/utility-coming-soon.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/utility-coming-soon.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/maps.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/maps.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/charts.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/charts.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-image-cropping.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-image-cropping.js'],
-            '<%= pathAssetsAdminRtlTpl %>/js/min/form-dropzone.min.js': ['<%= pathAssetsAdminRtlTpl %>/js/form-dropzone.js']
-        }
-    },
     libs: {
         files: {
             //'<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery.sparkline.js'],
             //'<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.min.js': ['<%= pathAssetsAdminTpl %>/plugin/jquery-ui.custom.js']
-        }
-    },
-    libsRtl: {
-        files: {
-            '<%= pathAssetsAdminRtlTpl %>/plugin/jquery.sparkline.min.js': ['<%= pathAssetsAdminRtlTpl %>/plugin/jquery.sparkline.js'],
-            '<%= pathAssetsAdminRtlTpl %>/plugin/jquery-ui.custom.min.js': ['<%= pathAssetsAdminRtlTpl %>/plugin/jquery-ui.custom.js']
         }
     }
 };
