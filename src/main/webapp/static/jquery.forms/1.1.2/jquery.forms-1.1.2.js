@@ -229,7 +229,14 @@
         disable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('readonly', true);
+                form.find('input, button, select, textarea').each(function () {
+                    var target = $(this);
+                    if (target.attr('readonly')) {
+                        target.attr('data-readonly', 'true');
+                    }
+
+                    target.prop('readonly', true);
+                });
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
@@ -239,7 +246,12 @@
         enable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('readonly', false);
+                form.find('input, button, select, textarea').each(function () {
+                    var target = $(this);
+                    if (target.attr('data-readonly') !== 'true') {
+                        target.prop('readonly', false);
+                    }
+                });
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
