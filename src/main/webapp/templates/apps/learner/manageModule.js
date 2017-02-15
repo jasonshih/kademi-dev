@@ -103,10 +103,9 @@ function initThumbnail() {
     btnSelectThumbnail.mselect({
         basePath: basePath,
         pagePath: pagePath,
-        onSelectFile: function (selectedUrl) {
-            // selectedUrl is absolute, need relative to module
-            flog('selectedUrl', selectedUrl, this);
-            thumbSel.val(selectedUrl);
+        onSelectFile: function (selectedUrl, relUrl) {
+            flog('relUrl', relUrl, this);
+            thumbSel.val(relUrl);
         }
     });
 
