@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>$page.title</title>
+    </head>
+    <body>
+        <h1>Points expiring report</h1>
+
+        $page.class - $page.href
+
+        #set( $table = $queryManager.getTable("ExpiringPoints") )
+
+        <div class="panel panel-default panel-query-table" style="min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
+            <div class="panel-heading">
+                <i class="fa fa-table"></i> Expiring points
+                <a download="data.csv" href="/queries/${query}?as=csv&from=0&size=10000" class="pull-right"><i class="fa fa-download"></i> CSV</a>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                #foreach( $field in $table.headers)
+                                    <th data-field="$field">$field</th>
+                                #end
+                            </tr>
+                        </thead>
+                        <tbody id="resultsBody">
+                            #set( $rowResult = $table.getRows(0, null) )
+                            #foreach($row in $rowResult.rows)
+                                <tr>
+                                    #foreach( $field in $row)
+                                        <td>$!field</td>
+                                    #end
+                                </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <script>
+                $(function() {
+                    $(document.body).on('pageDateChanged', function (e, startDate, endDate, text) {
+                        $("#resultsBody").reloadFragment();
+                    });
+                });
+            </script>
+    </body>
+</html>
