@@ -175,6 +175,15 @@
                 }
 
                 previewContainer.attr('data-url', selectedUrl);
+            },
+            ondelete: function (n, isFolder) {
+                if (isFolder) {
+                    flog('Deleted folder', n, isFolder);
+
+                    var newUrl = config.basePath + config.pagePath;
+                    newUrl = newUrl.replace(/\/\//g, '/');
+                    $('#milton-btn-upload-file').mupload('setUrl', newUrl);
+                }
             }
         };
         if (!config.mselectAll) {
