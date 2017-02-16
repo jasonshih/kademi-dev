@@ -299,57 +299,6 @@ function initClearer() {
     });
 }
 
-function initTable() {
-    flog('initTable');
-
-    $('.table.table-data').exist(function () {
-        this.each(function () {
-            var dataTable = $(this);
-            var cols = dataTable.find('colgroup col');
-            var ths = dataTable.find('thead th');
-
-            var aoColumnsSetting = [];
-            cols.each(function (i) {
-                var col = $(this);
-                var th = ths.eq(i);
-
-                aoColumnsSetting.push({
-                    "bSortable": !th.hasClass('action') && col.attr('data-sort') !== 'false'
-                });
-            });
-
-            dataTable.dataTable({
-                "aoColumnDefs": [{
-                    "aTargets": [0]
-                }],
-                "oLanguage": {
-                    "sLengthMenu": "Show _MENU_ Rows",
-                    "sSearch": "",
-                    "oPaginate": {
-                        "sPrevious": "",
-                        "sNext": ""
-                    }
-                },
-                "aaSorting": [
-                    [1, 'asc']
-                ],
-                "aoColumns": aoColumnsSetting,
-                "aLengthMenu": [
-                    [5, 10, 15, 20, -1],
-                    [5, 10, 15, 20, "All"]
-                ],
-                "iDisplayLength": 10
-            });
-
-            var $wrapper = dataTable.parent();
-
-            $wrapper.find('.dataTables_filter input').addClass("form-control input-sm").attr("placeholder", "Search");
-            $wrapper.find('.dataTables_length select').addClass("m-wrap small");
-            $wrapper.find('.dataTables_length select').select2();
-        });
-    });
-}
-
 function initSwitch() {
     flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
@@ -765,7 +714,6 @@ $(function () {
     initChkAll();
     initFuseModals();
     initClearer();
-    initTable();
     initAjaxStatus();
     initMasonryPanel();
 
