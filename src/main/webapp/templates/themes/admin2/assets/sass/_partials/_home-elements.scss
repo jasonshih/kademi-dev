@@ -89,7 +89,18 @@
         width: 50px;
         height: 50px;
         display: inline;
-        overflow: hidden;
+        //overflow: hidden;
+
+        img {
+            max-width: 100%;
+        }
+
+        .avatar-name {
+            white-space: nowrap;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
 
@@ -97,23 +108,23 @@
 .other {
     .messages {
         margin-left: 62px;
-        background: #E5E5EA;
+        background: $panel-bg;
 
-        &:after {
-            -moz-border-bottom-colors: none;
-            -moz-border-left-colors: none;
-            -moz-border-right-colors: none;
-            -moz-border-top-colors: none;
-            border-color: #E5E5EA #E5E5EA rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
-            border-style: solid;
-            border-width: 5px;
-            content: "";
-            height: 0;
-            position: absolute;
-            left: -9px;
-            top: 0;
-            width: 0;
-        }
+        //&:after {
+        //    -moz-border-bottom-colors: none;
+        //    -moz-border-left-colors: none;
+        //    -moz-border-right-colors: none;
+        //    -moz-border-top-colors: none;
+        //    border-color: #E5E5EA #E5E5EA rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+        //    border-style: solid;
+        //    border-width: 5px;
+        //    content: "";
+        //    height: 0;
+        //    position: absolute;
+        //    left: -9px;
+        //    top: 0;
+        //    width: 0;
+        //}
     }
 
     .avatar {
@@ -151,7 +162,7 @@
 }
 
 .messages {
-    @include border-radius(2px);
+    //@include border-radius(2px);
     padding: 10px;
     position: relative;
 

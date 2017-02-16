@@ -3915,26 +3915,18 @@ body.lock-screen .user-info {
     position: relative;
     width: 50px;
     height: 50px;
-    display: inline;
-    overflow: hidden; }
+    display: inline; }
+    .discussion .avatar img {
+      max-width: 100%; }
+    .discussion .avatar .avatar-name {
+      white-space: nowrap;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis; }
 
 .other .messages {
   margin-left: 62px;
-  background: #E5E5EA; }
-  .other .messages:after {
-    -moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: #E5E5EA #E5E5EA transparent transparent;
-    border-style: solid;
-    border-width: 5px;
-    content: "";
-    height: 0;
-    position: absolute;
-    left: -9px;
-    top: 0;
-    width: 0; }
+  background: #f0f5f8; }
 .other .avatar {
   float: left; }
 
@@ -3963,9 +3955,6 @@ body.lock-screen .user-info {
   float: right; }
 
 .messages {
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-  border-radius: 2px;
   padding: 10px;
   position: relative; }
   .messages p {
