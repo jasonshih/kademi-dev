@@ -651,7 +651,8 @@ a.bricky:hover {
       display: none; }
   .navbar.navbar-inverse {
     background: rgba(255, 255, 255, 0.9);
-    border-color: #dfeaf1; }
+    border-color: #dfeaf1;
+    box-shadow: 0 -1px 0 #dfeaf1 inset; }
 
 .logo {
   padding: 14px 10px 12px;
@@ -1919,7 +1920,6 @@ ul.main-navigation-menu {
   border-radius: 0;
   padding: 15px 45px 15px 30px;
   border-bottom: 1px solid #dfeaf1;
-  border-top: 1px solid #dfeaf1;
   position: relative;
   height: 51px;
   line-height: 22px;

@@ -37,6 +37,7 @@
     &.navbar-inverse {
         background: rgba(255, 255, 255, .9);
         border-color: $panel-border-color;
+        box-shadow: 0 -1px 0 $panel-border-color inset;
     }
 }
 
