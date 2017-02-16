@@ -1,6 +1,9 @@
 <html>
     <head>
         <title>$page.title</title>
+        <script src="/static/d3/d3.v3.js">//</script>
+        <script src="/static/nvd3/nv.d3.js">//</script>
+        <link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css"/>
         <style>
             #histogram {
                 height: 250px;
@@ -23,21 +26,22 @@
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$page.name">This organisation - $page.organisation.formattedName</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$page.name">This organisation - $page.organisation.formattedName</a>
+                                    </li>
                                     <li role="presentation" class="divider"></li>
                                     #foreach( $website in $page.websites)
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
+                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
                                     #end
                                     #if( $page.orgSelection )
-                                    <li role="presentation" class="divider"></li>
-                                    #foreach( $org in $page.find("/organisations").children.ofType.organisation )
-                                    <li role="presentation">
-                                        <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
-                                            <span class="fa fa-play-circle"></span>
-                                            $org.title
-                                        </a>
-                                    </li>
-                                    #end
+                                        <li role="presentation" class="divider"></li>
+                                        #foreach( $org in $page.find("/organisations").children.ofType.organisation )
+                                            <li role="presentation">
+                                                <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
+                                                    <span class="fa fa-play-circle"></span>
+                                                    $org.title
+                                                </a>
+                                            </li>
+                                        #end
                                     #end
                                 </ul>
                             </div>
@@ -66,11 +70,11 @@
 
                         <div class="col-lg-3" id="aggregations">
                             #if( $page.report.aggregations )
-                            <table class="table">
-                                #foreach($agg in $page.report.aggregations )
+                                <table class="table">
+                                    #foreach($agg in $page.report.aggregations )
                                 #showAggregation($agg)
                                 #end
-                            </table>
+                                </table>
                             #end
                         </div>
                     </div>
@@ -111,39 +115,39 @@
         </script>
 
         #macro( showAggregation $agg )
-    <tbody id="agg-$agg.name">
-        <tr>
-            <td colspan="2">$agg.title&nbsp;<span style="float: right">
-                    #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
-                    <span class="input-group input-group-sm">
-                        <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                        </span>
-                    </span>
-                    #end
-                </span></td>
-        </tr>
-        #foreach($b in $agg.buckets )
-        #showFacetBucket($b, 0)
+            <tbody id="agg-$agg.name">
+                <tr>
+                    <td colspan="2">$agg.title&nbsp;<span style="float: right">
+                        #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
+                            <span class="input-group input-group-sm">
+                                <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                </span>
+                            </span>
+                        #end
+                    </span></td>
+                </tr>
+                #foreach($b in $agg.buckets )
+                    #showFacetBucket($b, 0)
+                #end
+            </tbody>
         #end
-    </tbody>
-    #end
 
-    #macro( showFacetBucket $b $indent )
-    #set($termParamName = "term-" + $b.aggName)
-    <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-        <td>
-            <div class="col-md-offset-$indent">
-                <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-            </div>
-        </td>
-        <td align="right">$b.count</td>
-    </tr>
-    #foreach($sub in $b.buckets)
-    #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-    #end
-    #end
-    <script src="/theme/apps/rewardstore/managePointsBalanceReport.js" type="text/javascript"></script>
-</body>
+        #macro( showFacetBucket $b $indent )
+            #set($termParamName = "term-" + $b.aggName)
+            <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                <td>
+                    <div class="col-md-offset-$indent">
+                        <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                    </div>
+                </td>
+                <td align="right">$b.count</td>
+            </tr>
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
+        #end
+        <script src="/theme/apps/rewardstore/managePointsBalanceReport.js" type="text/javascript"></script>
+    </body>
 </html>
