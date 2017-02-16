@@ -323,3 +323,6 @@
     top: 0;
 }
 
+.modal-dialog {
+    max-width: 100%;
+}
