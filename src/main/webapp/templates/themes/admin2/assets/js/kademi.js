@@ -71,7 +71,7 @@ $.fn.exist = function (callback_when_exist, callback_when_no_exist) {
             flog('Modal has old structure. Modifying structure...');
 
             var modalContent = modal.html();
-            var sizeClass = 'modal-md';
+            var sizeClass = '';
             if (modal.hasClass('modal-lg')) {
                 sizeClass = 'modal-lg';
                 modal.removeClass('modal-lg');
