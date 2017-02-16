@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Administration</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/font-awesome/4.7.0/css/font-awesome.min.css" />
         <link rel="stylesheet" href="/theme/assets/fonts/clip-font.min.css" />
@@ -52,40 +52,40 @@
         </script>
         <!--End of Zopim Live Chat Script-->
     </head>
-    <body class="login example2">
+    <body class="login">
         <div class="main-login col-sm-4 col-sm-offset-4">
             <div class="logo">
-                <img src="/static/images/login-logo.png"  alt="Kademi" />
+                <img src="/theme/assets/images/logo_kademi_login.png" alt="Kademi" /><br />
+                <b>$page.organisation.formattedName</b>
             </div>
             <div class="box-login">
-                <h3>Sign in to: <b>$page.organisation.formattedName</b></h3>
-                <p>Please enter your name and password to log in.</p>
+                <!--<h3>Sign in to: <b>$page.organisation.formattedName</b></h3>
+
+                <p>Please enter your name and password to log in.</p>-->
+
                 <form action="" class="form-login" method="post" novalidate="novalidate">
                     <div class="errorHandler alert alert-danger no-display" id="validationMessage"><i class="fa fa-remove-sign"></i> <span></span></div>
                     <fieldset>
                         <div class="form-group">
                             <span class="input-icon">
-                                <input type="text" autocapitalize="off" autocorrect="off" placeholder="Username" name="email" class="form-control" />
+                                <input class="sr-only" type="text" name="fakeusernameremembered" />
+                                <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Enter your username or email" name="email" class="form-control input-lg" />
                                 <i class="fa fa-user"></i>
                             </span>
                         </div>
-                        <div class="form-group form-actions">
+                        <div class="form-group">
                             <span class="input-icon">
-                                <input type="password" placeholder="Password" name="password" class="form-control password" />
-                                <i class="fa fa-lock"></i>
-                                <a href="/password-reset" class="forgot">I forgot my password</a>
+                                <input class="sr-only" type="password" name="fakepasswordremembered" />
+                                <input type="password" placeholder="Enter your password" name="password" autocomplete="off" class="form-control password input-lg" />
+                                <i class="fa fa-unlock-alt"></i>
                             </span>
                         </div>
-                        <div class="form-actions">
-                            <button class="btn btn-sm btn-danger pull-right" type="submit">
-                                Login <i class="fa fa-arrow-circle-right"></i>
-                            </button>
-                        </div>
+                        <p class="form-actions">
+                            <button class="btn btn-info btn-lg btn-block" type="submit">Log in</button>
+                        </p>
+                        <p class="text-center"><a href="/password-reset" class="forgot">I forgot my password</a></p>
                     </fieldset>
                 </form>
-            </div>
-            <div class="copyright">
-                $formatter.getYear($formatter.now) &copy; Kademi Ltd.
             </div>
         </div>
     </body>
