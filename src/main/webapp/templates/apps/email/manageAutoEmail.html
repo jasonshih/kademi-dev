@@ -85,55 +85,57 @@
                             </div>
                             #set($stats = $page.emailStats)
                             <div class="col-md-4">
-                                <div class="ktile-wrapper col-sm-4 col-md-6">
-                                    <div class="ktile ktile-lg-v">
-                                        <div class="ktile-inner">
-                                            <div class="ktile-body">
-                                                <div class="ktile-front ktile-shadow">
-                                                    <div class="row" style="height: 100%; margin: 0">
-                                                        <div class="bgm-pink" style="height: 60%;">
-                                                            <div class="text-center ktile-content ktile-content-relative">
-                                                                <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
-                                                                    <div class="figure">
-                                                                        #if( $stats.total )
-                                                                        $stats.total
-                                                                        #else
-                                                                        N/A - $stats
-                                                                        #end
-                                                                    </div>
-                                                                    <div class="pie-title">Total Emails Sent</div>
-                                                                </div>
-                                                            </div>
-                                                            <div style="bottom: 42.5%; padding: 3px 10px;" class="ktile-footer text-center">
-                                                                Emails Delivered: $formatter.ifNull($stats.deliveredOk, 0)
-                                                                <br/>
-                                                                Emails Failed: $formatter.ifNull($stat.failed, 0)
-                                                            </div>
-                                                        </div>
-                                                        <div style="height: 38%">
-                                                            <div class="row text-center ktile-content ktile-content-relative">
-                                                                <div class="col-sm-6" style="padding: 0 3px">
-                                                                    <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                <div class="row">
+                                    <div class="ktile-wrapper col-sm-4 col-md-6">
+                                        <div class="ktile ktile-lg-v">
+                                            <div class="ktile-inner">
+                                                <div class="ktile-body">
+                                                    <div class="ktile-front ktile-shadow">
+                                                        <div class="row" style="height: 100%; margin: 0">
+                                                            <div class="bgm-pink" style="height: 60%;">
+                                                                <div class="text-center ktile-content ktile-content-relative">
+                                                                    <div data-percent="$stats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
                                                                         <div class="figure">
-                                                                            #if( $stats.openRatePerc )
-                                                                            $stats.openRatePerc%
+                                                                            #if( $stats.total )
+                                                                                $stats.total
                                                                             #else
-                                                                            N/A
+                                                                                N/A - $stats
                                                                             #end
                                                                         </div>
-                                                                        <div class="pie-title">Open rate</div>
+                                                                        <div class="pie-title">Total Emails Sent</div>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-sm-6" style="padding: 0 3px">
-                                                                    <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
-                                                                        <div class="figure">
-                                                                            #if( $stats.convertedRatePerc )
-                                                                            $stats.convertedRatePerc%
-                                                                            #else
-                                                                            N/A
-                                                                            #end
+                                                                <div style="bottom: 42.5%; padding: 3px 10px;" class="ktile-footer text-center">
+                                                                    Emails Delivered: $formatter.ifNull($stats.deliveredOk, 0)
+                                                                    <br/>
+                                                                    Emails Failed: $formatter.ifNull($stat.failed, 0)
+                                                                </div>
+                                                            </div>
+                                                            <div style="height: 38%">
+                                                                <div class="row text-center ktile-content ktile-content-relative">
+                                                                    <div class="col-sm-6" style="padding: 0 3px">
+                                                                        <div data-percent="$!stats.openRatePerc" class="easy-pie emailsSubPie smallPie bluePie">
+                                                                            <div class="figure">
+                                                                                #if( $stats.openRatePerc )
+                                                                                    $stats.openRatePerc%
+                                                                                #else
+                                                                                    N/A
+                                                                                #end
+                                                                            </div>
+                                                                            <div class="pie-title">Open rate</div>
                                                                         </div>
-                                                                        <div class="pie-title">Conversion rate</div>
+                                                                    </div>
+                                                                    <div class="col-sm-6" style="padding: 0 3px">
+                                                                        <div data-percent="$!stats.convertedRatePerc" class="easy-pie emailsSubPie smallPie orangePie">
+                                                                            <div class="figure">
+                                                                                #if( $stats.convertedRatePerc )
+                                                                                    $stats.convertedRatePerc%
+                                                                                #else
+                                                                                    N/A
+                                                                                #end
+                                                                            </div>
+                                                                            <div class="pie-title">Conversion rate</div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -143,31 +145,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                #set($smsStats = $page.smsStats)
-                                <div class="ktile-wrapper col-sm-4 col-md-6">
-                                    <div class="ktile ktile-lg-v">
-                                        <div class="ktile-inner">
-                                            <div class="ktile-body">
-                                                <div class="ktile-front ktile-shadow">
-                                                    <div class="row" style="height: 100%; margin: 0">
-                                                        <div class="bgm-blue" style="height: 60%;">
-                                                            <div class="text-center ktile-content ktile-content-relative">
-                                                                <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
-                                                                    <div class="figure">
-                                                                        #if( $smsStats.total )
-                                                                        $smsStats.total
-                                                                        #else
-                                                                        N/A
-                                                                        #end
+                                    #set($smsStats = $page.smsStats)
+                                    <div class="ktile-wrapper col-sm-4 col-md-6">
+                                        <div class="ktile ktile-lg-v">
+                                            <div class="ktile-inner">
+                                                <div class="ktile-body">
+                                                    <div class="ktile-front ktile-shadow">
+                                                        <div class="row" style="height: 100%; margin: 0">
+                                                            <div class="bgm-blue" style="height: 60%;">
+                                                                <div class="text-center ktile-content ktile-content-relative">
+                                                                    <div data-percent="$smsStats.deliveryRatePerc" class="easy-pie emailsMainPie largePie center-block">
+                                                                        <div class="figure">
+                                                                            #if( $smsStats.total )
+                                                                                $smsStats.total
+                                                                            #else
+                                                                                N/A
+                                                                            #end
+                                                                        </div>
+                                                                        <div class="pie-title">Total SMS's Sent</div>
                                                                     </div>
-                                                                    <div class="pie-title">Total SMS's Sent</div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div style="height: 38%">
-                                                            <div class="row text-center ktile-content ktile-content-relative">
-                                                                <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
+                                                            <div style="height: 38%">
+                                                                <div class="row text-center ktile-content ktile-content-relative">
+                                                                    <h4>Total Cost: $!smsStatus.currency$smsStats.totalCost</h4>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
