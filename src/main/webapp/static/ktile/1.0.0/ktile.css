@@ -80,7 +80,7 @@
 }
 
 .ktile-shadow {
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 2px #dfeaf1 inset;
 }
 
 /* Ktile default */
@@ -140,6 +140,23 @@
 .ktile-single-value .ktile-single-value-text .small {
     font-size: 13px;
     line-height: 15px;
+}
+
+/* Ktile brand-colors */
+.ktile-success {
+    background-color: #39b7a1 !important;
+}
+
+.ktile-info {
+    background-color: #3988b7 !important;
+}
+
+.ktile-default {
+    background-color: #c8c9cf !important;
+}
+
+.ktile-purple {
+    background-color: #8c559b !important;
 }
 
 /* Animations */
