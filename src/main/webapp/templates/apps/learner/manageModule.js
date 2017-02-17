@@ -99,13 +99,13 @@ function initThumbnail() {
 
     flog('init thumbnail-image selector', basePath, pagePath);
     var thumbSel = $('input.thumbnail-image');
-    thumbSel.mselect({
+    var btnSelectThumbnail = $('.btn-select-thumb');
+    btnSelectThumbnail.mselect({
         basePath: basePath,
         pagePath: pagePath,
-        onSelectFile: function (selectedUrl) {
-            // selectedUrl is absolute, need relative to module
-            flog('selectedUrl', selectedUrl, this);
-            thumbSel.val(selectedUrl);
+        onSelectFile: function (selectedUrl, relUrl) {
+            flog('relUrl', relUrl, this);
+            thumbSel.val(relUrl);
         }
     });
 
@@ -306,7 +306,6 @@ function initCRUDModulePages() {
         });
     } else {
         initFuseModal(modal, function () {
-            modal.find('.modal-body').css('height', getStandardModalEditorHeight());
             initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
         });
     }

@@ -1,4 +1,4 @@
-var Index = function () {
+﻿var Index = function () {
     // function to initiate Chart 1
     var runChart1 = function () {
         function randValue() {
@@ -299,7 +299,7 @@ var Index = function () {
                     }
                     var aArgs = Array.prototype.slice.call(arguments, 1),
                         fToBind = this,
-                        fNOP = function () {}, fBound = function () {
+                        fNOP = function () { }, fBound = function () {
                             return fToBind.apply(this instanceof fNOP && oThis ? this : oThis, aArgs.concat(Array.prototype.slice.call(arguments)));
                         };
                     fNOP.prototype = this.prototype;
@@ -317,7 +317,7 @@ var Index = function () {
             lineWidth: 3,
             barColor: '#35aa47',
             size: 70
-            
+
         });
     };
     // function to initiate Full Calendar
@@ -349,9 +349,9 @@ var Index = function () {
         var y = date.getFullYear();
         var form = '';
         var calendar = $('#calendar').fullCalendar({
-            buttonText: {
-                prev: '<i class="fa fa-chevron-left"></i>',
-                next: '<i class="fa fa-chevron-right"></i>'
+            themeButtonIcons: {
+                prev: '<i class="fa fa-angle-left"></i>',
+                next: '<i class="fa fa-angle-right"></i>'
             },
             header: {
                 left: 'prev,next today',
@@ -412,12 +412,12 @@ var Index = function () {
                     $categoryClass = form.find("select[name='category'] option:checked").val();
                     if (title !== null) {
                         calendar.fullCalendar('renderEvent', {
-                                title: title,
-                                start: start,
-                                end: end,
-                                allDay: allDay,
-                                className: $categoryClass
-                            }, true // make the event "stick"
+                            title: title,
+                            start: start,
+                            end: end,
+                            allDay: allDay,
+                            className: $categoryClass
+                        }, true // make the event "stick"
                         );
                     }
                     $modal.modal('hide');

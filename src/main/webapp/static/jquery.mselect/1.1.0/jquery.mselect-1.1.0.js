@@ -22,7 +22,6 @@
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
-        bs3Modal: false,
         zIndex: 10012,
         showModal: function (modal) {
             modal.modal('show');
@@ -48,19 +47,10 @@
                         e.preventDefault();
                         e.stopPropagation();
 
-                        var modal;
-                        if (config.bs3Modal) {
-                            modal = getModalBS3(config);
-                        } else {
-                            modal = getModal(config);
-                        }
+                        var modal = getModal(config);
                         config.showModal(modal);
                         if (config.zIndex) {
-                            if (config.bs3Modal){
-                                modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
-                            } else {
-                                modal.parent('.modal-scrollable').css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
-                            }
+                            modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
                         }
                     });
                 } else {
@@ -146,7 +136,7 @@
         config.pagePath = config.pagePath.replace(/\/\//g, '/');
 
         var tree = container.find('div.milton-tree-wrapper');
-        var previewContainer = container.find('.milton-preview');
+        var previewContainer = container.find('.milton-file-preview');
         var mtreeOptions = {
             basePath: config.basePath,
             pagePath: config.pagePath,
@@ -185,6 +175,15 @@
                 }
 
                 previewContainer.attr('data-url', selectedUrl);
+            },
+            ondelete: function (n, isFolder) {
+                if (isFolder) {
+                    flog('Deleted folder', n, isFolder);
+
+                    var newUrl = config.basePath + config.pagePath;
+                    newUrl = newUrl.replace(/\/\//g, '/');
+                    $('#milton-btn-upload-file').mupload('setUrl', newUrl);
+                }
             }
         };
         if (!config.mselectAll) {
@@ -267,7 +266,7 @@
             '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-8">' +
             '            <div id="milton-btn-upload-file"></div>' + extraElement +
-            '            <div class="milton-preview"></div>' +
+            '            <div class="milton-file-preview"></div>' +
             '        </div>' +
             '    </div>' +
             '</div>'
@@ -280,35 +279,8 @@
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
-                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-header">' +
-                '       <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-                '       <h4 class="modal-title">' + config.modalTitle + '</h4>' +
-                '   </div>' +
-                '   <div class="modal-body">' + getSelectContainer(config) + '</div>' +
-                '   <div class="modal-footer">' +
-                '<button class="' + config.btnOkClass + ' btn-ok" type="button"> OK </button>' +
-                '   </div>' +
-                '</div>'
-            );
-            modal = $('#modal-milton-file-select');
-
-            initSelectContainer(modal, config, function () {
-                modal.modal('hide');
-            });
-        }
-
-        return modal;
-    }
-
-    function getModalBS3(config) {
-        flog('[jquery.mselect] getModal', config);
-
-        var modal = $('#modal-milton-file-select');
-        if (modal.length === 0) {
-            $('body').append(
-                '<div id="modal-milton-file-select" class="modal modal-md fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog">' +
+                '<div id="modal-milton-file-select" class="modal fade" aria-hidden="true" tabindex="-1">' +
+                '   <div class="modal-dialog modal-md">' +
                 '       <div class="modal-content">' +
                 '           <div class="modal-header">' +
                 '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +

@@ -1,0 +1,310 @@
+﻿/* ---------------------------------------------------------------------- */
+/*	Basic Elements & Classes
+/* ---------------------------------------------------------------------- */
+html {
+    min-height: 100%;
+}
+
+body {
+    color: $black;
+    direction: ltr;
+    font-family: $fontRoboto;
+    font-size: 13px;
+    padding: 0px !important;
+    margin: 0px !important;
+    background: $white;
+
+    &.bg_style_1 {
+        background: url("../images/bg.png") rgba(0, 0, 0, 0) !important;
+    }
+
+    &.bg_style_2 {
+        background: url("../images/bg_2.png") rgba(0, 0, 0, 0) !important;
+    }
+
+    &.bg_style_3 {
+        background: url("../images/bg_3.png") rgba(0, 0, 0, 0) !important;
+    }
+
+    &.bg_style_4 {
+        background: url("../images/bg_4.png") rgba(0, 0, 0, 0) !important;
+    }
+
+    &.bg_style_5 {
+        background: url("../images/bg_5.png") rgba(0, 0, 0, 0) !important;
+    }
+
+    a, a:focus, a:hover, a:active {
+        outline: 0 !important;
+    }
+}
+
+h1,
+h2 {
+    font-weight: 300;
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Main Container and main content elements
+/* ---------------------------------------------------------------------- */
+.main-container {
+    margin-top: 50px;
+}
+
+.page-full-width .main-container {
+    margin-top: 98px;
+}
+
+.header-default .main-container {
+    margin-top: 0 !important;
+}
+
+.main-content {
+    margin-top: 0;
+    background-color: $white;
+    padding: 0;
+}
+
+.container {
+    max-width: none !important;
+    width: auto !important;
+}
+
+.layout-boxed {
+
+    & > .navbar, .main-container, & > .footer {
+        max-width: 1170px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border-left-width: 1px;
+        border-left-style: solid;
+        border-right-width: 1px;
+        border-right-style: solid;
+    }
+}
+
+.footer-fixed .main-content .container {
+    margin-bottom: 22px;
+}
+
+/* ---------------------------------------------------------------------- */
+/*	ToDo List
+/* ---------------------------------------------------------------------- */
+.todo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        a {
+            background: $white;
+            border-bottom: 1px solid #E4E6EB;
+            font-size: 12px;
+            margin-left: 0 !important;
+            padding: 10px 10px 10px 35px !important;
+            position: relative;
+            display: block;
+            color: $dark-grey;
+        }
+
+        .todo-actions {
+            &:hover, &:focus {
+                text-decoration: none;
+                background-color: #F4F6F9 !important;
+            }
+
+            i {
+                color: #C7CBD5;
+                font-size: 18px;
+                margin: 0 5px 0 0;
+                position: absolute;
+                left: 10px;
+            }
+        }
+
+        .label {
+            position: absolute;
+            right: 10px;
+            padding: 6px;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Page Header
+/* ---------------------------------------------------------------------- */
+.page-header {
+    margin: 20px 0 20px;
+
+    h1 {
+        letter-spacing: -1px;
+        margin: 0 0 15px;
+        padding: 0;
+        color: #666666;
+
+        small {
+            color: #888888;
+            font-size: 14px;
+            font-weight: 300;
+            letter-spacing: 0;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Backdrop
+/* ---------------------------------------------------------------------- */
+.full-white-backdrop {
+    background-color: $white;
+    display: none;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Activities
+/* ---------------------------------------------------------------------- */
+.activities {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        a {
+            background: white;
+            border-bottom: 1px solid #E4E6EB;
+            font-size: 12px;
+            margin-left: 0 !important;
+            padding: 10px 100px 10px 10px !important;
+            position: relative;
+            display: block;
+            color: $dark-grey;
+        }
+
+        .activity {
+            &:hover, &:focus {
+                text-decoration: none;
+                background-color: #F4F6F9 !important;
+            }
+
+            .circle-icon {
+                font-size: 16px !important;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+                margin-right: 10px;
+            }
+
+            img {
+                margin-right: 10px;
+            }
+        }
+
+        .time {
+            position: absolute;
+            right: 10px;
+            top: 30px;
+            color: #CCCCCC;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Animation Page
+/* ---------------------------------------------------------------------- */
+
+.animation-container {
+    overflow: hidden;
+    padding: 140px 0 40px;
+    background-color: #F4F4F4;
+}
+
+.animation-buttons {
+    .btn {
+        margin-bottom: 10px;
+    }
+}
+
+#object {
+    display: block;
+    margin-bottom: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 150px;
+    color: #007AFF;
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Social Icons
+/* ---------------------------------------------------------------------- */
+.social-icons li a, a.social-icon {
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    display: block;
+    height: 28px;
+    @include transition(all 0.3s ease-in-out 0s);
+    width: 28px;
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Icons
+/* ---------------------------------------------------------------------- */
+.icons {
+    & > section {
+        margin-top: 20px;
+    }
+}
+
+.the-icons {
+    li {
+        line-height: 40px;
+
+        i {
+            @include transition(font-size 0.2s ease 0s);
+        }
+
+        &:hover i {
+            font-size: 26px;
+        }
+    }
+}
+
+/* ---------------------------------------------------------------------- */
+/*	Footer and footer elemnts
+ * ---------------------------------------------------------------------- */
+
+.footer {
+    font-size: 12px;
+    padding: 8px 20px 5px;
+    position: relative;
+    background: $panel-bg;
+    border-top: 1px solid $panel-border-color;
+
+    .copyright {
+        line-height: 30px;
+    }
+}
+
+.footer-inner {
+    float: left;
+}
+
+.footer-items {
+    float: right;
+}
+
+.footer-fixed {
+    .footer {
+        bottom: 0;
+        left: 0;
+        position: fixed;
+        right: 0;
+        z-index: 1000;
+        border-top-width: 1px;
+        border-top-style: solid;
+    }
+}

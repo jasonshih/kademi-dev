@@ -229,7 +229,14 @@
         disable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('readonly', true);
+                form.find('input, button, select, textarea').each(function () {
+                    var target = $(this);
+                    if (target.attr('readonly')) {
+                        target.attr('data-readonly', 'true');
+                    }
+
+                    target.prop('readonly', true);
+                });
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
@@ -239,7 +246,12 @@
         enable: function (callback) {
             return $(this).each(function () {
                 var form = $(this);
-                form.find('input, button, select, textarea').prop('readonly', false);
+                form.find('input, button, select, textarea').each(function () {
+                    var target = $(this);
+                    if (target.attr('data-readonly') !== 'true') {
+                        target.prop('readonly', false);
+                    }
+                });
 
                 if (typeof callback === 'function') {
                     callback.call(this, form);
@@ -513,9 +525,9 @@ function showFieldMessages(fieldMessages, form) {
             flog('[jquery.forms] Show field message', message);
 
             var target = form.find('#' + message.field);
-            if (!target.length){
+            if (!target.length) {
                 flog('trying to find target by name', target, message.field);
-                target = form.find('[name='+ message.field+']');
+                target = form.find('[name=' + message.field + ']');
             }
             var parent = target.parent();
 
@@ -790,7 +802,7 @@ function checkRequiredFields(form, config) {
     // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
     form.find('input.required, textarea.required, select.required').not('.tt-hint').each(function () {
         var input = $(this);
-        if( !ignoredInput(input, config)) {
+        if (!ignoredInput(input, config)) {
             var val = input.val();
             if (val !== null) {
                 val = val.trim();
@@ -818,7 +830,7 @@ function checkRequiredFields(form, config) {
 
 function ignoredInput(input, config) {
     flog("forms: ignoredInput: ", config.ignoreContainers);
-    if( input.closest(config.ignoreContainers).length > 0 ) {
+    if (input.closest(config.ignoreContainers).length > 0) {
         return true;
     }
     return false;
@@ -911,7 +923,7 @@ function checkPhones(form, config) {
  * @returns {Boolean}
  */
 function shouldCheckValue(input, config) {
-    if( ignoredInput(input, config) ) {
+    if (ignoredInput(input, config)) {
         return false;
     }
     var shouldCheck = false;

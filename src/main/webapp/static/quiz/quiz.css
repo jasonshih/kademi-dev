@@ -72,7 +72,7 @@
 .quiz > li > ol > li > label,
 .quiz > li > ol > li > input[type="text"] {
 	display: inline-block;
-	width: 98%;
+	width: 97%;
 	float: right;
 }
 

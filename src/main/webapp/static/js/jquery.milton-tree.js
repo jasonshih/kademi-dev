@@ -20,8 +20,8 @@
                 onselectFolder: function (n) {
                     flog('def: folder selected', n);
                 },
-                ondelete: function (n) {
-                    flog('def: ondelete', n);
+                ondelete: function (n, isFolder) {
+                    flog('def: ondelete', n, isFolder);
                 },
                 onnewfolder: function (n) {
                     flog('def: onnewfolder', n);
@@ -57,7 +57,8 @@
                     flog('Selected item:', selectedItem);
 
                     if (selectedItem.length > 0) {
-                        deleteTreeItem(config);
+                        var isFolder = selectedItem.children('a').find('.jstree-icon').hasClass('folder');
+                        deleteTreeItem(config, isFolder);
                     } else {
                         alert('Please select item which you want to deleted!');
                     }
@@ -278,7 +279,7 @@ function initTree(tree, config) {
         },
         'themes': {
             'theme': config.theme,
-            'url' : '/static/js/themes/default/style.css'
+            'url': '/static/js/themes/default/style.css'
         },
         'ui': {
             'select_limit': 1,
@@ -464,13 +465,16 @@ function isDisplayableFileHref(href, config) {
     return true;
 }
 
-function deleteTreeItem(config) {
+function deleteTreeItem(config, isFolder) {
     var node = $(config.selectedItem);
     var href = config.basePath + toUrl(node, config);
     var name = node.find('a').text();
     flog('deleteTreeItem', config.selectedItem, name, href);
     confirmDelete(href, name, function () {
-        config.ondelete(node);
+        config.ondelete(node, isFolder);
+        if (isFolder) {
+            config.selectedItem = null;
+        }
         node.remove();
     });
 }

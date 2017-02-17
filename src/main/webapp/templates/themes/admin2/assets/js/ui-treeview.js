@@ -36,13 +36,45 @@ var UITreeview = function () {
             //              },
             // .. but here we use a local file instead:
             initAjax: {
-                url: "/static/ContentBuilder/assets/plugins/dynatree/tests/sample-data1.json"
+                url: "assets/json/dynatree/sample-data1.json"
             },
-            onActivate: function (node) {
-                $("#echoActive").text(node.data.title);
+            onLazyRead: function (node) {
+                // Mockup a slow reqeuest ...
+                node.appendAjax({
+                    url: "assets/json/dynatree/sample-data2.json",
+                    debugLazyDelay: 750 // don't do thi in production code
+                });
             },
-            onDeactivate: function (node) {
-                $("#echoActive").text("-");
+            dnd: {
+                preventVoidMoves: true, // Prevent dropping nodes 'before self', etc.
+                onDragStart: function (node) {
+                    /** This function MUST be defined to enable dragging for the tree.
+                     *  Return false to cancel dragging of node.
+                     */
+                    return true;
+                },
+                onDragEnter: function (node, sourceNode) {
+                    /** sourceNode may be null for non-dynatree droppables.
+                     *  Return false to disallow dropping on node. In this case
+                     *  onDragOver and onDragLeave are not called.
+                     *  Return 'over', 'before, or 'after' to force a hitMode.
+                     *  Return ['before', 'after'] to restrict available hitModes.
+                     *  Any other return value will calc the hitMode from the cursor position.
+                     */
+                    // Prevent dropping a parent below another parent (only sort
+                    // nodes under the same parent)
+                    if (node.parent !== sourceNode.parent) {
+                        return false;
+                    }
+                    // Don't allow dropping *over* a node (would create a child)
+                    return ["before", "after"];
+                },
+                onDrop: function (node, sourceNode, hitMode, ui, draggable) {
+                    /** This function MUST be defined to enable dropping of items on
+                     *  the tree.
+                     */
+                    sourceNode.move(node, hitMode);
+                }
             }
         });
         var treeData = [{
@@ -168,12 +200,12 @@ var UITreeview = function () {
         // Drag-and-drop 
         $("#tree6").dynatree({
             initAjax: {
-                url: "/static/ContentBuilder/assets/plugins/dynatree/tests/sample-data1.json"
+                url: "assets/json/dynatree/sample-data1.json"
             },
             onLazyRead: function (node) {
                 // Mockup a slow reqeuest ...
                 node.appendAjax({
-                    url: "sample-data2.json",
+                    url: "assets/json/dynatree/sample-data2.json",
                     debugLazyDelay: 750 // don't do this in production code
                 });
             },

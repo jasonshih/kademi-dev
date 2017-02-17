@@ -38,7 +38,7 @@ function initReindexForms() {
         callback: function (resp) {
             flog("The contents of current repository have been re-indexed", resp);
             // Should be disabled the Re-index button while processing, just enable after re-index thread was started
-            $(".btn-reindex").attr({"disabled": "disabled"});
+            $(".btn-reindex").prop('disabled', true);
 
             // Load state of re-indexing process
             setTimeout(function () {
@@ -65,7 +65,7 @@ function reIndexState() {
             var lblReindex = $(".lbl-reindex-action");
             if (state == 'PENDING' || state == 'PROCESSING') {
                 if (state == 'PROCESSING') {
-                    $(".btn-reindex").removeAttr("disabled");
+                    $(".btn-reindex").prop('disabled', false);
                     lblReindex.empty();
                     lblReindex.html("Stop re-indexing process");
                 }
@@ -76,7 +76,7 @@ function reIndexState() {
             } else if (state == 'STOPPED' || state == 'COMPLETED' || !status) {
                 if (state == 'STOPPED') {
                     flog("RE-INDEXING PROCESS HAVE BEEN STOPPED BY SOMEONE!!!");
-                    $(".btn-reindex").removeAttr("disabled");
+                    $(".btn-reindex").prop('disabled', false);
                 }
 
                 // Throw exception message

@@ -1,25 +1,19 @@
-var UIElements = function () {
+﻿var UIElements = function () {
     //function to initiate bootstrap-paginator
     var runPaginator = function () {
-        $('#paginator-example-1').bootstrapPaginator({
-            bootstrapMajorVersion: 3,
-            currentPage: 3,
+        $('#paginator-example-1').twbsPagination({
+            startPage: 3,
             totalPages: 10,
-            onPageClicked: function (e, originalEvent, type, page) {
-                $('#paginator-content-1').text("Page item clicked, type: " + type + " page: " + page);
+            onPageClick: function (event, page) {
+                $('#paginator-content-1').text("Page item clicked page: " + page);
             }
-        });
-        $('#paginator-example-2').bootstrapPaginator({
-            bootstrapMajorVersion: 3,
-            currentPage: 3,
-            totalPages: 10,
-            onPageChanged: function (e, oldPage, newPage) {
-                $('#paginator-content-2').text("Current page changed, old: " + oldPage + " new: " + newPage);
+        });        
+        $('#paginator-example-2, #paginator-example-2-2').twbsPagination({
+            startPage: 3,
+            totalPages: 15,
+            onPageClick: function (event, page) {
+                $('#paginator-content-2').text("Page item clicked page: " + page);
             }
-        });
-        $('#paginator-changed-select').change(function () {
-            var page = $(this).val();
-            $('#paginator-example-2').bootstrapPaginator("show", page);
         });
     };
     //function to initiate jQuery.pulsate
@@ -193,12 +187,65 @@ var UIElements = function () {
             return false;
         });
     };
+
+    var runToastNotification = function () {
+        $('#add-regular').click(function () {
+            $.toast({
+                heading: 'Information',
+                text: 'Now you can add icons to generate different kinds of toasts',
+                showHideTransition: 'slide',
+                position: 'top-right',
+                icon: 'info',
+                loader: false
+            })
+            return false;
+        });
+
+        $('#add-error').click(function () {
+            $.toast({
+                heading: 'Error',
+                text: 'Report any <a href="#">issues</a>',
+                showHideTransition: 'fade',
+                position: 'top-right',
+                icon: 'error',
+                loader: false
+            })
+            return false;
+        });
+
+        $('#add-success').click(function () {
+            $.toast({
+                heading: 'Success',
+                text: 'And these were just the basic demos! Scroll down to check further details on how to customize the output.',
+                showHideTransition: 'slide',
+                position: 'top-right',
+                icon: 'success',
+                loader: false
+            })
+            return false;
+        });
+
+        $('#add-warning').click(function () {
+            $.toast({
+                heading: 'Warning',
+                text: 'It is going to be supper easy for you to use ;)',
+                showHideTransition: 'plain',
+                position: 'top-right',
+                icon: 'warning',
+                loader: false
+            })
+            return false;
+        });
+        
+    };
+
     return {
         //main function to initiate template pages
         init: function () {
             runPaginator();
             runPulsate();
-            runGritterNotification();
+            runToastNotification();
+            //runGritterNotification();
         }
     };
 }();

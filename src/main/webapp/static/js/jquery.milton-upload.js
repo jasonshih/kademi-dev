@@ -53,7 +53,7 @@
                 form.attr("id", config.id);
                 container.append(form);
 
-                var dropzoneCss = "/templates/themes/admin2/assets/plugins/dropzone/downloads/css/dropzone.css";
+                var dropzoneCss = "/static/dropzone/4.3.0/downloads/css/dropzone.css";
                 if (!$("link[href='" + dropzoneCss + "']").length) {
                     flog("loading css");
                     $('<link href="' + dropzoneCss + '" rel="stylesheet">').appendTo("head");
@@ -63,7 +63,7 @@
 
                 var previewDiv = null;
 
-                $.getScriptOnce(('/templates/themes/admin2/assets/plugins/dropzone/downloads/dropzone.min.js'), function () {
+                $.getScriptOnce(('/static/dropzone/4.3.0/downloads/dropzone.min.js'), function () {
                     flog("Loaded dropzone plugin, now init...");
                     Dropzone.autoDiscover = false;
                     var dzConfig = {

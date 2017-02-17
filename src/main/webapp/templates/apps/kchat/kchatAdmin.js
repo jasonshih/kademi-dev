@@ -6,10 +6,10 @@ function initKChatAdmin() {
 
 function initSidebarToggle() {
     $('.navbar-tools .navbar-right').append(
-            '<li class="fuse-header-item">' +
-            '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
-            '</li>'
-            );
+        '<li class="fuse-header-item">' +
+        '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
+        '</li>'
+    );
 }
 
 var initKChatWebsocket = function () {

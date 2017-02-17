@@ -5,15 +5,15 @@
         <link href="/static/quiz/quiz.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/theme/assets/plugins/dropzone/downloads/css/dropzone.css"/>
+        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css"/>
+        <script src="/static/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js">//</script>
 
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
+        <script type="text/javascript" src="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
-        <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script>
+        <script type="text/javascript" src="/templates/themes/admin2/prompt.js">//</script>
         <script type="text/javascript" src="manageModule.js">//</script>
     </head>
     <body class="manageModulePages">
@@ -201,7 +201,11 @@
                         <div class="form-group">
                             <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
                             <div class="col-md-6">
-                                <input class="thumbnail-image form-control" id="thumb" type="text" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" />
+                                <div class="input-group">
+                                    <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
+                                </div>
                             </div>
                         </div>
 
@@ -347,137 +351,149 @@
         </div>
         #end
 
-        <script src="/theme/assets/plugins/dropzone/downloads/dropzone.min.js">//</script>
-        <div id="modal-upload-scorm" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload Scorm File</h4>
-            </div>
-            <div class="modal-body">
-                <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadScormFileDropzone"></form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js">//</script>
+        <div id="modal-upload-scorm" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload Scorm File</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadScormFileDropzone"></form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="modal-add-page" class="modal #if ($isKEditor) modal-full #else modal-fuse-editor modal-lg #end fade" aria-hidden="true" tabindex="-1">
-            <form method="POST" action="." class="form-horizontal" style="height: 100%;">
-                <input type="hidden" name="pageName" />
-                <input type="hidden" name="order" />
-                <input type="hidden" name="template" value="learner/modulePage" />
-                <div class="modal-header">
-                    <div class="row">
-                        <div class="col-sm-11">
-                            <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
+        <div id="modal-add-page" class="modal #if ($isKEditor) modal-full #end fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog #if (!$isKEditor) modal-lg #end">
+                <div class="modal-content">
+                    <form method="POST" action="." class="form-horizontal" style="height: 100%;">
+                        <input type="hidden" name="pageName" />
+                        <input type="hidden" name="order" />
+                        <input type="hidden" name="template" value="learner/modulePage" />
+                        <div class="modal-header">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
+                                </div>
+                                <div class="col-sm-1" style="padding-top: 8px;">
+                                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-1" style="padding-top: 8px;">
-                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        #if ($isKEditor)
+                            <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
+                                <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
+                            </div>
+                        #else
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        #end
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                            <button class="btn btn-sm btn-primary btn-save btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                            <button class="btn btn-sm btn-primary btn-save-close btn-img" data-type="form-submit" type="button">Save & Close <img class="ajax-loader" src="/static/common/loading.gif"/></button>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                #if ($isKEditor)
-                <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
-                    <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
-                </div>
-                #else
-                <div class="modal-body">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-                        </div>
-                    </div>
-                </div>
-                #end
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                    <button class="btn btn-sm btn-primary btn-save btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                    <button class="btn btn-sm btn-primary btn-save-close btn-img" data-type="form-submit" type="button">Save & Close <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <div id="modal-add-quiz" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add/edit quiz</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
-                    <input type="hidden" name="pageName" />
-                    <input type="hidden" name="order" />
-                    <input type="hidden" name="template" value="learner/quizPage" />
-                    <div class="tabbable">
-                        <ul class="nav nav-tabs tab-bricky">
-                            <li><a data-toggle="tab" href="#questions">Questions</a></li>
-                            <li><a data-toggle="tab" href="#options">Options</a></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div id="questions" class="tab-pane">
-                                <div class="row">
-                                    <div class="col-md-8">
+        <div id="modal-add-quiz" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Add/edit quiz</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="." class="form-horizontal">
+                            <input type="hidden" name="pageName" />
+                            <input type="hidden" name="order" />
+                            <input type="hidden" name="template" value="learner/quizPage" />
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs tab-bricky">
+                                    <li><a data-toggle="tab" href="#questions">Questions</a></li>
+                                    <li><a data-toggle="tab" href="#options">Options</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="questions" class="tab-pane">
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="form-group">
+                                                    <label for="quizTitle" class="control-label col-sm-3">Enter quiz title</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu pull-right">
+                                                        <li><a href="#" data-type="multiple">Multiple choice</a></li>
+                                                        <li><a href="#" data-type="multi-answer">Multiple choice with multi-answers</a></li>
+                                                        <li><a href="#" data-type="textbox">Textbox</a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="quiz-questions"></div>
+                                    </div>
+
+                                    <div id="options" class="tab-pane">
                                         <div class="form-group">
-                                            <label for="quizTitle" class="control-label col-md-3">Enter quiz title</label>
-                                            <div class="col-md-9">
-                                                <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                                            <label for="batchMode" class="control-label col-sm-4">Batch mode</label>
+                                            <div class="col-sm-6">
+                                                <select name="batchMode" id="batchMode">
+                                                    <option value="">Ask all</option>
+                                                    <option value="random">Random</option>
+                                                    <option value="sequential">Sequential</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="batchSize" class="control-label col-sm-4">Batch size</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="batchSize" id="batchSize" class="form-control" value="" placeholder="" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="maxAttempts" class="control-label col-sm-4">Maximum attempts</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="maxAttempts" id="maxAttempts" class="form-control" value="" placeholder="" />
+                                                <span class="help-block small text-muted">If leave it blank, default value will be <b>1000</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="passMarkPerc" class="control-label col-sm-4">Pass mark %</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="passMarkPerc" id="passMarkPerc" class="form-control" value="" placeholder="" />
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="btn-group">
-                                            <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
-                                                <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="#" data-type="multiple">Multiple choice</a></li>
-                                                <li><a href="#" data-type="multi-answer">Multiple choice with multi-answers</a></li>
-                                                <li><a href="#" data-type="textbox">Textbox</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="quiz-questions"></div>
-                            </div>
-
-                            <div id="options" class="tab-pane">
-                                <div class="form-group">
-                                    <label for="batchMode" class="control-label col-md-4">Batch mode</label>
-                                    <div class="col-md-6">
-                                        <select name="batchMode" id="batchMode">
-                                            <option value="">Ask all</option>
-                                            <option value="random">Random</option>
-                                            <option value="sequential">Sequential</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="batchSize" class="control-label col-md-4">Batch size</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="batchSize" id="batchSize" class="form-control" value="" placeholder="" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="maxAttempts" class="control-label col-md-4">Maximum attempts</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="maxAttempts" id="maxAttempts" class="form-control" value="" placeholder="" />
-                                        <span class="help-block small text-muted">If leave it blank, default value will be <b>1000</b></span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="passMarkPerc" class="control-label col-md-4">Pass mark %</label>
-                                    <div class="col-md-6">
-                                        <input type="text" name="passMarkPerc" id="passMarkPerc" class="form-control" value="" placeholder="" />
-                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
 

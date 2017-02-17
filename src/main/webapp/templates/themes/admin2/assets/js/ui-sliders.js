@@ -1,40 +1,54 @@
 var UISliders = function () {
-    //function to initiate jQRangeSlider
+    //function to initiate rangeSlider
     var runRangeSliders = function () {
-        //jQRangeSlider is highly dependant on CSS. Be sure to include one of the provided stylesheets.
-        $("#slider_example_1").rangeSlider();
-        $("#slider_example_2").editRangeSlider();
-        $("#slider_example_3").dateRangeSlider({
-            bounds: {
-                min: new Date(2013, 0, 1),
-                max: new Date(2014, 11, 31)
-            },
-            defaultValues: {
-                min: new Date(2013, 2, 1),
-                max: new Date(2014, 2, 31)
+        
+        $("#slider_example_1").ionRangeSlider();
+        
+        $("#slider_example_3").ionRangeSlider({
+            type: "double",
+            min: 0,
+            max: 10000,
+            grid: true,
+            grid_num: 10
+        });
+
+        $("#slider_example_4").ionRangeSlider({
+            type: "double",
+            min: 0,
+            max: 10000,
+            step: 500,
+            grid: true,
+            grid_snap: true
+        });
+
+        $("#slider_example_5").ionRangeSlider({
+            type: "double",
+            min: 0,
+            max: 100,
+            from: 20,
+            from_min: 10,
+            from_max: 30,
+            from_shadow: true,
+            to: 80,
+            to_min: 70,
+            to_max: 90,
+            to_shadow: true,
+            grid: true,
+            grid_num: 10
+        });
+
+        $("#slider_example_6").ionRangeSlider({
+            min: +moment().subtract(12, "hours").format("X"),
+            max: +moment().format("X"),
+            from: +moment().subtract(6, "hours").format("X"),
+            grid: true,
+            force_edges: true,
+            prettify: function (num) {
+                var m = moment(num, "X").locale("en");
+                return m.format("Do MMMM, HH:mm");
             }
         });
-        $("#slider_example_4").rangeSlider({
-            valueLabels: "change",
-            delayOut: 1000
-        });
-        $("#slider_example_5").rangeSlider({
-            valueLabels: "change",
-            durationIn: 1000,
-            durationOut: 1000
-        });
-        $("#slider_example_6").rangeSlider({
-            enabled: false
-        });
-        $("#slider_example_7").rangeSlider({
-            range: {
-                min: 10,
-                max: 40
-            }
-        });
-        $("#slider_example_8").rangeSlider({
-            step: 10
-        });
+
     };
     //function to initiate jQuery Knob
     var runKnob = function () {

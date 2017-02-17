@@ -197,8 +197,8 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
         flog("using templates and styles", templatesPath, stylesPath);
 
-        themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap.min.css');
-        themeCssFiles.push('/theme/assets/plugins/bootstrap/css/bootstrap-ckeditor.css');
+        themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
+        themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
 
         var config = {
             skin: editorSkin,

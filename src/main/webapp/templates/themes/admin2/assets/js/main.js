@@ -51,26 +51,32 @@ var Main = function () {
         }
     };
 
-    var initNiceScroll = function (target) {
-        if (target.length > 0 && typeof $.fn.niceScroll === 'function') {
-            target.niceScroll({
-                cursorcolor: '#999',
-                cursorwidth: 6,
-                railpadding: {
-                    top: 0,
-                    right: 0,
-                    left: 0,
-                    bottom: 0
-                },
-                cursorborder: '',
-                disablemutationobserver: true
+    var initPerfectScrollbar = function (target) {
+        if (target.length > 0 && typeof $.fn.perfectScrollbar === 'function') {
+            //target.niceScroll({
+            //    cursorcolor: '#999',
+            //    cursorwidth: 6,
+            //    railpadding: {
+            //        top: 0,
+            //        right: 0,
+            //        left: 0,
+            //        bottom: 0
+            //    },
+            //    cursorborder: '',
+            //    disablemutationobserver: true
+            //});
+            target.perfectScrollbar({
+                wheelSpeed: 50,
+                minScrollbarLength: 20,
+                suppressScrollX: true
             });
         }
     };
 
-    var updateNiceScroll = function (target) {
-        if($.fn.niceScroll){
-            target.getNiceScroll().resize();
+    var updatePerfectScrollbar = function (target) {
+        if($.fn.perfectScrollbar){
+            //target.getNiceScroll().resize();
+            target.perfectScrollbar('update');
         }
     };
 
@@ -142,7 +148,7 @@ var Main = function () {
     var runPanelScroll = function () {
         var scrollPanel = $(".panel-scroll");
         if (scrollPanel.length > 0) {
-            initNiceScroll(scrollPanel);
+            initPerfectScrollbar(scrollPanel);
         }
     };
 
@@ -263,9 +269,9 @@ var Main = function () {
         var callback = null;
 
         if (windowWidth >= 980) {
-            initNiceScroll(mainMenu);
+            initPerfectScrollbar(mainMenu);
             callback = function () {
-                updateNiceScroll(mainMenu);
+                updatePerfectScrollbar(mainMenu);
             };
         }
 
@@ -322,12 +328,12 @@ var Main = function () {
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     };
 
-    initNiceScroll($('.drop-down-wrapper'));
+    initPerfectScrollbar($('.drop-down-wrapper'));
 
     $('.navbar-tools .dropdown').on('shown.bs.dropdown', function () {
         var dropdown = $(this).find('.drop-down-wrapper');
         dropdown.scrollTop(0);
-        updateNiceScroll(dropdown);
+        updatePerfectScrollbar(dropdown);
     });
 
     var runColorPalette = function () {
@@ -365,19 +371,14 @@ var Main = function () {
     // function to adapt the Main Content height to the Main Navigation height
     var runContainerHeight = function () {
         var mainContainer = $('.main-content > .container');
-        var mainNavigation = $('.main-navigation');
         var footer = $('.footer');
         var navbar = $('.navbar');
-        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight());
-
-        if (windowWidth < 768) {
-            mainNavigation.css('min-height', windowHeight - $('body > .navbar').outerHeight());
-        }
+        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight() - 1);
 
         var sidebarWrapper = $('#page-sidebar .sidebar-wrapper');
         sidebarWrapper.css('height', windowHeight - $('body > .navbar').outerHeight()).scrollTop(0);
         if (windowWidth >= 768) {
-            updateNiceScroll(sidebarWrapper);
+            updatePerfectScrollbar(sidebarWrapper);
         }
     };
 

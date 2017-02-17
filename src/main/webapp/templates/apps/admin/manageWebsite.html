@@ -3,7 +3,6 @@
         <title>$view.title</title>
         <link href="manageApps.css" rel="stylesheet" type="text/css" />
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
-        <!-- <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-switch/static/stylesheets/bootstrap-switch.css"/> -->
         <script type="text/javascript" src="manageWebsite.js">//</script>
         <!--<script type="text/javascript" src="manageMenu.js">//</script>-->
         <script type="text/javascript" src="manageApps.js">//</script>
@@ -11,8 +10,7 @@
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
 
-        <!-- <script src="/theme/assets/plugins/bootstrap-switch/static/js/bootstrap-switch.min.js">//</script> -->
-        <!-- <script type="text/javascript" src="/templates/themes/admin/prompt.js">//</script> -->
+        <!-- <script type="text/javascript" src="/templates/themes/admin2/prompt.js">//</script> -->
         <style>
             .btn-file {
                 position: relative;
@@ -441,26 +439,30 @@
                     </p>
 
                     <div class="modal fade" id="addWebsiteHttpsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Create new HTTPS Configuration </h4>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" method="POST" action=".">
-                                <div id="certificate-body">
-                                    <div class="form-group">
-                                        <label for="title" class="col-sm-3 control-label">Title</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control regex required" required="true" id="title" name="title"  data-regex="^[a-zA-Z0-9-]+$" />
-                                            <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small></span>
-                                        </div>
-                                    </div>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title" id="myModalLabel">Create new HTTPS Configuration </h4>
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                                <div class="modal-body">
+                                    <form class="form-horizontal" method="POST" action=".">
+                                        <div id="certificate-body">
+                                            <div class="form-group">
+                                                <label for="title" class="col-sm-3 control-label">Title</label>
+                                                <div class="col-sm-8">
+                                                    <input type="text" class="form-control regex required" required="true" id="title" name="title"  data-regex="^[a-zA-Z0-9-]+$" />
+                                                    <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                                </div>
+                            </div>
                         </div>
                     </div><!-- /.modal -->
 
@@ -660,21 +662,25 @@
                     #foreach($app in $page.apps)
                     #if($page.hasSettings($app))
                     <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Edit Application: $app.appId</h4>
-                        </div>
-                        <div class="modal-body ModalContent">
-                            <form method="POST" action="." class="form-horizontal" role="form">
-                                <input type="hidden" name="settingsAppId" value="$app.appId" />
-                                #if($app.enabled)
-                                #appSettings($app.appId)
-                                #end
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Edit Application: $app.appId</h4>
+                                </div>
+                                <div class="modal-body ModalContent">
+                                    <form method="POST" action="." class="form-horizontal" role="form">
+                                        <input type="hidden" name="settingsAppId" value="$app.appId" />
+                                        #if($app.enabled)
+                                            #appSettings($app.appId)
+                                        #end
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     #end
@@ -684,374 +690,411 @@
         </div>
 
         <div id="modalGroup" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Choose groups</h4>
-            </div>
-            <div class="modal-body">
-                <table class="" style="width: 100%">
-                    #foreach($g in $page.allGroups)
-                    <tr>
-                        <td>
-                            <div class="col-sm-offset-3">
-                                <label class="checkbox-inline">
-                                    $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    #end
-                </table>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose groups</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="" style="width: 100%">
+                            #foreach($g in $page.allGroups)
+                                <tr>
+                                    <td>
+                                        <div class="col-sm-offset-3">
+                                            <label class="checkbox-inline">
+                                                $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                            #end
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="modal-menu" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add/edit menu</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="menu-text" class="control-label col-md-4">Text:</label>
-                        <div class="col-md-8">
-                            <input id="menu-text" class="form-control required" placeholder="Menu text" value="" />
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add/edit menu</h4>
                     </div>
-                    <div class="form-group">
-                        <label for="menu-link" class="control-label col-md-4">Link:</label>
-                        <div class="col-md-8">
-                            <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
-                        </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="menu-text" class="control-label col-md-4">Text:</label>
+                                <div class="col-md-8">
+                                    <input id="menu-text" class="form-control required" placeholder="Menu text" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="menu-link" class="control-label col-md-4">Link:</label>
+                                <div class="col-md-8">
+                                    <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="modal fade" id="modalUpdateCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
-                    <h4>Upload a File</h4>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <span class="btn btn-primary btn-file">
-                                        Browse&hellip; <input name="file" type="file" />
-                                    </span>
-                                </span>
-                                <input type="text" class="form-control file-input" readonly>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                            <h4>Upload a File</h4>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-primary btn-file">
+                                                Browse&hellip; <input name="file" type="file" />
+                                            </span>
+                                        </span>
+                                        <input type="text" class="form-control file-input" readonly>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <hr/>
+                            <h4>Upload raw text</h4>
+                            <div class="form-group">
+                                <input type="hidden" id = "updateCertId" name="updateCertId" value="updateCertId" />
+                                <div class="col-sm-12">
+                                    <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="10" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <hr/>
-                    <h4>Upload raw text</h4>
-                    <div class="form-group">
-                        <input type="hidden" id = "updateCertId" name="updateCertId" value="updateCertId" />
-                        <div class="col-sm-12">
-                            <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="10" class="form-control"></textarea>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+                </div>
             </div>
         </div><!-- /.modal -->
 
         <div class="modal fade" id="genCsrModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Certificate Signing Request</h4>
-            </div>
-            <div class="modal-body">
-                <p class="well csrForm">Please fill in the details below</p>
-                <form method="POST" action="." class="form-horizontal">
-                    <div class="csrForm">
-                        <div class="form-group">
-                            <input type="hidden" name="generateCsr" value="true" />
-                            <input type="hidden" name="certId" id="certId" value="" />
-                            <label class="control-label col-md-4" for="csr_cn">Common Name</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
-                            </div>
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Certificate Signing Request</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p class="well csrForm">Please fill in the details below</p>
+                        <form method="POST" action="." class="form-horizontal">
+                            <div class="csrForm">
+                                <div class="form-group">
+                                    <input type="hidden" name="generateCsr" value="true" />
+                                    <input type="hidden" name="certId" id="certId" value="" />
+                                    <label class="control-label col-md-4" for="csr_cn">Common Name</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_cn" id="csr_cn" placeholder="Common Name" class="required form-control" />
+                                    </div>
+                                </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_san">Subject Alternative Names
-                                <small>One domain per line.</small>
-                            </label>
-                            <div class="col-md-8">
-                                <textarea name="csr_san" id="csr_san" class="form-control" ></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_ou">Organizational Unit</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_ou" id="csr_ou" placeholder="Organizational Unit" class="required form-control" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_o">Organization Name</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_o" id="csr_o" placeholder="Organization Name" class="required form-control" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_l">Location</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_l" id="csr_l" placeholder="Location" class="required form-control" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_st">State</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_st" id="csr_st" placeholder="State" class="required form-control" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_c">Country</label>
-                            <div class="col-md-8">
-                                <select name="csr_c" id="csr_c" class="required form-control">
-                                    #set($countryCodes = $formatter.countryCodes)
-                                    #foreach($cc in $countryCodes.list)
-                                    $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-4" for="csr_email">Email</label>
-                            <div class="col-md-8">
-                                <input type="text" name="csr_email" id="csr_email" placeholder="Email" class="email form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group checkbox">
-                            <label class="control-label col-md-4" for="regenpk">New Private Key</label>
-                            <div class="col-md-8">
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="regenpk" id="regenpk" value="true" />
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_san">Subject Alternative Names
+                                        <small>One domain per line.</small>
                                     </label>
+                                    <div class="col-md-8">
+                                        <textarea name="csr_san" id="csr_san" class="form-control" ></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_ou">Organizational Unit</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_ou" id="csr_ou" placeholder="Organizational Unit" class="required form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_o">Organization Name</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_o" id="csr_o" placeholder="Organization Name" class="required form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_l">Location</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_l" id="csr_l" placeholder="Location" class="required form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_st">State</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_st" id="csr_st" placeholder="State" class="required form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_c">Country</label>
+                                    <div class="col-md-8">
+                                        <select name="csr_c" id="csr_c" class="required form-control">
+                                            #set($countryCodes = $formatter.countryCodes)
+                                    #foreach($cc in $countryCodes.list)
+                                            $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
+                                        #end
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="csr_email">Email</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="csr_email" id="csr_email" placeholder="Email" class="email form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group checkbox">
+                                    <label class="control-label col-md-4" for="regenpk">New Private Key</label>
+                                    <div class="col-md-8">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" name="regenpk" id="regenpk" value="true" />
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="viewCsr">
-                        <div>
-                            <p>
-                                <a href="#" class="btn btn-sm btn-success btn-gen-new-csr" ><i class="fa fa-plus"></i> Generate a new CSR</a>
-                            </p>
-                        </div>
-                        <div id="csrTextGroup" class="form-group">
-                            <div class="col-md-12">
-                                <textarea id = "csrText" name="csrText" rows="12" class="form-control" readonly style="cursor: text; resize: none;"></textarea>
+                            <div class="viewCsr">
+                                <div>
+                                    <p>
+                                        <a href="#" class="btn btn-sm btn-success btn-gen-new-csr" ><i class="fa fa-plus"></i> Generate a new CSR</a>
+                                    </p>
+                                </div>
+                                <div id="csrTextGroup" class="form-group">
+                                    <div class="col-md-12">
+                                        <textarea id = "csrText" name="csrText" rows="12" class="form-control" readonly style="cursor: text; resize: none;"></textarea>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
+                    </div>
+                </div>
             </div>
         </div><!-- /.modal -->
 
         <div class="modal fade" id="modalUpdateRootCert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
-                    <h4>Upload Files</h4>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <span class="btn btn-primary btn-file">
-                                        Browse&hellip; <input name="file" type="file" multiple="true"/>
-                                    </span>
-                                </span>
-                                <input type="text" class="form-control file-input" readonly>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                            <h4>Upload Files</h4>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-primary btn-file">
+                                                Browse&hellip; <input name="file" type="file" multiple="true"/>
+                                            </span>
+                                        </span>
+                                        <input type="text" class="form-control file-input" readonly>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <hr/>
+                            <h4>Upload raw text</h4>
+                            <div class="form-group">
+                                <input type="hidden" name="createRootCert" value="true" />
+                                <input type="hidden" class="certId" id = "certId" name="certId" value="" />
+                                <div class="col-sm-12">
+                                    <label for="certTitle">Certificate Title</label>
+                                    <input type="text" id = "certTitle" name="certTitle" class="form-control"></input>
+                                </div>
+                                <div class="col-sm-12">
+                                    <label for="certText">Certificate Text</label>
+                                    <textarea id="certText" name="certText" rows="10" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <hr/>
-                    <h4>Upload raw text</h4>
-                    <div class="form-group">
-                        <input type="hidden" name="createRootCert" value="true" />
-                        <input type="hidden" class="certId" id = "certId" name="certId" value="" />
-                        <div class="col-sm-12">
-                            <label for="certTitle">Certificate Title</label>
-                            <input type="text" id = "certTitle" name="certTitle" class="form-control"></input>
-                        </div>
-                        <div class="col-sm-12">
-                            <label for="certText">Certificate Text</label>
-                            <textarea id="certText" name="certText" rows="10" class="form-control"></textarea>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+                </div>
             </div>
         </div><!-- /.modal -->
 
         <div class="modal fade" id="modalUpdatePK" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Upload Private Key (RSA/PEM Encoded)</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="" action="." enctype="multipart/form-data">
-                    <h4>Upload a File</h4>
-                    <div class="form-group">
-                        <div class="col-sm-12">
-                            <div class="input-group">
-                                <span class="input-group-btn">
-                                    <span class="btn btn-primary btn-file">
-                                        Browse&hellip; <input name="file" type="file" multiple="true"/>
-                                    </span>
-                                </span>
-                                <input type="text" class="form-control file-input" readonly>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Upload Private Key (RSA/PEM Encoded)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" method="" action="." enctype="multipart/form-data">
+                            <h4>Upload a File</h4>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <span class="input-group-btn">
+                                            <span class="btn btn-primary btn-file">
+                                                Browse&hellip; <input name="file" type="file" multiple="true"/>
+                                            </span>
+                                        </span>
+                                        <input type="text" class="form-control file-input" readonly>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <hr/>
+                            <h4>Upload raw text</h4>
+                            <div class="form-group">
+                                <input type="hidden" id = "updatePKid" name="updatePKid" value="true" />
+                                <div class="col-sm-12">
+                                    <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="10" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <hr/>
-                    <h4>Upload raw text</h4>
-                    <div class="form-group">
-                        <input type="hidden" id = "updatePKid" name="updatePKid" value="true" />
-                        <div class="col-sm-12">
-                            <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="10" class="form-control"></textarea>
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+                </div>
             </div>
         </div><!-- /.modal -->
 
-        <div id="modal-gen-dkim" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Generate DKIM Key</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
-                    <div class="alert alert-danger" role="alert">
-                        If you are currently authenticating email from this domain, generating a new TXT record might cause email's to fail until the DNS record has been updated.
+        <div id="modal-gen-dkim" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Generate DKIM Key</h4>
                     </div>
-                    <input type="hidden" name="genDkim" value="true"/>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
-                        <div class="col-md-8">
-                            <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
-                        </div>
+                    <div class="modal-body">
+                        <form method="POST" action="." class="form-horizontal">
+                            <div class="alert alert-danger" role="alert">
+                                If you are currently authenticating email from this domain, generating a new TXT record might cause email's to fail until the DNS record has been updated.
+                            </div>
+                            <input type="hidden" name="genDkim" value="true"/>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="dkimKeySize">Key Size</label>
+                                <div class="col-md-8">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dkimKeySize" value="1024" checked="true"> 1024
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="dkimKeySize" value="2048"> 2048
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="dkimKeySize">Key Size</label>
-                        <div class="col-md-8">
-                            <label class="radio-inline">
-                                <input type="radio" name="dkimKeySize" value="1024" checked="true"> 1024
-                            </label>
-                            <label class="radio-inline">
-                                <input type="radio" name="dkimKeySize" value="2048"> 2048
-                            </label>
-                        </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Generate</button>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Generate</button>
+                </div>
             </div>
         </div>
 
-        <div id="modalUploadPrivateKey" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload a DKIM Private Key</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
-                    <input type="hidden" name="uploadDkimKey" value="true"/>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
-                        <div class="col-md-8">
-                            <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
+        <div id="modalUploadPrivateKey" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Upload a DKIM Private Key</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="." class="form-horizontal">
+                        <input type="hidden" name="uploadDkimKey" value="true"/>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
+                            <div class="col-md-8">
+                                <input type="text" name="dkimsel" value="" placeholder="DomainKey Selector (e.g. key1)" class="form-control" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="dkimpk">DKIM Private Key</label>
-                        <div class="col-md-8">
-                            <textarea type="text" name="dkimpk" value="" placeholder="PEM Encoded private key" class="form-control" ></textarea>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="dkimpk">DKIM Private Key</label>
+                            <div class="col-md-8">
+                                <textarea type="text" name="dkimpk" value="" placeholder="PEM Encoded private key" class="form-control" ></textarea>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Upload</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Upload</button>
+                </div>
             </div>
         </div>
 
-
-        <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Send test</h4>
-            </div>
-            <div class="modal-body">
-                <form method="POST" action="." class="form-horizontal">
-                    <input type="hidden" name="dkimTestEmail" value="true"/>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="name">Recipient</label>
-                        <div class="col-md-8">
-                            <input type="text" name="emailRecip" value="" placeholder="An email address" class="required email form-control" />
-                            <p>The email address to send the report to.</p>
-                        </div>
+        <div id="modal-send-test" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Send test</h4>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="name">From Address</label>
-                        <div class="col-md-8">
-                            <input type="text" name="senderEmail" value="" placeholder="Email from address" class="required email form-control" />
-                            <p>The address to be sending from eg. noreply@yourdomain.com</p>
-                        </div>
-                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="." class="form-horizontal">
+                            <input type="hidden" name="dkimTestEmail" value="true"/>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="name">Recipient</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="emailRecip" value="" placeholder="An email address" class="required email form-control" />
+                                    <p>The email address to send the report to.</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="name">From Address</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="senderEmail" value="" placeholder="Email from address" class="required email form-control" />
+                                    <p>The address to be sending from eg. noreply@yourdomain.com</p>
+                                </div>
+                            </div>
 
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="modal-send-test-progress" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Test send progress</h4>
-            </div>
-            <div class="modal-body" id="send-test-body">
+        <div id="modal-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Test send progress</h4>
+                    </div>
+                    <div class="modal-body" id="send-test-body">
+                    </div>
+                </div>
             </div>
         </div>
 

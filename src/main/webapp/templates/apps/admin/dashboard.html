@@ -34,7 +34,7 @@
                             #foreach( $website in $page.organisation.websites())
                             #if( $website.redirectTo.length() > 0 )
                             #else
-                            <div class="col-xs-6 col-md-4 col-lg-3 gallery-img">
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
                                 #if( $website.imageHash )
                                 #set( $bgimage = "/_hashes/files/$website.imageHash" )
                                 #else
@@ -46,14 +46,11 @@
                                     </a>
                                     <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
                                         $website.name
-                                        <br/>
-                                        <small style="font-size: 12px">
+                                        <small>
                                             #if ($website.domainName && $website.domainName != "")
                                             $website.domainName<br />
                                             #end
-                                            <i>
                                                 $!website.liveBranch / $!website.trunk.publicTheme
-                                            </i>
                                         </small>
                                     </a>
                                     <div class="tools tools-bottom">
@@ -76,26 +73,24 @@
                     </div>
                 </div>
 
-                <div class="ktile-container row">
+                <div class="ktile-container row row-sm">
                     <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
 
                     <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
                         <div class="ktile">
                             <div class="ktile-inner">
                                 <div class="ktile-body">
-                                    <div class="ktile-front bgm-blue">
+                                    <div class="ktile-front ktile-single-value">
                                         <div class="ktile-content">
-                                            <div class="row" style="margin: 0">
-                                                <a href="/manageUsers" class="c-white">
-                                                    <div class="col-xs-3">
-                                                        <i class="fa fa-user fa-4x"></i>
-                                                    </div>
-                                                    <div class="col-xs-9 text-right">
-                                                        <div class="huge">$rootFolder.numProfiles</div>
-                                                        <div>profiles</div>
-                                                    </div>
-                                                </a>
-                                            </div>
+                                            <a href="/manageUsers">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-user fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numProfiles</div>
+                                                    <div class="small">profiles</div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -107,19 +102,17 @@
                         <div class="ktile">
                             <div class="ktile-inner">
                                 <div class="ktile-body">
-                                    <div class="ktile-front bgm-blue">
+                                    <div class="ktile-front ktile-single-value">
                                         <div class="ktile-content">
-                                            <div class="row" style="margin: 0">
-                                                <a href="/groups" class="c-white">
-                                                    <div class="col-xs-3">
-                                                        <i class="fa fa-users fa-4x"></i>
-                                                    </div>
-                                                    <div class="col-xs-9 text-right">
-                                                        <div class="huge">$rootFolder.numGroups</div>
-                                                        <div>groups</div>
-                                                    </div>
-                                                </a>
-                                            </div>
+                                            <a href="/groups">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-users fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numGroups</div>
+                                                    <div class="small">groups</div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -131,19 +124,17 @@
                         <div class="ktile">
                             <div class="ktile-inner">
                                 <div class="ktile-body">
-                                    <div class="ktile-front bgm-blue">
+                                    <div class="ktile-front ktile-single-value">
                                         <div class="ktile-content">
-                                            <div class="row" style="margin: 0">
-                                                <a href="/organisations" class="c-white">
-                                                    <div class="col-xs-3">
-                                                        <i class="fa fa-sitemap fa-4x"></i>
-                                                    </div>
-                                                    <div class="col-xs-9 text-right">
-                                                        <div class="huge">$rootFolder.numOrgs</div>
-                                                        <div>orgs</div>
-                                                    </div>
-                                                </a>
-                                            </div>
+                                            <a href="/organisations">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-sitemap fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numOrgs</div>
+                                                    <div class="small">orgs</div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -154,7 +145,7 @@
                     #portlets("adminDashboardQuickLinks")
                 </div>
 
-                <div class="ktile-container row">
+                <div class="ktile-container row row-sm">
                     <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
                     #portlets("adminDashboardPrimaryMasonry")
                 </div>
@@ -170,7 +161,7 @@
             <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <i class="clip-stack-empty"></i>
+                        <i class="fa fa-history"></i>
                         History
                     </div>
                     <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">

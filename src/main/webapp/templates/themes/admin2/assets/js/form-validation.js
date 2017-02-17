@@ -109,15 +109,6 @@ var FormValidator = function () {
         var form2 = $('#form2');
         var errorHandler2 = $('.errorHandler', form2);
         var successHandler2 = $('.successHandler', form2);
-        $.validator.addMethod("getEditorValue", function () {
-            $("#editor1").val($('.summernote').code());
-            if ($("#editor1").val() != "" && $("#editor1").val() != "<br>") {
-                $('#editor1').val('');
-                return true;
-            } else {
-                return false;
-            }
-        }, 'This field is required.');
         form2.validate({
             errorElement: "span", // contain the error msg in a small tag
             errorClass: 'help-block',
@@ -156,8 +147,9 @@ var FormValidator = function () {
                     minlength: 2
                 },
                 creditcard: {
-                    required: true,
-                    creditcard: true
+                    minlength: 16,
+                    maxlength: 16,
+                    required: true
                 },
                 url: {
                     required: true,
@@ -185,7 +177,8 @@ var FormValidator = function () {
                     email: "Your email address must be in the format of name@domain.com"
                 },
                 services: {
-                    minlength: jQuery.format("Please select  at least {0} types of Service")
+                    //minlength: jQuery.format("Please select  at least {0} types of Service")
+                    minlength: "error services/minlength"
                 }
             },
             invalidHandler: function (event, validator) { //display error alert on form submit
@@ -210,10 +203,19 @@ var FormValidator = function () {
             submitHandler: function (form) {
                 successHandler2.show();
                 errorHandler2.hide();
-                // submit form
-                //$('#form2').submit();
             }
         });
+
+        $.validator.addMethod("getEditorValue", function () {
+            $("#editor1").val($('.summernote').summernote('code'));
+            if ($("#editor1").val() != "" && $("#editor1").val() != "<p><br></p>") {
+                $('#editor1').val('');
+                return true;
+            } else {
+                return false;
+            }
+        }, 'This field is required.');
+
         $('.summernote').summernote({
             height: 300,
             tabsize: 2
@@ -221,6 +223,7 @@ var FormValidator = function () {
         CKEDITOR.disableAutoInline = true;
         $('textarea.ckeditor').ckeditor();
     };
+
     return {
         //main function to initiate template pages
         init: function () {
