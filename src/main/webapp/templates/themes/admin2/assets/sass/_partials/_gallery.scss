@@ -13,6 +13,9 @@
     position: relative;
     width: 100%;
     overflow: hidden;
+    border: 2px solid $panel-border-color;
+    background: $panel-bg;
+    border-radius: 4px;
 
     & > .chkbox {
         width: 18px;
@@ -75,7 +78,7 @@
     }
 
     & > .tools {
-        background-color: rgba(0, 0, 0, 0.55);
+        background-color: #585b67;
         bottom: 0;
         left: -30px;
         position: absolute;

@@ -4011,7 +4011,10 @@ body.lock-screen .user-info {
 .wrap-image {
   position: relative;
   width: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  border: 2px solid #dfeaf1;
+  background: #f0f5f8;
+  border-radius: 4px; }
   .wrap-image > .chkbox {
     width: 18px;
     height: 18px;
@@ -4051,7 +4054,7 @@ body.lock-screen .user-info {
       left: auto;
       right: 0; }
   .wrap-image > .tools {
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: #585b67;
     bottom: 0;
     left: -30px;
     position: absolute;
