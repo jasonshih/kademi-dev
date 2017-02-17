@@ -83,7 +83,7 @@
       top: 100%;
       display: block !important; }
   ul.main-navigation-menu > li > a {
-    padding-left: 7px; }
+    padding-left: 10px; }
     ul.main-navigation-menu > li > a .icon-arrow {
       display: none; }
     ul.main-navigation-menu > li > a > .title {
@@ -378,7 +378,7 @@
   .navigation-small ul.main-navigation-menu {
     overflow: visible !important; }
     .navigation-small ul.main-navigation-menu > li > a {
-      padding-left: 7px; }
+      padding-left: 10px; }
       .navigation-small ul.main-navigation-menu > li > a > .title {
         display: none; }
       .navigation-small ul.main-navigation-menu > li > a .icon-arrow {
