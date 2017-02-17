@@ -95,7 +95,7 @@
 }
 
 .btn {
-    font-family: $fontOpenSans;
+    font-family: $fontRoboto;
     @include transition(all 0.3s ease 0s);
 }
 
@@ -437,7 +437,7 @@ fieldset[disabled] {
         border-width: 0;
         box-shadow: none;
         color: $white !important;
-        font-family: $fontOpenSans;
+        font-family: $fontRoboto;
         font-size: 11px !important;
         font-weight: 300;
         padding: 3px 7px;

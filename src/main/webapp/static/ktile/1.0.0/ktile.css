@@ -44,7 +44,7 @@
     font-weight: 700;
 }
 
-.ktile-footer{
+.ktile-footer {
     padding: 12px 10px;
     position: absolute;
     width: 100%;
@@ -81,6 +81,65 @@
 
 .ktile-shadow {
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Ktile default */
+.ktile-single-value {
+    background: #f0f5f8;
+    box-shadow: 0 0 0 2px #dfeaf1 inset;
+}
+
+.ktile-single-value .ktile-content {
+    transform: translate(0, 0);
+    top: 0;
+    height: 100%;
+}
+
+.ktile-single-value .ktile-single-value-icon {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    bottom: -2px;
+    width: 80px;
+    color: #fff;
+    background: #3988b7;
+}
+
+.ktile-single-value .ktile-single-value-icon > * {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ktile-single-value .ktile-single-value-text {
+    text-align: right;
+    color: #3988b7;
+    position: absolute;
+    left: 80px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    padding-right: 20px;
+    font-size: 18px;
+    line-height: 24 px;
+}
+
+.ktile-single-value .ktile-single-value-text > * {
+    margin: 0;
+}
+
+.ktile-single-value .ktile-single-value-text .lead {
+    font-size: 45px;
+    font-weight: 500;
+    line-height: 50px;
+}
+
+.ktile-single-value .ktile-single-value-text .small {
+    font-size: 13px;
+    line-height: 15px;
 }
 
 /* Animations */
@@ -159,7 +218,7 @@
 .ktile-flip-v .ktile-body,
 .ktile-flip-h .ktile-body {
     transform-style: preserve-3d;
-    animation-timing-function: cubic-bezier(.68,-0.55,.27,1.55);
+    animation-timing-function: cubic-bezier(.68, -0.55, .27, 1.55);
 }
 
 .ktile-flip-h .ktile-front,

@@ -16,7 +16,7 @@ html {
 body {
   color: #000;
   direction: ltr;
-  font-family: "Open+Sans", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 13px;
   padding: 0px !important;
   margin: 0px !important;
@@ -657,7 +657,6 @@ a.bricky:hover {
 .logo {
   padding: 14px 10px 12px;
   margin-left: 0;
-  font-family: "Raleway", sans-serif;
   font-size: 25px;
   min-width: 210px; }
   .logo i {
@@ -912,7 +911,7 @@ li.dropdown.current-user .dropdown-toggle {
 /*	Buttons
 /* ---------------------------------------------------------------------- */
 .btn {
-  font-family: "Open+Sans", sans-serif;
+  font-family: "Roboto", sans-serif;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
   -webkit-transition: all 0.3s ease;
@@ -1245,7 +1244,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
     border-width: 0;
     box-shadow: none;
     color: #ffffff !important;
-    font-family: "Open+Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-size: 11px !important;
     font-weight: 300;
     padding: 3px 7px;
@@ -1772,8 +1771,7 @@ ul.main-navigation-menu {
     ul.main-navigation-menu li a {
       color: #c8c9cf;
       font-size: 14px;
-      font-weight: 300;
-      font-family: Roboto; }
+      font-weight: 300; }
       ul.main-navigation-menu li a .badge {
         float: right;
         margin-right: 13px;
@@ -2368,8 +2366,7 @@ td.column-right {
 /*	Dropzone File Upload
 /* ---------------------------------------------------------------------- */
 .dz-default.dz-message {
-  font-size: 21px !important;
-  font-family: "Raleway", sans-serif !important; }
+  font-size: 21px !important; }
 
 /* ---------------------------------------------------------------------- */
 /*	WYSIWYG
@@ -2543,8 +2540,7 @@ body.login {
     font-size: 18px;
     padding-left: 40px;
     font-weight: 300;
-    color: #fff;
-    font-family: 'Roboto'; }
+    color: #fff; }
     body.login .input-icon .form-control::-webkit-input-placeholder {
       /* Chrome/Opera/Safari */
       opacity: 1;
@@ -3718,7 +3714,6 @@ ul#countdown {
 
 .fc-header-title h2, .fc-toolbar h2 {
   color: #666666;
-  font-family: "Raleway", sans-serif;
   font-weight: 200;
   letter-spacing: -1px; }
 
@@ -3833,7 +3828,6 @@ body.lock-screen .user-info {
   width: 285px; }
   body.lock-screen .user-info h1 {
     color: #666666;
-    font-family: "Raleway", sans-serif;
     font-size: 30px;
     font-weight: 300;
     line-height: 32px;
@@ -4106,7 +4100,7 @@ body.lock-screen .user-info {
   .invoice table {
     margin: 30px 0; }
   .invoice h4 {
-    font-family: "Open+Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
     font-weight: 300 !important; }
   .invoice .invoice-block {
     text-align: right; }
