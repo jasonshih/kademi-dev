@@ -5,7 +5,7 @@
     <artifactId>kademi-dev</artifactId>
     <name>kademi-dev-OLHUB</name>
     <packaging>war</packaging>
-    <version>8.2.4.32</version>
+    <version>8.2.4.33</version>
 
     <build>
         <plugins>
