@@ -15,9 +15,13 @@
             <div class="Content">
                 <div class="clearfix">
                     <div class="btn-group pull-right" style="margin-bottom: 15px">
-                        <a href="/rewards" class="btn btn-sm btn-primary">
+                        <a href="/points-buckets/" class="btn btn-sm btn-primary">
                             <span class="glyphicon glyphicon-star"></span>
-                            Manage Rewards
+                            Points buckets
+                        </a>
+                        <a href="/rewards/" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-star"></span>
+                            Promotions
                         </a>
                         <a href="#" class="btn btn-sm btn-info btn-refresh-pb">
                             <span class="fa fa-refresh"></span>
@@ -90,6 +94,7 @@
                                 <th>Reward</th>
                                 <th>Issued to</th>
                                 <th>Issued date/time</th>
+                                <th>Expiry</th>
                                 <th>No. Points</th>
                                 <th>Reason</th>
                                 <th>Tag</th>
@@ -120,6 +125,7 @@
                                     #end
                                 </td>
                                 <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
+                                <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
                                 <td>$p.numPoints</td>
                                 <td>$p.reason</td>
                                 <td>$!p.pointsTag.title</td>
@@ -349,7 +355,7 @@
                 </div>
             </form>
         </div>
-        
+
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">

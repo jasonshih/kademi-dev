@@ -35,7 +35,7 @@
                 <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
 
                 
-                <div class="input-group-btn">                    
+                <div class="input-group-btn orgSelectorWrap">
                     <a data-orgId="" href="javascript:void (0)" class="btn btn-default">
                         <i class="fa fa-times-circle"></i>
                     </a>
@@ -43,7 +43,7 @@
                         Select
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu orgSelectorWrap" aria-labelledby="dropdownMenuOrgSelector">
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuOrgSelector">
                         #if( $orgList.isEmpty() )
                         <li>No selections available</li>
                         #else
