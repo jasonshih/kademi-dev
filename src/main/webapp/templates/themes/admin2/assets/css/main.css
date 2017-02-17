@@ -16,7 +16,7 @@ html {
 body {
   color: #000;
   direction: ltr;
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 13px;
   padding: 0px !important;
   margin: 0px !important;
@@ -911,7 +911,7 @@ li.dropdown.current-user .dropdown-toggle {
 /*	Buttons
 /* ---------------------------------------------------------------------- */
 .btn {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
   -webkit-transition: all 0.3s ease;
@@ -1244,7 +1244,7 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
     border-width: 0;
     box-shadow: none;
     color: #ffffff !important;
-    font-family: "Roboto", sans-serif;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-size: 11px !important;
     font-weight: 300;
     padding: 3px 7px;
@@ -4100,7 +4100,7 @@ body.lock-screen .user-info {
   .invoice table {
     margin: 30px 0; }
   .invoice h4 {
-    font-family: "Roboto", sans-serif;
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
     font-weight: 300 !important; }
   .invoice .invoice-block {
     text-align: right; }
