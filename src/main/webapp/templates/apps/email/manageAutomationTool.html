@@ -9,8 +9,8 @@
                 <div class="col-md-4">
                     <select id="groupName" name="groupName" class="form-control">
                         <option value="">[NONE]</option>
-                        #foreach($group in $rootFolder.allGroups)
-                        <option value="$group.name">$group.name</option>
+                        #foreach($group in $rootFolder.groups)
+                        $formatter.option($group.name, $group.name, $request.params.groupName)
                         #end
                     </select>
                 </div>
@@ -19,10 +19,10 @@
             <div class="form-group">
                 <label class="control-label col-md-4" for="prevAutomationName">Previous Automation</label>
                 <div class="col-md-4">
-                    <select id="groupName" name="prevAutomationName" class="form-control">
+                    <select id="prevAutomationName" name="prevAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
-                        <option value="$a.name">$a.title</option>
+                        $formatter.option($a.name, $a.title, $request.params.prevAutomationName)
                         #end
                     </select>
                 </div>
@@ -32,9 +32,9 @@
                 <label class="control-label col-md-4" for="matchMode">Match Mode</label>
                 <div class="col-md-4">
                     <select id="matchMode" name="matchMode" class="form-control">
-                        <option value="missing">Missing</option>
-                        <option value="active">Active</option>
-                        <option value="completed">Completed</option>
+                        <option #if($request.params.matchMode == "missing")selected="true"#end value="missing">Missing</option>
+                        <option #if($request.params.matchMode == "active")selected="true"#end value="active">Active</option>
+                        <option #if($request.params.matchMode == "completed")selected="true"#end value="completed">Completed</option>
                     </select>
                 </div>
             </div>
@@ -45,7 +45,7 @@
                     <select id="curAutomationName" name="curAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
-                        <option value="$a.name">$a.title</option>
+                        $formatter.option($a.name, $a.title, $request.params.curAutomationName)
                         #end
                     </select>
                 </div>
@@ -64,8 +64,8 @@
         #set($paginator = $formatter.paginator())
         #set($results = $page.searchResults)
         #if($paginator.setSkipToStart(false))#end
-        #if($paginator.setRecords($results.profiles))#end
         #if($paginator.setTotalRecords($results.totalResults))#end
+        #if($paginator.setRecords($results.profiles))#end
 
         <table class="table table-hover table-striped">
             <thead>
