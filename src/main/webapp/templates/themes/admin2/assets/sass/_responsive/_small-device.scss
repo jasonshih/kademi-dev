@@ -55,7 +55,7 @@
             }
 
             &:hover {
-                width: 225px;
+                width: 239px;
                 position: relative;
 
                 .selected {
@@ -75,7 +75,7 @@
                         content: "";
                         bottom: -1px;
                         position: absolute;
-                        left: 35px;
+                        left: 50px;
                         top: -1px;
                         width: 14px;
                         background: url(../images/menu-white-arrow.png) left center no-repeat;
@@ -87,7 +87,7 @@
                         width: 189px;
                         position: absolute;
                         z-index: 1000;
-                        left: 36px;
+                        left: 50px;
                         margin-top: 0;
                         top: 100%;
                         display: block !important;
