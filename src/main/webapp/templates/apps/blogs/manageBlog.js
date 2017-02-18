@@ -1,6 +1,6 @@
 function initManageBlog() {
     $('#addArticleModal form').forms({
-        callback: function(resp) {
+        callback: function (resp) {
             if (resp.status) {
                 flog('created  blog', resp);
                 window.location = resp.nextHref;
@@ -11,7 +11,7 @@ function initManageBlog() {
         }
     });
     $('#addTagModal form').forms({
-        callback: function(resp) {
+        callback: function (resp) {
             if (resp.status) {
                 $('#tags-container').reloadFragment();
                 $('#addTagModal').modal('hide');
@@ -23,7 +23,7 @@ function initManageBlog() {
     });
 
     $('#addCategoryModal form').forms({
-        callback: function(resp) {
+        callback: function (resp) {
             if (resp.status) {
                 $('#categories-container').reloadFragment();
                 $('#addCategoryModal').modal('hide');
@@ -33,16 +33,16 @@ function initManageBlog() {
         }
     });
 
-    $('body').on('click', 'a.delete-article', function(e) {
+    $('body').on('click', 'a.delete-article', function (e) {
         e.preventDefault();
         var link = $(e.target).closest('a');
         var href = link.attr('href');
-        confirmDelete(href, href, function() {
+        confirmDelete(href, href, function () {
             link.closest('tr').remove();
         });
     });
     
-    $('body').on('click', 'a.tag-delete', function(e) {
+    $('body').on('click', 'a.tag-delete', function (e) {
         e.preventDefault();
         var link = $(e.target).closest('a');
         var href = link.attr('href');
@@ -54,11 +54,11 @@ function initManageBlog() {
                     removeTagName: href
                 },
                 dataType: 'json',
-                success: function(resp) {
+                success: function (resp) {
                     $('#tags-container').reloadFragment();
                     Msg.info('Deleted tag');
                 },
-                error: function(resp, textStatus, errorThrown) {
+                error: function (resp, textStatus, errorThrown) {
                     alert('An error occured deleting the tag')
                 }
             });
@@ -66,7 +66,7 @@ function initManageBlog() {
         }
     });
 
-    $('body').on('click', 'a.tag-edit', function(e) {
+    $('body').on('click', 'a.tag-edit', function (e) {
         e.preventDefault();
         var link = $(e.target).closest('a');
         var href = link.attr('href');
@@ -80,18 +80,18 @@ function initManageBlog() {
                     updatedTagName: newTag
                 },
                 dataType: 'json',
-                success: function(resp) {
+                success: function (resp) {
                     $('#tags-container').reloadFragment();
                     Msg.info('Updated tag');
                 },
-                error: function(resp, textStatus, errorThrown) {
+                error: function (resp, textStatus, errorThrown) {
                     alert('An error occured updating the tag')
                 }
             });
         }
     });
 
-    $('body').on('click', 'a.cat-delete', function(e) {
+    $('body').on('click', 'a.cat-delete', function (e) {
         e.preventDefault();
         var link = $(e.target).closest('a');
         var href = link.attr('href');
@@ -103,11 +103,11 @@ function initManageBlog() {
                     removeCategoryName: href
                 },
                 dataType: 'json',
-                success: function(resp) {
+                success: function (resp) {
                     $('#categories-container').reloadFragment();
                     Msg.info('Deleted category');
                 },
-                error: function(resp, textStatus, errorThrown) {
+                error: function (resp, textStatus, errorThrown) {
                     alert('An error occured deleting the category')
                 }
             });
@@ -115,7 +115,7 @@ function initManageBlog() {
         }
     });
 
-    $('body').on('click', 'a.cat-edit', function(e) {
+    $('body').on('click', 'a.cat-edit', function (e) {
         e.preventDefault();
         var link = $(e.target).closest('a');
         var href = link.attr('href');
@@ -129,11 +129,11 @@ function initManageBlog() {
                     updatedCategoryName: newCat
                 },
                 dataType: 'json',
-                success: function(resp) {
+                success: function (resp) {
                     $('#categories-container').reloadFragment();
                     Msg.info('Updated category');
                 },
-                error: function(resp, textStatus, errorThrown) {
+                error: function (resp, textStatus, errorThrown) {
                     alert('An error occured updating the category')
                 }
             });
