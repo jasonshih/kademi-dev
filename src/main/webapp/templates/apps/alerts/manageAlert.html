@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Dashboard Messages</title>
-	    <script type="text/javascript" src="manageDashboardMessages.js">//</script>
+	    <script type="text/javascript" src="manageAlerts.js">//</script>
     </head>
     <body class="manageModulePages">
         <div class='well'>
@@ -30,7 +30,7 @@
                                 <input type="text" name="title" value="$page.title" class="form-control required" />
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="type">Group</label>
                             <div class="col-md-8">
@@ -43,7 +43,7 @@
                                 <i>Select the user group you want to see this alert</i>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="type">Type</label>
                             <div class="col-md-8">
@@ -57,7 +57,7 @@
                                 danger or warn to indicate something bad might happen, etc.</i>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="type">Position</label>
                             <div class="col-md-8">
@@ -70,7 +70,7 @@
                                 <i>Choose to make the alert prominent by displaying above dashboard content, or less prominent below other content.</i>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="control">Control</label>
                             <div class="col-md-8">
@@ -83,9 +83,9 @@
                                 <i>Make the alert enabled to is immediately visible to members of the group, or you can select 'event' so the
                                 alert is only activated for specific users on certain selected events. Or you can make the alert disable so its never displayed.</i>
                             </div>
-                        </div>                        
-                        
-                                            
+                        </div>
+
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="startDate">Start Date</label>
                             <div class="col-sm-5">
@@ -100,25 +100,25 @@
                                 <i>You may choose an optional start date. If selected the alert will not be displayed before this date</i>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="control-label col-md-3" for="tags">Allow dismiss</label>
                             <div class="col-md-8">
                                 <label>
-                                    $formatter.checkbox("allowDismiss", $page.allowDismiss ) 
+                                    $formatter.checkbox("allowDismiss", $page.allowDismiss )
                                     Allow users to dismiss the alert.
                                 </label>
                             </div>
                         </div>
-                                             
+
                         <div class="clearfix"></div>
                     </div>
 
                     <div class="tab-pane" id="bodyCopy">
-                        <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>                        
+                        <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
                     </div>
 
-                                        
+
                 </div>
             </div>
         </form>
@@ -135,6 +135,6 @@
                     }
                 });
 	        });
-        </script>            
-    </body>    
+        </script>
+    </body>
 </html>
