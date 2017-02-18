@@ -5,6 +5,13 @@ $(document).ready(function () {
 function initPointsBucketTab() {
     flog('initPointsBucketTab');
 
+    $('body').on('click', '.reason-codes a', function (e) {
+        e.preventDefault();
+        var a = $(e.target).closest("a");
+        var code = a.attr("href");
+        a.closest(".input-group").find("input").val(code);
+    });
+
     $('body').on('click', '.btn-refresh-pb', function (e) {
         e.preventDefault();
         if (confirm('Are you sure you want to refresh the points balance for this bucket?')) {
@@ -59,7 +66,11 @@ function initPointsBucketTab() {
                 }
             });
             form.addClass("initDone");
+            flog("init form", form);
+        } else {
+            flog("form init already done");
         }
+
 
 
         var rewardName = btn.data('reward');
