@@ -29,8 +29,7 @@
  */
 
 (function( $ ) {
-    $.fn.user = function(options) {
-        flog("init login plugin2", this);
+    $.fn.user = function(options) {        
         initUser();
         var config = $.extend( {
             urlSuffix: "/.dologin",
@@ -52,14 +51,17 @@
         });
   
         var container = this;
-        $("form", this).submit(function() {
+        var form = $("form", this);
+        flog("init login plugin3", form);                
+        form.submit(function() {
             flog("login", window.location);
             
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
             try {
                 var userName = $("input[name=email]", container).val();
-                var password = $("input[type=password]", container).val();
+                var passwordInputs = $("input[name=password]", container);
+                var password = passwordInputs.val();
                 if( userName == null || userName.length == 0 ) {
                     $("input[type=text]", container).addClass("errorField");
                     $(config.valiationMessageText, container).text(config.requiredFieldsMessage);
