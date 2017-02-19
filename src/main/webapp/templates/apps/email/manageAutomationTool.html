@@ -29,24 +29,20 @@
             </div>
 
             <div class="form-group">
-                <label class="control-label col-md-4" for="matchMode">Match Mode</label>
-                <div class="col-md-4">
-                    <select id="matchMode" name="matchMode" class="form-control">
-                        <option #if($request.params.matchMode == "missing")selected="true"#end value="missing">Missing</option>
-                        <option #if($request.params.matchMode == "active")selected="true"#end value="active">Active</option>
-                        <option #if($request.params.matchMode == "completed")selected="true"#end value="completed">Completed</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label class="control-label col-md-4" for="curAutomationName">Current Automation</label>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <select id="curAutomationName" name="curAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
                         $formatter.option($a.name, $a.title, $request.params.curAutomationName)
                         #end
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <select id="matchMode" name="matchMode" class="form-control">
+                        <option #if($request.params.matchMode == "missing")selected="true"#end value="missing">Missing</option>
+                        <option #if($request.params.matchMode == "active")selected="true"#end value="active">Active</option>
+                        <option #if($request.params.matchMode == "completed")selected="true"#end value="completed">Completed</option>
                     </select>
                 </div>
             </div>
@@ -64,6 +60,10 @@
                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#modal-remove-from-group">
                         <i class="fa fa-trash"></i>
                         Remove From Group
+                    </button>
+                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-create-trigger-timers">
+                        <i class="fa fa-clock-o"></i>
+                        Create Trigger Timers
                     </button>
                 </div>
             </div>
@@ -153,6 +153,43 @@
                                 <option value="">[NONE]</option>
                                 #foreach($group in $rootFolder.groups)
                                 $formatter.option($group.name, $group.name, $request.params.groupName)
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Submit</button>
+            </div>
+        </div>
+
+        <div id="modal-create-trigger-timers" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Create Trigger Timers</h4>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="$page.path" class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label" for="createTriggerTimers">Group</label>
+                        <div class="col-md-8">
+                            <select id="createTriggerTimers" name="createTriggerTimers" class="form-control">
+                                <option value="">[NONE]</option>
+                                #foreach($group in $rootFolder.groups)
+                                $formatter.option($group.name, $group.name, $request.params.groupName)
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="automation">Automation</label>
+                        <div class="col-md-4">
+                            <select id="automation" name="automation" class="form-control">
+                                <option value="">[NONE]</option>
+                                #foreach($a in $page.automations)
+                                $formatter.option($a.name, $a.title, null)
                                 #end
                             </select>
                         </div>

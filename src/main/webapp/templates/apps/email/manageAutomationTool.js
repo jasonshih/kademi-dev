@@ -92,11 +92,23 @@
         });
     }
 
+    function initCreateTriggerTimers() {
+        var modal = $('#modal-create-trigger-timers');
+        var modalForm = modal.find('form');
+
+        modalForm.forms({
+            onSuccess: function (resp) {
+                Msg.success(resp.messages);
+                modal.modal('hide');
+            }
+        });
+    }
 
     // Run init Methods
     $(function () {
         initDoSearch();
         initAddToGroup();
         initRemoveFromGroup();
+        initCreateTriggerTimers();
     });
 })(jQuery);
