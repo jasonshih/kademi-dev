@@ -32,9 +32,11 @@
 
     <table class="table table-striped">
         <colgroup>
-            <col width="250px"/>
+            <col width="200px"/>
             <col />
-            <col width="10%"/>
+            <col />
+            <col width="100px"/>
+            <col width="100px"/>
         </colgroup>
         <thead>
             <tr>
@@ -57,7 +59,7 @@
             #foreach($p in $txs)
             <tr>
                 <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
-                <td>$p.code</td>
+                <td>$!p.code</td>
                 <td>
                     $p.description
                     #if( $p.related )
@@ -237,6 +239,9 @@
                 </div>
 
                 <div class="modal-body">
+                    
+                    $applications.rewardStore.reasonCodes
+                    
                     <div class="form-group">
                         <label class="control-label col-md-3" for="numPoints">No. of points</label>
                         <div class="col-md-9">
