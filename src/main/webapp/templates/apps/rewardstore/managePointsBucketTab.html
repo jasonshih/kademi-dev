@@ -265,6 +265,9 @@
                                     <ul class="dropdown-menu dropdown-menu-right reason-codes" >
                                         <li><a href="P">Purchase (P)</a></li>
                                         <li><a href="E">Expired (E)</a></li>
+                                        #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes )
+                                        <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
+                                        #end
                                     </ul>
                                 </div><!-- /btn-group -->
 
