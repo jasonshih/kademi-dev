@@ -308,15 +308,25 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="reasonCode">
                             Reason Code
-                            <small>
-                                Defaults:
-                                <br/>
-                                Purchase=P
-                                <br/>
-                                Expired=E
-                            </small>
-                        </label>                        <div class="col-md-9">
-                            <input type="text" name="reasonCode" class="form-control" />
+                        </label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" name="reasonCode" class="form-control" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Codes
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right reason-codes" >
+                                        <li><a href="P">Purchase (P)</a></li>
+                                        <li><a href="E">Expired (E)</a></li>
+                                        #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes.entrySet() )
+                                        <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
+                                        #end
+                                    </ul>
+                                </div><!-- /btn-group -->
+
+                            </div>
                         </div>
                     </div>
                 </div>

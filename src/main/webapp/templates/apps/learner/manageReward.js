@@ -125,6 +125,13 @@ function initManagePoints() {
     });
 
     updateRefreshPBStatus();
+    
+    $('body').on('click', '.reason-codes a', function (e) {
+        e.preventDefault();
+        var a = $(e.target).closest("a");
+        var code = a.attr("href");
+        a.closest(".input-group").find("input").val(code);
+    });    
 }
 
 var refreshPbCheckTimer = null;

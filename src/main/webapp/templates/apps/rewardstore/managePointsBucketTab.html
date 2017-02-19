@@ -239,9 +239,7 @@
                 </div>
 
                 <div class="modal-body">
-                    
-                    $applications.rewardStore.reasonCodes
-                    
+                                        
                     <div class="form-group">
                         <label class="control-label col-md-3" for="numPoints">No. of points</label>
                         <div class="col-md-9">
@@ -270,7 +268,7 @@
                                     <ul class="dropdown-menu dropdown-menu-right reason-codes" >
                                         <li><a href="P">Purchase (P)</a></li>
                                         <li><a href="E">Expired (E)</a></li>
-                                        #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes )
+                                        #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes.entrySet() )
                                         <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
                                         #end
                                     </ul>
