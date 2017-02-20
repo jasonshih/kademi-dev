@@ -34,7 +34,7 @@
         dateFormat: 'DD/MM/YYYY',
         onSelect: function (text, startDate, endDate) {
         },
-        default: ($.cookie('pageDatePicker-startDate') && $.cookie('pageDatePicker-endDate')) ? $.cookie('pageDatePicker-startDate') + '-' + $.cookie('pageDatePicker-endDate') : '7-day',
+        default: '7 days',
         extraClass: '',
         position: 'right'
     };
@@ -150,7 +150,7 @@
                 var startDate = dates[0].format(options.dateFormat);
                 var endDate = dates[1].format(options.dateFormat);
 
-                rangeHtml += '<a href="#" data-start-date="' + startDate + '" data-end-date="' + endDate +'" class="pageDatePicker-range"><span>' + rangeText + '</span></a>';
+                rangeHtml += '<a href="#" data-text="' + rangeText + '" data-start-date="' + startDate + '" data-end-date="' + endDate + '" class="pageDatePicker-range"><span>' + rangeText + '</span></a>';
             }
             rangeWrapper.html(rangeHtml);
 
@@ -235,6 +235,12 @@
             previewText.text(text);
 
             // See QueryService.java
+            $.cookie('pageDatePicker-text', (trigger ? trigger.text() : '').trim(), {
+                path: '/',
+                expires: 999
+            });
+
+            // See QueryService.java
             $.cookie('pageDatePicker-startDate', startDate, {
                 path: '/',
                 expires: 999
@@ -264,7 +270,41 @@
 
             flog('[jquery.pageDatePicker] Default value: ' + options.default);
 
-            var defaultValue = options.default.split('-');
+            var cookieText = $.cookie('pageDatePicker-text');
+            var cookieStartDate = $.cookie('pageDatePicker-startDate');
+            var cookieEndDate = $.cookie('pageDatePicker-endDate');
+
+            flog('[jquery.pageDatePicker] Cookie text = "' + cookieText +'", cookie start date = "' + cookieStartDate + '", cookie end date = "' + cookieEndDate + '"');
+
+            if (cookieText) {
+                var trigger = rangeItems.filter('[data-text="' + cookieText + '"]');
+                if (trigger.length > 0) {
+                    flog('[jquery.pageDatePicker] Init value: ' + cookieText);
+                    self.selectRange(trigger.attr('data-start-date'), trigger.attr('data-end-date'), trigger.text(), trigger, true);
+                    return;
+                }
+            }
+
+            if (cookieStartDate && cookieEndDate) {
+                flog('[jquery.pageDatePicker] Init value: ' + cookieStartDate + ' - ' + cookieEndDate);
+
+                var trigger = rangeItems.filter('[data-start-date="' + cookieStartDate + '"][data-end-date="' + cookieEndDate + '"]');
+                if (trigger.length > 0) {
+                    self.selectRange(cookieStartDate, cookieEndDate, null, trigger, true);
+                } else {
+                    var picker = self.dateRange.data('daterangepicker');
+                    picker.setStartDate(moment(cookieStartDate, options.dateFormat));
+                    picker.setEndDate(moment(cookieEndDate, options.dateFormat));
+                    picker.updateFormInputs();
+                    picker.updateCalendars();
+                    self.selectRange(cookieStartDate, cookieEndDate, null, null, true);
+                }
+
+                return;
+            }
+
+            flog('[jquery.pageDatePicker] Init value: ' + options.default);
+            var defaultValue = options.default.split(' ');
             if (moment(defaultValue[0], options.dateFormat).isValid() && moment(defaultValue[1], options.dateFormat).isValid()) {
                 flog('[jquery.pageDatePicker] Default is range');
 
@@ -275,18 +315,10 @@
 
                 var now = moment();
                 var from = moment().subtract(+defaultValue[0] - 1, defaultValue[1]);
+
                 startDate = from.format(options.dateFormat);
                 endDate = now.format(options.dateFormat);
             }
-
-//            var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
-//            if (trigger.length > 0) {
-//                flog('[jquery.pageDatePicker] Trigger click');
-//                trigger.trigger('click');
-//            } else {
-                flog('[jquery.pageDatePicker] Trigger initial page load event');
-                self.selectRange(startDate, endDate, null, null, true);
-//            }
         }
     };
 
@@ -308,8 +340,8 @@
 
 function getPageDateRange() {
     return {
-        start : $.cookie('pageDatePicker-startDate'),
-        end : $.cookie('pageDatePicker-endDate')
+        start: $.cookie('pageDatePicker-startDate'),
+        end: $.cookie('pageDatePicker-endDate')
     };
 }
 
