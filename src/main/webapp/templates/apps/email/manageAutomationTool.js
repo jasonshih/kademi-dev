@@ -1,7 +1,7 @@
 (function ($) {
     function initDoSearch() {
         var searchForm = $('#searchForm');
-        var tbody = $('#tbody-results');
+        var tbody = $('#results-table');
         var paginator = $('#paginator');
 
         searchForm.on('submit', function (e) {
