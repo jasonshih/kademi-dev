@@ -180,7 +180,6 @@
     top: 95px;
     left: 0;
     right: 0;
-    z-index: 1000;
     border-top: none; }
 
   .header-default .main-navigation {
@@ -328,9 +327,6 @@
   body {
     margin: 0px !important; }
 
-  .main-navigation {
-    z-index: 1000; }
-
   /*** Main content ***/
   .main-content {
     min-height: 760px; } }
@@ -371,7 +367,6 @@
     margin-left: 50px !important; }
   .navigation-small .main-navigation {
     width: 50px !important;
-    z-index: 1000;
     overflow: visible !important; }
   .navigation-small.sidebar-fixed .wrap-menu {
     width: 35px; }
