@@ -274,7 +274,7 @@
             var cookieStartDate = $.cookie('pageDatePicker-startDate');
             var cookieEndDate = $.cookie('pageDatePicker-endDate');
 
-            flog('[jquery.pageDatePicker] Cookie text = "' + cookieText +'", cookie start date = "' + cookieStartDate + '", cookie end date = "' + cookieEndDate + '"');
+            flog('[jquery.pageDatePicker] Cookie text = "' + cookieText + '", cookie start date = "' + cookieStartDate + '", cookie end date = "' + cookieEndDate + '"');
 
             if (cookieText) {
                 var trigger = rangeItems.filter('[data-text="' + cookieText + '"]');
@@ -333,6 +333,12 @@
                     container.data('pageDatePicker', pageDatePicker);
                 }
             });
+        },
+        getPageDateRange: function () {
+            return {
+                start: $.cookie('pageDatePicker-startDate'),
+                end: $.cookie('pageDatePicker-endDate')
+            };
         }
     };
 
