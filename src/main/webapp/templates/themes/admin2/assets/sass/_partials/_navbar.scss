@@ -37,7 +37,7 @@
     &.navbar-inverse {
         background: rgba(255, 255, 255, .9);
         border-color: $panel-border-color;
-        box-shadow: 0 -1px 0 $panel-border-color inset;
+        box-shadow: 0 1px 0 $panel-border-color;
     }
 }
 
@@ -357,11 +357,15 @@ ul.notifications, ul.todo, ul.posts {
 
 li.dropdown.current-user {
     .dropdown-toggle {
-        padding: 10px 4px 7px 9px;
+        //padding: 10px 4px 7px 9px;
     }
 
-    .dropdown-menu li a {
-        //border-bottom: none !important;
+    > a {
+        > img {
+            max-width: 34px;
+            max-height: 34px;
+            vertical-align: top;
+        }
     }
 }
 

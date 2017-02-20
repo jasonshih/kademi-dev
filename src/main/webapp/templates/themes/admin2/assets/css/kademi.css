@@ -1,4 +1,17 @@
 /* ============================================================================
+   pageDatePicker
+   ============================================================================ */
+.pageDatePicker-dropdown {
+    width: 522px;
+    top: 33px;
+    right: -45px;
+    border-radius: 0 0 0 4px;
+    border: solid #dfeaf1;
+    border-width: 1px 0 1px 1px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, .06);
+}
+
+/* ============================================================================
    Modal
    ============================================================================ */
 .modal[id*="upcrop-"] {
@@ -45,13 +58,6 @@
     background: #fff url("/static/images/loading.gif") 50% 50% no-repeat;
     opacity: 0.5;
     filter: "alpha(opacity=50)";
-}
-
-/* ============================================================================
-   Dashboard
-   ============================================================================ */
-.video-intro .panel-body {
-    text-align: center
 }
 
 /* ============================================================================
@@ -337,17 +343,12 @@ label small {
 }
 
 /*******************/
-
 .morris-hover {
     position: absolute;
     background: white;
     padding: 15px;
     border-radius: 5px;
     border: solid #ccc 1px;
-}
-
-.nav > li > a > img {
-    max-width: 30px !important; /* override default which is ''none'' */
 }
 
 .recent-post .messages-list {
@@ -474,10 +475,6 @@ fieldset hr {
     height: 0;
     line-height: 0;
     visibility: hidden
-}
-
-.unstyled {
-    list-style: none
 }
 
 .youtube-wrapper {

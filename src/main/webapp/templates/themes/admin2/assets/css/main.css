@@ -652,7 +652,7 @@ a.bricky:hover {
   .navbar.navbar-inverse {
     background: rgba(255, 255, 255, 0.9);
     border-color: #dfeaf1;
-    box-shadow: 0 -1px 0 #dfeaf1 inset; }
+    box-shadow: 0 1px 0 #dfeaf1; }
 
 .logo {
   padding: 14px 10px 12px;
@@ -844,8 +844,10 @@ a.bricky:hover {
 ul.notifications li, ul.todo li, ul.posts li {
   min-width: 260px; }
 
-li.dropdown.current-user .dropdown-toggle {
-  padding: 10px 4px 7px 9px; }
+li.dropdown.current-user > a > img {
+  max-width: 34px;
+  max-height: 34px;
+  vertical-align: top; }
 
 .navbar-toggle {
   border: none;
@@ -1720,7 +1722,8 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
   top: 50px;
   bottom: 0px;
   left: 0;
-  background: #252836; }
+  background: #252836;
+  z-index: 1031; }
 
 .sidebar-fixed .wrap-menu {
   overflow: hidden;
