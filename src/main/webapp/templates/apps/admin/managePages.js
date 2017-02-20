@@ -8,6 +8,10 @@ function initManagePages() {
     initDeleteFolders();
 }
 
+function initCopyCutPaste() {
+    $('#filesContainer').cutcopy();
+}
+
 function initCRUDPages() {
     var container = $('#filesContainer');
 
@@ -205,7 +209,8 @@ function showEditModal(name, pageArticle) {
 
             var data = resp.data;
 
-            var template = data.template;
+            var template = data.template || '';
+
             if (!template.endsWith('.html')) {
                 template += '.html';
             }
@@ -231,10 +236,10 @@ function showEditModal(name, pageArticle) {
                 modal.find('.newFileName[type=text]').val(name);
             }
 
-            flog(data.metas, data.params);
-
-            for (var i = 0; i < data.metas.length; i++) {
-                addMetaTag(data.metas[i].name, data.metas[i].content);
+            if (data.metas && data.metas.length > 0) {
+                for (var i = 0; i < data.metas.length; i++) {
+                    addMetaTag(data.metas[i].name, data.metas[i].content);
+                }
             }
 
             for (var key in data) {

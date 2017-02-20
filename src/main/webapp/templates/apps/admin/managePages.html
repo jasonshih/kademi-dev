@@ -4,7 +4,7 @@
         <link href="manageFiles.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css"/>
+        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
@@ -36,19 +36,19 @@
                 </a>
 
                 #if( $currentBranch.live )
-                <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
-                   <i class="fa fa-gear"></i>
-                    LIVE
-                </a>
+                    <a href="/repositories/$page.closest("repository").name/manageBranches" class="islive btn btn-sm btn-danger">
+                        <i class="fa fa-gear"></i>
+                        LIVE
+                    </a>
                 #else
-                <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
-                    <i class="glyphicon glyphicon-ok-sign"></i>
-                    PUBLISH
-                </a>
-                <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
-                   <i class="fa fa-gear"></i>
-                    Manage versions
-                </a>
+                    <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
+                        <i class="glyphicon glyphicon-ok-sign"></i>
+                        PUBLISH
+                    </a>
+                    <a href="/repositories/$page.closest("repository").name/manageBranches" class="btn btn-sm btn-primary">
+                        <i class="fa fa-gear"></i>
+                        Manage versions
+                    </a>
                 #end
 
                 <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
@@ -58,38 +58,38 @@
                 </a>
                 <ul role="menu" class="dropdown-menu list branches">
                     #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                    <li role="presentation" class="list-item">
-                        <aside class="list-item-controller">
-                            <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
-                            #if( $b.live )
+                        <li role="presentation" class="list-item">
+                            <aside class="list-item-controller">
+                                <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                                #if( $b.live )
 
-                            #else
-                            <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
-                            #end
-                        </aside>
-                        <a href="${b.href}" class="branch noclear">
-                            $b.name
-                        </a>
-                    </li>
+                                #else
+                                    <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                                #end
+                            </aside>
+                            <a href="${b.href}" class="branch noclear">
+                                $b.name
+                            </a>
+                        </li>
                     #end
                 </ul>
             </div>
 
             #if($page.closest("repository").name)
-            <div class="dropdown pull-left">
-                <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                    <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
-                </a>
-                <ul role="menu" class="dropdown-menu list">
-                    #foreach($w in $page.closest("repository").parent.children)
-                    <li class="list-item"><a href="${w.href}">$w.name</a></li>
-                    #end
-                </ul>
-            </div>
+                <div class="dropdown pull-left">
+                    <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                        <b>Change repository</b> $page.closest("repository").name <span class="caret"></span>
+                    </a>
+                    <ul role="menu" class="dropdown-menu list">
+                        #foreach($w in $page.closest("repository").parent.children)
+                            <li class="list-item"><a href="${w.href}">$w.name</a></li>
+                        #end
+                    </ul>
+                </div>
             #end
         </div>
 
-        <hr class="clearfix"/>
+        <hr class="clearfix" />
 
         <div class="tabbable" id="filesContainer">
             <ul class="nav nav-tabs tab-bricky">
@@ -99,52 +99,53 @@
                 <!-- Start content of Pages tab -->
                 <div id="pages" class="tab-pane">
                     <div class="btn-group pull-right">
-                        <a class="btn btn-sm btn-green btn-add-page" data-toggle="modal" href="#modal-save-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
-                        <a class="btn btn-sm btn-green btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
+                        <a class="btn btn-sm btn-success btn-add-page" data-toggle="modal" href="#modal-save-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
+                        <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i> Paste</a>
+                        <a class="btn btn-sm btn-success btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
                     </div>
 
                     <div class="btn-group">
                         #if( $page.is("branch") )
                         #else
-                        <a class="btn btn-info" href="../" type="button">
-                            <i class="fa fa-folder"></i>
-                            Up to $page.parent.name
-                        </a>
+                            <a class="btn btn-info" href="../" type="button">
+                                <i class="fa fa-folder"></i>
+                                Up to $page.parent.name
+                            </a>
                         #end
 
                         <div class="btn-group">
                             <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                 #if( $page.is("branch") )
-                                <i class="fa fa-globe"></i>
-                                $page.name
+                                    <i class="fa fa-globe"></i>
+                                    $page.name
                                 #else
-                                <i class="fa fa-folder-open"></i>
-                                $page.name
+                                    <i class="fa fa-folder-open"></i>
+                                    $page.name
                                 #end
                                 <span class="caret"></span>
                             </button>
                             #if( $page.is("branch") )
-                            <ul role="menu" class="dropdown-menu" id="">
-                                #foreach($b in $page.branch.repository.branches)
-                                <li>
-                                    <a href="$page.parent.href$b.name">
-                                        <i class="fa fa-folder"></i>
-                                        $b.name
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
+                                <ul role="menu" class="dropdown-menu" id="">
+                                    #foreach($b in $page.branch.repository.branches)
+                                        <li>
+                                            <a href="$page.parent.href$b.name">
+                                                <i class="fa fa-folder"></i>
+                                                $b.name
+                                            </a>
+                                        </li>
+                                    #end
+                                </ul>
                             #elseif( !$folder.subFolders.isEmpty() )
-                            <ul role="menu" class="dropdown-menu" id="">
-                                #foreach($subFolder in $folder.subFolders)
-                                <li>
-                                    <a href="$subFolder.href">
-                                        <i class="fa fa-folder"></i>
-                                        $subFolder.name
-                                    </a>
-                                </li>
-                                #end
-                            </ul>
+                                <ul role="menu" class="dropdown-menu" id="">
+                                    #foreach($subFolder in $folder.subFolders)
+                                        <li>
+                                            <a href="$subFolder.href">
+                                                <i class="fa fa-folder"></i>
+                                                $subFolder.name
+                                            </a>
+                                        </li>
+                                    #end
+                                </ul>
                             #end
                         </div>
 
@@ -155,16 +156,16 @@
                             </button>
                             <ul role="menu" class="dropdown-menu list" id="subFoldersList">
                                 #foreach($subFolder in $page.subFolders)
-                                <li class="clearfix list-item">
-                                    <aside class="list-item-controller">
-                                        <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
-                                            <i class="fa fa-times"></i>
+                                    <li class="clearfix list-item">
+                                        <aside class="list-item-controller">
+                                            <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </aside>
+                                        <a href="$subFolder.name">
+                                            <i class="fa fa-folder"></i> $subFolder.name
                                         </a>
-                                    </aside>
-                                    <a href="$subFolder.name">
-                                        <i class="fa fa-folder"></i> $subFolder.name
-                                    </a>
-                                </li>
+                                    </li>
                                 #end
                             </ul>
                         </div>
@@ -184,35 +185,41 @@
                             #set($order = 0)
                             #set( $pages = $page.children.ofType.html )
                             #if( $pages.isEmpty() )
-                            <article class="page">
-                                <p>I dont have any web pages yet :(  Click the green plus button over there to create one --></p>
-                            </article>
+                                <article class="page">
+                                    <p>I dont have any web pages yet :( Click the green plus button over there to create one --></p>
+                                </article>
                             #else
-                            #foreach($page in $pages)
-                            <article class="page">
-                                <i class="clip-file-2"></i>
-                                <span class="article-name">$page.title</span>
-                                <aside class="article-action">
-                                    <div class="btn-group btn-group-sm">
-                                        #if ($isKEditor)
-                                        <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
-                                        #else
-                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
-                                        #end
-                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"> <span class="caret"></span></button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
-                                            <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit source</a></li>
-                                            <li><a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with Content Editor <i class="clip-new" style="color: red;"></i></a></li>
-                                            <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
-                                            <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </aside>
-                            </article>
-                            #end
+                                #foreach($page in $pages)
+                                    <article class="page">
+                                        <i class="clip-file-2"></i>
+                                        <span class="article-name">$page.title</span>
+                                        <aside class="article-action">
+                                            <div class="btn-group btn-group-sm">
+                                                #if ($isKEditor)
+                                                    <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                                #else
+                                                    <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                                #end
+                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
+                                                    <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit source</a></li>
+                                                    <li><a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with Content Editor
+                                                        <i class="clip-new" style="color: red;"></i></a></li>
+                                                    <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
+                                                    <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="$page.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
+                                                    <li><a href="$page.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                                    <li><a href="$page.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                                    <li class="requires-clipboard" data-clipboard="default"><a href="$page.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                                </ul>
+                                            </div>
+                                        </aside>
+                                    </article>
+                                #end
                             #end
                         </div>
                     </form>
@@ -248,6 +255,7 @@
                                 <div class="tab-pane active" id="properties">
                                     <div class="form-group">
                                         <label for="template" class="control-label col-md-3">File name</label>
+
                                         <div class="col-md-9">
                                             <div class="radio">
                                                 <label>
@@ -266,6 +274,7 @@
 
                                     <div class="form-group">
                                         <label for="template" class="control-label col-md-3">Page template</label>
+
                                         <div class="col-md-9">
                                             <select name="template" id="template" class="form-control required">
                                                 <option value="">None</option>
@@ -277,8 +286,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">Meta tags</label>
+
                                         <div class="col-md-9">
-                                            <p><button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button></p>
+                                            <p>
+                                                <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
+                                            </p>
                                             <div class="meta-wrapper">
 
                                             </div>
@@ -286,29 +298,35 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">Data/parameter tags</label>
+
                                         <div class="col-md-9">
-                                            <p><button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button></p>
+                                            <p>
+                                                <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
+                                            </p>
                                             <div class="param-wrapper">
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div  class="tab-pane" id="for-search">
+                                <div class="tab-pane" id="for-search">
                                     <div class="form-group">
                                         <label for="itemType" class="control-label col-md-3">Item type</label>
+
                                         <div class="col-md-9">
                                             <input type="text" name="itemType" id="itemType" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="category" class="control-label col-md-3">Category</label>
+
                                         <div class="col-md-9">
                                             <input type="text" name="category" id="category" class="form-control" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="tags" class="control-label col-md-3">Tags</label>
+
                                         <div class="col-md-9">
                                             <input type="text" name="tags" id="tags" class="form-control" />
                                         </div>
@@ -318,15 +336,17 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-                            <button class="btn btn-sm btn-success btn-img" data-type="form-submit" type="button">Save & Close <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                            <button class="btn btn-sm btn-primary btn-img btn-history-page hidden" type="button">History
+                                <img class='ajax-loader' src='/static/common/loading.gif' /></button>
+                            <button class="btn btn-sm btn-success btn-img" data-type="form-submit" type="button">Save & Close
+                                <img class='ajax-loader' src='/static/common/loading.gif' /></button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
 
-        <script type="text/javascript" >
+        <script type="text/javascript">
             var themePath = "${page.themePath}";
             $(function () {
                 initManagePages();

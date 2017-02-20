@@ -8,323 +8,328 @@
         <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
         <script type="text/javascript" src="/static/ktile/1.0.0/ktile.js">//</script>
 
-        <link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />
         <link href="dashboard.css?v=6.3.1" rel="stylesheet" type="text/css" />
         <link href="/static/ktile/1.0.0/ktile.css?v=6.3.1" rel="stylesheet" type="text/css" />
     </head>
     <body class="dashboard">
         <div id="dashboard-wrapper" class="row">
 
-
             #foreach($msg in $applications.admin.adminAlerts)
-            <div class="dashboard-alert alert alert-${msg.type}" >
-                #if( $msg.id )
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <a class="hide msg" href="$msg.id">Ack</a>
-                #end
-                $!msg.body
-            </div>
+                <div class="col-sm-12">
+                    <div class="dashboard-alert alert alert-${msg.type}">
+                        #if( $msg.id )
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            <a class="hide msg" href="$msg.id">Ack</a>
+                        #end
+                        $!msg.body
+                    </div>
+                </div>
             #end
 
 
             #if( $page.customDashBody )
-            <div class="col-md-12">
-                $page.customDashBody
-            </div>
+                <div class="col-md-12">
+                    $page.customDashBody
+                </div>
             #else
-            #defaultDash()
+                #defaultDash()
             #end
         </div>
 
         <!-- This is the default dashboard, including js and init, for when there is no custom dash -->
         #macro( defaultDash )
-        #portlets("adminDashboardPrimaryAnnounce")
+            #portlets("adminDashboardPrimaryAnnounce")
 
-        <div class="col-md-8">
-            <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
-                <div style="overflow: hidden">
-                    <div class="row">
-                        #foreach( $website in $page.organisation.websites())
-                        #if( $website.redirectTo.length() > 0 )
-                        #else
-                        <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
-                            #if( $website.imageHash )
-                            #set( $bgimage = "/_hashes/files/$website.imageHash" )
-                            #else
-                            #set( $bgimage = "/static/images/website-icon-squared.png" )
-                            #end
-                            <div class="wrap-image">
-                                <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
-
-                                </a>
-                                <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
-                                    $website.name
-                                    <small>
-                                        #if ($website.domainName && $website.domainName != "")
-                                        $website.domainName<br />
+            <div class="col-md-8">
+                <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
+                    <div style="overflow: hidden">
+                        <div class="row">
+                            #foreach( $website in $page.organisation.websites())
+                                #if( $website.redirectTo.length() > 0 )
+                                #else
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
+                                        #if( $website.imageHash )
+                                            #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                                        #else
+                                            #set( $bgimage = "/static/images/website-icon-squared.png" )
                                         #end
-                                        $!website.liveBranch / $!website.trunk.publicTheme
-                                    </small>
-                                </a>
-                                <div class="tools tools-bottom">
-                                    <a href="/websites/$website.name/$website.liveBranch/" title="Website configuration">
-                                        <span class="glyphicon glyphicon-cog"></span>
-                                    </a>
-                                    <a href="/repositories/$website.name/$website.liveBranch/" title="Manage files" >
-                                        <span class="glyphicon glyphicon-folder-close"></span>
-                                    </a>
-                                    <a href="/pages/$website.name/$website.liveBranch/" title="Edit pages" >
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
+                                        <div class="wrap-image">
+                                            <a href="/websites/$website.name/$website.liveBranch/?goto=" target="_blank" style="background-image: url($bgimage)" class="dashWebsiteImage">
 
-                                </div>
-                            </div>
+                                            </a>
+                                            <a title="$!website.title" href="/websites/$website.name/$website.liveBranch/?goto=" class="group1 lead tileText cboxElement" target="_blank">
+                                                $website.name
+                                                <small>
+                                                    #if ($website.domainName && $website.domainName != "")
+                                                        $website.domainName<br />
+                                                    #end
+                                                    $!website.liveBranch / $!website.trunk.publicTheme
+                                                </small>
+                                            </a>
+
+                                            <div class="tools tools-bottom">
+                                                <a href="/websites/$website.name/$website.liveBranch/" title="Website configuration">
+                                                    <span class="glyphicon glyphicon-cog"></span>
+                                                </a>
+                                                <a href="/repositories/$website.name/$website.liveBranch/" title="Manage files">
+                                                    <span class="glyphicon glyphicon-folder-close"></span>
+                                                </a>
+                                                <a href="/pages/$website.name/$website.liveBranch/" title="Edit pages">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                #end
+                            #end
                         </div>
-                        #end
-                        #end
                     </div>
                 </div>
-            </div>
 
-            <div class="ktile-container row row-sm">
-                <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
+                <div class="ktile-container row row-sm">
+                    <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
 
-                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                    <div class="ktile">
-                        <div class="ktile-inner">
-                            <div class="ktile-body">
-                                <div class="ktile-front ktile-single-value">
-                                    <div class="ktile-content">
-                                        <a href="/manageUsers">
-                                            <div class="ktile-single-value-icon">
-                                                <i class="fa fa-user fa-4x"></i>
-                                            </div>
-                                            <div class="ktile-single-value-text">
-                                                <div class="lead">$rootFolder.numProfiles</div>
-                                                <div class="small">profiles</div>
-                                            </div>
-                                        </a>
+                    <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                        <div class="ktile">
+                            <div class="ktile-inner">
+                                <div class="ktile-body">
+                                    <div class="ktile-front ktile-single-value">
+                                        <div class="ktile-content">
+                                            <a href="/manageUsers">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-user fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numProfiles</div>
+                                                    <div class="small">profiles</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                    <div class="ktile">
-                        <div class="ktile-inner">
-                            <div class="ktile-body">
-                                <div class="ktile-front ktile-single-value">
-                                    <div class="ktile-content">
-                                        <a href="/groups">
-                                            <div class="ktile-single-value-icon">
-                                                <i class="fa fa-users fa-4x"></i>
-                                            </div>
-                                            <div class="ktile-single-value-text">
-                                                <div class="lead">$rootFolder.numGroups</div>
-                                                <div class="small">groups</div>
-                                            </div>
-                                        </a>
+                    <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                        <div class="ktile">
+                            <div class="ktile-inner">
+                                <div class="ktile-body">
+                                    <div class="ktile-front ktile-single-value">
+                                        <div class="ktile-content">
+                                            <a href="/groups">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-users fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numGroups</div>
+                                                    <div class="small">groups</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
-                    <div class="ktile">
-                        <div class="ktile-inner">
-                            <div class="ktile-body">
-                                <div class="ktile-front ktile-single-value">
-                                    <div class="ktile-content">
-                                        <a href="/organisations">
-                                            <div class="ktile-single-value-icon">
-                                                <i class="fa fa-sitemap fa-4x"></i>
-                                            </div>
-                                            <div class="ktile-single-value-text">
-                                                <div class="lead">$rootFolder.numOrgs</div>
-                                                <div class="small">orgs</div>
-                                            </div>
-                                        </a>
+                    <div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+                        <div class="ktile">
+                            <div class="ktile-inner">
+                                <div class="ktile-body">
+                                    <div class="ktile-front ktile-single-value">
+                                        <div class="ktile-content">
+                                            <a href="/organisations">
+                                                <div class="ktile-single-value-icon">
+                                                    <i class="fa fa-sitemap fa-4x"></i>
+                                                </div>
+                                                <div class="ktile-single-value-text">
+                                                    <div class="lead">$rootFolder.numOrgs</div>
+                                                    <div class="small">orgs</div>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    #portlets("adminDashboardQuickLinks")
                 </div>
 
-                #portlets("adminDashboardQuickLinks")
-            </div>
-
-            <div class="ktile-container row row-sm">
-                <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
-                #portlets("adminDashboardPrimaryMasonry")
-            </div>
-        </div>
-
-        <div class="col-md-4" id="stream-wrapper">
-            #portlets("adminDashboardStream")
-        </div>
-
-        <div class="col-md-7">
-            #portlets("adminDashboardSecondary")
-        </div>
-        <div class="col-md-5">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-history"></i>
-                    History
-                </div>
-                <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">
-                    <ul class="list" style=""></ul>
+                <div class="ktile-container row row-sm">
+                    <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>
+                    #portlets("adminDashboardPrimaryMasonry")
                 </div>
             </div>
-        </div>
 
-        <script src="/static/nvd3/1.8.2/d3.min.js" type="text/javascript">//</script>
-        <script src="/static/nvd3/1.8.2/nv.d3.min.js" type="text/javascript"></script>
-        <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
-        <script type="text/javascript">
-            var win = $(window);
+            <div class="col-md-4" id="stream-wrapper">
+                #portlets("adminDashboardStream")
+            </div>
 
-            function initStreamWrapper() {
-                var streamWrapper = $('#stream-wrapper');
-                var stream = streamWrapper.find('.panel-scroll');
-                var target = streamWrapper.prev();
+            <div class="col-md-7">
+                #portlets("adminDashboardSecondary")
+            </div>
+            <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-history"></i>
+                        History
+                    </div>
+                    <div class="panel-body panel-scroll ps-container ps-active-y" id="recentList" style="height: 400px">
+                        <ul class="list" style=""></ul>
+                    </div>
+                </div>
+            </div>
 
-                win.on('resize', function () {
-                    stream.css('height', '');
+            <script src="/static/nvd3/1.8.2/d3.min.js" type="text/javascript">//</script>
+            <script src="/static/nvd3/1.8.2/nv.d3.min.js" type="text/javascript"></script>
+            <script src="/static/sparkleline/2.1.2/jquery.sparkline.min.js">//</script>
+            <script type="text/javascript">
+                var win = $(window);
 
-                    if (win.width() > 768) {
-                        setTimeout(function () {
-                            var targetHeight = target.height();
-                            stream.css('height', targetHeight - 78);
-                        }, 450);
-                    }
-                }).trigger('resize');
-            }
+                function initStreamWrapper() {
+                    var streamWrapper = $('#stream-wrapper');
+                    var stream = streamWrapper.find('.panel-scroll');
+                    var target = streamWrapper.prev();
 
-            function initMasonryLayout() {
-                var container = $('.ktile-container');
+                    win.on('resize', function () {
+                        stream.css('height', '');
 
-                // Bind event listener
-                container.on('layoutComplete', function () {
-                    var wrappers = container.find(".ktile-wrapper");
-
-                    flog("onlayout", wrappers);
-
-                    wrappers.animate({
-                        opacity: 1,
-                    }, 1000, function () {
-                        flog("complete");
-                    });
-                });
-
-                container.masonry({
-                    columnWidth: ".ktile-sizer",
-                    percentPosition: true
-                });
-            }
-
-            $(function () {
-                initMasonryLayout();
-                initStreamWrapper();
-
-                var recent = getRecentItems();
-                if (recent !== null) {
-                    flog("recent", recent);
-                    var list = $("#recentList ul");
-                    var seen = new Array();
-                    for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
-                        var item = recent[i];
-                        var pos = $.inArray(item.url, seen);
-                        if (pos < 0) {
-                            seen.push(item.url);
-                            var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
-                            list.append(li)
-                            li.find("a").attr("href", item.url);
-                            li.find("a").text(item.title);
+                        if (win.width() > 768) {
+                            setTimeout(function () {
+                                var targetHeight = target.height();
+                                stream.css('height', targetHeight - 78);
+                            }, 450);
                         }
-                    }
-                } else {
-                    flog("no recent list");
+                    }).trigger('resize');
                 }
-            });
 
-            function sparklineBar(div, values, width, height, barWidth, barColor, barSpacing) {
-                div.sparkline(values, {
-                    type: 'bar',
-                    height: height,
-                    width: width,
-                    barColor: barColor,
-                    barSpacing: barSpacing
-                })
-            }
+                function initMasonryLayout() {
+                    var container = $('.ktile-container');
 
-            function sparklineLine(div, values, width, height, lineColor, fillColor, lineWidth, maxSpotColor, minSpotColor, spotColor, spotRadius, hSpotColor, hLineColor) {
-                div.sparkline(values, {
-                    type: 'line',
-                    width: width,
-                    height: height,
-                    lineColor: lineColor,
-                    fillColor: fillColor,
-                    lineWidth: lineWidth,
-                    maxSpotColor: maxSpotColor,
-                    minSpotColor: minSpotColor,
-                    spotColor: spotColor,
-                    spotRadius: spotRadius,
-                    highlightSpotColor: hSpotColor,
-                    highlightLineColor: hLineColor
-                });
-            }
+                    // Bind event listener
+                    container.on('layoutComplete', function () {
+                        var wrappers = container.find(".ktile-wrapper");
 
-            function sparklinePie(div, values, width, height, sliceColors) {
-                div.sparkline(values, {
-                    type: 'pie',
-                    width: width,
-                    height: height,
-                    sliceColors: sliceColors,
-                    offset: 0,
-                    borderWidth: 0
-                });
-            }
+                        flog("onlayout", wrappers);
 
-            function formatNumeric(a) {
-                a = a + "";
-                a = a.replace(new RegExp("^(\\d{" + (a.length % 3 ? a.length % 3 : 0) + "})(\\d{3})", "g"), "$1 $2").replace(/(\d{3})+?/gi, "$1 ").trim();
-                return a;
-            }
+                        wrappers.animate({
+                            opacity: 1,
+                        }, 1000, function () {
+                            flog("complete");
+                        });
+                    });
 
-            $(function () {
-                $('.dashboard-alert').bind('closed.bs.alert', function (e) {
-                    href = $(this).closest("div").find("a.msg").attr("href");
-                    if (href) {
-                        ackAlert(href);
-                    }
-                })
+                    container.masonry({
+                        columnWidth: ".ktile-sizer",
+                        percentPosition: true
+                    });
+                }
 
-            });
+                $(function () {
+                    initMasonryLayout();
+                    initStreamWrapper();
 
-            function ackAlert(href) {
-                $.ajax({
-                    type: 'POST',
-                    url: "/alert-ack",
-                    dataType: "json",
-                    data: {
-                        ackId: href
-                    },
-                    success: function (data) {
-                        flog("acked", data);
-                    },
-                    error: function (resp, textStatus, errorThrown) {
-                        flog("error", resp, textStatus, errorThrown)
-                        alert("Error acknowldeding the alert");
+                    var recent = getRecentItems();
+                    if (recent !== null) {
+                        flog("recent", recent);
+                        var list = $("#recentList ul");
+                        var seen = new Array();
+                        for (var i = recent.length - 1; i > (recent.length - 10) && i > 0; i--) {
+                            var item = recent[i];
+                            var pos = $.inArray(item.url, seen);
+                            if (pos < 0) {
+                                seen.push(item.url);
+                                var li = $("<li class=''><a href='" + item.url + "'>xx</a></li>");
+                                list.append(li)
+                                li.find("a").attr("href", item.url);
+                                li.find("a").text(item.title);
+                            }
+                        }
+                    } else {
+                        flog("no recent list");
                     }
                 });
-            }
-        </script>
+
+                function sparklineBar(div, values, width, height, barWidth, barColor, barSpacing) {
+                    div.sparkline(values, {
+                        type: 'bar',
+                        height: height,
+                        width: width,
+                        barColor: barColor,
+                        barSpacing: barSpacing
+                    })
+                }
+
+                function sparklineLine(div, values, width, height, lineColor, fillColor, lineWidth, maxSpotColor, minSpotColor, spotColor, spotRadius, hSpotColor, hLineColor) {
+                    div.sparkline(values, {
+                        type: 'line',
+                        width: width,
+                        height: height,
+                        lineColor: lineColor,
+                        fillColor: fillColor,
+                        lineWidth: lineWidth,
+                        maxSpotColor: maxSpotColor,
+                        minSpotColor: minSpotColor,
+                        spotColor: spotColor,
+                        spotRadius: spotRadius,
+                        highlightSpotColor: hSpotColor,
+                        highlightLineColor: hLineColor
+                    });
+                }
+
+                function sparklinePie(div, values, width, height, sliceColors) {
+                    div.sparkline(values, {
+                        type: 'pie',
+                        width: width,
+                        height: height,
+                        sliceColors: sliceColors,
+                        offset: 0,
+                        borderWidth: 0
+                    });
+                }
+
+                function formatNumeric(a) {
+                    a = a + "";
+                    a = a.replace(new RegExp("^(\\d{" + (a.length % 3 ? a.length % 3 : 0) + "})(\\d{3})", "g"), "$1 $2").replace(/(\d{3})+?/gi, "$1 ").trim();
+                    return a;
+                }
+
+                $(function () {
+                    $('.dashboard-alert').on('closed.bs.alert', function (e) {
+                        flog('aaaaaaaaaaaaa', $(this));
+                        $(this).closest('.col-sm-12').remove();
+
+                        href = $(this).closest("div").find("a.msg").attr("href");
+                        if (href) {
+                            ackAlert(href);
+                        }
+                    })
+
+                });
+
+                function ackAlert(href) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/alert-ack",
+                        dataType: "json",
+                        data: {
+                            ackId: href
+                        },
+                        success: function (data) {
+                            flog("acked", data);
+                        },
+                        error: function (resp, textStatus, errorThrown) {
+                            flog("error", resp, textStatus, errorThrown)
+                            alert("Error acknowldeding the alert");
+                        }
+                    });
+                }
+            </script>
         #end <!-- end default dash -->
     </body>
 </html>
