@@ -97,27 +97,27 @@ function createModal(id, href, title, formHtml) {
     }
 
     var modalString = '<div class="modal" tabindex="-1" role="dialog">' +
-            '  <div class="modal-dialog" role="document">' +
-            '    <div class="modal-content">' +
-            '      <div class="modal-header">' +
-            '        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '        <h4 class="modal-title">' + title + '</h4>' +
-            '      </div>' +
-            '      <div class="modal-body">' +
-            '       <form method="post" action="/checkout"  style="min-height: 50px">' +
-            '         <input type="hidden" name="addItemHref" value="" />' +
-            '         <input type="hidden" name="addItemQuantity" value="1" />' +
-            '         <div class="order-form-body">' +
-            '         </div>' +
-            '       </form>' +
-            '      </div>' +
-            '      <div class="modal-footer">' +
-            '        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-            '        <button type="button" class="btn btn-primary btn-submit">OK</button>' +
-            '      </div>' +
-            '    </div><!-- /.modal-content -->' +
-            '  </div><!-- /.modal-dialog -->' +
-            '</div>';
+        '    <div class="modal-dialog" role="document">' +
+        '        <div class="modal-content">' +
+        '            <div class="modal-header">' +
+        '                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+        '                <h4 class="modal-title">' + title + '</h4>' +
+        '            </div>' +
+        '            <div class="modal-body">' +
+        '             <form method="post" action="/checkout" style="min-height: 50px">' +
+        '                 <input type="hidden" name="addItemHref" value="" />' +
+        '                 <input type="hidden" name="addItemQuantity" value="1" />' +
+        '                 <div class="order-form-body">' +
+        '                 </div>' +
+        '             </form>' +
+        '            </div>' +
+        '            <div class="modal-footer">' +
+        '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+        '                <button type="button" class="btn btn-primary btn-submit">OK</button>' +
+        '            </div>' +
+        '        </div><!-- /.modal-content -->' +
+        '    </div><!-- /.modal-dialog -->' +
+        '</div>';
     
     
     var myPromptModal = $(modalString);
@@ -128,15 +128,15 @@ function createModal(id, href, title, formHtml) {
 
     var form = myPromptModal.find('form');
     form.forms({
-        onSuccess : function() {
+        onSuccess: function () {
             flog("success, close modal");
             Msg.info('Added item to shopping cart');
-            $('#cart-link').reloadFragment();            
+            $('#cart-link').reloadFragment();
             myPromptModal.modal("hide");
         }
     });
 
-    myPromptModal.find(".btn-submit").click(function() {
+    myPromptModal.find(".btn-submit").click(function () {
         flog("clicked");
         form.submit();
     });

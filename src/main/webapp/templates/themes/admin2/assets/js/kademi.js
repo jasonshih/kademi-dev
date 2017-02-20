@@ -336,6 +336,10 @@ function validateFuseEmail(emailAddress) {
 function initFuseModals() {
     flog("initFuseModal");
 
+    $(document.body).on('click', '[data-toggle=modal]', function (e) {
+        e.preventDefault();
+    });
+
     $(document.body).on('click', '[data-type=form-submit]', function (e) {
         e.preventDefault();
         flog("click submit");

@@ -65,17 +65,21 @@ JBNodes['decision'] = {
         );
 
         var modal = $(
-            '<div class="modal modal-lg fade in" id="modal-query-builder">' +
-            '   <div class="modal-header">' +
-            '       <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '       <h4 class="modal-title">Decide your choice</h4>' +
-            '   </div>' +
-            '   <div class="modal-body">' +
-            '       <div id="query-builder"></div>' +
-            '   </div>' +
-            '   <div class="modal-footer">' +
-            '       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-            '       <button type="button" class="btn btn-primary btn-save-choice">Save your choice</button>' +
+            '<div class="modal fade in" id="modal-query-builder">' +
+            '   <div class="modal-dialog modal-lg">' +
+            '       <div class="modal-content">' +
+            '           <div class="modal-header">' +
+            '               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '               <h4 class="modal-title">Decide your choice</h4>' +
+            '           </div>' +
+            '           <div class="modal-body">' +
+            '               <div id="query-builder"></div>' +
+            '           </div>' +
+            '           <div class="modal-footer">' +
+            '               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+            '               <button type="button" class="btn btn-primary btn-save-choice">Save your choice</button>' +
+            '           </div>' +
+            '       </div>' +
             '   </div>' +
             '</div>'
         );

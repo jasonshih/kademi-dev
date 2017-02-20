@@ -146,10 +146,10 @@ function setGroupRecipient(name, groupType, isRecip) {
                             groupIcon = "fa fa-envelope";
                         }
                         var newBtn = '<span id="group_' + name + '" class="group-list ' + groupClass + '">'
-                                + '<i class="' + groupIcon + '"></i>'
-                                + '<span class="block-name" title="' + name + '">' + name + '</span>'
-                                + '<a href="' + name + '" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group ' + name + '"><i href="' + name + '" class="fa fa-times"></i></a>'
-                                + '</span>';
+                            + '<i class="' + groupIcon + '"></i>'
+                            + '<span class="block-name" title="' + name + '">' + name + '</span>'
+                            + '<a href="' + name + '" class="btn btn-xs btn-danger btn-delete-group" title="Delete access for group ' + name + '"><i href="' + name + '" class="fa fa-times"></i></a>'
+                            + '</span>';
                         //$(".GroupList").append('<button class="btn btn-sm btn-default reset-margin-bottom" type="button" style="margin-right: 5px;">' + name + '</button>');
                         $(".GroupList").append(newBtn);
                         flog("appended to", $(".GroupList"));
@@ -250,37 +250,36 @@ function initManageAuctionImage() {
         ratio: 0,
         isEmbedded: true,
         embeddedTemplate:
-                '<div class="upcrop-embedded" id="{{upcropId}}">' +
-                '<div class="modal-header">' +
-                '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '<h4 class="modal-title">Upload and crop image</h4>' +
-                '</div>' +
-                '<div class="modal-body">' +
-                '<div class="form-horizontal">' +
-                '<div class="form-group orientation hide">' +
-                '<label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
-                '<div class="col-sm-9">' +
-                '<select class="form-control">' +
-                '<option value="">Default</option>' +
-                '<option value="square">Square</option>' +
-                '<option value="vertical">Vertical</option>' +
-                '<option value="horizontal">Horizontal</option>' +
-                '</select>' +
-                '</div>' +
-                '</div>' +
-                '</div>' +
-                '{{upcropZone}}' +
-                '</div>' +
-                '<div class="modal-footer">' +
-                '<div class="pull-left">' +
-                '{{buttonUploadOther}}' +
-                '</div>' +
-                '<button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
-                '{{buttonCrop}} ' +
-                '{{buttonContinue}}' +
-                '</div>' +
-                '</div>'
-        ,
+            '<div class="upcrop-embedded" id="{{upcropId}}">' +
+            '   <div class="modal-header">' +
+            '       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+            '       <h4 class="modal-title">Upload and crop image</h4>' +
+            '   </div>' +
+            '   <div class="modal-body">' +
+            '       <div class="form-horizontal">' +
+            '           <div class="form-group orientation hide">' +
+            '               <label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
+            '               <div class="col-sm-9">' +
+            '                   <select class="form-control">' +
+            '                       <option value="">Default</option>' +
+            '                       <option value="square">Square</option>' +
+            '                       <option value="vertical">Vertical</option>' +
+            '                       <option value="horizontal">Horizontal</option>' +
+            '                   </select>' +
+            '               </div>' +
+            '           </div>' +
+            '       </div>' +
+            '       {{upcropZone}}' +
+            '   </div>' +
+            '   <div class="modal-footer">' +
+            '       <div class="pull-left">' +
+            '           {{buttonUploadOther}}' +
+            '       </div>' +
+            '       <button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
+            '       {{buttonCrop}} ' +
+            '       {{buttonContinue}}' +
+            '   </div>' +
+            '</div>',
         onUploadComplete: function (data, name, href) {
             flog("manageAuction.js: onUploadComplete");
             upcropZone.find('.orientation').removeClass('hide');

@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" bottom="true" src="manageBlogArticle.js">//</script>
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
-        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
         <link rel="stylesheet" href="/static/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css" />
         <script src="/static/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js">//</script>
@@ -27,7 +27,7 @@
     <body>
         #set ($isKEditor = false)
         #if ($page.theme.editorName == "keditor")
-        #set ($isKEditor = true)
+            #set ($isKEditor = true)
         #end
 
         <form id="article-form" action="" method="POST" class="form-horizontal article-form" role="form">
@@ -35,8 +35,8 @@
                 <div class="clearfix">
                     <div class="pull-right">
                         #if( $page.canAuthor )
-                        <button class="btn btn-sm btn-success article-submit" type="button">Submit for approval</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
+                            <button class="btn btn-sm btn-success article-submit" type="button">Submit for approval</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
                         #end
 
                         <div class="btn-group">
@@ -49,7 +49,7 @@
                                 <li><a>Select a version:</a></li>
                                 <li class="divider"></li>
                                 #foreach($version in $page.parent.branches)
-                                <li><a target="_blank" href="$page.href?goto=$!version">$!version</a></li>
+                                    <li><a target="_blank" href="$page.href?goto=$!version">$!version</a></li>
                                 #end
                             </ul>
                         </div>
@@ -73,92 +73,96 @@
                         </div>
 
                         #if( $page.publishedDate or $page.submittedDate )
-                        <div class="panel panel-info col-md-8 pull-right">
-                            <div class="panel-body">
-                                #if( $page.publishedDate )
-                                <p class="lead text-right">
-                                    Published by $!page.publishedBy.name for release
-                                    <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
-                                </p>
-                                <p class="text-right">
-                                    Submitted by $!page.submittedBy.name
-                                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                </p>
-                                #if( $page.canPublish )
-                                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
-                                #end
-                                #else
-                                <p class="lead text-right">
-                                    Submitted by $!page.submittedBy.name
-                                    <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                </p>
-                                #if( $page.canPublish )
-                                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+                            <div class="panel panel-info col-md-8 pull-right">
+                                <div class="panel-body">
+                                    #if( $page.publishedDate )
+                                        <p class="lead text-right">
+                                            Published by $!page.publishedBy.name for release
+                                            <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
+                                        </p>
 
-                                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
-                                #end
-                                #end
+                                        <p class="text-right">
+                                            Submitted by $!page.submittedBy.name
+                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                        </p>
+                                        #if( $page.canPublish )
+                                            <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
+                                        #end
+                                    #else
+                                        <p class="lead text-right">
+                                            Submitted by $!page.submittedBy.name
+                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                        </p>
+                                        #if( $page.canPublish )
+                                            <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+
+                                            <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                        #end
+                                    #end
+                                </div>
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
+                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.rejectedAt )
-                        <div class="panel panel-info col-md-8 pull-right">
-                            <div class="panel-body">
-                                <p class="lead text-right">
-                                    Rejected by $!page.rejectedBy.name
-                                    <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
-                                </p>
+                            <div class="panel panel-info col-md-8 pull-right">
+                                <div class="panel-body">
+                                    <p class="lead text-right">
+                                        Rejected by $!page.rejectedBy.name
+                                        <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
+                                    </p>
 
-                                <p class="text-right">$!page.rejectedReason</p>
+                                    <p class="text-right">$!page.rejectedReason</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="clearfix"></div>
+                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.publishedDate )
-                        <div class="form-group">
-                            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
-                                <div id="chart_histogram">
-                                    <svg></svg>
-                                </div>
-                            </div>
-
-                            <div class="col-md-4">
-                                <div class="row p-b-20">
-                                    <div class="col-md-12">
-                                        <div class="input-group date-range">
-                                            <label for="analytics-range" class="input-group-addon">Date</label>
-                                            <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
-                                        </div>
+                            <div class="form-group">
+                                <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
+                                    <div id="chart_histogram">
+                                        <svg></svg>
                                     </div>
                                 </div>
 
+                                <div class="col-md-4">
+                                    <div class="row p-b-20">
+                                        <div class="col-md-12">
+                                            <div class="input-group date-range">
+                                                <label for="analytics-range" class="input-group-addon">Date</label>
+                                                <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
-                        </div>
-                        <hr/>
+                            <hr />
                         #end
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
+
                             <div class="col-md-8">
                                 <input type="text" id="title" name="title" value="$!page.title" placeholder="" class="required form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="themeSiteId">Category</label>
+
                             <div class="col-md-8">
                                 <select name="category" id="category" class="form-control">
                                     <option value="">[None]</option>
                                     #foreach($cat in $page.parent.categories)
-                                    $formatter.option($cat, $cat, $page.category)
+                                        $formatter.option($cat, $cat, $page.category)
                                     #end
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="tags">Featured</label>
+
                             <div class="col-md-8">
                                 <label>
                                     $formatter.checkbox("featured", $page.featured )
@@ -168,17 +172,19 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="tags">Tags</label>
+
                             <div class="col-md-8">
                                 #foreach($tag in $page.tags)
-                                <label>
-                                    $formatter.checkbox("tags", "tags", $page.isSelectedTag($tag), $tag)
+                                    <label>
+                                        $formatter.checkbox("tags", "tags", $page.isSelectedTag($tag), $tag)
                                     $tag
-                                </label>
+                                    </label>
                                 #end
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="articleDate">Article Date</label>
+
                             <div class="col-sm-5">
                                 <div class='input-group'>
                                     <input type="text" id="articleDate" name="articleDateDate" placeholder="Start date" value="$!page.articleDate" class="form-control datetimepicker" />
@@ -193,26 +199,28 @@
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="notes">Brief</label>
+
                             <div class="col-md-8">
                                 #if( $page.publishedDate or $page.submittedDate )
-                                <div class='well'>
-                                    $!page.brief
-                                </div>
+                                    <div class='well'>
+                                        $!page.brief
+                                    </div>
                                 #else
-                                <textarea cols="100" id="brief" name="brief" rows="10" placeholder="" class="htmleditor toolbar-Lite">$!page.brief</textarea>
+                                    <textarea cols="100" id="brief" name="brief" rows="10" placeholder="" class="htmleditor toolbar-Lite">$!page.brief</textarea>
                                 #end
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="notes">External URL</label>
+
                             <div class="col-md-8">
                                 #if( $page.publishedDate or $page.submittedDate )
-                                <div class='well'>
-                                    $!page.externalUrl
-                                </div>
+                                    <div class='well'>
+                                        $!page.externalUrl
+                                    </div>
                                 #else
-                                <input type="text" id="externalUrl" name="externalUrl" class="form-control" value="$!page.externalUrl" />
-                                <i>If this article is a stub relating to an external page, provide the URL here</i>
+                                    <input type="text" id="externalUrl" name="externalUrl" class="form-control" value="$!page.externalUrl" />
+                                    <i>If this article is a stub relating to an external page, provide the URL here</i>
                                 #end
                             </div>
                         </div>
@@ -221,17 +229,17 @@
 
                     <div class="tab-pane" id="bodyCopy">
                         #if( $page.publishedDate or $page.submittedDate )
-                        <div class='well'>
-                            $!page.body
-                        </div>
+                            <div class='well'>
+                                $!page.body
+                            </div>
                         #else
-                        #if ($isKEditor)
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                        </div>
-                        #else
-                        <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
-                        #end
+                            #if ($isKEditor)
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
+                                </div>
+                            #else
+                                <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                            #end
                         #end
                     </div>
 
@@ -240,33 +248,34 @@
                         <div class="well margin-top-10" style="margin-top: 10px">Add user groups to limit visibility to the selected groups only. If no groups are selected then everyone has visibility</div>
                         <div class="GroupList" id="groupMemberships">
                             #if ($page.groups.size() > 0)
-                            <h5>Selected groups</h5>
-                            <div>
-                                #foreach($m in $page.groups)
-                                #if(!$m.groupType || $m.groupType == "P")
-                                <div class="fluidLabel label label-success" style="margin-right: 5px">
-                                    <i class="clip-users"></i>
-                                    <span class="block-name">
-                                        <a target="_blank" href="/groups/$m.name">$m.name</a> in $m.organisation.title
-                                    </span>
-                                </div>
-                                #elseif( $m.groupType == "S" )
-                                <div class="fluidLabel label label-info" style="margin-right: 5px">
-                                    <i class="fa fa-trophy"></i>
-                                    <span class="block-name" title="$m.name in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
-                                </div>
+                                <h5>Selected groups</h5>
 
-                                #elseif( $m.groupType == "M" )
-                                <div class="fluidLabel label label-info" style="margin-right: 5px">
-                                    <i class="fa fa-envelope"></i>
-                                    <span class="block-name" title="$m.name in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
+                                <div>
+                                    #foreach($m in $page.groups)
+                                        #if(!$m.groupType || $m.groupType == "P")
+                                            <div class="fluidLabel label label-success" style="margin-right: 5px">
+                                                <i class="clip-users"></i>
+                                                <span class="block-name">
+                                                    <a target="_blank" href="/groups/$m.name">$m.name</a> in $m.organisation.title
+                                                </span>
+                                            </div>
+                                        #elseif( $m.groupType == "S" )
+                                            <div class="fluidLabel label label-info" style="margin-right: 5px">
+                                                <i class="fa fa-trophy"></i>
+                                                <span class="block-name" title="$m.name in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
+                                            </div>
+
+                                        #elseif( $m.groupType == "M" )
+                                            <div class="fluidLabel label label-info" style="margin-right: 5px">
+                                                <i class="fa fa-envelope"></i>
+                                                <span class="block-name" title="$m.name in $m.organisation.title"><a target="_blank" href="/groups/$m.name">$m.name</a></span>
+                                            </div>
+                                        #end
+                                    #end
+                                    <div style="clear: both"></div>
                                 </div>
-                                #end
-                                #end
-                                <div style="clear: both"></div>
-                            </div>
                             #else
-                            <div class="alert alert-info">This article is visible to everyone</div>
+                                <div class="alert alert-info">This article is visible to everyone</div>
                             #end
                         </div>
                     </div>
@@ -276,33 +285,35 @@
                             <i class="fa fa-plus"></i> Add image
                         </button>
 
-                        <hr/>
+                        <hr />
 
                         <div class="table-responsive" id="images-container">
                             <div class="row">
                                 #foreach($i in $page.images)
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        <img src="$i.href/alt-150-150.png" class="img-responsive" />
-                                        <div class="caption">
-                                            <a href="$i.href" target="_blank"><h4>$!i.name</h4></a>
+                                    <div class="col-md-3">
+                                        <div class="thumbnail">
+                                            <img src="$i.href/alt-150-150.png" class="img-responsive" />
 
-                                            <a class="pull-right btn btn-sm btn-danger image-delete" href="$i.href">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                            </a>
+                                            <div class="caption">
+                                                <a href="$i.href" target="_blank"><h4>$!i.name</h4></a>
 
-                                            <span class="label label-default">
-                                                #if( $i.orientation )
-                                                $i.orientation
-                                                #else
-                                                Default
-                                                #end
-                                            </span>
-                                            <div class="clearfix"></div>
+                                                <a class="pull-right btn btn-sm btn-danger image-delete" href="$i.href">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
+
+                                                <span class="label label-default">
+                                                    #if( $i.orientation )
+                                                        $i.orientation
+                                                    #else
+                                                        Default
+                                                    #end
+                                                </span>
+
+                                                <div class="clearfix"></div>
+                                            </div>
+
                                         </div>
-
                                     </div>
-                                </div>
                                 #end
                             </div>
                         </div>
@@ -312,30 +323,30 @@
                             <i class="fa fa-plus"></i> Add file
                         </button>
 
-                        <hr/>
+                        <hr />
 
                         <div class="table-responsive" id="files-container">
                             <div class="row">
                                 #foreach($i in $page.blogFiles)
-                                <div class="col-md-3">
-                                    <div class="thumbnail">
-                                        <div class="caption">
-                                            <a href="$i.name" target="_blank"><h4>$!i.name</h4></a>
+                                    <div class="col-md-3">
+                                        <div class="thumbnail">
+                                            <div class="caption">
+                                                <a href="$i.name" target="_blank"><h4>$!i.name</h4></a>
 
-                                            <a class="pull-right btn btn-sm btn-danger file-delete" href="$i.name">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                            </a>
+                                                <a class="pull-right btn btn-sm btn-danger file-delete" href="$i.name">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
 
-                                            #if( $i.tag )
-                                            <span class="label label-default">
-                                                $i.tag
-                                            </span>
-                                            #end
-                                            <div class="clearfix"></div>
+                                                #if( $i.tag )
+                                                    <span class="label label-default">
+                                                        $i.tag
+                                                    </span>
+                                                #end
+                                                <div class="clearfix"></div>
+                                            </div>
+
                                         </div>
-
                                     </div>
-                                </div>
                                 #end
                             </div>
                         </div>
@@ -344,159 +355,188 @@
             </div>
         </form>
 
-        <div id="modal-add-image" class="modal modal-md fade">
-            <div class="upcrop-zone"></div>
-            <div class="edit-image-zone hide">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add new image</h4>
-                </div>
-                <div class="modal-body">
-                    <form action="$page.href" method="POST" class="form-horizontal">
-                        <input type="hidden" name="hash" />
-                        <div class="form-group">
-                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+        <div id="modal-add-image" class="modal fade">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="upcrop-zone"></div>
+                    <div class="edit-image-zone hide">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Add new image</h4>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">Preview</label>
-                            <div class="col-sm-9">
-                                <p><img src="" class="img-responsive preview" /></p>
-                                <button class="btn btn-sm btn-success btn-add-other-img" type="button">Upload other image</button>
-                            </div>
+                        <div class="modal-body">
+                            <form action="$page.href" method="POST" class="form-horizontal">
+                                <input type="hidden" name="hash" />
+
+                                <div class="form-group">
+                                    <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTagName">Preview</label>
+
+                                    <div class="col-sm-9">
+                                        <p><img src="" class="img-responsive preview" /></p>
+                                        <button class="btn btn-sm btn-success btn-add-other-img" type="button">Upload other image</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTagName">File name</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" name="fileName" class="form-control required" required="true" />
+                                    </div>
+                                </div>
+                                <input type="hidden" name="orientation" value="" />
+                            </form>
                         </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">File name</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="fileName" class="form-control required" required="true" />
-                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
                         </div>
-                        <input type="hidden" name="orientation" value="" />
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="modal-add-file" class="modal modal-md fade">
-            <div class="">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add new file</h4>
-                </div>
-                <div class="modal-body">
-                    <form action="$page.href" method="POST" class="form-horizontal" enctype="multipart/form-data">
+        <div id="modal-add-file" class="modal fade">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add new file</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="$page.href" method="POST" class="form-horizontal" enctype="multipart/form-data">
 
-                        <div class="form-group">
-                            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="file">File</label>
-                            <div class="col-sm-9">
-                                <input type="file" name="file" class="required" required="true" />
+                            <div class="form-group">
+                                <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="file">File</label>
 
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">File name</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="fileName" class="form-control"  />
+                                <div class="col-sm-9">
+                                    <input type="file" name="file" class="required" required="true" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label" for="newTagName">Tags/labels</label>
-                            <div class="col-sm-9">
-                                <input type="text" name="tag" class="form-control" />
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="newTagName">File name</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" name="fileName" class="form-control" />
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save file</button>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="newTagName">Tags/labels</label>
+
+                                <div class="col-sm-9">
+                                    <input type="text" name="tag" class="form-control" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save file</button>
+                    </div>
                 </div>
             </div>
+        </div>
         </div>
 
         <div id="publishModal" class="modal fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Publish</h4>
-            </div>
-            <div class="modal-body">
-                <form action="$page.href" method="POST" class="form-horizontal">
-                    <input type="hidden" name="publish" />
-                    <div class="form-group">
-                        <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Publish</h4>
                     </div>
-                    #if($page.availableServices)
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
-                        #foreach($sm in $page.availableServices)
-                        <div class="checkbox">
-                            <label>
-                                <input name="publishTo_$sm" value="true" type="checkbox"/> $sm
-                            </label>
-                        </div>
-                        #end
-                    </div>
-                    #end
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
-                        <div class="col-sm-8">
-                            <div class="input-group">
-                                <input type="text" class="form-control datetimepicker" placeholder="Embargo date" value="" name="embargoDate"/>
-                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                    <div class="modal-body">
+                        <form action="$page.href" method="POST" class="form-horizontal">
+                            <input type="hidden" name="publish" />
+
+                            <div class="form-group">
+                                <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                             </div>
-                            <br/>
-                            <i>Enter a date for the article to become available, or leave blank to publish immediately</i>
-                        </div>
+                            #if($page.availableServices)
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
+                                    #foreach($sm in $page.availableServices)
+                                        <div class="checkbox">
+                                            <label>
+                                                <input name="publishTo_$sm" value="true" type="checkbox" /> $sm
+                                            </label>
+                                        </div>
+                                    #end
+                                </div>
+                            #end
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
+
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control datetimepicker" placeholder="Embargo date" value="" name="embargoDate" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                    <br />
+                                    <i>Enter a date for the article to become available, or leave blank to publish immediately</i>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-success btn-sm" data-type="form-submit">Publish</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success btn-sm" data-type="form-submit">Publish</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="rejectModal" class="modal fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Reject</h4>
-            </div>
-            <div class="modal-body">
-                <form action="$page.href" method="POST" class="form-horizontal">
-                    <input type="hidden" name="reject" />
-                    <p>Please give a reason for rejecting or un-publishing</p>
-                    <div class="input-group col-md-12">
-                        <textarea name="reason" class="form-control col-md-12"></textarea>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Reject</h4>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger btn-sm" data-type="form-submit">Reject</button>
+                    <div class="modal-body">
+                        <form action="$page.href" method="POST" class="form-horizontal">
+                            <input type="hidden" name="reject" />
+
+                            <p>Please give a reason for rejecting or un-publishing</p>
+
+                            <div class="input-group col-md-12">
+                                <textarea name="reason" class="form-control col-md-12"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-type="form-submit">Reject</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="modalGroup" class="modal fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Choose groups</h4>
-            </div>
-            <div class="modal-body">
-                <div class="ListItem">
-                    #foreach($g in $page.allGroups)
-                    <div class="panel panel-default">
-                        <div class="panel-body membership">
-                            <label for="$g.name">$g.name</label>
-                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose groups</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ListItem">
+                            #foreach($g in $page.allGroups)
+                                <div class="panel panel-default">
+                                    <div class="panel-body membership">
+                                        <label for="$g.name">$g.name</label>
+                                        <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                                    </div>
+                                </div>
+                            #end
                         </div>
                     </div>
-                    #end
                 </div>
             </div>
         </div>
