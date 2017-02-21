@@ -177,7 +177,8 @@
                     color: white;
                 }
 
-                &.btn-success:hover {
+                &.btn-success:hover,
+                &.btn-success:focus {
                     background-color: #4eaa96;
                 }
             }

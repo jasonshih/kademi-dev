@@ -1,8 +1,8 @@
 ﻿@import "compass";
 
-
 @import "_modules/variabiles";
 @import "_modules/mixins";
+@import "bootstrap/mixins/grid-framework";
 
 @import "_partials/base";
 @import "_partials/forms";
@@ -46,4 +46,6 @@
 @import "_partials/sidebar";
 @import "_partials/style-selector";
 @import "_partials/tabs";
-@import "_partials/rows";
+@import "_partials/grid";
+@import "_partials/hr";
+@import "_partials/tooltips";

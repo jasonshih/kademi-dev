@@ -308,7 +308,7 @@ function initSwitch() {
             var dataHolder = target.is('.make-switch') ? target : target.closest('.make-switch');
 
             target.bootstrapSwitch({
-                onColor: dataHolder.attr('data-on-color') || 'primary',
+                onColor: dataHolder.attr('data-on-color') || 'info',
                 offColor: dataHolder.attr('data-off-color') || 'default',
                 size: dataHolder.attr('data-size') || 'normal',
                 onText: dataHolder.attr('data-on-text') || 'ON',

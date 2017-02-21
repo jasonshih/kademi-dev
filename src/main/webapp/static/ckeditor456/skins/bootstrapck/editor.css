@@ -84,7 +84,7 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 0 3px;
-    background: #eee
+    background: #f0f5f8
 }
 
 .cke_inner {
@@ -113,7 +113,7 @@
 
 .cke_bottom, .cke_top {
     padding: 3px 0 0;
-    background: #eee
+    background: #f0f5f8
 }
 
 .cke_top {

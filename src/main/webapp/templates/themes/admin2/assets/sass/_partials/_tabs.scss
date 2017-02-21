@@ -20,7 +20,7 @@
         }
 
         & > a {
-            background-color: #F9F9F9;
+            background-color: $panel-bg;
             border-color: $light-grey;
             @include border-radius(0 !important);
             color: #999999;
