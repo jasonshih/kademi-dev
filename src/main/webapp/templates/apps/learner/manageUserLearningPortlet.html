@@ -227,48 +227,6 @@
 <script src="/templates/apps/learner/profileAdminPortlet.js">//</script>
 <script type="text/javascript">
     $(function () {
-        flog("init elearning admin", $("#moduleprogress-body"), $("#moduleprogress-body").find(".modulestatus-reset"));
         initAdminProfile();
-
-        $("#moduleprogress-body").on("click", ".modulestatus-reset", function (e) {
-            flog("click");
-            e.preventDefault();
-            var id = $(e.target).closest("a").attr("href");
-            if (confirm("This will clear the user's record of learning for this module and allow them to start it again. Are you sure you want to continue?")) {
-                doModuleReset(id);
-            }
-        });
-        $(".show-attempts").click(function (e) {
-            e.preventDefault();
-            var c = $(e.target).attr("href");
-            $("." + c).toggle(200);
-        });
     });
-    function doModuleReset(id) {
-        $.ajax({
-            type: 'POST',
-            url: '/manageCourses',
-            data: {
-                resetModuleStatusId: id
-            },
-            dataType: 'json',
-            success: function (resp) {
-                flog('saved course', resp);
-                if (resp.status) {
-                    $("#moduleprogress-body").reloadFragment({
-                        whenComplete: function () {
-                            Msg.info("Updated ok");
-                            jQuery("abbr.timeago").timeago();
-                        }
-                    });
-                } else {
-                    Msg.error("Sorry, we could not reset the module: " + resp.messages);
-                }
-            },
-            error: function (resp) {
-                cont.removeClass('ajax-loading');
-                Msg.error("Sorry, we could not reset the module");
-            }
-        });
-    }
 </script>
