@@ -1,8 +1,8 @@
 
 // were getting two change events for one click, so quick and dirty flag to prevent double submissions
 function initApps() {
-    flog("initApps");
-    $("div.appsContainer").on("switchChange", ".CheckBoxWrapper input[type=checkbox]", function () {
+    flog("initApps", $("div.appsContainer"));
+    $("div.appsContainer").on("switchChange.bootstrapSwitch", ".CheckBoxWrapper input[type=checkbox]", function () {
         chk = $(this);
         flog("changed", this);
         if (chk.prop('disabled')) {
