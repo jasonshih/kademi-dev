@@ -354,7 +354,6 @@ function initModuleEditing(courseUrl) {
                 '<li class="module splitter clearfix">' +
                 '<aside class="pull-right">' +
                 '<div class="btn-group btn-group-sm">' +
-                '<button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>' +
                 '<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">' +
                 '<i class="fa fa-cog"></i>' +
                 '</button>' +
@@ -492,7 +491,6 @@ function initCourseEditing(programUrl) {
                 '<li class="course splitter clearfix">' +
                 '<aside class="pull-right">' +
                 '<div class="btn-group btn-group-sm">' +
-                '<button type="button" class="btn btn-sm btn-default btn-move-splitter"><i class="glyphicon glyphicon-sort"></i></button>' +
                 '<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">' +
                 '<i class="fa fa-cog"></i>' +
                 '</button>' +

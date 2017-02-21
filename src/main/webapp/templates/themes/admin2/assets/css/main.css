@@ -2019,6 +2019,10 @@ ul.main-navigation-menu {
 /* ---------------------------------------------------------------------- */
 /*	Modal elements
 /* ---------------------------------------------------------------------- */
+.modal-content {
+  border-color: #eee;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); }
+
 .modal-footer {
   background: #f0f5f8;
   border-radius: 0 0 6px 6px; }
