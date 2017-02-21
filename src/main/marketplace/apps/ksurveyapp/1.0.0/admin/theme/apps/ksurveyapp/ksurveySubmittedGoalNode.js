@@ -1,5 +1,7 @@
 JBNodes['ksurveySubmittedGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">KSurvey Submit Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'KSurvey Submit Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/ksurveyapp/ksurvey-submit-goal.png',
     ports: {
         timeoutNode: {

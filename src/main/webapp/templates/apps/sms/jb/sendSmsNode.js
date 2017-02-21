@@ -1,5 +1,7 @@
 JBNodes['smsAction'] = {
-    title: '<i class="fa fa-comments"></i> <span class="node-type">Send Sms</span>',
+    icon: 'fa fa-comments',
+    title: 'Send Sms',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/sms/jb/sendSmsNode.png',
     ports: {
         nextNodeId: {

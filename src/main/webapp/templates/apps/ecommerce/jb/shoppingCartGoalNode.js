@@ -1,5 +1,7 @@
 JBNodes['shoppingCartGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Shopping Cart Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Shopping Cart Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/ecommerce/jb/shoppingCartGoalNode.png',
     ports: {
         timeoutNode: {

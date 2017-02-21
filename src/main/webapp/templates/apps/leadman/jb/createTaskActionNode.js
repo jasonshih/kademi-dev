@@ -1,5 +1,7 @@
 JBNodes['createTaskAction'] = {
-    title: '<i class="fa fa-tasks"></i> <span class="node-type">Create Task</span>',
+    icon: 'fa fa-tasks',
+    title: 'Create Task',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/leadman/jb/createTaskActionNode.png',
     ports: {
         nextNodeId: {

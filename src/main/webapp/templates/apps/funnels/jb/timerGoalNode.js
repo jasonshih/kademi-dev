@@ -1,5 +1,7 @@
 JBNodes['timerGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Timer Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Timer Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/funnels/jb/timerGoalNode.png',
     ports: {
         timeoutNode: {

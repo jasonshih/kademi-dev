@@ -1,5 +1,7 @@
 JBNodes['emailAction'] = {
-    title: '<i class="fa fa-envelope"></i> <span class="node-type">Send Email</span>',
+    icon: 'fa fa-envelope',
+    title: 'Send Email',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/email/jb/sendEmailNode.png',
     ports: {
         nextNodeId: {

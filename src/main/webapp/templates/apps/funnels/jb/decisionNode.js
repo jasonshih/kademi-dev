@@ -1,5 +1,7 @@
 JBNodes['decision'] = {
-    title: '<i class="fa fa-question-circle"></i> <span class="node-type">Decision</span>',
+    icon: 'fa fa-code-fork',
+    title: 'Decision',
+    type: JB_NODE_TYPE.DECISION,
     previewUrl: '/theme/apps/funnels/jb/decisionNode.png',
     ports: {
         decisionDefault: {

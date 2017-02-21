@@ -1,5 +1,7 @@
 JBNodes['calendarEventAction'] = {
-    title: '<i class="fa fa-calendar-check-o"></i> <span class="node-type">Calendar Event</span>',
+    icon: 'fa fa-calendar-check-o',
+    title: 'Calendar Event',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/calendar/jb/calendarEventActionNode.png',
     ports: {
         nextNodeId: {

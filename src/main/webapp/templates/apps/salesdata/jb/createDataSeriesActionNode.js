@@ -1,5 +1,7 @@
 JBNodes['createDataSeriesAction'] = {
-    title: '<i class="fa fa-database"></i> <span class="node-type">Create Data Series</span>',
+    icon: 'fa fa-database',
+    title: 'Create Data Series',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/salesdata/jb/createDataSeriesActionNode.png',
     ports: {
         nextNodeId: {

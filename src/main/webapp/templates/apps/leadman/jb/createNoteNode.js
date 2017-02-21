@@ -1,5 +1,7 @@
 JBNodes['createNote'] = {
-    title: '<i class="fa fa-pencil-square-o"></i> <span class="node-type">Create Note</span>',
+    icon: 'fa fa-pencil-square-o',
+    title: 'Create Note',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/leadman/jb/createNoteNode.png',
     ports: {
         nextNodeId: {

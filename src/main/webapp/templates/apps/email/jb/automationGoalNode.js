@@ -1,5 +1,7 @@
 JBNodes['automationGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Automation Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Automation Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/email/jb/automationGoalNode.png',
     ports: {
         timeoutNode: {

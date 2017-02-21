@@ -1,5 +1,7 @@
 JBNodes['addToGroup'] = {
-    title: '<i class="fa fa-pencil-square-o"></i> <span class="node-type">Add to group</span>',
+    icon: 'fa fa-pencil-square-o',
+    title: 'Add to group',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/user/jb/addToGroupNode.png',
     ports: {
         nextNodeId: {

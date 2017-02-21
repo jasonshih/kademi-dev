@@ -1,5 +1,7 @@
 JBNodes['startFunnel'] = {
-    title: '<i class="fa fa-gift"></i> <span class="node-type">Start journey</span>',
+    icon: 'fa fa-gift',
+    title: 'Start journey',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/funnels/jb/startFunnelsAction.png',
     ports: {
         nextNodeId: {
