@@ -194,9 +194,9 @@
 
 .panel-primary {
     &,
+    //.panel-footer,
     .panel-heading,
-    .panel-body,
-    .panel-footer {
+    .panel-body {
         border-color: $brand-primary;
     }
 
@@ -213,9 +213,9 @@
 
 .panel-info {
     &,
+    //.panel-footer,
     .panel-heading,
-    .panel-body,
-    .panel-footer {
+    .panel-body {
         border-color: $brand-info;
     }
 
@@ -232,9 +232,9 @@
 
 .panel-success {
     &,
+    //.panel-footer,
     .panel-heading,
-    .panel-body,
-    .panel-footer {
+    .panel-body {
         border-color: $brand-success;
     }
 
@@ -251,9 +251,9 @@
 
 .panel-danger {
     &,
+    //.panel-footer,
     .panel-heading,
-    .panel-body,
-    .panel-footer {
+    .panel-body {
         border-color: $brand-danger;
     }
 
@@ -270,9 +270,9 @@
 
 .brand-warning {
     &,
+    //.panel-footer,
     .panel-heading,
-    .panel-body,
-    .panel-footer {
+    .panel-body {
         border-color: $brand-warning;
     }
 

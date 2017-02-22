@@ -21,21 +21,21 @@
 }
 
 .courses-list li.course {
-    background: #555;
+    background: #252836;
 }
 
 .courses-list li.course.cut {
-    background: rgba(85, 85, 85, 0.5);
+    background: rgba(37, 40, 54, 0.5);
 }
 
 .courses-list li.course.active,
 .modules-list li.module {
-    background: #5BC0DE;
+    background: #3988b7;
 }
 
 .courses-list li.course.active.cut,
 .modules-list li.module.cut {
-    background: rgba(91, 192, 222, 0.5);
+    background: rgba(57, 136, 183, 0.5);
 }
 
 .courses-list li.course > a,

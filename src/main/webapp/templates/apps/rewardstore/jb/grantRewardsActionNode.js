@@ -1,5 +1,7 @@
 JBNodes['grantRewards'] = {
-    title: '<i class="fa fa-gift"></i> <span class="node-type">Grant rewards</span>',
+    icon: 'fa fa-gift',
+    title: 'Grant rewards',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/rewardstore/jb/grantRewardsAction.png',
     ports: {
         nextNodeId: {

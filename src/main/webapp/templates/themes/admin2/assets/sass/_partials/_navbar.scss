@@ -75,10 +75,10 @@
             background-color: $panel-bg;
         }
 
-        .input-group-addon,
-        .form-control {
-            border-color: $panel-border-color;
-        }
+        //.input-group-addon,
+        //.form-control {
+        //    border-color: $panel-border-color;
+        //}
     }
 
     .search-wrapper {
@@ -177,7 +177,8 @@
                     color: white;
                 }
 
-                &.btn-success:hover {
+                &.btn-success:hover,
+                &.btn-success:focus {
                     background-color: #4eaa96;
                 }
             }

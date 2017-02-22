@@ -98,133 +98,138 @@
             <div class="tab-content">
                 <!-- Start content of Pages tab -->
                 <div id="pages" class="tab-pane">
-                    <div class="btn-group pull-right">
-                        <a class="btn btn-sm btn-success btn-add-page" data-toggle="modal" href="#modal-save-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
-                        <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i> Paste</a>
-                        <a class="btn btn-sm btn-success btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
-                    </div>
-
-                    <div class="btn-group">
-                        #if( $page.is("branch") )
-                        #else
-                            <a class="btn btn-info" href="../" type="button">
-                                <i class="fa fa-folder"></i>
-                                Up to $page.parent.name
-                            </a>
-                        #end
+                    <div id="pages-inner">
+                        <div class="btn-group pull-right">
+                            <a class="btn btn-sm btn-success btn-add-page" data-toggle="modal" href="#modal-save-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
+                            <a title="Paste" href="$page.href" class="btn btn-success btn-sm btn-paste requires-clipboard" data-clipboard="default" href="$page.href"><i class="fa fa-paste"></i> Paste</a>
+                            <a class="btn btn-sm btn-success btn-create-folder" title="Add page"><i class="fa fa-folder"></i> New Folder</a>
+                        </div>
 
                         <div class="btn-group">
-                            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                                #if( $page.is("branch") )
-                                    <i class="fa fa-globe"></i>
-                                    $page.name
-                                #else
-                                    <i class="fa fa-folder-open"></i>
-                                    $page.name
-                                #end
-                                <span class="caret"></span>
-                            </button>
                             #if( $page.is("branch") )
-                                <ul role="menu" class="dropdown-menu" id="">
-                                    #foreach($b in $page.branch.repository.branches)
-                                        <li>
-                                            <a href="$page.parent.href$b.name">
-                                                <i class="fa fa-folder"></i>
-                                                $b.name
-                                            </a>
-                                        </li>
-                                    #end
-                                </ul>
-                            #elseif( !$folder.subFolders.isEmpty() )
-                                <ul role="menu" class="dropdown-menu" id="">
-                                    #foreach($subFolder in $folder.subFolders)
-                                        <li>
-                                            <a href="$subFolder.href">
-                                                <i class="fa fa-folder"></i>
-                                                $subFolder.name
-                                            </a>
-                                        </li>
-                                    #end
-                                </ul>
-                            #end
-                        </div>
-
-                        <div class="btn-group">
-                            <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                                Subfolders
-                                <span class="caret"></span>
-                            </button>
-                            <ul role="menu" class="dropdown-menu list" id="subFoldersList">
-                                #foreach($subFolder in $page.subFolders)
-                                    <li class="clearfix list-item">
-                                        <aside class="list-item-controller">
-                                            <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                        </aside>
-                                        <a href="$subFolder.name">
-                                            <i class="fa fa-folder"></i> $subFolder.name
-                                        </a>
-                                    </li>
-                                #end
-                            </ul>
-                        </div>
-
-                        <a class="btn btn-primary" href="/repositories/$page.closest('repository').name/$page.closest('branch').name">File manager</a>
-                    </div>
-
-                    <p class="clearfix"></p>
-
-                    <form method="POST" action="" class="">
-                        <div class="article-wrapper" id="page-list">
-                            #set ($isKEditor = false)
-                            #if ($page.theme.editorName == "keditor")
-                                #set ($isKEditor = true)
-                            #end
-
-                            #set($order = 0)
-                            #set( $pages = $page.children.ofType.html )
-                            #if( $pages.isEmpty() )
-                                <article class="page">
-                                    <p>I dont have any web pages yet :( Click the green plus button over there to create one --></p>
-                                </article>
                             #else
-                                #foreach($page in $pages)
-                                    <article class="page">
-                                        <i class="clip-file-2"></i>
-                                        <span class="article-name">$page.title</span>
-                                        <aside class="article-action">
-                                            <div class="btn-group btn-group-sm">
-                                                #if ($isKEditor)
-                                                    <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
-                                                #else
-                                                    <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
-                                                #end
-                                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
-                                                    <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit source</a></li>
-                                                    <li><a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with Content Editor
-                                                        <i class="clip-new" style="color: red;"></i></a></li>
-                                                    <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
-                                                    <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="$page.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
-                                                    <li><a href="$page.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
-                                                    <li><a href="$page.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
-                                                    <li class="requires-clipboard" data-clipboard="default"><a href="$page.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a></li>
-                                                    <li class="divider"></li>
-                                                    <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-                                                </ul>
-                                            </div>
-                                        </aside>
-                                    </article>
-                                #end
+                                <a class="btn btn-info" href="../" type="button">
+                                    <i class="fa fa-folder"></i>
+                                    Up to $page.parent.name
+                                </a>
                             #end
+
+                            <div class="btn-group">
+                                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    #if( $page.is("branch") )
+                                        <i class="fa fa-globe"></i>
+                                        $page.name
+                                    #else
+                                        <i class="fa fa-folder-open"></i>
+                                        $page.name
+                                    #end
+                                    <span class="caret"></span>
+                                </button>
+                                #if( $page.is("branch") )
+                                    <ul role="menu" class="dropdown-menu" id="">
+                                        #foreach($b in $page.branch.repository.branches)
+                                            <li>
+                                                <a href="$page.parent.href$b.name">
+                                                    <i class="fa fa-folder"></i>
+                                                    $b.name
+                                                </a>
+                                            </li>
+                                        #end
+                                    </ul>
+                                #elseif( !$folder.subFolders.isEmpty() )
+                                    <ul role="menu" class="dropdown-menu" id="">
+                                        #foreach($subFolder in $folder.subFolders)
+                                            <li>
+                                                <a href="$subFolder.href">
+                                                    <i class="fa fa-folder"></i>
+                                                    $subFolder.name
+                                                </a>
+                                            </li>
+                                        #end
+                                    </ul>
+                                #end
+                            </div>
+
+                            <div class="btn-group">
+                                <button class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                    Subfolders
+                                    <span class="caret"></span>
+                                </button>
+                                <ul role="menu" class="dropdown-menu list" id="subFoldersList">
+                                    #foreach($subFolder in $page.subFolders)
+                                        <li class="clearfix list-item">
+                                            <aside class="list-item-controller">
+                                                <a class="btn btn-xs btn-danger btn-delete-folder" href="$subFolder.href">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </aside>
+                                            <a href="$subFolder.name">
+                                                <i class="fa fa-folder"></i> $subFolder.name
+                                            </a>
+                                        </li>
+                                    #end
+                                </ul>
+                            </div>
+
+                            <a class="btn btn-primary" href="/repositories/$page.closest('repository').name/$page.closest('branch').name">File manager</a>
                         </div>
-                    </form>
+
+                        <p class="clearfix"></p>
+
+                        <form method="POST" action="" class="">
+                            <div class="article-wrapper" id="page-list">
+                                #set ($isKEditor = false)
+                                #if ($page.theme.editorName == "keditor")
+                                    #set ($isKEditor = true)
+                                #end
+
+                                #set($order = 0)
+                                #set( $pages = $page.children.ofType.html )
+                                #if( $pages.isEmpty() )
+                                    <article class="page">
+                                        <p>I dont have any web pages yet :( Click the green plus button over there to create one --></p>
+                                    </article>
+                                #else
+                                    #foreach($page in $pages)
+                                        <article class="page">
+                                            <i class="clip-file-2"></i>
+                                            <span class="article-name">$page.title</span>
+                                            <aside class="article-action">
+                                                <div class="btn-group btn-group-sm">
+                                                    #if ($isKEditor)
+                                                        <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                                    #else
+                                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                                    #end
+                                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                                    <ul class="dropdown-menu pull-right" role="menu">
+                                                        <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
+                                                        <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit source</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit with Content Editor
+                                                                <i class="clip-new" style="color: red;"></i></a></li>
+                                                        <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
+                                                        <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>
+                                                        <li class="divider"></li>
+                                                        <li><a href="$page.href" class="btn-duplicate"><span class="fa fa-copy"></span> Duplicate</a></li>
+                                                        <li><a href="$page.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>
+                                                        <li><a href="$page.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>
+                                                        <li class="requires-clipboard" data-clipboard="default">
+                                                            <a href="$page.href" class="btn-paste"><span class="fa fa-paste"></span> Paste</a></li>
+                                                        <li class="divider"></li>
+                                                        <li><a href="${page.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                                    </ul>
+                                                </div>
+                                            </aside>
+                                        </article>
+                                    #end
+                                #end
+                            </div>
+                        </form>
+                    </div>
+                    <!-- End content of Pages tab -->
                 </div>
-                <!-- End content of Pages tab -->
             </div>
         </div>
 

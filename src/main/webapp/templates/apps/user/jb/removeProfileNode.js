@@ -1,5 +1,7 @@
 JBNodes['removeProfile'] = {
-    title: '<i class="fa fa-pencil-square-o"></i> <span class="node-type">Remove profile</span>',
+    icon: 'fa fa-pencil-square-o',
+    title: 'Remove profile',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/user/jb/removeProfileNode.png',
     ports: {
         nextNodeId: {

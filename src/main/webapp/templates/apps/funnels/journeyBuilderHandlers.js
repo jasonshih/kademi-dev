@@ -4,3 +4,8 @@
  * and open the template in the editor.
  */
 var JBNodes = {};
+var JB_NODE_TYPE = {
+    ACTION: 1,
+    GOAL: 2,
+    DECISION: 3
+};

@@ -1,8 +1,78 @@
 ﻿/* ---------------------------------------------------------------------- */
 /*	Modal elements
 /* ---------------------------------------------------------------------- */
+.modal-content {
+    border-color: #eee;
+    box-shadow: 0 0 15px rgba(0, 0, 0, .4);
+}
 
 .modal-footer {
-    background: #ECF0F1;
+    background: $panel-bg;
     border-radius: 0 0 6px 6px;
 }
+
+.modal-backdrop {
+    background: #fff;
+}
+
+.modal-lg {
+    width: 1050px;
+}
+
+.modal-md {
+    width: 800px;
+}
+
+.modal-sm {
+    width: 600px;
+}
+
+.modal-xs {
+    width: 400px;
+}
+
+.modal-xxs {
+    width: 200px;
+}
+
+.modal-full {
+    padding-left: 0 !important;
+    overflow: hidden;
+
+    .modal-dialog {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+
+    .modal-content {
+        border: 0;
+        border-radius: 0;
+        height: 100%;
+    }
+
+    .modal-body {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 61px;
+        position: absolute;
+        overflow: auto;
+    }
+
+    .modal-header + .modal-body {
+        top: 56px;
+    }
+
+    .modal-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}
+
+.modal-dialog {
+    max-width: 100%;
+}
+

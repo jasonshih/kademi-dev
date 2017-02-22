@@ -1,5 +1,7 @@
 JBNodes['begin'] = {
-    title: '<i class="fa fa-play-circle"></i> <span class="node-type">Begin</span>',
+    icon: 'fa fa-play-circle',
+    title: 'Begin',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/funnels/jb/beginNode.png',
     ports: {
         nextNodeId: {

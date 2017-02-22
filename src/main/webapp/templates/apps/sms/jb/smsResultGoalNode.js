@@ -1,5 +1,7 @@
 JBNodes['smsResultGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Sms Result Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Sms Result Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/sms/jb/smsResultGoalNode.png',
     ports: {
         timeoutNode: {

@@ -1,5 +1,7 @@
 JBNodes['assignTo'] = {
-    title: '<i class="fa fa-check"></i> <span class="node-type">Assign Lead</span>',
+    icon: 'fa fa-check',
+    title: 'Assign Lead',
+    type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/funnels/jb/assignToNode.png',
     ports: {
         nextNodeId: {

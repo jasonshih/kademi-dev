@@ -85,11 +85,8 @@ function initButtons() {
             markFulfilled(listToFulfill.join(','));
         }
     });
-    $(document.body).on('change', '.searchGroup', function (e) {
+    $(document.body).on('change', '#searchFulfillmentState', function (e) {
         e.preventDefault();
-        var btn = $(this);
-        flog(btn.val());
-        searchFulfillment = btn.val();
         doSearch()
     });
 }
@@ -130,29 +127,6 @@ function initHistorySearch() {
     });
 }
 
-function doHistorySearch(startDate, endDate, searchFulfillment) {
-    flog('doHistorySearch', startDate, endDate);
-    var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate),
-        fulfillment: searchFulfillment
-    };
-    flog("data", data);
-    var target = $("#shoppingCartList");
-    $.ajax({
-        type: "GET",
-        url: window.location.pathname,
-        dataType: 'html',
-        data: data,
-        success: function (content) {
-            flog('response', content);
-            var newBody = $(content).find("#shoppingCartList");
-            flog("newBody", newBody);
-            target.replaceWith(newBody);
-            jQuery("abbr.timeago").timeago();
-        }
-    });
-}
 
 function doSearch() {
     var href = "?";
@@ -167,5 +141,31 @@ function doSearch() {
     }
     $("#cartCSV").attr("href", "carts.csv" + href);
     history.pushState(null, null, window.location.pathname + href);
-    doHistorySearch(searchOptions.startDate, searchOptions.endDate, searchOptions.searchFulfillment);
+    doHistorySearch(searchOptions.startDate, searchOptions.endDate);
+}
+
+
+function doHistorySearch(startDate, endDate) {
+    var f = $("#searchFulfillmentState").val();    
+    
+    var data = {
+        startDate: formatDate(startDate),
+        finishDate: formatDate(endDate),
+        fulfillment: f
+    };
+    flog('doHistorySearch', startDate, endDate, f);
+    var target = $("#shoppingCartList");
+    $.ajax({
+        type: "GET",
+        url: window.location.pathname,
+        dataType: 'html',
+        data: data,
+        success: function (content) {
+            flog('response', content);
+            var newBody = $(content).find("#shoppingCartList");
+            flog("newBody", newBody);
+            target.replaceWith(newBody);
+            jQuery("abbr.timeago").timeago();
+        }
+    });
 }

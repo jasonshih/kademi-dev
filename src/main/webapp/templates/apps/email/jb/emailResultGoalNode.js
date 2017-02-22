@@ -1,5 +1,7 @@
 JBNodes['emailResultGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Email Result Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Email Result Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/email/jb/emailResultGoalNode.png',
     ports: {
         timeoutNode: {

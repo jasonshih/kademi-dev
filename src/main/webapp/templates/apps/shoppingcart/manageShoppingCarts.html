@@ -21,8 +21,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="input-group col-md-6">
-                            <select name="searchGroup" id="search-group" class="form-control searchGroup">
-                                <option value="">Select fulfillment state</option>
+                            <select id="searchFulfillmentState" class="form-control">
+                                <option value="">Any fulfillment state</option>
                                 $formatter.option("N", "Not fulfilled", $params.fulfillment)
                                 $formatter.option("C", "Fulfilled", $params.fulfillment)
                                 ## $formatter.option("D", "Deleted", $params.fulfillment)

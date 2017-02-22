@@ -1,5 +1,7 @@
 JBNodes['groupGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Group goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Group goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/user/jb/groupGoalNode.png',
     ports: {
         timeoutNode: {

@@ -1,5 +1,7 @@
 JBNodes['pageViewedGoal'] = {
-    title: '<i class="fa fa-trophy"></i> <span class="node-type">Page Viewed Goal</span>',
+    icon: 'fa fa-trophy',
+    title: 'Page Viewed Goal',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/content/jb/pageViewedGoalNode.png',
     ports: {
         timeoutNode: {

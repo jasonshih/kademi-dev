@@ -91,6 +91,21 @@ var JBApp = {
             return null;
         }
 
+        switch (nodeDef.type) {
+            case JB_NODE_TYPE.ACTION:
+                divTypeClass += ' node-action';
+                break;
+
+            case JB_NODE_TYPE.GOAL:
+                divTypeClass += ' node-goal';
+                break;
+
+            case JB_NODE_TYPE.DECISION:
+                divTypeClass += ' node-decision';
+                break;
+
+        }
+
         var nodeDiv = document.createElement('div');
         nodeDiv.className = 'node ' + divTypeClass;
         nodeDiv.id = node.nodeId;
@@ -123,7 +138,8 @@ var JBApp = {
 
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="title"> ' + nodeDef.title;
+        nodeHtml += '<div class="title">';
+        nodeHtml += '   <i class="' + nodeDef.icon + '"></i> <span class="node-type">' + nodeDef.title + '</span>';
         nodeHtml += '   <span class="node-buttons clearfix">';
         if (nodeDef.settingEnabled) {
             nodeHtml += '   <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
@@ -829,13 +845,34 @@ function initSideBar() {
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
 
-        snippetsStr += '<li data-type="' + nodeType + '" class="list-group-item">';
-        snippetsStr += '    <img src="' + nodeDef.previewUrl + '" class="img-responsive" />';
-        snippetsStr += '</li>';
+        var divTypeClass = '';
+        switch (nodeDef.type) {
+            case JB_NODE_TYPE.ACTION:
+                divTypeClass = 'node-action';
+                break;
+
+            case JB_NODE_TYPE.GOAL:
+                divTypeClass = 'node-goal';
+                break;
+
+            case JB_NODE_TYPE.DECISION:
+                divTypeClass = 'node-decision';
+                break;
+
+        }
+
+        snippetsStr += '<div data-type="' + nodeType + '" class="col-xs-6 node-preview ' + divTypeClass + '">';
+        snippetsStr += '    <div class="node-preview-inner">';
+        snippetsStr += '        <div class="node-preview-content">';
+        snippetsStr += '            <i class="' + nodeDef.icon + '"></i>';
+        snippetsStr += '            <span>' + nodeDef.title + '</span>';
+        snippetsStr += '        </div>';
+        snippetsStr += '    </div>';
+        snippetsStr += '</div>';
     }
-    rightPanel.find('.list-group').html(snippetsStr);
+    rightPanel.find('.nodes-preview-list .row').html(snippetsStr);
     
-    rightPanel.find('.list-group, .panel-body').niceScroll({
+    rightPanel.find('.nodes-preview-list, .panel-body').niceScroll({
         cursorcolor: '#999',
         cursorwidth: 6,
         railpadding: {
@@ -848,7 +885,7 @@ function initSideBar() {
         disablemutationobserver: true
     });
     
-    rightPanel.find('.list-group-item').draggable({
+    rightPanel.find('.node-preview').draggable({
         revert: 'invalid',
         tolerance: 'pointer',
         helper: 'clone'

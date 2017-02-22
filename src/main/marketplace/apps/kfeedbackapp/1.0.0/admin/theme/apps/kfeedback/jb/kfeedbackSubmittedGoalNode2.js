@@ -1,5 +1,7 @@
 JBNodes['kfeedbackSubmittedGoal2'] = {
-    title: '<i class="fa fa-tasks"></i> <span class="node-type">Feedback submitted2</span>',
+    icon: 'fa fa-tasks',
+    title: 'Feedback submitted2',
+    type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/kfeedback/jb/kfeedbackSubmittedGoal2.png',
     nodeType: "customGoal",
     ports: {

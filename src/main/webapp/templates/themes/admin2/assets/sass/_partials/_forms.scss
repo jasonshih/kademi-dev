@@ -1,7 +1,7 @@
 ﻿/* ---------------------------------------------------------------------- */
 /*	Forms
 /* ---------------------------------------------------------------------- */
-
+select,
 textarea,
 input[type="text"],
 input[type="password"],
@@ -18,7 +18,7 @@ input[type="search"],
 input[type="tel"],
 input[type="color"] {
     background-color: $white;
-    border: 1px solid #D5D5D5;
+    border: 1px solid $panel-border-color;
     @include border-radius(0 !important);
     color: #858585;
     font-family: inherit;
@@ -29,7 +29,7 @@ input[type="color"] {
     @include box-shadow(none);
 
     &:hover {
-        border-color: #B5B5B5;
+        border-color: darken($panel-border-color, 10%);
     }
 
     &:focus {
@@ -123,10 +123,10 @@ span {
 
 select {
     &.form-control {
-        background-color: $white;
-        border: 1px solid #D5D5D5;
+        //background-color: $white;
+        //border: 1px solid #D5D5D5;
         @include border-radius(0);
-        color: #858585;
+        //color: #858585;
 
         option {
             padding: 3px 4px;

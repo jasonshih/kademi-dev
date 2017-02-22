@@ -9,7 +9,7 @@ function initManagePages() {
 }
 
 function initCopyCutPaste() {
-    $('#filesContainer').cutcopy();
+    $('#pages-inner').cutcopy();
 }
 
 function initCRUDPages() {

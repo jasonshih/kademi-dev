@@ -1,0 +1,32 @@
+﻿/* ---------------------------------------------------------------------- */
+/*	Tooltips
+/* ---------------------------------------------------------------------- */
+.tooltip.tooltip-error {
+    .tooltip-inner {
+        background-color: $tool-error;
+    }
+
+    &.bottom {
+        .tooltip-arrow {
+            border-bottom-color: $tool-error;
+        }
+    }
+
+    &.top {
+        .tooltip-arrow {
+            border-top-color: $tool-error;
+        }
+    }
+
+    &.left {
+        .tooltip-arrow {
+            border-left-color: $tool-error;
+        }
+    }
+
+    &.right {
+        .tooltip-arrow {
+            border-right-color: $tool-error;
+        }
+    }
+}
