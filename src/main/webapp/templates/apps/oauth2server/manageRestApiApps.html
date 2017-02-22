@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>REST Api Apps</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-md-6">
+                <button type="button" class="btn btn-success btn-create-app">
+                    <i class="fa fa-plus"></i>
+                    Create new app
+                </button>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <table id="restApiAppTable" class="table table-hover table-striped">
+            <colgroup>
+                <col width="171px"/>
+                <col/>
+                <col/>
+                <col width="78px"/>
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Logo</th>
+                    <th>Title</th>
+                    <th>Client ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($c in $page.children)
+                <tr>
+                    <td>
+                        #if($c.restApiApp.logoHash)
+                        <img src="/_hashes/files/$c.restApiApp.logoHash/alt-150-150.png" class="img-responsive"/>
+                        #end
+                    </td>
+                    <td>$!c.restApiApp.title</td>
+                    <td>$!c.restApiApp.clientId</td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a href="$c.href/" class="btn btn-sm btn-info">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li>
+                                        <a href="$c.href/" class="btn-delete-app">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <script src="/theme/apps/oauth2server/manageRestApiApps.js" type="text/javascript">//</script>
+    </body>
+</html>

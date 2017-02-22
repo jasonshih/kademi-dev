@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>$page.title</title>
+    </head>
+    <body>
+        <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+            <div class="alert alert-danger pageMessage">.</div>
+
+            <div class="form-group">
+                <label for="apiAppTitle" class="col-sm-3 control-label">Display name</label>
+                <div class="col-sm-6">
+                    <input type="text" name="title" id="apiAppTitle" value="$!page.restApiApp.title" class="required form-control" required="required" />
+                    <small>This is the publicly visible name of your application</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="clientId" class="col-sm-3 control-label">Client ID</label>
+                <div class="col-sm-6">
+                    <input type="text" id="clientId" value="$!page.restApiApp.clientId" class="form-control" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="clientSecret" class="col-sm-3 control-label">Client Secret</label>
+                <div class="col-sm-6">
+                    <input type="text" id="clientSecret" value="$!page.restApiApp.clientSecret" class="form-control" disabled="disabled">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="submit" class="btn btn-sm btn-success">Save details</button>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
