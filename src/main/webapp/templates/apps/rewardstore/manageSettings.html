@@ -6,8 +6,32 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-4 control-label" for="$reasonCodes">Reason codes</label>
+    <label class="col-sm-4 control-label" for="reasonCodes">Reason codes</label>
     <div class="col-sm-8">
         <textarea name="reasonCodes" class="form-control">$!reasonCodes</textarea>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-4" for="pointsTab">Allocation Rule Points tag<small>Used when assigning positive points</small></label>
+    <div class="col-sm-8">
+        <select id="pointsTag" name="pointsTag" class="form-control">
+            $formatter.option('', '[NONE]', $pointsTag)
+            #foreach($pt in $applications.rewardStore.pointsTags)
+            $formatter.option($pt.name, $formatter.firstNotNull($pt.title, $pt.name), $pointsTag)
+            #end
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-4" for="reasonCode">Allocation Rule Reason Code<small>Used when assigning negative points</small></label>
+    <div class="col-sm-8">
+        <select id="reasonCode" name="reasonCode" class="form-control">
+            $formatter.option('', '[NONE]', $reasonCode)
+            #foreach($rc in $applications.rewardStore.reasonCodes.entrySet())
+            $formatter.option($rc.key, $formatter.firstNotNull($rc.value, $rc.key), $reasonCode)
+            #end
+        </select>
     </div>
 </div>
