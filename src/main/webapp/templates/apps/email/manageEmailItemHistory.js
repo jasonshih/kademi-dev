@@ -1,6 +1,7 @@
 function initManageEmailHistory() {
     $('abbr.timeago').timeago();
     flog("Init email history");
+
     $("#email-query").keyup(function () {
         typewatch(function () {
             flog("do search");
@@ -11,50 +12,31 @@ function initManageEmailHistory() {
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         flog("page date changed", startDate, endDate);
 
-        doSearch(startDate, endDate);
-        loadAnalytics({
-            startDate: startDate,
-            endDate: endDate
-        });
+        doSearch();
     });
 
 
     initSelectAll();
     initMarkIgnored();
+
+    doSearch();
 }
 
-function doSearch(startDate, endDate) {
+function doSearch() {
     var query = $("#email-query").val();
     flog("doSearch", query);
     var data = {
-        q: query,
-        startDate: startDate,
-        finishDate: endDate
+        q: query
     };
     $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
 
     $('#email-table').reloadFragment({
+        url : window.location.pathname + "?q=" + $.param(data),
         whenComplete: function () {
             $('abbr.timeago').timeago();
         }
     });
 
-    /**
-     $.ajax({
-     type: 'GET',
-     url: window.location.pathname,
-     data: data,
-     success: function (data) {
-     flog("success", data);
-     var $fragment = $(data).find("#table-users");
-     $("#table-users").replaceWith($fragment);
-     $('abbr.timeago').timeago();
-     },
-     error: function (resp) {
-     Msg.error("An error occured doing the user search. Please check your internet connection and try again");
-     }
-     });
-     **/
 }
 
 function initMarkIgnored() {
@@ -137,31 +119,22 @@ function initMarkIgnored() {
 }
 
 
-function loadAnalytics(searchData) {
+function doSearch() {
     flog("loadAnalytics");
 
-    var extraParams = $.param(searchData);
+    var query = $("#email-query").val();
 
     $.ajax({
         type: "GET",
-        url: "?emailHistory&" + extraParams,
+        url: "?emailStats&q=" + query,
         dataType: 'json',
         success: function (json) {
             flog('response', json);
+//            renderRows();
             initHistogram(json.aggregations);
+            initPies(json.aggregations);
         }
     });
-
-    $.ajax({
-        type: "GET",
-        url: "?emailStats&" + extraParams,
-        dataType: 'json',
-        success: function (resp) {
-            flog("emailstats", resp);
-            initPies(resp.aggregations);
-        }
-    });
-
 }
 
 function initPies(aggr) {
