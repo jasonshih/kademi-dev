@@ -90,67 +90,39 @@
                         </tr>
                     </thead>
                     <tbody id="history-table-body">
-                        #set($paginator = $formatter.paginator())
-                        #set($results = $page.getSearchResults($paginator.start, $paginator.pageSize))
-                        #set($paginator = $paginator.totalRecords($results.totalHits))
-                        #set($records = $paginator.records($results.beans))
-
-                        #foreach($e in $results.beans)
                         <tr>
-                            <td><a href='$e.id'>$e.recipientAddress</a></td>
-                            <td>$e.subject</td>
-                            <td><abbr title="$formatter.formatDateISO8601($e.createdDate)" class="timeago">$!e.createdDate</abbr></td>
-                            <td>
-                                #set($statusLabel = "default")
-                                #set($statusText = $e.statusText)
-                                #set($statusIcon = "fa-check")
-
-                                #if( $e.edmConverted )
-                                #set($statusText = "Converted")
-                                #elseif( $e.readStatus )
-                                #set($statusLabel = "primary")
-                                #elseif( $e.sendStatus == 'r' )
-                                #set($statusLabel = "warning")
-                                #set($statusText = $e.statusText - $!e.numAttempts)
-                                #set($statusIcon = "fa-refresh")
-                                #elseif( $e.sendStatus == 'c' )
-                                #elseif( $e.sendStatus == 'p' )
-                                #set($statusLabel = "warning")
-                                #set($statusIcon = "fa-clock-o")
-                                #elseif( $e.sendStatus == 'f' )
-                                #set($statusLabel = "danger")
-                                #set($statusIcon = "fa-times")
-                                #else
-                                #set($statusIcon = "fa-clock-o")
-                                #set($statusText = "Preparing..")
-                                #end
-                                <p class="label label-$statusLabel">
-                                    <span class="fa-stack">
-                                        <i class="fa fa-stack-1x $statusIcon"></i>
-                                        #if($e.ignored)
-                                        <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                                        #end
-                                    </span>
-                                    $statusText
-                                </p>
-                            </td>
-                            <td><input data-edmid="$e.id" type="checkbox" name="markIgnored"/></td>
-                        </tr>
-                        #end
-                        <tr>
-                            <td colspan="5" class="text-center">
-                                $!paginator.html
-                            </td>
+                            <td colspan="6">
+                                <i>Loading, please wait..</i>
+                            </td>                            
                         </tr>
                     </tbody>
                 </table>
             </div>
-            #if( $results.totalHits >= 100 )
-            <p class="label label-warning">Displaying maximum results</p>
-            #end
+
         </div>
 
 
+        <script id="email-row-template" class="hide"  type="text/x-handlebars-template">
+            <tr>
+            <td colspan='5'>Displaying {{hits.hits.length}} of {{hits.total}} emails</td>
+            </tr>
+            {{#each hits.hits}}
+                        <tr>
+                            <td>
+                            <a href='/manageUsers/{{fields.recipient_id}}'><i class='fa fa-user'></i> {{fields.recipientAddress}}</a>                            
+                            </td>
+                            <td>
+                            <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
+                            {{fields.subject}}
+                            </td>
+                            <td><abbr title="{{dateFromLong fields.createdDate}})" class="timeago">{{fields.createdDate}}</abbr></td>
+                            <td></td>
+                            <td><input data-edmid="{{fields.id}}" type="checkbox" name="markIgnored"/></td>
+                        </tr>                
+            {{/each}}
+        </script>
+    
+        
         <script type="text/javascript" src="/theme/apps/email/manageEmailItemHistory.js">//</script>
         <script type="text/javascript">
             $(function () {
