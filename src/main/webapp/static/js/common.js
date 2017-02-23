@@ -97,19 +97,19 @@
 
 $.fn.fshow = function () {
     return $(this).each(function () {
-         $(this).animate({
-             height: 'show',
-             opacity: 1
-         }, 200);
+        $(this).animate({
+            height: 'show',
+            opacity: 1
+        }, 200);
     });
 };
 
 $.fn.fhide = function () {
     return $(this).each(function () {
-         $(this).animate({
-             height: 'hide',
-             opacity: 0
-         }, 200);
+        $(this).animate({
+            height: 'hide',
+            opacity: 0
+        }, 200);
     });
 };
 
@@ -155,7 +155,7 @@ String.prototype.endsWith = function (suffix) {
 String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     var count = 0;
-    while (target.indexOf(search) > -1 && count < 1000 ){
+    while (target.indexOf(search) > -1 && count < 1000) {
         count++;
         target = target.replace(search, replacement);
     }
@@ -228,20 +228,7 @@ $.fn.classes = function (f) {
  * varargs function to output to console.log if console is available
  */
 function log() {
-    if (typeof (console) != 'undefined') {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
-            if (arguments.length == 1) {
-                console.log(arguments[0]);
-            } else if (arguments.length == 2) {
-                console.log(arguments[0], arguments[1]);
-            } else if (arguments.length > 2) {
-                console.log(arguments[0], arguments[1], arguments[2]);
-            }
-        } else {
-            console.log(arguments);
-        }
-    }
+    flog("log function is deprecated");
 }
 
 /**
@@ -251,17 +238,24 @@ function log() {
  */
 function flog() {
     if (typeof (console) != 'undefined') {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-            // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
-            if (arguments.length == 1) {
-                console.log(arguments[0]);
-            } else if (arguments.length == 2) {
-                console.log(arguments[0], arguments[1]);
-            } else if (arguments.length > 2) {
-                console.log(arguments[0], arguments[1], arguments[2]);
-            }
+
+        // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
+        if (arguments.length == 1) {
+            console.log(arguments[0]);
+        } else if (arguments.length == 2) {
+            console.log(arguments[0], arguments[1]);
+        } else if (arguments.length == 3) {
+            console.log(arguments[0], arguments[1], arguments[2] );
+        } else if (arguments.length == 4) {
+            console.log(arguments[0], arguments[1], arguments[2], arguments[3] );
+        } else if (arguments.length == 5) {
+            console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] );
         } else {
-            console.log(arguments);
+            if (navigator.appName == 'Microsoft Internet Explorer') {
+                console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] );
+            } else {
+                console.log(arguments);
+            }
         }
     }
 }
@@ -862,7 +856,7 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
     flog('myPromptRename');
     var currentName = getFileName(sourceHref);
     var existing = $('#' + id);
-    if(existing ) {
+    if (existing) {
         existing.remove();
     }
 
@@ -872,40 +866,40 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
     var inputId = id + '_';
 
     myPromptModal.html(
-        '<div class="modal-dialog modal-sm">' +
-        '   <div class="modal-content">' +
-        '       <div class="modal-header">' +
-        '           <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-        '           <h4 class="modal-title">' + title + '</h4>' +
-        '       </div>' +
-        '       <form method="POST" class="form-horizontal" action="' + url + '">' +
-        '           <div class="modal-body">'+ (instructions ? '<p class="alert alert-info">' + instructions + '</p>' : '') +
-        '               <p class="alert alert-danger modal-alert"></p>' +
-        '               <div class="form-group">' +
-        '                   <label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
-        '                   <div class="col-md-8">' +
-        '                       <input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />' +
-        '                   </div>' +
-        '               </div>' +
-        '           </div>' +
-        '           <div class="modal-footer">' +
-        '               <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-        '               <button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
-        '           </div>' +
-        '       </form>' +
-        '   </div>' +
-        '</div>'
-    );
+            '<div class="modal-dialog modal-sm">' +
+            '   <div class="modal-content">' +
+            '       <div class="modal-header">' +
+            '           <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+            '           <h4 class="modal-title">' + title + '</h4>' +
+            '       </div>' +
+            '       <form method="POST" class="form-horizontal" action="' + url + '">' +
+            '           <div class="modal-body">' + (instructions ? '<p class="alert alert-info">' + instructions + '</p>' : '') +
+            '               <p class="alert alert-danger modal-alert"></p>' +
+            '               <div class="form-group">' +
+            '                   <label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
+            '                   <div class="col-md-8">' +
+            '                       <input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />' +
+            '                   </div>' +
+            '               </div>' +
+            '           </div>' +
+            '           <div class="modal-footer">' +
+            '               <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
+            '               <button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
+            '           </div>' +
+            '       </form>' +
+            '   </div>' +
+            '</div>'
+            );
 
     var form = myPromptModal.find('form');
 
-    form.submit(function(e) {
+    form.submit(function (e) {
         flog("submit");
         e.preventDefault();
         resetValidation(form);
 
         var checkResult = validateFormFields(form);
-        if(checkResult) {
+        if (checkResult) {
             var newName = form.find('input').val();
             if (currentName === newName) {
                 showErrorMessage(form, null, 'New name must be different from current name');
@@ -920,21 +914,21 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
             dest += newName;
             checkExists(dest, {
                 exists: function () {
-                    showErrorMessage(form, null, 'A folder/file with name <strong>'+newName+'</strong> is existed. Please choose a new name.');
+                    showErrorMessage(form, null, 'A folder/file with name <strong>' + newName + '</strong> is existed. Please choose a new name.');
                     return false;
                 },
                 notExists: function () {
                     log('promptRename: dest', dest);
                     move(sourceHref, dest,
-                        function (resp, sourceHref, destHref){
-                            // success
-                            myPromptModal.modal('hide');
-                            callback(sourceHref, destHref);
-                        },
-                        function () {
-                            // error
-                            showErrorMessage(form, null, 'There was an error when renaming file/folder');
-                        }
+                            function (resp, sourceHref, destHref) {
+                                // success
+                                myPromptModal.modal('hide');
+                                callback(sourceHref, destHref);
+                            },
+                            function () {
+                                // error
+                                showErrorMessage(form, null, 'There was an error when renaming file/folder');
+                            }
                     );
                 }
             });
@@ -943,9 +937,9 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
     });
 
     $('body').append(myPromptModal);
-    myPromptModal.on('shown.bs.modal', function(){
-        myPromptModal.find('[name='+buttonName+']').trigger('focus');
-        document.execCommand("selectall",null,false);
+    myPromptModal.on('shown.bs.modal', function () {
+        myPromptModal.find('[name=' + buttonName + ']').trigger('focus');
+        document.execCommand("selectall", null, false);
     });
 
     showModal(myPromptModal);
@@ -1197,7 +1191,7 @@ function stripFragment(href) {
  * http://javascriptbase64.googlecode.com/svn/trunk/base64.js
  *
  Copyright (c) 2008 Fred Palmer fred.palmer_at_gmail.com
- 
+
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
  files (the 'Software'), to deal in the Software without
@@ -1206,10 +1200,10 @@ function stripFragment(href) {
  copies of the Software, and to permit persons to whom the
  Software is furnished to do so, subject to the following
  conditions:
- 
+
  The above copyright notice and this permission notice shall be
  included in all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
