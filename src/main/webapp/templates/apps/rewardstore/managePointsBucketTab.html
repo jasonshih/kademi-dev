@@ -2,6 +2,7 @@
 
 
 #foreach($reward in $applications.rewardStore.pointsBuckets )
+#set( $participants = false )
 #set( $participants = $applications.rewardStore.findParticipantsForReward($page.profile, $reward) )
 #foreach($participant in $participants )
 <div class="tx-container">
@@ -48,6 +49,7 @@
             </tr>
         </thead>
         <tbody id="transactions-${participant.id}-${reward.id}">
+            #set( $txs = $formatter.newList() )
             #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
             #if( $txs.isEmpty() )
             <tr>
@@ -92,11 +94,12 @@
                     <span>Total Points:</span>
                 </td>
                 <td colspan="2">
-                    <strong>$!applications.rewardStore.balance($page.profile, $reward)</strong>
+                    <strong>$!applications.rewardStore.balance($participant, $reward)</strong>
                 </td>
                 <td></td>
             </tr>
-            #set( $avail = $applications.rewardStore.availableBalance($page.profile, $reward) )
+            #set( $avail = 0 )
+            #set( $avail = $applications.rewardStore.availableBalance($participant, $reward) )
             #if($current != $avail)
             <tr>
                 <td></td>
