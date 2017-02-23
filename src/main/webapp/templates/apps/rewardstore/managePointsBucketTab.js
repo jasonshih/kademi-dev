@@ -49,16 +49,21 @@ function initPointsBucketTab() {
 
     $('body').on('click', '.btn-add-points', function (e) {
         e.preventDefault();
-        var btn = $(this);
+        var btn = $(e.target).closest("button");
         var modal = $("#modal-new-points");
+        var form = modal.find("form");
+        var tbody = btn.closest(".tx-container").find("tbody");
+        var id = tbody.attr("id");
+        form.data("tbodyid", id);
 
         var form = modal.find("form");
         if (!form.hasClass("initDone")) {
             form.forms({
                 onSuccess: function () {
                     Msg.info("Applied credit. Reloading page..");
-                    var tbody = btn.closest(".tx-container").find("tbody");
-                    flog("reload tbody", tbody.attr("id"));
+                    id = form.data("tbodyid");
+                    var tbody = $("#" + id);
+
                     tbody.reloadFragment({
                         url: window.location.pathname + "?showTab=pointsBucketTab"
                     });
@@ -83,18 +88,20 @@ function initPointsBucketTab() {
 
     $('body').on('click', '.btn-debit-points', function (e) {
         e.preventDefault();
-        var btn = $(this);
+        var btn = $(e.target).closest("button");
         var modal = $("#modal-debit-points");
-
-        flog("show debit", modal);
-
         var form = modal.find("form");
+        var tbody = btn.closest(".tx-container").find("tbody");
+        var id = tbody.attr("id");
+
+        form.data("tbodyid", id);
         if (!form.hasClass("initDone")) {
             form.forms({
-                onSuccess: function () {
+                onSuccess: function (resp) {
+                    id = form.data("tbodyid");
                     modal.modal("hide");
-                    Msg.info("Applied debit. Reloading page..");
-                    var tbody = btn.closest(".tx-container").find("tbody");
+                    var tbody = $("#" + id);
+                    Msg.info("Applied debit. Reloading page.." + tbody.attr("id") );
                     flog("reload tbody", tbody);
                     tbody.reloadFragment({
                         url: window.location.pathname + "?showTab=pointsBucketTab"
