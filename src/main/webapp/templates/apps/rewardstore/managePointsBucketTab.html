@@ -1,5 +1,46 @@
 <script src="/theme/apps/rewardstore/managePointsBucketTab.js">//</script>
 
+<h3>Points Expiring - $membership.org.orgId</h3>
+
+#set($pEndDate = $formatter.addDays($formatter.now, 180))
+
+#foreach($reward in $applications.rewardStore.pointsBuckets )
+#set( $participants = false )
+#set( $participants = $applications.rewardStore.findParticipantsForReward($page.profile, $reward) )
+#foreach($participant in $participants )
+
+#set( $points = $applications.rewardStore.findExpiring($reward.name, $membership.org, $pEndDate ) )
+#set( $pointsMonths = $points.groupByExpiryMonth )
+
+<table class="table table-striped" id="points-expiring">
+    <tbody>
+        #set($totalExpiring = 0)
+        #if( $pointsMonths.isEmpty() )
+        <tr>
+            <td colspan="2">No points expiring in next six months</td>
+        </tr>
+        #else
+        #foreach($pg in $pointsMonths.entrySet())
+        <tr class="points-expiring-item">
+            #set($expiringYear = $formatter.getYear($pg.key))
+            #set($totalExpiring = $totalExpiring + $pg.value)
+            <th id="month-1-label">$formatter.formatJodaDate($pg.key, "d MMMM") $expiringYear</th>
+            <td id="month-1-value">$pg.value</td>
+        </tr>
+        #end
+        #end
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>Total Points Expiring</th>
+            <td class="total-points-expiring">$totalExpiring</td>
+        </tr>
+    </tfoot>
+</table>
+#end
+#end
+
+<h3>Points transactions</h3>
 
 #foreach($reward in $applications.rewardStore.pointsBuckets )
 #set( $participants = false )
@@ -242,7 +283,7 @@
                 </div>
 
                 <div class="modal-body">
-                                        
+
                     <div class="form-group">
                         <label class="control-label col-md-3" for="numPoints">No. of points</label>
                         <div class="col-md-9">
