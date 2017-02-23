@@ -319,6 +319,18 @@
                 startDate = from.format(options.dateFormat);
                 endDate = now.format(options.dateFormat);
             }
+
+            var trigger = rangeItems.filter('[data-start-date="' + startDate + '"][data-end-date="' + endDate + '"]');
+            if (trigger.length > 0) {
+                self.selectRange(startDate, endDate, trigger.text(), trigger, true);
+            } else {
+                var picker = self.dateRange.data('daterangepicker');
+                picker.setStartDate(moment(startDate, options.dateFormat));
+                picker.setEndDate(moment(endDate, options.dateFormat));
+                picker.updateFormInputs();
+                picker.updateCalendars();
+                self.selectRange(startDate, endDate, null, null, true);
+            }
         }
     };
 

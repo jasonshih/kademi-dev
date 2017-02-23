@@ -66,7 +66,7 @@ var Main = function () {
             //    disablemutationobserver: true
             //});
             target.perfectScrollbar({
-                wheelSpeed: 50,
+                wheelSpeed: 1,
                 minScrollbarLength: 20,
                 suppressScrollX: true
             });
