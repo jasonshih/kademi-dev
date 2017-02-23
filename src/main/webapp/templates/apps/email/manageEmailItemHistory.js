@@ -19,24 +19,8 @@ function initManageEmailHistory() {
     initSelectAll();
     initMarkIgnored();
 
+    initRowTemplate();
     doSearch();
-}
-
-function doSearch() {
-    var query = $("#email-query").val();
-    flog("doSearch", query);
-    var data = {
-        q: query
-    };
-    $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
-
-    $('#email-table').reloadFragment({
-        url : window.location.pathname + "?q=" + $.param(data),
-        whenComplete: function () {
-            $('abbr.timeago').timeago();
-        }
-    });
-
 }
 
 function initMarkIgnored() {
@@ -65,8 +49,13 @@ function initMarkIgnored() {
                 success: function (resp) {
                     $('.selectAll').prop('checked', false);
                     if (resp.status) {
-                        $('#history-table-body').reloadFragment();
                         Msg.success(resp.messages);
+                        
+                        checkBoxes.each(function (i, item) {
+                            var a = $(item);
+                            a.closest("tr").remove();
+                        });
+                        
                     } else {
                         Msg.warning(resp.messages);
                     }
@@ -120,7 +109,7 @@ function initMarkIgnored() {
 
 
 function doSearch() {
-    flog("loadAnalytics");
+    flog("doSearch");
 
     var query = $("#email-query").val();
 
@@ -130,11 +119,35 @@ function doSearch() {
         dataType: 'json',
         success: function (json) {
             flog('response', json);
-//            renderRows();
+            renderRows(json);
             initHistogram(json.aggregations);
             initPies(json.aggregations);
         }
     });
+}
+
+var template;
+
+function initRowTemplate() {
+    var templateHtml = $("#email-row-template").html();
+    template = Handlebars.compile(templateHtml);
+    Handlebars.registerHelper('dateFromLong', function (millis) {
+        if (millis) {
+            var date = new Date(millis[0]);
+            return date.toISOString();
+        } else {
+            return "";
+        }
+    });        
+}
+
+function renderRows(json) {
+    flog("renderRows", json, template);
+    var html = template(json);
+    var container = $("#history-table-body");
+    container.html(html);
+    flog("do timeago", $(".timeago", container));
+    container.find(".timeago").timeago();
 }
 
 function initPies(aggr) {
