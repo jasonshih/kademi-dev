@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Training Results</title>
+    </head>
+    <body class="manageModulePages">
+
+        <h1>Training Results</h1>
+        
+        #set( $results = $applications.learning.searchModuleStatuses(null, null, null) )
+        
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Program</th>
+                    <th>Course</th>
+                    <th>Module</th>
+                    <th>Learner</th>
+                    <th>Created</th>
+                    <th>Modified</th>
+                    <th>Status</th>
+                    <th>Page</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach( $row in $results )
+                <tr>
+                    <td>
+                        <a href="/programs/$row.programCode/">$row.programCode</a>                        
+                    </td>
+                    <td>
+                        <a href="/programs/$row.programCode/$row.courseCode/">$row.courseCode</a>                                                
+                    </td>
+                    <td>
+                        <a href="/programs/$row.programCode/$row.courseCode/$row.moduleCode/">$row.moduleCode</a>                                                                        
+                    </td>
+                    <td>
+                        <a href="/manageUsers/$row.profile.id">$row.profile.formattedName</a>                        
+                    </td>
+                    <td>
+                        <abbr class="timeago">$row.createdDate</abbr>                        
+                    </td>
+                    <td>
+                        <abbr class="timeago">$row.modifiedDate</abbr>
+                    </td>                    
+                    <td>
+                        #if( $row.complete )
+                        <span class="label label-success">Complete</span>
+                        #else
+                        $row.percentComplete %
+                        #end
+                    </td>                    
+                    <td><span class="label label-warning">$!row.currentPage</span></td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        
+        <script type="text/javascript" >
+
+        </script>
+    </body>
+</html>
