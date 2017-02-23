@@ -187,7 +187,7 @@ var initQuickSideBar = function () {
         e.preventDefault();
     });
     $('#page-sidebar .sidebar-wrapper').perfectScrollbar({
-        wheelSpeed: 50,
+        wheelSpeed: 1,
         minScrollbarLength: 20,
         suppressScrollX: true
     });
