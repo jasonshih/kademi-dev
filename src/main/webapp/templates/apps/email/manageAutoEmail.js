@@ -148,13 +148,11 @@ function initEnableSwitcher() {
     flog('initEnableSwitcher');
 
     $('.enabledSwitchContainer input').on('switchChange.bootstrapSwitch', function (e, state) {
-        flog('enabled', state.value);
-        var v = state.value;
-        flog('enabled', v);
+        flog('Enabled=' + state);
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
-            data: 'enabled=' + v,
+            data: 'enabled=' + state,
             dataType: 'json',
             success: function (content) {
                 flog('response', content);
