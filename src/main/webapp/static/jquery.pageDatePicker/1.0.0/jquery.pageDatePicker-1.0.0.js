@@ -27,9 +27,11 @@
         ranges: {
             '3 days': [moment().subtract(2, 'days'), moment()],
             '7 days': [moment().subtract(6, 'days'), moment()],
-            '1 month': [moment().subtract(1, 'month'), moment()],
-            '3 months': [moment().subtract(3, 'month'), moment()],
-            '1 year': [moment().subtract(1, 'year'), moment()]
+            '1 mo': [moment().subtract(1, 'month'), moment()],
+            '3 mo': [moment().subtract(3, 'month'), moment()],
+            '1 yr': [moment().subtract(1, 'year'), moment()],
+            '3 yrs': [moment().subtract(3, 'year'), moment()],
+            '10 yrs': [moment().subtract(10, 'year'), moment()],
         },
         dateFormat: 'DD/MM/YYYY',
         onSelect: function (text, startDate, endDate) {
@@ -199,7 +201,10 @@
                 parentEl: '#' + randomId,
                 autoApply: true,
                 opens: 'left',
-                maxDate: moment()
+                maxDate: moment(),
+                locale: {
+                    format: 'DD/MM/YYYY'
+                }
             });
 
             dateRange.on('apply.daterangepicker', function (ev, picker) {

@@ -122,6 +122,12 @@ function initTabLazyLoading() {
         }
     });
 
+    $(document).on('pageDateChanged', function (e, startDate, endDate) {
+        flog("page date changed", startDate, endDate);
+        reloadActiveTab();
+    });    
+
+
     // Better load the current tab if one is selected
     var uri = URI(window.location);
     var tabId = uri.fragment();
@@ -142,6 +148,19 @@ function loadTab(tabId) {
             }
         });
     }
+}
+
+function reloadActiveTab() {
+    var tab = $(".lazy-load.active");
+    if (tab.length > 0) {
+        var tabId = tab.attr("id");
+        tab.reloadFragment({
+            url: window.location.pathname + "?showTab=" + tabId,
+            whenComplete: function () {
+                $("abbr.timeago").timeago();
+            }
+        });
+    }    
 }
 
 function initEnableDisable() {
