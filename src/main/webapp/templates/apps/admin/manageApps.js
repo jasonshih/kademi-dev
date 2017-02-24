@@ -1,25 +1,25 @@
-
 // were getting two change events for one click, so quick and dirty flag to prevent double submissions
 function initApps() {
     flog("initApps", $("div.appsContainer"));
-    $("div.appsContainer").on("switchChange.bootstrapSwitch", ".CheckBoxWrapper input[type=checkbox]", function () {
-        chk = $(this);
-        flog("changed", this);
+    $("div.appsContainer").on("switchChange.bootstrapSwitch", ".CheckBoxWrapper input[type=checkbox]", function (e, state) {
+        var chk = $(this);
+        flog('Enabled=' + state, chk);
+
         if (chk.prop('disabled')) {
             flog("already processing");
             return;
         }
         chk.prop('disabled', true); // prevent user from double clicking while in progress
-        var isChecked = chk.is(":checked")
-        if (isChecked) {
-            setEnabled(chk.val(), true, function () {
+
+        if (state) {
+            setEnabled(chk.val(), state, function () {
                 chk.closest("tr").addClass("enabled");
             }, chk);
             if (chk.closest('tr').data('iscore')) {
                 chk.closest('.CheckBoxWrapper').empty();
             }
         } else {
-            setEnabled(chk.val(), false, function () {
+            setEnabled(chk.val(), state, function () {
                 chk.closest("tr").removeClass("enabled");
             }, chk);
         }
@@ -74,7 +74,7 @@ function setEnabled(appId, isEnabled, success, chk) {
             }
             success(data);
             $('#settings_' + appId).reloadFragment({
-                whenComplete: function(){
+                whenComplete: function () {
                     initSettingsForms();
                 }
             });
