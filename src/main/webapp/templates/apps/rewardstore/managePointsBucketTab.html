@@ -21,6 +21,11 @@
             <i class="fa fa-refresh"></i>
             Refresh balance
         </button>
+        <a href="/points-buckets/$reward.name/?exportCsv&participant=$participant.entityName" class="btn btn-info btn-export-csv">
+            <i class="fa fa-table"></i>
+            Export
+        </a>
+        
     </div>
 
 
@@ -56,7 +61,7 @@
             #if( $txs.isEmpty() )
             <tr>
                 <td colspan="4">
-                    <i>No transactions :(</i>
+                    <i>No transactions in date range</i>
                 </td>
             </tr>
             #else
