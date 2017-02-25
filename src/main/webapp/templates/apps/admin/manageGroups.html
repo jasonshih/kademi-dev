@@ -58,135 +58,155 @@
             </div>
         </div>
 
-        <div id="modal-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Edit Group</h4>
-            </div>
-            <form class="form-horizontal" action="" method="post">
-                <input type="hidden" name="groupType" value="Add"/>
-                <input type="hidden" name="group" value=""/>
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="label-control col-md-4" for="title">Group Title</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="text" name="title" id="title" value="" placeholder="Group Title" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="label-control col-md-4" for="name">Code</label>
-                            <div class="col-md-8">
-                                <input class="form-control simpleChars required" type="text" name="name" id="name" value="" placeholder="Group Name" />
-                                <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="label-control col-md-4" for="notes">Notes</label>
-                            <div class="col-md-8">
-                                <textarea class="form-control" type="text" name="notes" id="notes"></textarea>
-                            </div>
-                        </div>
+        <div id="modal-group" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit Group</h4>
                     </div>
+                    <form class="form-horizontal" action="" method="post">
+                        <input type="hidden" name="groupType" value="Add"/>
+                        <input type="hidden" name="group" value=""/>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="label-control col-md-4" for="title">Group Title</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" type="text" name="title" id="title" value="" placeholder="Group Title" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-control col-md-4" for="name">Code</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control simpleChars required" type="text" name="name" id="name" value="" placeholder="Group Name" />
+                                        <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="label-control col-md-4" for="notes">Notes</label>
+                                    <div class="col-md-8">
+                                        <textarea class="form-control" type="text" name="notes" id="notes"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <div id="modal-groupFolder" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Edit Folder</h4>
-            </div>
-            <form class="form-horizontal" action="" method="post">
-                <input id="folderModalAction" class="form-control" type="hidden" name="updateFolder" id="name" value="updateFolder"/>
-                <div class="modal-body">
-                    <p>Please use simple characters only, like letters and numbers, and spaces.</p>
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="label-control col-md-4" for="folderName">Folder name</label>
-                            <div class="col-md-8">
-                                <input class="form-control" type="text" name="folderName" id="name" value="" placeholder="Folder name" />
+        <div id="modal-groupFolder" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit Folder</h4>
+                    </div>
+                    <form class="form-horizontal" action="" method="post">
+                        <input id="folderModalAction" class="form-control" type="hidden" name="updateFolder" id="name" value="updateFolder"/>
+                        <div class="modal-body">
+                            <p>Please use simple characters only, like letters and numbers, and spaces.</p>
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="label-control col-md-4" for="folderName">Folder name</label>
+                                    <div class="col-md-8">
+                                        <input class="form-control" type="text" name="folderName" id="name" value="" placeholder="Folder name" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
 
-        <div id="modal-addGroupToFolder" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add To Folder</h4>
-            </div>
-            <form class="form-horizontal" action="" method="post">
-                <input id="folderModalAction" class="form-control" type="hidden" name="addToFolder" id="name" value="addToFolder"/>
-                <div class="modal-body">
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="label-control col-md-4" for="folderName">Folder</label>
-                            <div id="groupFoldersSelect" class="col-md-8">
-                                <select class="form-control" type="text" name="folderName" id="name" value="" placeholder="Folder name" >
-                                    #foreach($folder in $page.groupFolders)
+        <div id="modal-addGroupToFolder" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Add To Folder</h4>
+                    </div>
+                    <form class="form-horizontal" action="" method="post">
+                        <input id="folderModalAction" class="form-control" type="hidden" name="addToFolder" id="name" value="addToFolder"/>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="label-control col-md-4" for="folderName">Folder</label>
+                                    <div id="groupFoldersSelect" class="col-md-8">
+                                        <select class="form-control" type="text" name="folderName" id="name" value="" placeholder="Folder name" >
+                                            #foreach($folder in $page.groupFolders)
                                     $formatter.option($folder.name, $folder.name, null)
                                     #end
-                                </select>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
-                </div>
-            </form>
-        </div>
-
-        <div id="modal-rego-mode" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload Organisation IDs CSV</h4>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
-            </div>
-        </div>
-
-        <div id="modal-copy-members" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Copy Members To: <span class="group-name"></span></h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="" method="post">
-                    <p>Use this form to copy the members from the group below into <b class="group-name"></b></p>
-                    <div class="form-group">
-                        <label class="control-label col-md-4" for="selectSourceGroup">Group</label>
-                        <div class="col-md-8">
-                            <select name="sourceGroup" id="selectSourceGroup" class="form-control">
-                                <option value="">[None]</option>
-                                #foreach($group in $page.organisation.groups)
-                                <option value="$group.name">$group.name</option>
-                                #end
-                            </select>
-                            <p>Select the group to copy members from.</p>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary btn-save-group" type="submit">Save</button>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Copy Members</button>
+        </div>
+
+        <div id="modal-rego-mode" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload Organisation IDs CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-copy-members" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Copy Members To: <span class="group-name"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="" method="post">
+                            <p>Use this form to copy the members from the group below into <b class="group-name"></b></p>
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="selectSourceGroup">Group</label>
+                                <div class="col-md-8">
+                                    <select name="sourceGroup" id="selectSourceGroup" class="form-control">
+                                        <option value="">[None]</option>
+                                        #foreach($group in $page.organisation.groups)
+                                            <option value="$group.name">$group.name</option>
+                                        #end
+                                    </select>
+                                    <p>Select the group to copy members from.</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Copy Members</button>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -36,67 +36,71 @@
     </div>
 </div>
 
-<div id="modal-edit-programs" class="modal modal-md fade" tabindex="-1" data-group="$group.name">
-    <div class="modal-header">
-        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-        <h4 class="modal-title">Edit programs for group: <span>$group.name</span></h4>
-    </div>
-    <div class="modal-body">
-        #set($programs = $programs.allPrograms)
-        #if( $programs.isEmpty() )
-            <p>No programs have been created yet. <a href="../manageCourses" class="btn btn-sm btn-primary">Add a program</a></p>
-        #else
-            <p>Protip: This shows programs and courses for your most recently edited website versions.</p>
+<div id="modal-edit-programs" class="modal fade" tabindex="-1" data-group="$group.name">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Edit programs for group: <span>$group.name</span></h4>
+            </div>
+            <div class="modal-body">
+                #set($programs = $programs.allPrograms)
+                #if( $programs.isEmpty() )
+                    <p>No programs have been created yet. <a href="../manageCourses" class="btn btn-sm btn-primary">Add a program</a></p>
+                #else
+                    <p>Protip: This shows programs and courses for your most recently edited website versions.</p>
 
-            <div class="article-wrapper">
-                #foreach($program in $programs)
-                    #set($website = $program.closest("website"))
-                    <article class="$program.name">
-                        <span class="article-name">
-                            <a href="$program.href" title="$website.name/$program.name">$website.name/$program.name</a>
-                            <span>$program.title ( $program.parent.parent.name )</span>
-                        </span>
-                        <aside class="article-more-infor">
-                            #set($id = $group.name + "-" + $website.name + $program.name + "-completable")
-                            $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
-                            <label for="$id">Completable</label>
+                    <div class="article-wrapper">
+                        #foreach($program in $programs)
+                            #set($website = $program.closest("website"))
+                            <article class="$program.name">
+                                <span class="article-name">
+                                    <a href="$program.href" title="$website.name/$program.name">$website.name/$program.name</a>
+                                    <span>$program.title ( $program.parent.parent.name )</span>
+                                </span>
+                                <aside class="article-more-infor">
+                                    #set($id = $group.name + "-" + $website.name + $program.name + "-completable")
+                                    $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
+                                    <label for="$id">Completable</label>
 
-                            #set($id = $group.name + "-" + $website.name + $program.name + "-viewable")
-                            $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
-                            <label for="$id">Viewable</label>
+                                    #set($id = $group.name + "-" + $website.name + $program.name + "-viewable")
+                                    $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
+                                    <label for="$id">Viewable</label>
 
-                            #set($id = $group.name + "-" + $website.name + $program.name + "-na")
-                            $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
-                            <label for="$id">Not available</label>
-                        </aside>
-                    </article>
+                                    #set($id = $group.name + "-" + $website.name + $program.name + "-na")
+                                    $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
+                                    <label for="$id">Not available</label>
+                                </aside>
+                            </article>
 
-                    #foreach($course in $program.children.ofType.course)
-                        <article class="article-sub">
-                            <span class="article-name">
-                                <a href="$course.href">$course.name</a>
-                                <span>$course.title</span>
-                            </span>
-                            <aside class="article-more-infor">
-                                #set($id = $group.name + "-" + $website.name + $program.name + $course + "-completable")
-                                $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
-                                <label for="$id">Completable</label>
+                            #foreach($course in $program.children.ofType.course)
+                                <article class="article-sub">
+                                    <span class="article-name">
+                                        <a href="$course.href">$course.name</a>
+                                        <span>$course.title</span>
+                                    </span>
+                                    <aside class="article-more-infor">
+                                        #set($id = $group.name + "-" + $website.name + $program.name + $course + "-completable")
+                                        $formatter.radio($id, "status", $programs.isCompletable($group.group, $program), "Completable" )
+                                        <label for="$id">Completable</label>
 
-                                #set($id = $group.name + "-" + $website.name + $program.name + $course + "-viewable")
-                                $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
-                                <label for="$id">Viewable</label>
+                                        #set($id = $group.name + "-" + $website.name + $program.name + $course + "-viewable")
+                                        $formatter.radio($id, "status", $programs.isSelected($group.group, $program), "Viewable" )
+                                        <label for="$id">Viewable</label>
 
-                                #set($id = $group.name + "-" + $website.name + $program.name + $course + "-na")
-                                $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
-                                <label for="$id">Not available</label>
-                            </aside>
-                        </article>
-                    #end
+                                        #set($id = $group.name + "-" + $website.name + $program.name + $course + "-na")
+                                        $formatter.radio($id, "status", $programs.notSelected($group.group, $program), "" )
+                                        <label for="$id">Not available</label>
+                                    </aside>
+                                </article>
+                            #end
+                        #end
+                    </div>
                 #end
             </div>
-        #end
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -4,98 +4,97 @@
     </head>
     <body>
         #macro(genGroups $group $wrapper $folder)
-        #set( $folderName = "")
-        #if($folder)
-            #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
-        #end
-        <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
-            <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${folderName}-${foreach.count}">
-                #set($typeColour = "btn-info")
+            #set( $folderName = "")
+            #if($folder)
+                #set( $folderName = "-" + $folder.name.replaceAll('[^A-Za-z0-9]','') )
+            #end
+            <div id="$group.name" class="panel panel-default group" data-name="$group.name" data-title="$!group.groupTitle" data-notes="$!group.notes">
+                <div class="panel-heading" data-toggle="collapse" data-parent="#${wrapper}" data-target="#group${folderName}-${foreach.count}">
+                    #set($typeColour = "btn-info")
 
-                #if( $group.groupType == "P" )
-                #set($typeColour = "btn-success")
-                <i class="clip-users"></i>
-                #elseif( $group.groupType == "S" )
-                <i class="fa fa-trophy"></i>
-                #elseif( $group.groupType == "M" )
-                <i class="fa fa-envelope"></i>
-                #else
-                <i class="clip-users"></i>
-                #end
-
-                <span class="group-name clickable">
-                    #set($gName = false)
-                    #set($gName = $group.groupTitle)
-                    #if(!$gName)
-                    #set($gName = $group.name)
-                    #end
                     #if( $group.groupType == "P" )
-                    <b class="text-info">$gName</b>
+                        #set($typeColour = "btn-success")
+                        <i class="clip-users"></i>
+                    #elseif( $group.groupType == "S" )
+                        <i class="fa fa-trophy"></i>
+                    #elseif( $group.groupType == "M" )
+                        <i class="fa fa-envelope"></i>
                     #else
-                    $group.name
+                        <i class="clip-users"></i>
                     #end
-                </span>
-                <div class="btn-group btn-group-xs">
-                    <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
-                        <span class="caret"></span>
-                    </button>
-                    <ul role="menu" class="dropdown-menu">
-                        <li><a href="" class="btn-rename-group">Edit this group</a></li>
-                        <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
-                        <li><a href="" class="btn-copy-member">Copy members from group</a></li>
-                        #if($folder)
-                        <li><a href="$folder.name" class="btn-remove-from-folder">Remove From Folder</a></li>
-                        #else
-                        <li><a href="" class="btn-add-to-folder">Add To Folder</a></li>
+
+                    <span class="group-name clickable">
+                        #set($gName = false)
+                        #set($gName = $group.groupTitle)
+                        #if(!$gName)
+                            #set($gName = $group.name)
                         #end
-                        <li class="divider"></li>
-                        <li><a href="" class="btn-delete-group">Delete this group</a></li>
-                    </ul>
-                </div>
-                <div class="panel-tools">
-                    <div class="btn-group btn-group-sm">
-                        <a href="$group.name/members"class="btn btn-info">
-                            <i class="clip-users"></i>
-                            $group.numMembers
-                        </a>
+                        #if( $group.groupType == "P" )
+                            <b class="text-info">$gName</b>
+                        #else
+                            $group.name
+                        #end
+                    </span>
 
-                        <a href="$group.name" class="btn $typeColour">
-                            #if( $group.groupType == "P" )
-                            $group.regoModeText
+                    <div class="btn-group btn-group-xs">
+                        <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                            <span class="caret"></span>
+                        </button>
+                        <ul role="menu" class="dropdown-menu">
+                            <li><a href="" class="btn-rename-group">Edit this group</a></li>
+                            <li><a href="$group.name/members" class="btn-view-group-member">View members</a></li>
+                            <li><a href="" class="btn-copy-member">Copy members from group</a></li>
+                            #if($folder)
+                                <li><a href="$folder.name" class="btn-remove-from-folder">Remove From Folder</a></li>
+                            #else
+                                <li><a href="" class="btn-add-to-folder">Add To Folder</a></li>
                             #end
-                            $group.groupTypeText
-                        </a>
-                        <a href="$group.name" class="btn $typeColour">
-                            <i class="fa fa-cog"></i>
-                        </a>
+                            <li class="divider"></li>
+                            <li><a href="" class="btn-delete-group">Delete this group</a></li>
+                        </ul>
+                    </div>
+                    <div class="panel-tools">
+                        <div class="btn-group btn-group-sm">
+                            <a href="$group.name/members" class="btn btn-info">
+                                <i class="clip-users"></i>
+                                $group.numMembers
+                            </a>
 
+                            <a href="$group.name" class="btn $typeColour">
+                                #if( $group.groupType == "P" )
+                                    $group.regoModeText
+                                #end
+                                $group.groupTypeText
+                                <i class="fa fa-cog"></i>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="group${folderName}-${foreach.count}" class="collapse">
+                    <div class="panel-body">
+                        <table class="table">
+                            <tr>
+                                <th>Code</th>
+                                <td>$group.name</td>
+                            </tr>
+                            <tr>
+                                <th>Type</th>
+                                <td>$group.groupTypeText</td>
+                            </tr>
+                            <tr>
+                                <th>Roles</th>
+                                <td>
+                                    #foreach($role in $group.children.ofType.role)
+                                        <span class="label label-info" style="margin-bottom: 4px; display: inline-block;">$role.title</span>
+                                    #end
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
             </div>
-
-            <div id="group${folderName}-${foreach.count}" class="collapse">
-                <div class="panel-body">
-                    <table class="table">
-                        <tr>
-                            <th>Code</th>
-                            <td>$group.name</td>
-                        </tr>
-                        <tr>
-                            <th>Type</th>
-                            <td>$group.groupTypeText</td>
-                        </tr>
-                        <tr>
-                            <th>Roles</th>
-                            <td>
-                                #foreach($role in $group.children.ofType.role)
-                                <span class="label label-info" style="margin-bottom: 4px; display: inline-block;">$role.title</span>
-                                #end
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
         #end
     </body>
 </html>

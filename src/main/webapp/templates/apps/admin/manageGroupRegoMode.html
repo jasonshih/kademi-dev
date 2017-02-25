@@ -37,13 +37,14 @@
                                 <div class="clearfix">
                                     <label class="control-label radio-inline" for="groupTypeSubscription">
                                         $formatter.radioEq("groupTypeSubscription", "groupType", $page.group.groupType, "S")
-                                        Mailing list, which can have additional custom fields <br/><i>Formerly called 'Subscription group'</i>
+                                        Mailing list, which can have additional custom fields <br /><i>Formerly called 'Subscription group'</i>
                                     </label>
                                 </div>
                                 <div class="clearfix">
                                     <label class="control-label radio-inline" for="groupTypeMailing">
                                         $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
-                                        User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage <br/><i>Formerly called a 'mailing list' group</i>
+                                        User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage
+                                        <br /><i>Formerly called a 'mailing list' group</i>
                                     </label>
                                 </div>
 
@@ -58,19 +59,25 @@
                         <div class="panel-body">
                             <div class="form-group col-sm-12">
                                 <div class="clearfix">
-                                    <label for="regoModeOpen" class="radio-inline col-sm-1">$formatter.radioEq("regoModeOpen", "regoMode", $page.group.registrationMode  ,"o") Open</label>
+                                    <label for="regoModeOpen" class="radio-inline col-sm-1">$formatter.radioEq(
+                                        "regoModeOpen", "regoMode", $page.group.registrationMode  ,"o") Open</label>
+
                                     <div class="col-sm-10">
                                         <label class="radio-inline control-label">Allows any member of the public to register and their membership is immediately active</label>
                                     </div>
                                 </div>
                                 <div class="clearfix">
-                                    <label for="regoModeAdmin" class="radio-inline col-sm-1">$formatter.radioEq("regoModeAdmin", "regoMode", $page.group.registrationMode  ,"a") Approval</label>
+                                    <label for="regoModeAdmin" class="radio-inline col-sm-1">$formatter.radioEq(
+                                        "regoModeAdmin", "regoMode", $page.group.registrationMode  ,"a") Approval</label>
+
                                     <div class="col-sm-10">
                                         <label class="radio-inline control-label">Memberships are initially inactive until reviewed by an administrator</label>
                                     </div>
                                 </div>
                                 <div class="clearfix">
-                                    <label for="regoModeClosed" class="radio-inline col-sm-1">$formatter.radioEq("regoModeClosed", "regoMode", $page.group.registrationMode  ,"c") Closed</label>
+                                    <label for="regoModeClosed" class="radio-inline col-sm-1">$formatter.radioEq(
+                                        "regoModeClosed", "regoMode", $page.group.registrationMode  ,"c") Closed</label>
+
                                     <div class="col-sm-10">
                                         <label class="radio-inline control-label">External registration is not available. Instead administrators create accounts as required</label>
                                     </div>
@@ -86,11 +93,12 @@
                         <div class="panel-body form-horizontal">
                             <div class="form-group">
                                 <label for="selectOrgLabel" class="col-sm-3 control-label">Organisation Type</label>
+
                                 <div class="col-sm-6">
                                     <select name="orgType" class="form-control">
                                         <option value="">[Any]</option>
                                         #foreach($ot in $page.organisation.orgTypes)
-                                        $formatter.option($ot.name, $ot.displayName, $page.group.regoOrgType.name)
+                                            $formatter.option($ot.name, $ot.displayName, $page.group.regoOrgType.name)
                                         #end
                                     </select>
                                 </div>
@@ -102,11 +110,12 @@
                             </div>
                             <div class="form-group">
                                 <label for="rootOrg" class="col-sm-3 control-label">Select from</label>
+
                                 <div class="col-sm-6">
                                     <select name="sRootRegoOrg" class="form-control">
                                         <option value="">$page.organisation.formattedName (this organisation)</option>
                                         #foreach($org in $page.organisation.childOrgs())
-                                        $formatter.option($org.orgId, $org.formattedName, $page.group.rootRegoOrg.orgId)
+                                            $formatter.option($org.orgId, $org.formattedName, $page.group.rootRegoOrg.orgId)
                                         #end
                                     </select>
                                 </div>
@@ -118,7 +127,6 @@
                             </div>
                         </div>
                     </div>
-
 
 
                     <div class="panel panel-default panel-fields #if ($page.group.groupType == 'M') hide #end">
@@ -149,17 +157,17 @@
                                 </thead>
                                 <tbody>
                                     #foreach($field in $page.dataCaptureFields.entrySet())
-                                    <tr class="extra-field">
-                                        <td>
-                                            <input type="hidden" value="$field.key" name="key" />
-                                            <input type="hidden" value="$field.value" name="value" />
-                                        </td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                        <tr class="extra-field">
+                                            <td>
+                                                <input type="hidden" value="$field.key" name="key" />
+                                                <input type="hidden" value="$field.value" name="value" />
+                                            </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -172,25 +180,26 @@
                         </div>
                         <div class="panel-body">
                             <p>
-                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-policy"><i class="fa fa-plus"></i> Add new policy</button>
+                                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-policy"><i class="fa fa-plus"></i> Add new policy
+                                </button>
                             </p>
                             <div id="policy-list" class="showed-action policy-list" data-group="$page.group.name">
                                 #set($policies = false)
                                 #set($policies = $page.passwordPolicies)
                                 #if(!$policies || $policies.empty)
-                                <p>This group does not have any password policies</p>
+                                    <p>This group does not have any password policies</p>
                                 #else
-                                #foreach($pp in $policies)
-                                <article class="well" data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
-                                    <p class="article-name">
-                                        $page.getPasswordPolicyDescription($pp)
-                                    </p>
-                                    <aside class="article-action">
-                                        <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
-                                        <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
-                                    </aside>
-                                </article>
-                                #end
+                                    #foreach($pp in $policies)
+                                        <article class="well" data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
+                                            <p class="article-name">
+                                                $page.getPasswordPolicyDescription($pp)
+                                            </p>
+                                            <aside class="article-action">
+                                                <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
+                                                <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
+                                            </aside>
+                                        </article>
+                                    #end
                                 #end
                             </div>
                         </div>
@@ -208,38 +217,40 @@
                         </div>
                         <div class="panel-body">
                             <h4>Website access</h4>
+
                             <p>
                                 Grant access for this group to webites here on the <a href="/websites/">website manager</a>. If the group
                                 allows registration this will create a registration page for the group in that website, listed below
                             </p>
+
                             <div class="article-wrapper showed-action websites-list">
                                 #set($signups = $group.signupPages)
                                 #if( $signups.isEmpty() )
-                                <p>This user group does not have access to any websites. Grant access from the <a href="/websites/">website manager</a></p>
+                                    <p>This user group does not have access to any websites. Grant access from the <a href="/websites/">website manager</a></p>
                                 #else
-                                #foreach($p in $signups.keySet())
-                                <article>
-                                    <span class="article-name">
-                                        <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
-                                    </span>
-                                    #if( $group.publicSignup )
-                                    <aside class="article-action">
-                                        <div class="btn-group btn-group-sm">
-                                            <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-info" title="Visit the signup page">
-                                                <i class="fa fa-wpforms"></i>
-                                            </a>
-                                            <a href="/websites/$group.websiteName($p)/" class="btn btn-sm btn-info" title="Website settings">
-                                                <i class="fa fa-cog"></i>
-                                            </a>
-                                        </div>
-                                    </aside>
-                                    #else
-                                    <aside class="article-more-infor">
-                                        No signup page
-                                    </aside>
+                                    #foreach($p in $signups.keySet())
+                                        <article>
+                                            <span class="article-name">
+                                                <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                                            </span>
+                                            #if( $group.publicSignup )
+                                                <aside class="article-action">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-info" title="Visit the signup page">
+                                                            <i class="fa fa-wpforms"></i>
+                                                        </a>
+                                                        <a href="/websites/$group.websiteName($p)/" class="btn btn-sm btn-info" title="Website settings">
+                                                            <i class="fa fa-cog"></i>
+                                                        </a>
+                                                    </div>
+                                                </aside>
+                                            #else
+                                                <aside class="article-more-infor">
+                                                    No signup page
+                                                </aside>
+                                            #end
+                                        </article>
                                     #end
-                                </article>
-                                #end
                                 #end
                             </div>
                         </div>
@@ -256,10 +267,10 @@
                             <hr class="hr-sm" />
                             <div class="blocks-wrapper roles-wrapper">
                                 #foreach($role in $page.children.ofType.role)
-                                <span class="block role">
-                                    <span class="block-name">$role.title</span>
-                                    <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
-                                </span>
+                                    <span class="block role">
+                                        <span class="block-name">$role.title</span>
+                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
+                                    </span>
                                 #end
                             </div>
                         </div>
@@ -287,26 +298,26 @@
                             </div>
                             <div class="row">
                                 #foreach($group in $page.groups)
-                                #if( $group == $page.group )
+                                    #if( $group == $page.group )
 
-                                #elseif ($group.mailingList)
+                                    #elseif ($group.mailingList)
 
-                                <div class="optins col-sm-12 col-md-6 col-lg-4">
-                                    #set($groupId = "optin" + $group.name)
-                                    <div class="checkbox">
-                                        <label for="$groupId">
+                                        <div class="optins col-sm-12 col-md-6 col-lg-4">
+                                            #set($groupId = "optin" + $group.name)
+                                            <div class="checkbox">
+                                                <label for="$groupId">
 
-                                            #set($optin = "")
-                                            #set($optin = $page.optin($group))
-                                            $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                            <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
+                                                    #set($optin = "")
+                                                    #set($optin = $page.optin($group))
+                                                    $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
+                                                    <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
 
-                                        </label>
-                                    </div>
+                                                </label>
+                                            </div>
 
-                                    <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
-                                </div>
-                                #end
+                                            <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
+                                        </div>
+                                    #end
                                 #end
                             </div>
                         </div>
@@ -333,13 +344,15 @@
                     </div>
                     <div class="modal-body">
                         <h5>Role applies to:</h5>
+
                         <div class="applies-to">
                             <p>
                                 <input type="radio" name="appliesTo" value="ownOrg" id="appliesToOwnOrg" />
                                 <label for="appliesToOwnOrg">Their own organistion</label>
                             </p>
+
                             <p>
-                                <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository"/>
+                                <input type="radio" name="appliesTo" value="selectRepo" id="appliesToRepository" />
                                 <label for="appliesToRepository">A repository</label>
                                 <select class="hide">
                                     <option value="">-- Select a repository --</option>
@@ -349,7 +362,7 @@
                                 </select>
                             </p>
                             <p>
-                                <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg"/>
+                                <input type="radio" name="appliesTo" value="selectOrg" id="appliesToOrg" />
                                 <label for="appliesToOrg">An organistion</label>
                                 <select class="hide">
                                     <option value="">-- Select an organisation --</option>
@@ -378,151 +391,179 @@
 
         <!-- START OF MODAL EXTRA FIELD -->
         <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add extra field</h4>
-            </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="$page.href" method="POST">
-                    <input id="extra-field-value" type="hidden" name="addFieldValue" />
-                    <div class="alert alert-info">
-                        <strong>Kademi built-in fields:</strong> firstName, surName, phone, email, nickName, birthDate
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add extra field</h4>
                     </div>
-                    <div class="form-group">
-                        <label for="extra-field-name" class="control-label col-md-4">Name:</label>
-                        <div class="col-md-8">
-                            <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="extra-field-required" class="control-label col-md-4">Required:</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <label for="extra-field-required"><input id="extra-field-required" type="checkbox" /></label>
+                    <div class="modal-body">
+                        <form class="form-horizontal" action="$page.href" method="POST">
+                            <input id="extra-field-value" type="hidden" name="addFieldValue" />
+
+                            <div class="alert alert-info">
+                                <strong>Kademi built-in fields:</strong> firstName, surName, phone, email, nickName, birthDate
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="org-sel" class="control-label col-md-4">Organisation selection:</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <label for="org-sel"><input id="org-sel" type="checkbox" /></label>
+                            <div class="form-group">
+                                <label for="extra-field-name" class="control-label col-md-4">Name:</label>
+
+                                <div class="col-md-8">
+                                    <input id="extra-field-name" type="text" class="form-control required" name="addFieldName" placeholder="Field text" value="" />
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="prof-id" class="control-label col-md-4">Profile Identifier:</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <label for="prof-id"><input id="prof-id" type="checkbox" /></label>
+                            <div class="form-group">
+                                <label for="extra-field-required" class="control-label col-md-4">Required:</label>
+
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label for="extra-field-required"><input id="extra-field-required" type="checkbox" /></label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="org-sel" class="control-label col-md-4">Search index</label>
-                        <div class="col-md-8">
-                            <div class="checkbox">
-                                <label for="extra-field-indexed"><input id="extra-field-indexed" type="checkbox" /></label>
+                            <div class="form-group">
+                                <label for="org-sel" class="control-label col-md-4">Organisation selection:</label>
+
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label for="org-sel"><input id="org-sel" type="checkbox" /></label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="prof-id" class="control-label col-md-4">Profile Identifier:</label>
+
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label for="prof-id"><input id="prof-id" type="checkbox" /></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="org-sel" class="control-label col-md-4">Search index</label>
+
+                                <div class="col-md-8">
+                                    <div class="checkbox">
+                                        <label for="extra-field-indexed"><input id="extra-field-indexed" type="checkbox" /></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="extra-field-text" class="control-label col-md-4">Text:</label>
+
+                                <div class="col-md-8">
+                                    <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Option:</label>
+
+                                <div class="col-md-8">
+                                    <button type="button" class="btn btn-sm btn-add-option btn-info">Add option</button>
+                                    <div id="options-wrapper"></div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <label for="extra-field-text" class="control-label col-md-4">Text:</label>
-                        <div class="col-md-8">
-                            <input id="extra-field-text" class="form-control required" placeholder="Field text" value="" />
-                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
                     </div>
-                    <div class="form-group">
-                        <label  class="control-label col-md-4">Option:</label>
-                        <div class="col-md-8">
-                            <button type="button" class="btn btn-sm btn-add-option btn-info">Add option</button>
-                            <div id="options-wrapper"></div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                </div>
             </div>
         </div>
         <!-- END OF MODAL EXTRA FIELD -->
 
         <!-- START OF MODAL PASSWORD POLICY -->
-        <div id="modal-add-policy" class="modal modal-md fade add-policy-modal" aria-hidden="true" tabindex="-1" data-groupname="$page.group.name">
-            <form action="." method="POST" class="form-horizontal">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Add new password policy for $page.group.name</h4>
+        <div id="modal-add-policy" class="modal fade add-policy-modal" aria-hidden="true" tabindex="-1" data-groupname="$page.group.name">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <form action="." method="POST" class="form-horizontal">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Add new password policy for $page.group.name</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type='hidden' name="addPasswordPolicy" value="$page.group.name" />
+
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="preset">Preset</label>
+
+                                <div class="col-md-8">
+                                    <select class="form-control preset-select">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="minLength">Minimum Length</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="minLength" name="minLength" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="minUpperCase">Minimum Uppercase Characters</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="minUpperCase" name="minUpperCase" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="minLowerCase">Minimum Lowercase Characters</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="minLowerCase" name="minLowerCase" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="minAlpha">Minimum Alpha Characters</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="minAlpha" name="minAlpha" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="minNumeric">Minimum Numeric Characters</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="minNumeric" name="minNumeric" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="maxRepeat">Maximum repeats</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control numeric" type="number" id="maxRepeat" name="maxRepeat" placeholder="0" min="0" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="badWords">Bad Words
+                                    <small>a CSV list of words that aren't allowed.</small>
+                                </label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" id="badWords" name="badWords" placeholder="e.g. password,admin" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="customRegex">Custom Regex</label>
+
+                                <div class="col-md-8">
+                                    <input class="form-control" type="text" id="customRegex" name="customRegex" placeholder="e.g. [a-zA-Z]{10}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" type="submit">Save</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-body">
-                    <input type='hidden' name="addPasswordPolicy" value="$page.group.name"/>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="preset">Preset</label>
-                        <div class="col-md-8">
-                            <select class="form-control preset-select">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="minLength">Minimum Length</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="minLength" name="minLength" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="minUpperCase">Minimum Uppercase Characters</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="minUpperCase" name="minUpperCase" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="minLowerCase">Minimum Lowercase Characters</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="minLowerCase" name="minLowerCase" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="minAlpha">Minimum Alpha Characters</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="minAlpha" name="minAlpha" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="minNumeric">Minimum Numeric Characters</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="minNumeric" name="minNumeric" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="maxRepeat">Maximum repeats</label>
-                        <div class="col-md-8">
-                            <input class="form-control numeric" type="number" id="maxRepeat" name="maxRepeat" placeholder="0" min="0" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="badWords">Bad Words<small>a CSV list of words that aren't allowed.</small></label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" id="badWords" name="badWords" placeholder="e.g. password,admin" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="customRegex">Custom Regex</label>
-                        <div class="col-md-8">
-                            <input class="form-control" type="text" id="customRegex" name="customRegex" placeholder="e.g. [a-zA-Z]{10}" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-success" type="submit">Save</button>
-                </div>
-            </form>
+            </div>
         </div>
         <!-- START OF MODAL PASSWORD POLICY -->
 
-        <script type="text/javascript" >
+        <script type="text/javascript">
             $(function () {
                 initManageExtraField();
                 initManageGroupRegoMode();
