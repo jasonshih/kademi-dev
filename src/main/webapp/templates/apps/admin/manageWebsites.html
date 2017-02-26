@@ -76,7 +76,7 @@
                                             <li><a href="/pages/$w.name/$w.liveBranch/"><i class="fa fa-pencil"></i> Pages</a></li>
                                             <li><a href="/repositories/$w.name/$w.liveBranch/"><i class="fa fa-files-o"></i> Files</a></li>
                                             <li role="separator" class="divider"></li>
-                                            <li><a target="_blank" href="http://${page.websiteAddress($w)}${formatter.portString}/" class="ViewWebsite"><i class="fa fa-eye"></i> Open website</a></li>
+                                            <li><a target="_blank" href="${page.websiteAddress($w)}" class="ViewWebsite"><i class="fa fa-eye"></i> Open website</a></li>
                                             <li><a target='_blank' href='$liveBranch.href?goto='><i class="fa fa-eye"></i> Login to home page</a></li>
                                             <li><a target='_blank' href="$liveBranch.href?goto=&gotoPath=dashboard"><i class="fa fa-eye"></i> Login to dashboard</a></li>
                                             <li><a target='_blank' href="$liveBranch.href?goto=&gotoPath=profile"><i class="fa fa-eye"></i> Login to profile</a></li>
@@ -87,8 +87,8 @@
                                 </td>
                                 <td>
                                     $!liveBranch.domainName
-                                    
-                                    #if( $w.redirectTo.length() > 0 )                                    
+
+                                    #if( $w.redirectTo.length() > 0 )
                                     <p class="text-right">
                                         <br/>
                                     <i>
