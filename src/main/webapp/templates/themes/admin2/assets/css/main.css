@@ -315,69 +315,6 @@ input[type="color"] {
     -webkit-box-shadow: 0 0 8px rgba(82, 168, 236, 0.6);
     box-shadow: 0 0 8px rgba(82, 168, 236, 0.6);
     outline: 0 none; }
-  select:-webkit-autofill, select:-webkit-autofill:hover, select:-webkit-autofill:focus, select:-webkit-autofill:active,
-  textarea:-webkit-autofill,
-  textarea:-webkit-autofill:hover,
-  textarea:-webkit-autofill:focus,
-  textarea:-webkit-autofill:active,
-  input[type="text"]:-webkit-autofill,
-  input[type="text"]:-webkit-autofill:hover,
-  input[type="text"]:-webkit-autofill:focus,
-  input[type="text"]:-webkit-autofill:active,
-  input[type="password"]:-webkit-autofill,
-  input[type="password"]:-webkit-autofill:hover,
-  input[type="password"]:-webkit-autofill:focus,
-  input[type="password"]:-webkit-autofill:active,
-  input[type="datetime"]:-webkit-autofill,
-  input[type="datetime"]:-webkit-autofill:hover,
-  input[type="datetime"]:-webkit-autofill:focus,
-  input[type="datetime"]:-webkit-autofill:active,
-  input[type="datetime-local"]:-webkit-autofill,
-  input[type="datetime-local"]:-webkit-autofill:hover,
-  input[type="datetime-local"]:-webkit-autofill:focus,
-  input[type="datetime-local"]:-webkit-autofill:active,
-  input[type="date"]:-webkit-autofill,
-  input[type="date"]:-webkit-autofill:hover,
-  input[type="date"]:-webkit-autofill:focus,
-  input[type="date"]:-webkit-autofill:active,
-  input[type="month"]:-webkit-autofill,
-  input[type="month"]:-webkit-autofill:hover,
-  input[type="month"]:-webkit-autofill:focus,
-  input[type="month"]:-webkit-autofill:active,
-  input[type="time"]:-webkit-autofill,
-  input[type="time"]:-webkit-autofill:hover,
-  input[type="time"]:-webkit-autofill:focus,
-  input[type="time"]:-webkit-autofill:active,
-  input[type="week"]:-webkit-autofill,
-  input[type="week"]:-webkit-autofill:hover,
-  input[type="week"]:-webkit-autofill:focus,
-  input[type="week"]:-webkit-autofill:active,
-  input[type="number"]:-webkit-autofill,
-  input[type="number"]:-webkit-autofill:hover,
-  input[type="number"]:-webkit-autofill:focus,
-  input[type="number"]:-webkit-autofill:active,
-  input[type="email"]:-webkit-autofill,
-  input[type="email"]:-webkit-autofill:hover,
-  input[type="email"]:-webkit-autofill:focus,
-  input[type="email"]:-webkit-autofill:active,
-  input[type="url"]:-webkit-autofill,
-  input[type="url"]:-webkit-autofill:hover,
-  input[type="url"]:-webkit-autofill:focus,
-  input[type="url"]:-webkit-autofill:active,
-  input[type="search"]:-webkit-autofill,
-  input[type="search"]:-webkit-autofill:hover,
-  input[type="search"]:-webkit-autofill:focus,
-  input[type="search"]:-webkit-autofill:active,
-  input[type="tel"]:-webkit-autofill,
-  input[type="tel"]:-webkit-autofill:hover,
-  input[type="tel"]:-webkit-autofill:focus,
-  input[type="tel"]:-webkit-autofill:active,
-  input[type="color"]:-webkit-autofill,
-  input[type="color"]:-webkit-autofill:hover,
-  input[type="color"]:-webkit-autofill:focus,
-  input[type="color"]:-webkit-autofill:active {
-    transition: background-color 5000s ease-in-out 0s;
-    -webkit-text-fill-color: #fff !important; }
 
 label {
   font-weight: normal; }
@@ -2670,6 +2607,9 @@ body.login {
       opacity: 1;
       color: #fff;
       font-style: italic; }
+    body.login .input-icon .form-control:-webkit-autofill, body.login .input-icon .form-control:-webkit-autofill:hover, body.login .input-icon .form-control:-webkit-autofill:focus, body.login .input-icon .form-control:-webkit-autofill:active {
+      transition: background-color 5000s ease-in-out 0s;
+      -webkit-text-fill-color: #fff !important; }
   body.login .input-icon > .fa {
     color: #fff !important;
     font-size: 25px;
