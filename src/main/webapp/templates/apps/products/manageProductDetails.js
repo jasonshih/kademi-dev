@@ -285,7 +285,7 @@ function doAddToCategory(categoryName) {
         type: 'POST',
         dataType: 'json',
         data: {
-            categoryName: categoryName
+        	addProductCategory: categoryName
         },
         success: function (resp) {
             if (resp.status) {
@@ -306,12 +306,11 @@ function doRemoveFromCategory(categoryName) {
         type: 'POST',
         dataType: 'json',
         data: {
-        	removeCategoryName: categoryName
+        	removeProductCategory: categoryName
         },
         success: function (resp) {
             if (resp.status) {
             	reloadCategories();
-            	//a.closest("span.category").remove();
             } else {
                 Msg.error("Couldnt remove the product to category: " + resp.messages);
             }
