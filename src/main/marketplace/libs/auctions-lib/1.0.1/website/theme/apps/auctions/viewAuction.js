@@ -5,10 +5,18 @@ function initViewAuction(WSUri) {
 }
 
 function initWebsockets(WSUri) {
-    var path = getAuctionPath(window.location.pathname);
-    flog("initWebsockets", window.location.host, "ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
     try {
-        wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
+        var port = parseInt(window.location.port || 80) + 1;
+        var proto = 'ws://';
+        if (window.location.protocol === 'https:') {
+            proto = 'wss://';
+            port = parseInt(window.location.port || 443) + 1;
+        }
+        var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + WSUri;
+
+        flog("initWebsockets", window.location.hostname, wsPath);
+
+        wsocket = new WebSocket(wsPath);
         wsocket.onmessage = function (evt) {
             var c = $.parseJSON(evt.data);
             if (c.beanType != null && c.beanType == "auctionBid") {
