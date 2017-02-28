@@ -4124,7 +4124,8 @@ body.lock-screen .user-info {
     display: inline-block;
     font-size: 14px;
     font-weight: normal;
-    padding: 4px; }
+    padding: 4px;
+    line-height: 20px; }
     .wrap-image > .tools > a:hover, .wrap-image > *:first-child .inner a:hover {
       color: #C9E2EA;
       text-decoration: none; }
