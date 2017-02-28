@@ -202,6 +202,13 @@
                 <div id="cache" class="tab-pane">
                     #set( $caches = $page.caches )
                     
+                    <div class="alert alert-info">
+                        <h3>Cluster members: $page.clusterMembers.size()</h3>
+                        #foreach($m in $page.clusterMembers)
+                        <span class="label label-info" >$m</span>
+                        #end
+                    </div>
+                    
                     <form action="$page.href" method="POST">
                         <input type="hidden" name="flushCache" value="true"/>
                         <button class="btn btn-danger">Flush cache</button>
