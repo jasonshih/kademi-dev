@@ -5,10 +5,18 @@ function initViewAuction(WSUri) {
 }
 
 function initWebsockets(WSUri) {
-    var path = getAuctionPath(window.location.pathname);
-    flog("initWebsockets", window.location.host, "ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
     try {
-        wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
+        var port = parseInt(window.location.port || 80) + 1;
+        var proto = 'ws://';
+        if (window.location.protocol === 'https:') {
+            proto = 'wss://';
+            port = parseInt(window.location.port || 443) + 1;
+        }
+        var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + WSUri;
+
+        flog("initWebsockets", window.location.hostname, wsPath);
+
+        wsocket = new WebSocket(wsPath);
         wsocket.onmessage = function (evt) {
             var c = $.parseJSON(evt.data);
             if (c.beanType != null && c.beanType == "auctionBid") {
@@ -16,7 +24,7 @@ function initWebsockets(WSUri) {
                 var dt = moment(c.bidDate);
                 flog("Received Date: ", dt);
                 processReceivedBid(c);
-            }else{ // Bid must be closing
+            } else { // Bid must be closing
                 $("#bidFromDiv").hide();
                 Msg.info("Auction is closing, no more bids will be accepted.")
             }
@@ -31,7 +39,7 @@ function initWebsockets(WSUri) {
 function processReceivedBid(c) {
     var dt = moment(c.bidDate);
     $('#bidHistory tbody').prepend('<tr><td>' + c.bidValue.toFixed(2) + '</td><td><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></td><td><a href="' + c.bidderHref + '" > ' + c.bidderName + ' </a></td></tr>');
-    if($('#bidHistory tr').length > 5){
+    if ($('#bidHistory tr').length > 5) {
         $('#bidHistory tr:last').remove();
     }
     $('abbr.timeago').timeago();
