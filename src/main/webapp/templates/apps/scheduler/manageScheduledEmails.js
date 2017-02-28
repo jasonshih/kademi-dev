@@ -45,7 +45,7 @@ function initManageScheduledEmail() {
     $('body').on('change', '[name=periodMultiples]', function (e) {
         var inp = $(this);
         var val = inp.val();
-        if(val < 1){
+        if (val < 1) {
             inp.val(1);
         }
     });
@@ -205,10 +205,10 @@ function setGroupRecipient(name, isRecip) {
                 flog("saved ok", data);
                 if (isRecip) {
                     $(".GroupList").append(
-                            '<span class="block ' + name + '">' +
-                            name +
-                            '</span>'
-                            );
+                        '<span class="block ' + name + '">' +
+                        name +
+                        '</span>'
+                    );
                     flog("appended to", $(".GroupList"));
                 } else {
                     $(".GroupList ." + name).remove();
@@ -255,7 +255,6 @@ function checkCookie() {
                 $("a.SortByStatus").attr("rel", _asc ? "desc" : "asc");
                 break;
         }
-        ;
     }
 }
 
@@ -351,9 +350,9 @@ function sortBy(type, asc) {
     var _list = {};
     var sortObject = function (obj) {
         var sorted = {},
-                array = [],
-                key,
-                l;
+            array = [],
+            key,
+            l;
 
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
