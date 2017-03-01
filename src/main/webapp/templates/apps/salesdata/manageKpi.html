@@ -5,6 +5,7 @@
             .DateTimeIcon {
                 display: none;
             }
+
             .upload-results {
                 display: none;
             }
@@ -12,7 +13,7 @@
         <script type="text/javascript" src="manageKpi.js">//</script>
         <script type="text/javascript" src="jquery.kpiVis.js">//</script>
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
-        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
 
     </head>
@@ -54,17 +55,17 @@
                     <div id="general" class="tab-pane">
                         <p class="lead" id="configSummary">
                             #if( $page.kpi.aggregation )
-                            <b>$page.kpi.aggregation</b> values in <b>$page.parent.title</b> every <b>$page.kpi.periodMultiples $page.kpi.frequency</b>,
-                            for users in groups
-                            #foreach( $group in $page.selectedGroups)
-                            <b>$group.name</b>,
-                            #end
-                            starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone)
+                                <b>$page.kpi.aggregation</b> values in <b>$page.parent.title</b> every <b>$page.kpi.periodMultiples $page.kpi.frequency</b>,
+                                for users in groups
+                                #foreach( $group in $page.selectedGroups)
+                                    <b>$group.name</b>,
+                                #end
+                                starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone)
                             #else
-                            <b>This KPI has not been configured yet</b>
+                                <b>This KPI has not been configured yet</b>
                             #end
                         </p>
-                        <hr/>
+                        <hr />
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
                                 <div id="seriesHistogram" style="height: 480px">
@@ -81,7 +82,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <br/>
+                                <br />
+
                                 <div>
                                     <table class="table table-bordered table-striped" id="kpiLeaderboard">
                                         <thead>
@@ -103,14 +105,16 @@
                     <div id="config" class="tab-pane">
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Name</label>
+
                             <div class="col-md-8">
-                                <input type="text" name="name" id="name" value="$!page.kpi.name" placeholder="" class="required form-control"  required="true" />
+                                <input type="text" name="name" id="name" value="$!page.kpi.name" placeholder="" class="required form-control" required="true" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
+
                             <div class="col-md-8">
-                                <input type="text" name="title" id="title" value="$!page.kpi.title" placeholder="" class="required form-control"  required="true" />
+                                <input type="text" name="title" id="title" value="$!page.kpi.title" placeholder="" class="required form-control" required="true" />
                             </div>
                         </div>
 
@@ -119,11 +123,12 @@
                                 Aggregation
                                 <small>How should values be merged over the KPI period</small>
                             </label>
+
                             <div class="col-md-8">
-                                <select name="aggregation" id="aggregation" class="form-control required" required="true" >
+                                <select name="aggregation" id="aggregation" class="form-control required" required="true">
                                     <option value="">[Not selected]</option>
                                     #foreach($agg in $page.aggregationTypes.entrySet() )
-                                    $formatter.option($agg.key, $agg.value, $page.kpi.aggregation)
+                                        $formatter.option($agg.key, $agg.value, $page.kpi.aggregation)
                                     #end
                                 </select>
                             </div>
@@ -132,19 +137,23 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="notes">
                                 Aggregation period
-                                <small>Over what period should criteria be assessed?</small></label>
+                                <small>Over what period should criteria be assessed?</small>
+                            </label>
+
                             <div class="col-md-3 col-sm-4 col-xs-12">
                                 <div class="input-group pull-left">
                                     <input type="text" class="text-center form-control" value="$!page.kpi.periodMultiples" name="periodMultiples" />
+
                                     <div class="input-group-btn">
-                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.kpi.frequency <span class="caret"></span></button>
+                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.kpi.frequency
+                                            <span class="caret"></span></button>
                                         <ul role="menu" class="dropdown-menu pull-right timer-units">
                                             #foreach($unit in $page.allFrequencies)
-                                            <li><a href="#">$unit</a></li>
+                                                <li><a href="#">$unit</a></li>
                                             #end
                                         </ul>
                                     </div>
-                                    <input type="hidden" name="frequency" class="timer-unit" value="$!page.kpi.frequency"/>
+                                    <input type="hidden" name="frequency" class="timer-unit" value="$!page.kpi.frequency" />
                                 </div>
                             </div>
                         </div>
@@ -154,8 +163,9 @@
                                 Search Up
                                 <small>Select true for data where more is better (ie sales), and select false when less is better (ie num complaints)</small>
                             </label>
+
                             <div class="col-md-8">
-                                <select name="searchUp" id="searchUp" class="form-control required" >
+                                <select name="searchUp" id="searchUp" class="form-control required">
                                     $formatter.option("true", "Yes - search up because more is better", $page.searchUp)
                                     $formatter.option("false", "No - search down because less is better", $page.searchUp)
                                 </select>
@@ -167,6 +177,7 @@
                                 Ordering
                                 <small>In what order should the KPI's be listed</small>
                             </label>
+
                             <div class="col-md-8">
                                 <input type="text" name="orderingField" placeholder="Ordering" value="$!page.orderingField" class="form-control numeric" />
                             </div>
@@ -177,6 +188,7 @@
                                 Start date
                                 <small>Date of the first assessment period</small>
                             </label>
+
                             <div class="col-md-8">
                                 <div class="col-sm-5">
                                     <div class="input-group">
@@ -191,6 +203,7 @@
                             <label class="control-label col-md-3" for="endDate">
                                 End date
                             </label>
+
                             <div class="col-md-8">
                                 <div class="col-sm-5">
                                     <div class="input-group">
@@ -201,23 +214,24 @@
                             </div>
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         <h2>Groups</h2>
+
                         <div class="alert alert-info">
                             <p>The KPI will only users who belong to ALL of the selected groups</p>
                         </div>
                         <table class="">
                             #foreach($g in $page.allGroups)
-                            <tr>
-                                <td>
-                                    <div class="col-sm-offset-3">
-                                        <label class="checkbox-inline">
-                                            $formatter.checkbox("appliesToGroupIds", "appliesToGroupIds", $page.isSelected($g), $g.id ) $g.name
-                                        </label>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <div class="col-sm-offset-3">
+                                            <label class="checkbox-inline">
+                                                $formatter.checkbox("appliesToGroupIds", "appliesToGroupIds", $page.isSelected($g), $g.id ) $g.name
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
                             #end
                         </table>
 
@@ -226,77 +240,88 @@
                     <div id="notes" class="tab-pane">  <!-- notes -->
                         <small>For internal use.</small>
                         <textarea cols="100" name="notes" id="notes" rows="20" placeholder="" class="form-control">$!page.kpi.notes</textarea>
-                    </div> <!-- end notes -->
+                    </div>
+                    <!-- end notes -->
 
                     <div id="criteria" class="tab-pane">  <!-- criteria -->
                         <div class="form-group">
                             <label class="control-label col-md-3" for="field1">
                                 Field 1
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="field1" value="$!page.kpi.field1" class="form-control"/>
+                                <input type="text" name="field1" value="$!page.kpi.field1" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="field2">
                                 Field 2
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="field2" value="$!page.kpi.field2" class="form-control"/>
+                                <input type="text" name="field2" value="$!page.kpi.field2" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="field3">
                                 Field 3
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="field3" value="$!page.kpi.field3" class="form-control"/>
+                                <input type="text" name="field3" value="$!page.kpi.field3" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="field4">
                                 Field 4
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="field4" value="$!page.kpi.field4" class="form-control"/>
+                                <input type="text" name="field4" value="$!page.kpi.field4" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="field5">
                                 Field 5
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="field5" value="$!page.kpi.field5" class="form-control"/>
+                                <input type="text" name="field5" value="$!page.kpi.field5" class="form-control" />
                             </div>
                         </div>
 
-                        <hr/>
+                        <hr />
                         <div class="form-group">
                             <label class="control-label col-md-3" for="tags">
                                 Tags
                             </label>
+
                             <div class="col-md-8">
-                                <input type="text" name="tags" value="$!page.kpi.tags" class="form-control"/>
+                                <input type="text" name="tags" value="$!page.kpi.tags" class="form-control" />
                             </div>
                         </div>
 
 
-
-                    </div> <!-- end criteria -->
+                    </div>
+                    <!-- end criteria -->
 
                     <div id="levels" class="tab-pane"> <!-- levels -->
                         <div class="form-group">
                             <label class="control-label col-md-3" for="reward">
                                 Reward
                             </label>
+
                             <div class="col-md-8">
-                                <select name="reward" id="reward" class="form-control" >
+                                <select name="reward" id="reward" class="form-control">
                                     <option value="">[No points]</option>
                                     #foreach($reward in $page.rewards)
-                                    $formatter.option($reward.name, $reward.title, $page.kpi.reward.name)
+                                        $formatter.option($reward.name, $reward.title, $page.kpi.reward.name)
                                     #end
                                 </select>
-                                <p><small>To allocate points for achieving levels, select the reward here</small></p>
+
+                                <p>
+                                    <small>To allocate points for achieving levels, select the reward here</small>
+                                </p>
                             </div>
                         </div>
 
@@ -305,14 +330,18 @@
                                 Tag
                                 <small>Tag the allocated points</small>
                             </label>
+
                             <div class="col-md-8">
-                                <select name="pointsTag" id="pointsTag" class="form-control" >
+                                <select name="pointsTag" id="pointsTag" class="form-control">
                                     <option value="">[No tag]</option>
                                     #foreach($tag in $page.pointsTag)
-                                    $formatter.option($tag.name, $tag.title, $page.kpi.pointsTag.name)
+                                        $formatter.option($tag.name, $tag.title, $page.kpi.pointsTag.name)
                                     #end
                                 </select>
-                                <p><small>To tag the allocated points, select a tag here</small></p>
+
+                                <p>
+                                    <small>To tag the allocated points, select a tag here</small>
+                                </p>
                             </div>
                         </div>
 
@@ -322,8 +351,9 @@
                                     Top achievers
                                     <small>Allocate points to the top achievers in this KPI</small>
                                 </label>
+
                                 <div class="col-md-8">
-                                    <input type="text" name="numTopAchievers" id="numTopAchievers" value="$!page.kpi.numTopAchievers" placeholder="How many of the top achievers" class="form-control"  />
+                                    <input type="text" name="numTopAchievers" id="numTopAchievers" value="$!page.kpi.numTopAchievers" placeholder="How many of the top achievers" class="form-control" />
                                 </div>
                             </div>
 
@@ -332,8 +362,9 @@
                                     Points
                                     <small>MVEL expression for how many points to award top achievers</small>
                                 </label>
+
                                 <div class="col-md-8">
-                                    <input type="text" name="topAchieverPointsExpr" id="topAchieverPointsExpr" value="$!page.kpi.topAchieverPointsExpr" placeholder="A number or expression for the number of points to award" class="form-control"  />
+                                    <input type="text" name="topAchieverPointsExpr" id="topAchieverPointsExpr" value="$!page.kpi.topAchieverPointsExpr" placeholder="A number or expression for the number of points to award" class="form-control" />
                                     <i>Eg: amount * 10</i>
                                 </div>
                             </div>
@@ -345,7 +376,7 @@
 
                         <div>
                             <div class="btn-group btn-group-sm">
-                                <a href="#"  class="btn btn-sm btn-success btn-sm btn-add-level">
+                                <a href="#" class="btn btn-sm btn-success btn-sm btn-add-level">
                                     <i class="fa fa-plus"></i> Add new Level
                                 </a>
                                 <button class="btn btn-sm btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -358,7 +389,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <table class="table table-bordered table-striped">
                             <colgroup>
                                 <col />
@@ -378,47 +409,47 @@
                             </thead>
                             <tbody id="levels-table-body">
                                 #if( $page.kpi.levels.size() > 0 )
-                                #foreach( $level in $page.kpi.levels)
-                                <tr id="level-${level.id}">
-                                    <td>$level.name</td>
-                                    <td>$level.title</td>
-                                    <td>
-                                        #if($level.minorBoundFromSeries)
-                                        #if($level.minorBound)
-                                        <b>$level.minorBound%</b> of
-                                        participants value in <b><a href="../../../$level.minorBoundFromSeries.name">$level.minorBoundFromSeries.title</a></b>
-                                        #else
-                                        Find Participants value in <b><a href="../../../$level.minorBoundFromSeries.name">$level.minorBoundFromSeries.title</a></b>
-                                        #end
+                                    #foreach( $level in $page.kpi.levels)
+                                        <tr id="level-${level.id}">
+                                            <td>$level.name</td>
+                                            <td>$level.title</td>
+                                            <td>
+                                                #if($level.minorBoundFromSeries)
+                                                    #if($level.minorBound)
+                                                        <b>$level.minorBound%</b> of
+                                                        participants value in <b><a href="../../../$level.minorBoundFromSeries.name">$level.minorBoundFromSeries.title</a></b>
+                                                    #else
+                                                        Find Participants value in <b><a href="../../../$level.minorBoundFromSeries.name">$level.minorBoundFromSeries.title</a></b>
+                                                    #end
 
-                                        #elseif($level.minorBound)
-                                        $level.minorBound
-                                        #else
-                                        <span class="label label-danger">No threshhold set</span>
-                                        #end
-                                    </td>
-                                    <td>
-                                        $!level.awardAmount
+                                                #elseif($level.minorBound)
+                                                    $level.minorBound
+                                                #else
+                                                    <span class="label label-danger">No threshhold set</span>
+                                                #end
+                                            </td>
+                                            <td>
+                                                $!level.awardAmount
                                         $!level.awardAmountExpr
-                                    </td>
-                                    <td class="action">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="$level.id .edit-form" class="btn btn-sm btn-info btn-edit-level" data-toggle="modal" data-target="#editLevelModal"  ><i class="fa fa-cog"></i> Edit</a>
-                                            <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul role="menu" class="dropdown-menu pull-right">
-                                                <li><a class="btn-remove-level" href="$level.id"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                #end
+                                            </td>
+                                            <td class="action">
+                                                <div class="btn-group btn-group-sm">
+                                                    <a href="$level.id .edit-form" class="btn btn-sm btn-info btn-edit-level" data-toggle="modal" data-target="#editLevelModal"><i class="fa fa-cog"></i> Edit</a>
+                                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <ul role="menu" class="dropdown-menu pull-right">
+                                                        <li><a class="btn-remove-level" href="$level.id"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    #end
                                 #else
-                                <tr>
-                                    <td colspan="3">There are no KPI levels defined yet</td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="3">There are no KPI levels defined yet</td>
+                                    </tr>
                                 #end
                             </tbody>
                         </table>
@@ -434,7 +465,7 @@
                                 Delete
                             </button>
                         </div>
-                        <br/>
+                        <br />
 
                         <p>KPI start date: starting $formatter.formatDateTime($page.kpi.startDate, $page.organisation.timezone) </p>
 
@@ -457,21 +488,21 @@
                             </thead>
                             <tbody>
                                 #foreach($period in $page.periods)
-                                <tr>
-                                    <td>$formatter.formatDateTime($period.startDate, $page.organisation.timezone)</td>
-                                    <td>$formatter.formatDateTime($period.endDate, $page.organisation.timezone)</td>
-                                    <td>$formatter.formatDateTime($period.createdDate, $page.organisation.timezone)</td>
-                                    <td>
-                                        #if( $period.rewardsIssuedDate )
-                                        $formatter.formatDateTime($period.rewardsIssuedDate, $page.organisation.timezone)
-                                        #else
-                                        <span class="label label-danger">Rewards not issued</span>
-                                        #end
-                                    </td>
-                                    <td>
-                                        <input type="checkbox" class="deletePeriodId" value="$period.id"/>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>$formatter.formatDateTime($period.startDate, $page.organisation.timezone)</td>
+                                        <td>$formatter.formatDateTime($period.endDate, $page.organisation.timezone)</td>
+                                        <td>$formatter.formatDateTime($period.createdDate, $page.organisation.timezone)</td>
+                                        <td>
+                                            #if( $period.rewardsIssuedDate )
+                                                $formatter.formatDateTime($period.rewardsIssuedDate, $page.organisation.timezone)
+                                            #else
+                                                <span class="label label-danger">Rewards not issued</span>
+                                            #end
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" class="deletePeriodId" value="$period.id" />
+                                        </td>
+                                    </tr>
                                 #end
                             </tbody>
                         </table>
@@ -480,27 +511,27 @@
                     <div id="results" class="tab-pane">
                         #set( $selPeriodId = $formatter.toLong( $request.params.period, true ) )
                         #if( $selPeriodId )
-                        #set( $selPeriod = $page.kpi.period( $selPeriodId ) )
+                            #set( $selPeriod = $page.kpi.period( $selPeriodId ) )
                         #else
-                        #set( $selPeriod = $page.lastPeriod )
+                            #set( $selPeriod = $page.lastPeriod )
                         #end
 
                         <div class="row">
                             <div class="col-md-9">
                                 <h3>Assessed results for $formatter.formatDate($selPeriod.startDate) to $formatter.formatDate($selPeriod.endDate)</h3>
                                 #if( $selPeriod.rewardsIssuedDate )
-                                <div class="alert alert-success">
-                                    Rewards allocated $formatter.formatAge( $selPeriod.rewardsIssuedDate )
-                                </div>
+                                    <div class="alert alert-success">
+                                        Rewards allocated $formatter.formatAge( $selPeriod.rewardsIssuedDate )
+                                    </div>
                                 #else
-                                <div class="alert alert-danger">
-                                    Rewards have not been allocated yet
-                                </div>
+                                    <div class="alert alert-danger">
+                                        Rewards have not been allocated yet
+                                    </div>
                                 #end
                                 <div class="clearfix">
                                     <button type="button" class="btn btn-sm btn-danger pull-right btn-del-kpiresult"><i class="fa fa-trash"></i></button>
-                                    <br/>
-                                    <br/>
+                                    <br />
+                                    <br />
                                 </div>
                                 <table id="table-results" class="table table-bordered table-striped">
                                     <thead>
@@ -511,40 +542,40 @@
                                             <th>Points Awarded</th>
                                             <th>Participant</th>
                                             <th class="text-center">
-                                                <input type="checkbox" name="sel-kpiResult" class="selectAll"/>
+                                                <input type="checkbox" name="sel-kpiResult" class="selectAll" />
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         #foreach($result in $page.results($selPeriod) )
-                                        <tr data-id="$result.id">
-                                            <td>$!result.level.title</td>
-                                            <td>$formatter.formatCurrency( $result.amount )</td>
-                                            <td>$!result.awardedPoints</td>
-                                            <td>
-                                                #set( $actualPoints = false )
-                                                #set( $actualPoints = $result.actualAwardedPoints.numPoints )
-                                                #if( $actualPoints )
-                                                $actualPoints
-                                                #if( $actualPoints > $result.awardedPoints )
-                                                #set( $diff = $result.awardedPoints - $actualPoints )
-                                                <span class="label label-danger">$diff</span>
-                                                #elseif( $actualPoints < $result.awardedPoints )
-                                                #set( $diff = $result.awardedPoints - $actualPoints )
-                                                <span class="label label-success">$diff</span>
-                                                #end
-                                                #end
-                                            </td>
-                                            <td>
-                                                <a href="/manageUsers/$result.participant.id">
-                                                    $result.participant.formattedName ($result.participant.name)
-                                                </a>
+                                            <tr data-id="$result.id">
+                                                <td>$!result.level.title</td>
+                                                <td>$formatter.formatCurrency( $result.amount )</td>
+                                                <td>$!result.awardedPoints</td>
+                                                <td>
+                                                    #set( $actualPoints = false )
+                                                    #set( $actualPoints = $result.actualAwardedPoints.numPoints )
+                                                    #if( $actualPoints )
+                                                        $actualPoints
+                                                        #if( $actualPoints > $result.awardedPoints )
+                                                            #set( $diff = $result.awardedPoints - $actualPoints )
+                                                            <span class="label label-danger">$diff</span>
+                                                        #elseif( $actualPoints < $result.awardedPoints )
+                                                            #set( $diff = $result.awardedPoints - $actualPoints )
+                                                            <span class="label label-success">$diff</span>
+                                                        #end
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    <a href="/manageUsers/$result.participant.id">
+                                                        $result.participant.formattedName ($result.participant.name)
+                                                    </a>
 
-                                            </td>
-                                            <td class="text-center">
-                                                <input type="checkbox" name="sel-kpiResult"/>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" name="sel-kpiResult" />
+                                                </td>
+                                            </tr>
                                         #end
                                     </tbody>
                                 </table>
@@ -556,24 +587,24 @@
                                     Allocate rewards for selected period
                                 </button>
 
-                                <hr/>
+                                <hr />
 
                                 <ul class="list-group">
                                     #foreach($period in $page.periods)
 
-                                    #set( $active = "" )
-                                    #if( $period.id == $selPeriod.id )
-                                    #set( $active = "active" )
-                                    #end
-                                    <a class="list-group-item $active"  href="?period=$period.id#results-tab">
-                                        <span class="badge">$period.numResults</span>
-
-                                        #if( $period.rewardsIssuedDate )
-                                        <span class="fa fa-trophy"></span>
+                                        #set( $active = "" )
+                                        #if( $period.id == $selPeriod.id )
+                                            #set( $active = "active" )
                                         #end
+                                        <a class="list-group-item $active" href="?period=$period.id#results-tab">
+                                            <span class="badge">$period.numResults</span>
 
-                                        $formatter.formatDate($period.startDate) - $formatter.formatDate($period.endDate)
-                                    </a>
+                                            #if( $period.rewardsIssuedDate )
+                                                <span class="fa fa-trophy"></span>
+                                            #end
+
+                                            $formatter.formatDate($period.startDate) - $formatter.formatDate($period.endDate)
+                                        </a>
                                     #end
                                 </ul>
                             </div>
@@ -588,160 +619,161 @@
                         </div>
 
                         <div class="clearfix"></div>
-                        <hr/>
+                        <hr />
 
                         <div id="queryResults">
                             #if( $page.queryMessage )
-                            <div class="alert alert-info">
-                                $page.queryMessage
-                            </div>
+                                <div class="alert alert-info">
+                                    $page.queryMessage
+                                </div>
                             #end
 
                             #if( $page.queryRecords )
-                            <table class="table table-striped">
-                                <tr>
-                                    <th>Partipiant</th>
-                                    <td colspan="2">
-                                        <a href="/manageUsers/$page.queryProfile.userId">$page.queryProfile.userName</a>
-                                    </td>
-                                </tr>
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Partipiant</th>
+                                        <td colspan="2">
+                                            <a href="/manageUsers/$page.queryProfile.userId">$page.queryProfile.userName</a>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <th>Progress</th>
-                                    <td colspan="2">
-                                        #set( $prog = $page.getProgress( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
-                                        #if( $prog )
-                                        $formatter.formatNumeric($prog)
-                                        #else
-                                        Could not locate a progress value
-                                        #end
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Period start</th>
-                                    <td colspan="2">$!page.queryStart</td>
-                                </tr>
-                                <tr>
-                                    <th>Period end</th>
-                                    <td colspan="2">
-                                        #set($periodEndDate = $page.getPeriodEndDate( $page.queryStart ))
+                                    <tr>
+                                        <th>Progress</th>
+                                        <td colspan="2">
+                                            #set( $prog = $page.getProgress( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
+                                            #if( $prog )
+                                                $formatter.formatNumeric($prog)
+                                            #else
+                                                Could not locate a progress value
+                                            #end
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Period start</th>
+                                        <td colspan="2">$!page.queryStart</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Period end</th>
+                                        <td colspan="2">
+                                            #set($periodEndDate = $page.getPeriodEndDate( $page.queryStart ))
                                         $!periodEndDate
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Progress end</th>
-                                    <td colspan="2">
-                                        $!page.queryFinish
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Elapsed duration</th>
-                                    <td colspan="2">
-                                        #set( $perc = $page.getPeriodElapsedPerc( $page.queryStart, $periodEndDate, $page.queryFinish ) )
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Progress end</th>
+                                        <td colspan="2">
+                                            $!page.queryFinish
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Elapsed duration</th>
+                                        <td colspan="2">
+                                            #set( $perc = $page.getPeriodElapsedPerc( $page.queryStart, $periodEndDate, $page.queryFinish ) )
                                         $formatter.formatNumeric( $perc )
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>Level</th>
-                                    <td colspan="2">
-                                        #set( $level = false)
-                                        #set( $level = $page.progressLevel( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
-                                        #if( $level )
-                                        <span class="badge badge-info">$level.levelName</span>
-                                        Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
-                                        #else
-                                        Did not meet any levels
-                                        #end
-                                    </td>
-
-                                </tr>
-                            </table>
-
-                            <p class="lead">Level thresholds</p>
-                            <p>List of all levels, with the target values as calculated for the selected user, and the percentage of that level the current KPI value represents</p>
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Level name</th>
-                                        <th>Level target</th>
-                                        <th>Percentage achieved</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    #foreach($levelName in $page.levelNames)
-                                    <tr>
-                                        <th>$levelName</th>
-                                        <td>
-                                            #set( $l = $page.getTargetForLevel( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ))
-                                            #if( $l )
-                                            $formatter.formatNumeric($l)
-                                            #else
-                                            Could not locate a target for this level
-                                            #end
-
                                         </td>
-                                        <td>
+                                    </tr>
+                                    <tr>
+                                        <th>Level</th>
+                                        <td colspan="2">
                                             #set( $level = false)
-                                            #set( $level = $page.getProgressOfLevelPerc( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ) )
-                                            $formatter.formatNumeric($level) %
-                                        </td>
-
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
-
-                            <hr/>
-
-                            <h2>Matched records</h2>
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Amount</th>
-                                        <th>Sales by</th>
-                                        <th>Entered</th>
-                                        <th>By</th>
-                                        <th colspan="2">Sales Period</th>
-                                        #foreach($field in $page.extraFieldNames)
-                                        <th>$field</th>
-                                        #end
-                                        <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="history-table-body">
-                                    #foreach($item in $page.queryRecords)
-                                    <tr>
-                                        <td>
-                                            #if( $item.amount )
-                                            $item.amount
+                                            #set( $level = $page.progressLevel( $page.queryProfile, $page.queryStart, $page.queryFinish ) )
+                                            #if( $level )
+                                                <span class="badge badge-info">$level.levelName</span>
+                                                Actual = $formatter.formatNumeric($level.actual) vs target $formatter.formatNumeric($level.target)
                                             #else
-                                            No value
+                                                Did not meet any levels
                                             #end
                                         </td>
-                                        <td>
-                                            <!-- either a profilebean or orgdata -->
-                                            #if( $item.salesBy.name ) <!-- is individual -->
-                                            <a href="/manageUsers/$item.salesBy.userId">$item.salesBy.name ($item.salesBy.userName)</a>
-                                            #else
-                                            <a href="/manageOrgs/$item.salesBy.orgId">$item.salesBy.title</a>
-                                            #end
-                                        </td>
-                                        <td>
-                                            <abbr title="$formatter.formatDateISO8601($item.enteredDate)" class="timeago">$!item.enteredDate</abbr>
-                                        </td>
-                                        <td><a href="/manageUsers/$item.enteredBy.userId">$item.enteredBy.name</a></td>
-                                        <td title="$formatter.formatDateISO8601($item.periodTo)">$formatter.formatDateTime($item.periodFrom, $page.organisation.timezone)</td>
-                                        <td title="$formatter.formatDateISO8601($item.periodTo)">$formatter.formatDateTime($item.periodTo, $page.organisation.timezone)</td>
-                                        #foreach($field in $page.extraFieldNames)
-                                        <td>$!item.extraFields.get( $field )</td>
-                                        #end
-                                        <td><input type="checkbox" name="toRemoveId" value="$item.id" /></td>
+
                                     </tr>
-                                    #end
-                                </tbody>
-                            </table>
+                                </table>
+
+                                <p class="lead">Level thresholds</p>
+
+                                <p>List of all levels, with the target values as calculated for the selected user, and the percentage of that level the current KPI value represents</p>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Level name</th>
+                                            <th>Level target</th>
+                                            <th>Percentage achieved</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        #foreach($levelName in $page.levelNames)
+                                            <tr>
+                                                <th>$levelName</th>
+                                                <td>
+                                                    #set( $l = $page.getTargetForLevel( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ))
+                                                    #if( $l )
+                                                        $formatter.formatNumeric($l)
+                                                    #else
+                                                        Could not locate a target for this level
+                                                    #end
+
+                                                </td>
+                                                <td>
+                                                    #set( $level = false)
+                                                    #set( $level = $page.getProgressOfLevelPerc( $page.queryProfile, $levelName, $page.queryStart, $page.queryFinish ) )
+                                                    $formatter.formatNumeric($level) %
+                                                </td>
+
+                                            </tr>
+                                        #end
+                                    </tbody>
+                                </table>
+
+                                <hr />
+
+                                <h2>Matched records</h2>
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <th>Sales by</th>
+                                            <th>Entered</th>
+                                            <th>By</th>
+                                            <th colspan="2">Sales Period</th>
+                                            #foreach($field in $page.extraFieldNames)
+                                                <th>$field</th>
+                                            #end
+                                            <th><input type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="history-table-body">
+                                        #foreach($item in $page.queryRecords)
+                                            <tr>
+                                                <td>
+                                                    #if( $item.amount )
+                                                        $item.amount
+                                                    #else
+                                                        No value
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    <!-- either a profilebean or orgdata -->
+                                                    #if( $item.salesBy.name ) <!-- is individual -->
+                                                        <a href="/manageUsers/$item.salesBy.userId">$item.salesBy.name ($item.salesBy.userName)</a>
+                                                    #else
+                                                        <a href="/manageOrgs/$item.salesBy.orgId">$item.salesBy.title</a>
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    <abbr title="$formatter.formatDateISO8601($item.enteredDate)" class="timeago">$!item.enteredDate</abbr>
+                                                </td>
+                                                <td><a href="/manageUsers/$item.enteredBy.userId">$item.enteredBy.name</a></td>
+                                                <td title="$formatter.formatDateISO8601($item.periodTo)">$formatter.formatDateTime($item.periodFrom, $page.organisation.timezone)</td>
+                                                <td title="$formatter.formatDateISO8601($item.periodTo)">$formatter.formatDateTime($item.periodTo, $page.organisation.timezone)</td>
+                                                #foreach($field in $page.extraFieldNames)
+                                                    <td>$!item.extraFields.get( $field )</td>
+                                                #end
+                                                <td><input type="checkbox" name="toRemoveId" value="$item.id" /></td>
+                                            </tr>
+                                        #end
+                                    </tbody>
+                                </table>
                             #else
-                            <div class="alert alert-info">Query did not match any records</div>
+                                <div class="alert alert-info">Query did not match any records</div>
                             #end
                         </div>
                     </div>
@@ -754,58 +786,58 @@
                         </button>
 
                         <div class="clearfix"></div>
-                        <hr/>
+                        <hr />
 
                         <div id="leaderboardResults">
                             #if( $request.params.leaderboard )
-                            #set( $startDate = $formatter.toDate( $request.params.startDate ) )
-                            #set( $endDate = $formatter.toDate( $request.params.endDate ) )
-                            #set( $lb = $page.getLeaderboard($startDate, $endDate))
-                            <table class="table table-striped table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Amount</th>
-                                        <th>Participant</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="leaderboardBody">
-                                    #foreach($item in $lb.highestResults )
-                                    #set( $plusOne = $item.rank + 1 )
-                                    <tr>
-                                        <td>$plusOne</td>
-                                        <td>
-                                            #if( $item.amount )
-                                            $item.amount
-                                            #else
-                                            No value
-                                            #end
-                                        </td>
-                                        <td>
-                                            <!-- either a profilebean or orgdata -->
-                                            #if( $item.profile) <!-- is individual -->
-                                            <a href="/manageUsers/$item.profile.userId">$item.profile.name ($item.profile.userName)</a>
-                                            #else
-                                            <a href="/manageOrgs/$item.org.orgId">$item.org.title</a>
-                                            #end
-                                        </td>
-                                        <td>
-                                            #if( $item.profile)
-                                            #foreach($orgAndGroup in $item.profile.primaryMemberships().groupByOrg.entrySet() )
-                                            <span class="label label-success">
-                                                <b>$orgAndGroup.value.first.groupName</b>
-                                                in
-                                                $orgAndGroup.key.title
-                                            </span>
-                                            #end
-                                            #end
-                                        </td>
-                                    </tr>
-                                    #end
-                                </tbody>
-                            </table>
+                                #set( $startDate = $formatter.toDate( $request.params.startDate ) )
+                                #set( $endDate = $formatter.toDate( $request.params.endDate ) )
+                                #set( $lb = $page.getLeaderboard($startDate, $endDate))
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Amount</th>
+                                            <th>Participant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="leaderboardBody">
+                                        #foreach($item in $lb.highestResults )
+                                            #set( $plusOne = $item.rank + 1 )
+                                            <tr>
+                                                <td>$plusOne</td>
+                                                <td>
+                                                    #if( $item.amount )
+                                                        $item.amount
+                                                    #else
+                                                        No value
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    <!-- either a profilebean or orgdata -->
+                                                    #if( $item.profile) <!-- is individual -->
+                                                        <a href="/manageUsers/$item.profile.userId">$item.profile.name ($item.profile.userName)</a>
+                                                    #else
+                                                        <a href="/manageOrgs/$item.org.orgId">$item.org.title</a>
+                                                    #end
+                                                </td>
+                                                <td>
+                                                    #if( $item.profile)
+                                                        #foreach($orgAndGroup in $item.profile.primaryMemberships().groupByOrg.entrySet() )
+                                                            <span class="label label-success">
+                                                                <b>$orgAndGroup.value.first.groupName</b>
+                                                                in
+                                                                $orgAndGroup.key.title
+                                                            </span>
+                                                        #end
+                                                    #end
+                                                </td>
+                                            </tr>
+                                        #end
+                                    </tbody>
+                                </table>
                             #else
-                            <p>Press the query button above to generate the leaderboard</p>
+                                <p>Press the query button above to generate the leaderboard</p>
                             #end
                         </div>
                     </div>
@@ -813,100 +845,106 @@
             </div>
         </form>
 
-        <div id="editLevelModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">KPI Level</h4>
-            </div>
-            <div class="modal-body">
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Save level</button>
+        <div id="editLevelModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                </div>
             </div>
         </div>
 
         <div id="modal-reprocess" class="modal fade" aria-hidden="true" tabindex="-1">
-            <form action="." method="POST" class="form-horizontal">
-                <input type="hidden" name="reprocess" value="reprocess"/>
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Reprocess period</h4>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        This will re-generate KPI assessments and calculated points which should be awarded. This will not by itself
-                        create or change points.
-                    </p>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="users">Users
-                            <small>Username or email address, one per line.</small>
-                        </label>
-                        <div class="col-md-8">
-                            <textarea name="users" class="form-control" rows="4"></textarea>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form action="." method="POST" class="form-horizontal">
+                        <input type="hidden" name="reprocess" value="reprocess" />
+
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Reprocess period</h4>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="period">Period</label>
-                        <div class="col-md-8">
-                            <select name="period" class="form-control required">
-                                $formatter.option("", "Please select a period", null)
+                        <div class="modal-body">
+                            <p>
+                                This will re-generate KPI assessments and calculated points which should be awarded. This will not by itself
+                                create or change points.
+                            </p>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="users">Users
+                                    <small>Username or email address, one per line.</small>
+                                </label>
+
+                                <div class="col-md-8">
+                                    <textarea name="users" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="period">Period</label>
+
+                                <div class="col-md-8">
+                                    <select name="period" class="form-control required">
+                                        $formatter.option("", "Please select a period", null)
                                 #foreach($period in $page.periods)
-                                #set($pName = $formatter.formatDate($period.startDate) + ' - ' + $formatter.formatDate($period.endDate))
-                                $formatter.option($period.id, $pName, null)
-                                #end
-                            </select>
+                                        #set($pName = $formatter.formatDate($period.startDate) + ' - ' + $formatter.formatDate($period.endDate))
+                                        $formatter.option($period.id, $pName, null)
+                                    #end
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Process</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Process</button>
-                </div>
-            </form>
+            </div>
         </div>
 
 
-        <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload KPI Level CSV</h4>
-            </div>
-            <div class="modal-body">
-                <div class="upload">
-                    <div class="btn-upload" id='do-upload-csv'></div>
-                    <br />
-                    <!--
-                    <div class="allow-inserts">
-                        <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
+        <div id="modal-upload-csv" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload KPI Level CSV</h4>
                     </div>
-                    -->
-                </div>
-                <br />
-                <div class="upload-results">
-                    <p>
-                        <strong>No. inserted:</strong>
-                        <span class="badge badge-success num-inserted">-</span>
-                        <strong>No. updated:</strong>
-                        <span class="badge badge-success num-updated">-</span>
-                        <strong>Unmatched rows:</strong>
-                        <span class="badge badge-danger num-unmatched">-</span>
-                    </p>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-body">
+                        <div class="upload">
+                            <div class="btn-upload" id='do-upload-csv'></div>
+                            <br />
+                            <!--
+                            <div class="allow-inserts">
+                                <input type="checkbox" id="allow-inserts" /> <label for="allow-inserts">Allow inserts</label>
+                            </div>
+                            -->
+                        </div>
+                        <br />
+
+                        <div class="upload-results">
+                            <p>
+                                <strong>No. inserted:</strong>
+                                <span class="badge badge-success num-inserted">-</span>
+                                <strong>No. updated:</strong>
+                                <span class="badge badge-success num-updated">-</span>
+                                <strong>Unmatched rows:</strong>
+                                <span class="badge badge-danger num-unmatched">-</span>
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
         </div>
 
