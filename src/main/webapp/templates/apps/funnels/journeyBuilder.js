@@ -109,7 +109,7 @@ var JBApp = {
         var nodeDiv = document.createElement('div');
         nodeDiv.className = 'node ' + divTypeClass;
         nodeDiv.id = node.nodeId;
-        nodeDiv.setAttribute('data-type', divTypeClass);
+        nodeDiv.setAttribute('data-type', type);
         nodeDiv.style.left = node.x + 'px';
         nodeDiv.style.top = node.y + 'px';
 
@@ -136,10 +136,10 @@ var JBApp = {
             nodePorts += '<span title="' + portData.title + '" class="ep ' + portClass + '" data-name="' + portName + '"></span>';
         }
 
-        var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner text-muted">Enter title</span>';
+        var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner">Enter title</span>';
         var nodeHtml = '';
-        nodeHtml += '<div class="title">';
-        nodeHtml += '   <i class="' + nodeDef.icon + '"></i> <span class="node-type">' + nodeDef.title + '</span>';
+        nodeHtml += '<div class="node-heading">';
+        nodeHtml += '   <i class="node-icon ' + nodeDef.icon + '"></i> <span class="node-type">' + nodeDef.title + '</span>';
         nodeHtml += '   <span class="node-buttons clearfix">';
         if (nodeDef.settingEnabled) {
             nodeHtml += '   <span class="btnNodeDetails" title="Edit details"><i class="fa fa-fw fa-cog"></i></span>';
@@ -147,8 +147,8 @@ var JBApp = {
         nodeHtml += '       <span class="btnNodeDelete" title="Delete this node"><i class="fa fa-fw fa-trash"></i></span>';
         nodeHtml += '   </span>';
         nodeHtml += '</div>';
-        nodeHtml += '<div class="inner">';
-        nodeHtml += '   <span class="nodeTitle btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
+        nodeHtml += '<div class="node-body">';
+        nodeHtml += '   <span class="node-title btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
         nodeHtml += '</div>';
 
         nodeDiv.innerHTML = nodeHtml;
@@ -224,7 +224,7 @@ var JBApp = {
 
         JBApp.jspInstance.makeTarget(nodeDiv, {
             dropOptions: {
-                hoverClass: 'dragHover'
+                hoverClass: 'node-dragging-hover'
             },
             allowLoopback: false
         });
@@ -519,11 +519,11 @@ jsPlumb.ready(function () {
             ['Label', {
                 label: '',
                 id: 'label',
-                cssClass: 'aLabel'
+                cssClass: 'node-connection-label'
             }],
             ['Custom', {
                 create: function () {
-                    return $('<div><a href="#" title="Click to delete connection" class="buttonX"><i class="fa fa-times-circle"></i></a></div>');
+                    return $('<div><a href="#" title="Click to delete connection" class="btn-delete-node-connection"><i class="fa fa-times-circle"></i></a></div>');
                 },
                 events: {
                     click: function (labelOverlay, e) {
@@ -543,7 +543,7 @@ jsPlumb.ready(function () {
                     }
                 },
                 location: 0.7,
-                id: 'buttonX',
+                id: 'node-connection-label',
                 visible: false
             }]
         ],
@@ -611,14 +611,14 @@ jsPlumb.ready(function () {
     });
     
     instance.bind('mouseover', function (connection) {
-        if (connection.getOverlay('buttonX')) {
-            connection.getOverlay('buttonX').show();
+        if (connection.getOverlay('node-connection-label')) {
+            connection.getOverlay('node-connection-label').show();
         }
     });
     
     instance.bind('mouseout', function (connection) {
-        if (connection.getOverlay('buttonX')) {
-            connection.getOverlay('buttonX').hide();
+        if (connection.getOverlay('node-connection-label')) {
+            connection.getOverlay('node-connection-label').hide();
         }
     });
     
@@ -810,7 +810,7 @@ function updateNode(form) {
                 node[key].title = title;
 
                 JBApp.saveFunnel('Title is updated', function () {
-                    var nodeTitleInner = $('#' + sourceId).find('.nodeTitle .node-title-inner');
+                    var nodeTitleInner = $('#' + sourceId).find('.node-title .node-title-inner');
                     if (nodeTitleInner.hasClass('text-muted')) {
                         nodeTitleInner.removeClass('text-muted')
                     }
@@ -833,7 +833,7 @@ function initBuilderHeight() {
     var navTabs = tabbable.find('.nav-tabs');
     var container = builder.closest('.container');
     
-    builder.css('height', container.innerHeight() - navTabs.innerHeight());
+    builder.css('height', container.innerHeight() - navTabs.innerHeight() - 1);
 }
 
 function initSideBar() {
