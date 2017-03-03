@@ -120,7 +120,7 @@
     position: absolute;
     top: 0;
     right: -234px;
-    width: 232px;
+    width: 100%;
     height: 100%;
     transition: 0.2s all;
 }
@@ -148,6 +148,9 @@
     display: block !important;
 }
 
+/* ====================================================================
+   Node
+   ==================================================================== */
 .node-backdrop {
     position: absolute;
     width: 300px;
@@ -157,53 +160,57 @@
 
 .node {
     position: absolute;
-    opacity: 0.8;
     z-index: 4;
-    width: 200px;
-    height: 120px;
-    text-align: center;
-    border: 1px solid #2e6f9a;
-    box-shadow: 2px 2px 10px 0 rgba(0, 0, 0, .15);
-    border-radius: 8px;
-    background-color: white;
+    width: 210px;
+    height: 130px;
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, .37);
+    border-radius: 4px;
     font-size: 14px;
-    transition: background-color 0.25s ease-in;
     cursor: move;
+    color: #fff;
 }
 
-.node .inner {
-    padding: 8px;
+.node.node-action {
+    background: #3988b7;
 }
 
-.node .title {
+.node.node-goal {
+    background: #39b7a1;
+}
+
+.node.node-decision {
+    background: #e31b5c;
+}
+
+.node-dragging-hover {
+    box-shadow: 0 0 5px 1px orange;
+}
+
+/* Node title
+   ==================================================================== */
+.node .node-heading {
+    padding: 10px 45px 10px 15px;
+    font-size: 15px;
+}
+
+.node .node-heading .node-type {
+    font-weight: bold;
+    line-height: 20px;
+}
+
+.node-icon {
     text-align: left;
-    border-radius: 8px 8px 0 0;
-    padding: 5px 45px 5px 5px;
-    background-color: #f5f5f5;
-    border-color: #ddd;
+    width: 15px;
 }
 
-.node.action .inner {
-    text-align: center;
-    padding: 0 20px;
-}
-
-.jsplumb-connector {
-    z-index: 4;
-}
-
-.jsplumb-overlay {
-    z-index: 5;
-}
-
-.node .title .node-buttons {
+.node .node-heading .node-buttons {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 10px;
+    right: 10px;
     cursor: pointer;
 }
 
-.node .title .node-buttons span {
+.node .node-heading .node-buttons span {
     display: inline-block;
     width: 20px;
     height: 20px;
@@ -212,11 +219,47 @@
     float: left;
 }
 
-.node .title .node-buttons span:hover {
+.node .node-heading .node-buttons span:hover {
     background-color: #ddd;
 }
 
-.aLabel {
+/* Node body
+   ==================================================================== */
+.node .node-body {
+    padding: 10px 15px;
+    height: calc(100% - 40px);
+    background: rgba(255, 255, 255, .2);
+    font-weight: 300;
+}
+
+.node.action .node-body {
+    padding: 0 20px;
+}
+
+.node.action .node-body .node-title-inner {
+    color: #fff;
+}
+
+.node.action .node-body .node-title {
+    cursor: pointer;
+}
+
+/* JSPlumb connector
+   ==================================================================== */
+.jsplumb-connector {
+    z-index: 4;
+}
+
+.jsplumb-overlay {
+    z-index: 5;
+}
+
+path,
+.jsplumb-endpoint {
+    cursor: pointer;
+}
+
+.node-connection-label {
     transition: background-color 0.25s ease-in;
     background-color: white;
     padding: 0.3em;
@@ -224,10 +267,24 @@
     display: none;
 }
 
-.aLabel.showed {
+.node-connection-label.showed {
     display: block;
 }
 
+.btn-delete-node-connection {
+    color: #f00 !important;
+    display: block;
+    font-size: 20px;
+    background: #fff;
+    width: 19px;
+    height: 19px;
+    line-height: 19px;
+    border-radius: 50%;
+    text-align: center;
+}
+
+/* Endpoints
+   ==================================================================== */
 .ep, .ep-basic {
     position: absolute;
     bottom: 21px;
@@ -247,7 +304,7 @@
     bottom: 39px;
 }
 
-.ep-basic + .ep-basic  + .ep-basic {
+.ep-basic + .ep-basic + .ep-basic {
     bottom: 57px;
 }
 
@@ -275,64 +332,8 @@
     box-shadow: 0 0 6px black;
 }
 
-.statemachine-demo .jsplumb-endpoint {
-    z-index: 3;
-}
-
-#opened {
-    left: 10em;
-    top: 5em;
-}
-
-#phone1 {
-    left: 35em;
-    top: 12em;
-    width: 7em;
-}
-
-#inperson {
-    left: 12em;
-    top: 23em;
-}
-
-#phone2 {
-    left: 28em;
-    top: 24em;
-}
-
-#rejected {
-    left: 10em;
-    top: 35em;
-}
-
-.dragHover {
-    border: 2px solid orange;
-}
-
-path, .jsplumb-endpoint {
-    cursor: pointer;
-}
-
-.transitionItem {
-    padding: 0 15px 0 20px;
-}
-
-.buttonX {
-    color: #f00 !important;
-    display: block;
-    font-size: 20px;
-    background: #fff;
-    width: 19px;
-    height: 19px;
-    line-height: 19px;
-    border-radius: 50%;
-    text-align: center;
-}
-
-.nodeTitle {
-    cursor: pointer;
-}
-
+/* Choices options
+   ==================================================================== */
 .choices-wrapper ul {
     padding-left: 20px;
 }

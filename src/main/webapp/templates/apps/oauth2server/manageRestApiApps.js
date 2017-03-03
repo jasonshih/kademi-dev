@@ -1,45 +1,15 @@
 (function ($) {
 
     function initCreateApiApp() {
-        $('body').on('click', '.btn-create-app', function (e) {
-            e.preventDefault();
+        var modal = $('#modal-create-app');
+        var modalForm = modal.find('form');
 
-            swal({
-                title: "Create a new API App",
-                text: "Rest API App Display Name:",
-                type: "input",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                showLoaderOnConfirm: true,
-                inputPlaceholder: "e.g. My App"
-            }, function (inputValue) {
-                if (inputValue === false)
-                    return false;
-                if (inputValue === "") {
-                    swal.showInputError("Please enter a display name");
-                    return false
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        createRestApiApp: true,
-                        title: inputValue
-                    },
-                    success: function (resp, textStatus, jqXHR) {
-                        if (resp.status) {
-                            refreshTable();
-                            swal("Success", resp.messages[0], "success");
-                        } else {
-                            swal("Oh No!", resp.messages[0], "danger");
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-
-                    }
-                });
-            });
+        modalForm.forms({
+            onSuccess: function (resp) {
+                modal.modal('hide');
+                Msg.success(resp.messages);
+                refreshTable();
+            }
         });
     }
 

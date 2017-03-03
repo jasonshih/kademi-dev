@@ -1,8 +1,51 @@
 <html>
+    #parse("/theme/masterTemplate.html")
     <head>
-        <title>Request for Permission</title>
+        #@themeHeader( 'Request for Permission' )
+        #end
+        <style>
+            .col-centered {
+                width: 160px;
+                margin-left: auto;
+                margin-right: auto;
+                text-wrap: none;
+                margin-bottom: 10px;
+            }
+        </style>
     </head>
     <body>
-        <div>TODO write content</div>
+        #@themeBody()
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Request for Permission</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-centered">
+                        #set($appImage = "/theme/apps/oauth2server/img/no_photo.png")
+                        #if($page.restApiApp.logoHash)
+                        #set($appImage = "/_hashes/files/$page.restApiApp.logoHash")
+                        #end
+                        <div class="row">
+                            <div class="col-md-5">
+                                <img width="150" height="150" src="$appImage"/>
+                                <strong>$formatter.firstNotNull($page.restApiApp.title, $page.restApiApp.name)</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>
+                        <strong>$formatter.firstNotNull($page.restApiApp.title, $page.restApiApp.name)</strong> is requesting permission to access your profile
+                    </p>
+                </div>
+                <div class="panel-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default">Allow</button>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        #end
     </body>
 </html>

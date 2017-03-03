@@ -189,10 +189,23 @@ function initDatePicker() {
 
     $('.date-picker').exist(function () {
         var datePicker = this;
+        var container = 'body';
+        var inputGroup = datePicker.closest('.input-group');
+        var formGroup = datePicker.closest('.form-group');
+        var id = 'date-picker-wrapper' + (new Date()).getTime();
+
+        if (inputGroup.length > 0) {
+            inputGroup.attr('id', id);
+            container = '#' + id;
+        } else if (formGroup.length > 0) {
+            formGroup.attr('id', id);
+            container = '#' + id;
+        }
 
         datePicker.datepicker({
             autoclose: true,
-            format: 'DD/MM/YYYY'
+            format: 'dd/mm/yyyy',
+            container: container
         });
 
         var impactedTargetSelector = datePicker.attr('data-impacted');

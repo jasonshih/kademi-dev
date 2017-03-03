@@ -32,7 +32,7 @@ function getFiles() {
             form: [forms+'editable-form-bootstrap3.js'],
             container: [containers+'editable-popover3.js'],
             inputs: [
-                inputs+'date/bootstrap-datepicker/js/bootstrap-datepicker.js',
+                //inputs+'date/bootstrap-datepicker/js/bootstrap-datepicker.js',
                 inputs+'date/date.js', 
                 inputs+'date/datefield.js', 
                 inputs+'datetime/datetime.js', 
@@ -43,7 +43,7 @@ function getFiles() {
                 //inputs+'typeahead.js'
                 ], 
             css: [
-                inputs+'date/bootstrap-datepicker/css/datepicker.css'
+                //inputs+'date/bootstrap-datepicker/css/datepicker.css'
                //don't build datetime lib, should be included manually
                //inputs+'datetime/bootstrap-datetimepicker/css/datetimepicker.css'
                 ]

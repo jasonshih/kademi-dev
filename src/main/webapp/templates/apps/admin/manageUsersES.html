@@ -9,11 +9,13 @@
                 table-layout: fixed;
                 width: 100%;
             }
+
             #table-users td.text {
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
+
             #table-users td {
                 vertical-align: top;
             }
@@ -56,10 +58,12 @@
                         #end
                         <div class="btn-group btn-group-sm btn-group-user-states" style="margin-bottom: 5px;" data-toggle="buttons">
                             <label class="btn btn-link #if ($showEnabledUsers == true) active #end">
-                                <input type="radio" #if ($showEnabledUsers == true) checked="checked" #end name="enabled" value="true" class="btn-enable-user" autocomplete="off" /> <i class="fa fa-check"></i> Enabled Users
+                                <input type="radio" #if ($showEnabledUsers == true) checked="checked" #end name="enabled" value="true" class="btn-enable-user" autocomplete="off" />
+                                <i class="fa fa-check"></i> Enabled Users
                             </label>
                             <label class="btn btn-link #if ($showEnabledUsers == false) active #end">
-                                <input type="radio" #if ($showEnabledUsers == false) checked="checked" #end name="enabled" value="false" class="btn-disable-user" autocomplete="off" /> <i class="fa fa-times"></i> Disabled Users
+                                <input type="radio" #if ($showEnabledUsers == false) checked="checked" #end name="enabled" value="false" class="btn-disable-user" autocomplete="off" />
+                                <i class="fa fa-times"></i> Disabled Users
                             </label>
                         </div>
                         <div class="btn-group btn-group-sm" style="margin-bottom: 5px;">
@@ -150,465 +154,510 @@
                                 </thead>
                                 <tbody id="table-users-body">
                                     #if( $page.searchResults.isEmpty() )
-                                    <tr>
-                                        <td colspan="6">No profiles found</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="6">No profiles found</td>
+                                        </tr>
                                     #else
-                                    #foreach($p in $page.searchResults)
-                                    <tr>
-                                        <td class="text">
-                                            <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
-                                                $formatter.htmlEncode($p.fields.firstName.value)
+                                        #foreach($p in $page.searchResults)
+                                            <tr>
+                                                <td class="text">
+                                                    <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
+                                                        $formatter.htmlEncode($p.fields.firstName.value)
                                                 $formatter.htmlEncode($p.fields.surName.value)
-                                            </span>
-                                        </td>
-                                        <td class="text">
-                                            #if( $p.fields.email.value )
-                                            <a href="mailto:$p.fields.email.value">$p.fields.email.value</a>
-                                            #end
-                                        </td>
-                                        <td class="text">$!p.fields.phone.value</td>
-                                        <td class="group-names">
-                                            #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
-                                            #foreach( $group in $groups )
-                                            <div class="label label-info" style="margin-right: 5px;">
-                                                <a title="$group.name" href="/groups/$group.name/" style="color: white">
-                                                    #if( $group.title)
+                                                    </span>
+                                                </td>
+                                                <td class="text">
+                                                    #if( $p.fields.email.value )
+                                                        <a href="mailto:$p.fields.email.value">$p.fields.email.value</a>
+                                                    #end
+                                                </td>
+                                                <td class="text">$!p.fields.phone.value</td>
+                                                <td class="group-names">
+                                                    #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
+                                                    #foreach( $group in $groups )
+                                                        <div class="label label-info" style="margin-right: 5px;">
+                                                            <a title="$group.name" href="/groups/$group.name/" style="color: white">
+                                                                #if( $group.title)
                                                     $group.title
                                                     #else
-                                                    $group.name
+                                                                    $group.name
+                                                                #end
+                                                            </a>
+                                                        </div>
                                                     #end
-                                                </a>
-                                            </div>
-                                            #end
-                                        </td>
-                                        <td class="action">
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="$p.fields.userId.value" class="btn btn-sm btn-primary btn-sm">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="$p.fields.userId.value"><i class="fa fa-edit"></i> User details</a></li>
-                                                    <li><a href="$p.fields.userId.value" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
-                                    </tr>
-                                    #end
+                                                </td>
+                                                <td class="action">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="$p.fields.userId.value" class="btn btn-sm btn-primary btn-sm">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu pull-right" role="menu">
+                                                            <li><a href="$p.fields.userId.value"><i class="fa fa-edit"></i> User details</a></li>
+                                                            <li><a href="$p.fields.userId.value" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
+                                            </tr>
+                                        #end
                                     #end
                                 </tbody>
                             </table>
                         </div>
-                    </div> <!-- End results table -->
+                    </div>
+                    <!-- End results table -->
                 </div>
             </div>
             <div class="col-lg-3" id="aggregationsContainer">
                 #if( $page.aggregations )
-                <table class="table">
-                    #foreach($agg in $page.aggregations )
+                    <table class="table">
+                        #foreach($agg in $page.aggregations )
                     #showAggregation($agg)
                     #end
-                </table>
+                    </table>
                 #end
-            </div> <!-- end aggregations -->
+            </div>
+            <!-- end aggregations -->
         </div>
 
-        <div id="modal-new-user" class="modal modal-lg fade" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">New user</h4>
-            </div>
-            <div class="modal-body">
-                #set($groups = $page.groups) #if($groups.isEmpty())
-                <p class="alert alert-error">You must create at least one group
-                    in this or a parent organisation before you can add users</p>
-                #else
-                <form method="post" action="new" class="form-horizontal">
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserNickName">Display name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="nickName" id="newUserNickName" class="form-control" />
-                        </div>
+        <div id="modal-new-user" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">New user</h4>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserFirstName">First name</label>
-                        <div class="col-md-9">
-                            <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserSurName">Surname</label>
-                        <div class="col-md-9">
-                            <input type="text" name="surName" id="newUserSurName" class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-md-3" for="newUserEmail">Email</label>
-                        <div class="col-md-9">
-                            <input type="text" name="email" id="newUserEmail" class="form-control" />
-                            <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use <b>Joe Blogs</b> as First name and Surname if <b>First name</b> and <b>Surname</b> are blank</em>
-                        </div>
-                    </div>
-                    <hr />
-                    <h4>Group membership</h4>
-                    <p><i>Please select a group and an organisation to make this user a member of</i></p>
-                    <div class="groups">
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="newUserGroupSelect">Group</label>
-                            <div class="col-md-10">
-                                <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
-                                    <option></option>
-                                    #foreach($group in $groups)
-                                    $formatter.option($group.name, $group.name, false)
-                                    #end
-                                </select>
+                    <div class="modal-body">
+                        #set($groups = $page.groups) #if($groups.isEmpty())
+                        <p class="alert alert-error">You must create at least one group
+                            in this or a parent organisation before you can add users</p>
+                    #else
+                        <form method="post" action="new" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserNickName">Display name</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="nickName" id="newUserNickName" class="form-control" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
-                            <div class="col-md-10">
-                                <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
-                                <input type="hidden" class="required" autocomplete="off" name="orgId" id="orgId" value="$page.organisation.id" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserFirstName">First name</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div id="org-search">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover table-condensed">
-                                        #if( $page.orgSearchResults.isEmpty() )
-                                        <tbody>
-                                            <tr>
-                                                <td>No matching organisations found</td>
-                                            </tr>
-                                        </tbody>
-                                        #else
-                                        <thead>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Title</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            #foreach($org in $page.orgSearchResults)
-                                            <tr>
-                                                <td><a href="$org.id">$org.orgId</a></td>
-                                                <td><a href="$org.id">$!org.title</a></td>
-                                            </tr>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserSurName">Surname</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserEmail">Email</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="email" id="newUserEmail" class="form-control" />
+                                    <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use <b>Joe Blogs</b> as First name and Surname if
+                                        <b>First name</b> and <b>Surname</b> are blank</em>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Group membership</h4>
+
+                            <p><i>Please select a group and an organisation to make this user a member of</i></p>
+
+                            <div class="groups">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newUserGroupSelect">Group</label>
+
+                                    <div class="col-md-10">
+                                        <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
+                                            <option></option>
+                                            #foreach($group in $groups)
+                                                $formatter.option($group.name, $group.name, false)
                                             #end
-                                        </tbody>
-                                        #end
-                                    </table>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
+
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
+                                        <input type="hidden" class="required" autocomplete="off" name="orgId" id="orgId" value="$page.organisation.id" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div id="org-search">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-condensed">
+                                                #if( $page.orgSearchResults.isEmpty() )
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>No matching organisations found</td>
+                                                        </tr>
+                                                    </tbody>
+                                                #else
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Id</th>
+                                                            <th>Title</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        #foreach($org in $page.orgSearchResults)
+                                                            <tr>
+                                                                <td><a href="$org.id">$org.orgId</a></td>
+                                                                <td><a href="$org.id">$!org.title</a></td>
+                                                            </tr>
+                                                        #end
+                                                    </tbody>
+                                                #end
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+                        </form>
+                    #end
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <div class="btn-group btn-group-sm dropup"">
+                            <button class="btn btn-primary btn-add-and-view" data-type="form-submit" type="button">Create and view</button>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li><a href="#" data-type="form-submit" class="small btn-add-and-add">Create and add another</a></li>
+                                <li><a href="#" data-type="form-submit" class="small btn-add-and-close">Create and close</a></li>
+                            </ul>
                         </div>
                     </div>
-                </form>
-                #end
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <div class="btn-group btn-group-sm dropup"">
-                    <button class="btn btn-primary btn-add-and-view" data-type="form-submit" type="button">Create and view</button>
-                    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="#" data-type="form-submit" class="small btn-add-and-add">Create and add another</a></li>
-                        <li><a href="#" data-type="form-submit" class="small btn-add-and-close">Create and close</a></li>
-                    </ul>
                 </div>
             </div>
         </div>
 
-        <div id="modal-upload-userFile" class="modal modal-lg fade" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload Users CSV</h4>
+        <div id="modal-upload-userFile" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload Users CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" role="form" class="smart-wizard form-horizontal" id="form">
+                            <div id="wizard" class="swMain">
+                                <ul>
+                                    <li>
+                                        <a href="#step-1">
+                                            <div class="stepNumber">
+                                                1
+                                            </div>
+                                            <span class="stepDesc"> Step 1
+                                                <br />
+                                                <small>Upload File</small>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-2">
+                                            <div class="stepNumber">
+                                                2
+                                            </div>
+                                            <span class="stepDesc"> Step 2
+                                                <br />
+                                                <small>Assign Columns</small>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#step-3">
+                                            <div class="stepNumber">
+                                                3
+                                            </div>
+                                            <span class="stepDesc"> Step 3
+                                                <br />
+                                                <small>Add Users</small>
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div id="step-1">
+                                    <h2 class="StepTitle">Upload File</h2>
+
+                                    <div class="upload">
+                                        <div class="btn-upload" id='do-upload-file'></div>
+                                        <br />
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 col-sm-offset-10">
+                                            <button class="btn btn-blue next-step btn-block">
+                                                Next <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="step-2">
+                                    <h2 class="StepTitle">Step 2 Content</h2>
+
+                                    <div class="column-selector">
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 col-sm-offset-3">
+                                            <button class="btn btn-light-grey back-step btn-block">
+                                                <i class="fa fa-circle-arrow-left"></i> Back
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-2 col-sm-offset-3">
+                                            <button class="btn btn-blue next-step btn-block">
+                                                Next <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="step-3">
+                                    <h2 class="StepTitle">Step 3 Title</h2>
+
+                                    <div class="form-group">
+                                        <div class="col-sm-2 col-sm-offset-3">
+                                            <button class="btn btn-light-grey back-step btn-block">
+                                                <i class="fa fa-circle-arrow-left"></i> Back
+                                            </button>
+                                        </div>
+                                        <div class="col-sm-2 col-sm-offset-3">
+                                            <button class="btn btn-blue next-step btn-block">
+                                                Next <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form action="#" role="form" class="smart-wizard form-horizontal" id="form">
-                    <div id="wizard" class="swMain">
+        </div>
+
+        <div id="modal-upload-csv" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload Users CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please use the following column order <b>exactly</b>. First row is ignored.</p>
                         <ul>
-                            <li>
-                                <a href="#step-1">
-                                    <div class="stepNumber">
-                                        1
-                                    </div>
-                                    <span class="stepDesc"> Step 1
-                                        <br />
-                                        <small>Upload File</small> </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#step-2">
-                                    <div class="stepNumber">
-                                        2
-                                    </div>
-                                    <span class="stepDesc"> Step 2
-                                        <br />
-                                        <small>Assign Columns</small> </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#step-3">
-                                    <div class="stepNumber">
-                                        3
-                                    </div>
-                                    <span class="stepDesc"> Step 3
-                                        <br />
-                                        <small>Add Users</small> </span>
-                                </a>
-                            </li>
+                            <li>MemberOfOrg - optional. If present should be the OrgID of a child organisation</li>
+                            <li>Group - the name of the group to add the user to. Required</li>
+                            <li>UserName - optional, users will receive an auto-generated user name if not provided</li>
+                            <li>NickName - optional, defaults to first name</li>
+                            <li>Email - required</li>
+                            <li>FirstName - optional</li>
+                            <li>SurName - optional</li>
+                            <li>Phone - optional</li>
+                            <li>New password - optional. If provided the password will be applied to the profile</li>
                         </ul>
-                        <div id="step-1">
-                            <h2 class="StepTitle">Upload File</h2>
+                        <p>To unsubscribe users, provide the special keyword <b>!UNSUB!</b> as the group name</b></p>
 
-                            <div class="upload">
-                                <div class="btn-upload" id='do-upload-file'></div>
-                                <br />
-                            </div>
-
-                            <div class="form-group">
-                                <div class="col-sm-2 col-sm-offset-10">
-                                    <button class="btn btn-blue next-step btn-block">
-                                        Next <i class="fa fa-arrow-circle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="upload">
+                            <div class="btn-upload" id='do-upload-csv'></div>
+                            <br />
                         </div>
-                        <div id="step-2">
-                            <h2 class="StepTitle">Step 2 Content</h2>
-                            <div class="column-selector">
+                        <br />
 
-                            </div>
+                        <div class="upload-results">
+                            <p>
+                                <strong>No. inserted:</strong>
+                                <span class="badge badge-success num-inserted">-</span>
+                                <strong>No. updated:</strong>
+                                <span class="badge badge-success num-updated">-</span>
+                                <strong>Unmatched rows:</strong>
+                                <span class="badge badge-danger num-unmatched">-</span>
+                            </p>
 
-                            <div class="form-group">
-                                <div class="col-sm-2 col-sm-offset-3">
-                                    <button class="btn btn-light-grey back-step btn-block">
-                                        <i class="fa fa-circle-arrow-left"></i> Back
-                                    </button>
-                                </div>
-                                <div class="col-sm-2 col-sm-offset-3">
-                                    <button class="btn btn-blue next-step btn-block">
-                                        Next <i class="fa fa-arrow-circle-right"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="step-3">
-                            <h2 class="StepTitle">Step 3 Title</h2>
-
-                            <div class="form-group">
-                                <div class="col-sm-2 col-sm-offset-3">
-                                    <button class="btn btn-light-grey back-step btn-block">
-                                        <i class="fa fa-circle-arrow-left"></i> Back
-                                    </button>
-                                </div>
-                                <div class="col-sm-2 col-sm-offset-3">
-                                    <button class="btn btn-blue next-step btn-block">
-                                        Next <i class="fa fa-arrow-circle-right"></i>
-                                    </button>
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-        <div id="modal-upload-csv" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload Users CSV</h4>
-            </div>
-            <div class="modal-body">
-                <p>Please use the following column order <b>exactly</b>. First row is ignored.</p>
-                <ul>
-                    <li>MemberOfOrg - optional. If present should be the OrgID of a child organisation</li>
-                    <li>Group - the name of the group to add the user to. Required</li>
-                    <li>UserName - optional, users will receive an auto-generated user name if not provided</li>
-                    <li>NickName - optional, defaults to first name</li>
-                    <li>Email - required</li>
-                    <li>FirstName - optional</li>
-                    <li>SurName - optional</li>
-                    <li>Phone - optional</li>
-                    <li>New password - optional. If provided the password will be applied to the profile</li>
-                </ul>
-                <p>To unsubscribe users, provide the special keyword <b>!UNSUB!</b> as the group name</b></p>
-                <div class="upload">
-                    <div class="btn-upload" id='do-upload-csv'></div>
-                    <br />
-                </div>
-                <br />
-                <div class="upload-results">
-                    <p>
-                        <strong>No. inserted:</strong>
-                        <span class="badge badge-success num-inserted">-</span>
-                        <strong>No. updated:</strong>
-                        <span class="badge badge-success num-updated">-</span>
-                        <strong>Unmatched rows:</strong>
-                        <span class="badge badge-danger num-unmatched">-</span>
-                    </p>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover table-condensed">
-                            <tbody>
-                                <tr>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+        </div>
+
+        <div id="modal-match-orgs-csv" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Match organisations CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Use this form to location organisation ID's for the organisation
+                            titles in your users spreadsheet. Upload your users spreadsheet and
+                            the system will attempt to locate existing organisations, and return
+                            an updated spreadsheet. <b>This will not make any change your
+                            server data.</b>
+                        </p>
+
+                        <form method="POST" action="matchOrgs.csv"
+                                enctype="multipart/form-data">
+                            <div data-provides="fileupload" class="fileupload fileupload-new">
+                                <div class="input-group input-group-sm">
+                                    <div class="form-control uneditable-input">
+                                        <i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
+                                    </div>
+                                    <div class="input-group-btn">
+                                        <div class="btn btn-sm btn-light-grey btn-file">
+                                            <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span>
+                                            <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span>
+                                            <input type="file" class="file-input" name="usersCsv" />
+                                        </div>
+                                        <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
+                                            <i class="fa fa-times"></i> Remove
+                                        </a>
+                                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div id="modal-match-orgs-csv" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Match organisations CSV</h4>
+        <div id="modal-login-as" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Login as User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Below is the list of websites this user has access to:</p>
+                        <ul>
+                            <li>Please wait...</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <p>
-                    Use this form to location organisation ID's for the organisation
-                    titles in your users spreadsheet. Upload your users spreadsheet and
-                    the system will attempt to locate existing organisations, and return
-                    an updated spreadsheet. <b>This will not make any change your
-                        server data.</b>
-                </p>
-                <form method="POST" action="matchOrgs.csv"
-                      enctype="multipart/form-data">
-                    <div data-provides="fileupload" class="fileupload fileupload-new">
-                        <div class="input-group input-group-sm">
-                            <div class="form-control uneditable-input">
-                                <i class="fa fa-file fileupload-exists"></i> <span class="fileupload-preview"></span>
-                            </div>
-                            <div class="input-group-btn">
-                                <div class="btn btn-sm btn-light-grey btn-file">
-                                    <span class="fileupload-new"><i class="fa fa-folder-open-o"></i> Select file</span>
-                                    <span class="fileupload-exists"><i class="fa fa-folder-open-o"></i> Change</span>
-                                    <input type="file" class="file-input" name="usersCsv" />
-                                </div>
-                                <a data-dismiss="fileupload" class="btn btn-sm btn-light-grey fileupload-exists" href="#">
-                                    <i class="fa fa-times"></i> Remove
-                                </a>
-                                <button class="btn btn-sm btn-primary" type="submit">Upload</button>
-                            </div>
+        </div>
+
+        <div id="modal-add-to-group" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Add Users to Group</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please choose which groups to add users to and then click Save</p>
+
+                        <div class="groups-wrapper">
+                            <ul class="groups-list row" style="margin-left: 20px;">
+                                #foreach($group in $page.groups)
+                                    <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
+                                #end
+                            </ul>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-        <div id="modal-login-as" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Login as User</h4>
-            </div>
-            <div class="modal-body">
-                <p>Below is the list of websites this user has access to:</p>
-                <ul>
-                    <li>Please wait...</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
-        </div>
-
-        <div id="modal-add-to-group" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add Users to Group</h4>
-            </div>
-            <div class="modal-body">
-                <p>Please choose which groups to add users to and then click Save</p>
-                <div class="groups-wrapper">
-                    <ul class="groups-list row" style="margin-left: 20px;">
-                        #foreach($group in $page.groups)
-                        <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
-                        #end
-                    </ul>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary btnSaveGroup" type="button">Save</button>
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-primary btnSaveGroup" type="button">Save</button>
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-            </div>
         </div>
-
 
         #macro( showAggregation $agg )
-        #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
-        <tbody id="agg-$agg.name">
-            <tr>
-                <td colspan="2">
-                    $agg.title&nbsp;
-                    #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
-                    <span style="float: right; width: 50%" >
-                        #if ( $agg.name != "action" )
-                        <span class="input-group input-group-sm">
-                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                            </span>
-                        </span>
-                        #end
-                    </span>
+            #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
+                <tbody id="agg-$agg.name">
+                    <tr>
+                        <td colspan="2">
+                            $agg.title&nbsp;
+                            #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
+                                <span style="float: right; width: 50%">
+                                    #if ( $agg.name != "action" )
+                                        <span class="input-group input-group-sm">
+                                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                            </span>
+                                        </span>
+                                    #end
+                                </span>
+                            #end
+                        </td>
+                    </tr>
+                    #foreach($b in $agg.buckets )
+                        #showFacetBucket($b, 0)
                     #end
-                </td>
-            </tr>
-            #foreach($b in $agg.buckets )
-            #showFacetBucket($b, 0)
+                </tbody>
             #end
-        </tbody>
-        #end
         #end
 
         #macro( showFacetBucket $b $indent )
-        #set($termParamName = "term-" + $b.aggName)
-        #if( $b.count > 0 )
-        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-            <td>
-                <div class="col-md-offset-$indent">
-                    #if( $b.termTitle )
-                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                    #end
-                </div>
-            </td>
-            <td align="right">$b.count</td>
-        </tr>
+            #set($termParamName = "term-" + $b.aggName)
+            #if( $b.count > 0 )
+                <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                    <td>
+                        <div class="col-md-offset-$indent">
+                            #if( $b.termTitle )
+                                <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                            #end
+                        </div>
+                    </td>
+                    <td align="right">$b.count</td>
+                </tr>
+            #end
+
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
         #end
 
-        #foreach($sub in $b.buckets)
-        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-        #end
-        #end
-
-        <script id="column-sel-template"  type="text/html">
+        <script id="column-sel-template" type="text/html">
             {{#each fields as |value|}}
             <div class="form-group">
                 <label class="col-sm-3 control-label">
                     {{.}} <span class="symbol required"></span>
                 </label>
+
                 <div class="col-sm-7">
                     <select class="form-control" name="column_{{.}}">
                         <option value="">[ None ]</option>
                         {{#each ../columns as |childValue|}}
-                        <option {{#startsWith @value @childValue }} selected="true" {{/startsWith}} value="column_{{@index}}">{{childValue}}</option>
+                        <option {{#startsWith @value @childValue }} selected="true" {{
+                        /startsWith}} value="column_{{@index}}">{{childValue}}</option>
                         {{/each}}
                     </select>
                 </div>

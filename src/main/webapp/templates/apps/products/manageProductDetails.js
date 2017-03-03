@@ -42,6 +42,7 @@ function initProductDetails() {
     initProductImages();
     initProductVariants();
     initProductVariantImgUpload();
+    initCategoryManagment();
 }
 
 function initProductVariants() {
@@ -253,4 +254,74 @@ function doCreateProductField(newTitle) {
             alert('Sorry, we couldn\'t save.');
         }
     });
+}
+
+function initCategoryManagment() {
+    flog("init delete category");
+    $(".categories-wrapper").on("click", "a.btn-delete-category", function (e) {
+        flog("click", this);
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm("Are you sure you want to delete this category?")) {
+            var a = $(this);
+            var href = a.attr("href");
+            var categoryName = $(e.target).closest("a").attr("href");
+            doRemoveFromCategory(categoryName);    
+        }
+    });
+    
+    $(".categories-wrapper").on("click", ".addCategory a", function (e) {
+        flog("click", this);
+        e.preventDefault();
+        e.stopPropagation();
+        var categoryName = $(e.target).closest("a").attr("href");
+        doAddToCategory(categoryName);
+    });
+
+}
+
+function doAddToCategory(categoryName) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {
+        	addProductCategory: categoryName
+        },
+        success: function (resp) {
+            if (resp.status) {
+            	reloadCategories();
+            } else {
+                Msg.error("Couldnt add the product to category: " + resp.messages);
+            }
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
+        }
+    })
+
+}
+
+function doRemoveFromCategory(categoryName) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        data: {
+        	removeProductCategory: categoryName
+        },
+        success: function (resp) {
+            if (resp.status) {
+            	reloadCategories();
+            } else {
+                Msg.error("Couldnt remove the product to category: " + resp.messages);
+            }
+        },
+        error: function (e) {
+            Msg.error(e.status + ': ' + e.statusText);
+        }
+    })
+
+}
+
+function reloadCategories() {
+    $("#categoriesContainer").reloadFragment();
 }
