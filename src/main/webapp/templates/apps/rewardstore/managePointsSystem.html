@@ -2,15 +2,15 @@
     <head>
         <title>Manage Reward</title>
         <!--<link rel="stylesheet" type="text/css" href="manageReward.css" />-->
-        <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css"  />
-       	<script type="text/javascript" src="managePointsSystem.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/static/quiz/quiz.css" />
+        <script type="text/javascript" src="managePointsSystem.js">//</script>
         <script type="text/javascript" src="/static/inline-edit/inline-edit.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin2/prompt.js">//</script>
         <script type="text/javascript" src="/static/quiz/quiz.js">//</script>
         <script type="text/javascript" src="/static/js/jquery-ui-1.10.3.custom.min.js">//</script>
         <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
         <style>
-            .group-list{
+            .group-list {
                 margin-bottom: 5px;
                 display: inline-block;
                 border-radius: 5px;
@@ -22,9 +22,9 @@
     </head>
     <body>
         <form action="" method="POST" class="managePointsSystem" role="form">
-            <div id="manageReward" class="MainContent tabbable">
+            <div id="manageReward" class="tabbable">
                 <div class="clearfix">
-                    <div class="btn-group pull-right" style="margin-bottom: 15px">
+                    <div class="btn-group pull-right">
                         <a href="/rewards/points/" class="btn btn-sm btn-info">
                             <span class="glyphicon glyphicon-star"></span>
                             Points
@@ -92,7 +92,7 @@
                                                     $formatter.option("", "[Any]", $page.pointsOrgType)
                                                     #foreach($orgType in $page.orgTypes)
                                                     $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
-                                                    #end
+                                                #end
                                                 </select>
                                                 <i>You can <a href="/orgTypes/">manage organisation types here</a></i>
                                             </div>
@@ -129,7 +129,7 @@
                                     <td>
                                         <div class="form-group">
                                             <div class="col-sm-12">
-                                                <input type="text" name="template" value="$!page.template"/>
+                                                <input type="text" name="template" value="$!page.template" />
                                                 <i>Leave blank for default, otherwise a path to a template, eg /learner/competition.html</i>
                                             </div>
                                         </div>
@@ -138,7 +138,8 @@
                                 <tr>
                                     <td>
                                         Notes
-                                        <br /><small><i>These notes are for internal purposes only.</i></small>
+                                        <br />
+                                        <small><i>These notes are for internal purposes only.</i></small>
                                     </td>
                                     <td>
                                         <div class="form-group">
@@ -158,7 +159,9 @@
                     </div>
 
                     <div class="tab-pane" id="groups">
-                        <p><button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button></p>
+                        <p>
+                            <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        </p>
                         <div class="well margin-top-10">Specify which user groups are participants in this reward program.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
@@ -192,7 +195,7 @@
                                 </div>
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
 
                         <table class="table table-bordered table-striped pagination-container" id="tablePoints">
                             <colgroup>
@@ -201,7 +204,7 @@
                                 <col />
                                 <col />
                                 <col />
-                                <col width="25px;"/>
+                                <col width="25px;" />
                             </colgroup>
                             <thead>
                                 <tr>
@@ -211,41 +214,41 @@
                                     <th>Issued To</th>
                                     <th>Reason</th>
                                     <th>Status</th>
-                                    <th><input   type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
+                                    <th><input type="checkbox" name="toRemoveId" class="chk-all" value="" /></th>
                                 </tr>
                             </thead>
                             <tbody id="tablePointsBody" class="pagination-results">
                                 #set($pointsHistory = $page.history)
                                 #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(100))
                                 #foreach($points in $pointsPaginator.records($pointsHistory))
-                                <tr>
-                                    <td>$points.numPoints</td>
-                                    <td>$formatter.formatDateTime($points.issuedDate)</td>
-                                    <td>$formatter.formatDateTime($points.expiryDate)</td>
-                                    <td>
-                                        #if( $points.issuedTo )
-                                        #if( $points.issuedTo.asProfile() )
-                                        <a href="/manageUsers/$points.issuedTo.id">$points.issuedTo.formattedName</a>
-                                        #else
-                                        <a href="/organisations/$points.issuedTo.id/edit">$points.issuedTo.formattedName</a>
-                                        #end
-                                        #else
-                                        $points.points.issuedTo.formattedName
-                                        #end
-                                    </td>
-                                    <td>$!points.reason</td>
-                                    <td>
-                                        #if( $points.expired )
-                                        <span class="label label-warning">Expired</span>
-                                        #elseif( $points.completelyUsed )
-                                        <span class="label label-info">Used</span>
-                                        #else
-                                        <span class="label label-success">Active</span>
-                                        #end
+                                    <tr>
+                                        <td>$points.numPoints</td>
+                                        <td>$formatter.formatDateTime($points.issuedDate)</td>
+                                        <td>$formatter.formatDateTime($points.expiryDate)</td>
+                                        <td>
+                                            #if( $points.issuedTo )
+                                                #if( $points.issuedTo.asProfile() )
+                                                    <a href="/manageUsers/$points.issuedTo.id">$points.issuedTo.formattedName</a>
+                                                #else
+                                                    <a href="/organisations/$points.issuedTo.id/edit">$points.issuedTo.formattedName</a>
+                                                #end
+                                            #else
+                                                $points.points.issuedTo.formattedName
+                                            #end
+                                        </td>
+                                        <td>$!points.reason</td>
+                                        <td>
+                                            #if( $points.expired )
+                                                <span class="label label-warning">Expired</span>
+                                            #elseif( $points.completelyUsed )
+                                                <span class="label label-info">Used</span>
+                                            #else
+                                                <span class="label label-success">Active</span>
+                                            #end
 
-                                    </td>
-                                    <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
-                                </tr>
+                                        </td>
+                                        <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
+                                    </tr>
                                 #end
                             </tbody>
                             <tfoot id="pointsFooter">
@@ -264,7 +267,7 @@
                                 <span class="glyphicon glyphicon-download"></span>
                                 Save Debits CSV
                             </a>
-                            <button class="btn btn-sm btn-warning btnReconcile" >
+                            <button class="btn btn-sm btn-warning btnReconcile">
                                 <i class="fa fa-exclamation-circle"></i>
                                 Reconcile
                             </button>
@@ -289,7 +292,7 @@
                                     <col />
                                     <col />
                                     <col />
-                                    <col width="25px;"/>
+                                    <col width="25px;" />
                                 </colgroup>
                                 <thead>
                                     <tr>
@@ -304,31 +307,31 @@
                                 <tbody id="debitsTableBody" class="pagination-results">
                                     #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
                                     #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
-                                    <tr>
-                                        <td>$debit.numPoints</td>
-                                        <td>$formatter.formatDateTime($debit.issuedDate)</td>
-                                        <td>
-                                            #if( $debit.issuedTo )
-                                            #if( $debit.issuedTo.asProfile() )
-                                            <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
-                                            #else
-                                            <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
-                                            #end
-                                            #else
-                                            $debit.points.issuedTo.formattedName
-                                            #end
-                                        </td>
-                                        <td>$!debit.reason</td>
-                                        <td>
-                                            #if( $debit.points )
-                                            <span class="fa fa-check-circle fa-2x text-success"></span>
-                                            $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
-                                            #else
-                                            <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
-                                            #end
-                                        </td>
-                                        <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
-                                    </tr>
+                                        <tr>
+                                            <td>$debit.numPoints</td>
+                                            <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                            <td>
+                                                #if( $debit.issuedTo )
+                                                    #if( $debit.issuedTo.asProfile() )
+                                                        <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
+                                                    #else
+                                                        <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
+                                                    #end
+                                                #else
+                                                    $debit.points.issuedTo.formattedName
+                                                #end
+                                            </td>
+                                            <td>$!debit.reason</td>
+                                            <td>
+                                                #if( $debit.points )
+                                                    <span class="fa fa-check-circle fa-2x text-success"></span>
+                                                    $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
+                                                #else
+                                                    <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
+                                                #end
+                                            </td>
+                                            <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
+                                        </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -351,7 +354,7 @@
                         <div class="table-responsive">
                             <table class="table table-hover table-striped" id="table-leaderboard">
                                 <colgroup>
-                                    <col width="10%;"/>
+                                    <col width="10%;" />
                                     <col />
                                     <col />
                                 </colgroup>
@@ -366,22 +369,22 @@
                                     #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
                                     #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
                                     #if(!$lbFinishDate)
-                                    #set( $lbFinishDate = $formatter.now )
+                                        #set( $lbFinishDate = $formatter.now )
                                     #end
                                     #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
                                     #if(!$lbLimit)
-                                    #set( $lbLimit = 20 )
+                                        #set( $lbLimit = 20 )
                                     #end
                                     #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
                                     $myPointsInfo.setExtendedProfiles(true)
                                     #foreach($point in $myPointsInfo.allMemberPoints)
-                                    <tr>
-                                        <td>$foreach.count</td>
-                                        <td>
-                                            <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
-                                        </td>
-                                        <td>$point.numPoints</td>
-                                    </tr>
+                                        <tr>
+                                            <td>$foreach.count</td>
+                                            <td>
+                                                <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
+                                            </td>
+                                            <td>$point.numPoints</td>
+                                        </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -415,23 +418,23 @@
             </div>
         </div>
         #macro(genGroup $group)
-        #set($gc = "")
-        #set($gIcon = "")
-        #if( $group.groupType == "P" || !$group.groupType)
-        #set($gc = "alert alert-success")
-        #set($gIcon = "clip-users")
-        #elseif( $group.groupType == "S" )
-        #set($gc = "alert alert-info")
-        #set($gIcon = "fa fa-trophy")
-        #elseif( $group.groupType == "M" )
-        #set($gc = "alert alert-info")
-        #set($gIcon = "fa fa-envelope")
-        #end
-        <span id="group_$group.name" class="group-list $gc">
-            <i class="$gIcon"></i>
-            <span class="block-name" title="$group.name">$group.name</span>
-            <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
-        </span>
+            #set($gc = "")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "alert alert-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "alert alert-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <span id="group_$group.name" class="group-list $gc">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+                <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+            </span>
         #end
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>

@@ -2,10 +2,10 @@
     <head>
         <title>Manage Rewards</title>
         <!--<link href="manageReward.css" rel="stylesheet" type="text/css" />-->
-        <script type="text/javascript" src="managePointsSystems.js">//</script>        
+        <script type="text/javascript" src="managePointsSystems.js">//</script>
     </head>
     <body>
-        <section id="manageReward" class="MainContent">
+        <section id="manageReward">
             <p class="clearfix">
                 <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#addRewardModal"><i class="fa fa-plus"></i> Add new points system</button>
                 <a href="points/" class="pull-right btn btn-sm btn-info">Review points</a>
@@ -67,39 +67,39 @@
                             </thead>
                             <tbody>
                                 #foreach($r in $page.children.ofType.manageReward)
-                                <tr>
-                                    <td><a href="$r.name">$r.rewardTitle</a></td>
-                                    <td>
-                                        #if( $r.pointsType == "POINTS_ORG" )
+                                    <tr>
+                                        <td><a href="$r.name">$r.rewardTitle</a></td>
+                                        <td>
+                                            #if( $r.pointsType == "POINTS_ORG" )
                                         $r.pointsOrgType
                                         #else
-                                    #foreach($g in $r.selectedGroups)
-                                        #genGroup($g)
-                                    #end
-                                        #end
-                                    </td>
-                                    <td>$formatter.formatUnits($r.totalPoints) points</td>
-                                    <td>$r.countPointsRecs</td>
-                                    <td>$formatter.formatUnits($r.totalDebits) points</td>
-                                    <td>$r.countDebitsRecs</td>
-                                    <td class="action">
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
-                                            </a>
-                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right" role="menu">
-                                                <li role="presentation">
-                                                    <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward"><i class="fa fa-edit"></i> Edit</a>
-                                                </li>
-                                                <li role="presentation">
-                                                    <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward"><i class="fa fa-times"></i> Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                #foreach($g in $r.selectedGroups)
+                                                    #genGroup($g)
+                                                #end
+                                            #end
+                                        </td>
+                                        <td>$formatter.formatUnits($r.totalPoints) points</td>
+                                        <td>$r.countPointsRecs</td>
+                                        <td>$formatter.formatUnits($r.totalDebits) points</td>
+                                        <td>$r.countDebitsRecs</td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm">
+                                                <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
+                                                </a>
+                                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li role="presentation">
+                                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Edit EditReward"><i class="fa fa-edit"></i> Edit</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" tabindex="-1" href="$r.name" class="Delete DeleteReward"><i class="fa fa-times"></i> Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 #end
                             </tbody>
                         </table>
@@ -127,7 +127,7 @@
         #end
         <script type="text/javascript">
             $(function () {
-                initManagePointsSystems();                
+                initManagePointsSystems();
             });
         </script>
     </body>
