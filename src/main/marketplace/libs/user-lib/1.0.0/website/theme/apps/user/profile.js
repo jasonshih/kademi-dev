@@ -6,7 +6,7 @@ function initProfile() {
             Msg.info("Saved ok");
         }
     });
-
+    
     $(".form-unsubscribe").forms({
         validate: function () {
             return confirm("Are you sure you want to unsubscribe? You will no longer be able to access this site");
@@ -17,13 +17,13 @@ function initProfile() {
         },
         confirmMessage: "You have been unsubscribed"
     });
-
+    
     $("#myModal button.btn-save").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $(e.target).closest(".modal").find("form").trigger("submit");
     });
-
+    
     $(".membership-remove").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -37,22 +37,45 @@ function initProfile() {
         var li = target.closest("li");
         flog("deleteMembership", target);
         deleteMembership(li, target.attr("href"));
-
+        
     });
-
+    
     $("label.optin input").change(function (e) {
         e.preventDefault();
         e.stopPropagation();
         var target = $(e.target);
         updateOptin(target.is(":checked"), target.attr("value"));
     });
-
+    
     $('#btn-change-ava').upcropImage({
         url: window.location.pathname, // this is actually the default value anyway
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
             $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
             $(".modal").modal("hide");
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+                        $(".modal").modal("hide");
+                    } else {
+                        alert("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
         }
     });
 }
