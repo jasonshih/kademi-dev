@@ -47,7 +47,7 @@ function addToCart(href, quantity) {
             addItemHref: href,
             addItemQuantity: quantity
         },
-        datatype: 'json',
+        dataType: 'json',
         success: function (data) {
             if (data.status) {
                 Msg.info('Added item to shopping cart');
@@ -104,11 +104,10 @@ function createModal(id, href, title, formHtml) {
         '                <h4 class="modal-title">' + title + '</h4>' +
         '            </div>' +
         '            <div class="modal-body">' +
-        '             <form method="post" action="/checkout" style="min-height: 50px">' +
+        '             <form method="post" action="/checkout" style="min-height: 50px" class="form-horizontal">' +
         '                 <input type="hidden" name="addItemHref" value="" />' +
         '                 <input type="hidden" name="addItemQuantity" value="1" />' +
-        '                 <div class="order-form-body">' +
-        '                 </div>' +
+        '                 <div class="order-form-body">' + formHtml + '</div>' +
         '             </form>' +
         '            </div>' +
         '            <div class="modal-footer">' +
@@ -123,8 +122,6 @@ function createModal(id, href, title, formHtml) {
     var myPromptModal = $(modalString);
     $('body').append(myPromptModal);
     myPromptModal.find("input[name=addItemHref]").val(href);
-
-    myPromptModal.find(".order-form-body").html(formHtml);
 
     var form = myPromptModal.find('form');
     form.forms({
