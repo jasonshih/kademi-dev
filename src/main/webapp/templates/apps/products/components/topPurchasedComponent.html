@@ -12,7 +12,7 @@
 #end
 #set( $displayedItems = $formatter.toInteger($displayedItems) )
 
-#if( !$title )
+#if( !$title || $title == "" )
     #if ($displayedItems > 0)
         #set( $title = "Top " + $displayedItems + " Purchased" )
     #else
