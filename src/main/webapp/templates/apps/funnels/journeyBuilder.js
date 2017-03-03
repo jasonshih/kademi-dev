@@ -9,7 +9,7 @@ var JBApp = {
                 return [key, node[key]];
             }
         }
-
+        
         return null;
     },
     getNodeDef: function (node, typeName) {
@@ -29,7 +29,7 @@ var JBApp = {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeInfo = JBApp.getNodeInfo(node);
-
+            
             if (nodeInfo[1].nodeId === id) {
                 return nodeInfo;
                 break;
@@ -41,14 +41,14 @@ var JBApp = {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeInfo = JBApp.getNodeInfo(node);
-
+            
             if (nodeInfo[1].nodeId === id) {
                 flog('Found node info', nodeInfo, 'type=' + nodeInfo[0]);
-
+                
                 if (nodeInfo[1].nodeType) {
                     return nodeInfo[1].nodeType; // this is to allow customGoal etc to be used for many different node types
                 }
-
+                
                 return nodeInfo[0];
                 break;
             }
@@ -56,7 +56,7 @@ var JBApp = {
     },
     reloadFunnelJson: function () {
         flog('reloadFunnelJson');
-
+        
         $('#funnelJson').reloadFragment({
             whenComplete: function () {
                 JBApp.parseFunnel();
@@ -65,7 +65,7 @@ var JBApp = {
     },
     parseFunnel: function () {
         flog('parseFunnel');
-
+        
         try {
             JBApp.funnel = $.parseJSON($('#funnelJson').val());
         } catch (e) {
@@ -77,7 +77,7 @@ var JBApp = {
     },
     newNode: function (node, type) {
         flog('newNode', node, type);
-
+        
         var nodePorts = '';
         var divTypeClass = type;
         var nodeDef = JBNodes[type];
@@ -85,57 +85,57 @@ var JBApp = {
             nodeDef = JBNodes[node.nodeType];
             divTypeClass = node.nodeType;
         }
-
+        
         if (nodeDef == null) {
             flog('WARN: Could not find node type=' + type, ', nodeType=' + node.nodeType, 'node=', node);
             return null;
         }
-
+        
         switch (nodeDef.type) {
             case JB_NODE_TYPE.ACTION:
                 divTypeClass += ' node-action';
                 break;
-
+            
             case JB_NODE_TYPE.GOAL:
                 divTypeClass += ' node-goal';
                 break;
-
+            
             case JB_NODE_TYPE.DECISION:
                 divTypeClass += ' node-decision';
                 break;
-
+            
         }
-
+        
         var nodeDiv = document.createElement('div');
         nodeDiv.className = 'node ' + divTypeClass;
         nodeDiv.id = node.nodeId;
         nodeDiv.setAttribute('data-type', type);
         nodeDiv.style.left = node.x + 'px';
         nodeDiv.style.top = node.y + 'px';
-
+        
         for (var portName in nodeDef.ports) {
             var portData = nodeDef.ports[portName];
             var portClass = '';
             switch (portName) {
                 case 'decisionDefault':
-                    portClass = 'ep-red';
+                    portClass = 'node-endpoint-red';
                     break;
-
+                
                 case 'decisionChoices':
-                    portClass = 'ep-green';
+                    portClass = 'node-endpoint-green';
                     break;
-
+                
                 case 'timeoutNode':
-                    portClass = 'ep-timeout';
+                    portClass = 'node-endpoint-timeout';
                     break;
-
+                
                 default:
-                    portClass = 'ep-basic';
+                    portClass = 'node-endpoint-basic';
             }
-
-            nodePorts += '<span title="' + portData.title + '" class="ep ' + portClass + '" data-name="' + portName + '"></span>';
+            
+            nodePorts += '<span title="' + portData.title + '" class="node-endpoint ' + portClass + '" data-name="' + portName + '"></span>';
         }
-
+        
         var nodeName = node.title ? '<span class="node-title-inner">' + node.title + '</span>' : '<span class="node-title-inner">Enter title</span>';
         var nodeHtml = '';
         nodeHtml += '<div class="node-heading">';
@@ -150,17 +150,17 @@ var JBApp = {
         nodeHtml += '<div class="node-body">';
         nodeHtml += '   <span class="node-title btnNodeEdit">' + nodeName + ' <i class="fa fa-pencil"></i></span>' + nodePorts;
         nodeHtml += '</div>';
-
+        
         nodeDiv.innerHTML = nodeHtml;
         JBApp.jspInstance.getContainer().appendChild(nodeDiv);
-
+        
         var nodeBackdrop = document.createElement('div');
         nodeBackdrop.className = 'node-backdrop ' + divTypeClass;
         nodeBackdrop.id = node.nodeId + '-backdrop';
         nodeBackdrop.style.left = node.x + 'px';
         nodeBackdrop.style.top = node.y + 'px';
         JBApp.jspInstance.getContainer().appendChild(nodeBackdrop);
-
+        
         JBApp.initNode(nodeDiv, type, node);
         return nodeDiv;
     },
@@ -170,19 +170,19 @@ var JBApp = {
             case 'timeoutNode':
                 color = '#e5910f';
                 break;
-
+            
             case 'decisionDefault':
                 color = '#f00';
                 break;
-
+            
             case 'decisionChoices':
                 color = '#008000';
                 break;
-
+            
             default:
                 color = '#e50051';
         }
-
+        
         return {
             strokeStyle: color,
             lineWidth: 2,
@@ -192,7 +192,7 @@ var JBApp = {
     },
     initNode: function (nodeDiv, type, node) {
         flog('initNode', nodeDiv, type);
-
+        
         var nodeBackdrop = $('#' + nodeDiv.id + '-backdrop');
         JBApp.jspInstance.draggable(nodeDiv, {
             stop: function () {
@@ -206,13 +206,13 @@ var JBApp = {
             },
             grid: [10, 10]
         });
-
+        
         var nodeDef = JBApp.getNodeDef(node, type);
         if (nodeDef == null) {
             flog('WARN: Could not find definition of node type=' + type, 'node=', node);
             return;
         }
-
+        
         for (var portName in nodeDef.ports) {
             JBApp.jspInstance.makeSource(nodeDiv, {
                 filter: '[data-name=' + portName + ']',
@@ -221,7 +221,7 @@ var JBApp = {
                 maxConnections: -1
             });
         }
-
+        
         JBApp.jspInstance.makeTarget(nodeDiv, {
             dropOptions: {
                 hoverClass: 'node-dragging-hover'
@@ -229,28 +229,25 @@ var JBApp = {
             allowLoopback: false
         });
     },
-    connectionTypes: {
-        nextNodeId: [1, 0.775, 1, 0],
-        timeoutNode: [1, 0.925, 1, 0]
-    },
+    connectionTypes: {},
     initConnection: function (node, type) {
         flog('initConnection', node, type);
-
+        
         var nodeDef = JBApp.getNodeDef(node, type);
         if (nodeDef == null) {
             return null;
         }
-
+        
         for (var portName in nodeDef.ports) {
             var portData = nodeDef.ports[portName];
             var connectionType = portName;
-
+            
             if (typeof portData.onInitConnection === 'function') {
                 flog('Call "onInitConnection" handler of "' + portName + '" port of "' + type + '" node');
                 portData.onInitConnection.call(null, node);
             } else {
                 flog('Use default handler when initializing existing connection');
-
+                
                 if (node[portName]) {
                     JBApp.jspInstance.connect({
                         source: node.nodeId,
@@ -263,17 +260,17 @@ var JBApp = {
     },
     saveFunnel: function (message, callback) {
         flog('saveFunnel', message);
-
+        
         var builderStatus = $('#builder-status');
         builderStatus.stop().show().html('Saving...');
-
+        
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             for (var key in node) {
                 if (node.hasOwnProperty(key)) {
                     var nodeId = node[key].nodeId;
                     var nodeDiv = $('#' + nodeId);
-
+                    
                     if (nodeDiv.length > 0) {
                         node[key].x = parseInt(nodeDiv.css('left').replace('px', ''));
                         node[key].y = parseInt(nodeDiv.css('top').replace('px', ''));
@@ -283,14 +280,14 @@ var JBApp = {
                 }
             }
         }
-
+        
         $.ajax({
             url: 'funnel.json',
             type: 'PUT',
             data: JSON.stringify(JBApp.funnel, null, 4),
             success: function () {
                 builderStatus.html(message || 'Funnel is saved').delay(2000).fadeOut(2000);
-
+                
                 if (typeof callback === 'function') {
                     callback();
                 }
@@ -302,18 +299,18 @@ var JBApp = {
     },
     deleteConnection: function (connection) {
         flog('deleteConnection', connection);
-
+        
         var portName = connection.endpoints[0].connectionType;
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeInfo = JBApp.getNodeInfo(node);
             var nodeData = nodeInfo[1];
             var nodeType = nodeInfo[0];
-
+            
             if (nodeData.nodeId === connection.sourceId) {
                 var nodeDef = JBApp.getNodeDef(node, nodeType);
                 var portData = nodeDef.ports[portName];
-
+                
                 if (typeof portData.onDeleteConnection === 'function') {
                     flog('Call "onDeleteConnection" handler of "' + portName + '" port of "' + nodeDef + '" node');
                     portData.onDeleteConnection.call(null, connection, nodeData);
@@ -321,14 +318,14 @@ var JBApp = {
                     flog('Use default handler when deleting connection');
                     nodeData[portName] = '';
                 }
-
+                
                 break;
             }
         }
     },
     hideSettingPanel: function () {
         flog('hideSettingPanel');
-
+        
         var settingPanel = $('.panel-setting');
         settingPanel.removeClass('showed');
         settingPanel.find('.active').removeClass('active');
@@ -337,7 +334,7 @@ var JBApp = {
     },
     showSettingPanel: function (formName) {
         flog('showSettingPanel-', formName);
-
+        
         var titleSelector = '';
         var formSelector = '';
         if (typeof formName !== 'string') {
@@ -352,19 +349,19 @@ var JBApp = {
             formSelector = '.panel-' + formName;
             titleSelector = '.panel-' + formName;
         }
-
+        
         var settingPanel = $('.panel-setting');
         settingPanel.addClass('showed');
         settingPanel.find('.active').removeClass('active');
-
+        
         var settingPanelBody = settingPanel.find('.panel-body');
         var formPanel = settingPanelBody.find(formSelector);
         flog("showSettingPanel. formSelector=", formSelector, "formPanel=", formPanel, "settingPanelBody=", settingPanelBody);
         formPanel.addClass('active');
-
+        
         var settingPanelHeading = settingPanel.find('.panel-heading');
         settingPanelHeading.find(titleSelector).addClass('active');
-
+        
         setTimeout(function () {
             formPanel.find('input:text').first().trigger('focus');
         }, 250);
@@ -426,11 +423,11 @@ var JBApp = {
     initStandardGoalSettingControls: function (form) {
         form.find('.timeout-units-selector li').on('click', function (e) {
             e.preventDefault();
-
+            
             var a = $(this).find('a');
             var text = a.text().trim();
             var value = a.attr('data-value');
-
+            
             form.find('.timeout-units').val(value);
             form.find('.timeout-units-preview').html(text);
         });
@@ -443,7 +440,7 @@ var JBApp = {
         var cost = form.find('.cost').val();
         var probability = form.find('.probability').val();
         var time = form.find('.time').val();
-
+        
         JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
         JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
         JBApp.currentSettingNode.stageName = stageName || null;
@@ -460,7 +457,7 @@ var JBApp = {
             form.find('.timeout-units-preview').html('');
         }
         form.find('.timeout-multiples').val(node.timeoutMultiples !== null ? node.timeoutMultiples : '');
-
+        
         var stagesOptionStr = '<option value="">[No stage selected]</option>';
         if (JBApp.funnel.stages && $.isArray(JBApp.funnel.stages)) {
             for (var i = 0; i < JBApp.funnel.stages.length; i++) {
@@ -468,7 +465,7 @@ var JBApp = {
             }
         }
         form.find('.stageName').html(stagesOptionStr).val(node.stageName !== null ? node.stageName : '');
-
+        
         var sourceOptionStr = '<option value="">[No source selected]</option>';
         if (JBApp.funnel.sources && $.isArray(JBApp.funnel.sources)) {
             for (var i = 0; i < JBApp.funnel.sources.length; i++) {
@@ -476,7 +473,7 @@ var JBApp = {
             }
         }
         form.find('.source').html(sourceOptionStr).val(node.source !== null ? node.source : '');
-
+        
         form.find('.cost').val(node.cost !== null ? node.cost : '');
         form.find('.probability').val(node.probability !== null ? node.probability : '');
         form.find('.time').val(node.timerTime !== null ? node.timerTime : '');
@@ -528,13 +525,13 @@ jsPlumb.ready(function () {
                 events: {
                     click: function (labelOverlay, e) {
                         flog('Click on label overlay', labelOverlay, labelOverlay.component);
-
+                        
                         e.preventDefault();
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-
+                        
                         labelOverlay.component.setParameter('clickedButtonX', true);
-
+                        
                         if (confirm('Are you sure you want to delete this connection?')) {
                             labelOverlay.component.setParameter('clickedButtonXCancelled', false);
                         } else {
@@ -551,38 +548,44 @@ jsPlumb.ready(function () {
     });
     JBApp.jspInstance = instance;
     
+    
+    JBApp.connectionTypes = {
+        nextNodeId: [1, 0.775, 1, 0],
+        timeoutNode: [1, 0.94, 1, 0]
+    }
+    
     // Load connection types position from JBNodes
     for (var nodeName in JBNodes) {
         var index = 0;
         $.each(JBNodes[nodeName].ports, function (portName) {
             if (portName !== 'timeoutNode' && portName !== 'nextNodeId') {
                 var positionValue;
-
+                
                 switch (index) {
                     case 0:
-                        positionValue = [1, 0.925, 1, 0];
+                        positionValue = [1, 0.94, 1, 0];
                         break;
-
+                    
                     case 1:
-                        positionValue = [1, 0.775, 1, 0];
+                        positionValue = [1, 0.8, 1, 0];
                         break;
-
+                    
                     case 2:
-                        positionValue = [1, 0.63, 1, 0];
+                        positionValue = [1, 0.665, 1, 0];
                         break;
-
+                    
                     case 3:
-                        positionValue = [1, 0.475, 1, 0];
+                        positionValue = [1, 0.52, 1, 0];
                         break;
-
+                    
                     case 4:
-                        positionValue = [1, 0.325, 1, 0];
+                        positionValue = [1, 0.39, 1, 0];
                         break;
                 }
-
+                
                 JBApp.connectionTypes[portName] = positionValue;
             }
-
+            
             index++;
         });
     }
@@ -590,7 +593,7 @@ jsPlumb.ready(function () {
     // Register connection types
     for (var typeName in JBApp.connectionTypes) {
         var outPortPosition = JBApp.connectionTypes[typeName];
-
+        
         instance.registerConnectionType(typeName, {
             anchors: [outPortPosition, ['LeftMiddle', 'TopCenter', 'BottomCenter']],
             connector: 'StateMachine'
@@ -604,7 +607,7 @@ jsPlumb.ready(function () {
                 JBApp.deleteConnection(connection);
                 instance.detach(connection);
                 JBApp.saveFunnel('Connection is deleted!');
-
+                
                 return false;
             }
         }
@@ -647,11 +650,11 @@ jsPlumb.ready(function () {
                     if (item.endpoints[0].connectionType === portName && item.endpoints[0].connections && item.endpoints[0].connections.length !== 0) {
                         existingConnections++;
                     }
-
+                    
                     return;
                 }
             });
-
+            
             if (existingConnections > maxConnections) {
                 Msg.warning('You reached maximum connections (' + portData.maxConnections + ') of <b>' + portData.title + '</b>. Please delete current connection and make a new one.');
                 instance.detach(connection);
@@ -669,7 +672,7 @@ jsPlumb.ready(function () {
                 if (item.endpoints[0].connectionType === portName && item.endpoints[0].connections && item.endpoints[0].connections.length !== 0) {
                     existingConnections++;
                 }
-
+                
                 return;
             }
         });
@@ -718,19 +721,19 @@ jsPlumb.ready(function () {
             $('a[href=#journeyBuilder]').on('click', function () {
                 if (!journeyBuilder.hasClass('initialized')) {
                     JBApp.initialized = false;
-
+                    
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
                         var nodeInfo = JBApp.getNodeInfo(node);
                         JBApp.newNode(nodeInfo[1], nodeInfo[0]);
                     }
-
+                    
                     for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
                         var node = JBApp.funnel.nodes[i];
                         var nodeInfo = JBApp.getNodeInfo(node);
                         JBApp.initConnection(nodeInfo[1], nodeInfo[0]);
                     }
-
+                    
                     JBApp.initialized = true;
                     journeyBuilder.addClass('initialized')
                 }
@@ -793,7 +796,7 @@ function initTitleForm() {
     var form = $('form.panel-edit-title');
     form.on('submit', function (e) {
         e.preventDefault();
-
+        
         updateNode(form);
     });
 }
@@ -808,17 +811,17 @@ function updateNode(form) {
         for (var key in node) {
             if (node[key].nodeId === sourceId) {
                 node[key].title = title;
-
+                
                 JBApp.saveFunnel('Title is updated', function () {
                     var nodeTitleInner = $('#' + sourceId).find('.node-title .node-title-inner');
                     if (nodeTitleInner.hasClass('text-muted')) {
                         nodeTitleInner.removeClass('text-muted')
                     }
                     nodeTitleInner.html(title);
-
+                    
                     JBApp.hideSettingPanel();
                 });
-
+                
                 break;
             }
         }
@@ -844,23 +847,23 @@ function initSideBar() {
     var snippetsStr = '';
     for (var nodeType in JBNodes) {
         var nodeDef = JBNodes[nodeType];
-
+        
         var divTypeClass = '';
         switch (nodeDef.type) {
             case JB_NODE_TYPE.ACTION:
                 divTypeClass = 'node-action';
                 break;
-
+            
             case JB_NODE_TYPE.GOAL:
                 divTypeClass = 'node-goal';
                 break;
-
+            
             case JB_NODE_TYPE.DECISION:
                 divTypeClass = 'node-decision';
                 break;
-
+            
         }
-
+        
         snippetsStr += '<div data-type="' + nodeType + '" class="col-xs-6 node-preview ' + divTypeClass + '">';
         snippetsStr += '    <div class="node-preview-inner">';
         snippetsStr += '        <div class="node-preview-content">';
@@ -906,10 +909,10 @@ function initSideBar() {
             if (nodeInfo.nodeTypeClass) {
                 nodeType = nodeInfo.nodeTypeClass;
             }
-
+            
             var objToPush = {};
             objToPush[nodeType] = node;
-
+            
             JBApp.newNode(node, type);
             JBApp.funnel.nodes.push(objToPush);
             JBApp.saveFunnel('New node is added!');
@@ -938,7 +941,7 @@ function initNodeActions() {
         for (var i = 0; i < JBApp.funnel.nodes.length; i++) {
             var node = JBApp.funnel.nodes[i];
             var nodeData = JBApp.getNodeInfo(node)[1];
-
+            
             if (nodeData.nodeId === nodeId) {
                 showTitleForm(nodeData);
                 break;

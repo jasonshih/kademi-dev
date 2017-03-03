@@ -189,7 +189,7 @@
 /* Node title
    ==================================================================== */
 .node .node-heading {
-    padding: 10px 45px 10px 15px;
+    padding: 10px 45px 10px 10px;
     font-size: 15px;
 }
 
@@ -198,7 +198,7 @@
     line-height: 20px;
 }
 
-.node-icon {
+.node .node-heading .node-icon {
     text-align: left;
     width: 15px;
 }
@@ -220,13 +220,13 @@
 }
 
 .node .node-heading .node-buttons span:hover {
-    background-color: #ddd;
+    background: rgba(255, 255, 255, .2);
 }
 
 /* Node body
    ==================================================================== */
 .node .node-body {
-    padding: 10px 15px;
+    padding: 10px;
     height: calc(100% - 40px);
     background: rgba(255, 255, 255, .2);
     font-weight: 300;
@@ -285,7 +285,8 @@ path,
 
 /* Endpoints
    ==================================================================== */
-.ep, .ep-basic {
+.node-endpoint,
+.node-endpoint-basic {
     position: absolute;
     bottom: 21px;
     right: -5px;
@@ -300,35 +301,35 @@ path,
     transition: box-shadow 0.25s ease-in;
 }
 
-.ep-basic + .ep-basic {
+.node-endpoint-basic + .node-endpoint-basic {
     bottom: 39px;
 }
 
-.ep-basic + .ep-basic + .ep-basic {
+.node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic {
     bottom: 57px;
 }
 
-.ep-basic + .ep-basic + .ep-basic + .ep-basic {
+.node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic + .node-endpoint-basic {
     bottom: 75px;
 }
 
-.ep.ep-timeout {
+.node-endpoint.node-endpoint-timeout {
     bottom: 3px;
     top: auto;
     background-color: #e5910f;
 }
 
-.ep.ep-green {
+.node-endpoint.node-endpoint-green {
     background-color: green;
 }
 
-.ep.ep-red {
+.node-endpoint.node-endpoint-red {
     background-color: red;
     bottom: 3px;
     top: auto;
 }
 
-.ep:hover {
+.node-endpoint:hover {
     box-shadow: 0 0 6px black;
 }
 
