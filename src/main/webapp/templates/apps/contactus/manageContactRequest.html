@@ -95,6 +95,10 @@
                             #end
                         </tbody>
                     </table>
+                    <div class="pull-right">
+                        <a class="acknowledge btn btn-success" href="$page.contactRequest.id"><i class="glyphicon glyphicon-ok"></i> Hide</a>
+                        <a href="#" class="btn btn-danger btn-delete-requests" role="button"><i class="fa fa-times"></i> Delete</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -128,6 +132,42 @@
         </div>
         #end
 
+
+        <script type="text/javascript">
+            $(function () {
+                $(".acknowledge").on('click', function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: e.currentTarget.href,
+                        data: {
+                            acknowledge: true
+                        },
+                        success: function (data) {
+                            flog("success", data);
+                            goBackToContactList();  
+                        },
+                        error: function (resp) {
+                            Msg.error("There was an error: " + resp);
+                        }
+                    });
+                });
+
+                $(".btn-delete-requests").on('click', function (e) {
+                    e.preventDefault();
+
+                    var idToDelete = e.currentTarget.href;
+                    deleteFile(idToDelete, function () {
+                         goBackToContactList(); 
+                    });
+                });
+
+                function goBackToContactList() {
+                    var patt = new RegExp("(.*?)/[0-9]");
+                    window.location = patt.exec(window.location)[1];
+                }
+            });
+        </script>
 
     </body>
 </html>
