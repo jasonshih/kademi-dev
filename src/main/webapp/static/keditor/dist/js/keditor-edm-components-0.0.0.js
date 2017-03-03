@@ -649,6 +649,7 @@
     var flog = KEditor.log;
 
     CKEDITOR.disableAutoInline = true;
+    CKEDITOR.isEDM = true;
 
     // Text component
     // ---------------------------------------------------------------------

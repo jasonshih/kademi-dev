@@ -564,7 +564,7 @@
                 var content = snippet.html().trim();
                 var previewUrl = snippet.attr('data-preview');
                 var type = snippet.attr('data-type');
-                var title = snippet.attr('data-title');
+                var title = snippet.attr('data-keditor-title');
                 var snippetHtml = '';
                 var categories = snippet.attr('data-categories') || '';
 
@@ -584,7 +584,7 @@
                     self.snippetsComponentCategories = self.snippetsComponentCategories.concat(categories);
                 }
 
-                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type', 'data-title', 'data-categories'], true);
+                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type', 'data-keditor-title', 'data-categories'], true);
                 snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html" ' + dataAttributes.join(' ') + '>' + content + '</script>';
             });
 
