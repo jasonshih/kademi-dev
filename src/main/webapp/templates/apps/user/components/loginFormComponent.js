@@ -52,6 +52,22 @@
                         component.attr('data-layout', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     })
+                    
+                    form.find('.txt-username-placeholder').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+    
+                        component.attr('data-username-placeholder', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('.txt-password-placeholder').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+    
+                        component.attr('data-password-placeholder', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
