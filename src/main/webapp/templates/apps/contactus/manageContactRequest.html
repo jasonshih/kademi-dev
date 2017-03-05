@@ -145,7 +145,7 @@
                         },
                         success: function (data) {
                             flog("success", data);
-                            goBackToContactList();  
+                            window.location += ('/..'); 
                         },
                         error: function (resp) {
                             Msg.error("There was an error: " + resp);
@@ -158,14 +158,10 @@
 
                     var idToDelete = e.currentTarget.href;
                     deleteFile(idToDelete, function () {
-                         goBackToContactList(); 
+                        window.location += ('/..');
                     });
                 });
 
-                function goBackToContactList() {
-                    var patt = new RegExp("(.*?)/[0-9]");
-                    window.location = patt.exec(window.location)[1];
-                }
             });
         </script>
 
