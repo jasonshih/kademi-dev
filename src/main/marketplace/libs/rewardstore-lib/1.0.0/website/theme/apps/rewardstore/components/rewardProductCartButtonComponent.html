@@ -3,7 +3,7 @@
         #foreach( $param in $page.parameters)
             #if( $param.options.size() > 0 )
                 <div class="form-group">
-                    <label for="param-$param.name" class="col-sm-3 control-label variant-name">$param.title XX</label>
+                    <label for="param-$param.name" class="col-sm-3 control-label variant-name">$param.title</label>
                     <div class="col-sm-5">
                         <select name="param-$param.name" class="form-control productParameterSelect">
                             <option value="">[ $param.title ]</option>
