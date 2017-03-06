@@ -21,8 +21,12 @@
             #end
             <script type="text/javascript">
                 $(function () {
+                    var url = window.location.pathname;
+                    if (window.location.search !== null && typeof window.location.search !== 'undefined') {
+                        url += window.location.search;
+                    }
                     jQuery(".login-container").user({
-                        afterLoginUrl: window.location.pathname,
+                        afterLoginUrl: url,
                         valiationMessageSelector: "p.login.message"
                     }); // setup login and logout
                 });
