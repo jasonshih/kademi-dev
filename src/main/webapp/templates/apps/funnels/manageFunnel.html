@@ -99,24 +99,32 @@
                             <label class="control-label col-sm-3">Sources</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-source">
-                                    <p class="input-group input-group-sm form-group source">
-                                        <input type="text" class="form-control required" placeholder="Enter source name" name="sources" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group source">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control required" placeholder="Enter source name" name="sources" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-source"><i class="fa fa-plus"></i> Add source</button>
                                 </p>
                                 <div class="source-wrapper">
                                     #foreach ($s in $page.funnel.sources)
-                                        <p class="input-group input-group-sm form-group source">
-                                            <input type="text" class="form-control required" placeholder="Enter source name" name="sources" value="$s" />
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group source">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control required" placeholder="Enter source name" name="sources" value="$s" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                             </div>
@@ -125,26 +133,34 @@
                             <label class="control-label col-sm-3">Stages</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-stage">
-                                    <p class="input-group input-group-sm form-group stage">
-                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" />
-                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group stage">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" />
+                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-stage"><i class="fa fa-plus"></i> Add Stage</button>
                                 </p>
                                 <div class="stage-wrapper">
                                     #foreach ($s in $page.funnel.stages)
-                                        <p class="input-group input-group-sm form-group stage">
-                                            <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
-                                            <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group stage">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
+                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                             </div>
@@ -153,38 +169,46 @@
                             <label class="control-label col-sm-3">Extra Fields</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-extraField">
-                                    <p class="input-group input-group-sm form-group extraField">
-                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" />
-                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" />
-                                        <span class="input-group-addon">
-                                            <input type="checkbox" name="extraFieldRequired" /> Required
-                                        </span>
-                                        <span class="input-group-addon">
-                                            <input type="checkbox" name="extraFieldAggregate" /> Include in search
-                                        </span>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group extraField">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" />
+                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" />
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="extraFieldRequired" /> Required
+                                                </span>
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="extraFieldAggregate" /> Include in search
+                                                </span>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-extraField"><i class="fa fa-plus"></i> Add extra field</button>
                                 </p>
                                 <div class="extraField-wrapper">
                                     #foreach ($ef in $page.funnel.extraFields)
-                                        <p class="input-group input-group-sm form-group extraField">
-                                            <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" value="$ef.name" />
-                                            <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" value="$ef.title" />
-                                            <span class="input-group-addon">
-                                                <input type="checkbox" name="extraFieldRequired" #if ($ef.required == "true") checked="checked" #end /> Required
-                                            </span>
-                                            <span class="input-group-addon">
-                                                <input type="checkbox" name="extraFieldAggregate" #if ($ef.aggregate == "true") checked="checked" #end /> Include in search
-                                            </span>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group extraField">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" value="$ef.name" />
+                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" value="$ef.title" />
+                                                    <span class="input-group-addon">
+                                                        <input type="checkbox" name="extraFieldRequired" #if ($ef.required == "true") checked="checked" #end /> Required
+                                                    </span>
+                                                    <span class="input-group-addon">
+                                                        <input type="checkbox" name="extraFieldAggregate" #if ($ef.aggregate == "true") checked="checked" #end /> Include in search
+                                                    </span>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                             </div>
@@ -193,24 +217,32 @@
                             <label class="control-label col-sm-3">Lost Reasons</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-lostReason">
-                                    <p class="input-group input-group-sm form-group lostReason">
-                                        <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group lostReason">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-lostReason"><i class="fa fa-plus"></i> Add lost reason</button>
                                 </p>
                                 <div class="lostReason-wrapper">
                                     #foreach ($lr in $page.funnel.lostReasons)
-                                        <p class="input-group input-group-sm form-group lostReason">
-                                            <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" value="$lr" />
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group lostReason">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" value="$lr" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                             </div>
@@ -219,34 +251,42 @@
                             <label class="control-label col-sm-3">Customer Activities</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-customerActivity">
-                                    <p class="input-group input-group-sm form-group customerActivity">
-                                        <input type="hidden" name="customerActivityId" />
-                                        <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" />
-                                        <select class="form-control" style="width: 40%;" name="customerActivityInbound">
-                                            <option value="true">Inbound</option>
-                                            <option value="false">Outbound</option>
-                                        </select>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group customerActivity">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="hidden" name="customerActivityId" />
+                                                <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" />
+                                                <select class="form-control" style="width: 40%;" name="customerActivityInbound">
+                                                    <option value="true">Inbound</option>
+                                                    <option value="false">Outbound</option>
+                                                </select>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-customerActivity"><i class="fa fa-plus"></i> Add customer activity</button>
                                 </p>
                                 <div class="customerActivity-wrapper">
                                     #foreach ($ca in $page.funnel.customerActivities)
-                                        <p class="input-group input-group-sm form-group customerActivity">
-                                            <input type="hidden" name="customerActivityId" value="$ca.id" />
-                                            <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" value="$ca.text" />
-                                            <select class="form-control" style="width: 40%;" name="customerActivityInbound">
-                                                <option value="true" #if ($ca.inbound == "true") selected="selected" #end>Inbound</option>
-                                                <option value="false" #if ($ca.inbound == "false") selected="selected" #end>Outbound</option>
-                                            </select>
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group customerActivity">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="hidden" name="customerActivityId" value="$ca.id" />
+                                                    <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" value="$ca.text" />
+                                                    <select class="form-control" style="width: 40%;" name="customerActivityInbound">
+                                                        <option value="true" #if ($ca.inbound == "true") selected="selected" #end>Inbound</option>
+                                                        <option value="false" #if ($ca.inbound == "false") selected="selected" #end>Outbound</option>
+                                                    </select>
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                                 <div class="alert alert-info">
@@ -259,28 +299,36 @@
                             <label class="control-label col-sm-3">Funnel Testers</label>
                             <div class="col-sm-6">
                                 <script type="text/html" id="template-funnelTester">
-                                    <p class="input-group input-group-sm form-group funnelTester">
-                                        <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" />
-                                        <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" />
-                                        <input type="number" class="form-control numeric " style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
-                                        </span>
-                                    </p>
+                                    <div class="form-group funnelTester">
+                                        <div class="col-sm-12">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" />
+                                                <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" />
+                                                <input type="number" class="form-control numeric " style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" />
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-funnelTester"><i class="fa fa-plus"></i> Add funnel tester</button>
                                 </p>
                                 <div class="funnelTester-wrapper">
                                     #foreach ($ft in $page.funnel.funnelTesters)
-                                        <p class="input-group input-group-sm form-group funnelTester">
-                                            <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" value="$ft.emailDomain" />
-                                            <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" value="$!ft.delayMins" />
-                                            <input type="number" class="form-control numeric" style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" value="$!ft.accelerator" />
-                                            <span class="input-group-btn">
-                                                <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
-                                            </span>
-                                        </p>
+                                        <div class="form-group funnelTester">
+                                            <div class="col-sm-12">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" value="$ft.emailDomain" />
+                                                    <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" value="$!ft.delayMins" />
+                                                    <input type="number" class="form-control numeric" style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" value="$!ft.accelerator" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     #end
                                 </div>
                                 <div class="alert alert-info">
