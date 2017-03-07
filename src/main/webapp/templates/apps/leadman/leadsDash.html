@@ -86,11 +86,11 @@
                                 <div class="col-xs-6">
                                     #set($taskStats = $page.find('/leads/').taskStatus)
                                     <p class="mt-lg">Task completion </p>
-                                    <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
+                                    <div data-percent="$formatter.formatUnits($taskStats.completePerc)" data-line-width="20" class="easypie"><span>$formatter.formatUnits($taskStats.completePerc)%</span></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Conversion rate</p>
-                                    <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
+                                    <div data-percent="$formatter.formatUnits($taskStats.convertedPerc)" data-line-width="20" class="easypie"><span>$formatter.formatUnits($taskStats.convertedPerc)%</span></div>
                                 </div>
                             </div>
                         </div>
@@ -160,11 +160,11 @@
                                 <div class="col-xs-6">
                                     #set($taskStats = $leadsPage.teamTaskStatus)
                                     <p class="mt-lg">Task completion </p>
-                                    <div data-percent="$taskStats.completePerc" data-line-width="20" class="easypie"><span>$taskStats.completePerc%</span></div>
+                                    <div data-percent="$formatter.formatUnits($taskStats.completePerc)" data-line-width="20" class="easypie"><span>$formatter.formatUnits($taskStats.completePerc)%</span></div>
                                 </div>
                                 <div class="col-xs-6">
                                     <p class="mt-lg">Conversion rate</p>
-                                    <div data-percent="$taskStats.convertedPerc" data-line-width="20" class="easypie"><span>$taskStats.convertedPerc%</span></div>
+                                    <div data-percent="$formatter.formatUnits($taskStats.convertedPerc)" data-line-width="20" class="easypie"><span>$formatter.formatUnits($taskStats.convertedPerc)%</span></div>
                                 </div>
                             </div>
                         </div>
