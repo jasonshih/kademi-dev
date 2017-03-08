@@ -8,13 +8,7 @@
     <ul class="dropdown-menu" style="#if($pickerAlign == 'right') right: 0; left: initial; #end" aria-labelledby="kpiPeriodPicker-$formatter.randomGuid">
         #foreach($result in $kpiDataPage.assessedResults)
         #set ($text = "$formatter.formatDate($result.periodStart) - $formatter.formatDate($result.periodEnd)")
-        #if ($cookie && $text == $cookie)
-        #set ($active="active")
-        #end
         <li class="$!active"><a href="#" data-start="${result.periodStart}" data-end="${result.periodEnd}">$!text</a></li>
-        #end
-        #if (!$cookie)
-        #set ($defaultActive="active")
         #end
         <li class="$!defaultActive"><a class="current" href="#" data-start="${kpiDataPage.latestPeriodStartDate}" data-end="${kpiDataPage.latestPeriodStartDate}">$formatter.formatDate($kpiDataPage.latestPeriodStartDate) - $formatter.formatDate($kpiDataPage.getPeriodEndDate($kpiDataPage.latestPeriodStartDate))</a></li>
     </ul>
