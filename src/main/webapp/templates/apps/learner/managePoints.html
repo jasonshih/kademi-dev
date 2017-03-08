@@ -86,7 +86,7 @@
                                 <th>Expiry</th>
                                 <th>No. Points</th>
                                 <th>Reason</th>
-                                <th>Tag</th>
+                                <th>Tag/Reason Code</th>
                                 <th class="center">
                                     <div class="checkbox-table">
                                         <label>
@@ -104,6 +104,10 @@
                             </tr>
                             #else
                             #foreach($p in $page.paginator.records)
+                            #set($isDebit = false)
+                            #if($p.class.simpleName == "PointsDebit")
+                            #set($isDebit = true)
+                            #end
                             <tr>
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td>
@@ -115,9 +119,21 @@
                                 </td>
                                 <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
                                 <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
-                                <td>$p.numPoints</td>
+                                <td>
+                                    #if($isDebit)
+                                    <span class="label label-warning">-$p.numPoints</span>
+                                    #else
+                                    <span class="label label-success">$p.numPoints</span>
+                                    #end
+                                </td>
                                 <td>$p.reason</td>
-                                <td>$!p.pointsTag.title</td>
+                                <td>
+                                    #if($isDebit)
+                                    $!p.reasonCode
+                                    #else
+                                    $!p.pointsTag.title
+                                    #end
+                                </td>
                                 <td class="center">
                                     <div class="checkbox-table">
                                         <label>
