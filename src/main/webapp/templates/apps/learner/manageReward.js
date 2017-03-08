@@ -620,8 +620,6 @@ function showUnmatched(unmatched) {
 }
 
 var searchOptions = {
-    startDate: null,
-    endDate: null
 };
 
 function initHistorySearch() {
@@ -631,8 +629,6 @@ function initHistorySearch() {
             flog("Ignore initial");
             return;
         }
-        searchOptions.startDate = startDate;
-        searchOptions.endDate = endDate;
         doHistorySearch();
     });
 
@@ -667,8 +663,6 @@ function doHistorySearch() {
     Msg.info("Doing search...", 2000);
 
     var data = {
-        startDate: searchOptions.startDate,
-        finishDate: searchOptions.endDate,
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),

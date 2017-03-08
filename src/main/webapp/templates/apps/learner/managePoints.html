@@ -62,17 +62,6 @@
                     </div>
                     <div class="col-md-4">
                         <div class="input-group">
-                            <label for="searchGroup" class="input-group-addon">Group</label>
-                            <select name="searchGroup" id="searchGroup" class="form-control">
-                                <option value="">&nbsp;</option>
-                                #foreach($group in $rootFolder.groups)
-                                <option value="$group.name">$group.name</option>
-                                #end
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
                             <label for="searchReward" class="input-group-addon">Reward</label>
                             <select name="searchReward" id="searchReward" class="form-control">
                                 <option value="">&nbsp;</option>
@@ -136,11 +125,13 @@
                                         </label>
                                     </div>
                                 </td>
+                                <!--
                                 <td>
                                     <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
                                 </td>
+                                -->
                             </tr>
                             #end
                             #end
