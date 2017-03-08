@@ -129,9 +129,9 @@
                 <h4 class="modal-title">Enter a new contact</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
-                <input type="hidden" name="orgId" value="$currentOrg.orgId"/>
+                <input type="hidden" name="orgId" value="$selectedOrg.orgId"/>
                 <div class="modal-body">
-                    <p>Create contact in $currentOrg.title</p>
+                    <p>Create contact in $selectedOrg.title</p>
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
                         <div class="col-md-9">
@@ -436,7 +436,7 @@
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserNickName">Image</label>
                         <div class="col-md-9">
-                            <input type="file" id="quickInputFile" name="image" class="form-control quickInputFile" accept="image/*" capture="camera"/>
+                            <input type="file" id="quickInputFile" name="image" class="form-control quickInputFile sr-only" accept="image/*" capture="camera"/>
                             <label class="btn btn-sm btn-info" for="quickInputFile">
                                 <i class="fa fa-2x fa-camera"></i>
                             </label>
