@@ -7,6 +7,12 @@
                 "group": "main",
                 "path": "/theme/apps/salesdata-lib/kpis.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
+            }
         }
     ]
 }

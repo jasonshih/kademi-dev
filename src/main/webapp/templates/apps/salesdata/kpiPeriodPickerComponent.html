@@ -1,0 +1,18 @@
+#if ($kpi)
+#set ($kpiDataPage = $page.find($kpi))
+<div class="dropdown kpiPeriodPicker #if($pickerAlign == 'right') text-right #else text-left #end">
+    <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <span class="txt">Period</span>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" style="#if($pickerAlign == 'right') right: 0; left: initial; #end" aria-labelledby="kpiPeriodPicker-$formatter.randomGuid">
+        #foreach($result in $kpiDataPage.assessedResults)
+        #set ($text = "$formatter.formatDate($result.periodStart) - $formatter.formatDate($result.periodEnd)")
+        <li class="$!active"><a href="#" data-start="${result.periodStart}" data-end="${result.periodEnd}">$!text</a></li>
+        #end
+        <li class="$!defaultActive"><a class="current" href="#" data-start="${kpiDataPage.latestPeriodStartDate}" data-end="${kpiDataPage.latestPeriodStartDate}">$formatter.formatDate($kpiDataPage.latestPeriodStartDate) - $formatter.formatDate($kpiDataPage.getPeriodEndDate($kpiDataPage.latestPeriodStartDate))</a></li>
+    </ul>
+</div>
+#else
+No KPI selected
+#end
