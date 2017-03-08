@@ -73,49 +73,51 @@
                         </div>
 
                         #if( $page.publishedDate or $page.submittedDate )
-                            <div class="panel panel-info col-md-8 pull-right">
-                                <div class="panel-body">
-                                    #if( $page.publishedDate )
-                                        <p class="lead text-right">
-                                            Published by $!page.publishedBy.name for release
-                                            <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
-                                        </p>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <div class="alert alert-info">
+                                        #if( $page.publishedDate )
+                                            <p class="lead text-right">
+                                                Published by $!page.publishedBy.name for release
+                                                <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
+                                            </p>
 
-                                        <p class="text-right">
-                                            Submitted by $!page.submittedBy.name
-                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                        </p>
-                                        #if( $page.canPublish )
-                                            <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
-                                        #end
-                                    #else
-                                        <p class="lead text-right">
-                                            Submitted by $!page.submittedBy.name
-                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                        </p>
-                                        #if( $page.canPublish )
-                                            <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+                                            <p class="text-right">
+                                                Submitted by $!page.submittedBy.name
+                                                <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                            </p>
+                                            #if( $page.canPublish )
+                                                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
+                                            #end
+                                        #else
+                                            <p class="lead text-right">
+                                                Submitted by $!page.submittedBy.name
+                                                <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                            </p>
+                                            #if( $page.canPublish )
+                                                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
 
-                                            <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                            #end
                                         #end
-                                    #end
+                                    </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.rejectedAt )
-                            <div class="panel panel-info col-md-8 pull-right">
-                                <div class="panel-body">
-                                    <p class="lead text-right">
-                                        Rejected by $!page.rejectedBy.name
-                                        <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
-                                    </p>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <div class="alert alert-info">
+                                        <p class="lead text-right">
+                                            Rejected by $!page.rejectedBy.name
+                                            <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
+                                        </p>
 
-                                    <p class="text-right">$!page.rejectedReason</p>
+                                        <p class="text-right">$!page.rejectedReason</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.publishedDate )
@@ -281,9 +283,15 @@
                     </div>
 
                     <div class="tab-pane" id="images">
-                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
-                            <i class="fa fa-plus"></i> Add image
-                        </button>
+                        #if( $page.publishedDate or $page.submittedDate )
+                            <p class="alert alert-info lead">
+                                <i class="fa fa-info-circle"></i> Your article is published. If you want to add images, please unpublish it at <a href="#activity-tab">here</a>.
+                            </p>
+                        #else
+                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
+                                <i class="fa fa-plus"></i> Add image
+                            </button>
+                        #end
 
                         <hr />
 
@@ -319,9 +327,15 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="files">
-                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-file">
-                            <i class="fa fa-plus"></i> Add file
-                        </button>
+                        #if( $page.publishedDate or $page.submittedDate )
+                            <p class="alert alert-info lead">
+                                <i class="fa fa-info-circle"></i> Your article is published. If you want to add files, please unpublish it at <a href="#activity-tab">here</a>.
+                            </p>
+                        #else
+                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-file">
+                                <i class="fa fa-plus"></i> Add file
+                            </button>
+                        #end
 
                         <hr />
 
