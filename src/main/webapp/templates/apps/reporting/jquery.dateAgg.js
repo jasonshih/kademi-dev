@@ -36,9 +36,18 @@
                 graphOptions.type = component.attr('data-chart-type');
                 graphOptions.dateFormat = component.attr('data-date-format') || "%e %b";
                 graphOptions.valueFormat = component.attr('data-value-format') || ",.2f";
+                graphOptions.colors = component.attr('data-colors');
                 graphOptions.stacked = toBool(component.attr("data-stacked"));
                 graphOptions.showControls = toBool(component.attr("data-controls"));
                 graphOptions.showLegend = toBool(component.attr("data-legend"));
+
+                if (graphOptions.colors){
+                    var colors = graphOptions.colors.split(',');
+                    for(var i = 0; i < colors.length; i++){
+                        colors[i] = colors[i].trim();
+                    }
+                    graphOptions.userColors = colors;
+                }
             }
             flog("graphopts1", graphOptions.stacked, component, component.attr("data-stacked"));
 
@@ -138,6 +147,9 @@
                     .stacked(graphOptions.stacked)
                     .showYAxis(true)
                     .clipEdge(true);
+            }
+            if (graphOptions.userColors){
+                chart.color(graphOptions.userColors);
             }
 
             chart.xAxis.tickFormat(function (d) {
@@ -244,6 +256,9 @@
                         .stacked(graphOptions.stacked)
                         .showYAxis(true)
                         .clipEdge(true);
+            }
+            if (graphOptions.userColors){
+                chart.color(graphOptions.userColors);
             }
 
             chart.xAxis.tickFormat(function (d) {
