@@ -130,7 +130,7 @@
                 <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-home"></i> Theme</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-home"></i> Group access</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> HTTPS server</a></li>
+                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> Security</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
             </ul>
 
@@ -491,6 +491,7 @@
                             </tr>
                         </thead>
                         <tbody id="certificates-body">
+                            #if( $page.certificates.size() > 0 )
                             #foreach($cer in $page.certificates)
                             <tr>
                                 <td>$cer.title</td>
@@ -617,8 +618,53 @@
                                 </td>
                             </tr>
                             #end
+                            #else
+                            <tr>
+                                <td colspan="9">
+                                    You have no certificates yet.
+                                </td>
+                            </tr>
+                            #end
                         </tbody>
                     </table>
+                    
+                    <hr/>
+                    
+                    <h2>Intrusion detection and prevention</h2>
+                    #if( $page.idpPolicy.metrics.size() > 0 )
+                    <h3>Metrics</h3>                    
+                    <table class="table table-striped">
+                        <tbody>
+                            #foreach($metricEntry in $page.idpPolicy.metrics.entrySet())
+                            <tr>
+                                <td>$metricEntry.key</td>
+                                <td>$metricEntry.value.title</td>
+                                <td>$metricEntry.value.status</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #end
+                    
+                    <h3>Known IPs</h3>
+                    #foreach($knownIpEntry in $page.idpPolicy.knownIps.entrySet() )
+                    <h4>$knownIpEntry.key</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            #foreach($ip in $knownIpEntry.value)
+                            <tr>
+                                <td>$ip</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    
+                    #end
+                    
+                    <div class="well">
+                        <a target="_blank" class="btn btn-primary" href="WEB-INF/texteditor?fileName=idp-policy.xml">Edit IDP Policy file</a>
+                        <xmp>$page.idpPolicyXml</xmp>
+                    </div>                    
                 </div>
 
                 <div id="panel_apps" class="tab-pane appsContainer">
