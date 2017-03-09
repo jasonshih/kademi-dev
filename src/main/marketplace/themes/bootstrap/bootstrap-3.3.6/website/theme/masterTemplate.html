@@ -80,6 +80,15 @@
 
         #set($website = $page.closest("website"))
 
+        #set( $memberships = $userResource.primaryMemberships )
+        #set( $selectedOrgId = $request.getCookie("selectedOrg").value)
+        #if( $selectedOrgId )
+            #set( $curMembership = $memberships.filterByOrg($selectedOrgId).first )
+        #else
+            #set( $curMembership = $memberships.first )
+        #end
+        #set( $selectedOrg = $curMembership.org  )
+
     ## KToolbar for logged in user with admin or content author role
         #if($page.isWritable())
             <script src="/static/ktoolbar/ktoolbar.js">//</script>

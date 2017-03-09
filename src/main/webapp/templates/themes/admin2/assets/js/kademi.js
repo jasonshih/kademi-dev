@@ -44,18 +44,18 @@ $.fn.isEmpty = function () {
 /**
  * Check the available/existing of a object, if object is existing, the callback will be run
  * @method exist
- * @param {Function} callback_when_exist The callback is called when object is existed
- * @param {Function} callback_when_no_exist The callback is called when object is not existed
+ * @param {Function} whenExist The callback is called when object is existed
+ * @param {Function} whenNotExist The callback is called when object is not existed
  * @return {jQuery}
  */
-$.fn.exist = function (callback_when_exist, callback_when_no_exist) {
+$.fn.exist = function (whenExist, whenNotExist) {
     if (this.length > 0) {
-        if (typeof callback_when_exist === 'function') {
-            callback_when_exist.call(this);
+        if (typeof whenExist === 'function') {
+            whenExist.call(this);
         }
     } else {
-        if (typeof callback_when_no_exist === 'function') {
-            callback_when_no_exist.call(this);
+        if (typeof whenNotExist === 'function') {
+            whenNotExist.call(this);
         }
     }
     return this;
@@ -920,3 +920,16 @@ function getParam(name) {
 
     return value;
 }
+
+var K = window.K || {};
+K.alert = function (title, message, type) {
+    swal(title, message, type);
+};
+
+K.confirm = function (title, message, callback) {
+    
+};
+
+K.prompt = function (title, message, callback) {
+    
+};
