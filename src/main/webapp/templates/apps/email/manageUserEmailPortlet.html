@@ -95,3 +95,40 @@
     </table>
 </div>
 
+<div id="modal-compose-email" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <form id="compose_email" class="form-horizontal">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Compose Email</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-message" style="display: none;"></div>
+                    <input type="hidden" name="sendEmail" value="sendEmail" />
+                    <div class="form-group">
+                        <label for="fromAddress" class="col-sm-2 control-label">From</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control email" name="fromAddress" placeholder="From Address" value="$!page.defaultFromAddress">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject" class="col-sm-2 control-label">Subject</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control required" name="subject" id="subject" placeholder="Subject">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <textarea class="form-control htmleditor toolbar-Lite required" id="email_message" name="email_message" placeholder="Message"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-sm btn-success">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
