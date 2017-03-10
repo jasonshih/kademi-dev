@@ -38,7 +38,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         '           </div>' +
         '           <div class="modal-footer">' +
         '               <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-        '               <button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
+        '               <button class="btn btn-sm btn-primary" type="submit" type="submit">' + buttonText + '</button>' +
         '           </div>' +
         '       </form>' +
         '   </div>' +

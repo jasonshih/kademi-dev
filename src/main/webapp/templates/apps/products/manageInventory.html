@@ -60,8 +60,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Inventory Location Details</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="$page.href" method="POST" class="form-horizontal">
+                    <form action="$page.href" method="POST" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="action" value="" />
                             <input type="hidden" name="id" value="" />
                             <div class="form-group">
@@ -76,12 +77,12 @@
                                     <input class="form-control required" id="newTitle" type="text" name="newTitle" maxlength="250" placeholder="Location title" />
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create location</button>
+                        <button type="button" class="btn btn-sm btn-primary" type="submit">Create location</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

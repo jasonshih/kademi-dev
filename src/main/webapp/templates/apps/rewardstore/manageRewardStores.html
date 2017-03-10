@@ -65,8 +65,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Reward Store</h4>
             </div>
-            <div class="modal-body">
-                <form action="." method="POST" class="form-horizontal createCategory">
+            <form action="." method="POST" class="form-horizontal createCategory">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="action" value="create"/>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="websiteName">Website</label>
@@ -88,12 +89,12 @@
                             </select>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create reward store</button>
+                <button type="button" class="btn btn-sm btn-primary" type="submit">Create reward store</button>
             </div>
+            </form>
         </div>
 
         #macro(genGroup $group)

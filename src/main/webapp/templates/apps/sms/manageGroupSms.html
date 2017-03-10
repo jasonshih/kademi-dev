@@ -86,20 +86,21 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Create group sms</h4>
             </div>
-            <div class="modal-body">
-                <form id="SmsForm" method="POST" action="." class="form-horizontal">
+            <form id="SmsForm" method="POST" action="." class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="smsTitle">Enter sms title</label>
                         <div class="col-md-8">
                             <input type="text" name="smsTitle" id="Smsname" value="" placeholder="A name for the sms job" class="required simpleChars form-control" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-dismiss="modal" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-sm btn-primary" data-dismiss="modal" type="submit" type="button">Save</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript">

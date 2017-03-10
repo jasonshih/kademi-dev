@@ -221,7 +221,9 @@
             </div>
             <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
-                    <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
+                    <p class="alert alert-warning">Please note that any applicable allocation rules will also be processed.</p>
+
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
                     <input type="hidden" name="awardToEmail" value=""/>
                     <input type="hidden" name="awardedReward" value=""/>
@@ -255,7 +257,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
                 </div>
             </form>
         </div>
@@ -279,6 +281,7 @@
                 </div>
 
                 <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="numPoints">No. of points</label>
@@ -318,7 +321,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Debit</button>
+                    <button class="btn btn-sm btn-primary" type="submit" type="button">Debit</button>
                 </div>
             </form>
         </div>

@@ -468,6 +468,7 @@
                         </div>
                         #else
                         <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
@@ -478,8 +479,10 @@
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                             <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                            <button class="btn btn-sm btn-primary btn-save btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                            <button class="btn btn-sm btn-primary btn-save-close btn-img" data-type="form-submit" type="button">Save & Close <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                            <button class="btn btn-sm btn-primary btn-save btn-img" type="submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif" />
+                            </button>
+                            <button class="btn btn-sm btn-primary btn-save-close btn-img" type="submit" type="button">Save & Close
+                                <img class="ajax-loader" src="/static/common/loading.gif" /></button>
                         </div>
                     </form>
                 </div>
@@ -493,8 +496,9 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Add/edit quiz</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="." class="form-horizontal">
+                    <form method="POST" action="." class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="pageName" />
                             <input type="hidden" name="order" />
                             <input type="hidden" name="template" value="learner/quizPage" />
@@ -563,12 +567,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                        <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
