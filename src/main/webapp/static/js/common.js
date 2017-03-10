@@ -874,7 +874,7 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
             '       </div>' +
             '       <form method="POST" class="form-horizontal" action="' + url + '">' +
             '           <div class="modal-body">' + (instructions ? '<p class="alert alert-info">' + instructions + '</p>' : '') +
-            '               <p class="alert alert-danger modal-alert"></p>' +
+            '               <div class="form-message alert alert-danger" style="display: none;"></div>' +
             '               <div class="form-group">' +
             '                   <label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
             '                   <div class="col-md-8">' +
@@ -884,7 +884,7 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
             '           </div>' +
             '           <div class="modal-footer">' +
             '               <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-            '               <button class="btn btn-sm btn-primary" data-type="form-submit" type="submit">' + buttonText + '</button>' +
+            '               <button class="btn btn-sm btn-primary" type="submit">' + buttonText + '</button>' +
             '           </div>' +
             '       </form>' +
             '   </div>' +

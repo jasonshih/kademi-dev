@@ -32,193 +32,198 @@
         </div>
 
         #macro( showAppBuilder )
-        <div class="">
-            <p>
-                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addAppModal" ><i class="fa fa-plus"></i> Create new app</a>
-            </p>
+            <div class="">
+                <p>
+                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addAppModal"><i class="fa fa-plus"></i> Create new app</a>
+                </p>
 
-            <div class="modal fade" id="addAppModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Add new app</h4>
-                        </div>
-                        <div class="modal-body">
+                <div class="modal fade" id="addAppModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">Add new app</h4>
+                            </div>
                             <form class="form-horizontal" method="POST" action="$page.href">
-                                <div class="form-group">
-                                    <label for="newAppName" class="col-sm-3 control-label">Simple name</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control regex required" required="true" id="newAppName" name="newAppName" data-regex="^[a-zA-Z0-9-]+$" />
-                                        <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case</small></span>
+                                <div class="modal-body">
+                                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                                    <div class="form-group">
+                                        <label for="newAppName" class="col-sm-3 control-label">Simple name</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control regex required" required="true" id="newAppName" name="newAppName" data-regex="^[a-zA-Z0-9-]+$" />
+                                            <span class="help-block">
+                                                <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="newTitle" class="col-sm-3 control-label">Title</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control required" required="true" id="newTitle" name="newTitle" />
+                                    <div class="form-group">
+                                        <label for="newTitle" class="col-sm-3 control-label">Title</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control required" required="true" id="newTitle" name="newTitle" />
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="providesTheme" class="col-sm-3 control-label">Theme Provider</label>
-                                    <div class="col-sm-8">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox"value="true" id="providesTheme" name="providesTheme" />
-                                            </label>
+                                    <div class="form-group">
+                                        <label for="providesTheme" class="col-sm-3 control-label">Theme Provider</label>
+                                        <div class="col-sm-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="true" id="providesTheme" name="providesTheme" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="providesApp" class="col-sm-3 control-label">App Provider</label>
+                                        <div class="col-sm-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="true" id="providesApp" name="providesApp" />
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="providesApp" class="col-sm-3 control-label">App Provider</label>
-                                    <div class="col-sm-8">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" value="true" id="providesApp" name="providesApp" />
-                                            </label>
-                                        </div>
-                                    </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-sm btn-primary" type="submit">Create app</button>
                                 </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create app</button>
-                        </div>
                     </div>
-                </div>
-            </div><!-- /.modal -->
-        </div>
+                </div><!-- /.modal -->
+            </div>
 
-        <!-- End Settings Modal -->
+            <!-- End Settings Modal -->
 
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <colgroup>
-                    <col style="width: 25%" />
-                    <col style="width: 30%" />
-                    <col style="width: 10%" />
-                    <col style="width: 10%" />
-                    <col style="width: 10%" />
-                    <col style="width: 15%"/>
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th>App Name</th>
-                        <th>App Title</th>
-                        <th class="text-center">Live Version</th>
-                        <th class="text-center">Provides Theme</th>
-                        <th class="text-center">Provides App</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="my-apps-body">
-                    #foreach($app in $page.appRepos )
-                    <tr>
-                        <td>$app.appName</td>
-                        <td class="appTitle">$app.title</td>
-                        <td class="text-center">$app.liveBranch</td>
-                        <td class="text-center icon">
-                            #if($app.themeProvider)
-                            <i class="fa fa-check-circle text-success themeProvider"></i>
-                            #else
-                            <i class="fa fa-times text-danger"></i>
-                            #end
-                        </td>
-                        <td class="text-center icon">
-                            #if($app.appProvider)
-                            <i class="fa fa-check-circle text-success appProvider"></i>
-                            #else
-                            <i class="fa fa-times text-danger"></i>
-                            #end
-                        </td>
-                        <td class="text-center action">
-                            <div class="btn-group btn-group-sm">
-                                <a href="$app.name" class="btn btn-sm btn-info btn-sm">
-                                    <i class="fa fa-cog"></i> Manage
-                                </a>
-                                <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="/repositories/$app.name/" title="Edit"><i class="fa fa-edit"></i> Edit Files</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="$app.appName" class="btn-delete-app" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <colgroup>
+                        <col style="width: 25%" />
+                        <col style="width: 30%" />
+                        <col style="width: 10%" />
+                        <col style="width: 10%" />
+                        <col style="width: 10%" />
+                        <col style="width: 15%" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>App Name</th>
+                            <th>App Title</th>
+                            <th class="text-center">Live Version</th>
+                            <th class="text-center">Provides Theme</th>
+                            <th class="text-center">Provides App</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="my-apps-body">
+                        #foreach($app in $page.appRepos )
+                            <tr>
+                                <td>$app.appName</td>
+                                <td class="appTitle">$app.title</td>
+                                <td class="text-center">$app.liveBranch</td>
+                                <td class="text-center icon">
+                                    #if($app.themeProvider)
+                                        <i class="fa fa-check-circle text-success themeProvider"></i>
+                                    #else
+                                        <i class="fa fa-times text-danger"></i>
+                                    #end
+                                </td>
+                                <td class="text-center icon">
+                                    #if($app.appProvider)
+                                        <i class="fa fa-check-circle text-success appProvider"></i>
+                                    #else
+                                        <i class="fa fa-times text-danger"></i>
+                                    #end
+                                </td>
+                                <td class="text-center action">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="$app.name" class="btn btn-sm btn-info btn-sm">
+                                            <i class="fa fa-cog"></i> Manage
+                                        </a>
+                                        <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="/repositories/$app.name/" title="Edit"><i class="fa fa-edit"></i> Edit Files</a></li>
+                                            <li class="divider"></li>
+                                            <li><a href="$app.appName" class="btn-delete-app" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
         #end
 
 
         #macro( showApps )
-        <div class="well">
-            <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
-            <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
-        </div>
-        #set($apps = $page.apps)
-        #if( $apps.isEmpty() )
-        <div class="well">
-            <p>No applications are available. This means that the parent organisation has disabled them</p>
-        </div>
-        #end
-        <div class="appsContainer">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    #foreach($app in $apps )
-                    #set( $coreClass = $formatter.ifTrue($app.core, "iscore", "") )
-                    <tr data-isCore="$app.core" class="${coreClass}">
-                        <td class="CheckBoxWrapper">
-                            #if( !$app.core || !$app.enabled)
-                            $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
-                            <label for="chk_${app.appId}"></label>
-                            #end
-                        </td>
-                        <td>
-                            <h4>$page.getTitle($app.appId)</h4>
-                            <p>$page.getSummary($app.appId)</p>
-                        </td>
-                        <td>
-                            #if($page.hasSettings($app))
-                            <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings</button>
-                            #end
-                        </td>
-                    </tr>
-                    #end
-                </table>
+            <div class="well">
+                <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
+                <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
             </div>
-        </div>
+            #set($apps = $page.apps)
+            #if( $apps.isEmpty() )
+                <div class="well">
+                    <p>No applications are available. This means that the parent organisation has disabled them</p>
+                </div>
+            #end
+            <div class="appsContainer">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        #foreach($app in $apps )
+                            #set( $coreClass = $formatter.ifTrue($app.core, "iscore", "") )
+                            <tr data-isCore="$app.core" class="${coreClass}">
+                                <td class="CheckBoxWrapper">
+                                    #if( !$app.core || !$app.enabled)
+                                        $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
+                                        <label for="chk_${app.appId}"></label>
+                                    #end
+                                </td>
+                                <td>
+                                    <h4>$page.getTitle($app.appId)</h4>
+                                    <p>$page.getSummary($app.appId)</p>
+                                </td>
+                                <td>
+                                    #if($page.hasSettings($app))
+                                        <button class="btn btn-primary btn-sm settings" data-toggle="modal" data-target="#settings_${app.appId}"><i class="fa fa-cog"></i> Settings
+                                        </button>
+                                    #end
+                                </td>
+                            </tr>
+                        #end
+                    </table>
+                </div>
+            </div>
         #end <!-- end macro -->
 
         #foreach($app in $page.apps)
-        #if($page.hasSettings($app))
-        <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Edit Application: $app.appId</h4>
-                    </div>
-                    <div class="modal-body ModalContent">
-                        <form method="POST" action="/$page.name" class="form-horizontal" role="form">
-                            <input type="hidden" name="settingsAppId" value="$app.appId"/>
-                            #if($app.enabled)
-                                #appSettings($app.appId)
-                            #end
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+            #if($page.hasSettings($app))
+                <div class="modal fade settings" id="settings_${app.appId}" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Edit Application: $app.appId</h4>
+                            </div>
+                            <form method="POST" action="/$page.name" class="form-horizontal" role="form">
+                                <div class="modal-body">
+                                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                                    <input type="hidden" name="settingsAppId" value="$app.appId" />
+                                    #if($app.enabled)
+                                        #appSettings($app.appId)
+                                    #end
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary btn-sm" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        #end
+            #end
         #end
         <script type="text/javascript">
             $(function () {
@@ -238,26 +243,26 @@
                 var settingsForm = appSettingsModal.find("form");
 
                 settingsForm.forms({
-                    callback : function(resp){
+                    callback: function (resp) {
                         flog(resp);
-                        if(resp.status){
+                        if (resp.status) {
                             Msg.success(resp.messages[0]);
                             appSettingsModal.modal("hide");
                             $('#my-apps-body').reloadFragment();
-                        }else{
+                        } else {
                             Msg.warning("Uh No.. Something went wrong! Please contact your system administrator.");
                         }
                     }
                 });
 
-                $('body').on('click', '.btn-delete-app', function(e){
+                $('body').on('click', '.btn-delete-app', function (e) {
                     e.preventDefault();
                     var btn = $(this);
                     var href = btn.attr('href');
                     var tr = btn.closest('tr');
                     var title = tr.find('.appTitle').text();
 
-                    confirmDelete(href, title, function(){
+                    confirmDelete(href, title, function () {
                         tr.remove();
                     });
                 });

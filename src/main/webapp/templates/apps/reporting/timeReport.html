@@ -10,14 +10,14 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 #if( $page.is("customReport") )
-                <div class="btn-group pull-right">
-                    <a class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a data-toggle="modal" data-target="#reportSettingsModal"><span class="glyphicon glyphicon-list"></span> Edit fields</a></li>
-                        <li class="divider"></li>
-                        <li><a role="menuitem" tabindex="-1" href="$page.href" class="delete-report"><span class="glyphicon glyphicon-remove"></span>Delete</a></li>
-                    </ul>
-                </div>
+                    <div class="btn-group pull-right">
+                        <a class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-toggle="modal" data-target="#reportSettingsModal"><span class="glyphicon glyphicon-list"></span> Edit fields</a></li>
+                            <li class="divider"></li>
+                            <li><a role="menuitem" tabindex="-1" href="$page.href" class="delete-report"><span class="glyphicon glyphicon-remove"></span>Delete</a></li>
+                        </ul>
+                    </div>
                 #end
 
                 <i class="fa fa-bar-chart-o"></i> Reporting
@@ -34,18 +34,18 @@
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$page.name">This organisation - $page.organisation.formattedName</a></li>
                                 <li role="presentation" class="divider"></li>
                                 #foreach( $website in $page.websites)
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
                                 #end
                                 #if( $page.orgSelection )
-                                <li role="presentation" class="divider"></li>
-                                #foreach( $org in $page.find("/organisations").children.ofType.organisation )
-                                <li role="presentation">
-                                    <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
-                                        <span class="fa fa-play-circle"></span>
-                                        $org.title
-                                    </a>
-                                </li>
-                                #end
+                                    <li role="presentation" class="divider"></li>
+                                    #foreach( $org in $page.find("/organisations").children.ofType.organisation )
+                                        <li role="presentation">
+                                            <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
+                                                <span class="fa fa-play-circle"></span>
+                                                $org.title
+                                            </a>
+                                        </li>
+                                    #end
                                 #end
                             </ul>
                         </div>
@@ -76,11 +76,11 @@
                     </div>
                     <div class="col-lg-3">
                         #if( $page.aggregations )
-                        <table class="table">
-                            #foreach($agg in $page.aggregations )
+                            <table class="table">
+                                #foreach($agg in $page.aggregations )
                             #showAggregation($agg)
                             #end
-                        </table>
+                            </table>
                         #end
                     </div>
                 </div>
@@ -90,60 +90,60 @@
         </div>
 
         #if( $page.is("customReport") )
-        <div id="reportSettingsModal" class="modal modal-lg fade modal-fuse-editor" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Edit custom report fields</h4>
-            </div>
-            <div class="modal-body">
-                <p>The fields below are used for CSV generation. The first is the column label at the top of the CSV, and the second is the
-                    expression used to calculate the value</p>
-
-                <p>
-                    <button class="btn btn-success columns-add">
-                        <span class="glyphicon glyphicon-plus"></span>
-                        Add column
-                    </button>
-
-                    <a class="btn btn-info" href="${page.name}-fields.csv">
-                        <span class="fa fa-list"></span>
-                        Fields as CSV
-                    </a>
-
-                    <span class="btn btn-success fileinput-button">
-                        <i class="glyphicon glyphicon-plus"></i>
-                        <span>Upload fields CSV</span>
-                        <input id="fields-csv-upload" type="file" />
-                    </span>
-                </p>
-
+            <div id="reportSettingsModal" class="modal modal-lg fade modal-fuse-editor" aria-hidden="true" tabindex="-1">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Edit custom report fields</h4>
+                </div>
                 <form method="POST" action="$page.href" class="form-horizontal">
-                    <div class="columns-rows" id="fields-container">
-                        #foreach( $field in $page.fields.entrySet() )
-                        <div class="form-group">
-                            <div class="col-md-4">
-                                <input type="text" name="columnTitle.${foreach.count}" class="form-control required column-title" value="$formatter.htmlAttEncode( $field.key )" placeholder="Column label" />
-                            </div>
-                            <div class="col-md-4">
-                                <input type="text" name="columnExpression.${foreach.count}" class="form-control required column-expr" value="$formatter.htmlAttEncode( $field.value )" placeholder="Column expression" />
-                            </div>
+                    <div class="modal-body">
+                        <p>The fields below are used for CSV generation. The first is the column label at the top of the CSV, and the second is the
+                            expression used to calculate the value</p>
 
-                            <span class="btn btn-default">
-                                <span class="glyphicon glyphicon-sort handle"></span>
-                            </span>
-
-                            <button class="btn btn-sm btn-danger columns-remove" type="button">
-                                <span class="glyphicon glyphicon-remove"></span>
+                        <p>
+                            <button class="btn btn-success columns-add">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add column
                             </button>
+
+                            <a class="btn btn-info" href="${page.name}-fields.csv">
+                                <span class="fa fa-list"></span>
+                                Fields as CSV
+                            </a>
+
+                            <span class="btn btn-success fileinput-button">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>Upload fields CSV</span>
+                                <input id="fields-csv-upload" type="file" />
+                            </span>
+                        </p>
+
+                        <div class="columns-rows" id="fields-container">
+                            #foreach( $field in $page.fields.entrySet() )
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <input type="text" name="columnTitle.${foreach.count}" class="form-control required column-title" value="$formatter.htmlAttEncode( $field.key )" placeholder="Column label" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="columnExpression.${foreach.count}" class="form-control required column-expr" value="$formatter.htmlAttEncode( $field.value )" placeholder="Column expression" />
+                                    </div>
+
+                                    <span class="btn btn-default">
+                                        <span class="glyphicon glyphicon-sort handle"></span>
+                                    </span>
+
+                                    <button class="btn btn-sm btn-danger columns-remove" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </div>
+                            #end
                         </div>
-                        #end
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-primary btn-img" data-type="form-submit" type="button">Save <img class='ajax-loader' src='/static/common/loading.gif' /></button>
-            </div>
-        </div>
         #end
 
         <div class="hide column-row-template">
@@ -164,38 +164,38 @@
         </div>
 
         #macro( showAggregation $agg )
-        <tbody id="agg-$agg.name">
-            <tr>
-                <td colspan="2">$agg.title&nbsp;<span style="float: right">
-                #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
-                	<span class="input-group input-group-sm">
-                	<input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                	<span class="input-group-btn">
-                    	<button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                    </span>
-                    </span>
+            <tbody id="agg-$agg.name">
+                <tr>
+                    <td colspan="2">$agg.title&nbsp;<span style="float: right">
+                        #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
+                            <span class="input-group input-group-sm">
+                                <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                </span>
+                            </span>
+                        #end
+                    </span></td>
+                </tr>
+                #foreach($b in $agg.buckets )
+                    #showFacetBucket($b, 0)
                 #end
-                </span></td>
-            </tr>
-            #foreach($b in $agg.buckets )
-            #showFacetBucket($b, 0)
-            #end
-        </tbody>
+            </tbody>
         #end
 
         #macro( showFacetBucket $b $indent )
-        #set($termParamName = "term-" + $b.aggName)
-        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-            <td>
-                <div class="col-md-offset-$indent">
-                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                </div>
-            </td>
-            <td align="right">$b.count</td>
-        </tr>
-        #foreach($sub in $b.buckets)
-        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-        #end
+            #set($termParamName = "term-" + $b.aggName)
+            <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                <td>
+                    <div class="col-md-offset-$indent">
+                        <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                    </div>
+                </td>
+                <td align="right">$b.count</td>
+            </tr>
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
         #end
 
         <div id="proto" style="position: absolute; visibility: hidden">
