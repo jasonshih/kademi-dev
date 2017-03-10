@@ -1,9 +1,102 @@
-
-var options = {
+var searchOptions = {
     startDate: null,
     endDate: null,
-    interval: "day"
+    query: ''
 };
+
+function initManageSalesData() {
+    setRecentItem(document.title, window.location.pathname);
+    initManageExtraField();
+    
+    var addRecordModal = $("#addRecordModal");
+    addRecordModal.find("form").forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.info("Created record");
+                $("#history-table-body").reloadFragment();
+                addRecordModal.modal("hide");
+            } else {
+                Msg.error("Couldnt create record");
+            }
+        }
+    });
+    
+    $(".refresh-history").click(function (e) {
+        e.preventDefault();
+        $("#history-table-body").reloadFragment({
+            whenComplete: function () {
+                $(".timeago").timeago();
+            }
+        });
+    });
+    
+    $("form.series-form").forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.info("Saved ok");
+                if (resp.nextHref) {
+                    window.location = "../" + resp.nextHref;
+                }
+            } else {
+                Msg.error("An error occured saving: " + resp);
+            }
+        }
+    });
+    
+    initHistorySearch();
+    initRemoveSalesData();
+    initClearHistory();
+    initSelectAll();
+    initUploads();
+    
+    $("#addKpiModal").find("form").forms({
+        callback: function (resp, form) {
+            flog("form", form);
+            form.find("input").val("");
+            reloadKpiFragment();
+            $("#addKpiModal").modal("hide");
+        }
+    });
+    
+    $("#addSourceModal").find("form").forms({
+        callback: function (resp, form) {
+            form.find("input, select").val("");
+            $("#sources-table-body").reloadFragment();
+            $("#addSourceModal").modal("hide");
+        }
+    });
+    $("#createTestDataModal form").forms({
+        callback: function () {
+            $("#history-table-body").reloadFragment();
+            Msg.info("Created test data");
+        }
+    });
+    
+    initDelKpi();
+    initDelpoints();
+    initDupKpi();
+    initDataQuery();
+    
+    $("#seriesHistogram").seriesVis();
+}
+
+function initDataQuery() {
+    $(document.body).on('keypress', '#data-query', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            $(this).change();
+            return false;
+        }
+    });
+    
+    $(document.body).on('change', '#data-query', function (e) {
+        e.preventDefault();
+        
+        searchOptions.query = $(this).val();
+        doHistorySearch();
+    });
+}
 
 function initDelKpi() {
     var kpis = $(".btn-del-kpi");
@@ -31,7 +124,7 @@ function initDupKpi() {
             },
             error: function (resp) {
                 log('error', resp);
-                $('body').trigger('ajaxLoading', {
+                $(document.body).trigger('ajaxLoading', {
                     loading: false
                 });
                 if (resp.status === 400) {
@@ -72,27 +165,10 @@ function reloadPointsFragment() {
 }
 
 function initHistorySearch() {
-    var reportRange = $('#report-range');
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    startDate = start;
-                    endDate = end;
-                    doHistorySearch();
-                }
-        );
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        searchOptions.startDate = startDate;
+        searchOptions.endDate = endDate;
+        doHistorySearch();
     });
 }
 
@@ -114,7 +190,7 @@ function initRemoveSalesData() {
 
 function initClearHistory() {
     // btn-clear-history
-    $('body').on('click', '.btn-clear-history', function (e) {
+    $(document.body).on('click', '.btn-clear-history', function (e) {
         e.preventDefault();
         if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
             $.ajax({
@@ -166,15 +242,10 @@ function doRemoveSalesData(checkBoxes) {
 }
 
 function doHistorySearch() {
-    flog('doHistorySearch', startDate, endDate, searchQ);
+    flog('doHistorySearch', searchOptions.startDate, searchOptions.endDate, searchOptions.query);
     Msg.info("Doing search...", 2000);
-
-    var data = {
-        startDate: formatDate(startDate),
-        finishDate: formatDate(endDate),
-        dataQuery: searchQ
-    };
-    flog("data", data);
+    
+    flog("data", searchOptions);
 
     var target = $("#history-table-body");
     target.load();
@@ -183,9 +254,8 @@ function doHistorySearch() {
         type: "GET",
         url: window.location.pathname,
         dataType: 'html',
-        data: data,
+        data: searchOptions,
         success: function (content) {
-            flog('response', content);
             Msg.success("Search complete", 2000);
             var newBody = $(content).find("#history-table-body");
             target.replaceWith(newBody);
@@ -232,44 +302,3 @@ function showUnmatched(resultUploadCsv, unmatched) {
     });
 }
 
-function initSeriesGraphControls() {
-    flog("initGraphControls");
-    var reportRange = $('#analytics-range');
-
-    function cb(start, end) {
-        options.startDate = start.format('DD/MM/YYYY');
-        options.endDate = end.format('DD/MM/YYYY');
-        $("body").trigger("pageDateChange", options);
-    }
-
-    reportRange.exist(function () {
-        flog("init analytics range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY',
-            startDate: moment().subtract('days', 6),
-            endDate: moment(),
-            ranges: {
-                'Today': [
-                    moment().toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 7 Days': [
-                    moment().subtract('days', 6).toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 30 Days': [
-                    moment().subtract('days', 29).toISOString(),
-                    moment().toISOString()],
-                'This Month': [
-                    moment().startOf('month').toISOString(),
-                    moment().endOf('month').toISOString()],
-                'Last Month': [
-                    moment().subtract('month', 1).startOf('month').toISOString(),
-                    moment().subtract('month', 1).endOf('month').toISOString()],
-                'This Year': [
-                    moment().startOf('year').toISOString(),
-                    moment().toISOString()],
-            },
-        }, cb);
-    });
-}

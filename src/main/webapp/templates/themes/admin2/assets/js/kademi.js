@@ -719,6 +719,10 @@ function initPageDatePicker() {
     }
 }
 
+function initTimeago() {
+    $(".timeago").timeago();
+}
+
 $(function () {
     flog("Fuse init");
 
@@ -733,6 +737,7 @@ $(function () {
     initClearer();
     initAjaxStatus();
     initMasonryPanel();
+    initTimeago();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
