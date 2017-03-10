@@ -6,35 +6,44 @@
     <body>
         <div id="modal-edit-orgtype">
             <form method="POST" action="$page.href" class="form-horizontal">
-                <input type="hidden" name="orgTypeId" value="$page.orgType.id"/>
-                <div class="form-group">
-                    <label for="newOrgTypeName" class="control-label col-md-4">Code</label>
-                    <div class="col-md-8">
-                        <input type="text" name="name" id="newOrgTypeName" class="form-control required" value="$page.name" />
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                    <input type="hidden" name="orgTypeId" value="$page.orgType.id" />
+                    <div class="form-group">
+                        <label for="newOrgTypeName" class="control-label col-md-4">Code</label>
+                        <div class="col-md-8">
+                            <input type="text" name="name" id="newOrgTypeName" class="form-control required" value="$page.name" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="newOrgTypeDisplayName" class="control-label col-md-4">Display name</label>
-                    <div class="col-md-8">
-                        <input type="text" name="displayName" id="newOrgTypeDisplayName" class="form-control required" value="$page.orgType.displayName" />
+                    <div class="form-group">
+                        <label for="newOrgTypeDisplayName" class="control-label col-md-4">Display name</label>
+                        <div class="col-md-8">
+                            <input type="text" name="displayName" id="newOrgTypeDisplayName" class="form-control required" value="$page.orgType.displayName" />
+                        </div>
                     </div>
-                </div>
-                <p class="well"><b>What extra fields are associated with this type of organisation or business unit?</b><br />To add new fields, choose a name containing only letters and numbers, and no spaces or other special characters. Then set a comma seperated list of options. For example <i>required</i></p>
-                <a class="btn btn-xs btn-default btn-add-field" href="#"><i class="fa fa-plus"></i> Add field</a>
-                <div class="fields">
-                    #foreach($field in $page.dataCaptureFields.entrySet())
-                        <div class="form-group">
-                            <label for="field-${field.key}" class="control-label col-md-4">$field.key</label>
-                            <div class="col-md-8">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="field-${field.key}" name="field-${field.key}" value="${field.value}" />
-                                    <span class="input-group-btn">
-                                        <a href="${field.key}" class="btn btn-default btn-delete-field" title="Delete this field" role="button">&times;</a>
-                                    </span>
+                    <p class="well">
+                        <b>What extra fields are associated with this type of organisation or business unit?</b><br />To add new fields, choose a name containing only letters and numbers, and no spaces or other special characters. Then set a comma seperated list of options. For example
+                        <i>required</i></p>
+                    <a class="btn btn-xs btn-default btn-add-field" href="#"><i class="fa fa-plus"></i> Add field</a>
+                    <div class="fields">
+                        #foreach($field in $page.dataCaptureFields.entrySet())
+                            <div class="form-group">
+                                <label for="field-${field.key}" class="control-label col-md-4">$field.key</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="field-${field.key}" name="field-${field.key}" value="${field.value}" />
+                                        <span class="input-group-btn">
+                                            <a href="${field.key}" class="btn btn-default btn-delete-field" title="Delete this field" role="button">&times;</a>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    #end
+                        #end
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" type="submit" type="button">Save</button>
                 </div>
             </form>
         </div>

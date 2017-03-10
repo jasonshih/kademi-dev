@@ -69,6 +69,7 @@
                         <input type="hidden" name="groupType" value="Add"/>
                         <input type="hidden" name="group" value=""/>
                         <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="form-horizontal">
                                 <div class="form-group">
                                     <label class="label-control col-md-4" for="title">Group Title</label>
@@ -172,7 +173,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                        <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
                     </div>
                 </div>
             </div>
@@ -185,9 +186,10 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Copy Members To: <span class="group-name"></span></h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" action="" method="post">
+                    <form class="form-horizontal" action="" method="post">
+                        <div class="modal-body">
                             <p>Use this form to copy the members from the group below into <b class="group-name"></b></p>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="form-group">
                                 <label class="control-label col-md-4" for="selectSourceGroup">Group</label>
                                 <div class="col-md-8">
@@ -200,12 +202,12 @@
                                     <p>Select the group to copy members from.</p>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Copy Members</button>
+                        <button class="btn btn-sm btn-primary" type="submit" type="button">Copy Members</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

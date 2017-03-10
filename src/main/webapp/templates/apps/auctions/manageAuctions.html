@@ -18,8 +18,9 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title" id="myModalLabel">Add new auction</h4>
                         </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" method="POST" action=".">
+                        <form class="form-horizontal" method="POST" action=".">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
                                 <div class="form-group">
                                     <label for="auctionTitle" class="col-sm-3 control-label">Auction Title</label>
                                     <div class="col-sm-8">
@@ -58,12 +59,12 @@
                                         <input type='text' class="form-control date required" id="auctionEndDate" name="auctionEndDate" style="cursor:pointer;"/>
                                     </div>
                                 </div>
-                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create Auction</button>
+                            <button type="button" class="btn btn-sm btn-primary" type="submit">Create Auction</button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div><!-- /.modal -->

@@ -44,11 +44,12 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
             <h4 class="modal-title" id="resendValidationTitle">Resend Validation Email</h4>
         </div>
+        <form class="form-horizontal" method="POST" action="/awsAcm/">
         <div class="modal-body">
             <div class="alert alert-info">Click Resend to send new validation email.
                 The registered owner or an authorized representative can validate control of the domain name and
                 approve the certificate by following the instructions in the body of the email.</div>
-            <form class="form-horizontal" method="POST" action="/awsAcm/">
+            <div class="form-message alert alert-danger" style="display: none;"></div>
                 <input type="hidden" name="resendValidationEmail" value="true" />
                 <input type="hidden" name="websiteId" value="$website.id" />
                 <div id="certificate-body">
@@ -66,12 +67,12 @@
                         </div>
                     </div>
                 </div>
-            </form>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Resend</button>
+            <button type="button" class="btn btn-sm btn-primary" type="submit">Resend</button>
         </div>
+        </form>
     </div><!-- /.modal -->
 </div>
 

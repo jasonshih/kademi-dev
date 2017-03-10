@@ -100,8 +100,9 @@
                                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                                     <h4 class="modal-title">Edit Calendar</h4>
                                 </div>
-                                <div class="modal-body">
-                                    <form method="post" action="$page.href" class="form-horizontal">
+                                <form method="post" action="$page.href" class="form-horizontal">
+                                    <div class="modal-body">
+                                        <div class="form-message alert alert-danger" style="display: none;"></div>
                                         <input type="hidden" name="updateCalendarId" value="$cal.calendar.id" />
                                         <div class="form-group">
                                             <label class="control-label col-md-3" for="calendarNameEdi">Calendar name</label>
@@ -121,12 +122,12 @@
                                                 <textarea name="description" id="calendarNotes" class="form-control" rows="3">$!cal.calendarDescription</textarea>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                                    <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
                                 </div>
+                                </form>
                             </div>                            
                         </div>
                         #end
@@ -150,8 +151,9 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Add Calendar</h4>
             </div>
-            <div class="modal-body">
-                <form method="post" action="$page.href" class="form-horizontal">
+            <form method="post" action="$page.href" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="updateCalendarName" value="" />
                     <div class="form-group">
                         <label class="control-label col-md-3" for="calendarNameAdd">Calendar name</label>
@@ -171,12 +173,12 @@
                             <textarea name="description" id="calendarNotes" class="form-control" rows="3"></textarea>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-sm btn-primary" type="submit" type="button">Save</button>
             </div>
+            </form>
         </div>
 
 
