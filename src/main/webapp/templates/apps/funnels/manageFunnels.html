@@ -67,8 +67,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Funnel</h4>
             </div>
-            <div class="modal-body">
-                <form action="." method="POST" class="form-horizontal createCategory">
+            <form action="." method="POST" class="form-horizontal createCategory">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="action" value="create"/>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="rewardName">Name</label>
@@ -76,12 +77,12 @@
                             <input name="newTitle" class="form-control" id="rewardName" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create funnel</button>
+                <button class="btn btn-sm btn-primary" type="submit">Create funnel</button>
             </div>
+            </form>
         </div>
 
         <div id="uploadNotes" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
@@ -89,20 +90,21 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Upload Notes</h4>
             </div>
-            <div class="modal-body">
-                <form action="notes.csv" method="POST" class="form-horizontal" enctype="multipart/form-data">
+            <form action="notes.csv" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="rewardName">CSV</label>
                         <div class="col-md-8">
                             <input type="file" name="file" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+                <button class="btn btn-sm btn-primary" type="submit">Upload</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript">
