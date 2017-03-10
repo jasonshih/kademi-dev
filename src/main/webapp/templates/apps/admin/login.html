@@ -11,17 +11,6 @@
         <link rel="stylesheet" href="/theme/assets/css/kademi.css" rel="stylesheet" />
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <link rel="template" href="plain" />
-        <script type="text/javascript">
-            $(function () {
-                $(".login").user({
-                    afterLoginUrl: null,
-                    valiationMessageSelector: "#validationMessage",
-                    valiationMessageText: "#validationMessage span",
-                    requiredFieldsMessage: 'Please enter your credentials.',
-                    loginFailedMessage: 'Sorry, those login details were not recognised.'
-                }); // setup login and logout
-            });
-        </script>
         <!--Start of Zopim Live Chat Script-->
         <script type="text/javascript">
             var ua = navigator.userAgent.toLowerCase(),
@@ -35,8 +24,7 @@
                     }, $ = z.s =
                             d.createElement(s), e = d.getElementsByTagName(s)[0];
                     z.set = function (o) {
-                        z.set.
-                                _.push(o)
+                        z.set._.push(o)
                     };
                     z._ = [];
                     z.set._ = [];
@@ -44,8 +32,7 @@
                     $.setAttribute('charset', 'utf-8');
                     $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
                     z.t = +new Date;
-                    $.
-                            type = 'text/javascript';
+                    $.type = 'text/javascript';
                     e.parentNode.insertBefore($, e)
                 })(document, 'script');
             }
@@ -59,31 +46,45 @@
                 <b>$page.organisation.formattedName</b>
             </div>
             <div class="box-login">
-                <!--<h3>Sign in to: <b>$page.organisation.formattedName</b></h3>
 
-                <p>Please enter your name and password to log in.</p>-->
+                #if( $user )
+                    <h1>Sorry, you dont have permission to view this page</h1>
+                    <p class="lead">You're currently logged in as <b>$user.title</b> with email <b>$!user.thisUser.email</b></p>
+                #else
+                    <form action="" class="form-login" method="post" novalidate="novalidate">
+                        <div class="errorHandler alert alert-danger no-display" id="validationMessage"><i class="fa fa-remove-sign"></i> <span></span></div>
+                        <fieldset>
+                            <div class="form-group">
+                                <span class="input-icon">
+                                    <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Enter your username or email" name="email" class="form-control input-lg" />
+                                    <i class="fa fa-user"></i>
+                                </span>
+                            </div>
+                            <div class="form-group">
+                                <span class="input-icon">
+                                    <input type="password" placeholder="Enter your password" name="password" autocomplete="off" class="form-control password input-lg" />
+                                    <i class="fa fa-unlock-alt"></i>
+                                </span>
+                            </div>
+                            <p class="form-actions">
+                                <button class="btn btn-info btn-lg btn-block" type="submit">Log in</button>
+                            </p>
+                            <p class="text-center"><a href="/password-reset" class="forgot">I forgot my password</a></p>
+                        </fieldset>
+                    </form>
 
-                <form action="" class="form-login" method="post" novalidate="novalidate">
-                    <div class="errorHandler alert alert-danger no-display" id="validationMessage"><i class="fa fa-remove-sign"></i> <span></span></div>
-                    <fieldset>
-                        <div class="form-group">
-                            <span class="input-icon">
-                                <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="Enter your username or email" name="email" class="form-control input-lg" />
-                                <i class="fa fa-user"></i>
-                            </span>
-                        </div>
-                        <div class="form-group">
-                            <span class="input-icon">
-                                <input type="password" placeholder="Enter your password" name="password" autocomplete="off" class="form-control password input-lg" />
-                                <i class="fa fa-unlock-alt"></i>
-                            </span>
-                        </div>
-                        <p class="form-actions">
-                            <button class="btn btn-info btn-lg btn-block" type="submit">Log in</button>
-                        </p>
-                        <p class="text-center"><a href="/password-reset" class="forgot">I forgot my password</a></p>
-                    </fieldset>
-                </form>
+                    <script type="text/javascript">
+                        $(function () {
+                            $(".login").user({
+                                afterLoginUrl: null,
+                                valiationMessageSelector: "#validationMessage",
+                                valiationMessageText: "#validationMessage span",
+                                requiredFieldsMessage: 'Please enter your credentials.',
+                                loginFailedMessage: 'Sorry, those login details were not recognised.'
+                            }); // setup login and logout
+                        });
+                    </script>
+                #end
             </div>
         </div>
     </body>
