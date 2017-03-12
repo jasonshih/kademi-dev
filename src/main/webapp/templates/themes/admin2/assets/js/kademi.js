@@ -724,6 +724,7 @@ function initPageDatePicker() {
 }
 
 function initTimeago() {
+    jQuery.timeago.settings.allowFuture = true;
     $(".timeago").timeago();
 }
 
