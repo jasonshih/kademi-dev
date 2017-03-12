@@ -184,8 +184,8 @@
                                             <i class="fa fa-cog"></i>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="${module.name}" class="btn-edit-module" role="button">Edit module</a></li>
                                             <li><a href="${module.name}">Manage this module</a></li>
+                                            <li><a href="${module.name}" class="btn-edit-module" role="button">Module properties</a></li>                                            
                                             <li><a href="${module.name}?goto=" target="_blank">View module</a></li>
                                             <li><a href="#" class="btn-add-splitter">Add splitter below</a></li>
                                             <li><a href="#" class="btn-duplicate-module">Duplicate</a></li>
@@ -233,8 +233,9 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Program Details</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="post" action="${parentOrg.path}/programs/" class="form-horizontal">
+                    <form method="post" action="${parentOrg.path}/programs/" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="originalProgramName" value=""  />
                             <div class="form-group">
                                 <label for="programTitle" class="control-label col-sm-3">Program code</label>
@@ -277,12 +278,12 @@
                                     <input type="text" class="form-control"  name="tags" id="tags" value=""/>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
+                        <button class="btn btn-sm btn-primary" type="submit" type="submit" type="button">Save</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -296,6 +297,7 @@
                             <h4 class="modal-title">Course Details</h4>
                         </div>
                         <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="originalCourseName" value=""  />
                             <div class="form-group">
                                 <label for="programTitle" class="control-label col-sm-2">Course code</label>
@@ -351,7 +353,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
                         </div>
                     </form>
                 </div>
@@ -367,7 +369,7 @@
                             <h4 class="modal-title">Module Details</h4>
                         </div>
                         <div class="modal-body">
-
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="originalModuleName" value=""  />
                             <div class="form-group">
                                 <label for="moduleName" class="control-label col-sm-3">Module code</label>
@@ -390,7 +392,7 @@
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit" data-type="form-submit" type="button">Save</button>
+                            <button class="btn btn-sm btn-primary" type="submit" type="submit" type="button">Save</button>
                         </div>
                     </form>
                 </div>

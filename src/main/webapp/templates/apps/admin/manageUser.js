@@ -389,20 +389,14 @@ function initNewUserForm() {
     });
 
     $('.btn-add-and-view').on('click', function (e) {
-        e.preventDefault();
-
         nextAction = 'view';
     });
 
     $('.btn-add-and-add').on('click', function (e) {
-        e.preventDefault();
-
         nextAction = 'add';
     });
 
     $('.btn-add-and-close').on('click', function (e) {
-        e.preventDefault();
-
         nextAction = 'close';
     });
 

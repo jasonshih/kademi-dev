@@ -84,8 +84,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">Add new voucher</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action=".">
+            <form class="form-horizontal" method="POST" action=".">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="newName" class="col-sm-3 control-label">Voucher code</label>
                         <div class="col-sm-8">
@@ -99,12 +100,12 @@
                             <input type="text" class="form-control required" required="true" id=newTitle name="newTitle" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create voucher</button>
+                <button class="btn btn-sm btn-primary" type="submit">Create voucher</button>
             </div>
+            </form>
         </div><!-- /.modal -->
 
         <div class="modal fade" id="sellVouchersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -112,8 +113,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myModalLabel">Sell vouchers</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="$page.href">
+            <form class="form-horizontal" method="POST" action="$page.href">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="newName" class="col-sm-3 control-label">Voucher type</label>
                         <div class="col-sm-8">
@@ -136,12 +138,12 @@
                             <input type="text" class="form-control required" required="true" id="numberToSell" name="numberToSell" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Sell vouchers</button>
+                <button class="btn btn-sm btn-primary" type="submit">Sell vouchers</button>
             </div>
+            </form>
         </div><!-- /.modal -->
 
         <div class="modal fade" id="soldVouchersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

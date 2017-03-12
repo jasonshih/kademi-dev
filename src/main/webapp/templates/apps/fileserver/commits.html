@@ -111,8 +111,9 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Set Remote Hash</h4>
             </div>
-            <div class="modal-body">
-                <form action="./" method="POST" class="form-horizontal">
+            <form action="./" method="POST" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="newRemoteHash">Hash</label>
                         <div class="col-md-8">
@@ -137,12 +138,12 @@
                             <input class="form-control required" id="password" type="password" name="password" />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Set Remote Hash</button>
+                <button class="btn btn-sm btn-primary" type="submit">Set Remote Hash</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript">

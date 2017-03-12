@@ -11,7 +11,8 @@ function initManagePoints() {
             if (resp.status) {
                 Msg.success("Points record updated ok");
                 editModal.modal("hide");
-                $('#pointsBody, #pointsFooter').reloadFragment();
+                $('#pointsBody').reloadFragment();
+                $('#pointsFooter').reloadFragment();
             } else {
                 Msg.error("Sorry, there was a problem updating the points record");
             }
@@ -58,7 +59,8 @@ function initManagePoints() {
             if (resp.status) {
                 Msg.info("Assigned points OK");
                 $('#modal-new-points').modal('hide');
-                $('#pointsBody, #pointsFooter').reloadFragment();
+                $('#pointsBody').reloadFragment();
+                $('#pointsFooter').reloadFragment();
             } else {
                 alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
             }
@@ -78,7 +80,8 @@ function initManagePoints() {
             showUnmatched(data.result.data.unmatched);
             $(".results").show();
             Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
-            $('#pointsBody, #pointsFooter').reloadFragment();
+            $('#pointsBody').reloadFragment();
+            $('#pointsFooter').reloadFragment();
         }
     });
 
@@ -125,13 +128,13 @@ function initManagePoints() {
     });
 
     updateRefreshPBStatus();
-    
+
     $('body').on('click', '.reason-codes a', function (e) {
         e.preventDefault();
         var a = $(e.target).closest("a");
         var code = a.attr("href");
         a.closest(".input-group").find("input").val(code);
-    });    
+    });
 }
 
 var refreshPbCheckTimer = null;
@@ -617,8 +620,6 @@ function showUnmatched(unmatched) {
 }
 
 var searchOptions = {
-    startDate: null,
-    endDate: null
 };
 
 function initHistorySearch() {
@@ -628,8 +629,6 @@ function initHistorySearch() {
             flog("Ignore initial");
             return;
         }
-        searchOptions.startDate = startDate;
-        searchOptions.endDate = endDate;
         doHistorySearch();
     });
 
@@ -664,8 +663,6 @@ function doHistorySearch() {
     Msg.info("Doing search...", 2000);
 
     var data = {
-        startDate: searchOptions.startDate,
-        finishDate: searchOptions.endDate,
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),

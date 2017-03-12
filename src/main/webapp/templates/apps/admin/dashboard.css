@@ -81,6 +81,7 @@
 /* Wrap image */
 .gallery-img {
     height: 150px;
+    margin: 20px 0 0;
 }
 
 .wrap-image {

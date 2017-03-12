@@ -1150,8 +1150,9 @@ return false;</pre>
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Send test</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="$page.path" class="form-horizontal">
+                    <form method="POST" action="$page.path" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="sendTest" value="true"/>
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="name">Recipient</label>
@@ -1167,12 +1168,12 @@ return false;</pre>
                                     <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        <button class="btn btn-sm btn-success" type="submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

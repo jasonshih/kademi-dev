@@ -1,17 +1,27 @@
-#if( $menu ) 
+#if( $menu )
 #else
-#set( $menu = $menuManager.rootMenuItem )
+    #set( $menu = $menuManager.rootMenuItem )
 #end
 
 #if( $showUserMenu )
 #else
-#set( $showUserMenu = false )
+    #set( $showUserMenu = false )
 #end
 
 #if( $inverseMenu )
 #else
-#set( $inverseMenu = false )
+    #set( $inverseMenu = false )
 #end
+
+#set( $memberships = $userResource.primaryMemberships )
+#set( $currentOrgId = $request.getCookie("org").value )
+#if( $currentOrgId )
+    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#else
+    #set( $curMembership = $memberships.first )
+#end
+#set( $currentOrg = $curMembership.org  )
+
 <div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -33,7 +43,7 @@
         <div class="navbar-collapse collapse navbar-main-collapse">
             <ul class="nav navbar-nav navbar-right">
                 #foreach($item in $menu.visible)
-                    #showMenuItem( $item )                
+                    #showMenuItem( $item )
                 #end
 
                 <li>
@@ -44,54 +54,54 @@
 
                 #if ($showUserMenu == true)
                     #if($user)
-                    <li class="dropdown user">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            $formatter.truncate($userResource.title, 10)
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="/profile">Profile</a>
-                            </li>
-                            <li>
-                                <a href="#" class="logout">Logout</a>
-                            </li>
-                        </ul>
-                    </li>
+                        <li class="dropdown user">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                $formatter.truncate($userResource.title, 10)
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="/profile">Profile</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
                     #else
-                    <li class="dropdown login">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            Login
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li style="min-width: 320px; padding: 15px">
-                                <form class="form-horizontal form-horizontal-narrower" role="form">
-                                    <div class="form-group email">
-                                        <label class="control-label col-md-3" for="inputEmail">Email</label>
-                                        <div class="col-md-9">
-                                            <input type="text" id="inputEmail" name="email" placeholder="Email" type="email" required="true" class="form-control" />
-                                            <span class="help-block"></span>
+                        <li class="dropdown login">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                Login
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li style="min-width: 320px; padding: 15px">
+                                    <form class="form-horizontal form-horizontal-narrower" role="form">
+                                        <div class="form-group email">
+                                            <label class="control-label col-md-3" for="inputEmail">Email</label>
+                                            <div class="col-md-9">
+                                                <input type="text" id="inputEmail" name="email" placeholder="Email" type="email" required="true" class="form-control" />
+                                                <span class="help-block"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3" for="inputPassword">Password</label>
-                                        <div class="col-md-9">
-                                            <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control" />
-                                            <span class="help-block"></span>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3" for="inputPassword">Password</label>
+                                            <div class="col-md-9">
+                                                <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control" />
+                                                <span class="help-block"></span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-offset-3 col-md-9">
-                                            <button type="submit" class="btn">Sign in</button>
-                                            <small class="pull-right"><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-3 col-md-9">
+                                                <button type="submit" class="btn">Sign in</button>
+                                                <small class="pull-right"><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    #portlets("socialLoginForm")
-                                </form>
-                            </li>
-                        </ul>
-                    </li>
+                                        #portlets("socialLoginForm")
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
                     #end
                 #end
             </ul>
@@ -100,16 +110,19 @@
 </div>
 
 #macro( showMenuItem $item )
-#if( $item.visible.isEmpty() )
-<li class="$formatter.ifTrue($item.active, 'active', '')"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
-#else
-<li class="dropdown">
-    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">$item.text <span class="caret"></span></a>
-    <ul class="dropdown-menu">
-        #foreach( $subitem in $item.visible )
-        #showMenuItem( $subitem )
-        #end
-    </ul>
-</li>
-#end
+    #if( $item.visible.isEmpty() )
+    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
+    #else
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle nav-${item.id}"" data-toggle="dropdown" title="${item.text}">
+            $item.text
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            #foreach( $subitem in $item.visible )
+                #showMenuItem( $subitem )
+            #end
+        </ul>
+    </li>
+    #end
 #end

@@ -112,24 +112,24 @@ function initCRUDOrgType() {
 var ModalEditOrgType = {
     init: function() {
         var self = this;
-
-        self.$modal = $('#modal-edit-orgtype').modal({
+    
+        self.modal = $('#modal-edit-orgtype').modal({
             show: false
         });
-        self.$modalBody = self.$modal.find('.modal-body');
+        self.formContent = self.modal.find('.form-content');
     },
     show: function(href) {
         var self = this;
-        var modal = self.$modal;
-        var modalBody = self.$modalBody;
+        var modal = self.modal;
+        var formContent = self.formContent;
         var manageOrgTypes = $('#manage-org-types');
-
-        modalBody.load(href + ' #modal-edit-orgtype', function() {
-            modalBody.find('form').forms({
+    
+        formContent.load(href + ' #modal-edit-orgtype', function () {
+            formContent.find('form').forms({
                 callback: function(resp) {
                     log('done', resp);
                     self.hide();
-                    Msg.success(modalBody.find('[name=displayName]').val() + ' is saved!');
+                    Msg.success(formContent.find('[name=displayName]').val() + ' is saved!');
                     $('#org-types').reloadFragment();
                 }
             });
@@ -142,7 +142,7 @@ var ModalEditOrgType = {
         });
     },
     hide: function() {
-        this.$modal.modal('hide');
+        this.modal.modal('hide');
     }
 }
 

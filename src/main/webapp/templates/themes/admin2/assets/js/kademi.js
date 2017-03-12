@@ -44,18 +44,18 @@ $.fn.isEmpty = function () {
 /**
  * Check the available/existing of a object, if object is existing, the callback will be run
  * @method exist
- * @param {Function} callback_when_exist The callback is called when object is existed
- * @param {Function} callback_when_no_exist The callback is called when object is not existed
+ * @param {Function} whenExist The callback is called when object is existed
+ * @param {Function} whenNotExist The callback is called when object is not existed
  * @return {jQuery}
  */
-$.fn.exist = function (callback_when_exist, callback_when_no_exist) {
+$.fn.exist = function (whenExist, whenNotExist) {
     if (this.length > 0) {
-        if (typeof callback_when_exist === 'function') {
-            callback_when_exist.call(this);
+        if (typeof whenExist === 'function') {
+            whenExist.call(this);
         }
     } else {
-        if (typeof callback_when_no_exist === 'function') {
-            callback_when_no_exist.call(this);
+        if (typeof whenNotExist === 'function') {
+            whenNotExist.call(this);
         }
     }
     return this;
@@ -357,6 +357,10 @@ function initFuseModals() {
         e.preventDefault();
         flog("click submit");
         $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
+    
+        if (console && console.log) {
+            console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
+        }
     });
 }
 
@@ -719,6 +723,10 @@ function initPageDatePicker() {
     }
 }
 
+function initTimeago() {
+    $(".timeago").timeago();
+}
+
 $(function () {
     flog("Fuse init");
 
@@ -733,6 +741,7 @@ $(function () {
     initClearer();
     initAjaxStatus();
     initMasonryPanel();
+    initTimeago();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
@@ -920,3 +929,16 @@ function getParam(name) {
 
     return value;
 }
+
+var K = window.K || {};
+K.alert = function (title, message, type) {
+    swal(title, message, type);
+};
+
+K.confirm = function (title, message, callback) {
+    
+};
+
+K.prompt = function (title, message, callback) {
+    
+};

@@ -27,58 +27,63 @@
                 </thead>
                 <tbody>
                     #foreach($s in $page.children)
-                    <tr>
-                        <td><a href="$s.name">$s.title</a></td>
-                        <td>$s.storeWebsite.name</td>
-                        <td>$s.productCount</td>
-                        <td class="action">
-                            <div class="btn-group btn-group-sm">
-                                <a href="$s.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
-                                <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu pull-right">
-                                    <li><a class="delete-store" href="$s.name" data-title="$s.title"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><a href="$s.name">$s.title</a></td>
+                            <td>$s.storeWebsite.name</td>
+                            <td>$s.productCount</td>
+                            <td class="action">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="$s.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul role="menu" class="dropdown-menu pull-right">
+                                        <li><a class="delete-store" href="$s.name" data-title="$s.title"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
                     #end
                 </tbody>
             </table>
         </div>
 
         <div id="addStoreModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add an eCommerce Store</h4>
-            </div>
-            <div class="modal-body">
-                <form action="." method="POST" class="form-horizontal createCategory">
-                    <input type="hidden" name="action" value="create"/>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="title">Title</label>
-                        <div class="col-md-8">
-                            <input name="title" class="form-control required" value=""/>
-                        </div>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add an eCommerce Store</h4>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="websiteName">Website</label>
-                        <div class="col-md-8">
-                            <select name="website" class="form-control required">
-                                <option value="">Please select a website</option>
-                                #foreach($website in $page.find("/websites").children.ofType.website)
-                                <option value="$website.name">$website.title</option>
-                                #end
-                            </select>
+                    <form action="." method="POST" class="form-horizontal createCategory">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="action" value="create" />
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="title">Title</label>
+                                <div class="col-md-8">
+                                    <input name="title" class="form-control required" value="" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="websiteName">Website</label>
+                                <div class="col-md-8">
+                                    <select name="website" class="form-control required">
+                                        <option value="">Please select a website</option>
+                                        #foreach($website in $page.find("/websites").children.ofType.website)
+                                            <option value="$website.name">$website.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create store</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Create store</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -90,22 +95,22 @@
         </script>
 
         #macro(genGroup $group)
-        #set($gc = "label label-info")
-        #set($gIcon = "")
-        #if( $group.groupType == "P" || !$group.groupType)
-        #set($gc = "label label-success")
-        #set($gIcon = "clip-users")
-        #elseif( $group.groupType == "S" )
-        #set($gc = "label label-info")
-        #set($gIcon = "fa fa-trophy")
-        #elseif( $group.groupType == "M" )
-        #set($gc = "label label-info")
-        #set($gIcon = "fa fa-envelope")
-        #end
-        <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
-            <i class="$gIcon"></i>
-            <span class="block-name" title="$group.name">$group.name</span>
-        </div>
+            #set($gc = "label label-info")
+            #set($gIcon = "")
+            #if( $group.groupType == "P" || !$group.groupType)
+                #set($gc = "label label-success")
+                #set($gIcon = "clip-users")
+            #elseif( $group.groupType == "S" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-trophy")
+            #elseif( $group.groupType == "M" )
+                #set($gc = "label label-info")
+                #set($gIcon = "fa fa-envelope")
+            #end
+            <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
+                <i class="$gIcon"></i>
+                <span class="block-name" title="$group.name">$group.name</span>
+            </div>
         #end
     </body>
 </html>

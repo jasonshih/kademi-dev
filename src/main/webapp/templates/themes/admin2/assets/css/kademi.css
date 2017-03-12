@@ -30,15 +30,6 @@
     display: none;
 }
 
-.modal .btn-img img {
-    display: none;
-}
-
-.modal.ajax-processing .btn-img[data-type="form-submit"] img,
-.btn-img.loading img {
-    display: inline;
-}
-
 /* ============================================================================
    Main content
    ============================================================================ */

@@ -188,8 +188,9 @@
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">Set Module as Complete</h4>
     </div>
-    <div class="modal-body">
-        <form method="POST" action="." class="form-horizontal">
+    <form method="POST" action="." class="form-horizontal">
+        <div class="modal-body">
+            <div class="form-message alert alert-danger" style="display: none;"></div>
             <div class="form-group">
                 <div class="col-md-12">
                     <select class="form-control cbb-program">
@@ -207,12 +208,12 @@
                 </ul>
             </div>
             <input type="hidden" name="userName" value="$page.profile.name" />
-        </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-        <button type="button" data-type="form-submit" class="btn btn-sm btn-primary">Save</button>
+        <button type="button" type="submit" class="btn btn-sm btn-primary">Set complete</button>
     </div>
+    </form>
 </div>
 <script src="/templates/apps/learner/profileAdminPortlet.js">//</script>
 <script type="text/javascript">

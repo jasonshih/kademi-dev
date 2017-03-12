@@ -177,10 +177,11 @@
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                     <h4 class="modal-title">Create trigger</h4>
                 </div>
+                <form method="POST" action="." class="form-horizontal">
                 <div class="modal-body">
                     <p>Enter a name for your new auto-trigger and select the type of event to do some action on. You can
                         then choose additional options on the edit screen.</p>
-                    <form method="POST" action="." class="form-horizontal">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="name">Trigger name</label>
                             <div class="col-md-8">
@@ -200,13 +201,12 @@
                                 #end
                             </div>
                         </div>
-
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Save</button>
+                    <button class="btn btn-sm btn-success" type="submit" type="button"><i class="fa fa-plus"></i> Save</button>
                 </div>
+                </form>
             </div>
         </div>
         <!-- End General -->

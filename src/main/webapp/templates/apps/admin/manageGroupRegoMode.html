@@ -397,8 +397,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Add extra field</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" action="$page.href" method="POST">
+                    <form class="form-horizontal" action="$page.href" method="POST">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input id="extra-field-value" type="hidden" name="addFieldValue" />
 
                             <div class="alert alert-info">
@@ -462,12 +463,12 @@
                                     <div id="options-wrapper"></div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

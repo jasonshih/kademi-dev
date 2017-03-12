@@ -8,7 +8,7 @@
         endDate: null,
         interval: "day",
         groupBy: null,
-        dateChangeEvent : "pageDateChange"
+        dateChangeEvent : "pageDateChanged"
     };
 
     $.fn.seriesVis = function (options) {
@@ -30,9 +30,9 @@
 
         loadSeriesGraph(seriesHref, options, container, visType);
         
-        $("body").on("pageDateChange", function(e, opts) {
-            options.startDate = opts.startDate;
-            options.endDate = opts.endDate;
+        $("body").on("pageDateChanged", function(e, startDate, endDate) {
+            options.startDate = startDate;
+            options.endDate = endDate;
             flog("update series graph", options);
             loadSeriesGraph(seriesHref, options, container, visType);
         });

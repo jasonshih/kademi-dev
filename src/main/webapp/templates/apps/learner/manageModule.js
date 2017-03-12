@@ -34,8 +34,44 @@ function initManageModule(baseHref, themePath) {
     initFormDetails();
     initQuizBuilder();
     initScormUpload();
+    initFrequencyGroup();
+    initResultsSearch();
 
     window.onbeforeunload = isModalOpen;
+}
+
+function initResultsSearch() {
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
+        flog("initResultsSearch: pageDateChanged", initial);
+        if (initial) {
+            flog("Ignore initial");
+            return;
+        }
+        $("#activityBody").reloadFragment();
+    });    
+}
+
+function initFrequencyGroup() {
+    flog('initFrequencyGroup');
+
+    var group = $('#frequency-group');
+    var btnText = group.find('.btn .btn-text');
+    var lis = group.find('.dropdown-menu li');
+    var txt = $('#sFrequency');
+
+    lis.each(function () {
+        var li = $(this);
+
+        li.on('click', function (e) {
+            e.preventDefault();
+
+            var a = li.find('a');
+            var value = a.attr('data-value');
+
+            txt.val(value);
+            btnText.html(value);
+        });
+    });
 }
 
 function initCssForEditor(themePath) {

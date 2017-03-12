@@ -271,9 +271,10 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Manually create trigger</h4>
             </div>
+            <form method="POST" action="$page.name" class="form-horizontal">
             <div class="modal-body">
                 <p class="well">Please enter the email of the user below. This must be a registered member.</p>
-                <form method="POST" action="$page.name" class="form-horizontal">
+                <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label class="control-label col-md-4" for="profileEmail">Enter email</label>
                         <div class="col-md-8">
@@ -300,13 +301,12 @@
                             </div>
                         </div>
                     </div>
-
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-primary" type="submit" type="button">Save</button>
             </div>
+            </form>
         </div>
 
         <!-- Modal -->
@@ -315,9 +315,10 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel">Create timers</h4>
             </div>
+            <form method="POST" action="$page.name" class="form-horizontal">
             <div class="modal-body">
                 <p>This will create timers for all matching records</p>
-                <form method="POST" action="$page.name" class="form-horizontal">
+                <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="group" value="$!request.params.group" />
 
                     <div class="form-group">
@@ -340,12 +341,12 @@
                             </div>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-primary" data-type="form-submit" type="button">Create timers</button>
+                <button class="btn btn-primary" type="submit" type="button">Create timers</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript">

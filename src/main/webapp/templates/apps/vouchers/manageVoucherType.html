@@ -346,20 +346,22 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Create vouchers</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="$page.href" id="createVouchersForm">
+            <form class="form-horizontal" method="POST" action="$page.href" id="createVouchersForm">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
+
                     <div class="form-group">
                         <label for="numVouchers" class="col-sm-3 control-label">Number to create</label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control regex required" required="true" id="numVouchers" name="numVouchers"  />
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-type="form-submit">Create</button>
+                <button type="button" class="btn btn-primary" type="submit">Create</button>
             </div>
+            </form>
         </div>
 
         <div class="modal fade" id="selectOrgModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -367,8 +369,9 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">Select redeeming organisation</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="$page.href" id="selectRedeemingOrgForm">
+            <form class="form-horizontal" method="POST" action="$page.href" id="selectRedeemingOrgForm">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="numVouchers" class="col-sm-3 control-label">Admin Domain</label>
                         <div class="col-sm-8">
@@ -376,12 +379,12 @@
                             <small><i>Enter the admin domain of the organisation to be permitted to redeem this type of voucher</i></small>
                         </div>
                     </div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-type="form-submit">Select</button>
+                <button type="button" class="btn btn-primary" type="submit">Select</button>
             </div>
+            </form>
         </div>
 
         <div id="modal-extra-field" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
@@ -389,8 +392,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add extra field</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" action="$page.href" method="POST">
+            <form class="form-horizontal" action="$page.href" method="POST">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input id="extra-field-value" type="hidden" name="addFieldValue" />
                     <div class="form-group">
                         <label for="extra-field-name" class="control-label col-md-4">Name:</label>
@@ -417,12 +421,12 @@
                         </div>
                     </div>
                     <div id="options-wrapper"></div>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                <button type="button" class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>

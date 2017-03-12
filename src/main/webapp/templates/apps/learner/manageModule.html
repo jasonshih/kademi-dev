@@ -19,7 +19,7 @@
     <body class="manageModulePages">
         #set ($isKEditor = false)
         #if ($page.theme.editorName == "keditor")
-            #set ($isKEditor = true)
+        #set ($isKEditor = true)
         #end
         #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
@@ -118,6 +118,7 @@
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#files">Module pages</a></li>
                 <li><a data-toggle="tab" href="#details">Module details</a></li>
+                <li><a data-toggle="tab" href="#activity">Activity</a></li>
             </ul>
             <div class="tab-content">
                 <!-- Start content of Module list tab -->
@@ -151,24 +152,24 @@
                                     <div class="btn-group btn-group-sm">
                                         #if($type == "quiz")
                                         <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
-                                        #else
-                                        <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit page">
-                                        #end
-                                            <i class="fa fa-edit"></i>
-                                            Edit
-                                        </a>
+                                            #else
+                                            <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit page">
+                                                #end
+                                                <i class="fa fa-edit"></i>
+                                                Edit
+                                            </a>
 
-                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right">
-                                            <li><a href="?contenteditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in Content Editor <i class="clip-new" style="color: red;"></i></a>
-                                            <li><a href="?htmleditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in HTML Editor</a>
-                                            <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li>
-                                            <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-                                        </ul>
+                                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right">
+                                                <li><a href="?contenteditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in Content Editor <i class="clip-new" style="color: red;"></i></a></li>
+                                                <li><a href="?htmleditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in HTML Editor</a></li>
+                                                <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li></li>
+                                                <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                            </ul>
                                     </div>
                                 </aside>
                             </article>
@@ -180,6 +181,15 @@
                 <!-- Start content of Module details tab -->
                 <div id="details" class="tab-pane Content TabContent">
                     <form name="frmDetails" action="" method="post" class="Details form-horizontal" id="moduleDetailsForm">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-sm btn-success pull-right">
+                                    <i class="fa fa-save"></i>
+                                    Save module
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="name" class="control-label col-md-3">Code</label>
                             <div class="col-md-6">
@@ -215,6 +225,26 @@
                                 <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
                             </div>
                         </div>
+                        
+                        <div class="form-group">
+                            <label class="col-md-3 control-label">Expiry policy</label>
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="number" min="1" class="form-control" name="expiryMultiples" value="$!page.expiryMultiples" />
+                                    <input type="hidden" name="expiryFrequency" id="sFrequency" value="$!page.expiryFrequency" />
+                                    <div class="input-group-btn" id="frequency-group">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$!page.expiryFrequency </span> <span class="caret"></span></button>
+                                        <ul class="dropdown-menu dropdown-menu-right">
+                                            #foreach($f in $page.allFrequencies)
+                                            <li><a href="#" data-value="$f">$f</a></li>
+                                            #end
+                                        </ul>
+                                    </div>
+                                </div>
+                                <i>Module completion results will expire after the given time period</i>
+                            </div>
+                        </div>                        
+                        
 
                         <hr/>
 
@@ -252,20 +282,7 @@
                             </div>
                         </div>
                         <hr />
-                        <div class="form-group">
-                            <label for="" class="control-label col-md-3">
-                                Email confirmation <br />
-                                <small class="Hidden">Enter a message that will appear in an email that get's sent to the user after this module is completed.</small>
-                            </label>
-                            <div class="col-md-9">
-                                $formatter.checkbox("emailConfirm", "emailConfirm", $page.emailConfirm, "true" )
-                                <label for="emailConfirm">Send an email confirmation upon module completion</label>
-                                <div class="hide" id="email-confirm-content">
-                                    <textarea cols="100" id="email-message" class="htmleditor" name="emailCompletionMessage" rows="10" placeholder="Enter your email message here">$!page.emailConfirmMessage</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
+
                         <div class="form-group">
                             <label class="control-label col-md-3">
                                 Choose a certificate <br />
@@ -341,12 +358,71 @@
                         <hr />
                         <div class="form-group">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-sm btn-primary pull-right">Save changes</button>
+                                <button type="submit" class="btn btn-sm btn-success pull-right">
+                                    <i class="fa fa-save"></i>
+                                    Save module
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
                 <!-- End content of Module details tab -->
+                <div id="activity" class="tab-pane Content TabContent">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Started</th>
+                                <th>Last access</th>
+                                <th>Status</th>
+                                <th>Score</th>
+                                <th>Expiry</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityBody">
+                            #if( $page.paginator.isEmpty() )
+                            <td colspan="7">There are no results matching the selected date range and criteria</td>
+                            #else
+                                #foreach($p in $page.paginator.records)
+                                <tr>
+                                    <td>
+                                        <a href="/manageUsers/$p.profile.id/">
+                                            $p.profile.formattedName
+                                        </a>                                        
+                                    </td>
+                                    <td>
+                                        $formatter.formatDateTime($p.createdDate)                                        
+                                    </td>
+                                    <td>                                        
+                                        $formatter.formatDateTime($p.modifiedDate)
+                                    </td>
+                                    <td>
+                                        #if( $p.completed )
+                                        <span class="label label-success">Complete</span>
+                                        #else
+                                        ${p.percentComplete}%
+                                        #end
+                                    </td>
+                                    <td>$!p.scorePerc</td>
+                                    <td>
+                                        $!p.expiryDate
+                                        #if( $p.expired )
+                                        <span class="label label-danger">Expired</span>
+                                        #end
+                                    </td>
+                                </tr>
+                                #end
+                            #end
+                        </tbody>
+                        <tfoot id="pointsFooter">
+                            <tr>
+                                <td colspan="6">
+                                    $!page.paginator.html
+                                </td>
+                            </tr>
+                        </tfoot>                        
+                    </table>
+                </div>
             </div>
         </div>
         #end
@@ -387,23 +463,26 @@
                             </div>
                         </div>
                         #if ($isKEditor)
-                            <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
-                                <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
-                            </div>
+                        <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
+                            <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
+                        </div>
                         #else
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-                                    </div>
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
                                 </div>
                             </div>
+                        </div>
                         #end
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                             <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                            <button class="btn btn-sm btn-primary btn-save btn-img" data-type="form-submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                            <button class="btn btn-sm btn-primary btn-save-close btn-img" data-type="form-submit" type="button">Save & Close <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                            <button class="btn btn-sm btn-primary btn-save btn-img" type="submit" type="button">Save <img class="ajax-loader" src="/static/common/loading.gif" />
+                            </button>
+                            <button class="btn btn-sm btn-primary btn-save-close btn-img" type="submit" type="button">Save & Close
+                                <img class="ajax-loader" src="/static/common/loading.gif" /></button>
                         </div>
                     </form>
                 </div>
@@ -417,8 +496,9 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Add/edit quiz</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="." class="form-horizontal">
+                    <form method="POST" action="." class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="pageName" />
                             <input type="hidden" name="order" />
                             <input type="hidden" name="template" value="learner/quizPage" />
@@ -487,12 +567,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Save</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

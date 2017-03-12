@@ -329,8 +329,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Record</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="." id="addRecordForm">
+            <form class="form-horizontal" method="POST" action="." id="addRecordForm">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="newName" class="col-sm-3 control-label">Simple name</label>
                         <div class="col-sm-8">
@@ -346,12 +347,12 @@
                         </div>
                     </div>
                     <textarea name="json" class="form-control form-control-code"></textarea>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Save</button>
+                <button type="button" class="btn btn-sm btn-success" type="submit">Save</button>
             </div>
+            </form>
         </div>
 
         <div id="csvModal" class="modal modal-lg fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
@@ -402,8 +403,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Mapping</h4>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal" method="POST" action="." id="addMappingForm">
+            <form class="form-horizontal" method="POST" action="." id="addMappingForm">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="newName" class="col-sm-3 control-label">Mapping type </label>
                         <div class="col-sm-8">
@@ -414,12 +416,12 @@
 
                     <span class="help-block"><small>Please enter mappings as JSON below</small></span>
                     <textarea name="json" class="form-control form-control-code" rows="20"></textarea>
-                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-success" data-type="form-submit">Create mapping</button>
+                <button type="button" class="btn btn-sm btn-success" type="submit">Create mapping</button>
             </div>
+            </form>
         </div>
 
 

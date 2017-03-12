@@ -137,8 +137,9 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                 <h4 class="modal-title">Create a calendar event</h4>
             </div>
-            <div class="modal-body">
-                <form method="post" action="$request.absolutePath" class="form-horizontal">
+            <form method="post" action="$request.absolutePath" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <input type="hidden" name="action" value="create" />
 
                     <div class="form-group">
@@ -174,12 +175,12 @@
                     </div>
 
                     <i>Enter the full event content, reminders and other details after the event is created</i>
-                </form>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                <button class="btn btn-sm btn-primary" type="submit">Save</button>
             </div>
+            </form>
         </div>
 
         <script type="text/javascript">

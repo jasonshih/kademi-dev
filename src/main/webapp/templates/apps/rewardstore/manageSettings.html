@@ -35,3 +35,29 @@
         </select>
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="expirePoints">Use inventory control</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("useInventoryControl", "useInventoryControl", $useInventoryControl, "true")
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="expirePoints">Allow ordering non-stocked</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("allowOrderingNonstocked", "allowOrderingNonstocked", $allowOrderingNonstocked, "true")
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-md-4" for="reasonCode">Inventory location</label>
+    <div class="col-sm-8">
+        <select id="reasonCode" name="reasonCode" class="form-control">
+            $formatter.option('', '[NONE]', $inventoryLocationId)
+            #foreach($loc in $inventoryLocations)
+            $formatter.option($loc.id, $loc.title, $inventoryLocationId)
+            #end
+        </select>
+    </div>
+</div>

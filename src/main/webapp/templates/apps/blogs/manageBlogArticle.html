@@ -73,49 +73,51 @@
                         </div>
 
                         #if( $page.publishedDate or $page.submittedDate )
-                            <div class="panel panel-info col-md-8 pull-right">
-                                <div class="panel-body">
-                                    #if( $page.publishedDate )
-                                        <p class="lead text-right">
-                                            Published by $!page.publishedBy.name for release
-                                            <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
-                                        </p>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <div class="alert alert-info">
+                                        #if( $page.publishedDate )
+                                            <p class="lead text-right">
+                                                Published by $!page.publishedBy.name for release
+                                                <abbr title="$formatter.formatDateISO8601($page.publishedDate)" class="timeago">$!page.publishedDate</abbr>
+                                            </p>
 
-                                        <p class="text-right">
-                                            Submitted by $!page.submittedBy.name
-                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                        </p>
-                                        #if( $page.canPublish )
-                                            <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
-                                        #end
-                                    #else
-                                        <p class="lead text-right">
-                                            Submitted by $!page.submittedBy.name
-                                            <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
-                                        </p>
-                                        #if( $page.canPublish )
-                                            <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
+                                            <p class="text-right">
+                                                Submitted by $!page.submittedBy.name
+                                                <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                            </p>
+                                            #if( $page.canPublish )
+                                                <button class="btn btn-sm btn-warning article-reject" type="button">Unpublish</button>
+                                            #end
+                                        #else
+                                            <p class="lead text-right">
+                                                Submitted by $!page.submittedBy.name
+                                                <abbr title="$formatter.formatDateISO8601($page.submittedDate)" class="timeago">$!page.submittedDate</abbr>
+                                            </p>
+                                            #if( $page.canPublish )
+                                                <button class="btn btn-sm btn-warning article-reject" type="button">Reject with reason</button>
 
-                                            <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                                <button class="btn btn-sm btn-success article-publish" type="button">Publish</button>
+                                            #end
                                         #end
-                                    #end
+                                    </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.rejectedAt )
-                            <div class="panel panel-info col-md-8 pull-right">
-                                <div class="panel-body">
-                                    <p class="lead text-right">
-                                        Rejected by $!page.rejectedBy.name
-                                        <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
-                                    </p>
+                            <div class="row">
+                                <div class="col-md-8 col-md-offset-4">
+                                    <div class="alert alert-info">
+                                        <p class="lead text-right">
+                                            Rejected by $!page.rejectedBy.name
+                                            <abbr title="$formatter.formatDateISO8601($page.rejectedAt)" class="timeago">$!page.rejectedAt</abbr>
+                                        </p>
 
-                                    <p class="text-right">$!page.rejectedReason</p>
+                                        <p class="text-right">$!page.rejectedReason</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="clearfix"></div>
                         #end
 
                         #if( $page.publishedDate )
@@ -281,9 +283,15 @@
                     </div>
 
                     <div class="tab-pane" id="images">
-                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
-                            <i class="fa fa-plus"></i> Add image
-                        </button>
+                        #if( $page.publishedDate or $page.submittedDate )
+                            <p class="alert alert-info lead">
+                                <i class="fa fa-info-circle"></i> Your article is published. If you want to add images, please unpublish it at <a href="#activity-tab">here</a>.
+                            </p>
+                        #else
+                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-image">
+                                <i class="fa fa-plus"></i> Add image
+                            </button>
+                        #end
 
                         <hr />
 
@@ -319,9 +327,15 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="files">
-                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-file">
-                            <i class="fa fa-plus"></i> Add file
-                        </button>
+                        #if( $page.publishedDate or $page.submittedDate )
+                            <p class="alert alert-info lead">
+                                <i class="fa fa-info-circle"></i> Your article is published. If you want to add files, please unpublish it at <a href="#activity-tab">here</a>.
+                            </p>
+                        #else
+                            <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-add-file">
+                                <i class="fa fa-plus"></i> Add file
+                            </button>
+                        #end
 
                         <hr />
 
@@ -364,8 +378,9 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                             <h4 class="modal-title">Add new image</h4>
                         </div>
-                        <div class="modal-body">
-                            <form action="$page.href" method="POST" class="form-horizontal">
+                        <form action="$page.href" method="POST" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
                                 <input type="hidden" name="hash" />
 
                                 <div class="form-group">
@@ -387,12 +402,12 @@
                                     </div>
                                 </div>
                                 <input type="hidden" name="orientation" value="" />
-                            </form>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save image</button>
+                            <button type="button" class="btn btn-primary btn-sm" type="submit">Save image</button>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -405,8 +420,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Add new file</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="$page.href" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                    <form action="$page.href" method="POST" class="form-horizontal" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
 
                             <div class="form-group">
                                 <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
@@ -433,12 +449,12 @@
                                     <input type="text" name="tag" class="form-control" />
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save file</button>
+                        <button type="button" class="btn btn-primary btn-sm" type="submit">Save file</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -451,8 +467,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Publish</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="$page.href" method="POST" class="form-horizontal">
+                    <form action="$page.href" method="POST" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="publish" />
 
                             <div class="form-group">
@@ -482,12 +499,12 @@
                                     <i>Enter a date for the article to become available, or leave blank to publish immediately</i>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success btn-sm" data-type="form-submit">Publish</button>
+                        <button type="button" class="btn btn-success btn-sm" type="submit">Publish</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -499,8 +516,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Reject</h4>
                     </div>
-                    <div class="modal-body">
-                        <form action="$page.href" method="POST" class="form-horizontal">
+                    <form action="$page.href" method="POST" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="reject" />
 
                             <p>Please give a reason for rejecting or un-publishing</p>
@@ -508,12 +526,12 @@
                             <div class="input-group col-md-12">
                                 <textarea name="reason" class="form-control col-md-12"></textarea>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm btn-close" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger btn-sm" data-type="form-submit">Reject</button>
+                        <button type="button" class="btn btn-danger btn-sm" type="submit">Reject</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

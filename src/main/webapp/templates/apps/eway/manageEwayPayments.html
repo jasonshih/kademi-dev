@@ -273,8 +273,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Download Customer Tokens</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" method="POST" action="${page.href}customers.csv">
+                    <form class="form-horizontal" method="POST" action="${page.href}customers.csv">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="form-group">
                                 <label for="dctStartDate" class="col-sm-3 control-label">Start Date</label>
                                 <div class="col-sm-8">
@@ -289,11 +290,11 @@
                                     <span class="help-block"><small>Payments must be set up before the end date</small></span>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Download</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Download</button>
+                    </form>
                     </div>
 
 					<script type="text/javascript">

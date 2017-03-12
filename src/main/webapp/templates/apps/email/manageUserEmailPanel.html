@@ -6,45 +6,10 @@
     <div>$counts.read read, $counts.converted converted</div>
 </div>
 
-
-<div id="modal-compose-email" class="modal modal-md fade" aria-hidden="true">
-    <form id="compose_email" class="form-horizontal">
-        <div class="modal-header">
-            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-            <h4 class="modal-title">Compose Email</h4>
-        </div>
-        <div class="modal-body">
-            <input type="hidden" name="sendEmail" value="sendEmail"/>
-            <div class="form-group">
-                <label for="fromAddress" class="col-sm-2 control-label">From</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control email" name="fromAddress" placeholder="From Address" value="$!page.defaultFromAddress">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="subject" class="col-sm-2 control-label">Subject</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control required" name="subject" id="subject" placeholder="Subject">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <textarea class="form-control htmleditor toolbar-Lite required" id="email_message" name="email_message" placeholder="Message"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-sm btn-success">Send</button>
-        </div>
-    </form>
-</div>
-
-
 <link rel="stylesheet" href="/static/iCheck/1.0.2/skins/all.css">
 <script src="/static/iCheck/1.0.2/icheck.min.js">//</script>
 <script src="/static/bootstrap3-wysiwyg/0.3.3/bootstrap3-wysihtml5.all.min.js" type="text/javascript">//</script>
-<link href="/static/bootstrap3-wysiwyg/0.3.3/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css"/>
+<link href="/static/bootstrap3-wysiwyg/0.3.3/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
 <script src="/theme/apps/email/manageUsersEmailPortlet.js" type="text/javascript">//</script>
 <script>
     pageInitFunctions.push(function () {

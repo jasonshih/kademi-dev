@@ -7,7 +7,9 @@
     <body class="manage-org-types">
         <div id="manage-org-types">
             <div class="well">
-                Organisation types represent the different types of businesses, departments, or other business units that your users belong to. This can be used to limit which organisations different types of users can sign up to. For example, if you have a user group <b>"pharmacist"</b> you might only want them to register to organisations of type <b>"pharmacy"</b>. You can set the organisation type on your business units either one at a time through the Manage Business Units page, or you can set them when you upload a spread sheet of organisations.
+                Organisation types represent the different types of businesses, departments, or other business units that your users belong to. This can be used to limit which organisations different types of users can sign up to. For example, if you have a user group
+                <b>"pharmacist"</b> you might only want them to register to organisations of type
+                <b>"pharmacy"</b>. You can set the organisation type on your business units either one at a time through the Manage Business Units page, or you can set them when you upload a spread sheet of organisations.
             </div>
             <header class="clearfix">
                 <p class="pull-left">
@@ -16,89 +18,95 @@
             </header>
             <div class="panel panel-default">
                 <div class="panel-body">
-	                <div class="table-responsive">
-	                    <table id="org-types" class="table table-hover table-striped">
-			                <colgroup>
-			                    <col width="30%" />
-			                    <col width="65%" />
-			                    <col width="5%" />
-			                </colgroup>
-			                <thead>
-			                    <tr>
-			                        <th>Code</th>
-			                        <th>Display Name</th>
-			                        <th class="action"></th>
-			                    </tr>
-			                </thead>
-			                <tbody>
-			                    #foreach($ot in $page.children)
-			                    <tr>
-			                        <td>$ot.name</td>
-			                        <td>$formatter.htmlEncode($ot.title)</td>
-			                        <td class="action">
-			                            <div class="btn-group btn-group-sm">
-			                                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">
-			                                    <i class="fa fa-cog"></i> <span class="caret"></span>
-			                                </button>
-			                                <ul class="dropdown-menu pull-right" role="menu">
-			                                    <li class="presentation" role="menuitem">
-			                                        <a class="btn-edit-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-edit"></i> Edit details</a>
-			                                    </li>
-			                                    <li class="presentation">
-			                                        <a class="btn-delete-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-times"></i> Delete</a>
-			                                    </li>
-			                                </ul>
-			                            </div>
-			                        </td>
-			                    </tr>
-			                    #end
-			                </tbody>
-			            </table>
+                    <div class="table-responsive">
+                        <table id="org-types" class="table table-hover table-striped">
+                            <colgroup>
+                                <col width="30%" />
+                                <col width="65%" />
+                                <col width="5%" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Display Name</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($ot in $page.children)
+                                    <tr>
+                                        <td>$ot.name</td>
+                                        <td>$formatter.htmlEncode($ot.title)</td>
+                                        <td class="action">
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i> <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu pull-right" role="menu">
+                                                    <li class="presentation" role="menuitem">
+                                                        <a class="btn-edit-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-edit"></i> Edit details</a>
+                                                    </li>
+                                                    <li class="presentation">
+                                                        <a class="btn-delete-orgtype" role="menuitem" href="$ot.name"><i class="fa fa-times"></i> Delete</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <div id="modal-edit-orgtype" tabindex="-1" class="modal fade modal-sm" aria-hidden="true">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Edit Organisation Type</h4>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-primary" data-type="form-submit" type="button">Save</button>
+            <div id="modal-edit-orgtype" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Edit Organisation Type</h4>
+                        </div>
+                        <div class="form-content">
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div id="modal-new-orgtype" tabindex="-1" class="modal fade modal-sm" aria-hidden="true">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">New Organisation Type</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="" class="form-horizontal">
-                        <div class="form-group">
-                            <label for="newOrgTypeName" class="control-label col-md-3">Code</label>
-                            <div class="col-md-8">
-                                <input type="text" name="name" id="newOrgTypeName" class="form-control required" />
-                            </div>
+            <div id="modal-new-orgtype" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New Organisation Type</h4>
                         </div>
-                        <div class="form-group">
-                            <label for="newOrgTypeDisplayName" class="control-label col-md-3">Display name</label>
-                            <div class="col-md-8">
-                                <input type="text" name="displayName" id="newOrgTypeDisplayName" class="form-control required" />
+                        <form method="POST" action="" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label for="newOrgTypeName" class="control-label col-md-3">Code</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="name" id="newOrgTypeName" class="form-control required" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newOrgTypeDisplayName" class="control-label col-md-3">Display name</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="displayName" id="newOrgTypeDisplayName" class="form-control required" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <script type="text/javascript" >
+            <script type="text/javascript">
                 $(function () {
                     initManageOrgTypes();
                 });

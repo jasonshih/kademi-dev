@@ -130,7 +130,7 @@
                 <li class=""><a data-toggle="tab" href="#panel_theme"><i class="green fa fa-home"></i> Theme</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_groups"><i class="green fa fa-home"></i> Group access</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_mailserver"><i class="green fa fa-home"></i> Mail server</a></li>
-                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> HTTPS server</a></li>
+                <li class=""><a data-toggle="tab" href="#panel_sslserver"><i class="green fa fa-home"></i> Security</a></li>
                 <li class=""><a data-toggle="tab" href="#panel_apps"><i class="green fa fa-home"></i> Apps</a></li>
             </ul>
 
@@ -445,8 +445,9 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h4 class="modal-title" id="myModalLabel">Create new HTTPS Configuration </h4>
                                 </div>
-                                <div class="modal-body">
-                                    <form class="form-horizontal" method="POST" action=".">
+                                <form class="form-horizontal" method="POST" action=".">
+                                    <div class="modal-body">
+                                        <div class="form-message alert alert-danger" style="display: none;"></div>
                                         <div id="certificate-body">
                                             <div class="form-group">
                                                 <label for="title" class="col-sm-3 control-label">Title</label>
@@ -456,12 +457,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create</button>
+                                    <button class="btn btn-sm btn-primary" type="submit">Create</button>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div><!-- /.modal -->
@@ -491,6 +492,7 @@
                             </tr>
                         </thead>
                         <tbody id="certificates-body">
+                            #if( $page.certificates.size() > 0 )
                             #foreach($cer in $page.certificates)
                             <tr>
                                 <td>$cer.title</td>
@@ -617,8 +619,53 @@
                                 </td>
                             </tr>
                             #end
+                            #else
+                            <tr>
+                                <td colspan="9">
+                                    You have no certificates yet.
+                                </td>
+                            </tr>
+                            #end
                         </tbody>
                     </table>
+                    
+                    <hr/>
+                    
+                    <h2>Intrusion detection and prevention</h2>
+                    #if( $page.idpPolicy.metrics.size() > 0 )
+                    <h3>Metrics</h3>                    
+                    <table class="table table-striped">
+                        <tbody>
+                            #foreach($metricEntry in $page.idpPolicy.metrics.entrySet())
+                            <tr>
+                                <td>$metricEntry.key</td>
+                                <td>$metricEntry.value.title</td>
+                                <td>$metricEntry.value.status</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #end
+                    
+                    <h3>Known IPs</h3>
+                    #foreach($knownIpEntry in $page.idpPolicy.knownIps.entrySet() )
+                    <h4>$knownIpEntry.key</h4>
+                    <table class="table table-striped">
+                        <tbody>
+                            #foreach($ip in $knownIpEntry.value)
+                            <tr>
+                                <td>$ip</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    
+                    #end
+                    
+                    <div class="well">
+                        <a target="_blank" class="btn btn-primary" href="WEB-INF/texteditor?fileName=idp-policy.xml">Edit IDP Policy file</a>
+                        <xmp>$page.idpPolicyXml</xmp>
+                    </div>                    
                 </div>
 
                 <div id="panel_apps" class="tab-pane appsContainer">
@@ -668,18 +715,19 @@
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                     <h4 class="modal-title">Edit Application: $app.appId</h4>
                                 </div>
-                                <div class="modal-body ModalContent">
-                                    <form method="POST" action="." class="form-horizontal" role="form">
+                                <form method="POST" action="." class="form-horizontal" role="form">
+                                    <div class="modal-body">
+                                        <div class="form-message alert alert-danger" style="display: none;"></div>
                                         <input type="hidden" name="settingsAppId" value="$app.appId" />
                                         #if($app.enabled)
                                             #appSettings($app.appId)
                                         #end
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-primary btn-sm" data-type="form-submit">Save</button>
+                                    <button type="button" class="btn btn-primary btn-sm" type="submit">Save</button>
                                 </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -722,8 +770,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title">Add/edit menu</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal">
+                    <form class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="form-group">
                                 <label for="menu-text" class="control-label col-md-4">Text:</label>
                                 <div class="col-md-8">
@@ -736,12 +785,12 @@
                                     <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" data-type="form-submit">Save</button>
+                        <button type="button" class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -753,8 +802,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <h4>Upload a File</h4>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -776,12 +826,12 @@
                                     <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div><!-- /.modal -->
@@ -793,9 +843,10 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Certificate Signing Request</h4>
                     </div>
+                    <form method="POST" action="." class="form-horizontal">
                     <div class="modal-body">
                         <p class="well csrForm">Please fill in the details below</p>
-                        <form method="POST" action="." class="form-horizontal">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="csrForm">
                                 <div class="form-group">
                                     <input type="hidden" name="generateCsr" value="true" />
@@ -884,12 +935,12 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary btn-create" data-type="form-submit">Create</button>
+                        <button type="button" class="btn btn-sm btn-primary btn-create" type="submit">Create</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div><!-- /.modal -->
@@ -901,8 +952,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Upload Certificate (X.509)</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                    <form class="form-horizontal" method="POST" action="." enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <h4>Upload Files</h4>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -930,12 +982,12 @@
                                     <textarea id="certText" name="certText" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Upload</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div><!-- /.modal -->
@@ -947,8 +999,9 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">Upload Private Key (RSA/PEM Encoded)</h4>
                     </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" method="" action="." enctype="multipart/form-data">
+                    <form class="form-horizontal" method="" action="." enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <h4>Upload a File</h4>
                             <div class="form-group">
                                 <div class="col-sm-12">
@@ -970,12 +1023,12 @@
                                     <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Update</button>
+                        <button class="btn btn-sm btn-primary" type="submit">Update</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div><!-- /.modal -->
@@ -987,11 +1040,12 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Generate DKIM Key</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="." class="form-horizontal">
+                    <form method="POST" action="." class="form-horizontal">
+                        <div class="modal-body">
                             <div class="alert alert-danger" role="alert">
                                 If you are currently authenticating email from this domain, generating a new TXT record might cause email's to fail until the DNS record has been updated.
                             </div>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="genDkim" value="true"/>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
@@ -1010,12 +1064,12 @@
                                     </label>
                                 </div>
                             </div>
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Generate</button>
+                        <button class="btn btn-sm btn-success" type="submit" type="button"><i class="fa fa-plus"></i> Generate</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -1026,8 +1080,9 @@
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                     <h4 class="modal-title">Upload a DKIM Private Key</h4>
                 </div>
-                <div class="modal-body">
-                    <form method="POST" action="." class="form-horizontal">
+                <form method="POST" action="." class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
                         <input type="hidden" name="uploadDkimKey" value="true"/>
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="dkimsel">DKIM Selector</label>
@@ -1041,12 +1096,12 @@
                                 <textarea type="text" name="dkimpk" value="" placeholder="PEM Encoded private key" class="form-control" ></textarea>
                             </div>
                         </div>
-                    </form>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="fa fa-plus"></i> Upload</button>
+                    <button class="btn btn-sm btn-success" type="submit" type="button"><i class="fa fa-plus"></i> Upload</button>
                 </div>
+                </form>
             </div>
         </div>
 
@@ -1057,8 +1112,9 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">Send test</h4>
                     </div>
-                    <div class="modal-body">
-                        <form method="POST" action="." class="form-horizontal">
+                    <form method="POST" action="." class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <input type="hidden" name="dkimTestEmail" value="true"/>
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="name">Recipient</label>
@@ -1074,13 +1130,12 @@
                                     <p>The address to be sending from eg. noreply@yourdomain.com</p>
                                 </div>
                             </div>
-
-                        </form>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" data-type="form-submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        <button class="btn btn-sm btn-success" type="submit" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>

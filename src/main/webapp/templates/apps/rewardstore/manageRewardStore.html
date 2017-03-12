@@ -5,14 +5,16 @@
             .search, .search-group {
                 float: left;
             }
+
             .product-inreward-details {
                 display: none;
             }
+
             .in-reward-true .product-inreward-details {
                 display: block;
             }
         </style>
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet"/>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet" />
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
     </head>
     <body>
@@ -31,14 +33,14 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="name">Name/code</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="name" id="name" value="$page.rewardStore.name" placeholder="" class="required form-control"  required="true" />
+                                            <input type="text" name="name" id="name" value="$page.rewardStore.name" placeholder="" class="required form-control" required="true" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="title">Title</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="title" id="title" value="$page.rewardStore.title" placeholder="" class="required form-control"  required="true" />
+                                            <input type="text" name="title" id="title" value="$page.rewardStore.title" placeholder="" class="required form-control" required="true" />
                                         </div>
                                     </div>
 
@@ -79,7 +81,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="pointsMultiplier">Points Multiplier</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="pointsMultiplier" id="pointsMultiplier" value="$!page.rewardStore.pointsMultiplier" placeholder="" class="form-control"  />
+                                            <input type="text" name="pointsMultiplier" id="pointsMultiplier" value="$!page.rewardStore.pointsMultiplier" placeholder="" class="form-control" />
                                             <span class="help-block">
                                                 <i>Multiply buy price by this to get the points value</i>
                                             </span>
@@ -89,21 +91,21 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="margin">Your margin</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="margin" id="margin" value="$!page.rewardStore.margin" placeholder="0.20 for 20%" class="form-control"  />
+                                            <input type="text" name="margin" id="margin" value="$!page.rewardStore.margin" placeholder="0.20 for 20%" class="form-control" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="margin2">Client margin</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="margin2" id="margin2" value="$!page.rewardStore.margin2" placeholder="0.05 for 5%" class="form-control"  />
+                                            <input type="text" name="margin2" id="margin2" value="$!page.rewardStore.margin2" placeholder="0.05 for 5%" class="form-control" />
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <label class="control-label col-md-3" for="cashDivisor">Cash Divisor</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="cashDivisor" id="cashDivisor" value="$!page.rewardStore.cashDivisor" placeholder="2, to halve points to get cash equivalent" class="form-control"  />
+                                            <input type="text" name="cashDivisor" id="cashDivisor" value="$!page.rewardStore.cashDivisor" placeholder="2, to halve points to get cash equivalent" class="form-control" />
                                             <span class="help-block">
                                                 <i>Used to calculate an equivalent cash value of points. Points are divided by this value</i>
                                             </span>
@@ -164,7 +166,7 @@
                                             <select name="searchOrg" id="search-library" class="form-control input-sm">
                                                 <option value="">My library</option>
                                                 #foreach($org in $page.parentOrgsWithProducts)
-                                                <option value="$org.id">$org.title</option>
+                                                    <option value="$org.id">$org.title</option>
                                                 #end
                                             </select>
                                         </div>
@@ -172,7 +174,6 @@
                                 </div>
                             </div>
                         </div>
-
 
 
                         <div class="table-responsive">
@@ -202,27 +203,28 @@
                                 #set( $products = $page.searchProducts( $request.params.q, $request.params.all, $request.params.l ))
                                 <tbody id="products-list">
                                     #if( $products.isEmpty() )
-                                    <tr>
-                                        <td colspan="6">No products were found matching the critieria</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="6">No products were found matching the critieria</td>
+                                        </tr>
                                     #else
-                                    #foreach($p in $products )
-                                    <tr class='in-reward-$p.inReward' id='product-$p.productId'>
-                                        <td><a href='/products/$p.productId'>$p.name</a></td>
-                                        <td>$formatter.htmlEncode($p.title)</td>
-                                        <td>$!p.margin</td>
-                                        <td>$!p.multiplier</td>
-                                        <td></td>
-                                        <td class="text-center">
-                                            <input $formatter.ifTrue( $p.inReward, "checked", "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
-                                        </td>
-                                        <td>
-                                            <a href="$p.productId" class="product-inreward-details">
-                                                <span class="glyphicon glyphicon-cog"></span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    #end
+                                        #foreach($p in $products )
+                                            <tr class='in-reward-$p.inReward' id='product-$p.productId'>
+                                                <td><a href='/products/$p.productId'>$p.name</a></td>
+                                                <td>$formatter.htmlEncode($p.title)</td>
+                                                <td>$!p.margin</td>
+                                                <td>$!p.multiplier</td>
+                                                <td></td>
+                                                <td class="text-center">
+                                                    <input $formatter.ifTrue( $p.inReward, "checked",
+                                                        "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                                </td>
+                                                <td>
+                                                    <a href="$p.productId" class="product-inreward-details">
+                                                        <span class="glyphicon glyphicon-cog"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        #end
                                     #end
                                 </tbody>
                             </table>
@@ -232,19 +234,24 @@
             </div>
         </div>
 
-        <div id="editProductInRewardModal" class="modal modal-lg fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Product in Reward Details</h4>
-            </div>
-            <div class="modal-body">
-                <form action="$page.href" method="POST" class="form-horizontal createProduct">
-
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create product</button>
+        <div id="editProductInRewardModal" class="modal fade" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Product in Reward Details</h4>
+                    </div>
+                    <form action="$page.href" method="POST" class="form-horizontal createProduct">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-content"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Create product</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -301,10 +308,11 @@
                     url: href,
                     success: function (data) {
                         flog("success", data);
-                        var $fragment = $(data).find("#product-in-reward-fields");
+                        var $fragment =
+                        $(data).find("#product-in-reward-fields");
                         flog("frag", $fragment);
                         var form = productInRewardModal.find("form");
-                        form.html($fragment);
+                        form.find('.form-content').html($fragment);
                         form.attr("action", href);
                         productInRewardModal.modal("show");
                     },

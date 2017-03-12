@@ -62,17 +62,6 @@
                     </div>
                     <div class="col-md-4">
                         <div class="input-group">
-                            <label for="searchGroup" class="input-group-addon">Group</label>
-                            <select name="searchGroup" id="searchGroup" class="form-control">
-                                <option value="">&nbsp;</option>
-                                #foreach($group in $rootFolder.groups)
-                                <option value="$group.name">$group.name</option>
-                                #end
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="input-group">
                             <label for="searchReward" class="input-group-addon">Reward</label>
                             <select name="searchReward" id="searchReward" class="form-control">
                                 <option value="">&nbsp;</option>
@@ -97,7 +86,7 @@
                                 <th>Expiry</th>
                                 <th>No. Points</th>
                                 <th>Reason</th>
-                                <th>Tag</th>
+                                <th>Tag/Reason Code</th>
                                 <th class="center">
                                     <div class="checkbox-table">
                                         <label>
@@ -115,6 +104,10 @@
                             </tr>
                             #else
                             #foreach($p in $page.paginator.records)
+                            #set($isDebit = false)
+                            #if($p.class.simpleName == "PointsDebit")
+                            #set($isDebit = true)
+                            #end
                             <tr>
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td>
@@ -126,9 +119,21 @@
                                 </td>
                                 <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
                                 <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
-                                <td>$p.numPoints</td>
+                                <td>
+                                    #if($isDebit)
+                                    <span class="label label-warning">-$p.numPoints</span>
+                                    #else
+                                    <span class="label label-success">$p.numPoints</span>
+                                    #end
+                                </td>
                                 <td>$p.reason</td>
-                                <td>$!p.pointsTag.title</td>
+                                <td>
+                                    #if($isDebit)
+                                    $!p.reasonCode
+                                    #else
+                                    $!p.pointsTag.title
+                                    #end
+                                </td>
                                 <td class="center">
                                     <div class="checkbox-table">
                                         <label>
@@ -136,11 +141,13 @@
                                         </label>
                                     </div>
                                 </td>
+                                <!--
                                 <td>
                                     <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
                                 </td>
+                                -->
                             </tr>
                             #end
                             #end
@@ -211,6 +218,7 @@
                     <p class="alert alert-danger">Please note that any applicable allocation rules will also be processed.</p>
 
                     <p>Please specify a users email, userId or orgId to assign points to.</p>
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">Participant ID</label>
@@ -259,7 +267,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Save</button>
                 </div>
             </form>
         </div>
@@ -273,6 +281,7 @@
                 <input type="hidden" name="debitPoints" value="debitPoints"/>
                 <div class="modal-body">
                     <p>Please specify a users email or userId to assign points to.</p>
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="email">Email or UserID</label>
@@ -318,8 +327,6 @@
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-right reason-codes" >
-                                        <li><a href="P">Purchase (P)</a></li>
-                                        <li><a href="E">Expired (E)</a></li>
                                         #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes.entrySet() )
                                         <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
                                         #end
@@ -332,7 +339,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Debit</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Debit</button>
                 </div>
             </form>
         </div>
@@ -344,6 +351,7 @@
             </div>
             <form method="post" action="" class="form-horizontal" id="new-points-form">
                 <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserEmail">No. of points</label>
@@ -361,7 +369,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-primary" data-type="form-submit" type="button">Save</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Save</button>
                 </div>
             </form>
         </div>
