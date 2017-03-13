@@ -2,10 +2,12 @@ var progressPage; // the most advanced page the user has yet visited, set by inl
 var modStatusUrl;
 var modStatusComplete;
 var isCompletable;
+var isComplete;
 
 function initModulePage(pStatUrl, pFinished, pEditMode, pIsCompletable) {
     flog('initModulePage', pStatUrl, pFinished, pEditMode, pIsCompletable);
 
+    isComplete = pFinished; 
     isCompletable = pIsCompletable && !pFinished;
 
     if (pEditMode) {
@@ -962,8 +964,8 @@ function isQuizComplete(e) {
         return true;
     }
 
-    if (!isCompletable) {
-        flog('Module is complete, so true');
+    if (isComplete) {
+        flog('isQuizComplete: Module is complete already, so true');
         return true;
     }
 
