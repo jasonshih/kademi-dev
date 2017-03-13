@@ -357,7 +357,7 @@ function initFuseModals() {
         e.preventDefault();
         flog("click submit");
         $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
-    
+
         if (console && console.log) {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
@@ -724,8 +724,10 @@ function initPageDatePicker() {
 }
 
 function initTimeago() {
-    jQuery.timeago.settings.allowFuture = true;
-    $(".timeago").timeago();
+    if( jQuery.timeago ) {
+        jQuery.timeago.settings.allowFuture = true;
+        $(".timeago").timeago();
+    }
 }
 
 $(function () {
@@ -937,9 +939,9 @@ K.alert = function (title, message, type) {
 };
 
 K.confirm = function (title, message, callback) {
-    
+
 };
 
 K.prompt = function (title, message, callback) {
-    
+
 };
