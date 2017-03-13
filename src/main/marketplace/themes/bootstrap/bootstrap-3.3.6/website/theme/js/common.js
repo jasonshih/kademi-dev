@@ -80,69 +80,40 @@ function ensureObject(target) {
     return target;
 }
 
-
 /**
  * varargs function to output to console.log if console is available
  */
 function log() {
-    if (typeof (console) != "undefined") {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-//            console.log(arguments[0]);
-//            if (typeof (JSON) == "undefined") {
-//                if (arguments.length == 1) {
-//                    console.log(arguments[0]);
-//                } else if (arguments.length == 2) {
-//                    console.log(arguments[0], arguments[1]);
-//                } else if (arguments.length > 2) {
-//                    console.log(arguments[0], arguments[1], arguments[2]);
-//                }
-
-//            } else {
-//                try {
-//                    var msg = "";
-//                    for (var i = 0; i < arguments.length; i++) {
-//                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
-//                    }
-//                    console.log(msg);
-//                } catch (ex) {
-//                    console.log(ex); // If current browser doesn't support JSON.stringify method
-//                }
-//            }
-        } else {
-            console.log(arguments);
-        }
-    }
+    flog("log function is deprecated");
 }
 
+/**
+ * Fuse Log - renamed from 'log' to avoid name clash with less.js
+ *
+ * varargs function to output to console.log if console is available
+ */
 function flog() {
-    if (typeof (console) != "undefined") {
-        if (navigator.appName == 'Microsoft Internet Explorer') {
-//            if (typeof (JSON) == "undefined") {
-//                if (arguments.length == 1) {
-//                    console.log(arguments[0]);
-//                } else if (arguments.length == 2) {
-//                    console.log(arguments[0], arguments[1]);
-//                } else if (arguments.length > 2) {
-//                    console.log(arguments[0], arguments[1], arguments[2]);
-//                }
-//
-//            } else {
-//                try {
-//                    var msg = "";
-//                    for (var i = 0; i < arguments.length; i++) {
-//                        msg += JSON.stringify(arguments[i]) + ","; // log string instead of JSON object
-//                    }
-//                    console.log(msg);
-//                } catch (ex) {
-//                    console.log(ex); // If current browser doesn't support JSON.stringify method
-//                }
-//            }
+    if (typeof (console) != 'undefined') {
+        // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
+        if (arguments.length == 1) {
+            console.log(arguments[0]);
+        } else if (arguments.length == 2) {
+            console.log(arguments[0], arguments[1]);
+        } else if (arguments.length == 3) {
+            console.log(arguments[0], arguments[1], arguments[2] );
+        } else if (arguments.length == 4) {
+            console.log(arguments[0], arguments[1], arguments[2], arguments[3] );
+        } else if (arguments.length == 5) {
+            console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] );
         } else {
-            console.log(arguments);
+            if (navigator.appName == 'Microsoft Internet Explorer') {
+                console.log(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4] );
+            } else {
+                console.log(arguments);
+            }
         }
     }
 }
-
 
 function pad2(i) {
     var j = i - 0; // force to be a number
