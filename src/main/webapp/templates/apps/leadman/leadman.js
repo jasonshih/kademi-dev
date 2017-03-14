@@ -118,7 +118,6 @@ function initCloseDealModal() {
 function initCancelLeadModal() {
     var cancelLeadModal = $("#modalCancelLead");
     
-    
     cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             callback: function (resp) {
