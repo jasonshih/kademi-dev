@@ -1,0 +1,252 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>$view.title</title>
+    </head>
+    <body>
+        <section style="padding-top: 15px">
+            <header>
+                <h2>$page.title</h2>
+            </header>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-3">
+                                <label class="control-label" for="name">Vendor</label>
+
+                                <div class="input-group col-sm-12">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+
+                                    <div class="search-wrapper">
+                                        <input type="text" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" />
+                                        <ul class="search-suggestions hide" id="vendor-search-input-suggestions"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <label class="control-label" for="name">Customer</label>
+                                
+                                <div class="input-group col-sm-12">
+                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+
+                                    <div class="search-wrapper">
+                                        <input type="text" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" />
+                                        <ul class="search-suggestions hide" id="customer-search-input-suggestions"></ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label class="control-label" for="name">Issue Date</label>
+                                <div class="input-group col-sm-12"> 
+                                    <input class="form-control" value="$page.issuedDate" />
+                                </div> 
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label class="control-label" for="name">Due Date</label>
+                                <div class="input-group col-sm-12"> 
+                                    <input class="form-control" value="$page.dueDate" />
+                                </div> 
+                            </div>
+
+                            <div class="col-sm-2">
+                                <label class="control-label" for="name">Invoice #</label>
+                                <div class="input-group col-sm-12"> 
+                                    <input class="form-control" value="$page.number" />
+                                </div> 
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        #macro(isActive $state)
+        #if($request.params.state == $state)
+        active            
+        #end
+        #end
+        <script type="text/javascript">
+            $(document).ready(function() {
+                initGenericSearch('vendor-search-input');
+                initGenericSearch('customer-search-input');
+            });
+            
+            function initGenericSearch(inputId) {
+                flog('initGenericSearch');
+
+                var txt = $('#' + inputId);
+
+                if (txt.length > 0) {
+                    var suggestionsWrapper = $('#' + inputId + '-suggestions');
+                    var backdrop = $('<div />', {
+                        id: '' + inputId + '-backdrop',
+                        class: 'hide search-backdrop'
+                    }).on('click', function () {
+                        backdrop.addClass('hide');
+                        suggestionsWrapper.addClass('hide');
+                    }).appendTo(document.body);
+
+                    txt.on({
+                        input: function () {
+                            typewatch(function () {
+                                var text = txt.val().trim();
+
+                                if (text.length > 0) {
+                                    doTopNavSearch(text, suggestionsWrapper, backdrop);
+                                } else {
+                                    suggestionsWrapper.addClass('hide');
+                                    backdrop.addClass('hide');
+                                }
+                            }, 500);
+                        },
+                        keydown: function (e) {
+                            switch (e.keyCode) {
+                                case keymap.ESC:
+                                    flog('Pressed ESC button');
+
+                                    suggestionsWrapper.addClass('hide');
+                                    backdrop.addClass('hide');
+
+                                    e.preventDefault();
+                                    break;
+
+                                case keymap.UP:
+                                    flog('Pressed UP button');
+
+                                    var suggestions = suggestionsWrapper.find('.suggestion');
+                                    if (suggestions.length > 0) {
+                                        var actived = suggestions.filter('.active');
+                                        var prev = actived.prev();
+
+                                        actived.removeClass('active');
+                                        if (prev.length > 0) {
+                                            prev.addClass('active');
+                                        } else {
+                                            suggestions.last().addClass('active');
+                                        }
+                                    }
+
+                                    e.preventDefault();
+                                    break;
+
+                                case keymap.DOWN:
+                                    flog('Pressed DOWN button');
+
+                                    var suggestions = suggestionsWrapper.find('.suggestion');
+                                    if (suggestions.length > 0) {
+                                        var actived = suggestions.filter('.active');
+                                        var next = actived.next();
+
+                                        actived.removeClass('active');
+                                        if (next.length > 0) {
+                                            next.addClass('active');
+                                        } else {
+                                            suggestions.first().addClass('active');
+                                        }
+                                    }
+
+                                    e.preventDefault();
+                                    break;
+
+                                case keymap.ENTER:
+                                    flog('Pressed DOWN button');
+
+                                    var actived = suggestionsWrapper.find('.suggestion').filter('.active');
+                                    if (actived.length > 0) {
+                                        var link = actived.find('a').attr('href');
+
+                                        window.location.href = link;
+                                    }
+
+                                    e.preventDefault();
+                                    break;
+
+                                default:
+                                // Nothing
+                            }
+                        }
+                    });
+
+                    suggestionsWrapper.on({
+                        mouseenter: function () {
+                            suggestionsWrapper.find('.suggestion').removeClass('active');
+                            $(this).addClass('active');
+                        },
+                        mouseleave: function () {
+                            $(this).removeClass('active');
+                        }
+                    }, '.suggestion');
+                }
+            }
+
+            function doTopNavSearch(query, suggestionsWrapper, backdrop) {
+                flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
+
+                $.ajax({
+                    url: '/manageUsers',
+                    type: 'POST',
+                    data: {
+                        omni: query
+                    },
+                    dataType: 'JSON',
+                    success: function (resp) {
+                        flog('Got search response from server', resp);
+
+                        var suggestionStr = '';
+
+                        if (resp && resp.hits && resp.hits.total > 0) {
+                            for (var i = 0; i < resp.hits.hits.length; i++) {
+                                var suggestion = resp.hits.hits[i];
+                                suggestionStr += '<li class="suggestion">';
+                                if (suggestion.fields.userId) {
+                                    var userId = suggestion.fields.userId[0];
+                                    var userName = suggestion.fields.userName[0];
+                                    var email;
+                                    if (suggestion.fields.email) {
+                                        var email = suggestion.fields.email[0];
+                                    } else {
+                                        email = "";
+                                    }
+                                    var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
+                                    var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
+
+                                    suggestionStr += '    <a href="/manageUsers/' + userId + '">';
+                                    suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
+                                    if (firstName || surName) {
+                                        suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                                    }
+                                    suggestionStr += '    </a>';
+                                } else if (suggestion.fields.entityId) {
+                                    var id = suggestion.fields.entityId[0];
+                                    var orgId = suggestion.fields.orgId[0];
+                                    var orgTitle = suggestion.fields.title[0];
+
+                                    var href = "/organisations/" + id + "/edit";
+                                    suggestionStr += "    <a href='" + href + "'>";
+                                    suggestionStr += '        <span>' + orgTitle + '</span>';
+                                    suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
+                                    suggestionStr += '    </a>';
+
+                                }
+                                suggestionStr += '</li>';
+                            }
+                        } else {
+                            suggestionStr = '<li class="search-no-result">No result.</li>';
+                        }
+
+                        suggestionsWrapper.html(suggestionStr).removeClass('hide');
+                        backdrop.removeClass('hide');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
