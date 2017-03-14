@@ -7,57 +7,44 @@
     <body>
         <div class="">
             <p>
-                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteModal" ><i class="fa fa-plus"></i> Create new invoice</a>
+                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addInvoiceModal" ><i class="fa fa-plus"></i> Create new invoice</a>
                 <!--<a href="invoiceWinners.csv" class="btn btn-sm btn-success pull-right" ><i class="fa fa-download"></i> Winners CSV</a>-->
             </p>
 
-            <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addInvoiceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Add new invoice</h4>
+                            <h4 class="modal-title" id="myModalLabel">Add new Invoice</h4>
                         </div>
                         <div class="modal-body">
                             <form class="form-horizontal" method="POST" action=".">
                                 <div class="form-group">
+                                    <label for="invoiceNumber" class="col-sm-3 control-label">Invoice Number</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control required" required="true" id="invoiceNumber" name="number" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="invoiceTitle" class="col-sm-3 control-label">Invoice Title</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control required" required="true" id="invoiceTitle" name="invoiceTitle" />
+                                        <input type="text" class="form-control required" required="true" id="invoiceTitle" name="title" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="invoiceWebsite" class="col-sm-3 control-label">Website</label>
+                                    <label for="description" class="col-sm-3 control-label">Description</label>
                                     <div class="col-sm-8">
-                                        <select id="invoiceWebsite" name="invoiceWebsite" class="form-control">
-                                            #foreach($website in $page.organisation.websites())
-                                                <option value="$website.name">$website.name</option>
-                                            #end
-                                        </select>
+                                        <input type="text" class="form-control" required="true" id="description" name="description" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="invoiceBidType" class="col-sm-3 control-label">Invoice Type</label>
+                                    <label for="invoiceDueDate" class="col-sm-3 control-label">Due Date</label>
                                     <div class="col-sm-8">
-                                        <select name="invoiceBidType" class="form-control">
-                                            #foreach($st in $page.invoiceTypesMap.entrySet())
-                                    $formatter.option($st.key, $st.value, null)
-                                    #end
-                                        </select>
+                                        <input type='text' class="form-control date required" id="invoiceDueDate" name="dueDate" style="cursor:pointer;"/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="invoiceStartDate" class="col-sm-3 control-label">Start Date</label>
-                                    <div class="col-sm-8">
-                                        <input type='text' class="form-control date required" id="invoiceStartDate" name="invoiceStartDate" style="cursor:pointer;"/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="invoiceEndDate" class="col-sm-3 control-label">End Date</label>
-                                    <div class="col-sm-8">
-                                        <input type='text' class="form-control date required" id="invoiceEndDate" name="invoiceEndDate" style="cursor:pointer;"/>
-                                    </div>
-                                </div>
+                                <input type="hidden" name="createInvoiceFolder" value="true" />
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -170,34 +157,11 @@
                 </table>
             </div>
         </div>
+        
         #macro(isActive $state)
-            #if(!$request.params.state || $request.params.state == '')
-                #if($state == 'open')
-                active
-                #end
-            #elseif($request.params.state == $state)
+            #if($request.params.state == $state)
             active            
             #end
-
-        #end
-        
-        #macro(genGroup $group)
-        #set($gc = "label label-info")
-        #set($gIcon = "")
-        #if( $group.groupType == "P" || !$group.groupType)
-        #set($gc = "label label-success")
-        #set($gIcon = "clip-users")
-        #elseif( $group.groupType == "S" )
-        #set($gc = "label label-info")
-        #set($gIcon = "fa fa-trophy")
-        #elseif( $group.groupType == "M" )
-        #set($gc = "label label-info")
-        #set($gIcon = "fa fa-envelope")
-        #end
-        <div class="$gc" style="margin-right: 2.5px; margin-bottom: 5px; display: inline-block;">
-            <i class="$gIcon"></i>
-            <span class="block-name" title="$group.name">$group.name</span>
-        </div>
         #end
         <script src="/theme/apps/payment/manageInvoices.js" type="text/javascript">//</script>
         <script type="text/javascript">

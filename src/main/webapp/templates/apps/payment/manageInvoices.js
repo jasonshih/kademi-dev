@@ -30,14 +30,14 @@ function initInvoiceFilter() {
 }
 
 function initModalForm() {
-    var modal = $("#addWebsiteModal");
+    var modal = $("#addInvoiceModal");
     var form = modal.find(" form");
 
     form.forms({
         callback: function (resp) {
             flog("done", resp);
             modal.modal('hide');
-            Msg.success(form.find('[name=invoiceTitle]').val() + ' is created!');
+            Msg.success('Invoice is created!');
             reloadInvoiceTable();
         }
     });
@@ -52,16 +52,10 @@ function initDateTimePicker() {
         format: "DD/MM/YYYY HH:mm",
         minDate: moment()
     };
-    $('#invoiceStartDate').datetimepicker(opts).on('dp.change', function(e){
-        var d = $('#invoiceEndDate').data("DateTimePicker").date();
-        if (!d || d.isBefore(e.date, 'day')){
-            var n = e.date.add(1, 'd');
-            $('#invoiceEndDate').data("DateTimePicker").date(n);
-        }
-    });
-    $('#invoiceEndDate').datetimepicker(opts);
+    
+    $('#invoiceDueDate').datetimepicker(opts);
 
-    $('#invoiceStartDate, #invoiceEndDate').on('dp.show', function() {
+    $('#invoiceDueDate').on('dp.show', function() {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();
