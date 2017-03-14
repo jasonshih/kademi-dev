@@ -1,4 +1,4 @@
-JBNodes['automationGoal'] = {
+JBNodes['emailSendGoal'] = {
     icon: 'fa fa-trophy',
     title: 'Email Send Goal',
     type: JB_NODE_TYPE.GOAL,
@@ -23,9 +23,10 @@ JBNodes['automationGoal'] = {
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
             '        <label>Subject</label>' +
-            '        <select class="form-control subject"></select>' +
+            '        <input type="text" class="form-control subject" value="" />' +
             '    </div>' +
-            '</div>' + JBApp.standardGoalSettingControls
+            '</div>' +
+            + JBApp.standardGoalSettingControls
         );
 
 
