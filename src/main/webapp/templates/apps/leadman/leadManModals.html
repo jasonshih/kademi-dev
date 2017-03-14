@@ -18,7 +18,7 @@
                             <select id="source-frm" data-placeholder="Select a source" name="source" class="form-control select2" style="width: 100%">
                                 <option value="">[None]</option>
                                 #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
-                                $formatter.option($source, $source, $page.source)
+                                    $formatter.option($source, $source, $page.source)
                                 #end
                             </select>
                         </div>
@@ -27,7 +27,7 @@
 
                             <select name="funnel" class="form-control">
                                 #foreach($entry in $leadsPage.funnels.entrySet())
-                                <option value="$entry.key">$entry.value.title</option>
+                                    <option value="$entry.key">$entry.value.title</option>
                                 #end
                             </select>
                         </div>
@@ -39,8 +39,8 @@
                                 <option value="">[None]</option>
                                 #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
                                 #foreach( $stage in $stages )
-                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                $formatter.option($stage.name, $a, $stages[0].name)
+                                    #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                    $formatter.option($stage.name, $a, $stages[0].name)
                                 #end
                             </select>
                         </div>
@@ -48,8 +48,8 @@
                     <div class="form-group org-field">
                         <label class="control-label col-md-2" for="newOrgTitle">Company</label>
                         <div class="col-md-5">
-                            <input type="hidden" name="newOrgId"/>
-                            <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title"/>
+                            <input type="hidden" name="newOrgId" />
+                            <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title" />
                         </div>
                     </div>
 
@@ -99,7 +99,7 @@
                                     <span class="fa fa-calendar"></span>
                                 </span>
                             </div>
-                            <br/>
+                            <br />
 
                             <input type="text" name="title" id="title" class="form-control" placeholder="Task" />
                         </div>
@@ -129,7 +129,7 @@
                 <h4 class="modal-title">Enter a new contact</h4>
             </div>
             <form method="post" action="/leads/" class="form-horizontal">
-                <input type="hidden" name="orgId" value="$selectedOrg.orgId"/>
+                <input type="hidden" name="orgId" value="$selectedOrg.orgId" />
                 <div class="modal-body">
                     <p>Create contact in $selectedOrg.title</p>
                     <div class="form-group">
@@ -181,6 +181,7 @@
             </div>
             <form method="post" action="" class="form-horizontal">
                 <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <div class="col-md-12">
                             <select name="action" class="form-control required">
@@ -199,11 +200,15 @@
                             <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
                         </div>
                     </div>
-                    <div class="checkbox">
-                        <label for="note_newTask">
-                            <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
-                            <input type="hidden" value="false" name="newTask_checkbox" />
-                        </label>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <div class="checkbox">
+                                <label for="note_newTask">
+                                    <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
+                                    <input type="hidden" value="false" name="newTask_checkbox" />
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="row newLeadForm">
                         <div class="col-md-4">
@@ -222,7 +227,7 @@
                                     </ul>
                                 </div><!-- /btn-group -->
                             </div>
-                            <br/>
+                            <br />
                             <div class="input-group">
                                 <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
                                 <span class="input-group-addon">
@@ -287,7 +292,7 @@
                 <h4 class="modal-title">Edit a note on a lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
-                <input type="hidden" name="editNote"/>
+                <input type="hidden" name="editNote" />
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="col-md-12">
@@ -368,11 +373,11 @@
                 <h4 class="modal-title">Mark deal as closed</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal">
-                <input type="hidden" name="closeDeal"/>
+                <input type="hidden" name="closeDeal" />
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="col-md-12 text-center">
-                            <span class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</span>
+                            <p class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</p>
                         </div>
                     </div>
                     <div class="form-group">
@@ -408,7 +413,7 @@
                 <h4 class="modal-title">Cancel Task</h4>
             </div>
             <form method="post" action="" class="form-horizontal">
-                <input type="hidden" name="cancelTask"/>
+                <input type="hidden" name="cancelTask" />
                 <div class="modal-body">
                     <p>Cancel this task if it is no longer required to be done.</p>
                 </div>
@@ -430,13 +435,13 @@
                 <h4 class="modal-title">Enter a new lead</h4>
             </div>
             <form method="post" action="" class="form-horizontal" enctype="multipart/form-data">
-                <input type="hidden" name="quickLead"/>
-                <input type="hidden" name="geoLocation"/>
+                <input type="hidden" name="quickLead" />
+                <input type="hidden" name="geoLocation" />
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="control-label col-md-3" for="newUserNickName">Image</label>
                         <div class="col-md-9">
-                            <input type="file" id="quickInputFile" name="image" class="form-control quickInputFile sr-only" accept="image/*" capture="camera"/>
+                            <input type="file" id="quickInputFile" name="image" class="form-control quickInputFile sr-only" accept="image/*" capture="camera" />
                             <label class="btn btn-sm btn-info" for="quickInputFile">
                                 <i class="fa fa-2x fa-camera"></i>
                             </label>
@@ -485,7 +490,8 @@
                 <h4 class="modal-title">Create/update lead from email</h4>
             </div>
             <div class="modal-body">
-                <p>To create a new lead from an email simply add a BCC to <a href="mailto:customer@goeshere.com?bcc=lead@${page.find('/').domainName}">lead@${page.find('/').domainName}</a></p>
+                <p>To create a new lead from an email simply add a BCC to <a href="mailto:customer@goeshere.com?bcc=lead@${page.find('/').domainName}">lead@${page.find(
+                    '/').domainName}</a></p>
                 <p>If a lead exists with that email address, your email will be captured and attached to the lead</p>
             </div>
         </div><!-- /.modal-content -->
