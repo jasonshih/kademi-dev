@@ -635,7 +635,7 @@ function initNewContactForm() {
     var modal = $('#newContactModal');
     var form = modal.find('form');
     
-    $(".nav-menuAddContact").click(function (e) {
+    $(".nav-menuAddContact, .createContact").click(function (e) {
         flog("click");
         e.preventDefault();
         modal.modal("show");
