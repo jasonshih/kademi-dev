@@ -1,5 +1,5 @@
 JBNodes['pageViewedGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-globe',
     title: 'Page Viewed Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/content/jb/pageViewedGoalNode.png',

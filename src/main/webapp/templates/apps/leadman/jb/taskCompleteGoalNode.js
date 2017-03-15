@@ -1,5 +1,5 @@
 JBNodes['taskCompleteGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-thumbs-o-up',
     title: 'Task Complete',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/leadman/jb/taskCompleteGoalNode.png',

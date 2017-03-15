@@ -135,7 +135,25 @@
 
         <script>
             $(function() {
-                $(".simulateEvent").on("click", "a", function() {});
+                $(".simulateEvent").on("click", "a", function(e) {
+                    e.preventDefault();
+                    var action = $(e.target).attr("href");
+                    $.ajax({
+                        type: 'POST',
+                        url: window.location.pathname,
+                        data: {
+                            eventAction : action
+                        },
+                        dataType: 'json',
+                        success: function (content) {
+                            if( content.status ) {
+                                Msg.info("Done");
+                            } else {
+                                Msg.error("Hmm ... not so good. " + content.messages);
+                            }
+                        }
+                    });                    
+                });
             });
         </script>
 

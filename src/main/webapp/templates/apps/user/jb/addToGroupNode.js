@@ -1,5 +1,5 @@
 JBNodes['addToGroup'] = {
-    icon: 'fa fa-pencil-square-o',
+    icon: 'fa fa-users',
     title: 'Add to group',
     type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/user/jb/addToGroupNode.png',

@@ -1,5 +1,5 @@
 JBNodes['cancelLead'] = {
-    icon: 'fa fa-pencil-square-o',
+    icon: 'fa fa-stop-circle',
     title: 'Cancel lead',
     type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/funnels/jb/cancelLeadNode.png',

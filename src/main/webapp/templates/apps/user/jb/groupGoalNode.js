@@ -1,5 +1,5 @@
 JBNodes['groupGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-users',
     title: 'Group goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/user/jb/groupGoalNode.png',

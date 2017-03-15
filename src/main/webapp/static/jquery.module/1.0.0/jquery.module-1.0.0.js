@@ -69,6 +69,8 @@
 
             // Module is completable ?
             self.isCompletable = options.isCompletable && !options.isCompleted;
+            self.isComplete = options.isCompleted;
+            flog("iscomplete? ", self.isComplete);
 
             self.initModuleNav();
             self.initLearningContentStyles();
@@ -131,12 +133,11 @@
                     return false;
                 }
 
-                if (btn.hasClass('quizSubmit')) {
-                    if (!self.isQuizCompleted(e)) {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        return false;
-                    }
+                flog('[jquery.module] Check for a quiz');
+                if (!self.isQuizCompleted(e)) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    return false;
                 }
 
                 if (typeof options.onNextPage === 'function') {
@@ -1157,7 +1158,7 @@
 
                     modalTitle.html('Please try again');
                     errorText.html('Your score was <b>' + response.data.thisAttemptScore + '</b>%. You need <b>' + response.data.requiredPassmarkPerc + '</b>% to pass this quiz. And you have <b>' + (response.data.maxAttempts - response.data.numAttempts) + '</b> more attempts to answer this quiz');
-                    btnDismiss.html('See error answers');
+                    btnDismiss.html('See incorrect answers');
 
                     var isBatched = quiz.hasClass('batched-quiz');
                     modal.off('hide.bs.modal').on('hide.bs.modal', function () {
@@ -1195,8 +1196,8 @@
                 flog('[jquery.module] we have messages..');
                 modalTitle.html('Quiz invalid');
                 errorText.html('The quiz could not be completed because <b>' + response.messages + '</b>');
-                btnDismiss.html('Close');                                
-                
+                btnDismiss.html('Close');
+
                 modal.modal('show');
             } else {
                 self.showApology('check your answers');
@@ -1212,7 +1213,7 @@
          * messages
          */
         isQuizCompleted: function (e) {
-            flog('[jquery.module] isQuizCompleted', e);
+            flog('[jquery.module] isQuizCompleted');
 
             var self = this;
             var options = self.getOptions();
@@ -1227,7 +1228,7 @@
                 return true;
             }
 
-            if (!self.isCompletable) {
+            if (self.isComplete) {
                 flog('[jquery.module] Module is completed, so true');
                 return true;
             }

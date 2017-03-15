@@ -1,5 +1,5 @@
 #lead-cover {
-    background: url(/theme/images/profile.jpg) center center;
+    background: url(/theme/img/profile.jpg) center center;
     background-size: cover;
     height: 183px;
     position: relative;
@@ -15,6 +15,11 @@
     text-align: center;
 }
 
+.btn-task-panel-sm {
+    width: 30px;
+    padding: 5px 0;
+}
+
 .btn-task-panel:first-child {
     border-radius: 5px 5px 0 0;
 }
@@ -26,6 +31,7 @@
 .btn-task-panel-wrap {
     width: 50px;
     margin: 0 0 0 15px;
+    text-align: right;
 }
 
 .lead-note-author {

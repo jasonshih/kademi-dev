@@ -118,7 +118,6 @@ function initCloseDealModal() {
 function initCancelLeadModal() {
     var cancelLeadModal = $("#modalCancelLead");
     
-    
     cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             callback: function (resp) {
@@ -636,7 +635,7 @@ function initNewContactForm() {
     var modal = $('#newContactModal');
     var form = modal.find('form');
     
-    $(".nav-menuAddContact").click(function (e) {
+    $(".nav-menuAddContact, .createContact").click(function (e) {
         flog("click");
         e.preventDefault();
         modal.modal("show");
