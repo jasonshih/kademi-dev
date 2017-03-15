@@ -1,6 +1,6 @@
 JBNodes['emailSendGoal'] = {
-    icon: 'fa fa-trophy',
-    title: 'Email Send Goal',
+    icon: 'fa fa-envelope',
+    title: 'Email sent',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/email/jb/emailSendGoalNode.png',
     ports: {

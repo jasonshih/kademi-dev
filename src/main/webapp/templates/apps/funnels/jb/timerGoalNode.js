@@ -1,5 +1,5 @@
 JBNodes['timerGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-clock-o',
     title: 'Timer Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/funnels/jb/timerGoalNode.png',

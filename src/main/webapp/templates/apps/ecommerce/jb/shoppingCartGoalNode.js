@@ -1,5 +1,5 @@
 JBNodes['shoppingCartGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-shopping-cart',
     title: 'Shopping Cart Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/ecommerce/jb/shoppingCartGoalNode.png',

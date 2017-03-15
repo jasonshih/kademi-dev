@@ -1,27 +1,17 @@
-JBNodes['groupGoal'] = {
-    icon: 'fa fa-users',
-    title: 'Group goal',
+JBNodes['userVisitGoal'] = {
+    icon: 'fa fa-user-o',
+    title: 'User visit',
     type: JB_NODE_TYPE.GOAL,
-    previewUrl: '/theme/apps/user/jb/groupGoalNode.png',
+    previewUrl: '/theme/apps/user/jb/userVisitGoalNode.png',
     ports: {
         timeoutNode: {
             label: 'timeout',
             title: 'When timeout',
             maxConnections: 1
         },
-        nodeIdAccepted: {
-            label: 'accepted',
-            title: 'When accepted',
-            maxConnections: 1
-        },
-        nodeIdRejected: {
-            label: 'rejected',
-            title: 'When rejected',
-            maxConnections: 1
-        },
-        nodeIdPending: {
-            label: 'pending',
-            title: 'When pending',
+        nextNodeId: {
+            label: 'then',
+            title: 'when visited',
             maxConnections: 1
         }
     },

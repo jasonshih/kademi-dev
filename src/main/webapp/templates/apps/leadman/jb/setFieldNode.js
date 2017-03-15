@@ -1,5 +1,5 @@
 JBNodes['setField'] = {
-    icon: 'fa fa-pencil-square-o',
+    icon: 'fa fa-info',
     title: 'Set Field',
     type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/leadman/jb/setFieldNode.png',

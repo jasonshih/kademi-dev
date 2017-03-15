@@ -1,5 +1,5 @@
 JBNodes['automationGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-gear',
     title: 'Automation Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/email/jb/automationGoalNode.png',

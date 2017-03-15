@@ -1,5 +1,5 @@
 JBNodes['removeProfile'] = {
-    icon: 'fa fa-pencil-square-o',
+    icon: 'fa fa-remove',
     title: 'Remove profile',
     type: JB_NODE_TYPE.ACTION,
     previewUrl: '/theme/apps/user/jb/removeProfileNode.png',

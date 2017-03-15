@@ -1,5 +1,5 @@
 JBNodes['moduleProgressGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-graduation-cap',
     title: 'Module progress',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/learning/jb/moduleProgressGoalNode.png',

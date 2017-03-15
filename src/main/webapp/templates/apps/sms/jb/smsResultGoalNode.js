@@ -1,5 +1,5 @@
 JBNodes['smsResultGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-comments',
     title: 'Sms Result Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/sms/jb/smsResultGoalNode.png',

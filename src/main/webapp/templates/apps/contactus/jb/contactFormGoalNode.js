@@ -1,5 +1,5 @@
 JBNodes['contactFormGoal'] = {
-    icon: 'fa fa-trophy',
+    icon: 'fa fa-wpforms',
     title: 'Contact Form Goal',
     type: JB_NODE_TYPE.GOAL,
     previewUrl: '/theme/apps/contactus/jb/contactFormGoalNode.png',
