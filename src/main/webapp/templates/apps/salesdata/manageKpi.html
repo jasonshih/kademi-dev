@@ -814,9 +814,10 @@
 
                         <div id="leaderboardResults">
                             #if( $request.params.leaderboard )
-                                #set( $startDate = $formatter.toDate( $request.params.startDate ) )
-                                #set( $endDate = $formatter.toDate( $request.params.endDate ) )
+                                #set( $startDate = $page.startDate )
+                                #set( $endDate = $page.finishDate )
                                 #set( $lb = $page.getLeaderboard($startDate, $endDate))
+                                from: $startDate, to: $endDate
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
