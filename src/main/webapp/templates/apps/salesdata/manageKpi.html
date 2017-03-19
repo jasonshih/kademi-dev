@@ -104,17 +104,18 @@
                     </div>
                     <div id="config" class="tab-pane">
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="title">Name</label>
-
-                            <div class="col-md-8">
-                                <input type="text" name="name" id="name" value="$!page.kpi.name" placeholder="" class="required form-control" required="true" />
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
 
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <input type="text" name="title" id="title" value="$!page.kpi.title" placeholder="" class="required form-control" required="true" />
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="title">Identifier</label>
+
+                            <div class="col-md-3">
+                                <input type="text" name="name" id="name" value="$!page.kpi.name" placeholder="" class="required form-control" required="true" />
                             </div>
                         </div>
 
@@ -124,7 +125,7 @@
                                 <small>How should values be merged over the KPI period</small>
                             </label>
 
-                            <div class="col-md-8">
+                            <div class="col-md-3">
                                 <select name="aggregation" id="aggregation" class="form-control required" required="true">
                                     <option value="">[Not selected]</option>
                                     #foreach($agg in $page.aggregationTypes.entrySet() )
@@ -132,7 +133,19 @@
                                     #end
                                 </select>
                             </div>
+                            <label class="control-label col-md-3" for="searchUp">
+                                Search direction
+                                <small>Select true for data where more is better (ie sales), and select false when less is better (ie num complaints)</small>
+                            </label>
+
+                            <div class="col-md-3">
+                                <select name="searchUp" id="searchUp" class="form-control required">
+                                    $formatter.option("true", "Up - higher is better", $page.searchUp)
+                                    $formatter.option("false", "Down - lower is better", $page.searchUp)
+                                </select>
+                            </div>
                         </div>
+                        
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="notes">
@@ -156,32 +169,49 @@
                                     <input type="hidden" name="frequency" class="timer-unit" value="$!page.kpi.frequency" />
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="searchUp">
-                                Search Up
-                                <small>Select true for data where more is better (ie sales), and select false when less is better (ie num complaints)</small>
-                            </label>
-
-                            <div class="col-md-8">
-                                <select name="searchUp" id="searchUp" class="form-control required">
-                                    $formatter.option("true", "Yes - search up because more is better", $page.searchUp)
-                                    $formatter.option("false", "No - search down because less is better", $page.searchUp)
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
                             <label class="control-label col-md-3" for="orderingField">
                                 Ordering
                                 <small>In what order should the KPI's be listed</small>
                             </label>
 
-                            <div class="col-md-8">
+                            <div class="col-md-3">
                                 <input type="text" name="orderingField" placeholder="Ordering" value="$!page.orderingField" class="form-control numeric" />
                             </div>
                         </div>
+                        
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="aggregation">
+                                Baseline
+                                <small>Should KPI results be determined from a baseline</small>
+                            </label>
+
+                            <div class="col-md-3">
+                                <select name="baselineType" id="baselineType" class="form-control required" required="true">
+                                    <option value="">[Not selected]</option>
+                                    #foreach($agg in $page.baselineTypes.entrySet() )
+                                        $formatter.option($agg.key, $agg.value, $page.kpi.baselineType)
+                                    #end
+                                </select>
+                            </div>
+                            
+                            <label class="control-label col-md-3" for="aggregation">
+                                Baseline series
+                                <small>Select a series which contains baseline targets</small>
+                            </label>
+
+                            <div class="col-md-3">                                
+                                <select name="baselineSeries" id="baselineSeries" class="form-control required" required="true">
+                                    <option value="">[Not selected]</option>
+                                #foreach($ds in $page.find("/sales").children)
+                                    $formatter.option( $ds.name,$ds.title, $page.kpi.baselineSeries.name )
+                                #end
+                                </select>
+                            </div>                            
+                        </div>
+                        
+                        
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="startDate">
@@ -189,28 +219,22 @@
                                 <small>Date of the first assessment period</small>
                             </label>
 
-                            <div class="col-md-8">
-                                <div class="col-sm-5">
+                            <div class="col-md-3">
                                     <div class="input-group">
                                         <input type="text" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.startDate)" class="form-control DateTime" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
-                                </div>
                             </div>
-                        </div>
-
-                        <div class="form-group">
+                            
                             <label class="control-label col-md-3" for="endDate">
                                 End date
                             </label>
 
-                            <div class="col-md-8">
-                                <div class="col-sm-5">
+                            <div class="col-md-3">
                                     <div class="input-group">
                                         <input type="text" name="endDate" placeholder="End date" data-format="DD/MM/YYYY" value="$formatter.formatDate($!page.kpi.endDate)" class="form-control DateTime" />
                                         <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                     </div>
-                                </div>
                             </div>
                         </div>
 
@@ -790,14 +814,17 @@
 
                         <div id="leaderboardResults">
                             #if( $request.params.leaderboard )
-                                #set( $startDate = $formatter.toDate( $request.params.startDate ) )
-                                #set( $endDate = $formatter.toDate( $request.params.endDate ) )
+                                #set( $startDate = $page.startDate )
+                                #set( $endDate = $page.finishDate )
                                 #set( $lb = $page.getLeaderboard($startDate, $endDate))
+                                from: $startDate, to: $endDate
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>Rank</th>
                                             <th>Amount</th>
+                                            <th>Raw value</th>
+                                            <th>Baseline</th>
                                             <th>Participant</th>
                                         </tr>
                                     </thead>
@@ -813,6 +840,8 @@
                                                         No value
                                                     #end
                                                 </td>
+                                                <td>$!item.rawAmount</td>
+                                                <td>$!item.baseline</td>
                                                 <td>
                                                     <!-- either a profilebean or orgdata -->
                                                     #if( $item.profile) <!-- is individual -->
