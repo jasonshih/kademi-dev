@@ -582,6 +582,9 @@ body .form-control::-webkit-input-placeholder {
 body.ajax-loading .ajaxLoader {
     display: block;
 }
+.ajax-loader {
+    display: none;
+}
 
 .table-responsive {
     min-height: 220px;
