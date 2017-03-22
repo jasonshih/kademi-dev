@@ -5,13 +5,33 @@
     </head>
     <body>
         <section style="padding-top: 15px">
-            <header>
-                <h2>$page.title</h2>
-            </header>
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" onsubmit="return false;">
+            <form class="form-horizontal" method="POST">
+                <header>
+                    <h2>
+                        $page.title
+                        <div class="btn-group pull-right">
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="fa fa-save"></i> Save
+                            </button>
+
+                            <a target="_blank" href="#" class="btn btn-sm btn-info">
+                                <i class="fa fa-arrow-circle-right"></i> Send Now
+                            </a>
+
+                            <a href="#" class="btn btn-sm btn-info">
+                                <i class="fa fa-eye"></i> Preview
+                            </a>
+
+                            <a href="#" class="btn btn-sm btn-info">
+                                <i class="fa fa-print"></i> Print
+                            </a>
+                        </div>
+                    </h2>                
+                </header>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <div class="form-group">
                             <div class="container">
                                 <div class="row">
@@ -85,8 +105,8 @@
                                     </td>
                                     <td>
                                         <div class="search-wrapper">
-                                            <input type="text" class="form-control search-input" placeholder="Search for Supplier" id="supplier-search-input" />
-                                            <ul class="search-suggestions hide" id="supplier-search-input-suggestions"></ul>
+                                            <input type="text" class="form-control search-input supplier" placeholder="Search for Supplier" />
+                                            <ul class="search-suggestions hide supplier-suggestions"></ul>
                                         </div>
                                     </td>
                                     <td>
@@ -131,9 +151,9 @@
                         </table>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
 </section>
 
 #macro(isActive $state)
@@ -153,15 +173,20 @@ active
         return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
     };
 
+    var columnId = 0;
+
     $(document).ready(function () {
         initGenericSearch('vendor-search-input');
         initGenericSearch('customer-search-input');
-        initGenericSearch('supplier-search-input');
 
         initDateTimePickers();
 
         $(".new-line-add").on("click", function () {
-            $(".template-row").clone().removeClass("template-row").insertBefore(".new-line-add").find("input:eq(0)").focus();
+            $(".template-row").clone().removeClass("template-row").insertBefore(".new-line-add").find(".supplier").prop("id", "supplier-" + columnId).end().find(".supplier-suggestions").prop("id", "supplier-" + columnId + "-suggestions").end().find("input:eq(0)").focus();
+
+            initGenericSearch('supplier-' + columnId);
+
+            columnId++;
         });
 
         $("#line-items tbody").on("blur", ".last-field", function () {
