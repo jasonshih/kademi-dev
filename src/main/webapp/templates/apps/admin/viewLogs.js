@@ -85,22 +85,22 @@
         row.find('.col-msg').text(c.message);
 
         itemsToAppend.push(row);
-//
-//    if (c.callstack !== null && c.callstack.length > 0) {
-//        row = $(
-//                '<div class="col-row clearfix no-bordered">' +
-//                '   <div class="causes"></div>' +
-//                '</div>'
-//                );
-//
-//        var ul = $('<ul />');
-//        $.each(c.callstack, function (i, n) {
-//            $('<li>').text(n).appendTo(ul);
-//        });
-//        row.find('.causes').append(ul);
-//
-//        itemsToAppend.push(row);
-//    }
+
+        if (c.stackTrace && c.stackTrace !== null && c.stackTrace.length > 0) {
+            row = $(
+                    '<div class="col-row clearfix no-bordered">' +
+                    '   <div class="causes"></div>' +
+                    '</div>'
+                    );
+
+            var ul = $('<ul />');
+            $.each(c.stackTrace, function (i, n) {
+                $('<li>').text(n).appendTo(ul);
+            });
+            row.find('.causes').append(ul);
+
+            itemsToAppend.push(row);
+        }
     }
 
     function trimTable(limit) {
