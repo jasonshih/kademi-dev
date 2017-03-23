@@ -114,10 +114,11 @@
                         tabTooltipEnabled: false,
                         snippetsTooltipEnabled: false,
                         onContentChanged: function () {
+                            var contentArea = $(this);
                             if (target.keditor('getContent').trim() === '') {
-                                target.find('.keditor-content-area').addClass('empty');
+                                contentArea.addClass('empty');
                             } else {
-                                target.find('.keditor-content-area').removeClass('empty');
+                                contentArea.removeClass('empty');
                             }
                             
                             if (!$(document.body).hasClass('content-changed')) {
@@ -125,7 +126,6 @@
                             }
                         },
                         onInitContentArea: function (contentArea) {
-                            flog(contentArea, '===================================')
                             var content = contentArea.html() || '';
                             
                             if (content === '') {
