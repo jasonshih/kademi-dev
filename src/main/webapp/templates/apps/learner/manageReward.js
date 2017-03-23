@@ -63,16 +63,16 @@ function initManagePoints() {
         $.ajax({
             "url": '/reward-store/' + $("#new-debit-points-form select[name=\"awardedReward\"] :selected").val(),
             "data": {
-                "getUserPointsBalance": $("#new-debit-points-form input[name=\"email\"]").val()
+                "points": $("#new-debit-points-form input[name=\"email\"]").val()
             },
-            "method": "POST",
+            "method": "GET",
             "dataType": "json",
             "success": function (data) {
                 if (data.status === false) {
                     Msg.error(data.messages[0]);
                 } else {
-                    if (data.data.balance < points) {
-                        if (confirm("The amount of debit points (" + points + ") exceed user points balance (" + data.data.balance + "), are you sure?")) {
+                    if (data.data.availableBalance < points) {
+                        if (confirm("The amount of debit points (" + points + ") exceeds user available points balance (" + data.data.availableBalance + "), Do you want to proceed?")) {
                             $("#new-debit-points-form").submit();
                         }
                     } else {
