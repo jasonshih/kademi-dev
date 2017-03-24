@@ -298,6 +298,9 @@
             var self = this;
             var options = self.options;
             var originalContent = target.html();
+            if (target.is('textarea')) {
+                originalContent = target.val();
+            }
             var iframe = $('<iframe />');
             var iframeId = self.generateId('frame');
             
