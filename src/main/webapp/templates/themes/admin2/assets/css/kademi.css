@@ -11,43 +11,11 @@
 }
 
 /* ============================================================================
-   Modal
-   ============================================================================ */
-.modal[id*="upcrop-"] {
-    background: none;
-    border: none;
-    box-shadow: none;
-    left: 0;
-    margin-left: 0;
-    width: 100%;
-}
-
-.modal-splitter {
-    margin: 5px 0 15px;
-}
-
-.modal-alert {
-    display: none;
-}
-
-/* ============================================================================
    Main content
    ============================================================================ */
 .main-content .container {
     position: relative;
     padding-bottom: 15px;
-}
-
-.main-content .loading-overlay {
-    position: fixed;
-    z-index: 999999;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background: #fff url("/static/images/loading.gif") 50% 50% no-repeat;
-    opacity: 0.5;
-    filter: "alpha(opacity=50)";
 }
 
 /* ============================================================================
