@@ -92,17 +92,8 @@
 }
 
 /* ============================================================================
-   Utilities
+   Dropdown menu list
    ============================================================================ */
-/** BM: need to have links inside dropdowns which dont clear the float */
-.dropdown-menu > li > a.pull-right {
-    clear: none;
-}
-
-.noclear {
-    clear: none !important;
-}
-
 ul.dropdown-menu.list {
     min-width: 300px;
 }
@@ -137,6 +128,18 @@ ul.dropdown-menu.list li.list-item aside.list-item-controller {
 
 ul.dropdown-menu.list li.list-action {
     padding-top: 5px;
+}
+
+/* ============================================================================
+   Utilities
+   ============================================================================ */
+/** BM: need to have links inside dropdowns which dont clear the float */
+.dropdown-menu > li > a.pull-right {
+    clear: none;
+}
+
+.noclear {
+    clear: none !important;
 }
 
 /** BM: the pageMessage element is used for feedback from jquery.forms.js, needs to be initially hidden **/
@@ -550,6 +553,7 @@ body .form-control::-webkit-input-placeholder {
 body.ajax-loading .ajaxLoader {
     display: block;
 }
+
 .ajax-loader {
     display: none;
 }
