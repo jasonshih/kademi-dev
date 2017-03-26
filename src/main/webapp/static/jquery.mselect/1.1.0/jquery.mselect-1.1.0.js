@@ -62,7 +62,7 @@
 
                 flog('[jquery.mselect] Initialized mselect');
             };
-
+            
             var deps = ['/static/js/jquery.jstree.js', '/static/js/jquery.milton-tree.js', '/static/milton-upload/1.0.1/jquery.milton-upload.js'];
             var i = setInterval(function () {
                 if ($.getScriptOnce.loaded[deps[0]]
@@ -75,6 +75,8 @@
             $.getScriptOnce(deps[0]);
             $.getScriptOnce(deps[1]);
             $.getScriptOnce(deps[2]);
+            
+            $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
         }
     };
 
