@@ -50,6 +50,7 @@ function doSearch() {
             target.replaceWith(newBody);
             history.pushState(null, null, link);
             $("abbr.timeago").timeago();
+            $("#pointsTable").paginator();
         }
     });
 }
