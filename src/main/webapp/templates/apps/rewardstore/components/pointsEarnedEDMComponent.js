@@ -36,6 +36,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
+                        console.log("months", number);
                         component.attr('data-months', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
