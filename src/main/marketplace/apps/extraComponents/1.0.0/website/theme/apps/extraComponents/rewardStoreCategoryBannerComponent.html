@@ -1,0 +1,13 @@
+#if ($page)
+    #if ($page.imageHref)
+        #set ($bg = $page.imageHref)
+
+        <div class="embed-responsive embed-responsive-16by9 category-image hidden-xs">
+            <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+        </div>
+
+        <img src="$bg" class="img-responsive visible-xs category-image" width="100%" />
+    #end
+#else
+    <p class="alert alert-warning">Category's banner goes here</p>
+#end
