@@ -105,10 +105,10 @@ function initKEditor(body, fileName) {
 
     contentArea.keditor({
         ckeditorOptions: {
-            skin: editorSkin,
+            skin: 'bootstrapck',
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
             bodyId: 'editor',
-            contentsCss: themeCssFiles,
+            contentsCss: window.themeCssFiles,
             templates_files: [templatesPath],
             templates_replaceContent: false,
             toolbarGroups: toolbarSets['Default'],

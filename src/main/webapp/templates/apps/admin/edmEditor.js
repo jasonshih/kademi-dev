@@ -540,36 +540,6 @@ function applySetting(sender) {
     }
 }
 
-function initColorPicker(target, onChangeHandle) {
-    target.each(function () {
-        var colorPicker = $(this);
-        var input = colorPicker.find('input');
-        var previewer = colorPicker.find('.input-group-addon i');
-
-        colorPicker.colorpicker({
-            format: 'hex',
-            container: colorPicker.parent(),
-            component: '.input-group-addon',
-            align: 'left',
-            colorSelectors: {
-                'transparent': 'transparent'
-            }
-        }).on('changeColor.colorpicker', function (e) {
-            var colorHex = e.color.toHex();
-
-            if (!input.val() || input.val().trim().length === 0) {
-                colorHex = '';
-                previewer.css('background-color', '');
-            }
-
-            if (typeof onChangeHandle === 'function') {
-                onChangeHandle(colorHex);
-            }
-        });
-
-    });
-}
-
 function setStyle(target, name, value) {
     flog('setStyle', name, value);
 

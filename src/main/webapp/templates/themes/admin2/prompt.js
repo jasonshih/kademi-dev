@@ -28,7 +28,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         '       </div>' +
         '       <form method="POST" class="form-horizontal" action="' + url + '">' +
         '           <div class="modal-body">'+ (instructions ? '<p class="alert alert-info">' + instructions + '</p>' : '') +
-        '               <p class="alert alert-danger modal-alert"></p>' +
+        '               <p class="form-message alert alert-danger" style="display: none;"></p>' +
         '               <div class="form-group">' +
         '                   <label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
         '                   <div class="col-md-8">' +

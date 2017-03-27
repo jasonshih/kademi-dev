@@ -1,0 +1,202 @@
+/* ===========================================================================
+   KEditor styles
+   =========================================================================== */
+.keditor-content-areas-wrapper .navbar-fixed-top,
+.keditor-content-areas-wrapper .navbar-fixed-center,
+.keditor-content-areas-wrapper .navbar-fixed-bottom {
+    position: static !important;
+}
+
+.keditor-component .keditor-toolbar {
+    text-align: left;
+}
+
+.keditor-content-area {
+    padding-top: 30px;
+    margin-right: 0 !important;
+}
+
+.keditor-content-area.empty {
+    position: relative;
+}
+
+.keditor-content-area.empty:before {
+    content: "Drag & drop container in here";
+    color: #ccc;
+    font-size: 30px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 15px;
+    line-height: 35px;
+}
+
+.keditor-content-area.empty:after {
+    content: "";
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 50px;
+    right: 50px;
+    border: 3px dashed #eee;
+}
+
+/* ===========================================================================
+   Row small for panel setting
+   =========================================================================== */
+.row.row-sm {
+    margin: 0 -2px;
+}
+
+.row.row-sm > div {
+    padding: 0 2px;
+}
+
+/* ===========================================================================
+   Color picker
+   =========================================================================== */
+.colorpicker-wrapper {
+    position: relative;
+}
+
+.colorpicker-wrapper .colorpicker {
+    top: 31px !important;
+    right: auto;
+    left: 0px !important;
+}
+
+.colorpicker {
+    right: auto;
+    left: 15px !important;
+    padding: 5px !important;
+}
+
+label + .input-group + .colorpicker {
+    top: 60px !important;
+}
+
+/* ===========================================================================
+   Carousel components
+   =========================================================================== */
+.carouselImageWrap {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    direction: rtl;
+}
+
+.carouselImageItem {
+    position: relative;
+    padding: 5px;
+    border: 1px solid #eee8d5;
+    background: #fff;
+}
+
+.carouselImageItem + .carouselImageItem {
+    margin-top: 5px;
+}
+
+.carouselImageItem img {
+    width: 100%;
+    height: auto;
+}
+
+.carouselImageItem .btn-group {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+/* ===========================================================================
+   Select groups
+   =========================================================================== */
+.select-groups .checkbox:first-child {
+    padding-top: 0;
+}
+
+/* ===========================================================================
+   Drag & Drop
+   =========================================================================== */
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+/* ===========================================================================
+   Menu editor
+   =========================================================================== */
+ol.menuTree li.placeholder {
+    position: relative;
+    /** More li styles **/
+}
+ol.menuTree li.placeholder:before {
+    position: absolute;
+    /** Define arrowhead **/
+}
+
+.menuEditor ol.menuList {
+    padding-left: 0;
+    list-style: none;
+}
+
+.menuEditor ol.menuList ol.menuList {
+    padding-left: 15px;
+}
+
+.menuEditor ol.menuList li.ui-sortable-helper ol.menuList {
+    display: none;
+}
+
+.menuEditor div.menuItem {
+    position: relative;
+    padding: 3px;
+    border: 1px solid #ddd;
+    margin: 2px 0;
+    border-radius: 3px;
+    display: block;
+    background: #fff;
+}
+
+.menuEditor div.menuItem[data-hidden="true"] {
+    color: #bbb;
+    font-style: italic;
+}
+
+.menuEditor div.menuItem .btn-group {
+    position: absolute;
+    right: 3px;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+/* ===========================================================================
+   Video component
+   =========================================================================== */
+[class*="border-style"] {
+    border-bottom: 3px #555;
+    margin: 10px 0;
+}
+
+.border-style-solid {
+    border-bottom-style: solid;
+}
+
+.border-style-dotted {
+    border-bottom-style: dotted;
+}
+
+.border-style-dashed {
+    border-bottom-style: dashed;
+}
+
+.border-style-double {
+    border-bottom-style: double;
+}
