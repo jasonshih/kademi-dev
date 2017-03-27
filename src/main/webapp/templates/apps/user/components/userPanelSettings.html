@@ -3,13 +3,18 @@
         <label class="col-sm-12">Rewards</label>
 
         <div class="col-sm-12">
-            <select class="form-control select-reward">
-                <option value="">[No reward selected]</option>
-                #foreach ($pointsBucket in $applications.rewardStore.pointsBuckets)
-                <option value="$pointsBucket.name">$pointsBucket.title</option>
+            <div class="well well-sm checkbox-list">
+                #foreach ($store in $applications.rewardStore.stores)
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="$store.name" class="chk-rewards" name="rewards" /> $store.title
+                        </label>
+                        <input type="text" class="txt-rewards-titles form-control input-sm" name="$store.name" value="" placeholder="Point title" />
+                    </div>
                 #end
-            </select>
-            <em class="help-block small text-muted">If you choose reward, <b>My Point</b> block will be showed</em>
+            </div>
+            <div class="help-block small text-muted">If you choose reward, <b>My Point</b> block will be showed. <b>Point title</b> is the text follow your total point number. Default is <code>Points</code></div>
+            <div class="help-block small text-muted">If you don't have permission on selected reward, <b>My Point</b> block will be not showed</div>
         </div>
     </div>
 </form>

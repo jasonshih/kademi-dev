@@ -1766,12 +1766,12 @@ a.text-info:focus
 }
 .text-warning
 {
-    color: #e31b5c;
+    color: #e67e22;
 }
 a.text-warning:hover,
 a.text-warning:focus
 {
-    color: #b5164a;
+    color: #bf6516;
 }
 .text-danger
 {
@@ -4329,29 +4329,29 @@ fieldset[disabled] .btn-info.focus
 .btn-warning
 {
     color: #fff;
-    border-color: #cc1853;
-    background-color: #e31b5c;
+    border-color: #d67118;
+    background-color: #e67e22;
 }
 .btn-warning:focus,
 .btn-warning.focus
 {
     color: #fff;
-    border-color: #5a0b25;
-    background-color: #b5164a;
+    border-color: #64350b;
+    background-color: #bf6516;
 }
 .btn-warning:hover
 {
     color: #fff;
-    border-color: #96123d;
-    background-color: #b5164a;
+    border-color: #9f5412;
+    background-color: #bf6516;
 }
 .btn-warning:active,
 .btn-warning.active,
 .open > .dropdown-toggle.btn-warning
 {
     color: #fff;
-    border-color: #96123d;
-    background-color: #b5164a;
+    border-color: #9f5412;
+    background-color: #bf6516;
 }
 .btn-warning:active:hover,
 .btn-warning.active:hover,
@@ -4364,8 +4364,8 @@ fieldset[disabled] .btn-info.focus
 .open > .dropdown-toggle.btn-warning.focus
 {
     color: #fff;
-    border-color: #5a0b25;
-    background-color: #96123d;
+    border-color: #64350b;
+    background-color: #9f5412;
 }
 .btn-warning:active,
 .btn-warning.active,
@@ -4383,12 +4383,12 @@ fieldset[disabled] .btn-warning:focus,
 .btn-warning[disabled].focus,
 fieldset[disabled] .btn-warning.focus
 {
-    border-color: #cc1853;
-    background-color: #e31b5c;
+    border-color: #d67118;
+    background-color: #e67e22;
 }
 .btn-warning .badge
 {
-    color: #e31b5c;
+    color: #e67e22;
     background-color: #fff;
 }
 .btn-danger
@@ -6428,12 +6428,12 @@ a.label:focus
 }
 .label-warning
 {
-    background-color: #e31b5c;
+    background-color: #e67e22;
 }
 .label-warning[href]:hover,
 .label-warning[href]:focus
 {
-    background-color: #b5164a;
+    background-color: #bf6516;
 }
 .label-danger
 {
@@ -6796,7 +6796,7 @@ a.thumbnail.active
 }
 .progress-bar-warning
 {
-    background-color: #e31b5c;
+    background-color: #e67e22;
 }
 .progress-striped .progress-bar-warning
 {

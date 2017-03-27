@@ -4,12 +4,12 @@
         <div class="panel-body">
             #set ($ava = '/theme/img/default_avatar.png')
             #if ($userResource.profilePicHref)
-            #set ($ava = $userResource.profilePicHref)
+                #set ($ava = $userResource.profilePicHref)
             #end
 
             #set ($name = "User")
             #if ($user.firstName)
-            #set ($name = $user.firstName)
+                #set ($name = $user.firstName)
             #end
 
             <div class="profile-avatar-wrapper">
@@ -22,16 +22,58 @@
                 <h2><b>$name</b></h2>
             </div>
 
-            #if ($reward != "")
-            #set( $rewardStoreApp = $applications.rewardStore )
-            #set( $myPb =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
-            #set( $totalPoints = $formatter.formatCurrency($myPb, false) )
-            <div class="user-total-points bg-primary text-center">
-                <h1>
-                    <strong id="user-total-points" title="$totalPoints">$totalPoints</strong>
-                </h1>
-                <small>Points</small>
-            </div>
+            #if ($rewards != "")
+                #set ($rewards = $rewards.split(","))
+                #set ($rewardsTitles = $rewardsTitles.split(","))
+
+                #set ($availablePanel = 0)
+                #foreach($reward in $rewards)
+                    #set ($rewardPath = "/" + $reward)
+                    #set( $rewardFolder = $page.find($rewardPath))
+                    #set( $myPoint =  $rewardFolder.myAvailableBalance)
+                    #if ($myPoint)
+                        #set ($availablePanel = $availablePanel + 1)
+                    #end
+                #end
+
+                #set ($panelClass = '')
+                #if ($availablePanel == 1)
+                    #set ($panelClass = 'col-sm-12')
+                #elseif ($availablePanel == 2)
+                    #set ($panelClass = 'col-sm-6')
+                #elseif ($availablePanel == 3)
+                    #set ($panelClass = 'col-sm-4')
+                #elseif ($availablePanel == 4)
+                    #set ($panelClass = 'col-sm-3')
+                #end
+
+                #if ($availablePanel > 0)
+                    <div class="row">
+                        #foreach($reward in $rewards)
+                            #set ($rewardPath = "/" + $reward)
+                            #set( $rewardFolder = $page.find($rewardPath))
+                            #set( $myPoint =  $rewardFolder.myAvailableBalance)
+                            #if ($myPoint)
+                                #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
+                                <div class="$panelClass">
+                                    <div class="user-total-points bg-primary text-center">
+                                        <h1>
+                                            <strong id="user-total-points" title="$myPointString">$myPointString</strong>
+                                        </h1>
+                                        <small>
+                                            #if ($rewardsTitles[$foreach.index])
+                                                $rewardsTitles[$foreach.index]
+                                            #else
+                                                Points
+                                            #end
+                                        </small>
+                                    </div>
+                                </div>
+                            #end
+                        #end
+                    </div>
+                #end
+
             #end
         </div>
     </div>
