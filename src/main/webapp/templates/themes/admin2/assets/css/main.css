@@ -1996,6 +1996,8 @@ ul.main-navigation-menu {
 .label {
   font-size: 85% !important;
   padding: 0.4em 0.6em !important; }
+  .label a {
+    color: #fff; }
 
 .label-inverse, .badge-inverse {
   background-color: #555555; }
