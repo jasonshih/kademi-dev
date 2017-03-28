@@ -22,7 +22,7 @@
         #set ($isKEditor = true)
         #end
         #set($currentBranch = $page.closest("branch"))
-        <div class="btn-group publishing pull-right">
+        <div class="btn-group publishing pull-right">            
             #if( $currentBranch.live )
             <!-- TODO: Should be modified here -->
             <a href="${currentBranch.href}../manageBranches" class="islive btn btn-sm btn-danger">
@@ -60,9 +60,13 @@
         </div>
 
         <div class="btn-group">
-            <a target="_blank" href="$page.closest('website').externalUrl" class="btn btn-sm btn-success">
-                <i class="fa fa-arrow-circle-right"></i> View website
+            <a target="_blank" href="$page.href?goto" class="btn btn-sm btn-success">
+                <i class="fa fa-globe"></i> View
             </a>
+            <a href="/repositories/$currentBranch.parent.name/$currentBranch.name/programs/$page.programCode/$page.courseCode/$page.name/" class="btn btn-sm btn-info">
+                <i class="fa fa-folder"></i>
+            </a>
+
             <div class="btn-group">
                 <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
                     <b>Change website:</b> $page.closest("website").name <span class="caret"></span>
@@ -189,62 +193,107 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="name" class="control-label col-md-3">Code</label>
-                            <div class="col-md-6">
-                                <input type="text" id="name" class="form-control" name="name" value="$!page.name" placeholder="Module code Eg MOD001" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="title" class="control-label col-md-3">Module title</label>
-                            <div class="col-md-6">
-                                <input type="text" id="title" class="form-control" name="title" value="$!page.title" placeholder="Here is a module page title" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="learningTimeMins" class="control-label col-md-3">Learning time (mins)</label>
-                            <div class="col-md-6">
-                                <input type="text" id="learningTimeMins" class="form-control" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="brief" class="control-label col-md-3">Description</label>
-                            <div class="col-md-9">
-                                <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="col-md-3 control-label">Expiry policy</label>
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <input type="number" min="1" class="form-control" name="expiryMultiples" value="$!page.expiryMultiples" />
-                                    <input type="hidden" name="expiryFrequency" id="sFrequency" value="$!page.expiryFrequency" />
-                                    <div class="input-group-btn" id="frequency-group">
-                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$!page.expiryFrequency </span> <span class="caret"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right">
-                                            #foreach($f in $page.allFrequencies)
-                                            <li><a href="#" data-value="$f">$f</a></li>
-                                            #end
-                                        </ul>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="name" class="control-label col-md-3">Code</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="name" class="form-control" name="name" value="$!page.name" placeholder="Module code Eg MOD001" />
                                     </div>
                                 </div>
-                                <i>Module completion results will expire after the given time period</i>
+                                <div class="form-group">
+                                    <label for="title" class="control-label col-md-3">Module title</label>
+                                    <div class="col-md-9">
+                                        <input type="text" id="title" class="form-control" name="title" value="$!page.title" placeholder="Here is a module page title" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="learningTimeMins" class="control-label col-md-3">Learning time (mins)</label>
+                                    <div class="col-md-5">
+                                        <input type="text" id="learningTimeMins" class="form-control" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="brief" class="control-label col-md-3">Description</label>
+                                    <div class="col-md-9">
+                                        <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label">Expiry policy</label>
+                                    <div class="col-md-9">
+                                        <div class="input-group">
+                                            <input type="number" min="1" class="form-control" name="expiryMultiples" value="$!page.expiryMultiples" />
+                                            <input type="hidden" name="expiryFrequency" id="sFrequency" value="$!page.expiryFrequency" />
+                                            <div class="input-group-btn" id="frequency-group">
+                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$!page.expiryFrequency </span> <span class="caret"></span></button>
+                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                    #foreach($f in $page.allFrequencies)
+                                                    <li><a href="#" data-value="$f">$f</a></li>
+                                                    #end
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <i>Module completion results will expire after the given time period</i>
+                                    </div>
+                                </div>                                
                             </div>
-                        </div>                        
-                        
+                            <div class="col-md-4">
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        Scheduling
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="form-group">
+                                            <label for="instructorType" class="control-label col-md-4">Instructor type</label>
+                                            <div class="col-md-8">
+                                                <select class="form-control" name="instructorType">
+                                                    $formatter.option( "", "No instructor (self paced)", $page.instructorType )
+                                                    $formatter.option( "ILT", "Instructor led training (ILT)", $page.instructorType )
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-3">
+                                                <button class="btn btn-success addEvent">
+                                                    <i class="fa fa-calendar-plus-o"></i>                                    
+                                                </button>
+                                            </div>
+                                        </div>
+                                        #set( $events = $page.moduleCalEvents )
+                                        <table class="table table-striped">
+                                            #foreach($mce in $events)
+                                            <tr>
+                                                #set( $event = $mce.calEvent )
+                                                <td>$event.startDate</td>
+                                                <td>$event.location</td>
+                                                <td>$event.numAttendees() / $event.maxAttendees</td>
+                                            </tr>
+                                            #end
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>                            
+
+
+
 
                         <hr/>
 
@@ -383,35 +432,35 @@
                             #if( $page.paginator.isEmpty() )
                             <td colspan="7">There are no results matching the selected date range and criteria</td>
                             #else
-                                #foreach($p in $page.paginator.records)
-                                <tr>
-                                    <td>
-                                        <a href="/manageUsers/$p.profile.id/">
-                                            $p.profile.formattedName
-                                        </a>                                        
-                                    </td>
-                                    <td>
-                                        $formatter.formatDateTime($p.createdDate)                                        
-                                    </td>
-                                    <td>                                        
-                                        $formatter.formatDateTime($p.modifiedDate)
-                                    </td>
-                                    <td>
-                                        #if( $p.completed )
-                                        <span class="label label-success">Complete</span>
-                                        #else
-                                        ${p.percentComplete}%
-                                        #end
-                                    </td>
-                                    <td>$!p.scorePerc</td>
-                                    <td>
-                                        $!p.expiryDate
-                                        #if( $p.expired )
-                                        <span class="label label-danger">Expired</span>
-                                        #end
-                                    </td>
-                                </tr>
-                                #end
+                            #foreach($p in $page.paginator.records)
+                            <tr>
+                                <td>
+                                    <a href="/manageUsers/$p.profile.id/">
+                                        $p.profile.formattedName
+                                    </a>                                        
+                                </td>
+                                <td>
+                                    $formatter.formatDateTime($p.createdDate)                                        
+                                </td>
+                                <td>                                        
+                                    $formatter.formatDateTime($p.modifiedDate)
+                                </td>
+                                <td>
+                                    #if( $p.completed )
+                                    <span class="label label-success">Complete</span>
+                                    #else
+                                    ${p.percentComplete}%
+                                    #end
+                                </td>
+                                <td>$!p.scorePerc</td>
+                                <td>
+                                    $!p.expiryDate
+                                    #if( $p.expired )
+                                    <span class="label label-danger">Expired</span>
+                                    #end
+                                </td>
+                            </tr>
+                            #end
                             #end
                         </tbody>
                         <tfoot id="pointsFooter">
@@ -428,6 +477,7 @@
         #end
 
         <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js">//</script>
+
         <div id="modal-upload-scorm" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -441,6 +491,82 @@
                     <div class="modal-footer">
                         <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-add-event" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Create module event</h4>
+                    </div>
+                    <form action="${page.href}" class="form-horizontal" id="addEventForm">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="eventTitle" class="control-label col-md-2">Title</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="eventTitle" class="form-control" name="eventTitle" value="$!page.title" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="calendar" class="control-label col-md-2">Calendar</label>
+                                <div class="col-md-6">
+                                    <select class="form-control" name="calendar">                                   
+                                        #foreach($calendar in $rootFolder.organisation.calendars)
+                                        $formatter.option( $calendar.name, $calendar.title, "" )
+                                        #end                                    
+                                    </select>                                
+                                    <a href="/Calendars/"><i>Manage calendars here</i></a>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="control-label col-md-2">Description</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="description" class="form-control" name="description" value=""  />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="startDate" class="control-label col-md-2">Start</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="startDate" class="form-control" name="startDate" value="" />
+                                </div>
+                                <label for="endDate" class="control-label col-md-2">Finish</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
+                                </div>
+
+                                <label for="cohort" class="control-label col-md-2">Cohort</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="cohort" class="form-control" name="cohort" value="" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location" class="control-label col-md-2">Location</label>
+                                <div class="col-md-10">
+                                    <input type="text" id="location" class="form-control" name="location" value="" />
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -482,7 +608,8 @@
                             <button class="btn btn-sm btn-primary btn-save btn-img" type="submit">Save <img class="ajax-loader" src="/static/common/loading.gif" />
                             </button>
                             <button class="btn btn-sm btn-primary btn-save-close btn-img" type="submit">Save & Close
-                                <img class="ajax-loader" src="/static/common/loading.gif" /></button>
+                                <img class="ajax-loader" src="/static/common/loading.gif" />
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -567,11 +694,11 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Save</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
                     </form>
                 </div>
             </div>
