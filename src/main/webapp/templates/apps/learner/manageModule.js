@@ -36,8 +36,28 @@ function initManageModule(baseHref, themePath) {
     initScormUpload();
     initFrequencyGroup();
     initResultsSearch();
+    initCalendarStuff();
 
     window.onbeforeunload = isModalOpen;
+}
+
+function initCalendarStuff() {
+    flog("initCalendarStuff");
+    var btn = $(".addEvent");
+    var modal = $("#modal-add-event");
+    var form = modal.find('form');
+    form.forms({
+        callback: function (resp) {
+            flog('Module details saved', resp);
+            Msg.info("Saved");
+        }
+    });
+    btn.click(function (e) {
+        flog("clcik", modal);
+        e.preventDefault();
+        modal.modal("show");
+        flog("clcik2", modal);        
+    });
 }
 
 function initResultsSearch() {
@@ -48,7 +68,7 @@ function initResultsSearch() {
             return;
         }
         $("#activityBody").reloadFragment();
-    });    
+    });
 }
 
 function initFrequencyGroup() {
@@ -610,7 +630,7 @@ function checkEditListsValid() {
                 var item = $(this);
 
                 item.find('select.requiredIf, input.requiredIf').each(function () {
-                    var input = $(this);                    
+                    var input = $(this);
                     var val = input.val().trim();
                     flog("check", input, val);
 
@@ -621,7 +641,7 @@ function checkEditListsValid() {
                     }
                 });
                 item.find('select.requiredIf').each(function () {
-                    var input = $(this);                    
+                    var input = $(this);
                     var val = input.val().trim();
                     flog("check", input, val);
 
@@ -638,7 +658,7 @@ function checkEditListsValid() {
                             flog('val2', val, values);
                         }
                     }
-                });                
+                });
             });
         }
     });
