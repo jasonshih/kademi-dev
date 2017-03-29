@@ -4,6 +4,14 @@ function init() {
 
         doSearch();
     });
+    
+    var modal = $("#addPointsStatementModal");
+    modal.find("form").forms({
+        callback: function() {
+            modal.modal("hide");
+            Msg.info("Completed");
+        }
+    });
 }
 
 function doSearch() {
