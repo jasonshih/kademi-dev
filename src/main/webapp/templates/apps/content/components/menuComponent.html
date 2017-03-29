@@ -8,6 +8,11 @@
     #set( $showUserMenu = false )
 #end
 
+#if( $showOrgSelector )
+#else
+    #set( $showOrgSelector = false )
+#end
+
 #if( $inverseMenu )
 #else
     #set( $inverseMenu = false )
@@ -39,16 +44,21 @@
             </a>
         </div>
 
-
         <div class="navbar-collapse collapse navbar-main-collapse">
             <ul class="nav navbar-nav navbar-right">
                 #foreach($item in $menu.visible)
                     #showMenuItem( $item )
                 #end
 
-                <li>
+                <li class="navbar-search">
                     #portlets("searchInput")
                 </li>
+
+                #if ($showOrgSelector == true)
+                <li class="navbar-org-selector">
+                    #parse("/theme/apps/reporting/orgSelectorComponent.html")
+                </li>
+                #end
 
                 #portlets("shoppingCart")
 
@@ -115,8 +125,8 @@
     #else
     <li class="dropdown">
         <a href="#" class="dropdown-toggle nav-${item.id}"" data-toggle="dropdown" title="${item.text}">
-            $item.text
-            <span class="caret"></span>
+        $item.text
+        <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
             #foreach( $subitem in $item.visible )

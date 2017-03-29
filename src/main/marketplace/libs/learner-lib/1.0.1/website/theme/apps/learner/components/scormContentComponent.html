@@ -1,0 +1,5 @@
+
+<div id="iframe-container" >
+    #set($scormFile = $folder.find($page.getParam("scormHref")))
+    <iframe id="module-iframe" frameborder="1" src="$page.getParam('scormHref')" onload="resizeIframe(this)"></iframe>
+</div>
