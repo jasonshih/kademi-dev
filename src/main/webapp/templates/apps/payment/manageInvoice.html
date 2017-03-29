@@ -6,18 +6,14 @@
     <body>
         <section style="padding-top: 15px">
 
-            <form class="form-horizontal" method="POST">
+            <form class="form-horizontal">
                 <header>
                     <h2>
                         $page.title
                         <div class="btn-group pull-right">
                             <button type="submit" class="btn btn-sm btn-success">
-                                <i class="fa fa-save"></i> Save
-                            </button>
-
-                            <a target="_blank" href="#" class="btn btn-sm btn-info">
                                 <i class="fa fa-arrow-circle-right"></i> Send Now
-                            </a>
+                            </button>
 
                             <a href="#" class="btn btn-sm btn-info">
                                 <i class="fa fa-eye"></i> Preview
@@ -31,57 +27,85 @@
                 </header>
 
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-file-2"></i>
+                        Update Invoice details
+                    </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <label class="control-label" for="name">Vendor</label>
+                        <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal initProfileForm" charset="utf-8">
+                            <div class="form-group">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <label class="control-label" for="name">Vendor</label>
 
-                                        <div class="input-group col-sm-12">
-                                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                            <div class="input-group col-sm-12">
+                                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
 
-                                            <div class="search-wrapper">
-                                                <input type="text" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" />
-                                                <ul class="search-suggestions hide" id="vendor-search-input-suggestions"></ul>
+                                                <div class="search-wrapper">
+                                                    <input type="text" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" />
+                                                    <ul class="search-suggestions hide" id="vendor-search-input-suggestions"></ul>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="col-sm-3">
-                                        <label class="control-label" for="name">Customer</label>
+                                        <div class="col-sm-3">
+                                            <label class="control-label" for="name">Customer</label>
 
-                                        <div class="input-group col-sm-12">
-                                            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                            <div class="input-group col-sm-12">
+                                                <span class="input-group-addon"><i class="fa fa-search"></i></span>
 
-                                            <div class="search-wrapper">
-                                                <input type="text" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" />
-                                                <ul class="search-suggestions hide" id="customer-search-input-suggestions"></ul>
+                                                <div class="search-wrapper">
+                                                    <input type="text" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" />
+                                                    <ul class="search-suggestions hide" id="customer-search-input-suggestions"></ul>
+                                                </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-sm-2">
+                                            <label class="control-label" for="name">Issue Date</label>
+                                            <div class="input-group col-sm-12"> 
+                                                <input class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate, "dd/MM/yyyy HH:mm")" />
+                                        </div> 
                                     </div>
 
                                     <div class="col-sm-2">
-                                        <label class="control-label" for="name">Issue Date</label>
+                                        <label class="control-label" for="name">Due Date</label>
                                         <div class="input-group col-sm-12"> 
-                                            <input class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate, "dd/MM/yyyy HH:mm")" />
+                                            <input class="form-control date-pickers" value="$formatter.formatJodaDate($page.dueDate, "dd/MM/yyyy HH:mm")" />
                                     </div> 
                                 </div>
 
                                 <div class="col-sm-2">
-                                    <label class="control-label" for="name">Due Date</label>
+                                    <label class="control-label" for="name">Invoice #</label>
                                     <div class="input-group col-sm-12"> 
-                                        <input class="form-control date-pickers" value="$formatter.formatJodaDate($page.dueDate, "dd/MM/yyyy HH:mm")" />
-                                </div> 
-                            </div>
-
-                            <div class="col-sm-2">
-                                <label class="control-label" for="name">Invoice #</label>
-                                <div class="input-group col-sm-12"> 
-                                    <input class="form-control" value="$page.number" />
-                                </div> 
+                                        <input class="form-control" value="$page.number" />
+                                    </div> 
+                                </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-success pull-right" type="submit">
+                                <i class="fa fa-check"></i>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="clip-file-2"></i>
+                Update Invoice Items
+            </div>
+
+            <div class="panel-body">
+                <div class="form-group">
+                    <div class="container">
                         <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px">
                             <thead>
                                 <tr>
