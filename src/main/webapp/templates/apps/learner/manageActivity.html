@@ -7,14 +7,67 @@
 
         <h2>$page.moduleCalEvent.calEvent.summary</h2>
 
+        #if( $folder.assignment )
+        <p class="lead">Due on $formatter.formatDateTime( $page.moduleCalEvent.calEvent.startDate )</p>
+        #elseif( $folder.ilt )
+        <p class="lead">From $formatter.formatDateTime( $page.moduleCalEvent.calEvent.startDate ) to $formatter.formatDateTime( $page.moduleCalEvent.calEvent.endDate ) </p>
+        #end
+        
+        
         <div class="row">
             <div class="col-md-8">
                 <table class="table table-striped">
+                    <colgroup>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col style="width: 60px"/>
+                        <col/>
+                        <col style="width: 60px"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>First name</th>
+                            <th>Surname</th>
+                            <th colspan="2">Submitted</th>
+                            <th>Assessed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     #foreach($attendee in $page.attendees)
                     <tr>
-                        <td>$attendee</td>
+                        <td>
+                            <a href="/manageUsers/$attendee.attendeeRequest.attendee.id" class="btn btn-info btn-sm">
+                                <i class="fa fa-user"></i>
+                            </a>
+                        </td>
+                        <td>$!attendee.attendeeRequest.attendee.firstName</td>
+                        <td>$!attendee.attendeeRequest.attendee.surName</td>
+                        <td>
+                            #if( $attendee.moduleStatus.submittedDate )
+                            <span class="label label-success">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            #else
+                            <span class="label label-danger">
+                                <i class="fa fa-exclamation-circle"></i>
+                            </span>                            
+                            #end
+                        </td>
+                        <td>
+                            $!formatter.formatDateTime( $attendee.moduleStatus.submittedDate )
+                        </td>
+                        <td>
+                            #if( $attendee.moduleStatus.assessedDate )
+                            <span class="label label-success">
+                                <i class="fa fa-check"></i>
+                            </span>
+                            #end
+                        </td>                        
                     </tr>
                     #end
+                    </tbody>
                 </table>
             </div>
         </div>
