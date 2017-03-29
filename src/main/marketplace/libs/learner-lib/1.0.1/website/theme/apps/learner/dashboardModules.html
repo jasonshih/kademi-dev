@@ -49,6 +49,11 @@
                                     <span class="glyphicon glyphicon-ok"></span>
                                     Complete
                                 </div>
+                                #elseif( $mod.submitted )
+                                <div class="label label-info pull-right">
+                                    <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    Submittted
+                                </div>                                
                                 #elseif ( $mod.percentComplete )
                                 <div class="label label-info pull-right">
                                     <span class="glyphicon glyphicon-forward"></span>
@@ -153,6 +158,12 @@
                             <span class="glyphicon glyphicon-ok"></span>
                             Complete
                         </div>
+                        #elseif( $mod.submitted )
+                        <div class="label label-info pull-right">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                            Submittted
+                        </div>                                
+                        
                         #elseif ( $mod.percentComplete > 0 )
                         <div class="label label-info pull-right">
                             <span class="glyphicon glyphicon-forward"></span>

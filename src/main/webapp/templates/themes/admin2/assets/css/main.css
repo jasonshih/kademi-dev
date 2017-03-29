@@ -1446,11 +1446,11 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 .brand-warning,
 .brand-warning .panel-heading,
 .brand-warning .panel-body {
-  border-color: #e31b5c; }
+  border-color: #e67e22; }
 .brand-warning .panel-heading {
-  background-color: #e31b5c; }
+  background-color: #e67e22; }
 .brand-warning.statCard a {
-  color: #e31b5c; }
+  color: #e67e22; }
 
 .panel-primary .panel-heading, .panel-primary .panel-heading > [class^="fa-"], .panel-primary .panel-heading > [class*=" fa-"], .panel-primary .panel-heading > [class^="icon-"], .panel-primary .panel-heading > [class*=" icon-"], .panel-primary .panel-heading > [class^="clip-"], .panel-primary .panel-heading > [class*=" clip-"],
 .panel-info .panel-heading,
@@ -2002,6 +2002,8 @@ ul.main-navigation-menu {
 .label {
   font-size: 85% !important;
   padding: 0.4em 0.6em !important; }
+  .label a {
+    color: #fff; }
 
 .label-inverse, .badge-inverse {
   background-color: #555555; }

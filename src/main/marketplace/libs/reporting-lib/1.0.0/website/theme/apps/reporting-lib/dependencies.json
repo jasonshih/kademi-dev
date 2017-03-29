@@ -29,6 +29,12 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/reporting/orgSelector.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
