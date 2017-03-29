@@ -14,11 +14,25 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-                    
+    
+                    var txts = form.find('.txt-rewards-titles');
                     var chks = form.find('.chk-rewards');
-                    chks.on('click', function () {
+                    var updateTitle = function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
+                        var rewardsTitles = [];
+                        txts.each(function () {
+                            if (!this.disabled) {
+                                rewardsTitles.push(this.value || ' ');
+                            }
+                        });
+        
+                        component.attr('data-rewards-titles', rewardsTitles.join(','));
+                        keditor.initDynamicContent(dynamicElement);
+                    };
+                    
+                    chks.on('click', function () {
+                        var component = keditor.getSettingComponent();
                         var selectedRewards = [];
                         chks.each(function () {
                             if (this.checked) {
@@ -30,22 +44,11 @@
                         input.prop('disabled', !this.checked);
                         
                         component.attr('data-rewards', selectedRewards.join(','));
-                        keditor.initDynamicContent(dynamicElement);
+                        updateTitle();
                     });
                     
-                    var txts = form.find('.txt-rewards-titles');
                     txts.on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        var rewardsTitles = [];
-                        txts.each(function () {
-                            if (!this.disabled) {
-                                rewardsTitles.push(this.value || '');
-                            }
-                        });
-                        
-                        component.attr('data-rewards-titles', rewardsTitles.join(','));
-                        keditor.initDynamicContent(dynamicElement);
+                        updateTitle();
                     });
                 }
             });
