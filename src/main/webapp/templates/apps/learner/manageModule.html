@@ -312,7 +312,8 @@
                                             <colgroup>
                                                 <col/>
                                                 <col/>
-                                                <col style="width: 100px"/>
+                                                <col/>
+                                                <col style="width: 140px"/>
                                             </colgroup>
                                             <thead>
                                                 <th>
@@ -358,12 +359,17 @@
                                                         $mce.numSubmitted()
                                                     </td>
                                                     <td>
-                                                        <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-info">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                        <a href="$mce.id" class="btn btn-danger deleteEvent">
-                                                            <i class="fa fa-remove"></i>
-                                                        </a>                                                        
+                                                        <div class="btn-group">
+                                                            <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-info">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </a>
+                                                            <a href="$mce.id" class="btn btn-danger deleteEvent">
+                                                                <i class="fa fa-remove"></i>
+                                                            </a>                                                                                                                    
+                                                            <a href="activity-$mce.id" class="btn btn-info">
+                                                                <i class="fa fa-cog"></i>
+                                                            </a>                                                                                                                                                                                
+                                                        </div>
                                                     </td>
                                                 </tr>
                                                 #end
@@ -599,7 +605,7 @@
                                 <div class="col-md-4">
                                     <input type="text" id="startDate" class="form-control" name="startDate" value="" />                                    
                                 </div>
-                                
+
                                 <label for="cohort" class="control-label col-md-2">Cohort</label>
                                 <div class="col-md-4">
                                     <input type="text" id="cohort" class="form-control" name="cohort" value="" />
@@ -612,7 +618,7 @@
                                 <div class="col-md-4">
                                     <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
                                 </div>
-                                
+
                                 <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
                                 <div class="col-md-4">
                                     <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
