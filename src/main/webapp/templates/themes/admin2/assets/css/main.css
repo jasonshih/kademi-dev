@@ -2040,7 +2040,7 @@ ul.main-navigation-menu {
   width: 200px; }
 
 .modal-full {
-  padding-left: 0 !important;
+  padding-right: 0 !important;
   overflow: hidden; }
   .modal-full .modal-dialog {
     width: 100%;
