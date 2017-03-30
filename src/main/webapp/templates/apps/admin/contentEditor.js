@@ -7,8 +7,7 @@ function doPostMessage(data, url) {
     window.parent.postMessage(dataStr, url);
 }
 
-function initContentEditorPage(fileName) {    
-
+function initContentEditorPage(fileName) {
     var body = $(document.body);
     var url = getParam('url') || '';
     if (url && url !== 'undefined') {
@@ -73,7 +72,8 @@ function initKEditor(fileName) {
     }
     
     $('#content-area').contentEditor({
-        snippetsUrl: '_components?fileName=' + fileName
+        snippetsUrl: '_components?fileName=' + fileName,
+        allGroups: allGroups
     });
 }
 
