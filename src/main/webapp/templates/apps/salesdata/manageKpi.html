@@ -884,6 +884,7 @@
         <div id="editLevelModal" class="modal fade level-modal" tabindex="-1" data-focus-on="input:first" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
+                    <div class="panel-body text-center lead h2">Loading...</div>
                 </div>
             </div>
         </div>
@@ -1054,6 +1055,11 @@
                     if (newName != null) {
                         createLevel(newName);
                     }
+                });
+
+                editLevelModal.on('hidden.bs.modal', function () {
+                    editLevelModal.find('.modal-content').html('<div class="panel-body text-center lead h2">Loading...</div>');
+                    editLevelModal.removeData('bs.modal');
                 });
 
                 $(document).on('loaded.bs.modal', ".level-modal", function (e) {
