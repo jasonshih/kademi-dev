@@ -66,21 +66,21 @@
             return false;
         }
     };
-
-    $.getScriptOnce.loaded = [];
-
+    
+    $.getScriptOnce.loaded = {};
+    
     $(function () {
         var scripts = document.getElementsByTagName('script');
         for (var i = 0; i < scripts.length; i++) {
             var scr = scripts[i];
             var url = $(scr).attr('src') || '';
-
+            
             if (url.trim() !== '') {
-                $.getScriptOnce.loaded.push({
+                $.getScriptOnce.loaded[url] = {
                     url: url,
                     loaded: true,
                     callbacks: []
-                });
+                };
             }
         }
     });
