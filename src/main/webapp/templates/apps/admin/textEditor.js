@@ -231,13 +231,13 @@ function makeFullscreenEditor(isFullscreen) {
     if (isFullscreen) {
         btnFullscreen.addClass('active');
         btnFullscreen.attr('title', 'Exit fullscreen mode');
-        icon.attr('class', 'clip-fullscreen-exit');
+        icon.attr('class', 'fa fa-window-restore');
         editorWrapper.fullscreen();
         editorWrapper.addClass('fullscreen-mode');
     } else {
         btnFullscreen.removeClass('active');
         btnFullscreen.attr('title', 'Enter fullscreen mode');
-        icon.attr('class', 'clip-fullscreen');
+        icon.attr('class', 'fa fa-window-maximize');
         $.fullscreen.exit();
         editorWrapper.removeClass('fullscreen-mode');
     }
