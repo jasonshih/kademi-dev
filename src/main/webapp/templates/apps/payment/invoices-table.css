@@ -45,6 +45,12 @@ and open the template in the editor.
     font-weight: bold;
 }
 
+.invoices-table tbody tr.highlighted input, 
+.invoices-table tbody tr.highlighted select,
+.invoices-table tbody tr.highlighted span {
+    background-color: #fafafa !important;
+}
+
 .invoices-table tbody tr.template-row {
     display: none;
 }
