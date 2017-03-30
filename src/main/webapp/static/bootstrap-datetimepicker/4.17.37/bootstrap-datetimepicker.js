@@ -2376,7 +2376,7 @@
         maxDate: false,
         useCurrent: true,
         collapse: true,
-        locale: moment.locale(),
+        locale: moment.lang ? moment.lang() : moment.locale(),
         defaultDate: false,
         disabledDates: false,
         enabledDates: false,
