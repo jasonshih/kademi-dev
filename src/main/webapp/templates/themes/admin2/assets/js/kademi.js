@@ -362,6 +362,11 @@ function initFuseModals() {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
     });
+    
+    $(document.body).on('shown.bs.modal loaded.bs.modal', '.modal', function () {
+        var textbox = $(this).find('input, textarea').filter(':visible');
+        textbox.eq(0).focus();
+    });
 }
 
 function initFuseModal(modal, callback) {
