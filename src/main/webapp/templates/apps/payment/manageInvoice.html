@@ -149,7 +149,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <span class="total-field">0.00</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
+                                    <span data-total="0" class="total-field">0.00</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                             #foreach($lineItem in $page.lineItems)
@@ -256,35 +256,20 @@ active
             }
         });
 
-        $("#line-items").on("change", "input", function () {
+        $("#line-items").on("blur", "input", function () {
             var row = $(this).parents("tr");
 
-            var data = {
-                "description": row.find('[name="description"]').val(),
-                "account": row.find('[name="account"]').val(),
-                "supplierName": row.find('[name="supplier"]').data("selected-id") == undefined ? 0 : row.find('[name="supplier"]').data("selected-id"),
-                "quantity": row.find('[name="quantity"]').val(),
-                "unitPrice": row.find('[name="unitPrice"]').val(),
-                "discountRate": row.find('[name="discountRate"]').val(),
-                "taxRate": row.find('[name="taxRate"] :selected').val(),
-            };
-
-            if (row.data("item-id") === "NEW") {
-                data["addLineItem"] = "$page.name";
-            } else {
-                data["modifyLineItem"] = "$page.name";
-                data["lineItemId"] = row.data("item-id");
-            }
-
-            $.ajax({
-                method: "POST",
-                dataType: "json",
-                data: data,
-                success(data) {
-
-                }
-            });
+            saveChangedRow(row);
         });
+
+        $("#line-items").on("keyup", "input", function (event) {
+            if (event.keyCode === 13) {
+                var row = $(this).parents("tr");
+
+                saveChangedRow(row);
+            }
+        });
+
 
         $("#line-items").on("focus", "input", function () {
             $(this).parents("tr").addClass("highlighted");
@@ -338,6 +323,38 @@ active
 
         $(".new-line-add").click();
     });
+
+    function saveChangedRow(row) {
+        var data = {
+            "description": row.find('[name="description"]').val(),
+            "account": row.find('[name="account"]').val(),
+            "supplierName": row.find('[name="supplier"]').data("selected-id") == undefined ? 0 : row.find('[name="supplier"]').data("selected-id"),
+            "quantity": row.find('[name="quantity"]').val(),
+            "unitPrice": row.find('[name="unitPrice"]').val(),
+            "discountRate": row.find('[name="discountRate"]').val(),
+            "taxRate": row.find('[name="taxRate"] :selected').val(),
+        };
+
+        if (row.data("item-id") === "NEW") {
+            data["addLineItem"] = "$page.name";
+        } else {
+            data["modifyLineItem"] = "$page.name";
+            data["lineItemId"] = row.data("item-id");
+        }
+
+        $.ajax({
+            method: "POST",
+            dataType: "json",
+            data: data,
+            success(data) {
+                if (row.data("item-id") === "NEW") {
+                    if (data.data !== undefined) {
+                        row.data("item-id", data.data.id);
+                    }
+                }
+            }
+        });
+    }
 
     function refreshTotals() {
         var total = 0;
