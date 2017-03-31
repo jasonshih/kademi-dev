@@ -1,11 +1,13 @@
 /*
- * 
+ *
  * Cache
  */
 
 var moduleCache = {};
+var lastErrorCode = 0;
+var lastErrorString = "No Error";
 
-/* 
+/*
  * Kademi's API Adapters
  */
 var KademiAPI = {
@@ -32,23 +34,27 @@ var KademiAPI = {
     },
     GetValue: function (element) {
         flog('ScormAPI:GetValue', element);
-        Kademi_GetValue(element);
+        return Kademi_GetValue(element);
     },
     SetValue: function (element, value) {
         flog('ScormAPI:SetValue', element, value);
-        Kademi_SetValue(element, value);
+        return Kademi_SetValue(element, value);
     },
     Commit: function () {
         flog('ScormAPI:Commit');
+        return true;
     },
     GetLastError: function () {
         flog('ScormAPI:GetLastError');
+        return Kademi_GetLastError();
     },
     GetErrorString: function (errorCode) {
         flog('ScormAPI:GetErrorString', errorCode);
+        return Kademi_GetErrorString();
     },
     GetDiagnostic: function (errorCode) {
         flog('ScormAPI:GetDiagnostic', errorCode);
+        return Kademi_GetDiagnostic();
     }
 };
 
@@ -110,8 +116,21 @@ function Kademi_GetValue(dataModel) {
                 moduleCache['moduleStatusFields'][dataModel] = esp.moduleStatusFields[dataModel];
                 return resp.moduleStatusFields[dataModel];
             }
-            return null;
+
+            return "";
     }
+}
+
+function setError() {
+    lastErrorCode = 0;
+    lastErrorString = "No Error";
+    diagnostic = "";
+}
+
+function setError(code, String, details) {
+    lastErrorCode = code;
+    lastErrorString = String;
+    diagnostic = details;
 }
 
 function doPropFind(fields) {
@@ -119,7 +138,15 @@ function doPropFind(fields) {
         type: "GET",
         dataType: 'json',
         async: false,
-        url: window.location.pathname.replace('index.html', '') + "_DAV/PROPFIND?fields=" + fields.join(',')
+        url: window.location.pathname.replace('index.html', '') + "_DAV/PROPFIND?fields=" + fields.join(','),
+        success: function (response) {
+            setError(0, "No error", "");
+            flog('retrieve ok', response);
+        },
+        error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
+            setError(301, "General Get Failure", thrownError);
+            flog('error getting moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
+        }
     }).responseText;
 
     var d = JSON.parse(respText);
@@ -147,6 +174,17 @@ function Kademi_SetValue(dataModel, value) {
                 return resp.status;
             });
     }
+
+    return true;
+}
+
+
+function Kademi_GetLastError() {
+    return lastErrorCode;
+}
+
+function Kademi_GetErrorString() {
+    return lastErrorString;
 }
 
 function doAjaxPost(data, callback) {
@@ -156,11 +194,13 @@ function doAjaxPost(data, callback) {
         data: data,
         success: function (response) {
             flog('saved ok', response);
+            setError(0, "No error", "");
             if (callback) {
                 callback(response);
             }
         },
         error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
+            setError(351, "General Set Failure", thrownError);
             flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
         }
     });
