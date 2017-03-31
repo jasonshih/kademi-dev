@@ -47,7 +47,10 @@
                     <ul class="dropdown-menu">
                         #foreach($o in $page.teamsForUser)
                         <li>
-                            <a data-filter="team" class="btn-select-org $formatter.ifTrue($params.tags.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.team.contains($o.orgId.toString()), '', 'hide')"></i></span> $o.title</a>
+                            <a data-filter="team" class="btn-select-org $formatter.ifTrue($params.tags.contains($o.orgId.toString()), 'filterSelected', '')" href="$o.orgId">
+                                <span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.team.contains($o.orgId.toString()), '', 'hide')"></i></span>
+                                $formatter.ifNull($o.title, $o.orgId)
+                            </a>
                         </li>
                         #end
                     </ul>
