@@ -127,8 +127,8 @@
                             </td>
                             <td><a href="#">$v.number</a></td>
                             <td>$v.title</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td>$formatter.ifNull($v.vendor.formattedName, '-')</td>
+                            <td>$formatter.ifNull($v.customer.formattedName, '-')</td>
                             <td>$v.subTotal</td>
                             <td>$v.tax</td>
                             <td>$v.total</td>
