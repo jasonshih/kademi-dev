@@ -362,7 +362,7 @@ function initFuseModals() {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
     });
-    
+
     $(document.body).on('shown.bs.modal loaded.bs.modal', '.modal', function () {
         var textbox = $(this).find('input, textarea').filter(':visible');
         textbox.eq(0).focus();
@@ -729,7 +729,7 @@ function initPageDatePicker() {
 }
 
 function initTimeago() {
-    if( jQuery.timeago ) {
+    if (jQuery.timeago) {
         jQuery.timeago.settings.allowFuture = true;
         $(".timeago").timeago();
     }
@@ -782,8 +782,8 @@ function showLoginAs(profileId) {
                 newList += "<li>The user does not have access to any websites. Check the user's group memberships, and that those groups have been added to the right websites</li>";
             }
             modal.find("ul")
-                .empty()
-                .html(newList);
+                    .empty()
+                    .html(newList);
         },
         error: function (resp) {
             Msg.error("An error occured loading websites. Please try again");
@@ -793,7 +793,7 @@ function showLoginAs(profileId) {
 
 function setRecentItem(title, url) {
     flog("setRecentItem", title, url);
-    if (typeof(Storage) !== "undefined") {
+    if (typeof (Storage) !== "undefined") {
         //localStorage.removeItem("recent");
         var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
         if (recentList == null) {
@@ -815,7 +815,7 @@ function setRecentItem(title, url) {
 }
 
 function getRecentItems() {
-    if (typeof(Storage) !== "undefined") {
+    if (typeof (Storage) !== "undefined") {
         var recentList = JSON.parse(localStorage.getItem("recent"));  // an associative array, key is the url
         return recentList;
     } else {
@@ -944,7 +944,7 @@ function initColorPicker(target, onChangeHandle) {
             var colorPicker = $(this);
             var input = colorPicker.find('input');
             var previewer = colorPicker.find('.input-group-addon i');
-        
+
             colorPicker.colorpicker({
                 format: 'hex',
                 container: colorPicker.parent(),
@@ -955,12 +955,12 @@ function initColorPicker(target, onChangeHandle) {
                 }
             }).on('changeColor.colorpicker', function (e) {
                 var colorHex = e.color.toHex();
-            
+
                 if (!input.val() || input.val().trim().length === 0) {
                     colorHex = '';
                     previewer.css('background-color', '');
                 }
-            
+
                 if (typeof onChangeHandle === 'function') {
                     onChangeHandle(colorHex);
                 }
@@ -969,6 +969,32 @@ function initColorPicker(target, onChangeHandle) {
     } else {
         flog('ERROR! You need bootstrap-colorpicker plugin to continue this method!');
     }
+}
+
+function initMenuSearch() {
+    $(".main-navigation-menu .search-menu").on("keyup", "input", function () {
+        if ($(this).val() === "") {
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu), #kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu) li").show();
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.open) .sub-menu").css("display", "none");
+        } else {
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu), #kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu) li")
+                    .hide().find("li:Contains(" + $(this).val() + ")").show()
+                    .parents(".sub-menu").css("display", "block")
+                    .parents("li").show();
+            
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li > a[href != '#']")
+                    .parents("li:Contains(" + $(this).val() + ")").show();
+            
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:Contains(" + $(this).val() + ")").each(function() {
+                if ($(this).find("li:visible").length === 0) {
+                    $(this).find(".sub-menu").show().find("li").show();
+                    $(this).show();
+                }
+            });
+        }
+        
+        $(".main-navigation-menu.ps-container").perfectScrollbar("update");
+    });
 }
 
 var K = window.K || {};
