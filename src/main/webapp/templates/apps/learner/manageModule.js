@@ -50,14 +50,44 @@ function initCalendarStuff() {
         callback: function (resp) {
             flog('Module details saved', resp);
             Msg.info("Saved");
+            modal.modal("hide");
+            reloadEvents();
         }
     });
-    btn.click(function (e) {
-        flog("clcik", modal);
+    btn.click(function (e) {        
         e.preventDefault();
         modal.modal("show");
-        flog("clcik2", modal);        
     });
+    
+    $("body").on("click", ".deleteEvent", function(e) {
+        e.preventDefault();
+        var link = $(e.target).closest("a");
+        var id = link.attr("href");
+        if( confirm("Are you sure you want to completely delete this event and attendees?") ) {
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname + "?deleteEventId=" + id,
+                dataType: 'json',
+                success: function (resp) {
+                    reloadEvents();
+                },
+                error: function (resp) {
+                    flog('error', resp);
+                    Msg.error('err: couldnt load page data');
+                }
+            });
+        }
+        
+    });
+    $("abbr.timeago").timeago();
+}
+
+function reloadEvents() {
+    $("#modCalEventsBody").reloadFragment({
+        whenComplete: function() {
+            $("abbr.timeago").timeago();
+        }
+    });    
 }
 
 function initResultsSearch() {

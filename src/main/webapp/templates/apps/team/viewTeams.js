@@ -1,5 +1,4 @@
 (function ($) {
-
     function initCreateMemberForm() {
         var modal = $('#modal-add-member');
         var form = modal.find('form');
@@ -24,4 +23,5 @@
     $(function () {
         initCreateMemberForm();
     });
+    
 })(jQuery);

@@ -187,6 +187,5 @@ Any value defined here will override the pom.xml file value but is only applicab
         <org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_SuspiciousNamesCombination.enabled>false</org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_SuspiciousNamesCombination.enabled>
         <org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_bugs_2e_CloneAndCloneable_2e_cloneableWithoutClone.enabled>false</org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_bugs_2e_CloneAndCloneable_2e_cloneableWithoutClone.enabled>
         <org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_bugs_2e_CloneAndCloneable_2e_cloneInNonCloneableClass.enabled>false</org-netbeans-spi-editor-hints-projects.text.x-java.org_2e_netbeans_2e_modules_2e_java_2e_hints_2e_bugs_2e_CloneAndCloneable_2e_cloneInNonCloneableClass.enabled>
-        <netbeans.hint.jdkPlatform>JDK_1.8u65</netbeans.hint.jdkPlatform>
     </properties>
 </project-shared-configuration>

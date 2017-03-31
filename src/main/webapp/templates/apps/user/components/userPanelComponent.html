@@ -25,12 +25,12 @@
             #if ($rewards != "")
                 #set ($rewards = $rewards.split(","))
                 #set ($rewardsTitles = $rewardsTitles.split(","))
+                #set( $rewardStoreApp = $applications.rewardStore )
 
                 #set ($availablePanel = 0)
                 #foreach($reward in $rewards)
-                    #set ($rewardPath = "/" + $reward)
-                    #set( $rewardFolder = $page.find($rewardPath))
-                    #set( $myPoint =  $rewardFolder.myAvailableBalance)
+                    #set( $myPoint = false )
+                    #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
                     #if ($myPoint)
                         #set ($availablePanel = $availablePanel + 1)
                     #end
@@ -52,7 +52,9 @@
                         #foreach($reward in $rewards)
                             #set ($rewardPath = "/" + $reward)
                             #set( $rewardFolder = $page.find($rewardPath))
-                            #set( $myPoint =  $rewardFolder.myAvailableBalance)
+                            #set( $myPoint = false )
+                            #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
+
                             #if ($myPoint)
                                 #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
                                 <div class="$panelClass">
@@ -61,7 +63,7 @@
                                             <strong id="user-total-points" title="$myPointString">$myPointString</strong>
                                         </h1>
                                         <small>
-                                            #if ($rewardsTitles[$foreach.index])
+                                            #if ($rewardsTitles[$foreach.index] && $rewardsTitles[$foreach.index] != " ")
                                                 $rewardsTitles[$foreach.index]
                                             #else
                                                 Points

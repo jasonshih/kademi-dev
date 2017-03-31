@@ -130,20 +130,24 @@
                                     #foreach($r in $page.paginator.records)
                                         <tr>
                                             <td>$r.reward.name</td>
-                                            <td>$r.statementDate</td>
+                                            <td>$r.statementDate</td>                                            
                                             #if( $r.issuedTo.asOrg() )
                                                 <td>
-                                                    $r.issuedTo.asOrg().orgId
+                                                    $r.issuedTo.orgId
                                                 </td>
                                                 <td>
-                                                    $r.issuedTo.asOrg().title
+                                                    $r.issuedTo.title
                                                 </td>
+                                                <td></td>
                                             #else
                                                 <td>
-                                                    $r.issuedTo.asProfile().firstName
+                                                    <a href="/manageUsers/$r.issuedTo.id">$r.issuedTo.asProfile().name</a>
                                                 </td>
                                                 <td>
-                                                    r.issuedTo.asProfile().surName
+                                                    $!r.issuedTo.asProfile().firstName
+                                                </td>
+                                                <td>
+                                                    $!r.issuedTo.asProfile().surName
                                                 </td>
                                             #end
                                             <td>$r.balance</td>

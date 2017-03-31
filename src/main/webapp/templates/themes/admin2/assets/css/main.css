@@ -674,14 +674,15 @@ a.bricky:hover {
   bottom: 0;
   background: transparent; }
 
-.navbar-tools .navbar-form .input-group-addon {
+.navbar-tools .navbar-form .input-group-addon, .input-group .input-group-addon {
   background-color: #f0f5f8; }
-.navbar-tools .search-wrapper {
+.navbar-tools .search-wrapper, .search-wrapper {
   position: relative;
   z-index: 1; }
   .navbar-tools .search-wrapper .search-input {
     width: 300px; }
-  .navbar-tools .search-wrapper .search-suggestions {
+  .navbar-tools .search-wrapper .search-suggestions,
+  .search-wrapper .search-suggestions{
     position: absolute;
     top: 33px;
     left: 0;
@@ -691,18 +692,23 @@ a.bricky:hover {
     min-width: 100%;
     list-style: none;
     white-space: nowrap; }
-    .navbar-tools .search-wrapper .search-suggestions li a {
+    .navbar-tools .search-wrapper .search-suggestions li a,
+    .search-wrapper .search-suggestions li a{
       display: block;
       padding: 5px;
       color: #000;
       text-decoration: none !important; }
-      .navbar-tools .search-wrapper .search-suggestions li a .email {
+      .navbar-tools .search-wrapper .search-suggestions li a .email, 
+      .search-wrapper .search-suggestions li a .email{
         color: #337ab7; }
-    .navbar-tools .search-wrapper .search-suggestions li.active a, .navbar-tools .search-wrapper .search-suggestions li.active a:hover {
+    .navbar-tools .search-wrapper .search-suggestions li.active a, .navbar-tools .search-wrapper .search-suggestions li.active a:hover,
+    .search-wrapper .search-suggestions li.active a, .search-wrapper .search-suggestions li.active a:hover{
       background: #f0f5f8; }
-    .navbar-tools .search-wrapper .search-suggestions li.search-no-result {
+    .navbar-tools .search-wrapper .search-suggestions li.search-no-result,
+    .search-wrapper .search-suggestions li.search-no-result{
       padding: 5px; }
-    .navbar-tools .search-wrapper .search-suggestions li + li {
+    .navbar-tools .search-wrapper .search-suggestions li + li,
+    .search-wrapper .search-suggestions li + li{
       border-top: 1px solid #dfeaf1; }
 .navbar-tools > ul {
   list-style: none; }
@@ -1440,11 +1446,11 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 .brand-warning,
 .brand-warning .panel-heading,
 .brand-warning .panel-body {
-  border-color: #e67e22; }
+  border-color: #8c559b; }
 .brand-warning .panel-heading {
-  background-color: #e67e22; }
+  background-color: #8c559b; }
 .brand-warning.statCard a {
-  color: #e67e22; }
+  color: #8c559b; }
 
 .panel-primary .panel-heading, .panel-primary .panel-heading > [class^="fa-"], .panel-primary .panel-heading > [class*=" fa-"], .panel-primary .panel-heading > [class^="icon-"], .panel-primary .panel-heading > [class*=" icon-"], .panel-primary .panel-heading > [class^="clip-"], .panel-primary .panel-heading > [class*=" clip-"],
 .panel-info .panel-heading,
@@ -2040,7 +2046,7 @@ ul.main-navigation-menu {
   width: 200px; }
 
 .modal-full {
-  padding-left: 0 !important;
+  padding-right: 0 !important;
   overflow: hidden; }
   .modal-full .modal-dialog {
     width: 100%;
@@ -5087,3 +5093,4 @@ body.lock-screen .user-info {
   border-left-color: #a94442; }
 .tooltip.tooltip-error.right .tooltip-arrow {
   border-right-color: #a94442; }
+.search-backdrop:not(#top-nav-search-backdrop) { z-index: -1; }

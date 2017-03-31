@@ -195,7 +195,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-8">
+                            <div class="col-md-7">
                                 <div class="form-group">
                                     <label for="name" class="control-label col-md-3">Code</label>
                                     <div class="col-md-5">
@@ -251,22 +251,55 @@
                                         <i>Module completion results will expire after the given time period</i>
                                     </div>
                                 </div>                                
+
+                                <hr/>
+
+                                <div class="form-group">
+                                    <label for="" class="control-label col-md-3">Search fields</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="itemType" class="control-label col-md-3">Type</label>
+                                    <div class="col-md-3">
+                                        <input type="text" id="itemType" class="form-control" name="itemType" value="$!page.getParam('itemType')" placeholder="Top level category for search" />
+                                    </div>
+                                    <label for="category" class="control-label col-md-3">Category</label>
+                                    <div class="col-md-3">
+                                        <input type="text" class="form-control"  name="category" id="category" value="$!page.getParam('category')"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tags" class="control-label col-md-3">Tags</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control"  name="tags" id="tags" value="$!page.getParam('tags')"/>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-5">
                                 <div class="panel panel-info">
                                     <div class="panel-heading">
-                                        Scheduling
+                                        Actvity type
                                     </div>
                                     <div class="panel-body">
                                         <div class="form-group">
-                                            <label for="instructorType" class="control-label col-md-4">Instructor type</label>
+                                            <label for="instructorType" class="control-label col-md-4">Activity type</label>
                                             <div class="col-md-8">
                                                 <select class="form-control" name="instructorType">
                                                     $formatter.option( "", "No instructor (self paced)", $page.instructorType )
                                                     $formatter.option( "ILT", "Instructor led training (ILT)", $page.instructorType )
+                                                    $formatter.option( "ASSIGN", "Assignment", $page.instructorType )
                                                 </select>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                #if( $page.instructorType )
+                                <div class="panel panel-info">
+                                    <div class="panel-heading">
+                                        Scheduling
+                                    </div>
+                                    <div class="panel-body">                                
                                         <div class="form-group">
                                             <div class="col-md-3">
                                                 <button class="btn btn-success addEvent">
@@ -276,48 +309,79 @@
                                         </div>
                                         #set( $events = $page.moduleCalEvents )
                                         <table class="table table-striped">
-                                            #foreach($mce in $events)
-                                            <tr>
-                                                #set( $event = $mce.calEvent )
-                                                <td>$event.startDate</td>
-                                                <td>$event.location</td>
-                                                <td>$event.numAttendees() / $event.maxAttendees</td>
-                                            </tr>
-                                            #end
+                                            <colgroup>
+                                                <col/>
+                                                <col/>
+                                                <col/>
+                                                <col style="width: 140px"/>
+                                            </colgroup>
+                                            <thead>
+                                                <th>
+                                                    #if( $page.ilt )
+                                                    Date
+                                                    #elseif( $page.assignment )
+                                                    Due
+                                                    #end
+                                                </th>
+                                                <th>
+                                                    #if( $page.ilt )
+                                                    Attending
+                                                    #elseif( $page.assignment )
+                                                    Assigned
+                                                    #end
+                                                </th>
+                                                <th>
+                                                    #if( $page.ilt )
+                                                    Attended
+                                                    #elseif( $page.assignment )
+                                                    Submitted
+                                                    #end
+                                                </th>
+                                                <th></th>
+                                            </thead>
+                                            <tbody id="modCalEventsBody">
+                                                #foreach($mce in $events)
+                                                <tr>
+                                                    #set( $event = $mce.calEvent )
+                                                    <td>
+                                                        <abbr class="timeago" title="$formatter.formatDateISO8601($event.startDate)">
+                                                            $event.startDate
+                                                        </abbr>
+
+                                                    </td>
+                                                    <td>
+                                                        $event.numAttendees() 
+                                                        #if( $event.maxAttendees )
+                                                        / $event.maxAttendees
+                                                        #end
+                                                    </td>
+                                                    <td>
+                                                        $mce.numSubmitted()
+                                                    </td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-info">
+                                                                <i class="fa fa-calendar"></i>
+                                                            </a>
+                                                            <a href="$mce.id" class="btn btn-danger deleteEvent">
+                                                                <i class="fa fa-remove"></i>
+                                                            </a>                                                                                                                    
+                                                            <a href="activity-$mce.id" class="btn btn-info">
+                                                                <i class="fa fa-cog"></i>
+                                                            </a>                                                                                                                                                                                
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                #end
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
+                                #end
 
 
                             </div>
                         </div>                            
-
-
-
-
-                        <hr/>
-
-                        <div class="form-group">
-                            <label for="" class="control-label col-md-3">Search fields</label>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="itemType" class="control-label col-md-3">Type</label>
-                            <div class="col-md-3">
-                                <input type="text" id="itemType" class="form-control" name="itemType" value="$!page.getParam('itemType')" placeholder="Top level category for search" />
-                            </div>
-                            <label for="category" class="control-label col-md-3">Category</label>
-                            <div class="col-md-3">
-                                <input type="text" class="form-control"  name="category" id="category" value="$!page.getParam('category')"/>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tags" class="control-label col-md-3">Tags</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control"  name="tags" id="tags" value="$!page.getParam('tags')"/>
-                            </div>
-                        </div>
 
                         <hr/>
 
@@ -531,27 +595,36 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="startDate" class="control-label col-md-2">Start</label>
+                                <label for="startDate" class="control-label col-md-2">
+                                    #if( $page.instructorType == "ILT" )
+                                    Start
+                                    #else
+                                    Due date
+                                    #end
+                                </label>
                                 <div class="col-md-4">
-                                    <input type="text" id="startDate" class="form-control" name="startDate" value="" />
-                                </div>
-                                <label for="endDate" class="control-label col-md-2">Finish</label>
-                                <div class="col-md-4">
-                                    <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
-                                <div class="col-md-4">
-                                    <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
+                                    <input type="text" id="startDate" class="form-control" name="startDate" value="" />                                    
                                 </div>
 
                                 <label for="cohort" class="control-label col-md-2">Cohort</label>
                                 <div class="col-md-4">
                                     <input type="text" id="cohort" class="form-control" name="cohort" value="" />
+                                </div>                                
+                            </div>
+
+                            #if( $page.instructorType == "ILT" )
+                            <div class="form-group">
+                                <label for="endDate" class="control-label col-md-2">Finish</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
+                                </div>
+
+                                <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
+                                <div class="col-md-4">
+                                    <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
                                 </div>
                             </div>
+                            #end
 
                             <div class="form-group">
                                 <label for="location" class="control-label col-md-2">Location</label>
