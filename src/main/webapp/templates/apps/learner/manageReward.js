@@ -3,7 +3,7 @@ var win = $(window);
 
 function initManagePoints() {
     initSelectAll();
-    
+
     var editModal = $("#modalEditPoints");
     var modalForm = editModal.find("form");
     modalForm.forms({
@@ -18,7 +18,7 @@ function initManagePoints() {
             }
         }
     });
-    
+
     $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
@@ -41,7 +41,7 @@ function initManagePoints() {
             }
         });
     });
-    
+
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
         log("removeUsers", node, node.is(":checked"));
@@ -54,7 +54,48 @@ function initManagePoints() {
             }
         }
     });
-    
+
+    $("#new-debit-points-form .btn-primary").on("click", function (event) {
+        event.preventDefault();
+
+        var points = $("#new-debit-points-form input[name=\"numPoints\"]").val();
+
+        $.ajax({
+            "url": '/reward-store/' + $("#new-debit-points-form select[name=\"awardedReward\"] :selected").val(),
+            "data": {
+                "points": $("#new-debit-points-form input[name=\"email\"]").val()
+            },
+            "method": "GET",
+            "dataType": "json",
+            "success": function (data) {
+                if (data.status === false) {
+                    Msg.error(data.messages[0]);
+                } else {
+                    if (data.data.availableBalance < points) {
+                        if (confirm("The amount of debit points (" + points + ") exceeds user available points balance (" + data.data.availableBalance + "), Do you want to proceed?")) {
+                            $("#new-debit-points-form").submit();
+                        }
+                    } else {
+                        $("#new-debit-points-form").submit();
+                    }
+                }
+            }
+        });
+    });
+
+    $("#new-debit-points-form").forms({
+        callback: function (resp) {
+            if (resp.status) {
+                reloadFragmentPoints(function () {
+                    Msg.info("Points debit OK");
+                    $('#modal-debit-points').modal('hide');
+                });
+            } else {
+                alert("An error occured and the points may not have been assigned. Please refresh the page and try again");
+            }
+        }
+    });
+
     $("#new-points-form").forms({
         callback: function (resp) {
             if (resp.status) {
@@ -67,7 +108,7 @@ function initManagePoints() {
             }
         }
     });
-    
+
     $("#doUploadCsv").mupload({
         buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
         url: "points.csv",
@@ -84,10 +125,10 @@ function initManagePoints() {
             });
         }
     });
-    
+
     var debitModal = $('#modal-debit-points');
     var debitModalForm = debitModal.find('form');
-    
+
     debitModalForm.forms({
         callback: function (resp) {
             if (resp.status) {
@@ -100,13 +141,13 @@ function initManagePoints() {
             }
         }
     });
-    
+
     debitModal.on('hidden', function () {
         debitModalForm.trigger('reset');
     });
-    
+
     initHistorySearch();
-    
+
     $(document.body).on('click', '.btn-refresh-pb', function (e) {
         e.preventDefault();
         if (confirm('Are you sure you want to refresh the points balance for all rewards?')) {
@@ -128,9 +169,9 @@ function initManagePoints() {
             });
         }
     });
-    
+
     updateRefreshPBStatus();
-    
+
     $('body').on('click', '.reason-codes a', function (e) {
         e.preventDefault();
         var a = $(e.target).closest("a");
@@ -145,9 +186,9 @@ function updateRefreshPBStatus() {
         clearTimeout(refreshPbCheckTimer);
         refreshPbCheckTimer = null;
     }
-    
+
     var btn = $('.btn-refresh-pb');
-    
+
     $.ajax({
         type: 'GET',
         url: "/tasks/refreshPointsBalance",
@@ -185,7 +226,7 @@ function reloadFragmentPoints(callback) {
 function initEditReward() {
 //    try {
     initHtmlEditors($(".htmleditor"));
-    
+
     var entryFormInput = $("#quizHtml");
     var entryFormBuilderDiv = $("#entryFormBuilder");
     var formBuilder = entryFormBuilderDiv.formBuilder({
@@ -194,13 +235,13 @@ function initEditReward() {
         roles: null,
         disableFields: ["autocomplete", "button"]
     }).data('formBuilder');
-    
+
     $('.form-builder-save').click(function () {
         var config = formBuilder.formData;
         flog("save form config", config);
     });
-    
-    
+
+
     $("form.manageRewardForm").forms({
         ignoreContainers: "#entryFormBuilder",
         validate: function () {
@@ -210,7 +251,7 @@ function initEditReward() {
         },
         callback: function (resp) {
             flog("done", resp);
-    
+
             var editorFrame = $('#editor-frame');
             flog("save content. editorFrame=", editorFrame);
             var postData = {
@@ -219,9 +260,9 @@ function initEditReward() {
                 pageName: getFileName('index.html'),
                 resp: resp
             };
-    
+
             editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
-    
+
             Msg.success("Saved ok");
         },
         error: function () {
@@ -229,7 +270,7 @@ function initEditReward() {
         }
     });
     flog("initEditReward3");
-    
+
     $("body").on("submitForm", "form", function (e) {
         var form = $(e.target);
         data = prepareQuizForSave(form);
@@ -247,12 +288,12 @@ function initEditReward() {
     $(".Cancel").click(function () {
         window.location = "../";
     });
-    
+
     initGroupEditing();
     initEntryFormEditing();
     initQuizBuilder();
     initRestrictions();
-    
+
     flog("initEditReward9");
 //        loadQuizEditor(quizContainer, quiz);
 //    } catch (e) {
@@ -269,12 +310,12 @@ function showHidePointsOrgType() {
 }
 function initEditorFrame() {
     flog('initEditorFrame');
-    
+
     flog('initPostMessage');
-    
+
     win.on('message', function (e) {
         flog('On got iframe message', e, e.originalEvent);
-        
+
         var data = $.parseJSON(e.originalEvent.data);
         if (data.isSaved) {
             var resp = data.resp;
@@ -283,10 +324,10 @@ function initEditorFrame() {
             iframeUrl = data.url;
         }
     });
-    
+
     var editorFrame = $('#editor-frame');
     editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
-    
+
 }
 
 
@@ -308,10 +349,10 @@ function initRestrictions() {
         ul.append(li);
         ul.removeClass('hidden');
         flog("Successfully added restriction!");
-    
+
         $("#modalAddRestriction").modal('hide');
     });
-    
+
     $(".restrictionList").on("click", ".remove", function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -435,7 +476,7 @@ function initManageReward() {
             window.location.href = resp.nextHref;
         }
     });
-    
+
 }
 
 function checkCookie() {
@@ -445,7 +486,7 @@ function checkCookie() {
         var _type = _sort_type[0];
         var _asc = _sort_type[1] === "asc" ? true : false;
         sortBy(_type, _asc);
-    
+
         if (_type === "status") {
             $("a.SortByStatus").attr("rel", _asc ? "desc" : "asc");
         } else {
@@ -471,7 +512,7 @@ function initController() {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
-    
+
         confirmDelete(href, href, function () {
             flog("remove it");
             link.closest("tr").remove();
@@ -485,27 +526,27 @@ function sortBy(type, asc) {
     var _list = {};
     var sortObject = function (obj) {
         var sorted = {},
-            array = [],
-            key,
-            l;
-        
+                array = [],
+                key,
+                l;
+
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
                 array.push(key);
             }
         }
-    
+
         array.sort();
         if (!asc) {
             array.reverse();
         }
-    
+
         for (key = 0, l = array.length; key < l; key++) {
             sorted[array[key]] = obj[array[key]];
         }
         return sorted;
     };
-    
+
     if (type === "title") {
         for (var i = 0, _item; _item = list[i]; i++) {
             _item = $(_item);
@@ -521,15 +562,15 @@ function sortBy(type, asc) {
             _list[status + "#" + rel] = _item;
         }
     }
-    
+
     _list = sortObject(_list);
-    
+
     var _rewardList = $("#manageReward .Content ul");
     _rewardList.html("");
     for (var i in _list) {
         _rewardList.append(_list[i]);
     }
-    
+
     stripList();
 }
 
@@ -537,10 +578,10 @@ function initSortableButton() {
     // Bind event for Status sort button
     $("body").on("click", "a.SortByStatus", function (e) {
         e.preventDefault();
-    
+
         var _this = $(this);
         var _rel = _this.attr("rel");
-    
+
         if (_rel === "asc") {
             sortBy("status", true);
             $.cookie("reward-sort-type", "status#asc");
@@ -551,14 +592,14 @@ function initSortableButton() {
             _this.attr("rel", "asc");
         }
     });
-    
+
     // Bind event for Title sort button
     $("body").on("click", "a.SortByTitle", function (e) {
         e.preventDefault();
-    
+
         var _this = $(this);
         var _rel = _this.attr("rel");
-    
+
         if (_rel === "asc") {
             sortBy("title", true);
             $.cookie("reward-sort-type", "title#asc");
@@ -573,7 +614,7 @@ function initSortableButton() {
 
 function initEntryFormEditing() {
     var chks = $(".entryFormItem input[type=checkbox]");
-    
+
     chks.click(function (e) {
         var node = $(e.target);
         if (node.is(":checked")) {
@@ -639,7 +680,7 @@ function initHistorySearch() {
         }
         doHistorySearch();
     });
-    
+
     $(document.body).on('keypress', '#data-query', function (e) {
         var code = e.keyCode || e.which;
         if (code == 13) {
@@ -648,18 +689,18 @@ function initHistorySearch() {
             return false;
         }
     });
-    
+
     $(document.body).on('change', '#data-query', function (e) {
         e.preventDefault();
-        
+
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#searchGroup', function (e) {
         e.preventDefault();
         doHistorySearch();
     });
-    
+
     $(document.body).on('change', '#searchReward', function (e) {
         e.preventDefault();
         doHistorySearch();
@@ -669,32 +710,32 @@ function initHistorySearch() {
 function doHistorySearch() {
     flog('doHistorySearch');
     Msg.info("Doing search...", 2000);
-    
+
     var data = {
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),
     };
     flog("data", data);
-    
+
     $('.btn-export-points').attr('href', 'points.csv?' + $.param(data));
-    
+
     var target = $("#pointsTable");
     target.load();
-    
+
     var serialize = function (obj, prefix) {
         var str = [], p;
         for (p in obj) {
             if (obj.hasOwnProperty(p)) {
                 var k = prefix ? prefix + "[" + p + "]" : p, v = obj[p];
                 str.push((v !== null && typeof v === "object") ?
-                    serialize(v, k) :
-                    encodeURIComponent(k) + "=" + encodeURIComponent(v));
+                        serialize(v, k) :
+                        encodeURIComponent(k) + "=" + encodeURIComponent(v));
             }
         }
         return str.join("&");
     }
-    
+
     var link = window.location.pathname + "?" + serialize(data);
     flog("new link", link);
     $.ajax({
