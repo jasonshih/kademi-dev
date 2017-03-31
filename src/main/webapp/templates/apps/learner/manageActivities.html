@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Manage activities</title>
+
+    </head>
+    <body class="">
+
+        <h2>Activities</h2>
+        
+        <p class="lead">Create activities such as assignments and instructor led training sessions from the module
+        manager.</p>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <table class="table table-striped">
+                    <colgroup>
+                        <col style="width: 60px"/>
+                        <col/>
+                        <col/>
+                        <col/>
+                        <col/>                        
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Module</th>
+                            <th>Activity</th>
+                            <th>Location</th>                            
+                            <th>Instructor</th>
+                            <th>Attendees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    #foreach($mce in $page.activities)
+                    <tr>
+                        <td>
+                            <a href="/websites/$mce.website.name/$mce.website.liveBranch/programs/$mce.programCode/$mce.courseCode/$mce.moduleCode/activity-$mce.id" class="btn btn-info btn-sm">
+                                <i class="fa fa-user"></i>
+                            </a>
+                        </td>
+                        <td>$formatter.formatDateTime($mce.calEvent.startDate)</td>
+                        <td>
+                            <a href="/websites/$mce.website.name/$mce.website.liveBranch/programs/$mce.programCode/$mce.courseCode/$mce.moduleCode/">
+                                $mce.programCode / $mce.courseCode / $mce.moduleCode
+                            </a>                            
+                        </td>
+                        <td>$mce.calEvent.summary</td>
+                        <td>$!mce.calEvent.location</td>                        
+                        <td>
+                            <a href="/manageUsers/$mce.calEvent.organisor.id">$mce.calEvent.organisor.formattedName</a>
+                        </td>
+                        <td>$mce.calEvent.numAttendees()</td>
+                    </tr>
+                    #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <script type="text/javascript" >
+        </script>
+    </body>
+</html>

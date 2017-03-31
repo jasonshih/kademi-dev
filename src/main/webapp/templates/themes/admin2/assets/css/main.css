@@ -1446,11 +1446,11 @@ fieldset[disabled] .btn-red:hover, fieldset[disabled] .btn-red:focus, fieldset[d
 .brand-warning,
 .brand-warning .panel-heading,
 .brand-warning .panel-body {
-  border-color: #e67e22; }
+  border-color: #8c559b; }
 .brand-warning .panel-heading {
-  background-color: #e67e22; }
+  background-color: #8c559b; }
 .brand-warning.statCard a {
-  color: #e67e22; }
+  color: #8c559b; }
 
 .panel-primary .panel-heading, .panel-primary .panel-heading > [class^="fa-"], .panel-primary .panel-heading > [class*=" fa-"], .panel-primary .panel-heading > [class^="icon-"], .panel-primary .panel-heading > [class*=" icon-"], .panel-primary .panel-heading > [class^="clip-"], .panel-primary .panel-heading > [class*=" clip-"],
 .panel-info .panel-heading,
@@ -2046,7 +2046,7 @@ ul.main-navigation-menu {
   width: 200px; }
 
 .modal-full {
-  padding-left: 0 !important;
+  padding-right: 0 !important;
   overflow: hidden; }
   .modal-full .modal-dialog {
     width: 100%;
