@@ -201,7 +201,6 @@
                 parentEl: '#' + randomId,
                 autoApply: true,
                 opens: 'left',
-                maxDate: moment(),
                 locale: {
                     format: 'DD/MM/YYYY'
                 }
