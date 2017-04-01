@@ -194,6 +194,19 @@
                                             <i class="clip-exit"></i> &nbsp;Log Out
                                         </a>
                                     </li>
+                                    <li>
+                                        <a href="" class="select-lang">
+                                            <i class="fa fa-language"></i> &nbsp; Default
+                                        </a>
+                                    </li>
+
+                                    #foreach( $lang in $rootFolder.languages.entrySet() )
+                                    <li>
+                                        <a href="$lang.key" class="select-lang">
+                                            <i class="fa fa-language"></i> &nbsp; $lang.value
+                                        </a>
+                                    </li>
+                                    #end
                                 </ul>
                             </li>
                             <li>

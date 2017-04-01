@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Audit Records</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Id</th>
+                    <th>Field</th>
+                    <th>Translated text</th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($trans in $page.translations)
+                <tr>
+                    <td>$trans.sourceType</td>
+                    <td>$trans.sourceId</td>
+                    <td>$trans.sourceField</td>
+                    <td>$trans.translated</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <script>
+            $(function () {
+
+            });
+        </script>
+    </body>
+</html>
