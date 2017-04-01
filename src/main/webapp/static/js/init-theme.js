@@ -35,7 +35,6 @@ function initTheme() {
     initEdify();
     initNav();
     initActiveNav(".initActive");
-    initFontSwitching();
     initHelp();
     //initModal();
     initTabPanel();
@@ -62,7 +61,76 @@ function initTheme() {
         $(".DropdownContent", div).toggle(300);
     });
 
+    initMultiLingual();
+
     flog("finished init-theme");
+}
+
+function initMultiLingual() {
+    $(".select-lang").click(function (e) {
+        e.preventDefault();
+        var langCode = $(e.target).closest("a").attr("href");
+        flog("select lang", langCode);
+        $.cookie('selectedLangCode', langCode, {expires: 360, path: '/'});
+        window.location.reload();
+    });
+
+    $("body").on("click", ".translatable", function (e) {
+        var target = $(e.target);
+        showTranslateButton(target);
+    });
+}
+
+function showTranslateButton(target) {
+    var btn = $("<button class='btn btn-info btn-sm' style='position: absolute; z-index: 10000'><i class='fa fa-language'></i></button>");
+    $("body").append(btn);
+
+    var position = target.offset();
+    position.top = position.top - 30;
+    btn.css(position);
+
+    btn.click(function (e) {
+        e.preventDefault();
+        var text = prompt("Please enter the translated text");
+        if (text) {
+            var sourceType = target.data("source-type");
+            if (sourceType == null) {
+                sourceType = target.closest("form").data("source-type");
+            }
+            var sourceId = target.data("source-id");
+            if (sourceId == null) {
+                sourceId = target.closest("form").data("source-id");
+            }
+            var sourceField = target.data("source-field");
+            saveTranslation(sourceType, sourceId, sourceField, text);
+        }
+    });
+
+    window.setTimeout(function () {
+        btn.remove()
+    }, 3000);
+}
+
+function saveTranslation(sourceType, sourceId, sourceField, text) {
+    $.ajax({
+        url: '/translations/',
+        data: {
+            sourceType: sourceType,
+            sourceId: sourceId,
+            sourceField: sourceField,
+            translated: text,
+            langCode : $.cookie('selectedLangCode')
+        },
+        method: "post",
+        dataType: 'json',
+        success: function (json) {
+            if( json.status) {
+                Msg.info("Saved");
+            } else {
+                Msg.error("There was a problem saving the translation " + json.messages);
+            }
+        }
+    });
 }
 
 function initLoginDropDown() {
@@ -106,49 +174,6 @@ function initNav() {
             jQuery(".nav-" + c[i]).addClass("active");
         }
     }
-}
-
-function initFontSwitching() {
-    log("initFontSwitching");
-    $(".ZoomOut").click(function () {
-        var currentFontSize = $('html').css('font-size');
-        var currentFontSizeNum = parseFloat(currentFontSize, 10);
-        var newFontSize = currentFontSizeNum * 1.2;
-        $('html').css('font-size', newFontSize);
-        log("ZoomOut", newFontSize);
-        return false;
-    });
-    $(".ZoomIn").click(function () {
-        var currentFontSize = $('html').css('font-size');
-        var currentFontSizeNum = parseFloat(currentFontSize, 10);
-        var newFontSize = currentFontSizeNum / 1.2;
-        $('html').css('font-size', newFontSize);
-        log("ZoomOut", newFontSize);
-        return false;
-    });
-
-    $(".ZoomReset").click(function () {
-        var newFontSize = "1em";
-        $('html').css('font-size', newFontSize);
-        log("ZoomReset", newFontSize);
-        saveFontSizeInCookie(newFontSize);
-        return false;
-    });
-    var initialFontSize = getSavedFontSize();
-    if (initialFontSize) {
-        log("set initial font size", initialFontSize)
-        $('html').css('font-size', initialFontSize);
-    }
-}
-
-function saveFontSizeInCookie(fontSize) {
-    $.cookie("font-size", "", {
-        expires: 99999,
-        path: "/"
-    });
-}
-function getSavedFontSize() {
-    return $.cookie("font-size");
 }
 
 /**
@@ -540,7 +565,7 @@ function doInitVideos() {
     if (images.length === 0) {
         return;
     }
-    $.getScript("/static/jwplayer/6.8/jwplayer.js", function () {        
+    $.getScript("/static/jwplayer/6.8/jwplayer.js", function () {
         $.getScript("/static/jwplayer/6.8/jwplayer.html5.js", function () {
             jwplayer.key = "cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=";
             replaceImagesWithJWPlayer(images);
