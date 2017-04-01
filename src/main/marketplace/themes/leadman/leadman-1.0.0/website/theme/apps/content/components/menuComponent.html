@@ -85,14 +85,14 @@
 
 #macro( showMenuItem $item )
 <li class="$formatter.ifTrue($item.active, 'active', '') $formatter.ifTrue($item.items.empty, '', 'dropdown') $item.id">
-    <a href="$formatter.ifNull($item.href, '#')" #if(!$item.items.empty)class="dropdown-toggle" data-toggle="dropdown"#end title="$!item.text" data-ripple="">
+    <a href="$formatter.ifNull($item.href, '#')" class="nav-${item.id} #if(!$item.items.empty) dropdown-toggle #end" #if(!$item.items.empty) data-toggle="dropdown"#end title="$!item.text" data-ripple="">
         <i class="$item.cssClass fa-2x text-default"></i>
         <span class="visible-xs-inline visible-sm-inline ml">$!item.text</span>
     </a>
     #if(!$item.items.empty)
         <ul class="dropdown-menu">
             #foreach($entry in $item.visible)
-                <li class="presentation menu-item-$entry.id $formatter.ifTrue($entry.active, 'active', '')" role="menuitem"><a href="$entry.href">$entry.text</a></li>
+                <li class="presentation menu-item-$entry.id $formatter.ifTrue($entry.active, 'active', '')" role="menuitem"><a href="$entry.href" class="nav-${item.id}">$entry.text</a></li>
             #end
         </ul>
     #end

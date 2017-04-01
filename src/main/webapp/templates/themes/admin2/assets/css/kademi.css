@@ -19,6 +19,17 @@
 }
 
 /* ============================================================================
+   Main left menu search box
+   ============================================================================ */
+#kademi-container .main-container .main-navigation .main-navigation-menu .search-menu input {
+    display: block;
+    width: 100%;
+    background-color: #252836;
+    border: none;
+    padding: 12px 8px;
+}
+
+/* ============================================================================
    Articles list
    ============================================================================ */
 .article-wrapper > article {

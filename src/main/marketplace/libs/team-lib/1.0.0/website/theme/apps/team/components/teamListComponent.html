@@ -59,7 +59,7 @@
                 <form method="post" action="." class="form-horizontal">
                     <input type="hidden" name="newMember" value="newMember" />
                     <div class="modal-body">
-                        <p>Create member in $page.teamOrganisation.title</p>
+                        <p>Create member in $formatter.ifNull($page.teamOrganisation.title, $page.teamOrganisation.orgId)</p>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="newUserNickName">Nick name</label>
                             <div class="col-md-9">
