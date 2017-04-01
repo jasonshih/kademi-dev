@@ -1,0 +1,9 @@
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
+.audio-wrapper{margin-left:auto;margin-right:auto;max-width:100%;width:500px;text-align:center}.audio-wrapper>div{display:inline-block!important;max-width:100%}
+/*# sourceMappingURL=keditor-component-audio-0.0.0.min.css.map */

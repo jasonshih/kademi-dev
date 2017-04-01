@@ -12,7 +12,12 @@ var pjson = require('./package.json');
 var rimraf = require('gulp-rimraf');
 var replace = require('gulp-replace');
 var concat = require('gulp-concat-util');
+var header = require('gulp-header');
+var fs = require('fs');
 
+// =========================================================================
+// Clean tasks
+// =========================================================================
 var clearFolder = function (src) {
     return gulp.src(src)
         .pipe(rimraf()).on('error', gutil.log);
@@ -21,94 +26,94 @@ var clearFolder = function (src) {
 gulp.task('clean-css-dist', function () {
     return clearFolder('./dist/css/*.*');
 });
-
-gulp.task('build-css-keditor', function () {
-    return gulp.src('./src/less/keditor.less')
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(replace('@{version}', pjson.version))
-        .pipe(rename({
-            suffix: '-' + pjson.version
-        }))
-        .pipe(gulp.dest('./dist/css/'), {
-            base: './src/less/'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(cssmin({
-            keepSpecialComments: 1,
-            advanced: false
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/css/'))
-});
-
-gulp.task('build-css-components', function () {
-    return gulp.src(['./src/less/keditor-component-*.less', '!./src/less/keditor.less', '!./src/less/_*.less'])
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(concat('keditor-components.css'))
-        .pipe(replace('@{version}', pjson.version))
-        .pipe(rename({
-            suffix: '-' + pjson.version
-        }))
-        .pipe(gulp.dest('./dist/css/'), {
-            base: './src/less/'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(cssmin({
-            keepSpecialComments: '1',
-            advanced: false
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/css/'))
-});
-
-gulp.task('build-css-edm-components', function () {
-    return gulp.src(['./src/less/keditor-edm-component-*.less', '!./src/less/keditor.less', '!./src/less/_*.less'])
-        .pipe(plumber())
-        .pipe(less())
-        .pipe(concat('keditor-edm-components.css'))
-        .pipe(replace('@{version}', pjson.version))
-        .pipe(rename({
-            suffix: '-' + pjson.version
-        }))
-        .pipe(gulp.dest('./dist/css/'), {
-            base: './src/less/'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(cssmin({
-            keepSpecialComments: '1',
-            advanced: false
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dist/css/'))
-});
-
-gulp.task('build-css-dist', gulpsync.sync(['clean-css-dist', 'build-css-keditor', 'build-css-components', 'build-css-edm-components']));
-
 gulp.task('clean-js-dist', function () {
     return clearFolder('./dist/js/*.*');
 });
+gulp.task('clean-css-src', function () {
+    return clearFolder('./src/css/*.*');
+});
+gulp.task('clean-snippets-examples', function () {
+    return clearFolder('./examples/snippets');
+});
 
-gulp.task('build-js-keditor', function () {
-    return gulp.src(['./src/js/keditor.js'])
+// =========================================================================
+// Components tasks
+// =========================================================================
+var buildComponents = function (typeType) {
+    return gulp.src(['./src/' + typeType + '/keditor-component-*.' + typeType])
         .pipe(plumber())
-        .pipe(replace('@{version}', pjson.version))
+        .pipe(concat('keditor-components.' + typeType + ''))
         .pipe(rename({
             suffix: '-' + pjson.version
         }))
-        .pipe(gulp.dest('./dist/js/'), {
-            base: './src/'
-        })
+        .pipe(gulp.dest('./dist/' + typeType + '/'))
+};
+
+gulp.task('build-css-components', function () {
+    return buildComponents('css');
+});
+gulp.task('build-js-components', function () {
+    return buildComponents('js');
+});
+
+var buildEdmComponents = function (typeType) {
+    return gulp.src(['./src/' + typeType + '/keditor-edm-component-*.' + typeType])
+        .pipe(plumber())
+        .pipe(concat('keditor-edm-components.' + typeType + ''))
+        .pipe(rename({
+            suffix: '-' + pjson.version
+        }))
+        .pipe(gulp.dest('./dist/' + typeType + '/'))
+};
+
+gulp.task('build-css-edm-components', function () {
+    return buildEdmComponents('css');
+});
+gulp.task('build-js-edm-components', function () {
+    return buildEdmComponents('js');
+});
+
+// =========================================================================
+// Copy tasks
+// =========================================================================
+gulp.task('copy-css', function () {
+    return gulp.src('./src/css/*.css')
+        .pipe(rename({
+            suffix: '-' + pjson.version
+        }))
+        .pipe(gulp.dest('./dist/css/'));
+});
+gulp.task('copy-js', function () {
+    return gulp.src('./src/js/*.js')
+        .pipe(rename({
+            suffix: '-' + pjson.version
+        }))
+        .pipe(gulp.dest('./dist/js/'));
+});
+gulp.task('copy-snippets-src-examples', function () {
+    return gulp.src('./src/snippets/**/*')
+        .pipe(gulp.dest('./examples/snippets'));
+});
+
+// =========================================================================
+// Minify tasks
+// =========================================================================
+gulp.task('min-css', function () {
+    return gulp.src('./dist/css/*.css')
+        .pipe(sourcemaps.init())
+        .pipe(cssmin({
+            specialComments: 1,
+            advanced: false
+        }))
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(sourcemaps.write('./'))
+        .pipe(gulp.dest('./dist/css/'))
+});
+
+gulp.task('min-js', function () {
+    return gulp.src(['./dist/js/*.js'])
         .pipe(sourcemaps.init())
         .pipe(uglify({
             preserveComments: /(?:^!|@(?:license|preserve|cc_on))/
@@ -120,52 +125,54 @@ gulp.task('build-js-keditor', function () {
         .pipe(gulp.dest('./dist/js/')).on('error', gutil.log);
 });
 
-gulp.task('build-js-components', function () {
-    return gulp.src(['./src/js/keditor-component-*.js', '!./src/js/keditor.js'])
-        .pipe(plumber())
-        .pipe(concat('keditor-components.js'))
-        .pipe(replace('@{version}', pjson.version))
-        .pipe(rename({
-            suffix: '-' + pjson.version
-        }))
-        .pipe(gulp.dest('./dist/js/'), {
-            base: './src/'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(uglify({
-            preserveComments: 'some'
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./dist/js/')).on('error', gutil.log);
+// =========================================================================
+// Header tasks
+// =========================================================================
+var prependHeader = function (fileType) {
+    return gulp.src(['./dist/' + fileType + '/*.' + fileType])
+        .pipe(header(fs.readFileSync('./header.txt', 'utf8'), {pkg: pjson}))
+        .pipe(gulp.dest('./dist/' + fileType));
+}
+
+gulp.task('prepend-header-css', function () {
+    return prependHeader('css')
+});
+gulp.task('prepend-header-js', function () {
+    return prependHeader('js')
 });
 
-gulp.task('build-js-edm-components', function () {
-    return gulp.src(['./src/js/keditor-edm-component-*.js', '!./src/js/keditor.js'])
+// =========================================================================
+// Examples tasks
+// =========================================================================
+gulp.task('build-snippets-examples', gulpsync.sync(['clean-snippets-examples', 'copy-snippets-src-examples']));
+
+// =========================================================================
+// Build CSS
+// =========================================================================
+gulp.task('compile-less', function () {
+    return gulp.src(['./src/less/*.less', '!./src/less/_*.less'])
         .pipe(plumber())
-        .pipe(concat('keditor-edm-components.js'))
-        .pipe(replace('@{version}', pjson.version))
-        .pipe(rename({
-            suffix: '-' + pjson.version
-        }))
-        .pipe(gulp.dest('./dist/js/'), {
-            base: './src/'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(uglify({
-            preserveComments: 'some'
-        }))
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./dist/js/')).on('error', gutil.log);
+        .pipe(less())
+        .pipe(gulp.dest('./src/css/')).on('error', gutil.log);
+});
+gulp.task('build-css', gulpsync.sync(['clean-css-src', 'compile-less']));
+
+// =========================================================================
+// Watch
+// =========================================================================
+gulp.task('watch', function () {
+    gulp.watch(['./src/less/*.less'], ['build-css']);
 });
 
-gulp.task('build-js-dist', gulpsync.sync(['clean-js-dist', 'build-js-keditor', 'build-js-components', 'build-js-edm-components']));
+// =========================================================================
+// Main tasks
+// =========================================================================
+gulp.task('build-css-dist', gulpsync.sync(['build-css', 'clean-css-dist', 'copy-css', 'build-css-components', 'build-css-edm-components', 'min-css', 'prepend-header-css']));
+gulp.task('build-js-dist', gulpsync.sync(['clean-js-dist', 'copy-js', 'build-js-edm-components', 'build-js-components', 'min-js', 'prepend-header-js']));
 
-// Gulp Build
-gulp.task('build', ['build-css-dist', 'build-js-dist']);
+gulp.task('build', ['build-css-dist', 'build-js-dist', 'build-snippets-examples']);
 
+gulp.task('dev', ['build-css', 'watch']);
+
+// Gulp Default
+gulp.task('default', ['build-css-dist', 'build-js-dist']);

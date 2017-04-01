@@ -1,8 +1,15 @@
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor Text Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 0.0.0
+ * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 /* ==================================================================================
@@ -24,7 +31,7 @@
  * KEditor KSVG map Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 0.0.0
+ * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 /* ==================================================================================
@@ -152,7 +159,7 @@ svg {
  * KEditor Text Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 0.0.0
+ * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 /* ==================================================================================
@@ -188,7 +195,7 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-component-content-"] 
  * KEditor Text Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
- * @version: 0.0.0
+ * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
 /* ==================================================================================
