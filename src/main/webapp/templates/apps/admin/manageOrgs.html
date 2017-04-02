@@ -46,11 +46,16 @@
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input type="text" id="org-query-parent" class="form-control" placeholder="Parent" value="" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query-parent">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </span>                                                                        
                                 </div>                                
                             </div>
 
                             <div class="col-md-3">
-                                <select name="searchOrgType" id="searchOrgType" class="form-control input-sm">
+                                <select name="searchOrgType" id="searchOrgType" class="form-control">
                                     <option value="">[Select a type]</option>
                                     <option value="NONE">[No type]</option>
                                     #foreach($orgType in $rootFolder.orgTypes)
@@ -60,8 +65,8 @@
                             </div>
                             <div class="col-md-3">
                                 <div class="btn-group pull-right">
-                                    <button type="button" class="btn btn-sm btn-default btn-orgs-remove">Remove</button>
-                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <button type="button" class="btn btn-default btn-orgs-remove">Remove</button>
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu" role="menu">
