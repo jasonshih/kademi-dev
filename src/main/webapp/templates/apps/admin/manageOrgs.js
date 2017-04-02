@@ -219,9 +219,72 @@
         initEditPath();
         initSort();
         initMerge();
+        initMove();
     };
 
 })(jQuery, window, document);
+
+function initMove() {
+    var modal = $("#modal-move-orgs");
+    modal.find("form").forms({
+        callback : function(resp){
+            if( resp.status) {
+                Msg.info("Move complete");
+                modal.modal("hide");
+                window.location.reload();
+            } else {
+                Msg.warning("Move failed. " + resp.messages);
+            }
+        }
+    });
+    
+    $("body").on("click", ".btn-orgs-move", function(e) {
+        flog("move..");
+        e.preventDefault();
+        var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the organisations you want to move by clicking the checkboxs to the right");
+            return;
+        }
+
+        var tbody = modal.find(".orgsMoveTableBody");
+        var destSelect = modal.find("select[name=moveDest]");
+        tbody.html("");
+        var moveIds = "";
+        checkBoxes.each(function(i, n) {
+            var tr = $("<tr>");
+            var chk = $(n);
+            var selected = chk.closest("tr");
+            var orgid = selected.find(".org-orgid").text();
+            var title =  selected.find(".org-title").text();
+            var numMembers =  selected.find(".org-members").text();
+            var internalId = selected.data("id");
+            moveIds += internalId + ",";
+
+            var td = $("<td>");
+            td.text(orgid);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(title);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(numMembers + "");
+            tr.append(td);
+
+            tbody.append(tr);
+
+            var opt = $("<option>");
+            opt.attr("value", internalId);
+            opt.text(orgid + " - " + title);
+            destSelect.append(opt);
+        });
+        modal.find("textarea").val(moveIds);
+
+        modal.modal("show");
+    });    
+}
 
 function initMerge() {
     var modal = $("#modal-merge-orgs");
@@ -323,7 +386,7 @@ function getSearchValue(search, key) {
 
 
 function initSearchOrg() {
-    $("#org-query").on({
+    $("#org-query, #org-query-parent").on({
         keyup: function () {
             typewatch(function () {
                 flog("do search");
@@ -343,7 +406,7 @@ function initSearchOrg() {
 
 function doSearch() {
     flog("doSearch", $("#searchOrgType"));
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val();
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&searchOrgType=" + $("#searchOrgType").val() + "&parentOrgId=" + $("#org-query-parent").val();
     $.ajax({
         type: 'GET',
         url: newUrl,

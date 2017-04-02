@@ -5,20 +5,6 @@
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
-        <style>
-            .search-user, .search-user-group {
-                float: left;
-            }
-
-            .search-user {
-                width: 300px;
-                margin-right: 10px;
-            }
-
-            .search-user-group {
-                width: 200px;
-            }
-        </style>
     </head>
     <body class="manage-business-unit">
         <div id="manage-business-unit">
@@ -45,39 +31,51 @@
                 <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
                 <div class="panel-body">
                     <div class="form-horizontal">
-                        <div class="btn-group pull-right">
-                            <button type="button" class="btn btn-sm btn-default btn-orgs-remove">Remove</button>
-                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
-                                <li><a href="#" class="btn-orgs-merge">Merge selected..</a></li>
-                                <li><a href="#" class="btn-orgs-sort-all-asc">Sort all by ID Asc</a></li>
-                                <li><a href="#" class="btn-orgs-sort-all-desc">Sort all by ID Desc</a></li>
-                            </ul>
-                        </div>
-                        <p class="input-group search-user input-group-sm">
-                            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#org-query">
-                                    <i class="fa fa-times"></i>
-                                </button>
-                            </span>
-                        </p>
-                        <div class="form-group">
-                            <label for="searchOrgType" class="col-sm-1 control-label">Type</label>
+                        <div class="search-user row">
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </span>                                    
+                                </div>
+                            </div>
+                           
+                            <div class="col-md-3">
+                                <div class="input-group">
+                                    <input type="text" id="org-query-parent" class="form-control" placeholder="Parent" value="" />
+                                </div>                                
+                            </div>
 
-                            <div class="col-sm-2">
+                            <div class="col-md-3">
                                 <select name="searchOrgType" id="searchOrgType" class="form-control input-sm">
-                                    <option value="">&nbsp;</option>
+                                    <option value="">[Select a type]</option>
                                     <option value="NONE">[No type]</option>
                                     #foreach($orgType in $rootFolder.orgTypes)
-                                        <option value="$orgType.name">$orgType.displayName</option>
+                                    <option value="$orgType.name">$orgType.displayName</option>
                                     #end
-                                </select>
+                                </select>                                                                                        
+                            </div>
+                            <div class="col-md-3">
+                                <div class="btn-group pull-right">
+                                    <button type="button" class="btn btn-sm btn-default btn-orgs-remove">Remove</button>
+                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
+                                        <li><a href="#" class="btn-orgs-merge">Merge selected..</a></li>
+                                        <li><a href="#" class="btn-orgs-move">Move to parent..</a></li>
+                                        <li><a href="#" class="btn-orgs-sort-all-asc">Sort all by ID Asc</a></li>
+                                        <li><a href="#" class="btn-orgs-sort-all-desc">Sort all by ID Desc</a></li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
+
                     </div>
 
                     <div>
@@ -107,39 +105,39 @@
                             </thead>
                             <tbody id="searchResults" class="search-results">
                                 #foreach($org in $page.searchResults)
-                                    <tr data-id="$org.actualId">
-                                        <td class="org-orgid">$org.id</td>
-                                        <td class="org-title">$formatter.htmlEncode($org.title)</td>
-                                        <td>$org.orgTypeDisplayNames</td>
-                                        <td>$org.parentPath</td>
-                                        <td>$!org.phone</td>
-                                        <td>$!org.address</td>
-                                        <td class="org-members">$!org.memberCount</td>
-                                        <td class="action">
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="${org.href}edit" class="btn btn-sm btn-primary btn-sm">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
-                                                    <li><a class="btn-edit-path" role="button" data-path="$org.orgPath" data-orgid="$org.actualId" href="#">Edit Path</a></li>
-                                                    <li><a href="${org.href}viewDetails">View users and details</a></li>
-                                                    <li><a href="${org.href}organisations">Manage child orgs</a></li>
-                                                    <li><a href="${org.href}manageRepos">File manager</a></li>
-                                                    #if( $org.org.adminDomain )
-                                                        <li class="divider"></li>
-                                                        <li><a href="$page.href?gotoDomain=${org.org.adminDomain}">Admin dashboard</a></li>
-                                                    #end
-                                                    <li class="divider"></li>
-                                                    <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><input type="checkbox" name="toRemoveId" value="$org.actualId" tabindex="$foreach.count" /></td>
-                                    </tr>
+                                <tr data-id="$org.actualId">
+                                    <td class="org-orgid">$org.id</td>
+                                    <td class="org-title">$formatter.htmlEncode($org.title)</td>
+                                    <td>$org.orgTypeDisplayNames</td>
+                                    <td>$org.parentPath</td>
+                                    <td>$!org.phone</td>
+                                    <td>$!org.address</td>
+                                    <td class="org-members">$!org.memberCount</td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="${org.href}edit" class="btn btn-sm btn-primary btn-sm">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
+                                                <li><a class="btn-edit-path" role="button" data-path="$org.orgPath" data-orgid="$org.actualId" href="#">Edit Path</a></li>
+                                                <li><a href="${org.href}viewDetails">View users and details</a></li>
+                                                <li><a href="${org.href}organisations">Manage child orgs</a></li>
+                                                <li><a href="${org.href}manageRepos">File manager</a></li>
+                                                #if( $org.org.adminDomain )
+                                                <li class="divider"></li>
+                                                <li><a href="$page.href?gotoDomain=${org.org.adminDomain}">Admin dashboard</a></li>
+                                                #end
+                                                <li class="divider"></li>
+                                                <li><a class="btn-delete-org" href="${org.href}">Delete this organisation</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$org.actualId" tabindex="$foreach.count" /></td>
+                                </tr>
                                 #end
                             </tbody>
                         </table>
@@ -304,7 +302,7 @@
                                         <select name="orgTypeName" class="form-control" id="orgTypeName">
                                             <option value="">[None]</option>
                                             #foreach($orgType in $page.orgTypes)
-                                                $formatter.option($orgType.name, $orgType.displayName, "")
+                                            $formatter.option($orgType.name, $orgType.displayName, "")
                                             #end
                                         </select>
                                     </div>
@@ -402,6 +400,53 @@
                 </div>
             </div>
 
+            
+            <div id="modal-move-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Move Organisations</h4>
+                        </div>
+                        <form method="post" action="" class="form-horizontal">
+                            <div class="modal-body">
+                                <p>The organisations will be moved into the one selected here. This will move user memberships to the merge destination organisation, and the other organisations will be deleted</p>
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label for="destOrgId" class="control-label col-md-3">Move to</label>
+
+                                    <div class="col-md-9">
+                                        <input type="text" name="destOrgId" class="form-control" placeholder="Destination orgid" />
+                                    </div>
+                                </div>
+
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>OrgID</th>
+                                            <th>Title</th>
+                                            <th># members</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="orgsMoveTableBody">
+                                        <tr>
+                                            <td colspan="2">Please wait..</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <i>Internal ID's to move</i>
+                                <textarea name="mergeIds" class="form-control required"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Move</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>            
+            
             <script type="text/javascript">
                 $(function () {
                     initManageOrgs();
