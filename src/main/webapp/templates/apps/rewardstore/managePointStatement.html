@@ -16,7 +16,7 @@
                 height: inherit;
             }
             #managePoints div.row span {
-               margin: 5px; 
+               margin: 5px;
             }
         </style>
     </head>
@@ -32,14 +32,14 @@
                             <span class="glyphicon glyphicon-download"></span>
                             Export to CSV
                         </a>
-                 </div>       
+                 </div>
                  <div class="search">
                     <span>
                         <label class="control-label" for="newTitle">Reward</label>
                     </span>
                     <span>
                         <select id="searchStatementRewardId" name="searchStatementRewardId" class="pointsType form-control">
-                                <option value="" selected="true"> Select </option> 
+                                <option value="" selected="true"> Select </option>
                                 #foreach($reward in $page.rewards)
                                     $formatter.option($reward.id, $reward.name, 0)
                                 #end
@@ -48,14 +48,14 @@
                      <span>
                         <label class="control-label" for="newTitle">Date</label>
                      </span>
-                     <span>   
+                     <span>
                         <select id="searchStatementDateId" name="searchStatementDateId" class="pointsType form-control">
-                            <option value=""> Select </option> 
+                            <option value=""> Select </option>
                             #foreach($date in $page.PointStatementsDates)
                                 $formatter.option($formatter.formatDateTime($date, $page.organisation.timezone), $date, 1)
                             #end
                         </select>
-                    </span>      
+                    </span>
                     <span id="search" class="input-group-addon"><i class="fa fa-search"></i></span>
                 </div>
             </div>
@@ -86,10 +86,10 @@
                                          <span>
                                             <label class="control-label" for="newTitle">Date</label>
                                          </span>
-                                         <span>   
+                                         <span>
                                             <input type="text" name="createStatementDate" data-format="DD/MM/YYYY" value="$!page.expiryDate" class="form-control DateTime" />
                                             <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                                        </span>      
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -130,13 +130,13 @@
                                     #foreach($r in $page.paginator.records)
                                         <tr>
                                             <td>$r.reward.name</td>
-                                            <td>$r.statementDate</td>                                            
+                                            <td>$r.statementDate</td>
                                             #if( $r.issuedTo.asOrg() )
                                                 <td>
-                                                    $r.issuedTo.orgId
+                                                    $r.issuedTo.asOrg().orgId
                                                 </td>
                                                 <td>
-                                                    $r.issuedTo.title
+                                                    $r.issuedTo.asOrg().title
                                                 </td>
                                                 <td></td>
                                             #else
@@ -153,7 +153,7 @@
                                             <td>$r.balance</td>
                                         </tr>
                                     #end
-                                #end    
+                                #end
                             </tbody>
                             <tfoot id="pointsFooter">
                                 <tr>
@@ -163,7 +163,7 @@
                                 </tr>
                             </tfoot>
                         </table>
-                        
+
                     </div>
                 </div>
             </div>

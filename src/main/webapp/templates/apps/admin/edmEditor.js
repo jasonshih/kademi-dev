@@ -344,6 +344,15 @@ function initKEditor(fileName, stylesData) {
                 '           </div>' +
                 '       </div>' +
                 '   </div>' +
+                '   <div class="form-group">' +
+                '       <label class="col-sm-12">Background Color (HEX)</label>' +
+                '       <div class="col-sm-12">' +
+                    '       <div class="input-group">' +
+                    '           <span class="input-group-addon" style="color: transparent;"><i class="fa fa-stop"></i></span>' +
+                    '           <input type="text" max="7" value="" class="txt-bg-color form-control" />' +
+                    '       </div>' +
+                '       </div>' +
+                '   </div>' +
                 '</form>'
             );
 
@@ -372,6 +381,38 @@ function initKEditor(fileName, stylesData) {
                 }
 
                 column.prop('style')[propName] = number + 'px';
+            });
+
+
+            var hexDigits = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
+
+            //Function to convert rgb color to hex format
+            function rgb2hex(rgb) {
+                rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+            }
+            function hex(x) {
+                return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+            }
+
+            var txtBgColor = form.find('.txt-bg-color');
+            var txtBgColorPreview = txtBgColor.siblings('span');
+            txtBgColor.on('change', function () {
+                var container = keditor.getSettingContainer();
+                var target = container.find('.keditor-container-content');
+                var color = this.value;
+                if (color.indexOf('#') !== 0){
+                    color = '#' + color;
+                }
+                var isOk  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(color);
+                if (isOk){
+                    txtBgColorPreview.css('color', color);
+                    target.attr('bgcolor', rgb2hex(txtBgColorPreview.css('color')));
+                } else {
+                    txtBgColorPreview.css('color', 'transparent');
+                    target.attr('bgcolor', '');
+                }
+
             });
         },
         containerSettingShowFunction: function (form, container, keditor) {
@@ -420,6 +461,9 @@ function initKEditor(fileName, stylesData) {
                     '   <strong>Column #' + (i + 1) + '</strong>' + settingHtml +
                     '</div>'
                 );
+
+                var bgcolor = column.attr('bgcolor');
+                form.find('.txt-bg-color').val(bgcolor).trigger('change');
             });
         }
     });
