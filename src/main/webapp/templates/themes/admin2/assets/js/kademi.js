@@ -811,7 +811,7 @@ function showTranslateButton(target, timer) {
     
     var btn = $('#btn-translate');
     if (btn.length === 0) {
-        btn = $('<button class="btn btn-warning btn-sm" id="btn-translate"><i class="fa fa-language"></i>Translation</button>');
+        btn = $('<button class="btn btn-warning btn-sm" id="btn-translate"><i class="fa fa-language"></i></button>');
         $(document.body).append(btn);
     }
     
@@ -942,7 +942,6 @@ function showModalTranslate(target) {
                 destinationTextbox = translatedTextboxes.filter('textarea.htmleditor');
                 modal.find('.htmleditor-wrapper').show();
                 
-                var targetCkeditor = CKEDITOR.instances[target.attr('id')];
                 var ckeditor = CKEDITOR.instances[destinationTextbox.attr('id')];
                 ckeditor.setReadOnly(false);
                 ckeditor.setData(translatedText);
