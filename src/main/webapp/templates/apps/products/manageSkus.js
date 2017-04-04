@@ -1,5 +1,84 @@
+
 (function () {
 
+	$(document.body).on('keypress', '#data-query', function (e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            e.preventDefault();
+            doHistorySearch();
+            return false;
+        }
+    });
+	
+	function doHistorySearch() {
+	    flog('doHistorySearch');
+	    
+	    Msg.info("Doing search...", 2000);
+
+	    var data = {
+	        dataQuery: $("#data-query").val(),
+	    };
+	    flog("data", data);
+
+	    $('.btn-export-points').attr('href', 'skus.csv?' + $.param(data));
+
+	    var target = $("#pointsTable");
+	    target.load();
+
+
+	    var link = window.location.pathname + "?" + $.param(data);
+	    flog("new link", link);
+	    
+	    $.ajax({
+	        type: "GET",
+	        url: link,
+	        dataType: 'html',
+	        success: function (content) {
+	            flog('response', content);
+	            Msg.success("Search complete", 2000);
+	            var newBody = $(content).find("#pointsTable");
+	            target.replaceWith(newBody);
+	            history.pushState(null, null, link);
+	            $("abbr.timeago").timeago();
+	            $("#pointsTable").paginator();
+	        }
+	    });
+	}
+
+    function initProductsCsv() {
+        var modalUploadCsv = $("#modal-upload-csv");
+
+        var resultUploadCsv = modalUploadCsv.find('.upload-results');
+        $("#do-upload-csv").mupload({
+            buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
+            url: "skus.csv",
+            useJsonPut: false,
+            oncomplete: function (data, name, href) {
+                flog("oncomplete:", data.result.data, name, href);
+                resultUploadCsv.find('.num-updated').text(data.result.data.numUpdated);
+                resultUploadCsv.find('.num-unmatched').text(data.result.data.unmatched.length);
+                showUnmatched(resultUploadCsv, data.result.data.unmatched);
+                resultUploadCsv.show();
+                Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of products");
+                $("#productsTableContainer").reloadFragment();
+            }
+        });
+    }
+
+    function showUnmatched(resultUploadCsv, unmatched) {
+        var unmatchedTable = resultUploadCsv.find("table");
+        var tbody = unmatchedTable.find("tbody");
+        tbody.html("");
+        $.each(unmatched, function (i, row) {
+            flog("unmatched", row);
+            var tr = $("<tr>");
+            $.each(row, function (ii, field) {
+                tr.append("<td>" + field + "</td>");
+            });
+            tbody.append(tr);
+        });
+    }
+	
     function initUpdateSku() {
         $("#productsTableBody").on("change", ".input-sku", function (e) {
             var target = $(e.target);
@@ -325,8 +404,10 @@
     function reloadSkuTable() {
         $("#productsTableBody").reloadFragment({
             whenComplete: function () {
+            	
                 //initSkuImgUpload();
-            }
+            },
+            url: window.location.href
         });
     }
 
@@ -337,6 +418,7 @@
         initUpdateBaseCost();
         initUploadSkuImage();
         //initSkuImgUpload();
+        initProductsCsv();
         initUpdateSkuStock();
     });
 
