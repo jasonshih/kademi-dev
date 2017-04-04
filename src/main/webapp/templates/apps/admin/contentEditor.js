@@ -1,6 +1,6 @@
 var win = $(window);
 
-function doPostMessage(data, url) {    
+function doPostMessage(data, url) {
     data.from = 'keditor';
     var dataStr = JSON.stringify(data);
     flog('doPostMessage', data, window.parent);
@@ -26,33 +26,36 @@ function initContentEditorPage(fileName) {
                 }
             }
         });
-
+        
         window.onbeforeunload = function (e) {
             if (body.hasClass('content-changed')) {
                 e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
             }
         };
     }
-    var timer;
-    win.on('resize', function () {
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            var bd = $(document.body);
-            var paddingTop = bd.css('padding-top');
-            if( paddingTop ) {
-                paddingTop = paddingTop.replace('px', '');
-                $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
-            }
-        }, 100);
-    }).trigger('resize');
-
-    initKEditor(body, fileName);
+    
+    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+        var timer;
+        win.on('resize', function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var bd = $(document.body);
+                var paddingTop = bd.css('padding-top');
+                if (paddingTop) {
+                    paddingTop = paddingTop.replace('px', '');
+                    $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
+                }
+            }, 100);
+        }).trigger('resize');
+        
+        initKEditor(body, fileName);
+    });
     initSaving(body, fileName);
-
+    
     setTimeout(function () {
         hideLoadingIcon();
     }, 200);
-
+    
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -62,12 +65,12 @@ function initContentEditorPage(fileName) {
 
 function initKEditor(fileName) {
     var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
-
-    if( typeof themeCssFiles !== 'undefined' ) {
+    
+    if (typeof themeCssFiles !== 'undefined') {
         
         if (themeCss.length > 0) {
             themeCssFiles.push(themeCss.attr('href'));
-        }    
+        }
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
     
@@ -81,41 +84,41 @@ function getParam(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var value = regex.exec(window.location.href) || '';
     value = decodeURIComponent(value[1]);
-
+    
     return value;
 }
 
 function initSaving(body, fileName) {
     flog('initSaving', fileName);
-
+    
     var isEmbeddedIframe = body.hasClass('embedded-iframe');
     var btnSaveFile = $('.btn-save-file');
     var postMessageData;
     if (isEmbeddedIframe) {
         win.on('message', function (e) {
             flog('On got message', e, e.originalEvent);
-
+            
             postMessageData = $.parseJSON(e.originalEvent.data);
             if (postMessageData.triggerSave) {
                 btnSaveFile.trigger('click');
             }
         });
     }
-
+    
     btnSaveFile.on('click', function (e) {
         e.preventDefault();
-
+        
         showLoadingIcon();
         $('[contenteditable]').blur();
         var fileContent = $('#content-area').contentEditor('getContent');
         var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
-
+        
         $.ajax({
             url: saveUrl,
             type: 'POST',
             data: {
                 body: fileContent
-            },            
+            },
             dataType: 'json',
             success: function () {
                 if (isEmbeddedIframe) {
@@ -127,7 +130,7 @@ function initSaving(body, fileName) {
                 } else {
                     Msg.success('File is saved!');
                 }
-
+                
                 hideLoadingIcon();
                 body.removeClass('content-changed');
             },
