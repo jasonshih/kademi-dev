@@ -52,7 +52,7 @@
         <link rel="stylesheet" href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" />
         <link rel="stylesheet" href="/static/perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css" />
         <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=8.1.6" />
-        <link rel="stylesheet" href="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css"/>
+        <link rel="stylesheet" href="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" />
         <!-- end: MAIN CSS -->
 
         <!-- start: MAIN JAVASCRIPTS -->
@@ -108,21 +108,21 @@
     <body>
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
-        #foreach($cssFile in $groupEntry.value)
-        <link rel="stylesheet" href="$cssFile" />
-        #end
+            #foreach($cssFile in $groupEntry.value)
+                <link rel="stylesheet" href="$cssFile" />
+            #end
         #end
         <!-- End injected CSS sources -->
 
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-        #foreach($jsFile in $groupEntry.value)
-        <script type="text/javascript" src="$jsFile">//</script>
-        #end
+            #foreach($jsFile in $groupEntry.value)
+                <script type="text/javascript" src="$jsFile">//</script>
+            #end
         #end
         <!-- End injected CSS sources -->
 
-        <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end >
+        <div id="kademi-container" #if ($request.getCookie("admin-sidebar").value == "collapsed") class="navigation-small" #end>
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <!-- start: TOP NAVIGATION CONTAINER -->
                 <div class="container">
@@ -166,9 +166,9 @@
                                         <a href="/edit"><i class="clip-pencil"></i> &nbsp; Organisation details</a>
                                     </li>
                                     #foreach($org in $page.organisations)
-                                    <li>
-                                        <a href="$org.href"><i class="clip-home-2"></i> &nbsp; $org.title</a>
-                                    </li>
+                                        <li>
+                                            <a href="$org.href"><i class="clip-home-2"></i> &nbsp; $org.title</a>
+                                        </li>
                                     #end
                                 </ul>
                             </li>
@@ -176,7 +176,7 @@
                             <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
                                     <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
@@ -194,18 +194,21 @@
                                             <i class="clip-exit"></i> &nbsp;Log Out
                                         </a>
                                     </li>
+
+                                    <li class="divider"></li>
                                     <li>
                                         <a href="" class="select-lang">
                                             <i class="fa fa-language"></i> &nbsp; Default
                                         </a>
                                     </li>
 
+
                                     #foreach( $lang in $rootFolder.languages.entrySet() )
-                                    <li>
-                                        <a href="$lang.key" class="select-lang">
-                                            <i class="fa fa-language"></i> &nbsp; $lang.value
-                                        </a>
-                                    </li>
+                                        <li>
+                                            <a href="$lang.key" class="select-lang">
+                                                <i class="fa fa-language"></i> &nbsp; $lang.value
+                                            </a>
+                                        </li>
                                     #end
                                 </ul>
                             </li>
@@ -235,43 +238,43 @@
                         <li class="search-menu"><input type="text" placeholder="Type to Search Menu"></li>
                         #foreach($rootItem in $menu.items)
 
-                        <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                            #set($href = "#")
-                            #set($href = $rootItem.href)
-                            <a href="$href" data-ordering="$rootItem.ordering">
-                                #if($rootItem.cssClass)
-                                <i class="menu-item-$rootItem.id $rootItem.cssClass fa-fw"></i>
-                                #end
-                                <span class="title">$rootItem.text</span>
+                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                                #set($href = "#")
+                                #set($href = $rootItem.href)
+                                <a href="$href" data-ordering="$rootItem.ordering">
+                                    #if($rootItem.cssClass)
+                                        <i class="menu-item-$rootItem.id $rootItem.cssClass fa-fw"></i>
+                                    #end
+                                    <span class="title">$rootItem.text</span>
 
-                                #if( !$rootItem.items.isEmpty() )
-                                <i class="icon-arrow"></i>
-                                #end
+                                    #if( !$rootItem.items.isEmpty() )
+                                        <i class="icon-arrow"></i>
+                                    #end
 
-                                #if( $rootItem.active )
-                                <!--<span class="selected"></span>-->
-                                #end
-                            </a>
+                                    #if( $rootItem.active )
+                                        <!--<span class="selected"></span>-->
+                                    #end
+                                </a>
 
-                            #set($subItems = $rootItem.items)
-                            #if ($subItems && $subItems.size() > 0)
-                            <ul class="sub-menu">
-                                #foreach($sectionItem in $subItems)
-                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
-                                    <a href="$sectionItem.href">
-                                        #if($sectionItem.cssClass)
-                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
+                                #set($subItems = $rootItem.items)
+                                #if ($subItems && $subItems.size() > 0)
+                                    <ul class="sub-menu">
+                                        #foreach($sectionItem in $subItems)
+                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
+                                                <a href="$sectionItem.href">
+                                                    #if($sectionItem.cssClass)
+                                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
+                                                    #end
+                                                    <span class="title">$sectionItem.text</span>
+                                                    #if( $sectionItem.active )
+                                                        <span class="selected"></span>
+                                                    #end
+                                                </a>
+                                            </li>
                                         #end
-                                        <span class="title">$sectionItem.text</span>
-                                        #if( $sectionItem.active )
-                                        <span class="selected"></span>
-                                        #end
-                                    </a>
-                                </li>
+                                    </ul>
                                 #end
-                            </ul>
-                            #end
-                        </li>
+                            </li>
                         #end
                     </ul>
                     <!-- end: MAIN NAVIGATION MENU -->
@@ -283,11 +286,11 @@
                         <!-- start: PAGE HEADER -->
                         <ol class="breadcrumb">
                             #if( $page.parent.title )
-                            <li>
-                                <a href="$page.parent.href">
-                                    $page.parent.title
-                                </a>
-                            </li>
+                                <li>
+                                    <a href="$page.parent.href">
+                                        $page.parent.title
+                                    </a>
+                                </li>
                             #end
                             <li class="active">
                                 <a href="$page.href">$formatter.htmlEncode($page.title)</a>
@@ -343,37 +346,35 @@
         </script>
 
         #if( !$request.hostHeader.contains(":") )
-        <!--Start of Zopim Live Chat Script-->
-        <script type="text/javascript">
-            var ua = navigator.userAgent.toLowerCase();
-            var platform = navigator.platform.toLowerCase();
-            var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
-            var isMobile = /ios|android|webos/.test(platformName);
-            if (!isMobile) {
-                window.$zopim || (function (d, s) {
-                    var z = $zopim = function (c) {
-                        z._.push(c)
-                    },
-                            $ = z.s =
-                            d.createElement(s),
-                            e = d.getElementsByTagName(s)[0];
-                    z.set = function (o) {
-                        z.set.
-                                _.push(o)
-                    };
-                    z._ = [];
-                    z.set._ = [];
-                    $.async = !0;
-                    $.setAttribute('charset', 'utf-8');
-                    $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
-                    z.t = +new Date;
-                    $.
-                            type = 'text/javascript';
-                    e.parentNode.insertBefore($, e)
-                })(document, 'script');
-            }
-        </script>
-        <!--End of Zopim Live Chat Script-->
+            <!--Start of Zopim Live Chat Script-->
+            <script type="text/javascript">
+                var ua = navigator.userAgent.toLowerCase();
+                var platform = navigator.platform.toLowerCase();
+                var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
+                var isMobile = /ios|android|webos/.test(platformName);
+                if (!isMobile) {
+                    window.$zopim || (function (d, s) {
+                        var z = $zopim = function (c) {
+                                    z._.push(c)
+                                },
+                                $ = z.s =
+                                        d.createElement(s),
+                                e = d.getElementsByTagName(s)[0];
+                        z.set = function (o) {
+                            z.set._.push(o)
+                        };
+                        z._ = [];
+                        z.set._ = [];
+                        $.async = !0;
+                        $.setAttribute('charset', 'utf-8');
+                        $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
+                        z.t = +new Date;
+                        $.type = 'text/javascript';
+                        e.parentNode.insertBefore($, e)
+                    })(document, 'script');
+                }
+            </script>
+            <!--End of Zopim Live Chat Script-->
         #end
     </body>
     <!-- end: BODY -->

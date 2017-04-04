@@ -43,7 +43,6 @@ function initTheme() {
     initPseudoClasses();
     initPrintLink();
     initLoginDropDown();
-    initDropDownHiding();
     initVideos();
 
     flog("initTheme: run page init functions", pageInitFunctions.length);
@@ -61,76 +60,7 @@ function initTheme() {
         $(".DropdownContent", div).toggle(300);
     });
 
-    initMultiLingual();
-
     flog("finished init-theme");
-}
-
-function initMultiLingual() {
-    $(".select-lang").click(function (e) {
-        e.preventDefault();
-        var langCode = $(e.target).closest("a").attr("href");
-        flog("select lang", langCode);
-        $.cookie('selectedLangCode', langCode, {expires: 360, path: '/'});
-        window.location.reload();
-    });
-
-    $("body").on("click", ".translatable", function (e) {
-        var target = $(e.target);
-        showTranslateButton(target);
-    });
-}
-
-function showTranslateButton(target) {
-    var btn = $("<button class='btn btn-info btn-sm' style='position: absolute; z-index: 10000'><i class='fa fa-language'></i></button>");
-    $("body").append(btn);
-
-    var position = target.offset();
-    position.top = position.top - 30;
-    btn.css(position);
-
-    btn.click(function (e) {
-        e.preventDefault();
-        var text = prompt("Please enter the translated text");
-        if (text) {
-            var sourceType = target.data("source-type");
-            if (sourceType == null) {
-                sourceType = target.closest("form").data("source-type");
-            }
-            var sourceId = target.data("source-id");
-            if (sourceId == null) {
-                sourceId = target.closest("form").data("source-id");
-            }
-            var sourceField = target.data("source-field");
-            saveTranslation(sourceType, sourceId, sourceField, text);
-        }
-    });
-
-    window.setTimeout(function () {
-        btn.remove()
-    }, 3000);
-}
-
-function saveTranslation(sourceType, sourceId, sourceField, text) {
-    $.ajax({
-        url: '/translations/',
-        data: {
-            sourceType: sourceType,
-            sourceId: sourceId,
-            sourceField: sourceField,
-            translated: text,
-            langCode : $.cookie('selectedLangCode')
-        },
-        method: "post",
-        dataType: 'json',
-        success: function (json) {
-            if( json.status) {
-                Msg.info("Saved");
-            } else {
-                Msg.error("There was a problem saving the translation " + json.messages);
-            }
-        }
-    });
 }
 
 function initLoginDropDown() {
@@ -408,33 +338,6 @@ function initPrintLink() {
         e.preventDefault();
         window.print();
     });
-}
-
-function initDropDownHiding() {
-    $(".content").on("click", "a.ShowDialog", function (e) {
-        log("hi111");
-        var _this = $(this);
-        var dialog = _this.parent().find("> div");
-        log("show dialog", dialog, _this);
-        dialog.toggle();
-        e.preventDefault();
-    });
-
-    // Hide DropDownContent which clicking elsewhere
-    $('body').click(function (event) {
-        var target = $(event.target);
-        if (target.closest("div.DropdownControl, .ShowDialog, .Dialogue").length > 0) {
-            return; // don't handle events inside the dropdown'
-        }
-        var dropdown = $("div.DropdownContent, .Dialog").filter(":visible");
-        if (dropdown.length > 0) {
-            if (!target.closest('div.DropdownContent, Dialog').length) {
-                log("initDropDownHiding-click: hide", target);
-                dropdown.hide();
-            }
-        }
-    });
-
 }
 
 /**
