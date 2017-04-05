@@ -89,6 +89,14 @@
             keditor.initDynamicContent(dynamicElement);
         });
 
+        form.on('click', '.cbb-show-search', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+
+            component.attr('data-show-search', this.checked);
+            keditor.initDynamicContent(dynamicElement);
+        });
+
         form.on('click', '.cbb-inverse-menu', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
@@ -246,6 +254,7 @@
         form.find('.cbb-show-org-selector').prop('checked', dataAttributes['data-show-org-selector'] === 'true');
         form.find('.cbb-show-lang-selector').prop('checked', dataAttributes['data-show-lang-selector'] === 'true');
         form.find('.cbb-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
+        form.find('.cbb-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
 
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
 

@@ -13,6 +13,16 @@
     #set( $showOrgSelector = false )
 #end
 
+#if( $showLangSelector )
+#else
+    #set( $showLangSelector = false )
+#end
+
+#if( $showSearch )
+#else
+    #set( $showSearch = false )
+#end
+
 #if( $inverseMenu )
 #else
     #set( $inverseMenu = false )
@@ -52,9 +62,11 @@
                     #showMenuItem( $item )
                 #end
 
-                <li class="navbar-search">
-                    #portlets("searchInput")
-                </li>
+                #if ($showSearch == true)
+                    <li class="navbar-search">
+                        #portlets("searchInput")
+                    </li>
+                #end
 
                 #if ($showOrgSelector == true)
                     <li class="navbar-org-selector">
