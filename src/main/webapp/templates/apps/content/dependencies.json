@@ -1,10 +1,16 @@
 {
-    "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/content/toggleMenu.js"
-            }
-        }
-    ]
+  "dependencies": [
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/content/toggleMenu.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/content/selectLang.js"
+      }
+    }
+  ]
 }

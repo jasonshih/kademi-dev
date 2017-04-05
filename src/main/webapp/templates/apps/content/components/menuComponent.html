@@ -27,6 +27,8 @@
 #end
 #set( $currentOrg = $curMembership.org  )
 
+#set( $currentLang = $request.getCookie("selectedLangCode").value )
+
 <div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -55,9 +57,30 @@
                 </li>
 
                 #if ($showOrgSelector == true)
-                <li class="navbar-org-selector">
-                    #parse("/theme/apps/reporting/orgSelectorComponent.html")
-                </li>
+                    <li class="navbar-org-selector">
+                        #parse("/theme/apps/reporting/orgSelectorComponent.html")
+                    </li>
+                #end
+
+                #if ($showLangSelector == true)
+                    <li class="dropdown navbar-lang-selector">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-language"></i>
+                            #set($currentLangText = "Default")
+                            #if ($currentLang == "en")
+                                #set($currentLangText = "English")
+                            #elseif ($currentLang == "ar")
+                                #set($currentLangText = "Arabic")
+                            #end
+                            $currentLangText
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li><a class="select-lang" href="">Default</a></li>
+                            <li><a class="select-lang" href="en">English</a></li>
+                            <li><a class="select-lang" href="ar">Arabic</a></li>
+                        </ul>
+                    </li>
                 #end
 
                 #portlets("shoppingCart")
