@@ -389,6 +389,14 @@ label small {
 }
 
 /* ============================================================================
+Btn translate
+============================================================================ */
+#btn-translate {
+    position: absolute;
+    z-index: 1000;
+}
+
+/* ============================================================================
 Utilities
 ============================================================================ */
 .ps-container {
@@ -645,11 +653,11 @@ body.ajax-loading .ajaxLoader {
 */
 
 .search-wrapper {
-    position:relative;
+    position: relative;
 }
 
 .navbar-tools .search-wrapper .search-suggestions,
-.search-wrapper .search-suggestions{
+.search-wrapper .search-suggestions {
     position: absolute;
     top: 33px;
     left: 0;
@@ -658,29 +666,41 @@ body.ajax-loading .ajaxLoader {
     padding: 0;
     min-width: 100%;
     list-style: none;
-    white-space: nowrap; 
-    z-index: 1}
+    white-space: nowrap;
+    z-index: 1
+}
+
 .navbar-tools .search-wrapper .search-suggestions li a,
-.search-wrapper .search-suggestions li a{
+.search-wrapper .search-suggestions li a {
     display: block;
     padding: 5px;
     color: #000;
-    text-decoration: none !important; }
-.navbar-tools .search-wrapper .search-suggestions li a .email, 
-.search-wrapper .search-suggestions li a .email{
-    color: #337ab7; }
+    text-decoration: none !important;
+}
+
+.navbar-tools .search-wrapper .search-suggestions li a .email,
+.search-wrapper .search-suggestions li a .email {
+    color: #337ab7;
+}
+
 .navbar-tools .search-wrapper .search-suggestions li.active a, .navbar-tools .search-wrapper .search-suggestions li.active a:hover,
-.search-wrapper .search-suggestions li.active a, .search-wrapper .search-suggestions li.active a:hover{
-    background: #f0f5f8; }
+.search-wrapper .search-suggestions li.active a, .search-wrapper .search-suggestions li.active a:hover {
+    background: #f0f5f8;
+}
+
 .navbar-tools .search-wrapper .search-suggestions li.search-no-result,
-.search-wrapper .search-suggestions li.search-no-result{
-    padding: 5px; }
+.search-wrapper .search-suggestions li.search-no-result {
+    padding: 5px;
+}
+
 .navbar-tools .search-wrapper .search-suggestions li + li,
-.search-wrapper .search-suggestions li + li{
-    border-top: 1px solid #dfeaf1; }
+.search-wrapper .search-suggestions li + li {
+    border-top: 1px solid #dfeaf1;
+}
 
 .label a {
-    color: #fff; }
+    color: #fff;
+}
 
 /*
     End of mkhoudary modifications for invoices

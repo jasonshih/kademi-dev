@@ -28,7 +28,7 @@ $.fn.check = function (check) {
  */
 $.fn.focusAtEnd = function () {
     var value = this.val();
-
+    
     return this.val('').focus().val(value);
 };
 
@@ -63,13 +63,13 @@ $.fn.exist = function (whenExist, whenNotExist) {
 
 (function ($) {
     var oldModal = $.fn.modal;
-
+    
     function checkModal(modal) {
         var modalDialog = modal.find('.modal-dialog');
-
+        
         if (modalDialog.length === 0) {
             flog('Modal has old structure. Modifying structure...');
-
+            
             var modalContent = modal.html();
             var sizeClass = '';
             if (modal.hasClass('modal-lg')) {
@@ -88,38 +88,38 @@ $.fn.exist = function (whenExist, whenNotExist) {
                 sizeClass = 'modal-xss';
                 modal.removeClass('modal-xss');
             }
-
+            
             modal.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
             flog('Modifying structure is DONE');
-
+            
             modal.trigger('modal.bs.done');
-
+            
             if (console && console.log) {
                 console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + modal.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
             }
         }
     }
-
+    
     $.fn.modal = function (option, _relatedTarget) {
         var targets = $(this);
         targets.each(function () {
             checkModal($(this));
         });
-
+        
         return oldModal.call(targets, option, _relatedTarget);
     };
-
+    
     $(function () {
         $('.modal').each(function () {
             checkModal($(this));
         });
     });
-
+    
 })(jQuery);
 
 function initToggled() {
     flog('initToggled');
-
+    
     $('[data-toggled=display]').exist(function () {
         this.each(function () {
             var panel = $(this);
@@ -133,9 +133,9 @@ function initToggled() {
                     actor.trigger('unchecked.toggled', panel);
                 }
             };
-
+            
             actor.addClass('toggler');
-
+            
             actor.on('click', function () {
                 checkActor();
             });
@@ -148,23 +148,23 @@ function initToggled() {
 
 function doMasonryPanel() {
     flog('doMasonryPanel');
-
+    
     $('.masonry-panel').each(function () {
         var panel = $(this);
-
+        
         // Bind event listener
         panel.on('layoutComplete', function () {
             var items = panel.find(".masonry-item");
-
+            
             flog("onlayout", items);
-
+            
             items.animate({
                 opacity: 1
             }, 1000, function () {
                 flog("complete");
             });
         });
-
+        
         panel.masonry({
             columnWidth: ".masonry-sizer",
             percentPosition: true
@@ -174,7 +174,7 @@ function doMasonryPanel() {
 
 function initMasonryPanel() {
     flog('initMasonryPanel');
-
+    
     if (typeof window.Masonry === 'function') {
         doMasonryPanel();
     } else {
@@ -186,14 +186,14 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
-
+    
     $('.date-picker').exist(function () {
         var datePicker = this;
         var container = 'body';
         var inputGroup = datePicker.closest('.input-group');
         var formGroup = datePicker.closest('.form-group');
         var id = 'date-picker-wrapper' + (new Date()).getTime();
-
+        
         if (inputGroup.length > 0) {
             inputGroup.attr('id', id);
             container = '#' + id;
@@ -201,18 +201,18 @@ function initDatePicker() {
             formGroup.attr('id', id);
             container = '#' + id;
         }
-
+        
         datePicker.datepicker({
             autoclose: true,
             format: 'dd/mm/yyyy',
             container: container
         });
-
+        
         var impactedTargetSelector = datePicker.attr('data-impacted');
-
+        
         if (impactedTargetSelector) {
             var changedOption = datePicker.attr('data-impact') === 'startDate' ? 'StartDate' : 'EndDate';
-
+            
             datePicker.on('changeDate', function (ev) {
                 flog(ev);
                 var impactedTarget = $(impactedTargetSelector);
@@ -221,17 +221,17 @@ function initDatePicker() {
             });
         }
     });
-
+    
     $(document.body).on('click', '[data-role="date-picker-trigger"]', function (e) {
         e.preventDefault();
-
+        
         var trigger = $(this);
         var datePickerId = trigger.attr('href');
         var datePicker = $(datePickerId);
-
+        
         datePicker.datepicker('show');
     });
-
+    
     $('.date-time-picker').exist(function () {
         flog('Found date-time-picker', this);
         var options = {};
@@ -245,7 +245,7 @@ function initDatePicker() {
 
 function initTabbable() {
     flog('initTabbable');
-
+    
     $('.tabbable').exist(function () {
         this.each(function () {
             var wrapper = $(this);
@@ -253,27 +253,27 @@ function initTabbable() {
             var tabHeader = wrapper.find('.nav-tabs');
             var links = tabHeader.find('a');
             var hash = window.location.hash;
-
+            
             links.each(function () {
                 var link = $(this);
                 link.on('click', function (e) {
                     e.preventDefault();
-
+                    
                     if (!isModal) {
                         window.location.hash = $(this).attr('href') + '-tab';
                     }
                 });
             });
-
+            
             if (hash === '') {
                 links.eq(0).trigger('click');
             }
         });
-
+        
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
-
+            
             var tabbable = $('.tabbable .nav-tabs a[href="' + hash + '"]');
             tabbable.trigger('click');
         }).trigger('hashchange');
@@ -282,11 +282,11 @@ function initTabbable() {
 
 function initChkAll() {
     flog('initChkAll');
-
+    
     $('.chk-all').exist(function () {
         this.each(function () {
             var chkAll = $(this);
-
+            
             chkAll.on('click', function () {
                 var table = chkAll.parents('table');
                 var chks = table.find('tbody input:checkbox');
@@ -298,12 +298,12 @@ function initChkAll() {
 
 function initClearer() {
     flog('initClearer');
-
+    
     var body = $(document.body);
-
+    
     body.on('click', '[data-type=clearer]', function (e) {
         e.preventDefault();
-
+        
         var target = $($(this).data('target'));
         flog("clearer click", target);
         target.val('');
@@ -315,11 +315,11 @@ function initClearer() {
 function initSwitch() {
     flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
-
+        
         $(".make-switch input[type=checkbox], input.make-switch").each(function () {
             var target = $(this);
             var dataHolder = target.is('.make-switch') ? target : target.closest('.make-switch');
-
+            
             target.bootstrapSwitch({
                 onColor: dataHolder.attr('data-on-color') || 'info',
                 offColor: dataHolder.attr('data-off-color') || 'default',
@@ -336,33 +336,33 @@ function initSwitch() {
 
 function validateFuseEmail(emailAddress) {
     var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
-
+    
     if (pattern.test(emailAddress)) {
         return true;
     } else {
         emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, '$1');
-
+        
         return pattern.test(emailAddress);
     }
 }
 
 function initFuseModals() {
     flog("initFuseModal");
-
+    
     $(document.body).on('click', '[data-toggle=modal]', function (e) {
         e.preventDefault();
     });
-
+    
     $(document.body).on('click', '[data-type=form-submit]', function (e) {
         e.preventDefault();
         flog("click submit");
         $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
-
+        
         if (console && console.log) {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
     });
-
+    
     $(document.body).on('shown.bs.modal loaded.bs.modal', '.modal', function () {
         var textbox = $(this).find('input, textarea').filter(':visible');
         textbox.eq(0).focus();
@@ -371,11 +371,11 @@ function initFuseModals() {
 
 function initFuseModal(modal, callback) {
     flog('initFuseModal', modal, callback);
-
+    
     modal.modal({
         show: false
     });
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -383,9 +383,9 @@ function initFuseModal(modal, callback) {
 
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
-
+    
     modal.modal('show');
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -393,7 +393,7 @@ function openFuseModal(modal, callback, time) {
 
 function closeFuseModal(modal, callback) {
     modal.modal('hide');
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -490,9 +490,9 @@ function initAjaxStatus() {
 
 function initTopNavSearch() {
     flog('initTopNavSearch');
-
+    
     var txt = $('#top-nav-search-input');
-
+    
     if (txt.length > 0) {
         var suggestionsWrapper = $('#top-nav-search-suggestions');
         var backdrop = $('<div />', {
@@ -502,12 +502,12 @@ function initTopNavSearch() {
             backdrop.addClass('hide');
             suggestionsWrapper.addClass('hide');
         }).appendTo(document.body);
-
+        
         txt.on({
             input: function () {
                 typewatch(function () {
                     var text = txt.val().trim();
-
+                    
                     if (text.length > 0) {
                         doTopNavSearch(text, suggestionsWrapper, backdrop);
                     } else {
@@ -520,21 +520,21 @@ function initTopNavSearch() {
                 switch (e.keyCode) {
                     case keymap.ESC:
                         flog('Pressed ESC button');
-
+                        
                         suggestionsWrapper.addClass('hide');
                         backdrop.addClass('hide');
-
+                        
                         e.preventDefault();
                         break;
-
+                    
                     case keymap.UP:
                         flog('Pressed UP button');
-
+                        
                         var suggestions = suggestionsWrapper.find('.suggestion');
                         if (suggestions.length > 0) {
                             var actived = suggestions.filter('.active');
                             var prev = actived.prev();
-
+                            
                             actived.removeClass('active');
                             if (prev.length > 0) {
                                 prev.addClass('active');
@@ -542,18 +542,18 @@ function initTopNavSearch() {
                                 suggestions.last().addClass('active');
                             }
                         }
-
+                        
                         e.preventDefault();
                         break;
-
+                    
                     case keymap.DOWN:
                         flog('Pressed DOWN button');
-
+                        
                         var suggestions = suggestionsWrapper.find('.suggestion');
                         if (suggestions.length > 0) {
                             var actived = suggestions.filter('.active');
                             var next = actived.next();
-
+                            
                             actived.removeClass('active');
                             if (next.length > 0) {
                                 next.addClass('active');
@@ -561,29 +561,29 @@ function initTopNavSearch() {
                                 suggestions.first().addClass('active');
                             }
                         }
-
+                        
                         e.preventDefault();
                         break;
-
+                    
                     case keymap.ENTER:
                         flog('Pressed DOWN button');
-
+                        
                         var actived = suggestionsWrapper.find('.suggestion').filter('.active');
                         if (actived.length > 0) {
                             var link = actived.find('a').attr('href');
-
+                            
                             window.location.href = link;
                         }
-
+                        
                         e.preventDefault();
                         break;
-
+                    
                     default:
                     // Nothing
                 }
             }
         });
-
+        
         suggestionsWrapper.on({
             mouseenter: function () {
                 suggestionsWrapper.find('.suggestion').removeClass('active');
@@ -598,7 +598,7 @@ function initTopNavSearch() {
 
 function doTopNavSearch(query, suggestionsWrapper, backdrop) {
     flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
-
+    
     $.ajax({
         url: '/manageUsers',
         type: 'POST',
@@ -608,9 +608,9 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
         dataType: 'JSON',
         success: function (resp) {
             flog('Got search response from server', resp);
-
+            
             var suggestionStr = '';
-
+            
             if (resp && resp.hits && resp.hits.total > 0) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
@@ -626,7 +626,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         }
                         var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
                         var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
-
+                        
                         suggestionStr += '    <a href="/manageUsers/' + userId + '">';
                         suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
                         if (firstName || surName) {
@@ -637,20 +637,20 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
                         var id = suggestion.fields.entityId[0];
                         var orgId = suggestion.fields.orgId[0];
                         var orgTitle = suggestion.fields.title[0];
-
+                        
                         var href = "/organisations/" + id + "/edit";
                         suggestionStr += "    <a href='" + href + "'>";
                         suggestionStr += '        <span>' + orgTitle + '</span>';
                         suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
                         suggestionStr += '    </a>';
-
+                        
                     }
                     suggestionStr += '</li>';
                 }
             } else {
                 suggestionStr = '<li class="search-no-result">No result.</li>';
             }
-
+            
             suggestionsWrapper.html(suggestionStr).removeClass('hide');
             backdrop.removeClass('hide');
         },
@@ -662,7 +662,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
 
 function drawPieChart(chart, options, padding, isFirstTime) {
     flog('drawPieChart', chart, options, padding, isFirstTime);
-
+    
     var wrapper = chart.closest('.col-sm-6');
     var canvas = chart.find('canvas');
     var sizeChart = wrapper.width() - padding;
@@ -671,22 +671,22 @@ function drawPieChart(chart, options, padding, isFirstTime) {
     }
     var currentSize = +chart.attr('data-size');
     flog("got size", sizeChart, chart);
-
+    
     // Hide canvas
     canvas.hide();
-
+    
     if (currentSize !== sizeChart || isFirstTime) {
         flog('Render new chart', sizeChart);
-
+        
         // Clear data pf easyPieChart
         if (!isFirstTime) {
             chart.data('easy-pie-chart', null);
             chart.data('size', sizeChart);
         }
-
+        
         // Remove the chart
         canvas.remove();
-
+        
         // Render new chart
         options.size = sizeChart;
         flog("chart size", sizeChart);
@@ -703,7 +703,7 @@ function drawPieChart(chart, options, padding, isFirstTime) {
 
 function initPieChart(target, options, padding) {
     drawPieChart(target, options, padding, true);
-
+    
     var timer = null;
     $(window).on('resize', function () {
         clearTimeout(timer);
@@ -715,12 +715,12 @@ function initPieChart(target, options, padding) {
 
 function initPageDatePicker() {
     flog('initPageDatePicker');
-
+    
     var range = $('#commonControlsRange');
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
         var position = range.attr('data-position') || 'right';
-
+        
         range.pageDatePicker({
             extraClass: extraClass,
             position: position
@@ -737,7 +737,7 @@ function initTimeago() {
 
 $(function () {
     flog("Fuse init");
-
+    
     initLoadingOverlay();
     initTopNavSearch();
     initSwitch();
@@ -750,7 +750,8 @@ $(function () {
     initAjaxStatus();
     initMasonryPanel();
     initTimeago();
-
+    initMultiLingual();
+    
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
@@ -762,6 +763,208 @@ $(window).load(function () {
     }
 });
 
+function initMultiLingual() {
+    initModalTranslate();
+    
+    $('.select-lang').click(function (e) {
+        e.preventDefault();
+        
+        var langCode = $(this).attr('href');
+        flog('Selected lang: ' + langCode);
+        
+        $.cookie('selectedLangCode', langCode, {
+            expires: 360, path: '/'
+        });
+        window.location.reload();
+    });
+    
+    var timer;
+    CKEDITOR.on('instanceReady', function (e) {
+        var editor = e.editor;
+        
+        var element = $(editor.element.$);
+        if (element.hasClass('translatable')) {
+            editor.on('focus', function () {
+                showTranslateButton(element, timer);
+            });
+            
+            editor.on('blur', function () {
+                hideTranslateButton(timer);
+            });
+        }
+    });
+    
+    $(document.body).on({
+        focus: function () {
+            showTranslateButton($(this), timer);
+        },
+        blur: function () {
+            hideTranslateButton(timer);
+        }
+    }, '.translatable');
+}
+
+function showTranslateButton(target, timer) {
+    flog(showTranslateButton, target, timer);
+    
+    clearTimeout(timer);
+    
+    var btn = $('#btn-translate');
+    if (btn.length === 0) {
+        btn = $('<button class="btn btn-warning btn-sm" id="btn-translate"><i class="fa fa-language"></i></button>');
+        $(document.body).append(btn);
+    }
+    
+    btn.off('click').on('click', function (e) {
+        e.preventDefault();
+        
+        showModalTranslate(target);
+    });
+    
+    var position;
+    if (target.is('.htmleditor')) {
+        position = $('#cke_' + target.attr('id')).offset();
+    } else {
+        position = target.offset();
+    }
+    
+    position.top = position.top - 30;
+    btn.css(position).show();
+}
+
+function initModalTranslate() {
+    var modal = $(
+        '<div id="modal-translate" class="modal fade" tabindex="-1">' +
+        '     <div class="modal-dialog modal-sm">' +
+        '        <div class="modal-content">' +
+        '            <div class="modal-header">' +
+        '                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+        '                <h4 class="modal-title">Save translated text</h4>' +
+        '            </div>' +
+        '            <form method="POST" class="form-horizontal" action="/translations/">' +
+        '                <div class="modal-body">' +
+        '                    <p class="form-message alert alert-danger" style="display: none;"></p>' +
+        '                    <input type="hidden" name="sourceType" value="" />' +
+        '                    <input type="hidden" name="sourceId" value="" />' +
+        '                    <input type="hidden" name="sourceField" value="" />' +
+        '                    <input type="hidden" name="langCode" value="" />' +
+        '                    <div class="form-group">' +
+        '                        <label for="translated" class="control-label col-md-3">Translated text</label>' +
+        '                        <div class="col-md-9">' +
+        '                            <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />' +
+        '                            <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>' +
+        '                            <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                </div>' +
+        '                <div class="modal-footer">' +
+        '                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
+        '                    <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>' +
+        '                </div>' +
+        '            </form>' +
+        '        </div>' +
+        '     </div>' +
+        '</div>'
+    );
+    $(document.body).append(modal);
+    initHtmlEditors();
+    
+    modal.find('form').forms({
+        onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info("Translated text is saved");
+                modal.modal('hide');
+            } else {
+                Msg.error("There was a problem saving the translation " + resp.messages);
+            }
+        }
+    });
+    
+    modal.on('hidden.bs.modal', function () {
+        modal.find('[name=translated]').prop('disabled', true).removeClass('required').hide();
+        modal.find('.htmleditor-wrapper').hide();
+        var ckeditor = CKEDITOR.instances[modal.find('.htmleditor').attr('id')];
+        ckeditor.setReadOnly(true);
+    });
+    
+    return modal;
+}
+
+function showModalTranslate(target) {
+    flog('showTranslateButton', target);
+    
+    var modal = $('#modal-translate');
+    if (modal.length === 0) {
+        modal = initModalTranslate();
+    }
+    
+    var sourceType = target.data("source-type");
+    if (sourceType == null) {
+        sourceType = target.closest("form").data("source-type");
+    }
+    var sourceId = target.data("source-id");
+    if (sourceId == null) {
+        sourceId = target.closest("form").data("source-id");
+    }
+    var sourceField = target.data("source-field");
+    var langCode = $.cookie('selectedLangCode');
+    
+    modal.find('[name=sourceType]').val(sourceType);
+    modal.find('[name=sourceId]').val(sourceId);
+    modal.find('[name=sourceField]').val(sourceField);
+    modal.find('[name=langCode]').val(langCode);
+    
+    $.ajax({
+        url: '/translations',
+        dataType: 'json',
+        type: 'get',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: {
+            sourceType: sourceType,
+            sourceId: sourceId,
+            sourceField: sourceField,
+            langCode: langCode,
+            asJson: true
+        },
+        success: function (resp) {
+            var translatedText = '';
+            if (resp && resp.status && resp.data.length > 0) {
+                translatedText = resp.data[0].translated || '';
+            }
+            
+            var modalSize = 'modal-sm';
+            var translatedTextboxes = modal.find('[name=translated]');
+            var destinationTextbox;
+            if (target.is('textarea.htmleditor')) {
+                modalSize = 'modal-lg';
+                destinationTextbox = translatedTextboxes.filter('textarea.htmleditor');
+                modal.find('.htmleditor-wrapper').show();
+                
+                var ckeditor = CKEDITOR.instances[destinationTextbox.attr('id')];
+                ckeditor.setReadOnly(false);
+                ckeditor.setData(translatedText);
+            } else if (target.is('input')) {
+                destinationTextbox = translatedTextboxes.filter('input');
+            } else {
+                destinationTextbox = translatedTextboxes.filter('textarea').not('.htmleditor');
+            }
+            
+            destinationTextbox.prop('disabled', false).addClass('required').not('.htmleditor').show();
+            destinationTextbox.val(translatedText);
+            
+            modal.find('.modal-dialog').attr('class', 'modal-dialog ' + modalSize);
+            modal.modal('show');
+        }
+    });
+}
+
+function hideTranslateButton(timer) {
+    timer = setTimeout(function () {
+        $('#btn-translate').hide();
+    }, 400);
+}
 
 function showLoginAs(profileId) {
     var modal = $("#modal-login-as");
@@ -782,8 +985,8 @@ function showLoginAs(profileId) {
                 newList += "<li>The user does not have access to any websites. Check the user's group memberships, and that those groups have been added to the right websites</li>";
             }
             modal.find("ul")
-                    .empty()
-                    .html(newList);
+                .empty()
+                .html(newList);
         },
         error: function (resp) {
             Msg.error("An error occured loading websites. Please try again");
@@ -799,7 +1002,7 @@ function setRecentItem(title, url) {
         if (recentList == null) {
             recentList = new Array();
         } else {
-
+            
         }
         flog("recent", recentList);
         var item = {
@@ -827,20 +1030,20 @@ function initBackgroundJobStatus(options) {
     // Find divs which need to reload to get job status. For each div get the current
     // job status and then apply data to the handlebars template in the div
     flog("initBackgroundJobStatus", options);
-
+    
     options = $.extend({}, options);
-
+    
     Handlebars.registerHelper('formatISODate', function (millis) {
         if (millis) {
             var m = millis;
             var date = new Date(m);
-
+            
             return date.toISOString();
         } else {
             return "";
         }
     });
-
+    
     Handlebars.registerHelper('formatDate', function (millis) {
         if (millis) {
             return moment(millis).format('DD/MM/YYYY');
@@ -848,41 +1051,41 @@ function initBackgroundJobStatus(options) {
             return "";
         }
     });
-
+    
     Handlebars.registerHelper('notRunning', function (data, options) {
         var b = (data == null || data.statusInfo.complete);
         var out = options.fn(data);
-
+        
         return out;
     });
-
+    
     $(".backgroundTask").each(function () {
         var div = $(this);
         var href = div.data("task-href");
         var templateHtml = div.siblings('.backgroundTaskTemplate').html();
         var template = Handlebars.compile(templateHtml);
-
+        
         checkBackgroundJobStatus(href, div, template, options);
     });
 }
 
 function checkBackgroundJobStatus(href, div, template, options) {
     flog('checkBackgroundJobStatus', href, div, template, options);
-
+    
     $.ajax({
         url: href,
         method: "GET",
         dataType: 'json',
         success: function (resp) {
             flog('Success in checking background task', resp);
-
+            
             if (resp.status) {
                 var htmlStr = template(resp);
                 flog('Background task status HTML:', htmlStr);
-
+                
                 div.html(htmlStr);
                 div.show(400);
-
+                
                 if (resp.data.statusInfo.complete) {
                     if (typeof options.onComplete === 'function') {
                         options.onComplete.call(this, resp);
@@ -893,7 +1096,7 @@ function checkBackgroundJobStatus(href, div, template, options) {
                     window.setTimeout(function () {
                         checkBackgroundJobStatus(href, div, template, options);
                     }, 3000);
-
+                    
                     if (typeof options.onRunning === 'function') {
                         options.onRunning.call(this, resp);
                     }
@@ -901,28 +1104,28 @@ function checkBackgroundJobStatus(href, div, template, options) {
             } else {
                 var htmlStr = template(null);
                 flog('Background task status HTML:', htmlStr);
-
+                
                 div.html(htmlStr);
                 div.show(400);
-
+                
                 if (typeof options.onError === 'function') {
                     options.onError.call(this, resp);
                 }
             }
-
+            
             div.find('.timeago').timeago();
         },
         error: function (jqXHR) {
             // probably a 404, which is fine, show the template with no data so it can render a run form
             flog("No task resource, thats cool, means not running and hasnt been run");
-
+            
             var htmlStr = template(null);
             flog('Background task status HTML:', htmlStr);
-
+            
             div.html(htmlStr);
             div.show(400);
             div.find('.timeago').timeago();
-
+            
             if (typeof options.onError === 'function') {
                 options.onError.call(this, jqXHR);
             }
@@ -934,7 +1137,7 @@ function getParam(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var value = regex.exec(window.location.href) || '';
     value = decodeURIComponent(value[1]);
-
+    
     return value;
 }
 
@@ -944,7 +1147,7 @@ function initColorPicker(target, onChangeHandle) {
             var colorPicker = $(this);
             var input = colorPicker.find('input');
             var previewer = colorPicker.find('.input-group-addon i');
-
+            
             colorPicker.colorpicker({
                 format: 'hex',
                 container: colorPicker.parent(),
@@ -955,12 +1158,12 @@ function initColorPicker(target, onChangeHandle) {
                 }
             }).on('changeColor.colorpicker', function (e) {
                 var colorHex = e.color.toHex();
-
+                
                 if (!input.val() || input.val().trim().length === 0) {
                     colorHex = '';
                     previewer.css('background-color', '');
                 }
-
+                
                 if (typeof onChangeHandle === 'function') {
                     onChangeHandle(colorHex);
                 }
@@ -978,14 +1181,14 @@ function initMenuSearch() {
             $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.open) .sub-menu").css("display", "none");
         } else {
             $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu), #kademi-container .main-container .main-navigation .main-navigation-menu > li:not(.search-menu) li")
-                    .hide().find("li:Contains(" + $(this).val() + ")").show()
-                    .parents(".sub-menu").css("display", "block")
-                    .parents("li").show();
+                .hide().find("li:Contains(" + $(this).val() + ")").show()
+                .parents(".sub-menu").css("display", "block")
+                .parents("li").show();
             
             $("#kademi-container .main-container .main-navigation .main-navigation-menu > li > a[href != '#']")
-                    .parents("li:Contains(" + $(this).val() + ")").show();
+                .parents("li:Contains(" + $(this).val() + ")").show();
             
-            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:Contains(" + $(this).val() + ")").each(function() {
+            $("#kademi-container .main-container .main-navigation .main-navigation-menu > li:Contains(" + $(this).val() + ")").each(function () {
                 if ($(this).find("li:visible").length === 0) {
                     $(this).find(".sub-menu").show().find("li").show();
                     $(this).show();
@@ -1003,9 +1206,9 @@ K.alert = function (title, message, type) {
 };
 
 K.confirm = function (title, message, callback) {
-
+    
 };
 
 K.prompt = function (title, message, callback) {
-
+    
 };
