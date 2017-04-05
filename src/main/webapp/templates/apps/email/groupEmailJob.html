@@ -84,7 +84,9 @@
                             <label class="control-label col-md-3" for="fromAddress">Email from address</label>
                             <div class="col-md-8">
                                 <input type="text" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="form-control" />
-                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
+                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but
+                                    <b>Reply to address</b> will be required!
+                                </small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -128,7 +130,15 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for=""></label>
+                            <div class="col-md-9">
+                                <div class="well">
+                                    $formatter.checkbox("loginTokens", "loginTokens", $page.job.loginTokens, "true")
+                                    <label for="loginTokens" style="float: none">Enable login token for all links in your EDM</label>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <div class="form-group">
@@ -146,29 +156,33 @@
                                 Select which groups to send to and/or exclude
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
+                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group">
+                                    <i class="fa fa-plus"></i> Add recipient groups
+                                </button>
                                 <hr class="hr-sm" />
                                 <div class="blocks-wrapper recipient">
                                     #foreach($g in $page.groupRecipients)
-                                    <span class="block $g.name">
-                                        <span class="block-name">$g.name</span>
-                                        #if( $page.status == "Draft" )
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">
+                                            <span class="block-name">$g.name</span>
+                                            #if( $page.status == "Draft" )
+                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                            #end
+                                        </span>
                                     #end
                                 </div>
                                 <p>&nbsp;</p>
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
+                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group">
+                                    <i class="fa fa-plus"></i> Add excluded groups
+                                </button>
                                 <hr class="hr-sm" />
                                 <div class="blocks-wrapper excluded">
                                     #foreach($g in $page.excludedGroups)
-                                    <span class="block $g.name">
-                                        <span class="block-name">$g.name</span>
-                                        #if( $page.status == "Draft" )
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">
+                                            <span class="block-name">$g.name</span>
+                                            #if( $page.status == "Draft" )
+                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                            #end
+                                        </span>
                                     #end
                                 </div>
                                 <p>&nbsp;</p>
@@ -218,36 +232,36 @@
                                                     <h6>Expression types</h6>
                                                     <ul>
                                                         <li>
-                                                            <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                            <b>const</b>: Constants, eg <br />&lt;const type='Integer'&gt;1&lt;/const&gt;
                                                         </li>
                                                         <li>
                                                             <b>comparison</b>:
                                                             Compare 2 expressions, Eg
-                                                            <br/>
-                                                            &lt;comparison operator='EQUALS'&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                            &lt;/comparison&gt;<br/>
+                                                            <br />
+                                                            &lt;comparison operator='EQUALS'&gt;<br />
+                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br />
+                                                            &lt;const type='Integer'&gt;1&lt;/const&gt;<br />
+                                                            &lt;/comparison&gt;<br />
                                                         </li>
                                                         <li>
                                                             <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
-                                                            <br/>
+                                                            <br />
                                                             &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
                                                         </li>
                                                     </ul>
                                                 </li>
                                                 #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                                <li>
-                                                    <h6>$app.instanceId</h6>
-                                                    <ul>
-                                                        #foreach( $expr in $app.allProperties )
-                                                        <li>
-                                                            <b>$expr.name</b>:
-                                                            $expr.description
-                                                        </li>
-                                                        #end
-                                                    </ul>
-                                                </li>
+                                                    <li>
+                                                        <h6>$app.instanceId</h6>
+                                                        <ul>
+                                                            #foreach( $expr in $app.allProperties )
+                                                                <li>
+                                                                    <b>$expr.name</b>:
+                                                                    $expr.description
+                                                                </li>
+                                                            #end
+                                                        </ul>
+                                                    </li>
                                                 #end
                                             </ul>
                                         </div>
@@ -263,39 +277,39 @@
                                 <div class="add-attachment btn-upload"></div>
                                 <div class="article-wrapper article-sm showed-action attachments-list">
                                     #foreach($att in $page.attachments)
-                                    <article>
-                                        <span class="article-name">
-                                            <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
-                                        </span>
-                                        <aside class="article-action">
-                                            <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
-                                        </aside>
-                                    </article>
+                                        <article>
+                                            <span class="article-name">
+                                                <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                                            </span>
+                                            <aside class="article-action">
+                                                <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                                            </aside>
+                                        </article>
                                     #end
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
 
                     <!-- Start content of Message tab -->
-                    <div id="messages" class="tab-pane">                       
+                    <div id="messages" class="tab-pane">
                         <div class="row">
                             <div class="col-lg-12">
-                                <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                                <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary">
                                     <span class="fa fa-globe"></span>
                                     Rich text editor
                                 </a>
-                                <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                                <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary">
                                     <span class="fa fa-globe"></span> EDM editor
                                     <i class="clip-new" style="color: red"></i>
                                 </a>
-                                <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary" >
+                                <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary">
                                     <span class="fa fa-pencil"></span>
                                     Raw text editor
                                 </a>
                             </div>
                         </div>
-                        <iframe id="rawBody" class="panel panel-default" style="width: 100%; height: 500px; overflow: scroll; margin-top: 15px" src="./?rawBodyHtml" >
+                        <iframe id="rawBody" class="panel panel-default" style="width: 100%; height: 500px; overflow: scroll; margin-top: 15px" src="./?rawBodyHtml">
 
                         </iframe>
 
@@ -306,34 +320,36 @@
                     <!-- Start content of Send tab -->
                     <div id="send" class="tab-pane">
                         #if( $page.status == "Draft" )
-                        <div class="sent" style="display: none;">
-                            <p>&nbsp;</p>
-                            <h4>Email has been sent, or is sending</h4>
-                            <p>&nbsp;</p>
-                        </div>
-                        <div>
-                            <h3>Before you send:</h3>
-                            <p><span class="label label-info">PREVIEW</span> Preview the email using the 'Send test' button above</p>
-                            <p><span class="label label-info">CHECK</span> Use the 'Show Recipients' button on the <a href='#recipients'>recipients</a> tab to check who the email will be sent to</p>
-                            <p>&nbsp;</p>
-                            <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.</p>
-                            <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
-                            <p>
-                                <button class="btn btn-lg btn-danger btn-send-email" type="button">
-                                    <span class='fa fa-envelope'></span>
-                                    SEND NOW
-                                </button>
-                            </p>
-                        </div>
+                            <div class="sent" style="display: none;">
+                                <p>&nbsp;</p>
+                                <h4>Email has been sent, or is sending</h4>
+                                <p>&nbsp;</p>
+                            </div>
+                            <div>
+                                <h3>Before you send:</h3>
+                                <p><span class="label label-info">PREVIEW</span> Preview the email using the 'Send test' button above</p>
+                                <p><span class="label label-info">CHECK</span> Use the 'Show Recipients' button on the
+                                    <a href='#recipients'>recipients</a> tab to check who the email will be sent to</p>
+                                <p>&nbsp;</p>
+                                <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.
+                                </p>
+                                <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
+                                <p>
+                                    <button class="btn btn-lg btn-danger btn-send-email" type="button">
+                                        <span class='fa fa-envelope'></span>
+                                        SEND NOW
+                                    </button>
+                                </p>
+                            </div>
                         #else
-                        <p>&nbsp;</p>
-                        #if( $page.status == "Cancelled" )
-                        <h4>Email sending was cancelled</h4>
-                        #else
-                        <h4>Email has been sent, or is sending</h4>
+                            <p>&nbsp;</p>
+                            #if( $page.status == "Cancelled" )
+                                <h4>Email sending was cancelled</h4>
+                            #else
+                                <h4>Email has been sent, or is sending</h4>
 
-                        #end
-                        <p>&nbsp;</p>
+                            #end
+                            <p>&nbsp;</p>
                         #end
                     </div>
                     <!-- Start content of Send tab -->
@@ -354,7 +370,9 @@
                                     </button>
                                 </div>
                                 <h4 class="status status_c text-success">Job completed</h4>
-                                <p class="status status_p"><small>You may navigate away from this page.</small></p>
+                                <p class="status status_p">
+                                    <small>You may navigate away from this page.</small>
+                                </p>
                             </div>
                             <div id="open-rate">
                                 <h3>Open rate <span class="label label-info">$page.openRate</span></h3>
@@ -363,8 +381,8 @@
                                 <div class="progress-bar"></div>
                                 <div class="stats"></div>
                             </div>
-                            <br/>
-                            <br/>
+                            <br />
+                            <br />
                             <p class="well">In-progress emails, if any, are shown below. See the log (above) to see completed and failed emails</p>
                             <div class="table-responsive">
                                 <table id="emails" class="table table-striped table-hover table-condensed">
@@ -406,26 +424,26 @@
                             </thead>
                             <tbody>
                                 #foreach($g in $page.allGroups)
-                                <tr>
-                                    <td>$g.name</td>
+                                    <tr>
+                                        <td>$g.name</td>
 
-                                    #set($name = $g.name)
-                                    <td>
-                                        #set($id = $name + "-recip")
-                                        $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
-                                        <label for="$id">Recipient</label>
-                                    </td>
-                                    <td>
-                                        #set($id = $name + "-excluded")
-                                        $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
-                                        <label for="$id">Excluded</label>
-                                    </td>
-                                    <td>
-                                        #set($id = $name + "-none")
-                                        $formatter.radio($id, $name, false, "none" )
-                                        <label for="$id">Don't care</label>
-                                    </td>
-                                </tr>
+                                        #set($name = $g.name)
+                                        <td>
+                                            #set($id = $name + "-recip")
+                                            $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
+                                            <label for="$id">Recipient</label>
+                                        </td>
+                                        <td>
+                                            #set($id = $name + "-excluded")
+                                            $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
+                                            <label for="$id">Excluded</label>
+                                        </td>
+                                        <td>
+                                            #set($id = $name + "-none")
+                                            $formatter.radio($id, $name, false, "none" )
+                                            <label for="$id">Don't care</label>
+                                        </td>
+                                    </tr>
                                 #end
                             </tbody>
                         </table>
@@ -445,7 +463,7 @@
             <form method="POST" action="$page.path" class="form-horizontal">
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
-                    <input type="hidden" name="sendTest" value="true"/>
+                    <input type="hidden" name="sendTest" value="true" />
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="name">Recipient</label>
                         <div class="col-md-8">
@@ -460,11 +478,11 @@
                             <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
+                </div>
             </form>
         </div>
 
