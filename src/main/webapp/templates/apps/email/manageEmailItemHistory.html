@@ -115,14 +115,13 @@
                             <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
                             {{fields.subject}}
                             </td>
-                            <td><abbr title="{{dateFromLong fields.createdDate}})" class="timeago">{{fields.createdDate}}</abbr></td>
+                            <td><abbr title='{{dateFromLong fields.createdDate}}' class='timeago'>{{dateFromLong fields.createdDate}}</abbr></td>
                             <td></td>
                             <td><input data-edmid="{{fields.id}}" type="checkbox" name="markIgnored"/></td>
                         </tr>                
             {{/each}}
         </script>
-    
-        
+            
         <script type="text/javascript" src="/theme/apps/email/manageEmailItemHistory.js">//</script>
         <script type="text/javascript">
             $(function () {
