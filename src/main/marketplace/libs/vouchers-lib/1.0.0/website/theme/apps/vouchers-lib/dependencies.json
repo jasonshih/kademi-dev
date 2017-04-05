@@ -1,15 +1,35 @@
 {
+  "appDependencies": [
+  ],
   "dependencies": [
     {
       "css": {
         "cssMedia": "all",
-        "path": "/theme/apps/rewardstore/reward-store.css"
+        "path": "/theme/apps/vouchers/voucher.css"
       }
     },
     {
       "js": {
         "group": "main",
         "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/static/uri/1.15.1/URI.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/vouchers/voucher.js"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/vouchers/voucherRedemption.js"
       }
     }
   ]
