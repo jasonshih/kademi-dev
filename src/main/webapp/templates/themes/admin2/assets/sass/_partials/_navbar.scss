@@ -191,13 +191,23 @@
         }
     }
 
+    .dropdown.open {
+        > a {
+            &,
+            &:focus,
+            &:hover {
+                background: $panel-bg;
+            }
+        }
+    }
+
     .dropdown-menu {
         background: none repeat scroll 0 0 white;
-        border: 1px solid #C7CBD5;
+        border: 1px solid $panel-border-color;
         @include border-radius(0 0 4px 4px);
         @include box-shadow(none);
         list-style: none outside none;
-        margin: 0;
+        margin: 0 -1px 0 0;
         max-width: 300px;
         min-width: 166px;
         padding: 0;
@@ -205,6 +215,10 @@
         text-shadow: none;
         top: 100%;
         z-index: 1000;
+
+        .divider {
+            margin: 5px 0;
+        }
 
         & > li {
             & > a {
@@ -232,7 +246,7 @@
                 font-weight: 300;
                 margin: 0;
                 padding: 8px 8px 6px;
-                border-bottom: 1px solid rgba(100, 100, 100, 0.22);
+                //border-bottom: 1px solid rgba(100, 100, 100, 0.22);
                 white-space: normal !important;
                 display: block;
             }

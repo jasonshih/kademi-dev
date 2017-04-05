@@ -1,6 +1,5 @@
 function initManageEmailHistory() {
     $('abbr.timeago').timeago();
-    flog("Init email history");
 
     $("#email-query").keyup(function () {
         typewatch(function () {

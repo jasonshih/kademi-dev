@@ -34,7 +34,6 @@
 
             <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
 
-
             <div class="input-group-btn orgSelectorWrap">
                 <a data-orgId="" href="javascript:void (0)" class="btn btn-default">
                     <i class="fa fa-times-circle"></i>
@@ -48,25 +47,34 @@
                         <li>No selections available</li>
                     #else
                         #foreach( $m in $orgList)
-                            #if ($selectedOrg.orgId == $m.orgId)
+                            #if ($selectedOrg.orgId == $m.orgId || $selectedOrg.parent.orgId == $m.orgId)
                                 <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
                             #else
                                 <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
-
-                                #set( $childOrgs = $formatter.sortByProperty($m.childOrgs(), "title") )
-                                #foreach( $childOrg in $childOrgs )
-                                    #if( $foreach.count < 20 )
-                                        <li><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> - $childOrg.title</a>
-                                        </li>
+                            #end
+                            
+                            #set( $childOrgs = $formatter.sortByProperty($m.childOrgs(), "title") )
+                            #foreach( $childOrg in $childOrgs )
+                                #if( $foreach.count < 20 )
+                                    #if ($selectedOrg.orgId == $childOrg.orgId || $selectedOrg.parent.orgId == $childOrg.orgId)
+                                    <li style="padding-left: 10px"><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check text-success"></i> $childOrg.title</a></li>
+                                    
+                                    #set( $subChildOrgs = $formatter.sortByProperty($childOrg.childOrgs(), "title") )
+                                    #foreach( $subChildOrg in $subChildOrgs )
+                                    #if ($selectedOrg.orgId == $subChildOrg.orgId )
+                                    <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check"></i> $subChildOrg.title</a></li>
                                     #else
-                                        <li><a href="#"><i>Results truncated. Use search for more</i></a></li>
-                                        #break
+                                    <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $subChildOrg.title</a></li>
                                     #end
+                                    #end
+                                    
+                                    #else
+                                    <li style="padding-left: 10px"><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $childOrg.title</a></li>
+                                    #end
+                                #else
+                                    <li><a href="#"><i>Results truncated. Use search for more</i></a></li>
+                                    #break
                                 #end
-                                #if( $childOrgs.size() > 1 )
-
-                                #end
-
                             #end
                         #end
                     #end
