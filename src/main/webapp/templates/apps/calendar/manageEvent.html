@@ -134,15 +134,13 @@
                         <p class="lead">Create your calendar event content below</p>
 
                         #if($page.calendar.website)
-                            #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
-                                <div class="embed-responsive embed-responsive-16by9">
-                                    <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                                </div>
-                            #else
-                                <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of <b>$page.calendar.website.name</b> website is disabled. Please enable it at <a href="/websites/${page.calendar.website.name}/${page.calendar.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
-                            #end
+                        #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
+                        <textarea class="htmleditor" cols="100" name="description" rows="10" placeholder="">$!page.description</textarea>
                         #else
-                            <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Please specify a website on the calendar at <a href="./" class="text-warning"><b>here</b></a> before creating event content</p>
+                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of <b>$page.calendar.website.name</b> website is disabled. Please enable it at <a href="/websites/${page.calendar.website.name}/${page.calendar.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
+                        #end
+                        #else
+                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Please specify a website on the calendar at <a href="./" class="text-warning"><b>here</b></a> before creating event content</p>
                         #end
 
                     </div>
