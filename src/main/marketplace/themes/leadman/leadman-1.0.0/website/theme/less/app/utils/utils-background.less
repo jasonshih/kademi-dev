@@ -103,14 +103,14 @@
 
 }
 
-.make-bg(@bg; @color: lighten(@@bg, 43%); @link: lighten(@@bg, 52%); @muted: lighten(@@bg, 26%); @navlinkbg: darken(@@bg, 8%)) {
-  background-color: @@bg !important;
+.make-bg(@bg; @color: lighten(@bg, 43%); @link: lighten(@bg, 52%); @muted: lighten(@bg, 26%); @navlinkbg: darken(@bg, 8%)) {
+  background-color: @bg !important;
   // .transition(background-color .2s ease);
 
   & {
     color: @color;
     a {
-      color: mix(@link, @@bg, 70%);
+      color: mix(@link, @bg, 70%);
       &:focus, &:hover {
         color: @link;
       }
@@ -127,7 +127,7 @@
         color: @link;
       }
       &.active {
-        background-color: mix(@@bg, @navlinkbg, 50%) !important;
+        background-color: mix(@bg, @navlinkbg, 50%) !important;
       }
       &:hover,
       &.active {
@@ -140,7 +140,7 @@
     }
 
     .sidebar-subnav {
-      background-color: @@bg;
+      background-color: @bg;
       > li.active {
         > a {
           font-weight: bold;
@@ -151,7 +151,7 @@
     
     .navbar-form {
       .form-control {
-        background-color: @@bg;
+        background-color: @bg;
         color: @color;
         .placeholder(@muted);
         .ie9 & {
