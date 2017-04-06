@@ -22,7 +22,7 @@
                     <select id="prevAutomationName" name="prevAutomationName" class="form-control">
                         <option value="">[NONE]</option>
                         #foreach($a in $page.automations)
-                        $formatter.option($a.name, $a.title, $request.params.prevAutomationName)
+                        $formatter.option($a.id, $a.title, $request.params.prevAutomationName)
                         #end
                     </select>
                 </div>
@@ -33,8 +33,8 @@
                 <div class="col-md-2">
                     <select id="curAutomationName" name="curAutomationName" class="form-control">
                         <option value="">[NONE]</option>
-                        #foreach($a in $page.automations)
-                        $formatter.option($a.name, $a.title, $request.params.curAutomationName)
+                        #foreach($b in $page.automations)
+                        $formatter.option($b.id, $b.title, $request.params.curAutomationName)
                         #end
                     </select>
                 </div>
