@@ -10,11 +10,42 @@ function initManageWebsite() {
     initCerts();
     initEmailServerTab();
     initHttpsTab();
+    initHstsSettings();
+    initXFrameOptionSettings();
 
     $("form.details").forms({
         callback: function (resp) {
             flog("Saved Ok!");
             Msg.info("Saved");
+        }
+    });
+}
+
+function initXFrameOptionSettings() {
+    var form = $('#kxifrime-form');
+
+    form.forms({
+        onSuccess: function (resp) {
+            Msg.success(resp.messages);
+        }
+    });
+
+    $('body').on('change', '#kxifrime-xFrameType', function () {
+        var select = $(this);
+        if (select.val() == 'ALLOW-FROM') {
+            $('#kxifrime-fromUriDiv').show();
+        } else {
+            $('#kxifrime-fromUriDiv').hide();
+        }
+    });
+}
+
+function initHstsSettings() {
+    var form = $('#hsts-form');
+
+    form.forms({
+        onSuccess: function (resp) {
+            Msg.success(resp.messages);
         }
     });
 }
@@ -158,14 +189,14 @@ function initInputFile() {
 
     $(document).on('change', '.btn-file :file', function () {
         var input = $(this),
-            numFiles = input.get(0).files ? input.get(0).files.length : 1,
-            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label]);
     });
 
     $('.btn-file :file').on('fileselect', function (event, numFiles, label) {
         var input = $(this).parents('.input-group').find(':text'),
-            log = numFiles > 1 ? numFiles + ' files selected' : label;
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
 
         if (input.length) {
             input.val(log);
@@ -393,8 +424,8 @@ function deleteRootCert(certId, rootCertid, tr) {
                 });
             } else {
                 tbody.append('<tr>'
-                    + '<td colspan="3">You have no root/intermediate certificates</td>'
-                    + '</tr>');
+                        + '<td colspan="3">You have no root/intermediate certificates</td>'
+                        + '</tr>');
             }
         },
         error: function (resp) {
@@ -406,7 +437,7 @@ function deleteRootCert(certId, rootCertid, tr) {
 function initSwitchPublic() {
     flog('initSwitchPublic');
 
-    $('.make-switch input').on('change switchChange', function(e) {
+    $('.make-switch input').on('change switchChange', function (e) {
         flog("switch", e.target);
         e.preventDefault();
 
@@ -414,7 +445,7 @@ function initSwitchPublic() {
         var wrapper = label.parents('.make-switch');
         var href = wrapper.attr('data-link');
 
-        setTimeout(function() {
+        setTimeout(function () {
             var isChecked = wrapper.find('input:checked').val() === 'true';
             flog("checked=", isChecked);
             setRepoPublicAccess(href, isChecked);
@@ -427,9 +458,9 @@ function setRepoPublicAccess(href, isPublic) {
         type: 'POST',
         data: {isPublic: isPublic},
         url: href,
-        success: function(data) {
+        success: function (data) {
         },
-        error: function(resp) {
+        error: function (resp) {
             flog("error updating: ", href, resp);
             Msg.error('Sorry, couldnt update public access: ' + resp);
             window.location.reload();
@@ -441,7 +472,7 @@ function initManageWebsiteImage() {
     $('#btn-change-ava').upcropImage({
         buttonContinueText: 'Save',
         url: window.location.pathname, // this is actually the default value anyway
-        ratio: 4/3,
+        ratio: 4 / 3,
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
             $("#websiteImage").reloadFragment();
