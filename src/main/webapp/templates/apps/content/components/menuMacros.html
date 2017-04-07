@@ -17,9 +17,21 @@
 </div>
 <div class="form-group">
     <div class="col-sm-12">
+        <label>Show search form or not</label><br />
+        <input type="checkbox" class="cbb-show-search" />
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
         <label>Show organisation selector or not</label><br />
         <input type="checkbox" class="cbb-show-org-selector" />
         <small class="help-block text-mute">Requires <code>reporting-lib</code></small>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show language selector or not</label><br />
+        <input type="checkbox" class="cbb-show-lang-selector" />
     </div>
 </div>
 <div class="form-group">
@@ -90,21 +102,21 @@
 #macro( showMenu $menuItem $isRootMenuItem )
 <li #if ($isRootMenuItem) class="rootMenuItem" #end>
     <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
-                <span class="btn-group btn-group-xs small">
-                    <a class="btn btn-success btnAddMenuItem" href="#">
-                        <span class="fa fa-plus small"></span>
-                    </a>
-                    #if (!$isRootMenuItem)
-                        <a class="btn btn-info btnSortMenuItem" href="#">
-                            <span class="fa fa-sort small"></span>
-                        </a>
-                    #end
-                    #if (!$isRootMenuItem)
-                    <a class="btn btn-primary btnEditMenuItem" href="#">
-                        <span class="fa fa-pencil small"></span>
-                    </a>
-                    #end
-                </span>
+        <span class="btn-group btn-group-xs small">
+            <a class="btn btn-success btnAddMenuItem" href="#">
+                <span class="fa fa-plus small"></span>
+            </a>
+            #if (!$isRootMenuItem)
+                <a class="btn btn-info btnSortMenuItem" href="#">
+                    <span class="fa fa-sort small"></span>
+                </a>
+            #end
+            #if (!$isRootMenuItem)
+                <a class="btn btn-primary btnEditMenuItem" href="#">
+                    <span class="fa fa-pencil small"></span>
+                </a>
+            #end
+        </span>
 
         <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
     </div>

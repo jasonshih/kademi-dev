@@ -766,7 +766,7 @@ $(window).load(function () {
 function initMultiLingual() {
     initModalTranslate();
     
-    $('.select-lang').click(function (e) {
+    $('.select-lang').on('click', function (e) {
         e.preventDefault();
         
         var langCode = $(this).attr('href');
