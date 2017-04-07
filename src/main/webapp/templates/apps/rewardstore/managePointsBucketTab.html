@@ -4,155 +4,155 @@
 
 
 #foreach($reward in $applications.rewardStore.pointsBuckets )
-#set( $participants = false )
-#set( $participants = $applications.rewardStore.findParticipantsForReward($page.profile, $reward) )
-#foreach($participant in $participants )
-<div class="tx-container">
-    <div class="btn-group pull-right" role="group">
-        <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-success btn-add-points">
-            <i class="fa fa-plus"></i>
-            Add points
-        </button>
-        <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-warning btn-debit-points">
-            <i class="fa fa-minus"></i>
-            Debit points
-        </button>
-        <button data-href="/points-buckets/$reward.name/" data-userid="$participant.entityName" type="button" class="btn btn-info btn-refresh-pb">
-            <i class="fa fa-refresh"></i>
-            Refresh balance
-        </button>
-        <a href="/points-buckets/$reward.name/?exportCsv&participant=$participant.entityName" class="btn btn-info btn-export-csv">
-            <i class="fa fa-table"></i>
-            Export
-        </a>
+    #set( $participants = false )
+    #set( $participants = $applications.rewardStore.findParticipantsForReward($page.profile, $reward) )
+    #foreach($participant in $participants )
+    <div class="tx-container">
+        <div class="btn-group pull-right" role="group">
+            <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-success btn-add-points">
+                <i class="fa fa-plus"></i>
+                Add points
+            </button>
+            <button data-reward="$reward.name" data-userid="$participant.entityName" type="button" class="btn btn-warning btn-debit-points">
+                <i class="fa fa-minus"></i>
+                Debit points
+            </button>
+            <button data-href="/points-buckets/$reward.name/" data-userid="$participant.entityName" type="button" class="btn btn-info btn-refresh-pb">
+                <i class="fa fa-refresh"></i>
+                Refresh balance
+            </button>
+            <a href="/points-buckets/$reward.name/?exportCsv&participant=$participant.entityName" class="btn btn-info btn-export-csv">
+                <i class="fa fa-table"></i>
+                Export
+            </a>
         
+        </div>
+
+
+        <h2>
+            <a href="/points-buckets/$reward.name/">
+                $reward.title
+            </a>
+            #if( $participants.size() > 1 )
+                ( $participant.entityName : $participant.formattedName  )
+            #end
+        </h2>
+
+        <table class="table table-striped">
+            <colgroup>
+                <col width="200px" />
+                <col />
+                <col />
+                <col width="100px" />
+                <col width="100px" />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Tag/Code</th>
+                    <th>Reason</th>
+                    <th>Credits</th>
+                    <th>Expiry</th>
+                </tr>
+            </thead>
+            <tbody id="transactions-${participant.id}-${reward.id}">
+                #set( $txs = $formatter.newList() )
+                #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
+                #if( $txs.isEmpty() )
+                    <tr>
+                        <td colspan="4">
+                            <i>No transactions in date range</i>
+                        </td>
+                    </tr>
+                #else
+                    #foreach($p in $txs)
+                        <tr>
+                            <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
+                            <td>$!p.code</td>
+                            <td>
+                                $p.description
+                                #if( $p.related )
+                                    <i>
+                                        - used
+                                        $p.related</i>
+                                #end
+                            </td>
+                            <td>
+                                #if( $p.txType == "C" )
+                                    <span class="label label-success">$p.numPoints</span>
+                                #else
+                                    <span class="label label-warning">-$p.numPoints</span>
+                                #end
+                            </td>
+                            <td>
+                                #if( $p.completelyUsed )
+                                    <span class="label label-info">Used</span>
+                                #elseif( $p.expired )
+                                    <span class="label label-warning">Expired</span>
+                                #else
+                                    $!formatter.formatAge($p.expiry)
+                                #end
+                            </td>
+                        </tr>
+                    #end
+                #end
+                <tr>
+                    <td></td>
+                    <td class="text-right">
+                        <span>Total Points:</span>
+                    </td>
+                    <td colspan="2">
+                        <strong>$!applications.rewardStore.balance($participant, $reward)</strong>
+                    </td>
+                    <td></td>
+                </tr>
+                #set( $avail = 0 )
+                #set( $avail = $applications.rewardStore.availableBalance($participant, $reward) )
+                #if($current != $avail)
+                    <tr>
+                        <td></td>
+                        <td class="text-right">
+                            <span>Available Points:</span>
+                        </td>
+                        <td colspan="2">
+                            <strong>$avail</strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                #end
+            </tbody>
+        </table>
     </div>
 
+        #set( $points = $applications.rewardStore.findExpiring($reward.name, $participant, $pEndDate ) )
 
-    <h2>
-        <a href="/points-buckets/$reward.name/">
-            $reward.title
-        </a>
-        #if( $participants.size() > 1 )
-        ( $participant.entityName : $participant.formattedName  )
+        #set( $pointsMonths = $points.groupByExpiryMonth )
+        #if( $pointsMonths.isEmpty() )
+        #else
+        <h4>Expiring in next 6 months</h4>
+        <table class="table table-striped" id="points-expiring">
+            <tbody>
+                #set($totalExpiring = 0)
+                #foreach($pg in $pointsMonths.entrySet())
+                    <tr class="points-expiring-item">
+                        #set($expiringYear = $formatter.getYear($pg.key))
+                        #set($totalExpiring = $totalExpiring + $pg.value)
+                        <th id="month-1-label">$formatter.formatJodaDate($pg.key, "d MMMM") $expiringYear</th>
+                        <td id="month-1-value">$pg.value</td>
+                    </tr>
+                #end
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total Points Expiring</th>
+                    <td class="total-points-expiring">$totalExpiring</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <hr />
         #end
-    </h2>
-
-    <table class="table table-striped">
-        <colgroup>
-            <col width="200px"/>
-            <col />
-            <col />
-            <col width="100px"/>
-            <col width="100px"/>
-        </colgroup>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Tag/Code</th>
-                <th>Reason</th>
-                <th>Credits</th>
-                <th>Expiry</th>
-            </tr>
-        </thead>
-        <tbody id="transactions-${participant.id}-${reward.id}">
-            #set( $txs = $formatter.newList() )
-            #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
-            #if( $txs.isEmpty() )
-            <tr>
-                <td colspan="4">
-                    <i>No transactions in date range</i>
-                </td>
-            </tr>
-            #else
-            #foreach($p in $txs)
-            <tr>
-                <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
-                <td>$!p.code</td>
-                <td>
-                    $p.description
-                    #if( $p.related )
-                    <i>
-                        - used
-                        $p.related</i>
-                    #end
-                </td>
-                <td>
-                    #if( $p.txType == "C" )
-                    <span class="label label-success">$p.numPoints</span>
-                    #else
-                    <span class="label label-warning">-$p.numPoints</span>
-                    #end
-                </td>
-                <td>
-                    #if( $p.completelyUsed )
-                    <span class="label label-info">Used</span>
-                    #elseif( $p.expired )
-                    <span class="label label-warning">Expired</span>
-                    #else
-                    $!formatter.formatAge($p.expiry)
-                    #end
-                </td>
-            </tr>
-            #end
-            #end
-            <tr>
-                <td></td>
-                <td class="text-right">
-                    <span>Total Points:</span>
-                </td>
-                <td colspan="2">
-                    <strong>$!applications.rewardStore.balance($participant, $reward)</strong>
-                </td>
-                <td></td>
-            </tr>
-            #set( $avail = 0 )
-            #set( $avail = $applications.rewardStore.availableBalance($participant, $reward) )
-            #if($current != $avail)
-            <tr>
-                <td></td>
-                <td class="text-right">
-                    <span>Available Points:</span>
-                </td>
-                <td colspan="2">
-                    <strong>$avail</strong>
-                </td>
-                <td></td>
-            </tr>
-            #end
-        </tbody>
-    </table>
-</div>
-
-#set( $points = $applications.rewardStore.findExpiring($reward.name, $participant, $pEndDate ) )
-
-#set( $pointsMonths = $points.groupByExpiryMonth )
-#if( $pointsMonths.isEmpty() )
-#else
-<h4>Expiring in next 6 months</h4>
-<table class="table table-striped" id="points-expiring">
-    <tbody>
-        #set($totalExpiring = 0)
-        #foreach($pg in $pointsMonths.entrySet())
-        <tr class="points-expiring-item">
-            #set($expiringYear = $formatter.getYear($pg.key))
-            #set($totalExpiring = $totalExpiring + $pg.value)
-            <th id="month-1-label">$formatter.formatJodaDate($pg.key, "d MMMM") $expiringYear</th>
-            <td id="month-1-value">$pg.value</td>
-        </tr>
-        #end
-    </tbody>
-    <tfoot>
-        <tr>
-            <th>Total Points Expiring</th>
-            <td class="total-points-expiring">$totalExpiring</td>
-        </tr>
-    </tfoot>
-</table>
-
-<hr/>
-#end
-#end
+    #end
 #end
 <!--
 <hr/>
@@ -212,8 +212,8 @@
 -->
 
 
-<div id="modal-new-points" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-    <div class="modal-dialog" role="document">
+<div id="modal-new-points" class="modal fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -225,8 +225,8 @@
 
                     <div class="form-message alert alert-danger" style="display: none;"></div>
 
-                    <input type="hidden" name="awardToEmail" value=""/>
-                    <input type="hidden" name="awardedReward" value=""/>
+                    <input type="hidden" name="awardToEmail" value="" />
+                    <input type="hidden" name="awardedReward" value="" />
 
                     <div class="form-group">
                         <label class="control-label col-md-3" for="awardNumPoints">No. of points</label>
@@ -241,7 +241,7 @@
                             <select name="awardPointsTag" class="form-control input-sm">
                                 <option value="">[None]</option>
                                 #foreach($pointTag in $page.find("/pointTags").children )
-                                <option value="$pointTag.name">$pointTag.title</option>
+                                    <option value="$pointTag.name">$pointTag.title</option>
                                 #end
                             </select>
                         </div>
@@ -266,14 +266,14 @@
 
 </div>
 
-<div id="modal-debit-points" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-    <div class="modal-dialog" role="document">
+<div id="modal-debit-points" class="modal fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <form method="post" action="/rewards/points/" class="form-horizontal" id="new-points-form">
 
-                <input type="hidden" name="debitPoints" value="debitPoints"/>
-                <input type="hidden" name="email" value=""/>
-                <input type="hidden" name="awardedReward" value=""/>
+                <input type="hidden" name="debitPoints" value="debitPoints" />
+                <input type="hidden" name="email" value="" />
+                <input type="hidden" name="awardedReward" value="" />
 
                 <div class="modal-header">
                     <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
@@ -308,9 +308,9 @@
                                         Codes
                                         <span class="caret"></span>
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-right reason-codes" >
+                                    <ul class="dropdown-menu dropdown-menu-right reason-codes">
                                         #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes.entrySet() )
-                                        <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
+                                            <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
                                         #end
                                     </ul>
                                 </div><!-- /btn-group -->

@@ -1,60 +1,61 @@
 <html>
     <head>
         <title>Manage Repo App</title>
-        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css"/>
+        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
         <link rel="stylesheet" href="/static/jasny-bootstrap/css/jasny-bootstrap.min.css">
         <style>
-            .gallery-img{
+            .gallery-img {
                 display: block;
-                //width:400px;
-                height:150px;
+            / / width: 400 px;
+                height: 150px;
                 width: auto;
                 height: auto;
             }
 
-            .gallery-img img{
-                max-width:400px;
-                max-height:150px;
+            .gallery-img img {
+                max-width: 400px;
+                max-height: 150px;
             }
-            .star-rating{
+
+            .star-rating {
                 color: #555555;
                 cursor: default;
             }
 
-            .app-logo{
+            .app-logo {
                 display: inline-block;
-                max-height:150px;
-                max-width :320px;
+                max-height: 150px;
+                max-width: 320px;
                 width: auto;
                 height: auto;
             }
 
-            .app-logo img{
-                max-height:150px;
-                max-width :320px;
+            .app-logo img {
+                max-height: 150px;
+                max-width: 320px;
                 width: auto;
                 height: auto;
             }
 
-            .app-logo .noLogo{
-                display:none !important;
+            .app-logo .noLogo {
+                display: none !important;
             }
 
-            .app-banner{
+            .app-banner {
                 display: inline-block;
-                max-width: 533px; 
+                max-width: 533px;
                 max-height: 200px;
                 width: auto;
                 height: auto;
             }
 
-            .app-banner img{
-                max-width: 533px; 
+            .app-banner img {
+                max-width: 533px;
                 max-height: 200px;
             }
 
-            .app-banner .noBanner{
-                display:none !important;
+            .app-banner .noBanner {
+                display: none !important;
             }
         </style>
     </head>
@@ -67,15 +68,15 @@
                     <a href="#details" data-toggle="tab"><i class="fa fa-home"></i> Details</a>
                 </li>
                 #if($marketItem)
-                <li>
-                    <a href="#market" data-toggle="tab"><i class="fa fa-cog"></i> Market Place</a> 
-                </li>
-                <li>
-                    <a href="#reviews" data-toggle="tab"><i class="fa fa-star-o"></i> Reviews</a>
-                </li>
-                <li>
-                    <a href="#history" data-toggle="tab"><i class="fa fa-history"></i> Publish History</a> 
-                </li>
+                    <li>
+                        <a href="#market" data-toggle="tab"><i class="fa fa-cog"></i> Market Place</a>
+                    </li>
+                    <li>
+                        <a href="#reviews" data-toggle="tab"><i class="fa fa-star-o"></i> Reviews</a>
+                    </li>
+                    <li>
+                        <a href="#history" data-toggle="tab"><i class="fa fa-history"></i> Publish History</a>
+                    </li>
                 #end
             </ul>
 
@@ -84,11 +85,13 @@
                     <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
                         <div class="pull-right">
                             #if(!$marketItem)
-                            <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success"><i class="fa fa-shopping-cart"></i> Add to market place</button>
+                                <button type="button" data-toggle="modal" data-target="#makeMarketItem" class="btn btn-sm btn-success">
+                                    <i class="fa fa-shopping-cart"></i> Add to market place
+                                </button>
                             #end
                             <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
                         </div>
-                        <input type="hidden" name="details" value="details"/>
+                        <input type="hidden" name="details" value="details" />
                         <div class="form-group">
                             <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                         </div>
@@ -126,240 +129,251 @@
                 </div>
 
                 #if($marketItem)
-                <div class="tab-pane" id="reviews">
-                    <div class="row">
-                        #set($reviews = $marketItem.appRatings)
-                        #if(!$reviews || $reviews.empty)
-                        <div class="col-md-12">
-                            No ratings have been submitted
-                        </div>
-                        #else
-                        #foreach($review in $reviews)
-                        <div class="col-md-12">
-                            <hr/>
-                            #genRating($review.rating)
-                            $review.reviewedBy.formattedName from $review.organisation.formattedName
-                            <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                            <p>$review.review</p>
-                        </div>
-                        #end
-                        #end
-                    </div>
-                </div>
-
-                <div class="tab-pane" id="market">
-                    <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
-                        <input type="hidden" name="marketDetails" value="true"/>
-                        <div class="pull-right" id="marketButtons">
-                            #if(!$marketItem.published)
-                            <button type="button" class="btn btn-sm btn-info publishApp"><i class="fa fa-check"></i> Publish</button>
+                    <div class="tab-pane" id="reviews">
+                        <div class="row">
+                            #set($reviews = $marketItem.appRatings)
+                            #if(!$reviews || $reviews.empty)
+                                <div class="col-md-12">
+                                    No ratings have been submitted
+                                </div>
                             #else
-                            <button type="button" class="btn btn-sm btn-info rePublishApp"><i class="fa fa-refresh"></i> Re-Publish</button>
-                            <button type="button" class="btn btn-sm btn-danger unPublishApp"><i class="fa fa-times"></i> Un-Publish</button>
+                                #foreach($review in $reviews)
+                                    <div class="col-md-12">
+                                        <hr />
+                                        #genRating($review.rating)
+                                        $review.reviewedBy.formattedName
+                                        from $review.organisation.formattedName
+                                        <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                        <p>$review.review</p>
+                                    </div>
+                                #end
                             #end
-                            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
                         </div>
-                        <div class="clearfix">
-                        </div>
-                        <br/>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Unique Name</label>
-                            <div class="col-sm-9">
-                                <div class="input-group">
-                                    <span>
-                                        <label class="control-label">$!marketItem.name</label>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="price">Price</label>
-                            <div class="col-sm-9">
-                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">$</span>
-                                    <input disabled="disabled" type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
-                                </div>
-                                <small>Only free items are currently supported.</small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="brief">Short Brief</label>
-                            <div class="col-sm-9">
-                                <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!marketItem.brief</textarea>
-                                <small>This text will show in the gallery view of the market place.</small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="description">Description</label>
-                            <div class="col-sm-9">
-                                <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!marketItem.description</textarea>
-                                <small>This is the full description of this item.</small>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Banner 
-                                <small>Recommended size 800x300 px</small>
-                            </label>
-                            <div class="col-sm-9" id="bannerImage">
-                                #set($banner = "/theme/apps/marketplace/no_banner.png")
-                                #if($page.banner)
-                                #set($banner = $page.banner.name + '?' + $formatter.now.time)
+                    </div>
+
+                    <div class="tab-pane" id="market">
+                        <form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+                            <input type="hidden" name="marketDetails" value="true" />
+                            <div class="pull-right" id="marketButtons">
+                                #if(!$marketItem.published)
+                                    <button type="button" class="btn btn-sm btn-info publishApp"><i class="fa fa-check"></i> Publish</button>
+                                #else
+                                    <button type="button" class="btn btn-sm btn-info rePublishApp"><i class="fa fa-refresh"></i> Re-Publish</button>
+                                    <button type="button" class="btn btn-sm btn-danger unPublishApp"><i class="fa fa-times"></i> Un-Publish</button>
                                 #end
-                                #set($bannerTitle = "No Banner")
-                                <div class="app-banner wrap-image" data-href="$banner">
-                                    <a class="banner-logo cboxElement" href="$banner" title="Banner">
-                                        <img src="$banner" alt="" class="img-responsive">
-                                    </a>
-                                    <div class="tools tools-bottom">
-                                        <a href="#" class="upload-banner" id="upload-banner" title="Change/Upload Banner">
-                                            <i class="fa fa-plus"></i>
-                                        </a>
-                                        <a href="$banner" data-title="$bannerTitle" class="delete-banner pull-right #if(!$page.banner)noBanner#end" title="Delete Banner">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                            <div class="clearfix">
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Unique Name</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <span>
+                                            <label class="control-label">$!marketItem.name</label>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Logo
-                                <small>Recommended size 320x150 px</small>
-                            </label>
-                            <div class="col-sm-9" id="logoImage">
-                                #set($logo = "/theme/apps/marketplace/no_logo.png")
-                                #if($page.logo)
-                                #set($logo = $page.logo.name)
-                                #end
-                                <div class="app-logo wrap-image">
-                                    <a class="cboxElement" href="$logo" title="Logo">
-                                        <img src="$logo#if($page.logo)?$formatter.now.time#end" alt="" class="img-responsive">
-                                    </a>
-                                    <div class="tools tools-bottom">
-                                        <a href="#" class="upload-logo" id="upload-logo" title="Change/Upload Logo">
-                                            <i class="fa fa-plus"></i>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="price">Price</label>
+                                <div class="col-sm-9">
+                                    <div class="input-group">
+                                        <span class="input-group-addon" id="basic-addon1">$</span>
+                                        <input disabled="disabled" type="number" min="0" step="0.01" class="form-control numeric" name="price" value="$!marketItem.price" />
+                                    </div>
+                                    <small>Only free items are currently supported.</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="brief">Short Brief</label>
+                                <div class="col-sm-9">
+                                    <textarea id="brief" name="brief" class="form-control limited" maxLength="200" cols="100" rows="5">$!marketItem.brief</textarea>
+                                    <small>This text will show in the gallery view of the market place.</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="description">Description</label>
+                                <div class="col-sm-9">
+                                    <textarea id="description" name="description" class="htmleditor toolbar-Lite" cols="100" rows="5">$!marketItem.description</textarea>
+                                    <small>This is the full description of this item.</small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Banner
+                                    <small>Recommended size 800x300 px</small>
+                                </label>
+                                <div class="col-sm-9" id="bannerImage">
+                                    #set($banner = "/theme/apps/marketplace/no_banner.png")
+                                    #if($page.banner)
+                                        #set($banner = $page.banner.name + '?' + $formatter.now.time)
+                                    #end
+                                    #set($bannerTitle = "No Banner")
+                                    <div class="app-banner wrap-image" data-href="$banner">
+                                        <a class="banner-logo cboxElement" href="$banner" title="Banner">
+                                            <img src="$banner" alt="" class="img-responsive">
                                         </a>
-                                        <a href="$logo" data-title="Logo" class="delete-logo pull-right #if(!$page.logo)noLogo#end" title="Delete Logo">
-                                            <i class="fa fa-trash"></i>
-                                        </a>                                        
+                                        <div class="tools tools-bottom">
+                                            <a href="#" class="upload-banner" id="upload-banner" title="Change/Upload Banner">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                            <a href="$banner" data-title="$bannerTitle" class="delete-banner pull-right #if(!$page.banner)noBanner#end" title="Delete Banner">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Screenshots</label>
-                            <div class="col-sm-9" id="screenshot-div">
-                                <div style="margin-bottom: 5px;">
-                                    <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-image-upload">
-                                        <i class="fa fa-plus"></i> Add screenshots
-                                    </button>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Logo
+                                    <small>Recommended size 320x150 px</small>
+                                </label>
+                                <div class="col-sm-9" id="logoImage">
+                                    #set($logo = "/theme/apps/marketplace/no_logo.png")
+                                    #if($page.logo)
+                                        #set($logo = $page.logo.name)
+                                    #end
+                                    <div class="app-logo wrap-image">
+                                        <a class="cboxElement" href="$logo" title="Logo">
+                                            <img src="$logo#if($page.logo)?$formatter.now.time#end" alt="" class="img-responsive">
+                                        </a>
+                                        <div class="tools tools-bottom">
+                                            <a href="#" class="upload-logo" id="upload-logo" title="Change/Upload Logo">
+                                                <i class="fa fa-plus"></i>
+                                            </a>
+                                            <a href="$logo" data-title="Logo" class="delete-logo pull-right #if(!$page.logo)noLogo#end" title="Delete Logo">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="panel panel-default" id="screenshots-panel">
-                                    <div class="panel-body">
-                                        <div class="row">
-                                            <div id="screenshots">
-                                                #foreach($i in $page.screenshots)
-                                                <div class="col-md-3 col-sm-4 gallery-img">
-                                                    <div class="wrap-image" data-href="$i.name">
-                                                        <a class="group1 cboxElement" href="$i.name" title="$i.name">
-                                                            <img src="$i.name" alt="" class="img-responsive">
-                                                        </a>
-                                                        <div class="tools tools-bottom">
-                                                            <a href="$i.name" data-title="$i.name" class="delete-screenshot pull-right" title="Delete $i.name">
-                                                                <i class="fa fa-trash"></i>
-                                                            </a>
-                                                        </div>                                                
-                                                    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Screenshots</label>
+                                <div class="col-sm-9" id="screenshot-div">
+                                    <div style="margin-bottom: 5px;">
+                                        <button class="btn btn-sm btn-success" data-toggle="modal" data-target="#modal-image-upload">
+                                            <i class="fa fa-plus"></i> Add screenshots
+                                        </button>
+                                    </div>
+                                    <div class="panel panel-default" id="screenshots-panel">
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div id="screenshots">
+                                                    #foreach($i in $page.screenshots)
+                                                        <div class="col-md-3 col-sm-4 gallery-img">
+                                                            <div class="wrap-image" data-href="$i.name">
+                                                                <a class="group1 cboxElement" href="$i.name" title="$i.name">
+                                                                    <img src="$i.name" alt="" class="img-responsive">
+                                                                </a>
+                                                                <div class="tools tools-bottom">
+                                                                    <a href="$i.name" data-title="$i.name" class="delete-screenshot pull-right" title="Delete $i.name">
+                                                                        <i class="fa fa-trash"></i>
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    #end
                                                 </div>
-                                                #end                                                
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="tab-pane" id="history">
-                    Current live version: $page.marketPlaceItem.currentItem.branch.name - $page.marketPlaceItem.currentItem.id - market place item id: $page.marketPlaceItem.id
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Title</th>
-                                    <th>Brief</th>
-                                    <th>Price</th>
-                                    <th>Published By</th>
-                                    <th>Published Date</th>
-                                    <th>Branch</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                #foreach($item in $page.publishedItems)
-                                <tr>
-                                    <th scope="row">$foreach.count</th>
-                                    <td>$!item.title</td>
-                                    <td>$!item.brief</td>
-                                    <td>
-                                        #if(!$item.price || $item.price == 0)
-                                        Free
-                                        #else
-                                        $$item.price
-                                        #end
-                                    </td>
-                                    <td>$item.publishedBy.formattedName</td>
-                                    <td><abbr title="$item.publishedDate">$formatter.formatDateTime($item.publishedDate, $page.organisation.timezone)</abbr></td>
-                                    <td>$item.branch.name (commit-$item.commit.id)</td>
-                                </tr>
-                                #end
-                            </tbody>
-                        </table>
+                        </form>
                     </div>
-                </div>
+
+                    <div class="tab-pane" id="history">
+                        Current live version: $page.marketPlaceItem.currentItem.branch.name - $page.marketPlaceItem.currentItem.id - market place item id: $page.marketPlaceItem.id
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Brief</th>
+                                        <th>Price</th>
+                                        <th>Published By</th>
+                                        <th>Published Date</th>
+                                        <th>Branch</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($item in $page.publishedItems)
+                                        <tr>
+                                            <th scope="row">$foreach.count</th>
+                                            <td>$!item.title</td>
+                                            <td>$!item.brief</td>
+                                            <td>
+                                                #if(!$item.price || $item.price == 0)
+                                                    Free
+                                                #else
+                                                    $$item.price
+                                                #end
+                                            </td>
+                                            <td>$item.publishedBy.formattedName</td>
+                                            <td><abbr title="$item.publishedDate">$formatter.formatDateTime($item.publishedDate, $page.organisation.timezone)</abbr></td>
+                                            <td>$item.branch.name (commit-$item.commit.id)</td>
+                                        </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
                 #end
             </div>
         </div>
 
-        <div id="modal-image-upload" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Upload images</h4>
-            </div>
-            <div class="modal-body">
-                <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadImageDropzone">
-                    <input type="hidden" name="uploadScreenshots" value="true"/>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+        <div id="modal-image-upload" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload images</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadImageDropzone">
+                            <input type="hidden" name="uploadScreenshots" value="true" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
         #if(!$marketItem)
-        <div id="makeMarketItem" class="modal modal-md fade" aria-hidden="true">
-            <div class="modal-header">
-                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Create Market Item</h4>
-            </div>
-            <form class="form-horizontal" method="POST" action=".">
-                <div class="modal-body">
-                    <div class="form-message alert alert-danger" style="display: none;"></div>
-                    <input type="hidden" name="createMarketItem" value="true"/>
-                    <div class="form-group">
-                        <label for="newName" class="col-sm-3 control-label">Unique name</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control regex required" required="required" name="uniqueName" data-regex="^[a-zA-Z0-9-]+$" />
-                            <span class="help-block"><small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small></span>
+            <div id="makeMarketItem" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Create Market Item</h4>
                         </div>
+                        <form class="form-horizontal" method="POST" action=".">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <input type="hidden" name="createMarketItem" value="true" />
+                                <div class="form-group">
+                                    <label for="newName" class="col-sm-3 control-label">Unique name</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control regex required" required="required" name="uniqueName" data-regex="^[a-zA-Z0-9-]+$" />
+                                        <span class="help-block">
+                                            <small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Create</button>
+                            </div>
+                        </form>
                     </div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Create</button>
-            </div>
-            </form>
-        </div>
         #end
 
         <script src="/theme/assets/plugins/jquery-inputlimiter/jquery.inputlimiter.1.3.1.min.js">//
@@ -377,24 +391,24 @@
         <script>
             $(function () {
                 initManageRepoApp();
-                        #if (!$marketItem)
-                        initCreateMarketItem();
-                        #end
+                #if (!$marketItem)
+                    initCreateMarketItem();
+                #end
             });
         </script>
         #macro(genRating $rating)
-        <p class="star-rating" title="$rating/5 stars">
-            #foreach($i in [0..4])
-            #set($a = $rating - $i)
-            #if($a > 0.5)
-            <span class="fa fa-star"></span>
-            #elseif($a == 0.5)
-            <span class="fa fa-star-half-o"></span>
-            #else
-            <span class="fa fa-star-o"></span>
-            #end
-            #end
-        </p>
+            <p class="star-rating" title="$rating/5 stars">
+                #foreach($i in [0..4])
+                    #set($a = $rating - $i)
+                    #if($a > 0.5)
+                        <span class="fa fa-star"></span>
+                    #elseif($a == 0.5)
+                        <span class="fa fa-star-half-o"></span>
+                    #else
+                        <span class="fa fa-star-o"></span>
+                    #end
+                #end
+            </p>
         #end
     </body>
 </html>
