@@ -76,7 +76,7 @@ CKEDITOR.plugins.add('fuse-image',
                                 elements: [
                                     {
                                         type: 'html',
-                                        html: '<div class="row" style="width: 100%; max-width: 900px">'
+                                        html: '<div class="row kimagePlugin" style="width: 100%; max-width: 900px">'
                                                 + '  <div class="col-md-4">'
                                                 + '    <div id="imageTree" class="tree"></div>'
                                                 + '  </div>'
