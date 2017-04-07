@@ -192,16 +192,6 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="forceHttps" class="col-sm-3 control-label">Force HTTPS</label>
-                            <div class="col-sm-6">
-                                <select name="forceHttps" id="aliasTo" class="form-control">
-                                    $formatter.option(false, "No", $page.forceHttps)
-                                    $formatter.option(true, "Yes", $page.forceHttps)
-                                </select>
-                                <small>If you want visitors to this site to be forced to use HTTPS.</small>
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <div class="col-sm-offset-3 col-sm-6">
                                 <button type="submit" class="btn btn-sm btn-success">Save details</button>
                             </div>
@@ -457,11 +447,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                    <button class="btn btn-sm btn-primary" type="submit">Create</button>
-                                </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                        <button class="btn btn-sm btn-primary" type="submit">Create</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -628,12 +618,92 @@
                             #end
                         </tbody>
                     </table>
-                    
+
                     <hr/>
-                    
+
+                    <h2>Security Settings</h2>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-lock"></i>
+                                    HTTPS Settings
+                                </div>
+                                <div class="panel-body courses-wrapper clearfix">
+
+                                    <div class="alert alert-info">
+                                        When "Force HTTPS" is enabled, it will redirect any users to the secure version of the site (https).
+                                        HTTP Strict Transport Security (HSTS) is automatically enabled when https is used to provide an extra layer of security.
+                                    </div>
+
+                                    <form id="hsts-form" class="form-horizontal">
+                                        <input type="hidden" name="saveHTTPSettings" value="true"/>
+                                        <div class="form-group">
+                                            <label for="forceHttps" class="col-sm-3 control-label">Force HTTPS</label>
+                                            <div class="col-sm-6">
+                                                <select name="forceHttps" id="forceHttps" class="form-control">
+                                                    $formatter.option(false, "No", $page.forceHttps)
+                                                    $formatter.option(true, "Yes", $page.forceHttps)
+                                                </select>
+                                                <small>If you want visitors to this site to be forced to use HTTPS.</small>
+                                            </div>
+                                        </div>
+
+                                        <p class="pull-right">
+                                            <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
+                                        </p>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-window-maximize"></i>
+                                    X-Frame-Options
+                                </div>
+                                <div class="panel-body courses-wrapper clearfix">
+
+                                    <form id="kxifrime-form" class="form-horizontal">
+                                        <input type="hidden" name="saveXFrameOptions" value="true"/>
+                                        <div class="form-group">
+                                            <label for="kxifrime-xFrameType" class="col-sm-3 control-label">Type</label>
+                                            <div class="col-sm-6">
+                                                #set($xFrameType = $page.xFrameOptionsType)
+                                                <select id="kxifrime-xFrameType" name="xFrameType" class="form-control">
+                                                    $formatter.option('', 'Disable', $xFrameType)
+                                                    $formatter.option('DENY', 'Deny', $xFrameType)
+                                                    $formatter.option('SAMEORIGIN', 'Same Origin', $xFrameType)
+                                                    $formatter.option('ALLOW-FROM', 'Allow From', $xFrameType)
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div id="kxifrime-fromUriDiv" class="form-group" $formatter.ifEqual('', 'style="display:none;"', $xFrameType, 'ALLOW-FROM')>
+                                            <label for="kxifrime-fromUri" class="col-sm-4 control-label">URI</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" id="kxifrime-fromUri" name="fromUri" class="form-control" value="$!page.xFrameOptionsUri" />
+                                            </div>
+                                        </div>
+                                        <p class="pull-right">
+                                            <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
+                                        </p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <hr/>
+
                     <h2>Intrusion detection and prevention</h2>
                     #if( $page.idpPolicy.metrics.size() > 0 )
-                    <h3>Metrics</h3>                    
+                    <h3>Metrics</h3>
                     <table class="table table-striped">
                         <tbody>
                             #foreach($metricEntry in $page.idpPolicy.metrics.entrySet())
@@ -646,7 +716,7 @@
                         </tbody>
                     </table>
                     #end
-                    
+
                     <h3>Known IPs</h3>
                     #foreach($knownIpEntry in $page.idpPolicy.knownIps.entrySet() )
                     <h4>$knownIpEntry.key</h4>
@@ -659,13 +729,13 @@
                             #end
                         </tbody>
                     </table>
-                    
+
                     #end
-                    
+
                     <div class="well">
                         <a target="_blank" class="btn btn-primary" href="WEB-INF/texteditor?fileName=idp-policy.xml">Edit IDP Policy file</a>
                         <xmp>$page.idpPolicyXml</xmp>
-                    </div>                    
+                    </div>
                 </div>
 
                 <div id="panel_apps" class="tab-pane appsContainer">
@@ -720,13 +790,13 @@
                                         <div class="form-message alert alert-danger" style="display: none;"></div>
                                         <input type="hidden" name="settingsAppId" value="$app.appId" />
                                         #if($app.enabled)
-                                            #appSettings($app.appId)
+                                        #appSettings($app.appId)
                                         #end
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                                    <button class="btn btn-primary btn-sm" type="submit">Save</button>
-                                </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary btn-sm" type="submit">Save</button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -747,15 +817,15 @@
                     <div class="modal-body">
                         <table class="" style="width: 100%">
                             #foreach($g in $page.allGroups)
-                                <tr>
-                                    <td>
-                                        <div class="col-sm-offset-3">
-                                            <label class="checkbox-inline">
-                                                $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
-                                            </label>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>
+                                    <div class="col-sm-offset-3">
+                                        <label class="checkbox-inline">
+                                            $formatter.checkbox($g.name, $page.isSelected($g) ) $g.name
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
                             #end
                         </table>
                     </div>
@@ -785,11 +855,11 @@
                                     <input id="menu-link" class="form-control required" placeholder="Menu link" value="" />
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -826,11 +896,11 @@
                                     <textarea id = "certificateTextUpdate" name="certificateTextUpdate" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -844,9 +914,9 @@
                         <h4 class="modal-title" id="myModalLabel">Certificate Signing Request</h4>
                     </div>
                     <form method="POST" action="." class="form-horizontal">
-                    <div class="modal-body">
-                        <p class="well csrForm">Please fill in the details below</p>
-                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <div class="modal-body">
+                            <p class="well csrForm">Please fill in the details below</p>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="csrForm">
                                 <div class="form-group">
                                     <input type="hidden" name="generateCsr" value="true" />
@@ -899,9 +969,9 @@
                                     <div class="col-md-8">
                                         <select name="csr_c" id="csr_c" class="required form-control">
                                             #set($countryCodes = $formatter.countryCodes)
-                                    #foreach($cc in $countryCodes.list)
+                                            #foreach($cc in $countryCodes.list)
                                             $formatter.option($cc.alpha2Code, $cc.englishShortName, false)
-                                        #end
+                                            #end
                                         </select>
                                     </div>
                                 </div>
@@ -935,11 +1005,11 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-sm btn-primary btn-create" type="submit">Create</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary btn-create" type="submit">Create</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -982,11 +1052,11 @@
                                     <textarea id="certText" name="certText" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Upload</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1023,11 +1093,11 @@
                                     <textarea id = "privateKeyTextUpdate" name="privateKeyTextUpdate" rows="10" class="form-control"></textarea>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Update</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Update</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1064,11 +1134,11 @@
                                     </label>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Generate</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Generate</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1096,11 +1166,11 @@
                                 <textarea type="text" name="dkimpk" value="" placeholder="PEM Encoded private key" class="form-control" ></textarea>
                             </div>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Upload</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Upload</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -1130,11 +1200,11 @@
                                     <p>The address to be sending from eg. noreply@yourdomain.com</p>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        </div>
                     </form>
                 </div>
             </div>
