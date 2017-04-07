@@ -394,7 +394,7 @@ body.highlighted-container-content .keditor-container-content:before {
   left: -2px;
   background-color: rgba(0, 0, 0, 0.5);
   padding: 2px 2px;
-  text-align: right;
+  text-align: left;
 }
 .keditor-component .keditor-toolbar > a {
   border: 0;
