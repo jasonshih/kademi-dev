@@ -1,0 +1,97 @@
+/* ===========================================================================
+   KEditor styles
+   =========================================================================== */
+.keditor-content-area {
+    padding-top: 30px;
+    margin-right: 0 !important;
+}
+
+.keditor-content-area.empty {
+    position: relative;
+}
+
+.keditor-content-area.empty:before {
+    content: "Drag & drop container in here";
+    color: #ccc;
+    font-size: 30px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .4);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 0 15px;
+    line-height: 35px;
+}
+
+.keditor-content-area.empty:after {
+    content: "";
+    position: absolute;
+    top: 30px;
+    bottom: 30px;
+    left: 50px;
+    right: 50px;
+    border: 3px dashed #eee;
+}
+
+/* ===========================================================================
+   Row small for panel setting
+   =========================================================================== */
+.row.row-sm {
+    margin: 0 -2px;
+}
+
+.row.row-sm > div {
+    padding: 0 2px;
+}
+
+/* ===========================================================================
+   Color picker
+   =========================================================================== */
+.colorpicker-wrapper {
+    position: relative;
+}
+
+.colorpicker-wrapper .colorpicker {
+    top: 31px !important;
+    right: auto;
+    left: 0px !important;
+}
+
+.colorpicker {
+    right: auto;
+    left: 15px !important;
+    padding: 5px !important;
+}
+
+label + .input-group + .colorpicker {
+    top: 60px !important;
+}
+
+/* ===========================================================================
+   Select groups
+   =========================================================================== */
+.checkboxes-list .checkbox {
+    min-height: 0;
+}
+
+.checkboxes-list .checkbox:first-child {
+    padding-top: 0;
+}
+
+.form-group .checkboxes-list {
+    margin-bottom: 0;
+}
+
+/* ===========================================================================
+   Drag & Drop
+   =========================================================================== */
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}

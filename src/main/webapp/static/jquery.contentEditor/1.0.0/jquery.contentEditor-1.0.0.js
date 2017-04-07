@@ -81,7 +81,6 @@
                 
                 methods.checkDependencies(options, function () {
                     target.keditor({
-                        contentAreasWrapper: '<div class="keditor-content-areas-wrapper"></div>',
                         niceScrollEnabled: false,
                         ckeditorOptions: {
                             skin: 'bootstrapck',
