@@ -1,0 +1,76 @@
+#if ($user)
+    <link rel="stylesheet" itemprop="stylesheet" property="stylesheet" type="text/css" href="/theme/apps/kpoll/kpollPortlet.css" />
+
+    #if($poll)
+        #if (!$answer)
+            <form method="post" action="/kpoll/${poll.id}/answer" id="form-kpoll">
+                <div class="kpoll">
+                    <div class="kpoll-question clearfix">
+                        $poll.fields.question.value
+                    </div>
+                    <hr />
+                    <div class="kpoll-anwsers">
+                        #foreach($ans in $poll.fields.answers)
+                            #set ($anwserId = "answer-" + $foreach.index)
+                            <div class="radio kpoll-anwser">
+                                <label for="$anwserId">
+                                    $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
+                                </label>
+                            </div>
+                        #end
+                    </div>
+                    <div class="kpoll-action">
+                        <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
+                        <button type="button" class="btn btn-success btn-see-result btn-sm btn-small">See result</button>
+                    </div>
+                </div>
+            </form>
+        #end
+
+        <div id="poll-result" #if (!$answer) style="display: none" #end>
+            <div class="kpoll">
+                #if ($answer)
+                    <p class="alert alert-info lead"><i class="glyphicon glyphicon-info-sign"></i> You already answered this poll!</p>
+                #end
+                <div class="kpoll-question clearfix">
+                    $poll.fields.question.value
+                </div>
+                <hr />
+                <h3 class="kpoll-total-answer">Total answer: <span class="label label-success">$answers.total</span></h3>
+                <div class="kpoll-anwsers">
+                    #foreach($ans in $answers.list)
+                    <div class="answer">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                #if ($answer && $answer.fields.answer.value == $ans.answer)
+                                    <strong>$ans.answer (<em class="small">your answer</em>)</strong>
+                                #else
+                                    $ans.answer
+                                #end
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: ${ans.percent}%"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                $ans.hit ($ans.percent%)
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" src="/theme/apps/kpoll/kpollPortlet.js"></script>
+        <script type="text/javascript">
+            $(function () {
+                initKpollPortlet();
+            });
+        </script>
+    #else
+        <p class="alert alert-info">You don't have any poll for now.</p>
+    #end
+#end
