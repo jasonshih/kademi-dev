@@ -1,0 +1,18 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Poll Result</title>
+</head>
+<body>
+    #set ($poll = $page.attributes.poll)
+
+	<div id="result">
+		#if ($poll)
+			<div><b>Question:</b> $poll.jsonObject.question</div>
+			
+		#else
+			<p class="alert alert-danger">The poll does not exist!</p>
+		#end
+	</div>
+</body>
+</html>
