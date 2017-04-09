@@ -7,10 +7,6 @@
     position: static !important;
 }
 
-.keditor-component .keditor-toolbar {
-    text-align: left;
-}
-
 .keditor-content-area {
     padding-top: 30px;
     margin-right: 0 !important;

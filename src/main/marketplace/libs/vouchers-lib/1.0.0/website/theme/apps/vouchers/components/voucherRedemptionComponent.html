@@ -1,3 +1,4 @@
+#if ($page)
 #set ($vrp = $page.find("/vouchers"))
 #if ($vrp)
 <div class="panel panel-default panel-voucherRedemption">
@@ -124,4 +125,7 @@
 
 #else
 Vouchers app is not enabled
+#end
+#else
+<p class="alert alert-warning">Voucher Redemption component will go here</p>
 #end
