@@ -1,0 +1,7 @@
+#set( $selectedOrgs = $queryManager.selectedOrgs )
+
+#if( $selectedOrgs.size() == "1" )
+    <div>
+        <h1>$selectedOrgs[0].title</h1>
+    </div>
+#end
