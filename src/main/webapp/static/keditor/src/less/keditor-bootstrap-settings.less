@@ -18,9 +18,77 @@
     }
 }
 
+hr {
+    margin-top: @line-height-computed;
+    margin-bottom: @line-height-computed;
+    border: 0;
+    border-top: 1px solid @hr-border;
+}
+
+// Alignment
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+// Transformation
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+// Contextual colors
+.text-muted {
+    color: @text-muted;
+}
+
+.text-primary {
+    .text-emphasis-variant(@brand-primary);
+}
+
+.text-success {
+    .text-emphasis-variant(@state-success-text);
+}
+
+.text-info {
+    .text-emphasis-variant(@state-info-text);
+}
+
+.text-warning {
+    .text-emphasis-variant(@state-warning-text);
+}
+
+.text-danger {
+    .text-emphasis-variant(@state-danger-text);
+}
+
 @import "bootstrap/grid";
 @import "bootstrap/panels";
 @import "bootstrap/forms";
 @import "bootstrap/buttons";
+@import "bootstrap/wells";
 @import "bootstrap/button-groups";
+@import "bootstrap/input-groups";
 @import "bootstrap/utilities";
