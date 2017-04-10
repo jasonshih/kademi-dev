@@ -329,7 +329,7 @@ return false;</pre>
                             <div class="panel-body">
                                 <label class="control-label col-sm-2" for="subject">Sending Preference</label>
                                 <div class="col-md-8">
-                                    <select name="sendPreference" class="form-control required-if-shown">
+                                    <select name="sendPreference" class="form-control required-when-checked">
                                         $formatter.option("both", "Send To Both", $page.job.sendPreference)
                                         $formatter.option("sms", "Prefer SMS", $page.job.sendPreference)
                                     </select>
@@ -347,7 +347,7 @@ return false;</pre>
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="themeSiteId">Website</label>
                                             <div class="col-md-8">
-                                                <select name="themeSiteId" id="themeSiteId" class="form-control required-if-shown">
+                                                <select name="themeSiteId" id="themeSiteId" class="form-control required-when-checked">
                                                     $formatter.option("", "[Please select]", $page.themeSiteId)
                                                     #foreach($website in $rootFolder.websites)
                                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
@@ -358,7 +358,7 @@ return false;</pre>
                                         <div class="form-group">
                                             <label class="control-label col-md-4" for="subject">Email subject</label>
                                             <div class="col-md-8">
-                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-if-shown">$formatter.htmlEncode( $page.subject )</textarea>
+                                                <textarea style="height: 70px" name="subject" id="subject" value="" placeholder="Enter the email subject here" class="form-control required-when-checked">$formatter.htmlEncode( $page.subject )</textarea>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -449,7 +449,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="smsMessage">Message to send</label>
                                             <div class="col-md-8">
-                                                <textarea type="text" class="form-control required-if-shown" name="smsMessage" id="smsMessage">$!page.job.smsMessage</textarea>
+                                                <textarea type="text" class="form-control required-when-checked" name="smsMessage" id="smsMessage">$!page.job.smsMessage</textarea>
                                                 <span id="sms-char-remaining">160 Characters Remaining</span>
                                             </div>
                                         </div>
@@ -460,7 +460,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="smsMessage">SMS Providers</label>
                                             <div class="col-md-8" id="smsprovider-list">
-                                                <select name="smsProvider" id="smsProvider" class="form-control required-if-shown">
+                                                <select name="smsProvider" id="smsProvider" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", null )
                                                     #foreach($app in $page.smsProviders )
                                                     $formatter.option( $app.instanceId, $app.getTitle($page.organisation, null), $page.job.smsProvider )
@@ -485,7 +485,7 @@ return false;</pre>
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="groupToJoin">Group to join</label>
                                             <div class="col-md-8">
-                                                <select name="groupToJoinName" title="lala Land" id="groupToJoin" class="form-control required-if-shown">
+                                                <select name="groupToJoinName" title="lala Land" id="groupToJoin" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
                                                     #foreach($group in $page.allGroups)
                                                     $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
@@ -511,7 +511,7 @@ return false;</pre>
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="removeFromGroup">Group to remove from</label>
                                             <div class="col-md-8">
-                                                <select name="removeFromGroupName" id="removeFromGroup" class="form-control required-if-shown">
+                                                <select name="removeFromGroupName" id="removeFromGroup" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", $page.job.removeFromGroup.name )
                                                     #foreach($group in $page.allGroups)
                                                     $formatter.option( $group.name, $group.name, $page.job.removeFromGroup.name )
@@ -542,7 +542,7 @@ return false;</pre>
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="groupToJoin">Reward to grant</label>
                                             <div class="col-md-8" id="rewards-container">
-                                                <select name="reward" id="reward" class="form-control required-if-shown">
+                                                <select name="reward" id="reward" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", $page.job.reward.name )
                                                     #foreach($reward in $page.allRewards)
                                                     $formatter.option( $reward.name, $reward.title, $page.job.reward.name )
@@ -577,7 +577,7 @@ return false;</pre>
                                         <div class="col-md-6">
                                             <label class="control-label col-md-4" for="groupToJoin">Reason</label>
                                             <div class="col-md-8">
-                                                <input type="text" name="rewardReason" id="rewardReason" value="$!page.job.rewardReason" class="form-control required-if-shown" />
+                                                <input type="text" name="rewardReason" id="rewardReason" value="$!page.job.rewardReason" class="form-control required-when-checked" />
                                                 <br/>
                                                 <i>The reason to show the user why they received the points.</i>
                                             </div>
@@ -620,7 +620,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="alert">Alert to activate</label>
                                             <div class="col-md-10" id='alerts-list'>
-                                                <select name="alert" id="alert" class="form-control required-if-shown">
+                                                <select name="alert" id="alert" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", $page.job.alert.id )
                                                     #foreach($alert in $page.allAlerts)
                                                     $formatter.option( $alert.id, $alert.title, $page.job.alert.id )
@@ -651,7 +651,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-4" for="awardCpdForCert">Certificate to award points against</label>
                                             <div class="col-md-8" id='certs-list'>
-                                                <select name="awardCpdForCert" id="awardCpdForCert" class="form-control required-if-shown">
+                                                <select name="awardCpdForCert" id="awardCpdForCert" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", $page.job.awardCpdForCert.id )
                                                     #foreach($cert in $page.find("/certificates").children.ofType.certificate )
                                                     $formatter.option( $cert.id, $cert.title, $page.job.awardCpdForCert.id )
@@ -678,7 +678,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-4" for="awardCpdNumPoints">No. points to award</label>
                                             <div class="col-md-8" >
-                                                <input type="text" class="form-control required-if-shown" name="awardCpdNumPoints" id="awardCpdNumPoints" value="$!page.job.awardCpdNumPoints" />
+                                                <input type="text" class="form-control required-when-checked" name="awardCpdNumPoints" id="awardCpdNumPoints" value="$!page.job.awardCpdNumPoints" />
                                                 <small><i>How many points to award when this event is triggered</i></small>
                                             </div>
                                         </div>
@@ -709,7 +709,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="dataSeriesAmountMvel">Amount expression</label>
                                             <div class="col-md-8">
-                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesAmountMvel" id="dataSeriesAmountMvel">$!page.job.dataSeriesAmountMvel</textarea>
+                                                <textarea type="text" class="form-control required-when-checked" name="dataSeriesAmountMvel" id="dataSeriesAmountMvel">$!page.job.dataSeriesAmountMvel</textarea>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -719,7 +719,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="dataSeriesDateMvel">Date expression</label>
                                             <div class="col-md-8">
-                                                <textarea type="text" class="form-control required-if-shown" name="dataSeriesDateMvel" id="dataSeriesDateMvel">$!page.job.dataSeriesDateMvel</textarea>
+                                                <textarea type="text" class="form-control required-when-checked" name="dataSeriesDateMvel" id="dataSeriesDateMvel">$!page.job.dataSeriesDateMvel</textarea>
                                             </div>
                                         </div>
                                     </div> <!-- end row -->
@@ -729,7 +729,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="dataSeriesName">Data Series</label>
                                             <div class="col-md-8" id="dataseries-list">
-                                                <select name="dataSeriesName" id="dataSeriesName" class="form-control required-if-shown">
+                                                <select name="dataSeriesName" id="dataSeriesName" class="form-control required-when-checked">
                                                     $formatter.option( "", "[Please select]", null )
                                                     #foreach($series in $page.find("/sales").children )
                                                     $formatter.option( $series.name, $series.title, $page.job.dataSeriesName )
@@ -787,7 +787,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="jsWebsiteId">Website</label>
                                             <div class="col-md-8">
-                                                <select name="jsWebsiteId" id="jsWebsiteId" class="form-control required-if-shown">
+                                                <select name="jsWebsiteId" id="jsWebsiteId" class="form-control required-when-checked">
                                                     $formatter.option("", "[Please select]", $!page.job.jsWebsite.id)
                                                     #foreach($website in $rootFolder.websites)
                                                     $formatter.option($website.id, $website.name, $!page.job.jsWebsite.id)
@@ -802,7 +802,7 @@ return false;</pre>
                                         <div class="col-md-12">
                                             <label class="control-label col-md-2" for="javascript">JavaScript</label>
                                             <div class="col-md-8">
-                                                <textarea class="hide required-if-shown" name="javascript"></textarea>
+                                                <textarea class="hide required-when-checked" name="javascript"></textarea>
                                                 <div id="javascriptEditor" style="display:none;">$formatter.htmlEncode($page.job.javascript)</div>
                                             </div>
                                         </div>
