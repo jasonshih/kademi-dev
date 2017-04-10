@@ -29,10 +29,10 @@ function initManageAutoEmail(emailEnabled, smsEnabled) {
 
     $('#action .toggler').on({
         'checked.toggled': function (e, panel) {
-            $(panel).find('.required-if-shown').not(':hidden').addClass('required');
+            $(panel).find('.required-when-checked').not(':hidden').addClass('required');
         },
         'unchecked.toggled': function (e, panel) {
-            $(panel).find('.required-if-shown').removeClass('required');
+            $(panel).find('.required-when-checked').removeClass('required');
         }
     });
 
@@ -40,9 +40,9 @@ function initManageAutoEmail(emailEnabled, smsEnabled) {
     toggledPanel.each(function () {
         var panel = $(this);
         if (panel.is(':hidden')) {
-            panel.find('.required-if-shown').not(':hidden').removeClass('required');
+            panel.find('.required-when-checked').not(':hidden').removeClass('required');
         } else {
-            panel.find('.required-if-shown').not(':hidden').addClass('required');
+            panel.find('.required-when-checked').not(':hidden').addClass('required');
         }
     });
 
