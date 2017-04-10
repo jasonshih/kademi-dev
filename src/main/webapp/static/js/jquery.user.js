@@ -29,7 +29,7 @@
  */
 
 (function( $ ) {
-    $.fn.user = function(options) {        
+    $.fn.user = function(options) {   
         initUser();
         var config = $.extend( {
             urlSuffix: "/.dologin",
@@ -41,6 +41,7 @@
             loginFailedMessage: "Sorry, those login details were not recognised.",
             userNameProperty: "_loginUserName",
             passwordProperty: "_loginPassword",
+            secondFactorModalSelector: "#modal-2fa-input",
             loginCallback: function() {
                 
             }
@@ -108,36 +109,47 @@ function doLogin(userName, password, config, container) {
             initUser();                
             if( resp.status ) {
                 flog("login success", resp.status);
-                if( config.loginCallback) {
-                    config.loginCallback();
-                }
-                if( config.afterLoginUrl === null) {
-                    // If not url in config then use the next href in the response, if given, else reload current page
-                    if( resp.nextHref ) {
-                        flog("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
-                        window.location.href = resp.nextHref;
-                    } else {
-                        flog("login: no afterLoginUrl and no nextHref, so reload");
-                        window.location.reload(true);
-                    }                    
-                } else if( config.afterLoginUrl.startsWith("/")) {
-                    // if config has an absolute path the redirect to it
-                    flog("redirect to1: " + config.afterLoginUrl);
-                    //return;
-                    window.location = config.afterLoginUrl;
-                } else {
-                    if( config.afterLoginUrl === "none") {
-                        flog("Not doing redirect because afterLoginUrl=='none'");
-                    } else if( config.afterLoginUrl === "reload") {
-                        flog("Reload current location");
-                        window.location.reload(true);
-                    } else {
-                        // if config has a relative path, then evaluate it relative to the user's own url in response
-                        flog("redirect to2: " + userUrl + config.afterLoginUrl);
-                        //return;
-                        window.location = userUrl + config.afterLoginUrl;
+                
+                resp.required2FA = true;
+                if( resp.required2FA ){
+                    flog("2FA is enabled and required");
+                    $(config.secondFactorModalSelector).modal("show");
+                    return;
+                }else{
+                    
+                    if( config.loginCallback) {
+                        config.loginCallback();
                     }
+                    if( config.afterLoginUrl === null) {
+                        // If not url in config then use the next href in the response, if given, else reload current page
+                        if( resp.nextHref ) {
+                            flog("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
+                            window.location.href = resp.nextHref;
+                        } else {
+                            flog("login: no afterLoginUrl and no nextHref, so reload");
+                            window.location.reload(true);
+                        }                    
+                    } else if( config.afterLoginUrl.startsWith("/")) {
+                        // if config has an absolute path the redirect to it
+                        flog("redirect to1: " + config.afterLoginUrl);
+                        //return;
+                        window.location = config.afterLoginUrl;
+                    } else {
+                        if( config.afterLoginUrl === "none") {
+                            flog("Not doing redirect because afterLoginUrl=='none'");
+                        } else if( config.afterLoginUrl === "reload") {
+                            flog("Reload current location");
+                            window.location.reload(true);
+                        } else {
+                            // if config has a relative path, then evaluate it relative to the user's own url in response
+                            flog("redirect to2: " + userUrl + config.afterLoginUrl);
+                            //return;
+                            window.location = userUrl + config.afterLoginUrl;
+                        }
+                    }
+
                 }
+                
             } else {
                 flog("Login not successful", resp.status);
                 // null userurl, so login was not successful

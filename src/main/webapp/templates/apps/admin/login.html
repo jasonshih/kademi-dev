@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="/theme/assets/css/main.min.css" />
         <link rel="stylesheet" href="/theme/assets/css/main-responsive.min.css" />
         <link rel="stylesheet" href="/theme/assets/css/kademi.css" rel="stylesheet" />
+        <script type="text/javascript" src="/static/js/bootstrap.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.user.js">//</script>
         <link rel="template" href="plain" />
         <!--Start of Zopim Live Chat Script-->
@@ -72,7 +73,6 @@
                             <p class="text-center"><a href="/password-reset" class="forgot">I forgot my password</a></p>
                         </fieldset>
                     </form>
-
                     <script type="text/javascript">
                         $(function () {
                             $(".login").user({
@@ -80,11 +80,30 @@
                                 valiationMessageSelector: "#validationMessage",
                                 valiationMessageText: "#validationMessage span",
                                 requiredFieldsMessage: 'Please enter your credentials.',
-                                loginFailedMessage: 'Sorry, those login details were not recognised.'
+                                loginFailedMessage: 'Sorry, those login details were not recognised.',
+                                secondFactorModalSelector: "#modal-2fa-input"
                             }); // setup login and logout
                         });
                     </script>
                 #end
+            </div>
+        </div>
+        <div id="modal-2fa-input" class="modal fade" aria-hidden="true" tabindex="-1" style="color:#000000; z-index: 1500;">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Second factor of Authentification</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Enter below the number given by your 2FA device:</p>
+                        <input type="text" autocapitalize="off" autocorrect="off" autocomplete="off" placeholder="2FA code" name="code2FA" class="form-control input-lg" />
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-info btn-sm btn-block" data-dismiss="modal" type="button">Login</button>
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
