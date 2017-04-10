@@ -15,12 +15,13 @@
                 </div>
             #end
         #end
+        
         #set ($variantsQuery = "")
         #foreach($paramName in $page.selectedParameterOptions.keySet())
-        #if ($variantsQuery == "")
-        #set ($variantsQuery = "?param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+        #if ($variantsQuery == "")        
+            #set ($variantsQuery = "?param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
         #else
-        #set ($variantsQuery = "&param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+            #set ($variantsQuery = $variantsQuery + "&amp;param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
         #end
         #end
         <div class="form-group" style="margin-top: 20px" id="btn-add-to-cart-wrapper">
