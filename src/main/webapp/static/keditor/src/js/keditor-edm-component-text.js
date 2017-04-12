@@ -7,6 +7,7 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     CKEDITOR.disableAutoInline = true;
@@ -124,15 +125,13 @@
             );
 
             form = form.find('form');
-            KEditor.initBgColorControl(keditor, form, 'append');
-            KEditor.initPaddingControls(keditor, form, 'append');
+            edmEditor.initDefaultComponentControls(form, keditor);
         },
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
-
-            KEditor.showBgColorControl(keditor, form, component);
-            KEditor.showPaddingControls(keditor, form, component);
+    
+            edmEditor.showDefaultComponentControls(form, component, keditor);
         }
     };
 

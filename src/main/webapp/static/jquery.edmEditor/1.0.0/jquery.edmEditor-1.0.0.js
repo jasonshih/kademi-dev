@@ -186,9 +186,7 @@
         target.before(previewer);
         previewer.css('color', target.val() || 'transparent');
         
-        target.on('change', function () {
-            var color = this.value;
-            
+        var getColor = function (color) {
             if (color) {
                 previewer.css('color', color);
                 color = edmEditor.rgb2Hex(previewer.css('color'));
@@ -197,10 +195,22 @@
                 color = '';
             }
             
-            target.val(color);
-            
-            if (typeof onChange === 'function') {
-                onChange.call(target, color);
+            return color;
+        };
+        
+        target.on({
+            change: function () {
+                var color = getColor(this.value);
+    
+                target.val(color);
+    
+                if (typeof onChange === 'function') {
+                    onChange.call(target, color);
+                }
+            },
+            update: function (e, color) {
+                previewer.css('color', '');
+                target.val(getColor(color));
             }
         });
     };
@@ -250,45 +260,73 @@
     };
     
     edmEditor.initDefaultComponentControls = function (form, keditor, options) {
+        if (!options || !options.hidePadding) {
+            form.prepend(
+                '<div class="form-group">' +
+                '   <div class="col-md-12">' +
+                '       <label>Padding (in px)</label>' +
+                '       <div class="row row-sm text-center">' +
+                '           <div class="col-xs-4 col-xs-offset-4">' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-top" />' +
+                '               <small>top</small>' +
+                '           </div>' +
+                '       </div>' +
+                '       <div class="row row-sm text-center">' +
+                '           <div class="col-xs-4">' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-left" />' +
+                '               <small>left</small>' +
+                '           </div>' +
+                '           <div class="col-xs-4 col-xs-offset-4">' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-right" />' +
+                '               <small>right</small>' +
+                '           </div>' +
+                '       </div>' +
+                '       <div class="row row-sm text-center">' +
+                '           <div class="col-xs-4 col-xs-offset-4">' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-bottom" />' +
+                '               <small>bottom</small>' +
+                '           </div>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>'
+            );
+    
+            form.find('.txt-padding').each(function () {
+                var input = $(this);
+                var dataCss = input.attr('data-css');
+        
+                edmEditor.initPaddingControl(input, function (value) {
+                    var component = keditor.getSettingComponent();
+            
+                    if (options.dynamicComponent) {
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                
+                        component.attr('data-' + dataCss, value);
+                        keditor.initDynamicContent(dynamicElement);
+                    } else {
+                        var tdWrapper = component.find('td.wrapper');
+                        edmEditor.setStyles(dataCss, value + 'px', tdWrapper);
+                    }
+            
+                    if (options && typeof options.onPaddingChanged === 'function') {
+                        options.onPaddingChanged.call(this, dataCss, value);
+                    }
+                });
+            });
+        }
+        
         form.prepend(
             '<div class="form-group">' +
             '   <div class="col-md-12">' +
             '       <label>Background</label>' +
             '       <input type="text" value="" class="txt-bg-color form-control simple-color-picker" />' +
             '   </div>' +
-            '</div>' +
-            '<div class="form-group">' +
-            '   <div class="col-md-12">' +
-            '       <label>Padding (in px)</label>' +
-            '       <div class="row row-sm text-center">' +
-            '           <div class="col-xs-4 col-xs-offset-4">' +
-            '               <input type="number" value="" class="txt-padding form-control" data-css="padding-top" />' +
-            '               <small>top</small>' +
-            '           </div>' +
-            '       </div>' +
-            '       <div class="row row-sm text-center">' +
-            '           <div class="col-xs-4">' +
-            '               <input type="number" value="" class="txt-padding form-control" data-css="padding-left" />' +
-            '               <small>left</small>' +
-            '           </div>' +
-            '           <div class="col-xs-4 col-xs-offset-4">' +
-            '               <input type="number" value="" class="txt-padding form-control" data-css="padding-right" />' +
-            '               <small>right</small>' +
-            '           </div>' +
-            '       </div>' +
-            '       <div class="row row-sm text-center">' +
-            '           <div class="col-xs-4 col-xs-offset-4">' +
-            '               <input type="number" value="" class="txt-padding form-control" data-css="padding-bottom" />' +
-            '               <small>bottom</small>' +
-            '           </div>' +
-            '       </div>' +
-            '   </div>' +
             '</div>'
         );
         
         edmEditor.initSimpleColorPicker(form.find('.txt-bg-color'), function (color) {
             var component = keditor.getSettingComponent();
-            if (options.dynamicComponent) {
+            if (options && options.dynamicComponent) {
                 var dynamicElement = component.find('[data-dynamic-href]');
                 
                 component.attr('data-background-color', color);
@@ -298,32 +336,9 @@
                 tdWrapper.attr('bgcolor', color);
             }
             
-            if (typeof options.onColorChanged === 'function') {
+            if (options && typeof options.onColorChanged === 'function') {
                 options.onColorChanged.call(this, color);
             }
-        });
-        
-        form.find('.txt-padding').each(function () {
-            var input = $(this);
-            var dataCss = input.attr('data-css');
-            
-            edmEditor.initPaddingControl(input, function (value) {
-                var component = keditor.getSettingComponent();
-                
-                if (options.dynamicComponent) {
-                    var dynamicElement = component.find('[data-dynamic-href]');
-                    
-                    component.attr('data-' + dataCss, value);
-                    keditor.initDynamicContent(dynamicElement);
-                } else {
-                    var tdWrapper = component.find('td.wrapper');
-                    edmEditor.setStyles(dataCss, value + 'px', tdWrapper);
-                }
-                
-                if (typeof options.onPaddingChanged === 'function') {
-                    options.onPaddingChanged.call(this, dataCss, value);
-                }
-            });
         });
     };
     
@@ -497,6 +512,8 @@
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
+    
+        form.find('.txt-bg-color').val(table.attr('bgcolor') || '').trigger('update');
         
         container.find('[data-type=container-content]').each(function (i) {
             var column = $(this);
@@ -733,6 +750,6 @@
         }
     };
     
-    edmEditor = edmEditor;
+    $.edmEditor = edmEditor;
     
 })(jQuery);
