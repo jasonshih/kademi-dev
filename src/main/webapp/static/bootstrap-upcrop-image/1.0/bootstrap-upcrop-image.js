@@ -18,42 +18,41 @@
         bgColor: '#fff',
         isEmbedded: false,
         fieldName: "file",
-        uploadMultiple: false,
         modalTemplate:
-                '<div class="modal fade" id="{{upcropId}}">' +
-                '   <div class="modal-dialog">' +
-                '       <div class="modal-content">' +
-                '           <div class="modal-header">' +
-                '               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '               <h4 class="modal-title">{{modalTitle}}</h4>' +
-                '           </div>' +
-                '           <div class="modal-body">' +
-                '               {{upcropZone}}' +
-                '           </div>' +
-                '           <div class="modal-footer">' +
-                '               <div class="pull-left">' +
-                '                   {{buttonUploadOther}}' +
-                '               </div>' +
-                '               <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
-                '               {{buttonCrop}} ' +
-                '               {{buttonContinue}}' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>',
+            '<div class="modal fade" id="{{upcropId}}">' +
+            '   <div class="modal-dialog">' +
+            '       <div class="modal-content">' +
+            '           <div class="modal-header">' +
+            '               <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+            '               <h4 class="modal-title">{{modalTitle}}</h4>' +
+            '           </div>' +
+            '           <div class="modal-body">' +
+            '               {{upcropZone}}' +
+            '           </div>' +
+            '           <div class="modal-footer">' +
+            '               <div class="pull-left">' +
+            '                   {{buttonUploadOther}}' +
+            '               </div>' +
+            '               <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
+            '               {{buttonCrop}} ' +
+            '               {{buttonContinue}}' +
+            '           </div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>',
         embeddedTemplate:
-                '<div class="upcrop-embedded" id="{{upcropId}}">' +
-                '   {{upcropZone}}' +
-                '   <div class="clearfix">' +
-                '       <div class="pull-left">' +
-                '           {{buttonUploadOther}}' +
-                '       </div>' +
-                '       <div class="pull-right">' +
-                '           {{buttonContinue}} ' +
-                '           {{buttonCrop}}' +
-                '       </div>' +
-                '   </div>' +
-                '</div>'
+            '<div class="upcrop-embedded" id="{{upcropId}}">' +
+            '   {{upcropZone}}' +
+            '   <div class="clearfix">' +
+            '       <div class="pull-left">' +
+            '           {{buttonUploadOther}}' +
+            '       </div>' +
+            '       <div class="pull-right">' +
+            '           {{buttonContinue}} ' +
+            '           {{buttonCrop}}' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
     };
 
     var methods = {
@@ -371,17 +370,17 @@
 
     function getUpcropZone(config) {
         return (
-                '<input type="hidden" value="" name="x" />' +
-                '<input type="hidden" value="" name="y" />' +
-                '<input type="hidden" value="" name="w" />' +
-                '<input type="hidden" value="" name="h" />' +
-                '<input type="hidden" value="" name="url" />' +
-                '<div class="upload-zone"></div>' +
-                '<div class="crop-zone hide clearfix">' +
-                config.cropHint +
-                '<div class="image-wrapper"><img class="image-crop" src="" width="100%" /></div>' +
-                '</div>'
-                );
+            '<input type="hidden" value="" name="x" />' +
+            '<input type="hidden" value="" name="y" />' +
+            '<input type="hidden" value="" name="w" />' +
+            '<input type="hidden" value="" name="h" />' +
+            '<input type="hidden" value="" name="url" />' +
+            '<div class="upload-zone"></div>' +
+            '<div class="crop-zone hide clearfix">' +
+            config.cropHint +
+            '<div class="image-wrapper"><img class="image-crop" src="" width="100%" /></div>' +
+            '</div>'
+        );
     }
 
     function initUpCropModal(target, config, dataUpCrop) {
