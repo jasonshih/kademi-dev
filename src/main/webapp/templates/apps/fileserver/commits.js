@@ -3,6 +3,37 @@ function initManageRepoHistory() {
     initSetRemoteHash();
 }
 
+function doHistorySearch() {
+    flog('doHistorySearch');
+    Msg.info("Doing search...", 2000);
+
+    var data = {
+        dataQuery: $("#data-query").val(),
+    };
+    flog("data", data);
+
+    var target = $("#commit-wrapper");
+    target.load();
+
+    var link = window.location.pathname + "?" + $.param(data);
+    flog("new link", link);
+    
+    $.ajax({
+        type: "GET",
+        url: link,
+        dataType: 'html',
+        success: function (content) {
+            flog('response', content);
+            Msg.success("Search complete", 2000);
+            var newBody = $(content).find("#commit-wrapper");
+            target.replaceWith(newBody);
+            history.pushState(null, null, link);
+            $("abbr.timeago").timeago();
+            $("#commit-wrapper").paginator();
+        }
+    });
+}
+
 function initEvents() {
     var wrapper = $('#commit-wrapper');
 
