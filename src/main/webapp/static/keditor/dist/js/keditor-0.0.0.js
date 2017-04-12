@@ -335,10 +335,15 @@
             
             if (options.contentStyles && $.isArray(options.contentStyles)) {
                 $.each(options.contentStyles, function (i, style) {
+                    var idStr = '';
+                    if (style.id) {
+                        idStr = ' id="' + style.id + '" '
+                    }
+                    
                     if (style.href) {
-                        styles += '<link rel="stylesheet" type="text/css" href="' + style.href + '" />\n';
+                        styles += '<link rel="stylesheet" type="text/css" href="' + style.href + '"' + idStr + ' />\n';
                     } else {
-                        styles += '<style type="text/css">' + style.content + '</style>\n';
+                        styles += '<style type="text/css"' + idStr + '>' + style.content + '</style>\n';
                     }
                 });
             }

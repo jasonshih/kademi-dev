@@ -40,6 +40,7 @@ body.opened-keditor-sidebar #edm-area {
     min-height: 100px;
     outline: 3px dashed #ccc;
     outline-offset: 3px;
+    width: 600px;
 }
 
 #edm-body {
@@ -48,7 +49,8 @@ body.opened-keditor-sidebar #edm-area {
 }
 
 #edm-header,
-#edm-footer {
+#edm-footer,
+#edm-body {
     padding: 0;
 }
 

@@ -1,5 +1,4 @@
 #if( $store.length() > 0 )
-months - $months
     #set( $months = $formatter.toInteger($months) )
     #set( $monthsNeg = $months * -1 )
     #set($startDate = $formatter.addMonths($formatter.now, $monthsNeg))

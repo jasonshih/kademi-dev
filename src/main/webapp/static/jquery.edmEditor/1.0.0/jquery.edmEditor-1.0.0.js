@@ -20,12 +20,7 @@
         edmPaddingBottom: '20',
         edmPaddingLeft: '20',
         edmPaddingRight: '20',
-        edmWidth: '600',
         bodyBackground: '#ffffff',
-        bodyPaddingTop: '10',
-        bodyPaddingBottom: '10',
-        bodyPaddingLeft: '10',
-        bodyPaddingRight: '10',
         textColor: '#333333',
         linkColor: '#337ab7',
         fontFamily: 'Arial, Helvetica, san-serif',
@@ -134,8 +129,6 @@
             var edmBodyContent = fragment.find('td#edm-body-td').html() || '';
             var edmFooterContent = fragment.find('td#edm-footer-td').html() || '';
             
-            methods.mergeStyleOptions(options, 'edmWidth', fragment.find('#edm-container').attr('width'));
-            
             var tdWrapper = fragment.find('td#edm-wrapper-td');
             methods.mergeStyleOptions(options, 'edmBackground', tdWrapper.css('background-color'));
             methods.mergeStyleOptions(options, 'edmPaddingTop', methods.getPxValue(tdWrapper.css('padding-top')));
@@ -145,17 +138,13 @@
             
             var tdBody = fragment.find('td#edm-body-td');
             methods.mergeStyleOptions(options, 'bodyBackground', tdBody.css('background-color'));
-            methods.mergeStyleOptions(options, 'bodyPaddingTop', methods.getPxValue(tdBody.css('padding-top')));
-            methods.mergeStyleOptions(options, 'bodyPaddingBottom', methods.getPxValue(tdBody.css('padding-bottom')));
-            methods.mergeStyleOptions(options, 'bodyPaddingLeft', methods.getPxValue(tdBody.css('padding-left')));
-            methods.mergeStyleOptions(options, 'bodyPaddingRight', methods.getPxValue(tdBody.css('padding-right')));
             
-            var tableContainer = fragment.find('table#edm-container');
-            methods.mergeStyleOptions(options, 'fontFamily', tableContainer.attr('data-font-family'));
-            methods.mergeStyleOptions(options, 'fontSize', tableContainer.attr('data-font-size'));
-            methods.mergeStyleOptions(options, 'lineHeight', tableContainer.attr('data-line-height'));
-            methods.mergeStyleOptions(options, 'textColor', tableContainer.attr('data-text-color'));
-            methods.mergeStyleOptions(options, 'linkColor', tableContainer.attr('data-link-color'));
+            var tableWrapper = fragment.find('table#edm-wrapper');
+            methods.mergeStyleOptions(options, 'fontFamily', tableWrapper.attr('data-font-family'));
+            methods.mergeStyleOptions(options, 'fontSize', tableWrapper.attr('data-font-size'));
+            methods.mergeStyleOptions(options, 'lineHeight', tableWrapper.attr('data-line-height'));
+            methods.mergeStyleOptions(options, 'textColor', tableWrapper.attr('data-text-color'));
+            methods.mergeStyleOptions(options, 'linkColor', tableWrapper.attr('data-link-color'));
             
             target[target.is('textarea') ? 'val' : 'html'](
                 '<div id="edm-header">' + edmHeaderContent + '</div>' +
@@ -211,6 +200,7 @@
                 
                 methods.checkDependencies(options, function () {
                     options.contentStyles.push({
+                        id: 'edm-base-style',
                         content: edmStyle || defaultStyles
                     });
                     
@@ -246,24 +236,6 @@
                             
                             return contentArea.find('> table');
                         },
-                        onComponentReady: function (component, editor) {
-                            // if (editor) {
-                            //     applyInlineCssForTextWrapper(component);
-                            //     applyInlineCssForLink(component);
-                            //
-                            //     editor.on('change', function () {
-                            //         applyInlineCssForLink(component);
-                            //     });
-                            // }
-                            //
-                            // if (!component.hasClass('existing-component')) {
-                            //     var img = component.find('img');
-                            //
-                            //     if (img.length > 0) {
-                            //         $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
-                            //     }
-                            // }
-                        },
                         onContentChanged: function (e, contentArea) {
                             var body = this.body;
                             
@@ -273,27 +245,9 @@
                             
                             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
                         },
-                        onContainerChanged: function (e, changedContainer) {
-                            // changedContainer.find('[data-dynamic-href]').each(function () {
-                            //     keditor.initDynamicContent($(this));
-                            // });
-                        },
                         onReady: function () {
                             methods.initSettingPanel(this, options);
-                            
-                            // adjustColWidth($('.keditor-container'));
-                            
-                            // $('#edm-area [data-type="component-photo"]').find('img').each(function () {
-                            //     var img = $(this);
-                            //     $.keditor.components['photo'].adjustWidthForImg(img, img.hasClass('full-width'));
-                            // });
-                            
-                            // hideLoadingIcon();
                         },
-                        onContainerSnippetDropped: function (event, newContainer, droppedContainer) {
-                            // adjustColWidth(newContainer);
-                        },
-                        
                         containerSettingEnabled: true,
                         containerSettingInitFunction: methods.initContainerSettings,
                         containerSettingShowFunction: methods.showContainerSettings
@@ -352,32 +306,28 @@
             var dataTarget = input.attr('data-target');
             var dataUnit = input.attr('data-unit') || '';
             
-            if (input.is('.edmWidth')) {
-                body.find('#edm-area').children().innerWidth(input.val());
-            } else {
-                if (dataTarget === 'style') {
-                    var styleTags = keditor.iframeHead.find('style');
-                    var previewStyle = styleTags.filter('#preview-style');
-                    if (previewStyle.length === 0) {
-                        previewStyle = $('<style id="preview-style" type="text/css"></style>')
-                        keditor.iframeHead.append(previewStyle);
-                    }
-                    
-                    var styleInputs = body.find('#edm-setting').find('[data-target=style]');
-                    var fontSize = styleInputs.filter('[data-css="font-size"]').val();
-                    var fontFamily = styleInputs.filter('[data-css="font-family"]').val();
-                    var lineHeight = styleInputs.filter('[data-css="line-height"]').val();
-                    var textColor = styleInputs.filter('[data-css="color"]').val();
-                    var linkColor = styleInputs.filter('[data-css="a-color"]').val();
-                    var previewStyleStr = '';
-                    previewStyleStr += 'body {font-size:' + fontSize + 'px;color:' + textColor + ';font-family:' + fontFamily + ';line-height:' + lineHeight + '}';
-                    previewStyleStr += 'a {color:' + linkColor + ';text-decoration:none;}';
-                    
-                    previewStyle.html(previewStyleStr);
-                } else {
-                    var target = dataTarget === 'body' ? body : body.find(dataTarget);
-                    methods.setStyles(dataCss, input.val() + dataUnit, target);
+            if (dataTarget === 'style') {
+                var styleTags = keditor.iframeHead.find('style');
+                var previewStyle = styleTags.filter('#preview-style');
+                if (previewStyle.length === 0) {
+                    previewStyle = $('<style id="preview-style" type="text/css"></style>')
+                    keditor.iframeHead.append(previewStyle);
                 }
+                
+                var styleInputs = body.find('#edm-setting').find('[data-target=style]');
+                var fontSize = styleInputs.filter('[data-css="font-size"]').val();
+                var fontFamily = styleInputs.filter('[data-css="font-family"]').val();
+                var lineHeight = styleInputs.filter('[data-css="line-height"]').val();
+                var textColor = styleInputs.filter('[data-css="color"]').val();
+                var linkColor = styleInputs.filter('[data-css="a-color"]').val();
+                var previewStyleStr = '';
+                previewStyleStr += 'body {font-size:' + fontSize + 'px;color:' + textColor + ';font-family:' + fontFamily + ';line-height:' + lineHeight + '}';
+                previewStyleStr += 'a {color:' + linkColor + ';text-decoration:none;}';
+                
+                previewStyle.html(previewStyleStr);
+            } else {
+                var target = dataTarget === 'body' ? body : body.find(dataTarget);
+                methods.setStyles(dataCss, input.val() + dataUnit, target);
             }
         },
         
@@ -451,7 +401,7 @@
                     form.find('.columns-setting').on('change', '.txt-padding', function () {
                         var txt = $(this);
                         var index = +txt.attr('data-index');
-                        var propName = txt.attr('data-prop');
+                        var dataCss = txt.attr('data-css');
                         var container = keditor.getSettingContainer();
                         var column = container.find('[data-type=container-content]').eq(index);
                         var number = txt.val();
@@ -460,7 +410,7 @@
                             this.value = number;
                         }
                         
-                        column.prop('style')[propName] = number + 'px';
+                        methods.setStyles(dataCss, number + 'px', column);
                     });
                     
                     methods.initSimpleColorPicker(form.find('.txt-bg-color'), function (color) {
@@ -500,29 +450,29 @@
             settingHtml += '       <p>Padding (in px)</p>';
             settingHtml += '       <div class="row row-sm text-center">';
             settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
-            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingTop'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingTop" data-index="' + i + '" />';
+            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingTop'] || '').replace('px', '') + '" class="txt-padding form-control" data-css="padding-top" data-index="' + i + '" />';
             settingHtml += '               <small>top</small>';
             settingHtml += '           </div>';
             settingHtml += '       </div>';
             settingHtml += '       <div class="row row-sm text-center">';
             settingHtml += '           <div class="col-xs-4">';
-            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingLeft'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingLeft" data-index="' + i + '" />';
+            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingLeft'] || '').replace('px', '') + '" class="txt-padding form-control" data-css="padding-left" data-index="' + i + '" />';
             settingHtml += '               <small>left</small>';
             settingHtml += '           </div>';
             settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
-            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingRight'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingRight" data-index="' + i + '" />';
+            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingRight'] || '').replace('px', '') + '" class="txt-padding form-control" data-css="padding-right" data-index="' + i + '" />';
             settingHtml += '               <small>right</small>';
             settingHtml += '           </div>';
             settingHtml += '       </div>';
             settingHtml += '       <div class="row row-sm text-center">';
             settingHtml += '           <div class="col-xs-4 col-xs-offset-4">';
-            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingBottom'] || '').replace('px', '') + '" class="txt-padding form-control" data-prop="paddingBottom" data-index="' + i + '" />';
+            settingHtml += '               <input type="number" value="' + (column.prop('style')['paddingBottom'] || '').replace('px', '') + '" class="txt-padding form-control" data-css="padding-bottom" data-index="' + i + '" />';
             settingHtml += '               <small>bottom</small>';
             settingHtml += '           </div>';
             settingHtml += '       </div>';
             settingHtml += '   </div>';
             settingHtml += '</div>';
-    
+            
             columnsSettings.append(
                 (i > 0 ? '<hr />' : '') +
                 '<div class="column-setting">' +
@@ -532,7 +482,126 @@
         },
         
         getContent: function () {
-            return $(this).keditor('getContent', false);
+            var target = $(this);
+            var keditor = target.data('keditor');
+            var body = keditor.body;
+            var edmHtml = target.keditor('getContent', true);
+            var edmHeader = edmHtml[0];
+            var edmBody = edmHtml[1];
+            var edmFooter = edmHtml[2];
+            
+            var fragment = $('<div />').html(
+                '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper">' +
+                '    <tbody>' +
+                '        <tr>' +
+                '            <td id="edm-wrapper-td" align="center">' +
+                '                <table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px;" id="edm-container">' +
+                '                    <tbody>' +
+                '                        <tr>' +
+                '                            <td>' +
+                '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-header" align="center">' +
+                '                                    <tbody>' +
+                '                                        <tr>' +
+                '                                            <td id="edm-header-td">' + edmHeader + '</td>' +
+                '                                        </tr>' +
+                '                                    </tbody>' +
+                '                                </table>' +
+                '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-body" align="center">' +
+                '                                    <tbody>' +
+                '                                        <tr>' +
+                '                                            <td id="edm-body-td">' + edmBody + '</td>' +
+                '                                        </tr>' +
+                '                                    </tbody>' +
+                '                                </table>' +
+                '                                <table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-footer" align="center">' +
+                '                                    <tbody>' +
+                '                                        <tr>' +
+                '                                            <td id="edm-footer-td">' + edmFooter + '</td>' +
+                '                                        </tr>' +
+                '                                    </tbody>' +
+                '                                </table>' +
+                '                            </td>' +
+                '                        </tr>' +
+                '                    </tbody>' +
+                '                </table>' +
+                '            </td>' +
+                '        </tr>' +
+                '    </tbody>' +
+                '</table>'
+            );
+            
+            var fontFamily = body.find('#edm-font-family').val() || '';
+            var fontSize = body.find('#edm-font-size').val() || '';
+            var lineHeight = body.find('#edm-line-height').val() || '';
+            var textColor = body.find('#edm-text-color').val() || '';
+            var linkColor = body.find('#edm-link-color').val() || '';
+                        
+            // Set background color for edm and store base styles in #edm-wrapper
+            fragment.find('#edm-wrapper').attr({
+                'data-font-family': fontFamily,
+                'data-font-size': fontSize,
+                'data-line-height': lineHeight,
+                'data-text-color': textColor,
+                'data-link-color': linkColor,
+                'bgcolor': body.find('#edm-background').val()
+            });
+    
+            // Set base styles for dynamic components
+            fragment.find('[data-dynamic-href]').each(function() {
+                $(this).closest('[data-type]').attr({
+                    'data-font-family': fontFamily,
+                    'data-font-size': fontSize,
+                    'data-line-height': lineHeight,
+                    'data-text-color': textColor,
+                    'data-link-color': linkColor,
+                });
+            });
+            
+            // Set outer padding for edm
+            var edmWrapperTd = fragment.find('#edm-wrapper-td');
+            methods.setStyles('padding-top', body.find('#edm-padding-top').val() + 'px', edmWrapperTd);
+            methods.setStyles('padding-bottom', body.find('#edm-padding-bottom').val() + 'px', edmWrapperTd);
+            methods.setStyles('padding-left', body.find('#edm-padding-left').val() + 'px', edmWrapperTd);
+            methods.setStyles('padding-right', body.find('#edm-padding-right').val() + 'px', edmWrapperTd);
+    
+            // Set background color for edm body
+            fragment.find('#edm-body').attr({
+                'bgcolor': body.find('#edm-body-background').val()
+            });
+    
+            var styleInputs = body.find('#edm-setting').find('[data-target=style]');
+            var fontSize = styleInputs.filter('[data-css="font-size"]').val();
+            var fontFamily = styleInputs.filter('[data-css="font-family"]').val();
+            var lineHeight = styleInputs.filter('[data-css="line-height"]').val();
+            var textColor = styleInputs.filter('[data-css="color"]').val();
+            var linkColor = styleInputs.filter('[data-css="a-color"]').val();
+            
+            fragment.find('td.text-wrapper').each(function () {
+                var textWrapper = $(this);
+                methods.setStyles('font-size', fontSize + 'px', textWrapper);
+                methods.setStyles('color', textColor, textWrapper);
+                methods.setStyles('font-family', fontFamily, textWrapper);
+                methods.setStyles('line-height', lineHeight, textWrapper);
+                
+                var links = textWrapper.find('a');
+                methods.setStyles('text-decoration', 'none', links);
+                methods.setStyles('color', linkColor, links);
+            });
+    
+            return (
+            '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' +
+            '<html xmlns="http://www.w3.org/1999/xhtml">' +
+            '    <head>' +
+            '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' +
+            '        <meta name="viewport" content="width=device-width, initial-scale=1.0" />' +
+            '        <title>Kademi EDM Title</title>' +
+            '        <style type="text/css">' + keditor.iframeHead.find('#edm-base-style').html() + '</style>' +
+            '    </head>' +
+            '    <body>' +
+            '        <center>' + fragment.html() + '</center>' +
+            '    </body>' +
+            '</html>'
+            );
         }
     };
     
