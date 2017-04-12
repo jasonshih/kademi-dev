@@ -81,7 +81,7 @@
             if (config.isEmbedded) {
                 initUpCropEmbedded(target, config, dataUpCrop);
             } else {
-                (target, config, dataUpCrop);
+                initUpCropModal(target, config, dataUpCrop);
             }
 
             var upcropContainer = $('#' + uniqueId);
@@ -271,7 +271,6 @@
             };
 
             $.getScriptOnce('/static/js/jquery.milton-upload.js', function () {
-                flog(uploadZone, "===================================");
                 uploadZone.mupload({
                     url: config.url,
                     fieldName: config.fieldName,
