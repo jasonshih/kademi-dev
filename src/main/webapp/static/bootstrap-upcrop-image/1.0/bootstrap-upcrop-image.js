@@ -17,7 +17,8 @@
         bgOpacity: 0.4,
         bgColor: '#fff',
         isEmbedded: false,
-        fieldName: "file",
+        maxFiles: 1,
+        uploadMultiple: false,
         modalTemplate:
                 '<div class="modal fade" id="{{upcropId}}">' +
                 '   <div class="modal-dialog">' +
@@ -62,6 +63,7 @@
             if (target.data('upcrop')) {
                 flog('This target is already upcrop object!', target);
                 return target;
+
             }
 
             var config = $.extend({}, DEFAULTS, options);
@@ -273,6 +275,7 @@
                     url: config.url,
                     fieldName: config.fieldName,
                     useJsonPut: false, // Just do a POST
+                    maxFiles: config.maxFiles,
                     useDropzone: true,
                     oncomplete: function (data, name, href) {
                         dataContinue = arguments;
@@ -299,7 +302,6 @@
                         sizingImg.src = href;
 
                         initCropZone(href);
-
                         if (typeof config.onUploadComplete === 'function') {
                             flog("onUploadComplete callback..");
                             config.onUploadComplete(data, name, href);
