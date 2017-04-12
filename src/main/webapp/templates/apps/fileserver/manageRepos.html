@@ -74,6 +74,7 @@
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu pull-right" role="menu">
+                                        	<li><a name="$w.name" class="btn-update-repo">Add new repository</a></li>
                                             <li><a href="../repositories/$w.name/$w.liveBranch/commits" class="">History (Live)</a></li>
                                             <li><a href="../repositories/$w.name/manageBranches" class="">Branches and History</a></li>
                                             <li><a class="transfer-ownership" href="../repositories/$w.name">Transfer ownership</a></li>
@@ -94,10 +95,11 @@
         <div id="modal-new-repo" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                <h4 class="modal-title">Add new repository</h4>
+                <h4 id="repoModal" class="modal-title">Add new repository</h4>
             </div>
             <form method="POST" action="." class="form-horizontal">
                 <div class="modal-body">
+                	<input type="hidden" id="updateRepo" name="updateRepo"/>
                     <div class="form-message alert alert-danger" style="display: none;"></div>
                     <div class="form-group">
                         <label for="newName" class="col-md-3 control-label">Repository name</label>

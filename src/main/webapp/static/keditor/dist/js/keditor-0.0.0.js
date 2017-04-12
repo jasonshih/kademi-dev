@@ -311,14 +311,14 @@
             target.css('display', 'none');
             target.attr('data-keditor-frame', '#' + iframeId);
             
-            var iframeDoc = iframe.contents();
+            var iframeDoc = self.iframeDoc = iframe.contents();
             // Fix issue Firefox can't render content inside iframe
             // ======================================================
             iframeDoc.get(0).open();
             iframeDoc.get(0).close();
             // ======================================================
-            var iframeHead = iframeDoc.find('head');
-            var iframeBody = iframeDoc.find('body');
+            var iframeHead = self.iframeHead = iframeDoc.find('head');
+            var iframeBody = self.iframeBody = iframeDoc.find('body');
             
             flog('Adding styles to iframe...');
             var styles = '';
@@ -335,10 +335,15 @@
             
             if (options.contentStyles && $.isArray(options.contentStyles)) {
                 $.each(options.contentStyles, function (i, style) {
+                    var idStr = '';
+                    if (style.id) {
+                        idStr = ' id="' + style.id + '" '
+                    }
+                    
                     if (style.href) {
-                        styles += '<link rel="stylesheet" type="text/css" href="' + style.href + '" />\n';
+                        styles += '<link rel="stylesheet" type="text/css" href="' + style.href + '"' + idStr + ' />\n';
                     } else {
-                        styles += '<style type="text/css">' + style.content + '</style>\n';
+                        styles += '<style type="text/css"' + idStr + '>' + style.content + '</style>\n';
                     }
                 });
             }
@@ -364,7 +369,7 @@
             self.body = iframeBody;
             
             if (typeof options.onInitFrame === 'function') {
-                options.onInitFrame.call(iframe, iframe, iframeHead, iframeBody);
+                options.onInitFrame.call(self, iframe, iframeHead, iframeBody);
             }
             
             return contentAreasWrapper || iframeBody;
@@ -548,7 +553,7 @@
             }
             
             if (typeof options.onSidebarToggled === 'function') {
-                options.onSidebarToggled.call(null, showSidebar);
+                options.onSidebarToggled.call(self, showSidebar);
             }
         },
         
@@ -1021,7 +1026,7 @@
                         }
                         
                         if (typeof options.onContainerSnippetDropped === 'function') {
-                            options.onContainerSnippetDropped.call(contentArea, event, container, ui.item);
+                            options.onContainerSnippetDropped.call(self, event, container, ui.item, contentArea);
                         }
                         
                         self.initContainer(contentArea, container);
@@ -1030,7 +1035,7 @@
                     self.hideSettingPanel();
                     
                     if (typeof options.onContentChanged === 'function') {
-                        options.onContentChanged.call(contentArea, event);
+                        options.onContentChanged.call(self, event, contentArea);
                     }
                 }
             });
@@ -1041,7 +1046,7 @@
             });
             
             if (typeof options.onInitContentArea === 'function') {
-                var contentData = options.onInitContentArea.call(contentArea, contentArea);
+                var contentData = options.onInitContentArea.call(self, contentArea);
                 if (contentData && contentData.length > 0) {
                     $.each(contentData, function () {
                         self.convertToContainer(contentArea, $(this));
@@ -1103,7 +1108,7 @@
                 });
                 
                 if (typeof options.onInitContainer === 'function') {
-                    options.onInitContainer.call(contentArea, container);
+                    options.onInitContainer.call(self, container, contentArea);
                 }
                 
                 container.addClass('keditor-initialized-container');
@@ -1166,7 +1171,7 @@
                         container = component.closest('.keditor-container');
                         
                         if (typeof options.onComponentSnippetDropped === 'function') {
-                            options.onComponentSnippetDropped.call(contentArea, event, component, ui.item);
+                            options.onComponentSnippetDropped.call(self, event, component, ui.item, contentArea);
                         }
                         
                         self.initComponent(contentArea, container, component);
@@ -1180,11 +1185,11 @@
                     }
                     
                     if (typeof options.onContainerChanged === 'function') {
-                        options.onContainerChanged.call(contentArea, event, container);
+                        options.onContainerChanged.call(self, event, container, contentArea);
                     }
                     
                     if (typeof options.onContentChanged === 'function') {
-                        options.onContentChanged.call(contentArea, event);
+                        options.onContentChanged.call(self, event, contentArea);
                     }
                 }
             });
@@ -1261,7 +1266,7 @@
                 if (typeof options.defaultComponentType === 'string') {
                     componentType = options.defaultComponentType;
                 } else if (typeof options.defaultComponentType === 'function') {
-                    componentType = options.defaultComponentType.call(component, component);
+                    componentType = options.defaultComponentType.call(self, component);
                 }
                 
                 if (!componentType) {
@@ -1322,7 +1327,7 @@
                     }
                     
                     if (typeof options.onInitComponent === 'function') {
-                        options.onInitComponent.call(contentArea, component);
+                        options.onInitComponent.call(self, component, contentArea);
                     }
                     
                     component.addClass('keditor-initialized-component');
@@ -1371,7 +1376,7 @@
                         
                         var contentArea = container.parent();
                         if (typeof options.onContainerSelected === 'function') {
-                            options.onContainerSelected.call(contentArea, e, container);
+                            options.onContainerSelected.call(self, e, container, contentArea);
                         }
                     }
                 } else {
@@ -1391,7 +1396,7 @@
                         
                         var contentArea = component.parent();
                         if (typeof options.onComponentSelected === 'function') {
-                            options.onComponentSelected.call(contentArea, e, component);
+                            options.onComponentSelected.call(self, e, component, contentArea);
                         }
                     }
                 } else {
@@ -1441,11 +1446,11 @@
                 flog('Container is duplicated');
                 
                 if (typeof options.onContainerDuplicated === 'function') {
-                    options.onContainerDuplicated.call(contentArea, container, newContainer);
+                    options.onContainerDuplicated.call(self, container, newContainer, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(self, e, contentArea);
                 }
             });
             
@@ -1461,7 +1466,7 @@
                     var contentArea = container.parent();
                     
                     if (typeof options.onBeforeContainerDeleted === 'function') {
-                        options.onBeforeContainerDeleted.call(contentArea, e, container);
+                        options.onBeforeContainerDeleted.call(self, e, container, contentArea);
                     }
                     
                     var settingComponent = self.getSettingComponent();
@@ -1485,11 +1490,11 @@
                     container.remove();
                     
                     if (typeof options.onContainerDeleted === 'function') {
-                        options.onContainerDeleted.call(contentArea, e, container);
+                        options.onContainerDeleted.call(self, e, container, contentArea);
                     }
                     
                     if (typeof options.onContentChanged === 'function') {
-                        options.onContentChanged.call(contentArea, e);
+                        options.onContentChanged.call(self, e, contentArea);
                     }
                 }
             });
@@ -1529,15 +1534,15 @@
                 flog('Component is duplicated');
                 
                 if (typeof options.onComponentDuplicated === 'function') {
-                    options.onComponentDuplicated.call(contentArea, component, newComponent);
+                    options.onComponentDuplicated.call(self, component, newComponent, contentArea);
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(self, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(self, e, contentArea);
                 }
             });
             
@@ -1552,7 +1557,7 @@
                     var contentArea = component.closest('.keditor-content-area');
                     
                     if (typeof options.onBeforeComponentDeleted === 'function') {
-                        options.onBeforeComponentDeleted.call(contentArea, e, component);
+                        options.onBeforeComponentDeleted.call(self, e, component, contentArea);
                     }
                     
                     if (self.getSettingComponent().is(component)) {
@@ -1562,15 +1567,15 @@
                     self.deleteComponent(component);
                     
                     if (typeof options.onComponentDeleted === 'function') {
-                        options.onComponentDeleted.call(contentArea, e, component);
+                        options.onComponentDeleted.call(self, e, component, contentArea);
                     }
                     
                     if (typeof options.onContainerChanged === 'function') {
-                        options.onContainerChanged.call(contentArea, e, component);
+                        options.onContainerChanged.call(self, e, component, contentArea);
                     }
                     
                     if (typeof options.onContentChanged === 'function') {
-                        options.onContentChanged.call(contentArea, e);
+                        options.onContentChanged.call(self, e, contentArea);
                     }
                 }
             });
@@ -1605,7 +1610,7 @@
             }
             
             if (typeof options.onBeforeDynamicContentLoad === 'function') {
-                options.onBeforeDynamicContentLoad.call(contentArea, dynamicElement, component);
+                options.onBeforeDynamicContentLoad.call(self, dynamicElement, component, contentArea);
             }
             
             var dynamicHref = dynamicElement.attr('data-dynamic-href');
@@ -1623,14 +1628,14 @@
                     dynamicElement.html(response);
                     
                     if (typeof options.onDynamicContentLoaded === 'function') {
-                        options.onDynamicContentLoaded.call(contentArea, dynamicElement, response, status, xhr);
+                        options.onDynamicContentLoaded.call(self, dynamicElement, response, status, xhr, contentArea);
                     }
                 },
                 error: function (response, status, xhr) {
                     flog('Error when loading dynamic content', dynamicElement, response, status, xhr);
                     
                     if (typeof options.onDynamicContentError === 'function') {
-                        options.onDynamicContentError.call(contentArea, dynamicElement, response, status, xhr);
+                        options.onDynamicContentError.call(self, dynamicElement, response, status, xhr, contentArea);
                     }
                 }
             });

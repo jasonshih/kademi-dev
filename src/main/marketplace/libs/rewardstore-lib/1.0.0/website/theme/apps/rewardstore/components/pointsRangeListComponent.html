@@ -1,0 +1,22 @@
+
+#set ($dataRanges = $ranges.split(','))
+#set ($lastIndexRange = $dataRanges.size())
+#set ($lastIndexRange = $lastIndexRange - 1)
+<div class="row">
+	<div class="col-sm-12">
+		<div class="list-group points-range">
+			<span href="#" class="list-group-item active">Shop by points range</span>
+			#if($dataRanges.size() > 0)
+			<a href="#" class="list-group-item" data-startprice="$dataRanges[0]" data-endprice="$dataRanges[1]">Below $dataRanges[0]</a>
+
+			#foreach( $pointRange in $dataRanges )
+				#if ($foreach.count != $dataRanges.size())
+					<a href="#" class="list-group-item" data-startprice="$pointRange" data-endprice="$dataRanges[$foreach.count]">From $pointRange to $dataRanges[$foreach.count]</a>
+				#end
+			#end
+
+			<a href="#" class="list-group-item" data-startprice="$dataRanges[$lastIndexRange]" data-endprice="99999">Above $dataRanges[$lastIndexRange]</a>
+			#end
+		</div>
+	</div>
+</div>
