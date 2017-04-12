@@ -43,11 +43,11 @@
                     Save
                 </button>
 
-                <button class="btn btn-sm btn-success btn-sent-test">
+                <button class="btn btn-sm btn-info btn-sent-test">
                     <span class="glyphicon glyphicon-send"></span>
                     Test
                 </button>
-                <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
@@ -135,7 +135,7 @@
                             <div class="col-md-9">
                                 <div class="well">
                                     $formatter.checkbox("loginTokens", "loginTokens", $page.job.loginTokens, "true")
-                                    <label for="loginTokens" style="float: none">Enable login token for all links in your EDM</label>
+                                    <label for="loginTokens" style="float: none">Enable login token for all links. Users will be logged in automatically when they click these links.</label>
                                 </div>
                             </div>
                         </div>
@@ -419,7 +419,9 @@
                             <thead>
                                 <tr>
                                     <th>Group</th>
-                                    <th colspan='3'></th>
+                                    <th>Recipient</th>
+                                    <th>Exclude</th>
+                                    <th>Remove group</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -431,7 +433,7 @@
                                         <td>
                                             #set($id = $name + "-recip")
                                             $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
-                                            <label for="$id">Recipient</label>
+                                            <label for="$id">Included</label>
                                         </td>
                                         <td>
                                             #set($id = $name + "-excluded")
@@ -441,7 +443,7 @@
                                         <td>
                                             #set($id = $name + "-none")
                                             $formatter.radio($id, $name, false, "none" )
-                                            <label for="$id">Don't care</label>
+                                            <label for="$id">Neither</label>
                                         </td>
                                     </tr>
                                 #end
