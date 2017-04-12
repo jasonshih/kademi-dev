@@ -63,14 +63,6 @@
 
             var previewDiv = null;
 
-            $.size = function(obj) {
-                var size = 0, key;
-                for (key in obj) {
-                    if (obj.hasOwnProperty(key)) size++;
-                }
-                return size;
-            };
-
             $.getScriptOnce(('/static/dropzone/4.3.0/downloads/dropzone.min.js'), function () {
                 flog("Loaded dropzone plugin, now init...");
                 Dropzone.autoDiscover = false;
@@ -119,10 +111,6 @@
                                 previewDiv.show();
                             }
                         });
-
-                        // this.on("maxfilesexceeded", function(file, errorMessage) {
-                        //     flog("maxfilesexceeded =====================================", this.files);
-                        // });
 
                         this.on("complete", function (file, errorMessage) {
                             if (previewDiv !== null) {

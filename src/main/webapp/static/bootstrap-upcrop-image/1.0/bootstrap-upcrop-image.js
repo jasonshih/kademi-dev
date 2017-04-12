@@ -17,7 +17,7 @@
         bgOpacity: 0.4,
         bgColor: '#fff',
         isEmbedded: false,
-        maxFiles: 1,
+        fieldName: "file",
         uploadMultiple: false,
         modalTemplate:
                 '<div class="modal fade" id="{{upcropId}}">' +
@@ -275,7 +275,7 @@
                     url: config.url,
                     fieldName: config.fieldName,
                     useJsonPut: false, // Just do a POST
-                    maxFiles: config.maxFiles,
+                    maxFiles: 1,
                     useDropzone: true,
                     oncomplete: function (data, name, href) {
                         dataContinue = arguments;
