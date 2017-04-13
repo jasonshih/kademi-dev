@@ -37,6 +37,10 @@
             </ul>
         </nav>
 
+        #if($file.repository.repoType == 'FR')
+            #set ($pagePath = "/repositories/" + $file.repository.name + "/" + $file.repository.liveBranch + "/")
+        #end
+
         <textarea id="edm-editor">$!file.body</textarea>
 
         <script type="text/javascript">
@@ -51,7 +55,8 @@
                     fileName: '$fname',
                     snippetsUrl: '_components?fileName=$fname',
                     snippetsHandlersUrl: '${page.parent.href}_components?handlers&amp;fileName=${params.fileName}',
-                    allGroups: allGroups
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath'
                 });
             });
         </script>

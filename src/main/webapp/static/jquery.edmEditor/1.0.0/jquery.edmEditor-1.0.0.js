@@ -55,7 +55,10 @@
     ];
     
     edmEditor.checkDependencies = function (options, callback) {
+        flog('[jquery.edmEditor] checkDependencies');
+        
         if (edmEditor.isDependenciesChecked) {
+            flog('[jquery.edmEditor] Dependencies are already loaded');
             callback();
         }
         
@@ -84,6 +87,7 @@
             url: '/static/jquery.edmEditor/1.0.0/jquery.edmEditorSettings-1.0.0.html',
             type: 'get',
             success: function (resp) {
+                flog('[jquery.edmEditor] EDM settings are loaded');
                 edmEditor.settingsHtml = resp;
             }
         });
@@ -91,6 +95,7 @@
             url: '/static/jquery.edmEditor/1.0.0/jquery.edmEditorStyles-1.0.0.css',
             type: 'get',
             success: function (resp) {
+                flog('[jquery.edmEditor] EDM default styles are loaded');
                 edmEditor.defaultStyles = resp;
             }
         });
@@ -99,6 +104,7 @@
             $.getScriptOnce(edmEditor.dependScripts[index], function () {
                 if (index === edmEditor.dependScripts.length - 1) {
                     $.when(requestSettings, requestStyles).done(function () {
+                        flog('[jquery.edmEditor] All dependencies are loaded');
                         edmEditor.isDependenciesChecked = true;
                         callback();
                     });
@@ -126,26 +132,32 @@
     };
     
     edmEditor.processEdmContent = function (target, options) {
+        flog('[jquery.edmEditor] processEdmContent', target, options);
+        
         var edmContent = target.is('textarea') ? target.val() : target.html();
         var fragment = $('<div />').html(edmContent);
-        
+    
+        flog('[jquery.edmEditor] Processing td#edm-wrapper-td...');
         var tdWrapper = fragment.find('td#edm-wrapper-td');
         edmEditor.mergeStyleOptions(options, 'edmBackground', edmEditor.rgb2Hex(tdWrapper.css('background-color')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingTop', edmEditor.getPxValue(tdWrapper.css('padding-top')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingBottom', edmEditor.getPxValue(tdWrapper.css('padding-bottom')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingLeft', edmEditor.getPxValue(tdWrapper.css('padding-left')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingRight', edmEditor.getPxValue(tdWrapper.css('padding-right')));
-        
+    
+        flog('[jquery.edmEditor] Processing td#edm-body-td...');
         var tdBody = fragment.find('td#edm-body-td');
         edmEditor.mergeStyleOptions(options, 'bodyBackground', edmEditor.rgb2Hex(tdBody.css('background-color')));
-        
+    
+        flog('[jquery.edmEditor] Processing table#edm-wrapper...');
         var tableWrapper = fragment.find('table#edm-wrapper');
         edmEditor.mergeStyleOptions(options, 'fontFamily', tableWrapper.attr('data-font-family'));
         edmEditor.mergeStyleOptions(options, 'fontSize', tableWrapper.attr('data-font-size'));
         edmEditor.mergeStyleOptions(options, 'lineHeight', tableWrapper.attr('data-line-height'));
         edmEditor.mergeStyleOptions(options, 'textColor', tableWrapper.attr('data-text-color'));
         edmEditor.mergeStyleOptions(options, 'linkColor', tableWrapper.attr('data-link-color'));
-        
+    
+        flog('[jquery.edmEditor] Processing EDM header, body and footer content...');
         var edmHeaderContent = fragment.find('td#edm-header-td').html() || '';
         var edmBodyContent = fragment.find('td#edm-body-td').html() || '';
         var edmFooterContent = fragment.find('td#edm-footer-td').html() || '';
@@ -159,6 +171,10 @@
     };
     
     edmEditor.rgb2Hex = function (value) {
+        if (!value) {
+            return '';
+        }
+        
         var hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
         var hex = function (x) {
             return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
@@ -174,6 +190,8 @@
     };
     
     edmEditor.initPaddingControl = function (target, onChange) {
+        flog('[jquery.edmEditor] initPaddingControl', target);
+        
         target.on('change', function () {
             var txt = $(this);
             var number = txt.val();
@@ -187,6 +205,8 @@
     };
     
     edmEditor.initSimpleColorPicker = function (target, onChange) {
+        flog('[jquery.edmEditor] initSimpleColorPicker', target);
+        
         target.wrap('<div class="input-group"></div>');
         
         var previewer = $('<span class="input-group-addon" style="color: transparent;"><i class="fa fa-stop"></i></span>');
@@ -267,6 +287,8 @@
     };
     
     edmEditor.initDefaultComponentControls = function (form, keditor, options) {
+        flog('[jquery.edmEditor] initDefaultComponentControls', form, keditor, options);
+        
         if (!options || !options.hidePadding) {
             form.prepend(
                 '<div class="form-group">' +
@@ -350,6 +372,8 @@
     };
     
     edmEditor.showDefaultComponentControls = function (form, component, keditor) {
+        flog('[jquery.edmEditor] showDefaultComponentControls', form, component, keditor);
+        
         var tdWrapper = component.find('td.wrapper');
         form.find('.txt-padding').each(function () {
             var input = $(this);
@@ -364,6 +388,8 @@
     };
     
     edmEditor.applySetting = function (keditor, input) {
+        flog('[jquery.edmEditor] applySetting', keditor, input);
+        
         var body = keditor.body;
         var dataCss = input.attr('data-css');
         var dataTarget = input.attr('data-target');
@@ -405,7 +431,7 @@
     };
     
     edmEditor.initSettingPanel = function (keditor, options) {
-        flog('initSettingPanel');
+        flog('[jquery.edmEditor] initSettingPanel', keditor, options);
         
         var body = keditor.body;
         var settingPanel = body.find('#edm-setting');
@@ -429,6 +455,8 @@
     };
     
     edmEditor.initContainerSettings = function (form, keditor) {
+        flog('[jquery.edmEditor] initContainerSettings', form, keditor);
+        
         $.ajax({
             url: '/static/jquery.edmEditor/1.0.0/jquery.edmEditorContainerSettings-1.0.0.html',
             type: 'get',
@@ -508,6 +536,8 @@
     };
     
     edmEditor.showContainerSettings = function (form, container, keditor) {
+        flog('[jquery.edmEditor] showContainerSettings', form, container, keditor);
+        
         var table = container.find('.keditor-container-inner > table');
         
         var selectGroups = form.find('.select-groups');
@@ -531,6 +561,8 @@
     };
     
     edmEditor.generateColumnSettings = function (columnsSettings, column, i) {
+        flog('[jquery.edmEditor] generateColumnSettings', columnsSettings, column, i);
+        
         var settingHtml = '';
         settingHtml += '<div class="form-group">';
         settingHtml += '   <div class="col-md-12">';
@@ -574,9 +606,18 @@
             
             return $(this).each(function () {
                 var target = $(this);
+    
+                flog('[jquery.edmEditor] Initializing...', target, options);
+                
+                if (target.data('edmEditorOptions')) {
+                    flog('[jquery.edmEditor] EDM Editor is already initialized', target);
+                    return;
+                }
+                
                 var edmStyle = edmEditor.processEdmContent(target, options);
                 
                 edmEditor.checkDependencies(options, function () {
+                    flog('[jquery.edmEditor] Add EDM base style');
                     if (options.iframeMode) {
                         options.contentStyles.push({
                             id: 'edm-base-style',
@@ -637,6 +678,8 @@
                         basePath: options.basePath
                     });
                 });
+    
+                target.data('edmEditorOptions', options);
             });
         },
         
