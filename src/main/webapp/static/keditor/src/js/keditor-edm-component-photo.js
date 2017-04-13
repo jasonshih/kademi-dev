@@ -7,11 +7,16 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['photo'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "photo" component', component);
+            
+            var self = this;
+            var img = component.find('img');
+            self.adjustWidthForImg(img, img.hasClass('full-width'));
 
             var options = keditor.options;
             if (typeof options.onComponentReady === 'function') {
@@ -27,7 +32,6 @@
             flog('initSettingForm "photo" component');
 
             var self = this;
-            var options = keditor.options;
 
             form.append(
                 '<form class="form-horizontal">' +
@@ -112,15 +116,11 @@
             });
 
             var photoEdit = form.find('#photo-edit');
-            var basePath = window.location.pathname.replace('edmeditor', '');
-            if (keditor.options.basePath) {
-                basePath = keditor.options.basePath;
-            }
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: basePath,
-                basePath: basePath,
+                pagePath: keditor.options.pagePath,
+                basePath: keditor.options.basePath,
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', "http://" + window.location.host + "/_hashes/files/" + hash);
@@ -136,24 +136,23 @@
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.on('click', function () {
                 var img = keditor.getSettingComponent().find('img');
-                self.adjustWidthForImg(img, chkFullWidth.is(':checked'));
+                img[this.checked ? 'addClass' : 'removeClass']('full-width');
+                self.adjustWidthForImg(img, this.checked);
             });
-
+    
             form = form.find('form');
-            KEditor.initBgColorControl(keditor, form, 'after', '.photo-edit-wrapper');
-            KEditor.initPaddingControls(keditor, form, 'before', '.photo-alt-wrapper');
+            edmEditor.initDefaultComponentControls(form, keditor);
         },
 
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "photo" component', component);
+            
+            edmEditor.showDefaultComponentControls(form, component, keditor);
 
             var img = component.find('img');
 
             var inputAlt = form.find('#photo-alt');
             inputAlt.val(img.attr('alt') || '');
-
-            KEditor.showBgColorControl(keditor, form, component);
-            KEditor.showPaddingControls(keditor, form, component);
 
             var chkFullWidth = form.find('#photo-fullwidth');
             chkFullWidth.prop('checked', img.hasClass('full-width'));
@@ -201,6 +200,13 @@
                     img.css('display', 'block');
                 }, 200);
             });
+        },
+        
+        onWithChanged: function (component, width, keditor) {
+            var self = this;
+    
+            var img = component.find('img');
+            self.adjustWidthForImg(img, img.hasClass('full-width'));
         }
     };
 
