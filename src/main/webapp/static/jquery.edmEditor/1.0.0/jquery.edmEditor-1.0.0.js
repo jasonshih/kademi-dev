@@ -167,7 +167,7 @@
     };
     
     edmEditor.initPaddingControl = function (target, onChange) {
-        target.on('change', '.txt-padding', function () {
+        target.on('change', function () {
             var txt = $(this);
             var number = txt.val();
             if (isNaN(number) || +number < 0) {
@@ -298,7 +298,7 @@
                 edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
             
-                    if (options.dynamicComponent) {
+                    if (options && options.dynamicComponent) {
                         var dynamicElement = component.find('[data-dynamic-href]');
                 
                         component.attr('data-' + dataCss, value);
