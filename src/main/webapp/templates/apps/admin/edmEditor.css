@@ -1,220 +1,60 @@
 ﻿body {
-    background: none;
-    padding-top: 50px;
+    padding-top: 50px !important;
 }
 
-table,
-tr,
-td,
-th {
-    box-sizing: content-box;
-}
-
-.edm-editor-page .navbar-fixed-top a {
-    height: 50px;
-}
-
-.navbar-fixed-top .navbar-nav > li > a:hover {
+.edm-editor-nav {
+    position: fixed;
+    background: #222;
+    z-index: 900;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 18px;
     color: #fff;
-    background-color: #080808;
-}
-
-.navbar-fixed-top .fa {
-    font-size: 20px;
-    line-height: inherit;
-}
-
-.edm-editor-page #keditor-sidebar {
-    top: 50px;
-}
-
-/* ==================================================================================
-   EDM Area
-   ================================================================================== */
-#edm-area {
-    min-width: 680px;
-}
-
-#edm-area h1,
-#edm-area h2,
-#edm-area h3,
-#edm-area h4,
-#edm-area h5,
-#edm-area h6 {
-    padding: 0;
-    margin: 0;
-    font-style: normal;
-    font-weight: bold;
-    line-height: 125%;
-}
-
-#edm-area h1 {
-    font-size: 26px;
-}
-
-#edm-area h2 {
-    font-size: 22px;
-}
-
-#edm-area h3 {
-    font-size: 20px;
-}
-
-#edm-area h4 {
-    font-size: 20px;
-}
-
-
-body.opened-keditor-sidebar #edm-area {
-    margin-right: 260px;
-}
-
-/* ==================================================================================
-   EDM header, body and footer
-   ================================================================================== */
-#edm-header,
-#edm-body,
-#edm-footer {
-    margin: 0 auto;
-    box-sizing: border-box;
-    min-height: 100px;
-    outline: 3px dashed #ccc;
-    outline-offset: 3px;
-}
-
-#edm-body {
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-#edm-header,
-#edm-footer {
-    padding: 0;
-}
-
-#edm-header.empty,
-#edm-body.empty,
-#edm-footer.empty {
-    position: relative;
-}
-
-#edm-header.empty:before,
-#edm-body.empty:before,
-#edm-footer.empty:before {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    font-size: 20px;
-    font-weight: bold;
-    color: #ccc;
-    transform: translate(-50%, -50%);
-}
-
-#edm-header.empty:before {
-    content: "EDM Header";
-}
-
-#edm-body.empty:before {
-    content: "EDM Body";
-}
-
-#edm-footer.empty:before {
-    content: "EDM Footer";
-}
-
-.keditor-component .keditor-toolbar {
-    text-align: left;
-}
-
-/* ==================================================================================
-   EDM Setting
-   ================================================================================== */
-#edm-setting {
-    margin: 0 5px;
-}
-
-#edm-setting .panel {
-    border-radius: 0;
-}
-
-.row.row-sm {
-    margin: 0 -2px;
-}
-
-.row.row-sm > div {
-    padding: 0 2px;
-}
-
-.colorpicker-wrapper {
-    position: relative;
-}
-
-.colorpicker-wrapper .colorpicker {
-    top: 50px !important;
-    right: auto;
-    left: 15px !important;
-}
-
-/* ====================================================================================
-   Customize CKEditor
-/* ==================================================================================== */
-.cke_combo__format .cke_combo_text,
-.cke_combo__font .cke_combo_text,
-.cke_combo__fontsize .cke_combo_text,
-.cke_combo__lineheight .cke_combo_text {
-    width: auto;
-}
-
-/* ====================================================================================
-   Hide border of tables when CKEditor is enabled
-/* ==================================================================================== */
-.cke_show_borders table.cke_show_border,
-.cke_show_borders table.cke_show_border th,
-.cke_show_borders table.cke_show_border td {
-    border: 0 !important;
-}
-
-div.cke_float[id*="cke_keditor-section-"] {
-    max-width: none !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: auto !important;
-}
-
-body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
-    margin-right: 232px;
-    margin-top: 0;
-    margin-left: 0;
-}
-
-/* ====================================================================================
-   Customize KEditor
-/* ==================================================================================== */
-#keditor-sidebar {
-    opacity: 1;
-}
-
-.keditor-container-content {
+    font-family: Arial, Helvetica, san-serif;
+    line-height: 26px;
     height: 50px;
-    vertical-align: top;
 }
 
-.keditor-setting-form {
-    min-height: 150px;
+.edm-editor-nav a {
+    color: #fff;
+    text-decoration: none;
 }
 
-.keditor-container-content .keditor-component-content h1,
-.keditor-container-content .keditor-component-content h2,
-.keditor-container-content .keditor-component-content h3,
-.keditor-container-content .keditor-component-content h4,
-.keditor-container-content .keditor-component-content h5,
-.keditor-container-content .keditor-component-content h6,
-.keditor-container-content .keditor-component-content p {
+.edm-editor-nav .edm-editor-file {
+    float: left;
+}
+
+.edm-editor-nav .edm-editor-file,
+.edm-editor-nav .edm-editor-navbar li a {
+    display: block;
+    padding: 12px 20px;
+}
+
+.edm-editor-nav .edm-editor-navbar {
+    float: right;
     margin: 0;
+    padding: 0;
 }
 
-#msg {
-    z-index: 99999;
+.edm-editor-nav .edm-editor-navbar li {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.edm-editor-nav .edm-editor-navbar li a {
+    color: #ccc;
+}
+
+.edm-editor-nav .edm-editor-navbar li a:hover,
+.edm-editor-nav .edm-editor-navbar li a:focus,
+.edm-editor-nav .edm-editor-navbar li a:active {
+    background: #000;
+    color: #fff;
+}
+
+#keditor-sidebar {
+    top: 50px !important;
 }

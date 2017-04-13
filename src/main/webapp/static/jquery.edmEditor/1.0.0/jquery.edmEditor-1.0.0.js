@@ -21,6 +21,8 @@
         iframeMode: false,
         contentStyles: [],
         allGroups: [],
+        pagePath: null,
+        basePath: null,
         edmBackground: '#fafafa',
         edmPaddingTop: '20',
         edmPaddingBottom: '20',
@@ -126,19 +128,16 @@
     edmEditor.processEdmContent = function (target, options) {
         var edmContent = target.is('textarea') ? target.val() : target.html();
         var fragment = $('<div />').html(edmContent);
-        var edmHeaderContent = fragment.find('td#edm-header-td').html() || '';
-        var edmBodyContent = fragment.find('td#edm-body-td').html() || '';
-        var edmFooterContent = fragment.find('td#edm-footer-td').html() || '';
         
         var tdWrapper = fragment.find('td#edm-wrapper-td');
-        edmEditor.mergeStyleOptions(options, 'edmBackground', tdWrapper.css('background-color'));
+        edmEditor.mergeStyleOptions(options, 'edmBackground', edmEditor.rgb2Hex(tdWrapper.css('background-color')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingTop', edmEditor.getPxValue(tdWrapper.css('padding-top')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingBottom', edmEditor.getPxValue(tdWrapper.css('padding-bottom')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingLeft', edmEditor.getPxValue(tdWrapper.css('padding-left')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingRight', edmEditor.getPxValue(tdWrapper.css('padding-right')));
         
         var tdBody = fragment.find('td#edm-body-td');
-        edmEditor.mergeStyleOptions(options, 'bodyBackground', tdBody.css('background-color'));
+        edmEditor.mergeStyleOptions(options, 'bodyBackground', edmEditor.rgb2Hex(tdBody.css('background-color')));
         
         var tableWrapper = fragment.find('table#edm-wrapper');
         edmEditor.mergeStyleOptions(options, 'fontFamily', tableWrapper.attr('data-font-family'));
@@ -147,6 +146,9 @@
         edmEditor.mergeStyleOptions(options, 'textColor', tableWrapper.attr('data-text-color'));
         edmEditor.mergeStyleOptions(options, 'linkColor', tableWrapper.attr('data-link-color'));
         
+        var edmHeaderContent = fragment.find('td#edm-header-td').html() || '';
+        var edmBodyContent = fragment.find('td#edm-body-td').html() || '';
+        var edmFooterContent = fragment.find('td#edm-footer-td').html() || '';
         target[target.is('textarea') ? 'val' : 'html'](
             '<div id="edm-header">' + edmHeaderContent + '</div>' +
             '<div id="edm-body">' + edmBodyContent + '</div>' +
@@ -163,7 +165,12 @@
         }
         
         value = value.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-        return "#" + hex(value[1]) + hex(value[2]) + hex(value[3]);
+        
+        if ($.isArray(value)) {
+            return "#" + hex(value[1]) + hex(value[2]) + hex(value[3]);
+        } else {
+            return '';
+        }
     };
     
     edmEditor.initPaddingControl = function (target, onChange) {
@@ -201,9 +208,9 @@
         target.on({
             change: function () {
                 var color = getColor(this.value);
-    
+                
                 target.val(color);
-    
+                
                 if (typeof onChange === 'function') {
                     onChange.call(target, color);
                 }
@@ -290,24 +297,24 @@
                 '   </div>' +
                 '</div>'
             );
-    
+            
             form.find('.txt-padding').each(function () {
                 var input = $(this);
                 var dataCss = input.attr('data-css');
-        
+                
                 edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
-            
+                    
                     if (options && options.dynamicComponent) {
                         var dynamicElement = component.find('[data-dynamic-href]');
-                
+                        
                         component.attr('data-' + dataCss, value);
                         keditor.initDynamicContent(dynamicElement);
                     } else {
                         var tdWrapper = component.find('td.wrapper');
                         edmEditor.setStyles(dataCss, value + 'px', tdWrapper);
                     }
-            
+                    
                     if (options && typeof options.onPaddingChanged === 'function') {
                         options.onPaddingChanged.call(this, dataCss, value);
                     }
@@ -363,11 +370,12 @@
         var dataUnit = input.attr('data-unit') || '';
         
         if (dataTarget === 'style') {
-            var styleTags = keditor.iframeHead.find('style');
+            var headTag = (keditor.options.iframeMode ? keditor.iframeHead : $('head'));
+            var styleTags = headTag.find('style');
             var previewStyle = styleTags.filter('#preview-style');
             if (previewStyle.length === 0) {
                 previewStyle = $('<style id="preview-style" type="text/css"></style>')
-                keditor.iframeHead.append(previewStyle);
+                headTag.append(previewStyle);
             }
             
             var styleInputs = body.find('#edm-setting').find('[data-target=style]');
@@ -512,7 +520,7 @@
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
-    
+        
         form.find('.txt-bg-color').val(table.attr('bgcolor') || '').trigger('update');
         
         container.find('[data-type=container-content]').each(function (i) {
@@ -569,10 +577,14 @@
                 var edmStyle = edmEditor.processEdmContent(target, options);
                 
                 edmEditor.checkDependencies(options, function () {
-                    options.contentStyles.push({
-                        id: 'edm-base-style',
-                        content: edmStyle || edmEditor.defaultStyles
-                    });
+                    if (options.iframeMode) {
+                        options.contentStyles.push({
+                            id: 'edm-base-style',
+                            content: edmStyle || edmEditor.defaultStyles
+                        });
+                    } else {
+                        $('head').append('<style type="text/css" id="edm-base-style">' + edmStyle || edmEditor.defaultStyles + '</style>');
+                    }
                     
                     target.keditor({
                         niceScrollEnabled: false,
@@ -620,7 +632,9 @@
                         },
                         containerSettingEnabled: true,
                         containerSettingInitFunction: edmEditor.initContainerSettings,
-                        containerSettingShowFunction: edmEditor.showContainerSettings
+                        containerSettingShowFunction: edmEditor.showContainerSettings,
+                        pagePath: options.pagePath,
+                        basePath: options.basePath
                     });
                 });
             });
@@ -740,7 +754,7 @@
                 '        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />' +
                 '        <meta name="viewport" content="width=device-width, initial-scale=1.0" />' +
                 '        <title>Kademi EDM Title</title>' +
-                '        <style type="text/css">' + keditor.iframeHead.find('#edm-base-style').html() + '</style>' +
+                '        <style type="text/css">' + (keditor.options.iframeMode ? keditor.iframeHead : $('head')).find('#edm-base-style').html() + '</style>' +
                 '    </head>' +
                 '    <body>' +
                 '        <center>' + fragment.html() + '</center>' +
