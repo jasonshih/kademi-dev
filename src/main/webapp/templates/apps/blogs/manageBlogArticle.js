@@ -42,6 +42,7 @@ function initManageBlogArticle() {
     initPublish();
     initGroupEditing();
     initManageArticleImage();
+    initManageArticleGallery();
     initManageArticleFiles();
     initGraphControls();
     loadGraphData();
@@ -467,6 +468,66 @@ function initManageArticleImage() {
     });
 }
 
+
+function initManageArticleGallery() {
+    var galleryContainer = $('#images-container');
+    var addGalleryModal = $('#modal-add-gallery');
+    addGalleryModal.find('form.form-horizontal').forms({
+        callback: function () {
+            galleryContainer.reloadFragment();
+            addGalleryModal.modal("hide");
+        }
+    });
+    uploadZone = $("#uploadFileDropzone");
+    $.getScriptOnce('/static/js/jquery.milton-upload.js', function () {
+        uploadZone.mupload({
+            // url: window.location.pathname,
+            fieldName: "file",
+            useJsonPut: false, // Just do a POST
+            useDropzone: true,
+            oncomplete: function (data, name, href) {
+
+                flog('uploaded image:', data, name, data.result.nextHref);
+
+                uploadedHref = data.result.nextHref;
+                uploadedName = name;
+
+                if (data.result) {
+                    data = data.result;
+                }
+                var hash = data.data;
+                if (typeof hash == "object") {
+                    hash = hash.file;
+                }
+
+                saveManageArticleGallery(hash, uploadedName, "");
+            }
+        });
+    });
+
+    addGalleryModal.find('.btn-close').on('click', function (e) {
+        galleryContainer.reloadFragment();
+        addGalleryModal.modal("hide");
+    });
+}
+
+function saveManageArticleGallery(hash, name, ignoreOrientation) {
+    var objImage = {
+        hash: hash,
+        fileName: name,
+        orientation: ignoreOrientation
+    };
+
+    var saveData = $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        data: objImage,
+        success: function(resultData) {
+            flog("save galleries data success", resultData);
+        }
+    });
+    saveData.error(function() { alert("Something went wrong"); });
+}
 
 function initGroupEditing() {
     $('#modalGroup input[type=checkbox]').click(function () {
