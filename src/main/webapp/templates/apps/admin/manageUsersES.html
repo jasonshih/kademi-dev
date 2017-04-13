@@ -91,7 +91,7 @@
                                         <span class="fa fa-user" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.totalProfiles</strong>
+                                        <strong>$page.paginator.records[0].totalProfiles</strong>
                                         Profiles
                                     </div>
                                 </li>
@@ -100,7 +100,7 @@
                                         <span class="fa fa-users" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.groupsCount</strong>
+                                        <strong>$page.paginator.records[0].groupsCount</strong>
                                         Groups
                                     </div>
                                 </li>
@@ -109,7 +109,7 @@
                                         <span class="fa fa-sitemap" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.orgsCount</strong>
+                                        <strong>$page.paginator.records[0].orgsCount</strong>
                                         Organisations
                                     </div>
                                 </li>
@@ -161,19 +161,19 @@
                                         #foreach($p in $page.paginator.records)
                                             <tr>
                                                 <td class="text">
-                                                    <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
-                                                        $formatter.htmlEncode($p.fields.firstName.value)
-                                                $formatter.htmlEncode($p.fields.surName.value)
+                                                    <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)">
+                                                        $formatter.htmlEncode($p.firstName)
+                                                		$formatter.htmlEncode($p.surName)
                                                     </span>
                                                 </td>
                                                 <td class="text">
-                                                    #if( $p.fields.email.value )
-                                                        <a href="mailto:$p.fields.email.value">$p.fields.email.value</a>
+                                                    #if( $p.email )
+                                                        <a href="mailto:$p.email">$p.email</a>
                                                     #end
                                                 </td>
-                                                <td class="text">$!p.fields.phone.value</td>
+                                                <td class="text">$!p.phone</td>
                                                 <td class="group-names">
-                                                    #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
+                                                    #set( $groups = $page.primaryGroups( $p.membershipsGroup ) )
                                                     #foreach( $group in $groups )
                                                         <div class="label label-info" style="margin-right: 5px;">
                                                             <a title="$group.name" href="/groups/$group.name/" style="color: white">
@@ -188,19 +188,19 @@
                                                 </td>
                                                 <td class="action">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="$p.fields.userId.value" class="btn btn-sm btn-primary btn-sm">
+                                                        <a href="$p.userId" class="btn btn-sm btn-primary btn-sm">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                         <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul class="dropdown-menu pull-right" role="menu">
-                                                            <li><a href="$p.fields.userId.value"><i class="fa fa-edit"></i> User details</a></li>
-                                                            <li><a href="$p.fields.userId.value" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
+                                                            <li><a href="$p.userId"><i class="fa fa-edit"></i> User details</a></li>
+                                                            <li><a href="$p.userId" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
-                                                <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
+                                                <td><input type="checkbox" name="toRemoveId" value="$p.userId" /></td>
                                             </tr>
                                         #end
                                     #end

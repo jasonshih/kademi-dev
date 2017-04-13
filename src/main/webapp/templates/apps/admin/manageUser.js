@@ -243,9 +243,13 @@ function doSearch() {
         url: newHref,
         success: function (data) {
             Msg.info('Search complete', 5000);
+            
             flog('success', data);
+            
             var newDom = $(data);
+            
             var $fragment = newDom.find('#table-users');
+            
             $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
             $("#table-users").paginator();
