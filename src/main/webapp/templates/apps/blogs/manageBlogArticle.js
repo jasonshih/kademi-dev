@@ -330,14 +330,14 @@ function initManageArticleImage() {
     upcropZone.upcropImage({
         buttonUploadText: "<i class='clip-folder'></i> Upload image",
         buttonCropText: 'Crop and use this image',
-        modalTitle: 'Upload and crop image',
+        modalTitle: 'Add and crop image',
         ratio: 0,
         isEmbedded: true,
         embeddedTemplate:
                 '<div class="upcrop-embedded" id="{{upcropId}}">' +
                 '   <div class="modal-header">' +
                 '       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '       <h4 class="modal-title">Upload and crop image</h4>' +
+                '       <h4 class="modal-title">Add and crop image</h4>' +
                 '   </div>' +
                 '   <div class="modal-body">' +
                 '       <div class="form-horizontal">' +
