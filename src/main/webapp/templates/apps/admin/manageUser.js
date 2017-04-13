@@ -222,15 +222,22 @@ function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
     var isEnabled = $('.btn-enable-user').is(':checked');
+    
     flog('doSearch', query, groupName);
+    
     var uri = URI(window.location);
+    
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
     uri.setSearch('enabled', isEnabled);
+    
     flog('doSearch', uri.toString());
+    
     var newHref = uri.toString();
+    
     window.history.pushState('', newHref, newHref);
     Msg.info('Searching...', 50000);
+    
     $.ajax({
         type: 'GET',
         url: newHref,
@@ -238,9 +245,10 @@ function doSearch() {
             Msg.info('Search complete', 5000);
             flog('success', data);
             var newDom = $(data);
-            var $fragment = newDom.find('#table-users-body');
-            $('#table-users-body').replaceWith($fragment);
+            var $fragment = newDom.find('#table-users');
+            $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
+            $("#table-users").paginator();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
@@ -679,10 +687,11 @@ function initSort() {
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
-                var $fragment = $(data).find('#table-users-body');
+                var $fragment = $(data).find('#table-users');
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
-                $('#table-users-body').replaceWith($fragment);
+                $('#table-users').replaceWith($fragment);
+                $("#table-users").paginator();
             },
             error: function (resp) {
                 Msg.error('err');
