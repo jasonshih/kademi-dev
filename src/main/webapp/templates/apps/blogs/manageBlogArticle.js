@@ -486,9 +486,7 @@ function initManageArticleGallery() {
             useJsonPut: false, // Just do a POST
             useDropzone: true,
             oncomplete: function (data, name, href) {
-
                 flog('uploaded image:', data, name, data.result.nextHref);
-
                 uploadedHref = data.result.nextHref;
                 uploadedName = name;
 
@@ -505,9 +503,8 @@ function initManageArticleGallery() {
         });
     });
 
-    addGalleryModal.find('.btn-close').on('click', function (e) {
+    addGalleryModal.on('hide.bs.modal', function (e) {
         galleryContainer.reloadFragment();
-        addGalleryModal.modal("hide");
     });
 }
 
