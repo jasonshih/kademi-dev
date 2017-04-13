@@ -41,7 +41,10 @@
             loginFailedMessage: "Sorry, those login details were not recognised.",
             userNameProperty: "_loginUserName",
             passwordProperty: "_loginPassword",
+            secondFactorProperty: "_login2FA",
             secondFactorModalSelector: "#modal-2fa-input",
+            secondFactorValidationMessageText: "#validationMessage2FA",
+            secondFactorValidationMessage: "The 2FA code is incorrect. Try again.",
             loginCallback: function() {
                 
             }
@@ -50,6 +53,10 @@
         $(config.logoutSelector).click(function() {
             doLogout();
         });
+        
+        var getUserName = function(){ return $("input[name=email]", container).val();  }
+        var getPassword = function(){ return $("input[name=password]", container).val(); }
+        var getLogin2FA = function(){ return $("#login2FA", container).val();  }
   
         var container = this;
         var form = $("form", this);
@@ -60,27 +67,44 @@
             $("input", container).removeClass("errorField");
             $(config.valiationMessageSelector, this).hide(100);
             try {
-                var userName = $("input[name=email]", container).val();
-                var passwordInputs = $("input[name=password]", container);
-                var password = passwordInputs.val();
+                var userName = getUserName();
+                var password = getPassword();
+                var login2FA = getLogin2FA();
+
                 if( userName == null || userName.length == 0 ) {
                     $("input[type=text]", container).addClass("errorField");
                     $(config.valiationMessageText, container).text(config.requiredFieldsMessage);
                     $(config.valiationMessageSelector, container).show(200);
                     return false;
                 }
-                doLogin(userName, password, config, container);
+                doLogin(userName, password, login2FA, config, container);
             } catch(e) {
                 flog("exception doing login", e);
             }            
             return false;
-        });    
-    };
+        });
+        
+            
+        $(".login2FA").on("click", function(){
+           flog("Doing login with 2FA");
+           try{
+                var container = this;
+                var userName = getUserName();
+                var password = getPassword();
+                var login2FA = getLogin2FA();
+                
+                doLogin(userName, password, login2FA, config, container);
+            } catch(e) {
+                flog("exception doing login with 2FA", e);
+            }            
+            return false;
+        });
+    };   
 })( jQuery );
 
 
-function doLogin(userName, password, config, container) {
-    flog("doLogin", userName, config.urlSuffix);
+function doLogin(userName, password, login2FA, config, container) {
+    flog("doLogin", userName, login2FA, config.urlSuffix);
     $(config.valiationMessageSelector).hide();
     var data = new Object();
     var userNameProperty;
@@ -96,8 +120,19 @@ function doLogin(userName, password, config, container) {
         passwordProperty = "_loginPassword";
     }
     
+    var login2FAProperty;
+    if( config.login2FAProperty ) {
+        login2FAProperty = config.login2FAProperty;
+    } else {
+        login2FAProperty = "_login2FA";
+    }
+    
     data[userNameProperty] = userName;
     data[passwordProperty] = password;
+    data[login2FAProperty] = login2FA;
+    
+    flog(data);
+
     $.ajax({
         type: 'POST',
         url: config.urlSuffix,
@@ -105,49 +140,42 @@ function doLogin(userName, password, config, container) {
         dataType: "json",
         acceptsMap: "application/x-javascript",
         success: function(resp) {
+            console.log(resp);
+            
             flog("received login response", resp)
             initUser();                
             if( resp.status ) {
                 flog("login success", resp.status);
-                
-                resp.required2FA = true;
-                if( resp.required2FA ){
-                    flog("2FA is enabled and required");
-                    $(config.secondFactorModalSelector).modal("show");
-                    return;
-                }else{
-                    
-                    if( config.loginCallback) {
-                        config.loginCallback();
-                    }
-                    if( config.afterLoginUrl === null) {
-                        // If not url in config then use the next href in the response, if given, else reload current page
-                        if( resp.nextHref ) {
-                            flog("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
-                            window.location.href = resp.nextHref;
-                        } else {
-                            flog("login: no afterLoginUrl and no nextHref, so reload");
-                            window.location.reload(true);
-                        }                    
-                    } else if( config.afterLoginUrl.startsWith("/")) {
-                        // if config has an absolute path the redirect to it
-                        flog("redirect to1: " + config.afterLoginUrl);
-                        //return;
-                        window.location = config.afterLoginUrl;
-                    } else {
-                        if( config.afterLoginUrl === "none") {
-                            flog("Not doing redirect because afterLoginUrl=='none'");
-                        } else if( config.afterLoginUrl === "reload") {
-                            flog("Reload current location");
-                            window.location.reload(true);
-                        } else {
-                            // if config has a relative path, then evaluate it relative to the user's own url in response
-                            flog("redirect to2: " + userUrl + config.afterLoginUrl);
-                            //return;
-                            window.location = userUrl + config.afterLoginUrl;
-                        }
-                    }
 
+                if( config.loginCallback) {
+                    config.loginCallback();
+                }
+                if( config.afterLoginUrl === null) {
+                    // If not url in config then use the next href in the response, if given, else reload current page
+                    if( resp.nextHref ) {
+                        flog("login: no afterLoginUrl and received next href, so go there", resp.nextHref);
+                        window.location.href = resp.nextHref;
+                    } else {
+                        flog("login: no afterLoginUrl and no nextHref, so reload");
+                        window.location.reload(true);
+                    }                    
+                } else if( config.afterLoginUrl.startsWith("/")) {
+                    // if config has an absolute path the redirect to it
+                    flog("redirect to1: " + config.afterLoginUrl);
+                    //return;
+                    window.location = config.afterLoginUrl;
+                } else {
+                    if( config.afterLoginUrl === "none") {
+                        flog("Not doing redirect because afterLoginUrl=='none'");
+                    } else if( config.afterLoginUrl === "reload") {
+                        flog("Reload current location");
+                        window.location.reload(true);
+                    } else {
+                        // if config has a relative path, then evaluate it relative to the user's own url in response
+                        flog("redirect to2: " + userUrl + config.afterLoginUrl);
+                        //return;
+                        window.location = userUrl + config.afterLoginUrl;
+                    }
                 }
                 
             } else {
@@ -160,9 +188,26 @@ function doLogin(userName, password, config, container) {
         //window.location = "/index.html";
         },
         error: function(resp) {
-            $(config.valiationMessageText).text(config.loginFailedMessage);
-            flog("error response from server, set message. msg output:", $(config.valiationMessageSelector, this), "config msg:", config.loginFailedMessage, "resp:", resp);
-            $(config.valiationMessageSelector).show(300);
+            if(resp.responseText !== undefined && resp.responseText !== ""){
+                var response = JSON.parse(resp.responseText);    
+                if(response.code2FA !== undefined){
+                    if( response.code2FA == "REQUIRED" || response.code2FA == "INVALID"){                        
+                        if(response.code2FA == "REQUIRED"){
+                            flog("2FA is enabled and required");
+                            $(config.secondFactorModalSelector).modal("show");    
+                        }else{
+                            flog("2FA code is invalid");
+                            $(config.secondFactorValidationMessageText).text(config.secondFactorValidationMessage);
+                            $(config.secondFactorValidationMessageText).show(300);                           
+                        }
+                        return;
+                    }
+                }    
+            }else{
+                $(config.valiationMessageText).text(config.loginFailedMessage);
+                flog("error response from server, set message. msg output:", $(config.valiationMessageSelector, this), "config msg:", config.loginFailedMessage, "resp:", resp);
+                $(config.valiationMessageSelector).show(300);   
+            }
         }
     });      
 }
