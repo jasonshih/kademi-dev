@@ -33,7 +33,10 @@
         linkColor: '#337ab7',
         fontFamily: 'Arial, Helvetica, san-serif',
         fontSize: '14',
-        lineHeight: '1.42857143'
+        lineHeight: '1.42857143',
+        onReady: function () {
+            
+        }
     };
     
     edmEditor.dependScripts = [
@@ -670,6 +673,10 @@
                         },
                         onReady: function () {
                             edmEditor.initSettingPanel(this, options);
+                            
+                            if (typeof options.onReady === 'function') {
+                                options.onReady.call(target);
+                            }
                         },
                         containerSettingEnabled: true,
                         containerSettingInitFunction: edmEditor.initContainerSettings,

@@ -14,7 +14,11 @@ function initEdmEditorPage(options) {
         snippetsHandlersUrl: options.snippetsHandlersUrl,
         allGroups: options.allGroups,
         basePath: basePath,
-        pagePath: basePath
+        pagePath: basePath,
+        onReady: function () {
+            $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+            hideLoadingIcon();
+        }
     });
     
     initSaveFile(options.fileName);

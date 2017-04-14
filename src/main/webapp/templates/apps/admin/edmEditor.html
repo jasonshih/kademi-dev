@@ -43,6 +43,13 @@
 
         <textarea id="edm-editor">$!file.body</textarea>
 
+        <div id="editor-loading">
+            <span>
+                <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i><br /><br />
+                <span class="loading-text">Initializing EDM Editor...</span>
+            </span>
+        </div>
+
         <script type="text/javascript">
             var allGroups = {
                 #foreach ($group in $page.find("/").allGroups)
