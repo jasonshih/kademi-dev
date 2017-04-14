@@ -35,7 +35,9 @@ function initSearch() {
 
 function initProductSearch() {
     var timer;
-    $('#search-product[name=q]').on('keydown', function () {
+    // remove all events of this
+
+    $('#searchBoxInput[data-type=RewardProducts]').on('keydown', function () {
         var input = $(this);
 
         clearTimeout(timer);
@@ -115,12 +117,13 @@ function doProductSearch() {
             flog("success", data);
             var fragment = $(data).find("#products-list");
             $("#products-list").replaceWith(fragment);
-            truncateProductContent();
+            // truncateProductContent();
             startFrom = 12;
             inifiniteLoader.removeClass('limited').hide();
         },
         error: function (resp) {
-            Msg.error("An error occured doing the product search. Please check your internet connection and try again");
+            inifiniteLoader.removeClass('limited').hide();
+            Msg.error("An error occurred doing the product search. Please check your internet connection and try again");
         }
     });
 }
@@ -135,13 +138,13 @@ function doPaginate() {
         type: 'GET',
         url: newUrl.toString(),
         success: function (data) {
-            flog("success", data);
+            flog("success");
             var fragment = $(data).find("#products-list");
             var products = fragment.find('.product-item');
 
             if (products.length > 0) {
                 $("#products-list .row").append(products);
-                truncateProductContent();
+                // truncateProductContent();
                 startFrom = startFrom + 12;
             } else {
                 inifiniteLoader.addClass('limited');
