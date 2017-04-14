@@ -149,6 +149,24 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
 }
 
 /* ====================================================================================
+   Headings settings
+/* ==================================================================================== */
+.form-group-heading .input-group + .input-group {
+    margin-top: 5px;
+}
+
+.form-group-heading .input-group .input-group-addon {
+    font-size: 80%;
+    padding: 6px 5px;
+}
+
+.form-group-heading .input-group .input-group-addon span {
+    display: block;
+    width: 55px;
+    text-align: center;
+}
+
+/* ====================================================================================
    Customize KEditor
 /* ==================================================================================== */
 #keditor-sidebar {

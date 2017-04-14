@@ -33,7 +33,19 @@
         linkColor: '#337ab7',
         fontFamily: 'Arial, Helvetica, san-serif',
         fontSize: '14',
-        lineHeight: '1.42857143',
+        lineHeight: '20',
+        fontSizeH1: '36',
+        lineHeightH1: '40',
+        fontSizeH2: '30',
+        lineHeightH2: '34',
+        fontSizeH3: '24',
+        lineHeightH3: '26',
+        fontSizeH4: '18',
+        lineHeightH4: '20',
+        fontSizeH5: '14',
+        lineHeightH5: '16',
+        fontSizeH6: '12',
+        lineHeightH6: '14',
         onReady: function () {
             
         }
@@ -139,7 +151,7 @@
         
         var edmContent = target.is('textarea') ? target.val() : target.html();
         var fragment = $('<div />').html(edmContent);
-    
+        
         flog('[jquery.edmEditor] Processing td#edm-wrapper-td...');
         var tdWrapper = fragment.find('td#edm-wrapper-td');
         edmEditor.mergeStyleOptions(options, 'edmBackground', edmEditor.rgb2Hex(tdWrapper.css('background-color')));
@@ -147,19 +159,31 @@
         edmEditor.mergeStyleOptions(options, 'edmPaddingBottom', edmEditor.getPxValue(tdWrapper.css('padding-bottom')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingLeft', edmEditor.getPxValue(tdWrapper.css('padding-left')));
         edmEditor.mergeStyleOptions(options, 'edmPaddingRight', edmEditor.getPxValue(tdWrapper.css('padding-right')));
-    
+        
         flog('[jquery.edmEditor] Processing td#edm-body-td...');
         var tdBody = fragment.find('td#edm-body-td');
         edmEditor.mergeStyleOptions(options, 'bodyBackground', edmEditor.rgb2Hex(tdBody.css('background-color')));
-    
+        
         flog('[jquery.edmEditor] Processing table#edm-wrapper...');
         var tableWrapper = fragment.find('table#edm-wrapper');
         edmEditor.mergeStyleOptions(options, 'fontFamily', tableWrapper.attr('data-font-family'));
-        edmEditor.mergeStyleOptions(options, 'fontSize', tableWrapper.attr('data-font-size'));
-        edmEditor.mergeStyleOptions(options, 'lineHeight', tableWrapper.attr('data-line-height'));
         edmEditor.mergeStyleOptions(options, 'textColor', tableWrapper.attr('data-text-color'));
         edmEditor.mergeStyleOptions(options, 'linkColor', tableWrapper.attr('data-link-color'));
-    
+        edmEditor.mergeStyleOptions(options, 'fontSize', tableWrapper.attr('data-font-size'));
+        edmEditor.mergeStyleOptions(options, 'lineHeight', tableWrapper.attr('data-line-height'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH1', tableWrapper.attr('data-font-size-h1'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH1', tableWrapper.attr('data-line-height-h1'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH2', tableWrapper.attr('data-font-size-h2'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH2', tableWrapper.attr('data-line-height-h2'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH3', tableWrapper.attr('data-font-size-h3'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH3', tableWrapper.attr('data-line-height-h3'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH4', tableWrapper.attr('data-font-size-h4'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH4', tableWrapper.attr('data-line-height-h4'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH5', tableWrapper.attr('data-font-size-h5'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH5', tableWrapper.attr('data-line-height-h5'));
+        edmEditor.mergeStyleOptions(options, 'fontSizeH6', tableWrapper.attr('data-font-size-h6'));
+        edmEditor.mergeStyleOptions(options, 'lineHeightH6', tableWrapper.attr('data-line-height-h6'));
+        
         flog('[jquery.edmEditor] Processing EDM header, body and footer content...');
         var edmHeaderContent = fragment.find('td#edm-header-td').html() || '';
         var edmBodyContent = fragment.find('td#edm-body-td').html() || '';
@@ -407,15 +431,28 @@
                 headTag.append(previewStyle);
             }
             
+            
+            var previewStyleObj = {};
             var styleInputs = body.find('#edm-setting').find('[data-target=style]');
-            var fontSize = styleInputs.filter('[data-css="font-size"]').val();
-            var fontFamily = styleInputs.filter('[data-css="font-family"]').val();
-            var lineHeight = styleInputs.filter('[data-css="line-height"]').val();
-            var textColor = styleInputs.filter('[data-css="color"]').val();
-            var linkColor = styleInputs.filter('[data-css="a-color"]').val();
+            styleInputs.each(function () {
+                var input = $(this);
+                var dataSelector = input.attr('data-selector');
+                var dataCss = input.attr('data-css');
+                var dataUnit = input.attr('data-unit');
+                
+                if (!(dataSelector in previewStyleObj)) {
+                    previewStyleObj[dataSelector] = [];
+                }
+                
+                previewStyleObj[dataSelector].push(dataCss + ':' + (input.val() || '') + (dataUnit || ''));
+            });
+            
             var previewStyleStr = '';
-            previewStyleStr += 'body {font-size:' + fontSize + 'px;color:' + textColor + ';font-family:' + fontFamily + ';line-height:' + lineHeight + '}';
-            previewStyleStr += 'a {color:' + linkColor + ';text-decoration:none;}';
+            $.each(previewStyleObj, function (key, value) {
+                previewStyleStr += key + '{' + value.join(';') + '}';
+            });
+            previewStyleStr += 'a{text-decoration:none}';
+            previewStyleStr += 'h1,h2,h3,h4,h5,h6{margin:0;}';
             
             previewStyle.html(previewStyleStr);
         } else {
@@ -603,13 +640,33 @@
         );
     };
     
+    edmEditor.cleanBaseStyles = function (component) {
+        flog('[jquery.edmEditor] cleanBaseStyles', component);
+        
+        var tdWrapper = component.find('td.text-wrapper');
+        tdWrapper.css({
+            'color': '',
+            'font-size': '',
+            'font-family': '',
+            'line-height': ''
+        });
+        tdWrapper.find('a').css({
+            'color': ''
+        });
+    
+        tdWrapper.find('h1, h2, h3, h4, h5, h6').css({
+            'font-size': '',
+            'line-height': ''
+        });
+    };
+    
     var methods = {
         init: function (options) {
             options = $.extend({}, edmEditor.DEFAULTS, options);
             
             return $(this).each(function () {
                 var target = $(this);
-    
+                
                 flog('[jquery.edmEditor] Initializing...', target, options);
                 
                 if (target.data('edmEditorOptions')) {
@@ -678,6 +735,8 @@
                                 options.onReady.call(target);
                             }
                         },
+                        onComponentReady: edmEditor.cleanBaseStyles,
+                        onInitComponent: edmEditor.cleanBaseStyles,
                         containerSettingEnabled: true,
                         containerSettingInitFunction: edmEditor.initContainerSettings,
                         containerSettingShowFunction: edmEditor.showContainerSettings,
@@ -685,7 +744,7 @@
                         basePath: options.basePath
                     });
                 });
-    
+                
                 target.data('edmEditorOptions', options);
             });
         },
@@ -739,62 +798,113 @@
                 '</table>'
             );
             
-            var fontFamily = body.find('#edm-font-family').val() || '';
-            var fontSize = body.find('#edm-font-size').val() || '';
-            var lineHeight = body.find('#edm-line-height').val() || '';
-            var textColor = body.find('#edm-text-color').val() || '';
-            var linkColor = body.find('#edm-link-color').val() || '';
+            // Base styles
+            var fontFamily = body.find('.fontFamily').val() || '';
+            var fontSize = body.find('.fontSize').val() || '';
+            var lineHeight = body.find('.lineHeight').val() || '';
+            var textColor = body.find('.textColor').val() || '';
+            var linkColor = body.find('.linkColor').val() || '';
             
-            // Set background color for edm and store base styles in #edm-wrapper
-            fragment.find('#edm-wrapper').attr({
+            // Headings styles
+            var fontSizeH1 = body.find('.fontSizeH1').val() || '';
+            var lineHeightH1 = body.find('.lineHeightH1').val() || '';
+            var fontSizeH2 = body.find('.fontSizeH2').val() || '';
+            var lineHeightH2 = body.find('.lineHeightH2').val() || '';
+            var fontSizeH3 = body.find('.fontSizeH3').val() || '';
+            var lineHeightH3 = body.find('.lineHeightH3').val() || '';
+            var fontSizeH4 = body.find('.fontSizeH4').val() || '';
+            var lineHeightH4 = body.find('.lineHeightH4').val() || '';
+            var fontSizeH5 = body.find('.fontSizeH5').val() || '';
+            var lineHeightH5 = body.find('.lineHeightH5').val() || '';
+            var fontSizeH6 = body.find('.fontSizeH6').val() || '';
+            var lineHeightH6 = body.find('.lineHeightH6').val() || '';
+            
+            var dataBaseStyles = {
                 'data-font-family': fontFamily,
                 'data-font-size': fontSize,
                 'data-line-height': lineHeight,
                 'data-text-color': textColor,
                 'data-link-color': linkColor,
-                'bgcolor': body.find('#edm-background').val()
-            });
+                'data-font-size-h1': fontSizeH1,
+                'data-line-height-h1': lineHeightH1,
+                'data-font-size-h2': fontSizeH2,
+                'data-line-height-h2': lineHeightH2,
+                'data-font-size-h3': fontSizeH3,
+                'data-line-height-h3': lineHeightH3,
+                'data-font-size-h4': fontSizeH4,
+                'data-line-height-h4': lineHeightH4,
+                'data-font-size-h5': fontSizeH5,
+                'data-line-height-h5': lineHeightH5,
+                'data-font-size-h6': fontSizeH6,
+                'data-line-height-h6': lineHeightH6
+            };
+            
+            // Set background color for edm and store base styles in #edm-wrapper
+            fragment.find('#edm-wrapper').attr(dataBaseStyles).attr('bgcolor', body.find('.edmBackground').val());
             
             // Set base styles for dynamic components
             fragment.find('[data-dynamic-href]').each(function () {
-                $(this).closest('[data-type]').attr({
-                    'data-font-family': fontFamily,
-                    'data-font-size': fontSize,
-                    'data-line-height': lineHeight,
-                    'data-text-color': textColor,
-                    'data-link-color': linkColor,
-                });
+                $(this).closest('[data-type]').attr(dataBaseStyles);
             });
             
             // Set outer padding for edm
             var edmWrapperTd = fragment.find('#edm-wrapper-td');
-            edmEditor.setStyles('padding-top', body.find('#edm-padding-top').val() + 'px', edmWrapperTd);
-            edmEditor.setStyles('padding-bottom', body.find('#edm-padding-bottom').val() + 'px', edmWrapperTd);
-            edmEditor.setStyles('padding-left', body.find('#edm-padding-left').val() + 'px', edmWrapperTd);
-            edmEditor.setStyles('padding-right', body.find('#edm-padding-right').val() + 'px', edmWrapperTd);
+            edmEditor.setStyles('padding-top', body.find('.edmPaddingTop').val() + 'px', edmWrapperTd);
+            edmEditor.setStyles('padding-bottom', body.find('.edmPaddingBottom').val() + 'px', edmWrapperTd);
+            edmEditor.setStyles('padding-left', body.find('.edmPaddingLeft').val() + 'px', edmWrapperTd);
+            edmEditor.setStyles('padding-right', body.find('.edmPaddingRight').val() + 'px', edmWrapperTd);
             
             // Set background color for edm body
             fragment.find('#edm-body').attr({
-                'bgcolor': body.find('#edm-body-background').val()
+                'bgcolor': body.find('.bodyBackground').val()
             });
-            
-            var styleInputs = body.find('#edm-setting').find('[data-target=style]');
-            var fontSize = styleInputs.filter('[data-css="font-size"]').val();
-            var fontFamily = styleInputs.filter('[data-css="font-family"]').val();
-            var lineHeight = styleInputs.filter('[data-css="line-height"]').val();
-            var textColor = styleInputs.filter('[data-css="color"]').val();
-            var linkColor = styleInputs.filter('[data-css="a-color"]').val();
             
             fragment.find('td.text-wrapper').each(function () {
                 var textWrapper = $(this);
                 edmEditor.setStyles('font-size', fontSize + 'px', textWrapper);
                 edmEditor.setStyles('color', textColor, textWrapper);
                 edmEditor.setStyles('font-family', fontFamily, textWrapper);
-                edmEditor.setStyles('line-height', lineHeight, textWrapper);
+                edmEditor.setStyles('line-height', lineHeight + 'px', textWrapper);
                 
                 var links = textWrapper.find('a');
                 edmEditor.setStyles('text-decoration', 'none', links);
                 edmEditor.setStyles('color', linkColor, links);
+                
+                var h1s = textWrapper.find('h1');
+                edmEditor.setStyles('font-size', fontSizeH1 + 'px', h1s);
+                edmEditor.setStyles('line-height', lineHeightH1 + 'px', h1s);
+                edmEditor.setStyles('margin-top', '0', h1s);
+                edmEditor.setStyles('margin-bottom', '0', h1s);
+                
+                var h2s = textWrapper.find('h2');
+                edmEditor.setStyles('font-size', fontSizeH2 + 'px', h2s);
+                edmEditor.setStyles('line-height', lineHeightH2 + 'px', h2s);
+                edmEditor.setStyles('margin-top', '0', h2s);
+                edmEditor.setStyles('margin-bottom', '0', h2s);
+                
+                var h3s = textWrapper.find('h3');
+                edmEditor.setStyles('font-size', fontSizeH3 + 'px', h3s);
+                edmEditor.setStyles('line-height', lineHeightH3 + 'px', h3s);
+                edmEditor.setStyles('margin-top', '0', h3s);
+                edmEditor.setStyles('margin-bottom', '0', h3s);
+                
+                var h4s = textWrapper.find('h4');
+                edmEditor.setStyles('font-size', fontSizeH4 + 'px', h4s);
+                edmEditor.setStyles('line-height', lineHeightH4 + 'px', h4s);
+                edmEditor.setStyles('margin-top', '0', h4s);
+                edmEditor.setStyles('margin-bottom', '0', h4s);
+                
+                var h5s = textWrapper.find('h5');
+                edmEditor.setStyles('font-size', fontSizeH5 + 'px', h5s);
+                edmEditor.setStyles('line-height', lineHeightH5 + 'px', h5s);
+                edmEditor.setStyles('margin-top', '0', h5s);
+                edmEditor.setStyles('margin-bottom', '0', h5s);
+                
+                var h6s = textWrapper.find('h6');
+                edmEditor.setStyles('font-size', fontSizeH6 + 'px', h6s);
+                edmEditor.setStyles('line-height', lineHeightH6 + 'px', h6s);
+                edmEditor.setStyles('margin-top', '0', h6s);
+                edmEditor.setStyles('margin-bottom', '0', h6s);
             });
             
             return (
