@@ -9,7 +9,7 @@
 #if (!$rewardResource.is('rewardStore'))
 <p class="alert alert-warning">No reward store selected</p>
 #else
-<div class="list-group">
+<div class="list-group rewardStoreCategoriesList">
     <span href="#" class="list-group-item active lead">Categories</span>
     #foreach($cate in $rewardResource.children.ofType.category)
     #if ($cate.numProducts > 0)
