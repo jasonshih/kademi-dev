@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/css" href="manageUser.css" />
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
+        <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
         <style>
             #table-users {
                 table-layout: fixed;
@@ -41,7 +42,7 @@
     </head>
     <body class="manage-users">
         <div class="row fuelux">
-            <div class="col-lg-9">
+            <div class="col-lg-9">    	
                 <div class="row">
                     <div class="col-lg-5">
                         <p class="input-group search-user input-group-sm">
@@ -91,7 +92,13 @@
                                         <span class="fa fa-user" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.paginator.records[0].totalProfiles</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+    	                                    $page.paginator.records[0].totalProfiles
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Profiles
                                     </div>
                                 </li>
@@ -100,7 +107,13 @@
                                         <span class="fa fa-users" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.paginator.records[0].groupsCount</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+	                                        $page.paginator.records[0].groupsCount
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Groups
                                     </div>
                                 </li>
@@ -109,7 +122,13 @@
                                         <span class="fa fa-sitemap" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.paginator.records[0].orgsCount</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+	                                        $page.paginator.records[0].orgsCount
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Organisations
                                     </div>
                                 </li>
@@ -221,8 +240,8 @@
             <div class="col-lg-3" id="aggregationsContainer">
                 #if( $page.aggregations )
                     <table class="table">
-                        #foreach($agg in $page.aggregations )
-                    #showAggregation($agg)
+                    	#foreach($agg in $page.aggregations )
+                    		#showAggregation($agg)
                     #end
                     </table>
                 #end
@@ -684,7 +703,7 @@
                     var newHref = $(e.target).closest('a').attr('href');
                     window.history.pushState('', newHref, newHref);
 
-                    $('#table-users-body').reloadFragment({
+                    $('#table-users').reloadFragment({
                         url: newHref,
                         whenComplete: function (response) {
                             flog('complete', response);
@@ -693,6 +712,8 @@
                             $('#searchStats').replaceWith(newDom.find('#searchStats'));
                             var inner = $(response).find('#aggregationsContainer > *');
                             $('#aggregationsContainer').html(inner);
+                            $("#table-users").paginator();
+                            initSort();
                         }
                     });
                 });

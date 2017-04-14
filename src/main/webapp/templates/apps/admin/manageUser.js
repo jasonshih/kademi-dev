@@ -253,6 +253,7 @@ function doSearch() {
             $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
             $("#table-users").paginator();
+            initSort();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
@@ -607,7 +608,7 @@ function doRemoveUsers(checkBoxes) {
                 doSearch();
                 Msg.success('Removed users ok');
             } else {
-                Msg.error('There was a problem removing users. Please try again and contact the administrator if you still have problems');
+                Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
             }
         },
         error: function (resp) {
@@ -691,16 +692,22 @@ function initSort() {
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
+                
                 var $fragment = $(data).find('#table-users');
+                
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
+                
                 $('#table-users').replaceWith($fragment);
                 $("#table-users").paginator();
+
+                initSort();
             },
             error: function (resp) {
                 Msg.error('err');
             }
         });
+
     });
 }
 
