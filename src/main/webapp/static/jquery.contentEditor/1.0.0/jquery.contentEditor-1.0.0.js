@@ -37,7 +37,6 @@
         '/static/ckeditor456/adapters/jquery.js',
         '/static/keditor/dist/js/keditor-0.0.0.min.js',
         '/static/keditor/dist/js/keditor-components-0.0.0.js',
-        '/theme/apps/admin/contentEditorUtils.js',
         '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js'
     ];
     
@@ -74,7 +73,7 @@
         }
     
         if (options.snippetsHandlersUrl) {
-            edmEditor.dependScripts.push(options.snippetsHandlersUrl);
+            contentEditor.dependScripts.push(options.snippetsHandlersUrl);
         }
         
         function loadScript(index) {

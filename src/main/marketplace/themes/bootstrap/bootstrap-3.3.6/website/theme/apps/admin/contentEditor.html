@@ -2,10 +2,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Edit: $!params.fileName</title>
-        <link href="/static/keditor/dist/css/keditor-0.0.0.min.css" rel="stylesheet" type="text/css" />
-        <link href="/static/keditor/dist/css/keditor-components-0.0.0.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/bootstrap-colorpicker/2.3.0/css/bootstrap-colorpicker.min.css"/>
-        <link rel="stylesheet" type="text/css" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript">
@@ -26,15 +22,12 @@
         <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
         <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
 
-        <script type="text/javascript" src="/theme/js/init-theme.js" >//</script>
+        <script type="text/javascript" src="/theme/js/init-theme.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
         <script type="text/javascript" src="/theme/toolbars.js">//</script>
         <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
         <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
         <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
-        <script type="text/javascript" src="/static/keditor/dist/js/keditor-0.0.0.min.js">//</script>
-        <script type="text/javascript" src="/static/keditor/dist/js/keditor-components-0.0.0.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/contentEditorUtils.js">//</script>
         <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
@@ -49,7 +42,6 @@
         #end
 
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-        <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css"/>
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
@@ -110,16 +102,21 @@
 
         <div id="content-area">$!file.body</div>
 
-        <script type="text/javascript" src="_components?handlers&amp;fileName=$!{params.fileName}">//</script>
         <script type="text/javascript">
+            var useHash = "$!useHash";
             var allGroups = {
                 #foreach ($group in $page.find("/").allGroups)
-                    '$group.name' : #groupTitle($group),
-                #end
-            };
-            var useHash = "$!useHash";
+                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
+                #end};
+
             $(function () {
-                initContentEditorPage('$!fname', '/_components/web/snippets.html');
+                initContentEditorPage({
+                    fileName: '$fname',
+                    snippetsUrl: '_components?fileName=$!{params.fileName}',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&amp;fileName=$!{params.fileName}"',
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath'
+                });
             });
         </script>
 
