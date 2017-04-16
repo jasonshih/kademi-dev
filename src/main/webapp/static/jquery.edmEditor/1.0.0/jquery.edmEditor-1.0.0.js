@@ -671,7 +671,7 @@
                 
                 if (target.data('edmEditorOptions')) {
                     flog('[jquery.edmEditor] EDM Editor is already initialized', target);
-                    return;
+                    return target;
                 }
                 
                 var edmStyle = edmEditor.processEdmContent(target, options);
