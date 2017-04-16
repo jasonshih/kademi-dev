@@ -850,7 +850,9 @@
                                 }
                             },
                             minimumChangeMilliseconds: 100,
-                            stylesSet: 'myStyles:' + stylesPath
+                            stylesSet: 'myStyles:' + stylesPath,
+                            basePath: options.basePath,
+                            pagePath: options.pagePath
                         },
                         tabContainersText: '<i class="fa fa-columns"></i>',
                         tabComponentsText: '<i class="fa fa-files-o"></i>',
