@@ -39,7 +39,7 @@
  *     }
  * ]
  * @option {String} contentAreasSelector Selector of content areas. If is null or selector does not match any elements, will create default content area and wrap all content inside it.
- * @option {String} contentAreasWrapper The wrapper element for all contents inside iframe. It's just for displaying purpose. If you want all contents inside iframe are appended into body tag
+ * @option {String} contentAreasWrapper The wrapper element for all contents inside iframe or new div which will contains content of textarea. It's just for displaying purpose. If you want all contents inside iframe are appended into body tag, just leave it as blank
  * @option {Boolean} containerSettingEnabled Enable setting panel for container
  * @option {Function} containerSettingInitFunction Method will be called when initializing setting panel for container
  * @option {Function} containerSettingShowFunction Method will be called when setting panel for container is showed
@@ -220,14 +220,17 @@
                     flog('Target is textarea', target);
                     
                     var htmlContent = target.val();
-                    var keditorWrapper = $('<div />');
-                    var keditorWrapperId = self.generateId('wrapper');
-                    
+                    var keditorWrapper = $(options.contentAreasWrapper || '<div />');
                     target.after(keditorWrapper);
                     keditorWrapper.attr({
-                        id: keditorWrapperId,
                         class: 'keditor-ui keditor-wrapper'
                     });
+    
+                    var keditorWrapperId = keditorWrapper.attr('id');
+                    if (!keditorWrapperId) {
+                        keditorWrapperId = self.generateId('wrapper');
+                        keditorWrapper.attr('id', keditorWrapperId);
+                    }
                     
                     keditorWrapper.html(htmlContent);
                     target.css('display', 'none');
@@ -1705,6 +1708,10 @@
             var options = keditor.options;
             var result = [];
             target = options.iframeMode ? keditor.body : target;
+            
+            if (target.is('textarea')) {
+                target = $(target.attr('data-keditor-wrapper'));
+            }
             
             target.find('.keditor-content-area').each(function () {
                 var html = '';

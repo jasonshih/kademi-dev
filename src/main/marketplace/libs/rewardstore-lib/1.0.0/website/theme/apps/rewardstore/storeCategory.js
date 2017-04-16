@@ -6,9 +6,8 @@ var currentURI = new URI(window.location.href);
 
 $(function () {
     if (!window.contentEditing && $('.rewardStoreCategoryProductsComponent').length) {
-        initCategorySelector();
-        initPriceSelector();
-        initSearch();
+        initPointsRanges();
+        initCategories();
         initProductSearch();
         $(window).scroll(function () {
             if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
@@ -18,24 +17,9 @@ $(function () {
     }
 });
 
-function initSearch() {
-    var timer;
-    $('#product-search [name=q]').on('keydown', function () {
-        var input = $(this);
-
-        clearTimeout(timer);
-        timer = setTimeout(function () {
-            var newUrl = new URI(window.location.href);
-            newUrl.setSearch('q', input.val().trim());
-            window.history.pushState("", document.title, newUrl.toString());
-            doProductSearch();
-        }, 300);
-    });
-}
-
 function initProductSearch() {
     var timer;
-    $('#search-product[name=q]').on('keydown', function () {
+    $('#searchBoxInput[data-type=RewardProducts]').on('keydown', function () {
         var input = $(this);
 
         clearTimeout(timer);
@@ -48,13 +32,13 @@ function initProductSearch() {
     });
 }
 
-function initCategorySelector() {
-    flog('initCategorySelector');
+function initPointsRanges() {
+    flog('initPointsRanges');
 
     var uriSearch = currentURI.search(true);
     var startPrice = uriSearch.startPrice;
     var endPrice = uriSearch.endPrice;
-    var pointRangeItems = $('.points-range a.list-group-item');
+    var pointRangeItems = $('.pointsRangeList a.list-group-item');
     pointRangeItems.filter('[data-startprice="' + startPrice + '"][data-endprice="' + endPrice + '"]').addClass('selected');
 
     pointRangeItems.on('click', function (e) {
@@ -65,46 +49,36 @@ function initCategorySelector() {
         newUrl.removeSearch('startPrice');
         newUrl.removeSearch('endPrice');
 
-        if (item.hasClass('selected')) {
-            item.removeClass('selected');
-        } else {
-            pointRangeItems.filter('.selected').removeClass('selected');
-            item.addClass('selected');
-            newUrl.addSearch('startPrice', item.attr('data-startprice'));
-            newUrl.addSearch('endPrice', item.attr('data-endprice'));
-        }
+        pointRangeItems.filter('.selected').removeClass('selected');
+        item.addClass('selected');
+        newUrl.addSearch('startPrice', item.attr('data-startprice'));
+        newUrl.addSearch('endPrice', item.attr('data-endprice'));
 
         window.history.pushState("", document.title, newUrl.toString());
         doProductSearch();
     });
 }
 
-function initPriceSelector() {
-    flog('initPriceSelector');
-    var categoryItems = $('.categories-list a.list-group-item');
-
+function initCategories() {
+    flog('initCategories');
+    var categoryItems = $('.rewardStoreCategoriesList a.list-group-item');
+    categoryItems.filter('[href='+window.location.pathName+']').addClass('selected');
     categoryItems.on('click', function (e) {
         e.preventDefault();
 
+        categoryItems.filter('.selected').removeClass('selected');
         var item = $(this);
-        var newUrl;
+        item.addClass('selected');
+        var newUrl = item.attr('href') + window.location.search;
 
-        if (item.hasClass('selected')) {
-            item.removeClass('selected');
-            newUrl = '/nesst-rewards/' + window.location.search;
-        } else {
-            categoryItems.filter('.selected').removeClass('selected');
-            item.addClass('selected');
-            newUrl = item.attr('href') + window.location.search;
-        }
-
-        window.history.pushState("", document.title, newUrl);
+        window.history.pushState("", "", newUrl);
         doProductSearch();
     });
 }
 
 function doProductSearch() {
     flog('doProductSearch')
+    $("#products-list").html('');
     var inifiniteLoader = $('#inifiniteLoader');
     inifiniteLoader.show();
 
@@ -112,15 +86,16 @@ function doProductSearch() {
         type: 'GET',
         url: window.location.href,
         success: function (data) {
-            flog("success", data);
+            // flog("success", data);
             var fragment = $(data).find("#products-list");
             $("#products-list").replaceWith(fragment);
-            truncateProductContent();
+            // truncateProductContent();
             startFrom = 12;
             inifiniteLoader.removeClass('limited').hide();
         },
         error: function (resp) {
-            Msg.error("An error occured doing the product search. Please check your internet connection and try again");
+            inifiniteLoader.removeClass('limited').hide();
+            Msg.error("An error occurred doing the product search. Please check your internet connection and try again");
         }
     });
 }
@@ -135,13 +110,13 @@ function doPaginate() {
         type: 'GET',
         url: newUrl.toString(),
         success: function (data) {
-            flog("success", data);
+            flog("success");
             var fragment = $(data).find("#products-list");
             var products = fragment.find('.product-item');
 
             if (products.length > 0) {
                 $("#products-list .row").append(products);
-                truncateProductContent();
+                // truncateProductContent();
                 startFrom = startFrom + 12;
             } else {
                 inifiniteLoader.addClass('limited');

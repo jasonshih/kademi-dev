@@ -25,6 +25,15 @@ hr {
     border-top: 1px solid @hr-border;
 }
 
+.row,
+.row * {
+    &,
+    &:before,
+    &:after {
+        box-sizing: border-box;
+    }
+}
+
 // Alignment
 .text-left {
     text-align: left;
@@ -84,7 +93,10 @@ hr {
     .text-emphasis-variant(@state-danger-text);
 }
 
+@import "bootstrap/alerts";
+@import "bootstrap/close";
 @import "bootstrap/grid";
+@import "bootstrap/modals";
 @import "bootstrap/panels";
 @import "bootstrap/forms";
 @import "bootstrap/buttons";

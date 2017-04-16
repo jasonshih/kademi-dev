@@ -1,3 +1,5 @@
+#if ($page)
+
 #set ($rewardStoreFolder = $page)
 #if ($reward)
     #set ($reward = '/' + $reward)
@@ -80,7 +82,8 @@
 </div>
 <p id="inifiniteLoader" class="text-center" style="display: none;"><img src="/templates/ajax-loader.gif" /></p>
 
-#if (!$page)
+
+#else
 <div class="alert alert-warning">Products go here</div>
 <script type="text/javascript">
     var contentEditing = true;

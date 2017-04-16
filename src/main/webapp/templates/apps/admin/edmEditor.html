@@ -4,141 +4,67 @@
         <meta charset="utf-8">
         <link rel="template" href="reallyPlain" />
 
-        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="/static/font-awesome/4.7.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" href="/static/bootstrap-colorpicker/2.3.0/css/bootstrap-colorpicker.min.css" />
         <link rel="stylesheet" href="/static/bootstrap-msg/0.4.0/dist/css/bootstrap-msg-0.4.0.min.css" type="text/css" />
-        <link href="/static/keditor/dist/css/keditor-0.0.0.css" rel="stylesheet" type="text/css" />
-        <link href="/static/keditor/dist/css/keditor-edm-components-0.0.0.css" rel="stylesheet" type="text/css" />
-        <link href="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="/static/bootstrap-select/1.10.0/dist/css/bootstrap-select.min.css" />
         <link href="/theme/apps/admin/edmEditor.css" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript" src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
-        <script type="text/javascript" src="/static/js/common.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.jstree.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
-        <script type="text/javascript" src="/static/milton-upload/1.0.1/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js">//</script>
-        <script type="text/javascript" src="/static/jquery-ui/1.11.4/jquery-ui.min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap/3.3.7/js/bootstrap.min.js">//</script>
+        <script type="text/javascript" src="/static/js/common.js">//</script>
         <script type="text/javascript" src="/static/jquery.cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-colorpicker/2.3.0/js/bootstrap-colorpicker.min.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-msg/0.4.0/dist/js/bootstrap-msg-0.4.0.min.js">//</script>
-
         <script type="text/javascript" src="/theme/toolbars.js">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
-        <script type="text/javascript" src="/static/keditor/dist/js/keditor-0.0.0.js">//</script>
-        <script type="text/javascript" src="/static/keditor/dist/js/keditor-edm-components-0.0.0.js">//</script>
-        <script type="text/javascript" src="/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"></script>
-
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-msg/0.4.0/dist/js/bootstrap-msg-0.4.0.min.js">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js">//</script>
-
+        <script type="text/javascript" src="/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/edmEditor.js" bottom="true">//</script>
-
-        <style id="edm-style" type="text/css">
-            #outlook a {
-                padding: 0;
-            }
-
-            /* Force Outlook to provide a "view in browser" message */
-            .ReadMsgBody {
-                width: 100%;
-            }
-
-            .ExternalClass {
-                width: 100%;
-            }
-
-            /* Force Hotmail to display emails at full width */
-            .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
-                line-height: 100%;
-            }
-
-            /* Force Hotmail to display normal line spacing */
-            body, table, td, p, a, li, blockquote {
-                -webkit-text-size-adjust: 100%;
-                -ms-text-size-adjust: 100%;
-            }
-
-            /* Prevent WebKit and Windows mobile changing default text sizes */
-            table, td {
-                mso-table-lspace: 0pt;
-                mso-table-rspace: 0pt;
-            }
-
-            /* Remove spacing between tables in Outlook 2007 and up */
-            img {
-                -ms-interpolation-mode: bicubic;
-            }
-
-            /* Allow smoother rendering of resized image in Internet Explorer */
-
-            @media screen and (max-width: 479px) {
-                table.col {
-                    width: 100% !important;
-                }
-
-                #edm-container {
-                    width: 100% !important;
-                }
-
-                img {
-                    max-width: 100% !important;
-                    height: auto !important;
-                }
-
-                #edm-body .wrapper {
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                }
-            }
-        </style>
     </head>
     <body class="edm-editor-page">
         #set($fname = $params.fileName)
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
 
-
-        <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                <ul class="nav navbar-nav">
-                </ul>
-                <div class="navbar-header">
-                    <a class="navbar-brand">$params.fileName</a>
-                </div>
-                <ul class="nav navbar-nav navbar-right">
-                    #if (!$params.iframe)
-                        <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
-                    #end
-                    <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
-                    #if (!$params.iframe)
-                        <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
-                    #end
-                </ul>
-            </div>
+        <nav class="edm-editor-nav">
+            <span class="edm-editor-file">$params.fileName</span>
+            <ul class="edm-editor-navbar">
+                #if (!$params.iframe)
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                #end
+                <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                #if (!$params.iframe)
+                    <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
+                #end
+            </ul>
         </nav>
 
-        <script type="text/html" id="edm-html">$!file.body</script>
-        <div id="edm-area">
-            <div id="edm-header"></div>
-            <div id="edm-body"></div>
-            <div id="edm-footer"></div>
-        </div>
+        #if($file.repository.repoType == 'FR')
+            #set ($pagePath = "/repositories/" + $file.repository.name + "/" + $file.repository.liveBranch + "/")
+        #end
 
-        <script type="text/javascript" src="${page.parent.href}_components?handlers&amp;fileName=${params.fileName}">//</script>
+        <textarea id="edm-editor">$!file.body</textarea>
+
+        <div id="editor-loading">
+            <span>
+                <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
+                <span class="loading-text">Initializing EDM Editor...</span>
+            </span>
+        </div>
 
         <script type="text/javascript">
             var allGroups = {
                 #foreach ($group in $page.find("/").allGroups)
                 '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end};
+                #end
+            };
             var useHash = "$!useHash";
             $(function () {
-                initEdmEditorPage('$fname');
+                initEdmEditorPage({
+                    fileName: '$fname',
+                    snippetsUrl: '_components?fileName=$fname',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&amp;fileName=${params.fileName}',
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath'
+                });
             });
         </script>
     </body>

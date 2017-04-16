@@ -5,13 +5,13 @@
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-background">Background</label>
-                    <input type="text" value="" id="edm-background" class="edmBackground form-control simple-color-picker" data-css="background-color" data-target="body" />
+                    <input type="text" value="" class="edmBackground form-control simple-color-picker" data-css="background-color" data-target="body" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-md-12">
                     <label for="edm-body-background">Background for body</label>
-                    <input type="text" value="" id="edm-body-background" class="bodyBackground form-control simple-color-picker" data-css="background-color" data-target="#edm-body" />
+                    <input type="text" value="" class="bodyBackground form-control simple-color-picker" data-css="background-color" data-target="#edm-body" />
                 </div>
             </div>
             <div class="form-group form-group-sm">
@@ -19,23 +19,23 @@
                     <label>Outer padding (in px)</label>
                     <div class="row row-sm text-center">
                         <div class="col-xs-4 col-xs-offset-4">
-                            <input type="number" value="" id="edm-padding-top" class="edmPaddingTop form-control" data-unit="px" data-css="padding-top" data-target="#edm-area" />
+                            <input type="number" value="" class="edmPaddingTop form-control" data-unit="px" data-css="padding-top" data-target="#edm-area" />
                             <small>top</small>
                         </div>
                     </div>
                     <div class="row row-sm text-center">
                         <div class="col-xs-4">
-                            <input type="number" value="" id="edm-padding-left" class="edmPaddingLeft form-control" data-unit="px" data-css="padding-left" data-target="#edm-area" />
+                            <input type="number" value="" class="edmPaddingLeft form-control" data-unit="px" data-css="padding-left" data-target="#edm-area" />
                             <small>left</small>
                         </div>
                         <div class="col-xs-4 col-xs-offset-4">
-                            <input type="number" value="" id="edm-padding-right" class="edmPaddingRight form-control" data-unit="px" data-css="padding-right" data-target="#edm-area" />
+                            <input type="number" value="" class="edmPaddingRight form-control" data-unit="px" data-css="padding-right" data-target="#edm-area" />
                             <small>right</small>
                         </div>
                     </div>
                     <div class="row row-sm text-center">
                         <div class="col-xs-4 col-xs-offset-4">
-                            <input type="number" value="" id="edm-padding-bottom" class="edmPaddingBottom form-control" data-unit="px" data-css="padding-bottom" data-target="#edm-area" />
+                            <input type="number" value="" class="edmPaddingBottom form-control" data-unit="px" data-css="padding-bottom" data-target="#edm-area" />
                             <small>bottom</small>
                         </div>
                     </div>
@@ -49,31 +49,110 @@
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-text-color">Text color</label>
-                    <input type="text" value="" id="edm-text-color" class="textColor form-control simple-color-picker" data-target="style" data-css="color" />
+                    <input type="text" value="" class="textColor form-control simple-color-picker" data-target="style" data-css="color" data-selector="body" />
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-text-color">Link color</label>
-                    <input type="text" value="" id="edm-link-color" class="linkColor form-control simple-color-picker" data-target="style" data-css="a-color" />
+                    <input type="text" value="" class="linkColor form-control simple-color-picker" data-target="style" data-css="color" data-selector="a" />
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-font-family">Font family</label>
-                    <input type="text" value="" id="edm-font-family" class="fontFamily form-control" data-target="style" data-css="font-family" />
+                    <input type="text" value="" class="fontFamily form-control" data-target="style" data-css="font-family" data-selector="body" />
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-font-size">Font size</label>
-                    <input type="number" value="" id="edm-font-size" class="fontSize form-control" data-target="style" data-css="font-size" />
+                    <input type="number" value="" class="fontSize form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="body" />
                 </div>
             </div>
             <div class="form-group form-group-sm">
                 <div class="col-md-12">
                     <label for="edm-line-height">Line height</label>
-                    <input type="text" value="" id="edm-line-height" class="lineHeight form-control" data-target="style" data-css="line-height" />
+                    <input type="number" value="" class="lineHeight form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="body" />
+                </div>
+            </div>
+            <hr />
+            <b>Heading 1</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH1 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h1" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH1 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h1" />
+                    </div>
+                </div>
+            </div>
+            <b>Heading 2</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH2 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h2" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH2 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h2" />
+                    </div>
+                </div>
+            </div>
+            <b>Heading 3</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH3 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h3" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH3 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h3" />
+                    </div>
+                </div>
+            </div>
+            <b>Heading 4</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH4 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h4" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH4 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h4" />
+                    </div>
+                </div>
+            </div>
+            <b>Heading 5</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH5 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h5" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH5 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h5" />
+                    </div>
+                </div>
+            </div>
+            <b>Heading 6</b>
+            <div class="form-group form-group-sm form-group-heading">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Font size</span></span>
+                        <input type="number" value="" class="fontSizeH6 form-control" data-target="style" data-css="font-size" data-unit="px" data-selector="h6" />
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><span>Line height</span></span>
+                        <input type="number" value="" class="lineHeightH6 form-control" data-target="style" data-css="line-height" data-unit="px" data-selector="h6" />
+                    </div>
                 </div>
             </div>
         </div>
