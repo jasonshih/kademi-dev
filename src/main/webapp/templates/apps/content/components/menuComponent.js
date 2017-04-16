@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
 
     KEditor.components['menu'] = {
@@ -14,15 +15,15 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-
-                    KEditor.initDefaultMenuControls(form, keditor);
+    
+                    contentEditor.initDefaultMenuControls(form, keditor);
                 }
             });
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "menu" component');
-
-            KEditor.showDefaultMenuControls(form, component, keditor);
+    
+            contentEditor.showDefaultMenuControls(form, component, keditor);
         }
 
     };

@@ -148,17 +148,13 @@
                     img.unwrap('a');
                 }
             });
-
-            var basePath = window.location.pathname.replace('contenteditor', '');
-            if (keditor.options.basePath) {
-                basePath = keditor.options.basePath;
-            }
+            
             var photoEdit = form.find('#photo-edit');
             photoEdit.mselect({
                 contentTypes: ['image'],
                 bs3Modal: true,
-                pagePath: basePath,
-                basePath: basePath,
+                pagePath: options.pagePath,
+                basePath: options.basePath,
                 onSelectFile: function (url, relativeUrl, fileType, hash) {
                     var img = keditor.getSettingComponent().find('img');
                     img.attr('src', "/_hashes/files/" + hash);

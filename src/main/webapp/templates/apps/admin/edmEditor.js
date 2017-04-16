@@ -6,9 +6,6 @@ function initEdmEditorPage(options) {
     Msg.iconMode = 'fa';
     
     var basePath = window.location.pathname.replace('edmeditor', '');
-    if (options.pagePath) {
-        basePath = options.pagePath;
-    }
     $('#edm-editor').edmEditor({
         snippetsUrl: options.snippetsUrl,
         snippetsHandlersUrl: options.snippetsHandlersUrl,
