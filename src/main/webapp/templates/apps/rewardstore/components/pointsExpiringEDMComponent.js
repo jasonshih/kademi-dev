@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['pointsExpiringEDM'] = {
@@ -58,20 +59,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    var parts = ['header', 'body', 'footer'];
-
                     $.each(['header', 'body', 'footer'], function (_, part) {
                         var colorPicker = form.find('.color-picker-' + part);
-                        initColorPicker(colorPicker, function (color) {
+                        edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-                            var bgColor = '';
-
-                            if (color && color !== 'transparent') {
-                                bgColor = color;
-                            }
-
-                            component.attr('data-' + part + '-bgcolor', bgColor);
+    
+                            component.attr('data-' + part + '-bgcolor', color);
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
@@ -87,8 +81,7 @@
             form.find('.num-months').val(dataAttributes['data-months']);
             var parts = ['header', 'body', 'footer'];
             for (var i = 0; i < parts.length; i++) {
-                var colorPicker = form.find('.color-picker-' + parts[i]);
-                colorPicker.colorpicker('setValue', dataAttributes['data-' + parts[i] + '-bgcolor'] || 'transparent');
+                form.find('.color-picker-' + parts[i]).val(dataAttributes['data-' + parts[i] + '-bgcolor'] || '').trigger('update');
             }
         }
     };

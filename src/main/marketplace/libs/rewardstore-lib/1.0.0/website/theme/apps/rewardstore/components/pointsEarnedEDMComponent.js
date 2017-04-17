@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['pointsEarnedEDM'] = {
@@ -41,16 +42,10 @@
                     });
 
                     var colorPicker = form.find('.color-picker');
-                    initColorPicker(colorPicker, function (color) {
+                    edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var bgColor = '';
-
-                        if (color && color !== 'transparent') {
-                            bgColor = color;
-                        }
-
-                        component.attr('data-bgcolor', bgColor);
+                        component.attr('data-bgcolor', color);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -65,8 +60,7 @@
             form.find('.select-store').val(dataAttributes['data-store']);
             form.find('.num-months').val(dataAttributes['data-months']);
             form.find('.txt-height').val(dataAttributes['data-height']);
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', dataAttributes['data-bgcolor'] || 'transparent');
+            form.find('.color-picker').val(dataAttributes['data-bgcolor'] || '').trigger('update');
         }
     };
 
