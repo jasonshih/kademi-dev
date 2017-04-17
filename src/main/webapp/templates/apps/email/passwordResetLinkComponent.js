@@ -12,14 +12,11 @@
 
             form.append(this.settingFormHtml);
             form.find('.button-link').remove();
-            form.prepend(
+            form.find('form').prepend(
                 '<div class="form-group">' +
                 '   <div class="col-md-12">' +
                 '       <label>Background</label>' +
-                '       <div class="input-group color-picker">' +
-                '           <span class="input-group-addon"><i></i></span>' +
-                '           <input type="text" value="" class="txt-bg-color form-control" />' +
-                '       </div>' +
+                '       <input type="text" value="" class="txt-bg-color form-control" />' +
                 '   </div>' +
                 '</div>' +
                 '<div class="form-group">' +
@@ -51,7 +48,7 @@
                 '</div>'
             );
 
-            var colorPicker = form.find('.color-picker');
+            var colorPicker = form.find('.txt-bg-color');
             edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
@@ -61,7 +58,7 @@
                 keditor.initDynamicContent(dynamicElement);
             });
 
-            var buttonColorPicker = form.find('.button-color-picker');
+            var buttonColorPicker = form.find('#button-color');
             edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
@@ -118,7 +115,7 @@
                 keditor.initDynamicContent(dynamicElement);
             });
 
-            var buttonTextColorPicker = form.find('.button-color-text-picker');
+            var buttonTextColorPicker = form.find('#button-text-color');
             edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
@@ -195,8 +192,8 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 
-            form.find('.button-color-picker').colorpicker('setValue', dataAttributes['data-color'] || 'transparent');
-            form.find('.color-picker').colorpicker('setValue', dataAttributes['data-bg-color'] || 'transparent');
+            form.find('#button-color').val(dataAttributes['data-color'] || 'transparent').trigger('update');
+            form.find('.txt-bg-color').val(dataAttributes['data-bg-color'] || 'transparent').trigger('update');
             form.find('#button-border-radius').val(dataAttributes['data-border-radius'] || '0');
 
             form.find('.button-inner-padding').each(function () {
@@ -214,7 +211,7 @@
             });
 
             form.find('#button-text').val(dataAttributes['data-message'] || '');
-            form.find('.button-color-text-picker').colorpicker('setValue', dataAttributes['data-button-text-color'] || '');
+            form.find('#button-text-color').val(dataAttributes['data-button-text-color'] || '').trigger('update');
             form.find('#button-font-size').val(dataAttributes['data-button-font-size'] || '');
             form.find('#button-font-family').val(dataAttributes['data-button-font-family'] || '');
             form.find('.btn-bold')[dataAttributes['data-font-weight'] === 'bold' ? 'addClass' : 'removeClass']('active');
