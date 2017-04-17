@@ -3,7 +3,6 @@
 #set ($bodyBg = '#fafafa')
 #set ($footerBg = '#eeeeee')
 
-#if ($event)
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
@@ -11,12 +10,12 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tbody>
                         <tr>
-                            <td class="text-wrapper">
+                            <td class="text-wrapper" style="${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
                                 <strong style="line-height: 30px;">
                                     #if ($titleText && $titleText != "")
-                                    $titleText
+                                        $titleText
                                     #else
-                                    Purchased Products
+                                        Purchased Products
                                     #end
                                 </strong>
 
@@ -24,7 +23,7 @@
                                     <thead>
                                         <tr bgcolor="${headerBg}">
                                             #if ($showProductPhoto == "true")
-                                            <th style="${cellStyles}; text-align: left"><strong>Photo</strong></th>
+                                                <th style="${cellStyles}; text-align: left"><strong>Photo</strong></th>
                                             #end
                                             <th style="${cellStyles}; text-align: left"><strong>Name</strong></th>
                                             <th style="${cellStyles}; text-align: left"><strong>Price</strong></th>
@@ -33,27 +32,71 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        #foreach( $productOrder in $event.attributes.shoppingCart.productOrders )
-                                        #if( $productOrder.quantity > 0 )
-                                        <tr bgcolor="${bodyBg}">
-                                            #if ($showProductPhoto == "true")
-                                            <td valign="top" style="${cellStyles}">
-                                                <img src="http://${website.domainName}${productOrder.getItemHref()}${productOrder.product.images.get(0).getId()}" width="200" height="auto" alt="${productOrder.product.title}" />
-                                            </td>
+                                        #if ($event)
+                                            #foreach( $productOrder in $event.attributes.shoppingCart.productOrders )
+                                                #if( $productOrder.quantity > 0 )
+                                                    <tr bgcolor="${bodyBg}">
+                                                        #if ($showProductPhoto == "true")
+                                                            <td valign="top" style="${cellStyles}">
+                                                                <img src="http://${website.domainName}${productOrder.getItemHref()}${productOrder.product.images.get(0).getId()}" width="200" height="auto" alt="${productOrder.product.title}" />
+                                                            </td>
+                                                        #end
+                                                        <td valign="top" style="${cellStyles}">$productOrder.product.title</td>
+                                                        <td valign="top" style="${cellStyles}">$formatter.formatCurrency($productOrder.unitCost, false) Points</td>
+                                                        <td valign="top" style="${cellStyles}">$productOrder.quantity</td>
+                                                        <td valign="top" style="${cellStyles}; text-align: right">#set( $subtotal = $productOrder.unitCost * $productOrder.quantity) $formatter.formatCurrency($subtotal, false) Points</td>
+                                                    </tr>
+                                                #end
                                             #end
-                                            <td valign="top" style="${cellStyles}">$productOrder.product.title</td>
-                                            <td valign="top" style="${cellStyles}">$formatter.formatCurrency($productOrder.unitCost, false) Points</td>
-                                            <td valign="top" style="${cellStyles}">$productOrder.quantity</td>
-                                            <td valign="top" style="${cellStyles}; text-align: right">#set( $subtotal = $productOrder.unitCost * $productOrder.quantity) $formatter.formatCurrency($subtotal, false) Points</td>
-                                        </tr>
-                                        #end
+                                        #else
+                                            <tr bgcolor="${bodyBg}">
+                                                #if ($showProductPhoto == "true")
+                                                    <td valign="top" style="${cellStyles}">
+                                                        <img src="/static/images/ballon_flight.jpg" width="200" height="auto" alt="Product #1" />
+                                                    </td>
+                                                #end
+                                                <td valign="top" style="${cellStyles}">Product #1</td>
+                                                <td valign="top" style="${cellStyles}">300 Points</td>
+                                                <td valign="top" style="${cellStyles}">1</td>
+                                                <td valign="top" style="${cellStyles}; text-align: right">300 Points</td>
+                                            </tr>
+                                            <tr bgcolor="${bodyBg}">
+                                                #if ($showProductPhoto == "true")
+                                                    <td valign="top" style="${cellStyles}">
+                                                        <img src="/static/images/basketball_net.jpg" width="200" height="auto" alt="Product #2" />
+                                                    </td>
+                                                #end
+                                                <td valign="top" style="${cellStyles}">Product #2</td>
+                                                <td valign="top" style="${cellStyles}">200 Points</td>
+                                                <td valign="top" style="${cellStyles}">2</td>
+                                                <td valign="top" style="${cellStyles}; text-align: right">400 Points</td>
+                                            </tr>
+                                            <tr bgcolor="${bodyBg}">
+                                                #if ($showProductPhoto == "true")
+                                                    <td valign="top" style="${cellStyles}">
+                                                        <img src="/static/images/beach_house.jpg" width="200" height="auto" alt="Product #3" />
+                                                    </td>
+                                                #end
+                                                <td valign="top" style="${cellStyles}">Product #3</td>
+                                                <td valign="top" style="${cellStyles}">100 Points</td>
+                                                <td valign="top" style="${cellStyles}">3</td>
+                                                <td valign="top" style="${cellStyles}; text-align: right">300 Points</td>
+                                            </tr>
                                         #end
                                     </tbody>
                                     <tfoot>
                                         <tr bgcolor="${footerBg}">
-                                            <td align="right" style="${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
-                                            "true") colspan="4" #else colspan="3" #end valign="top">Total</td>
-                                            <td align="right" style="${cellStyles}; font-weight: 700;">$formatter.formatCurrency($event.cart.totalCost, false) Points</td>
+                                            #if ($event)
+                                                <td align="right" style="${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
+                                                    "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                </td>
+                                                <td align="right" style="${cellStyles}; font-weight: 700;">$formatter.formatCurrency($event.cart.totalCost, false) Points</td>
+                                            #else
+                                                <td align="right" style="${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
+                                                    "true") colspan="4" #else colspan="3" #end valign="top">Total
+                                                </td>
+                                                <td align="right" style="${cellStyles}; font-weight: 700;">1000 Points</td>
+                                            #end
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -66,85 +109,3 @@
         </tr>
     </tbody>
 </table>
-#else
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-    <tbody>
-        <tr>
-            <td class="wrapper" style="padding-left: 10px; padding-right: 10px;">
-                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <tbody>
-                        <tr>
-                            <td class="text-wrapper">
-                                <strong style="line-height: 30px;">
-                                    #if ($titleText && $titleText != "")
-                                    $titleText
-                                    #else
-                                    Purchased Products
-                                    #end
-                                </strong>
-
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr bgcolor="${footerBg}">
-                                            #if ($showProductPhoto == "true")
-                                            <th style="${cellStyles}; text-align: left"><strong>Photo</strong></th>
-                                            #end
-                                            <th style="${cellStyles}; text-align: left"><strong>Name</strong></th>
-                                            <th style="${cellStyles}; text-align: left"><strong>Price</strong></th>
-                                            <th style="${cellStyles}; text-align: left"><strong>Qty</strong></th>
-                                            <th style="${cellStyles}; text-align: right"><strong>Sub Total</strong></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr bgcolor="${bodyBg}">
-                                            #if ($showProductPhoto == "true")
-                                            <td valign="top" style="${cellStyles}">
-                                                <img src="/static/images/ballon_flight.jpg" width="200" height="auto" alt="Product #1" />
-                                            </td>
-                                            #end
-                                            <td valign="top" style="${cellStyles}">Product #1</td>
-                                            <td valign="top" style="${cellStyles}">300 Points</td>
-                                            <td valign="top" style="${cellStyles}">1</td>
-                                            <td valign="top" style="${cellStyles}; text-align: right">300 Points</td>
-                                        </tr>
-                                        <tr bgcolor="${bodyBg}">
-                                            #if ($showProductPhoto == "true")
-                                            <td valign="top" style="${cellStyles}">
-                                                <img src="/static/images/basketball_net.jpg" width="200" height="auto" alt="Product #2" />
-                                            </td>
-                                            #end
-                                            <td valign="top" style="${cellStyles}">Product #2</td>
-                                            <td valign="top" style="${cellStyles}">200 Points</td>
-                                            <td valign="top" style="${cellStyles}">2</td>
-                                            <td valign="top" style="${cellStyles}; text-align: right">400 Points</td>
-                                        </tr>
-                                        <tr bgcolor="${bodyBg}">
-                                            #if ($showProductPhoto == "true")
-                                            <td valign="top" style="${cellStyles}">
-                                                <img src="/static/images/beach_house.jpg" width="200" height="auto" alt="Product #3" />
-                                            </td>
-                                            #end
-                                            <td valign="top" style="${cellStyles}">Product #3</td>
-                                            <td valign="top" style="${cellStyles}">100 Points</td>
-                                            <td valign="top" style="${cellStyles}">3</td>
-                                            <td valign="top" style="${cellStyles}; text-align: right">300 Points</td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr bgcolor="${footerBg}">
-                                            <td align="right" style="${cellStyles}; font-weight: 700;" #if ($showProductPhoto==
-                                            "true") colspan="4" #else colspan="3" #end valign="top">Total</td>
-                                            <td align="right" style="${cellStyles}; font-weight: 700;">1000 Points</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <br />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table>
-#end
