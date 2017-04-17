@@ -26,6 +26,7 @@
                             form.find('[data-calendar]').addClass('hide');
                             form.find('.select-event [data-calendar='+selectedCalendar+']').removeClass('hide');
                             form.find('.select-event').val('').trigger('change');
+                            component.attr('data-calendar', selectedCalendar);
                         } else {
                             dynamicElement.html('<p>Please select calendar</p>');
                         }
