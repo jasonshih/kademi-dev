@@ -661,8 +661,6 @@
 
             var self = this;
             var options = keditor.options;
-            self.options.skin = editorSkin;
-            self.options.templates_files = [templatesPath];
 
             var componentContent = component.children('.keditor-component-content');
             var textWrapper = componentContent.find('.text-wrapper');
