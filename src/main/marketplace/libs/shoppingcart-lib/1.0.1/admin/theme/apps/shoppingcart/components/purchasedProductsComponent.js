@@ -1,66 +1,63 @@
 (function ($) {
     var KEditor = $.keditor;
-    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
-    KEditor.components['pointsEarnedEDM'] = {
+    KEditor.components['purchasedProducts'] = {
         settingEnabled: true,
 
-        settingTitle: 'Points Earned Settings',
+        settingTitle: 'Purchased Products',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "pointsEarnedEDM" component', form, keditor);
+            flog('initSettingForm "purchasedProducts" component');
 
             return $.ajax({
-                url: '_components/pointsEarnedEDM?settings',
+                url: '_components/purchasedProducts?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
                     form.html(resp);
 
-                    form.find('.select-store').on('change', function () {
+                    form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-store', this.value);
+                        component.attr('data-title-text', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    form.find('.num-months').on('change', function () {
+                    form.find('.txt-cell-padding').on('change', function () {
                         var number = this.value;
 
-                        if (isNaN(number) || +number <= 0) {
-                            number = 1;
+                        if (isNaN(number) || +number < 0) {
+                            number = 0;
                             this.value = number;
                         }
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-months', number);
+                        component.attr('data-cell-padding', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    var colorPicker = form.find('.color-picker');
-                    edmEditor.initSimpleColorPicker(colorPicker, function (color) {
+                    form.find('.chk-show-photo').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-bgcolor', color);
+
+                        component.attr('data-show-product-photo', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
-
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pointsEarnedEDM" component', form, component, keditor);
+            flog('showSettingForm "purchasedProducts" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-store').val(dataAttributes['data-store']);
-            form.find('.num-months').val(dataAttributes['data-months']);
-            form.find('.txt-height').val(dataAttributes['data-height']);
-            form.find('.color-picker').val(dataAttributes['data-bgcolor'] || '').trigger('update');
+            form.find('.txt-title').val(dataAttributes['data-title-text']);
+            form.find('.txt-cell-padding').val(dataAttributes['data-cell-padding']);
+            form.find('.chk-show-photo').prop('checked', dataAttributes['data-show-product-photo'] === 'true');
         }
     };
 

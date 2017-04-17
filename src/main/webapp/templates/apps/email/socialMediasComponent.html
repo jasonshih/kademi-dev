@@ -43,12 +43,12 @@
         <tr>
             <td valign="middle">
                 &nbsp;
-                <a href="$link" style="text-decoration: none;">
+                <a href="$link" style="${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;">
                     #if ($display == "icon" || $display == "icon-text")
                         <img src="http://${rootFolder.domainName}${formatter.portString}/static/icons/social-media-icons/${iconStyle}/${name}.png" width="$size" height="$iconSize" style="display: inline-block; border: 0; vertical-align: middle;" />
                     #end
                     #if ($display == "text" || $display == "icon-text")
-                        $!text
+                        <span>$!text</span>
                     #end
                 </a>
                 &nbsp;
