@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
@@ -51,32 +52,22 @@
             );
 
             var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
+            edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-bg-color', color);
-                } else {
-                    component.attr('data-bg-color', '');
-                    form.find('.txt-bg-color').val('');
-                }
-
+                component.attr('data-bg-color', color);
+                form.find('.txt-bg-color').val(color);
+    
                 keditor.initDynamicContent(dynamicElement);
             });
 
             var buttonColorPicker = form.find('.button-color-picker');
-            initColorPicker(buttonColorPicker, function (color) {
+            edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-color', color);
-                } else {
-                    component.attr('data-color', '');
-                    form.find('.button-color').val('');
-                }
-
+                component.attr('data-color', color);
+                form.find('.button-color').val(color);
+        
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -128,18 +119,12 @@
             });
 
             var buttonTextColorPicker = form.find('.button-color-text-picker');
-            initColorPicker(buttonTextColorPicker, function (color) {
-
+            edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-text-color', color);
-                } else {
-                    component.attr('data-text-color', '');
-                    form.find('.button-text-color').val('');
-                }
-
+                component.attr('data-button-text-color', color);
+                form.find('.button-text-color').val(color);
+        
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -148,7 +133,7 @@
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
 
-                component.attr('data-font-size', this.value > 0 ? this.value : 0);
+                component.attr('data-button-font-size', this.value > 0 ? this.value : 0);
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -157,7 +142,7 @@
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
 
-                component.attr('data-font-family', this.value);
+                component.attr('data-button-font-family', this.value);
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -229,9 +214,9 @@
             });
 
             form.find('#button-text').val(dataAttributes['data-message'] || '');
-            form.find('.button-color-text-picker').colorpicker('setValue', dataAttributes['data-text-color'] || '');
-            form.find('#button-font-size').val(dataAttributes['data-font-size'] || '');
-            form.find('#button-font-family').val(dataAttributes['data-font-family'] || '');
+            form.find('.button-color-text-picker').colorpicker('setValue', dataAttributes['data-button-text-color'] || '');
+            form.find('#button-font-size').val(dataAttributes['data-button-font-size'] || '');
+            form.find('#button-font-family').val(dataAttributes['data-button-font-family'] || '');
             form.find('.btn-bold')[dataAttributes['data-font-weight'] === 'bold' ? 'addClass' : 'removeClass']('active');
             form.find('.btn-italic')[dataAttributes['data-font-style'] === 'italic' ? 'addClass' : 'removeClass']('active');
             form.find('.btn-align').removeClass('active').filter('[data-value=' + (dataAttributes['data-text-align'] || '') + ']').addClass('active');
