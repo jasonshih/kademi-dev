@@ -356,7 +356,7 @@
                                 <label for="appliesToRepository">A repository</label>
                                 <select class="hide">
                                     <option value="">-- Select a repository --</option>
-                                    #foreach($r in $page.organisation.repositories())
+                                    #foreach($r in $formatter.sortByProperty( $page.organisation.repositories(), "name" ) )
                                         <option value="$r.name">$r.name</option>
                                     #end
                                 </select>
