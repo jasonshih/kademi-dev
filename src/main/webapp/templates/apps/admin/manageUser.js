@@ -252,8 +252,9 @@ function doSearch() {
             
             $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
-            $("#table-users").paginator();
+            
             initSort();
+            initLoginAs();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
@@ -706,8 +707,7 @@ function initSort() {
                 var $footer = newDom.find('#pointsFooter');
                 $('#pointsFooter').replaceWith($footer);
                 
-                $("#table-users").paginator();
-
+                initLoginAs();
             },
             error: function (resp) {
                 Msg.error('err');
