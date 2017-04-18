@@ -1,7 +1,13 @@
-<a href="http://${rootFolder.domainName}${formatter.portString}/profile/?${login}" style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;">
-    #if($message && $message.length() > 0)
-    $message
-    #else
-    To unsubscribe please login to your profile page
-    #end
-</a>
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td align="${textAlign}" style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
+            <a href="http://${rootFolder.domainName}${formatter.portString}/profile/?${login}" style="color: ${linkColor}; text-decoration: none;">
+                #if($message && $message.length() > 0)
+                    $message
+                #else
+                    To unsubscribe please login to your profile page
+                #end
+            </a>
+        </td>
+    </tr>
+</table>
