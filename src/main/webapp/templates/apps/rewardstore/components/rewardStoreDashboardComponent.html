@@ -1,46 +1,49 @@
 #if ($reward && $reward != "")
-#set ($rewardPath = "/" + $reward)
-#set ($rewardResource = $rootFolder.find($rewardPath))
+    #set ($rewardPath = "/" + $reward)
+    #set ($rewardResource = $rootFolder.find($rewardPath))
 
 <div class="row" id="cates-list">
-    #foreach($cat in $rewardResource.children.ofType.category)
-        <div class="col-sm-6 col-md-4 product-item">
-            #set($bg = "/theme/img/photo_holder.png")
-            #if( $cat.imageHref )
-            #set($bg = $cat.imageHref)
-            #end
-            <a href="$cat.href" class="cate-item">
-                <div class="thumbnail cate">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
-                    </div>
-                    <div class="caption h3 text-center cate-title" title="$cat.title">$cat.title</div>
-                </div>
-            </a>
-        </div>
+    #foreach($cate in $rewardResource.children.ofType.category)
+            #renderCate($cate)
     #end
 </div>
 #else
-#if ($page)
-<div class="row" id="cates-list">
-    #foreach($cat in $page.children.ofType.category)
+    #if ($page)
+        #set ($rewardResource = $page.closest("store"))
+    <div class="row" id="cates-list">
+        #foreach($cate in $rewardResource.children.ofType.category)
+            #renderCate($cate)
+        #end
+    </div>
+    #else
+    <p class="alert alert-warning">Categories list goes here</p>
+    #end
+#end
+
+#macro(renderCate $cate)
+    #if ($cate.numProducts > 0)
     <div class="col-sm-6 col-md-4 product-item">
         #set($bg = "/theme/img/photo_holder.png")
-        #if( $cat.imageHref )
-        #set($bg = $cat.imageHref)
+        #if( $cate.imageHref )
+            #set($bg = $cate.imageHref)
         #end
-        <a href="$cat.href" class="cate-item">
+        <a href="$cate.href" class="cate-item">
             <div class="thumbnail cate">
                 <div class="embed-responsive embed-responsive-4by3">
                     <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
                 </div>
-                <div class="caption h3 text-center cate-title" title="$cat.title">$cat.title</div>
+                <div class="caption h3 text-center cate-title" title="$cate.title">$cate.title</div>
             </div>
         </a>
     </div>
     #end
-</div>
-#else
-<p class="alert alert-warning">Categories list goes here</p>
+
+    #if ($showSubCate == "true")
+        #if($cate.children.ofType.category.size() > 0)
+            #set ( $subCates = $formatter.sortByProperty( $cate.children.ofType.category, "title" ) )
+            #foreach($subCate in $subCates)
+                #renderCate($subCate)
+            #end
+        #end
     #end
 #end
