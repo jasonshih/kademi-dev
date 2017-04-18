@@ -222,37 +222,37 @@ function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
     var isEnabled = $('.btn-enable-user').is(':checked');
-    
+
     flog('doSearch', query, groupName);
-    
+
     var uri = URI(window.location);
-    
+
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
     uri.setSearch('enabled', isEnabled);
-    
+
     flog('doSearch', uri.toString());
-    
+
     var newHref = uri.toString();
-    
+
     window.history.pushState('', newHref, newHref);
     Msg.info('Searching...', 50000);
-    
+
     $.ajax({
         type: 'GET',
         url: newHref,
         success: function (data) {
             Msg.info('Search complete', 5000);
-            
+
             flog('success', data);
-            
+
             var newDom = $(data);
-            
+
             var $fragment = newDom.find('#table-users');
-            
+
             $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
-            
+
             initSort();
             initLoginAs();
         },
@@ -515,7 +515,7 @@ function doOrgSearch() {
 }
 
 function initRemoveUsers() {
-    $('.btn-remove-users').click(function (e) {
+    $("body").on("click", ".btn-remove-users", function(e) {
         e.preventDefault();
         var node = $(e.target);
         flog('removeUsers', node, node.is(':checked'));
@@ -693,11 +693,11 @@ function initSort() {
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
-                
+
                 var newDom = $(data);
-                
+
                 var $fragment = newDom.find('#table-users');
-                
+
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
 
@@ -706,7 +706,7 @@ function initSort() {
 
                 var $footer = newDom.find('#pointsFooter');
                 $('#pointsFooter').replaceWith($footer);
-                
+
                 initLoginAs();
             },
             error: function (resp) {
