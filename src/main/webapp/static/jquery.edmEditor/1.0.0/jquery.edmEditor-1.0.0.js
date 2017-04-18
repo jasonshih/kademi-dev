@@ -262,9 +262,9 @@
                     onChange.call(target, color);
                 }
             },
-            update: function (e, color) {
+            update: function () {
                 previewer.css('color', '');
-                target.val(getColor(color));
+                target.val(getColor(target.val()));
             }
         });
     };
