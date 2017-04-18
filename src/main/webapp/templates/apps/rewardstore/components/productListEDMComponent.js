@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['productListEDM'] = {
@@ -74,16 +75,11 @@
                     });
 
                     var colorPicker = form.find('.color-picker');
-                    initColorPicker(colorPicker, function (color) {
+                    edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var bgColor = '';
-
-                        if (color && color !== 'transparent') {
-                            bgColor = color;
-                        }
-
-                        component.attr('data-background-item', bgColor);
+    
+                        component.attr('data-background-item', color);
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -100,8 +96,7 @@
             form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
             form.find('.items-per-row').val(dataAttributes['data-items-per-row']);
             form.find('.grid-only').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', dataAttributes['data-background-item'] || 'transparent');
+            form.find('.color-picker').val(dataAttributes['data-bgcolor'] || '').trigger('update');
         }
     };
 

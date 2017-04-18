@@ -262,9 +262,9 @@
                     onChange.call(target, color);
                 }
             },
-            update: function (e, color) {
+            update: function () {
                 previewer.css('color', '');
-                target.val(getColor(color));
+                target.val(getColor(target.val()));
             }
         });
     };
@@ -653,7 +653,7 @@
         tdWrapper.find('a').css({
             'color': ''
         });
-    
+        
         tdWrapper.find('h1, h2, h3, h4, h5, h6').css({
             'font-size': '',
             'line-height': ''
@@ -671,7 +671,7 @@
                 
                 if (target.data('edmEditorOptions')) {
                     flog('[jquery.edmEditor] EDM Editor is already initialized', target);
-                    return;
+                    return target;
                 }
                 
                 var edmStyle = edmEditor.processEdmContent(target, options);
@@ -688,6 +688,40 @@
                     }
                     
                     target.keditor({
+                        ckeditorOptions: {
+                            title: false,
+                            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+                            bodyId: 'editor',
+                            templates_replaceContent: false,
+                            toolbarGroups: [
+                                {name: 'document', groups: ['mode', 'document', 'doctools']},
+                                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
+                                {name: 'forms', groups: ['forms']},
+                                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+                                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
+                                {name: 'links', groups: ['links']},
+                                {name: 'insert', groups: ['insert']},
+                                '/',
+                                {name: 'clipboard', groups: ['clipboard', 'undo']},
+                                {name: 'styles', groups: ['styles']},
+                                {name: 'colors', groups: ['colors']},
+                                {name: 'tools', groups: ['tools']},
+                                {name: 'others', groups: ['others']},
+                                {name: 'about', groups: ['about']}
+                            ],
+                            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image',
+                            removePlugins: 'table,magicline,tabletools',
+                            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
+                            enterMode: CKEDITOR.ENTER_DIV,
+                            forceEnterMode: true,
+                            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+                            filebrowserUploadUrl: '/uploader/upload',
+                            format_tags: 'p;h1;h2;h3;h4;h5;h6',
+                            stylesSet: 'myStyles:' + stylesPath,
+                            line_height: '1;1.2;1.5;2;2.2;2.5',
+                            pagePath: options.pagePath,
+                            basePath: options.basePath
+                        },
                         niceScrollEnabled: false,
                         tabContainersText: '<i class="fa fa-columns"></i>',
                         tabComponentsText: '<i class="fa fa-files-o"></i>',
@@ -707,12 +741,23 @@
                             }
                         },
                         onBeforeDynamicContentLoad: function (dynamicElement, component) {
-                            var containerInner = dynamicElement.closest('[data-type=container-content]');
-                            var width = containerInner.width();
-                            
-                            component.attr({
-                                'data-width': width
-                            });
+                            component.removeAttr('data-font-family');
+                            component.removeAttr('data-font-size');
+                            component.removeAttr('data-line-height');
+                            component.removeAttr('data-text-color');
+                            component.removeAttr('data-link-color');
+                            component.removeAttr('data-font-size-h1');
+                            component.removeAttr('data-line-height-h1');
+                            component.removeAttr('data-font-size-h2');
+                            component.removeAttr('data-line-height-h2');
+                            component.removeAttr('data-font-size-h3');
+                            component.removeAttr('data-line-height-h3');
+                            component.removeAttr('data-font-size-h4');
+                            component.removeAttr('data-line-height-h4');
+                            component.removeAttr('data-font-size-h5');
+                            component.removeAttr('data-line-height-h5');
+                            component.removeAttr('data-font-size-h6');
+                            component.removeAttr('data-line-height-h6');
                         },
                         onInitContentArea: function (contentArea) {
                             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');

@@ -1,17 +1,18 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
-    KEditor.components['pointsEarnedEDM'] = {
+    KEditor.components['pointsExpiringEDM'] = {
         settingEnabled: true,
 
-        settingTitle: 'Points Earned Settings',
+        settingTitle: 'Points Expiring Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "pointsEarnedEDM" component', form, keditor);
+            flog('initSettingForm "pointsExpiringEDM" component', form, keditor);
 
             return $.ajax({
-                url: '_components/pointsEarnedEDM?settings',
+                url: '_components/pointsExpiringEDM?settings',
                 type: 'get',
                 dataType: 'html',
                 success: function (resp) {
@@ -40,33 +41,48 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
-                    var colorPicker = form.find('.color-picker');
-                    initColorPicker(colorPicker, function (color) {
+                    form.find('.txt-height').on('change', function () {
+                        var number = this.value;
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        var bgColor = '';
 
-                        if (color && color !== 'transparent') {
-                            bgColor = color;
+                        if (number === undefined || number === null || number === '') {
+                            number = '';
+                        } else {
+                            if (isNaN(number) || +number <= 100) {
+                                number = 100;
+                                this.value = number;
+                            }
                         }
 
-                        component.attr('data-bgcolor', bgColor);
+                        component.attr('data-height', number);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    $.each(['header', 'body', 'footer'], function (_, part) {
+                        var colorPicker = form.find('.color-picker-' + part);
+                        edmEditor.initSimpleColorPicker(colorPicker, function (color) {
+                            var component = keditor.getSettingComponent();
+                            var dynamicElement = component.find('[data-dynamic-href]');
+    
+                            component.attr('data-' + part + '-bgcolor', color);
+                            keditor.initDynamicContent(dynamicElement);
+                        });
+                    });
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "pointsEarnedEDM" component', form, component, keditor);
+            flog('showSettingForm "pointsExpiringEDM" component', form, component, keditor);
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-store').val(dataAttributes['data-store']);
             form.find('.num-months').val(dataAttributes['data-months']);
-            form.find('.txt-height').val(dataAttributes['data-height']);
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', dataAttributes['data-bgcolor'] || 'transparent');
+            var parts = ['header', 'body', 'footer'];
+            for (var i = 0; i < parts.length; i++) {
+                form.find('.color-picker-' + parts[i]).val(dataAttributes['data-' + parts[i] + '-bgcolor'] || '').trigger('update');
+            }
         }
     };
 

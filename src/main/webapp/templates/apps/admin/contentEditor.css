@@ -3,7 +3,7 @@
 }
 
 #keditor-sidebar {
-    top: 50px;
+    top: 50px !important;
 }
 
 /* Embedded iframe */
