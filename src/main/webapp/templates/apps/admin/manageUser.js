@@ -693,15 +693,21 @@ function initSort() {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
                 
-                var $fragment = $(data).find('#table-users');
+                var newDom = $(data);
+                
+                var $fragment = newDom.find('#table-users');
                 
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
+
+                var $tableContent = newDom.find('#table-users-body');
+                $('#table-users-body').replaceWith($tableContent);
+
+                var $footer = newDom.find('#pointsFooter');
+                $('#pointsFooter').replaceWith($footer);
                 
-                $('#table-users').replaceWith($fragment);
                 $("#table-users").paginator();
 
-                initSort();
             },
             error: function (resp) {
                 Msg.error('err');
