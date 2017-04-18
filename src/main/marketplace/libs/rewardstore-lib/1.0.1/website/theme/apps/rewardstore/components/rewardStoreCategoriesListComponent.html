@@ -1,0 +1,20 @@
+#set ($rewardResource = $page)
+#if ($page.is('category'))
+#set ($rewardResource = $page.parent)
+#end
+#if ($reward && $reward != "")
+#set ($rewardPath = "/" + $reward)
+#set ($rewardResource = $rootFolder.find($rewardPath))
+#end
+#if (!$rewardResource.is('rewardStore'))
+<p class="alert alert-warning">No reward store selected</p>
+#else
+<div class="list-group rewardStoreCategoriesList">
+    <span href="#" class="list-group-item active lead">Categories</span>
+    #foreach($cate in $rewardResource.children.ofType.category)
+    #if ($cate.numProducts > 0)
+    <a href="$cate.href" class="list-group-item #if($page.href == $cate.href) selected #end">$cate.title</a>
+    #end
+    #end
+</div>
+#end

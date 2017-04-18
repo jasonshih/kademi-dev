@@ -41,7 +41,7 @@
     </head>
     <body class="manage-users">
         <div class="row fuelux">
-            <div class="col-lg-9">
+            <div class="col-lg-9">    	
                 <div class="row">
                     <div class="col-lg-5">
                         <p class="input-group search-user input-group-sm">
@@ -91,7 +91,13 @@
                                         <span class="fa fa-user" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.totalProfiles</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+    	                                    $page.paginator.records[0].totalProfiles
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Profiles
                                     </div>
                                 </li>
@@ -100,7 +106,13 @@
                                         <span class="fa fa-users" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.groupsCount</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+	                                        $page.paginator.records[0].groupsCount
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Groups
                                     </div>
                                 </li>
@@ -109,7 +121,13 @@
                                         <span class="fa fa-sitemap" style="font-size: 34px"></span>
                                     </div>
                                     <div class="values">
-                                        <strong>$page.orgsCount</strong>
+                                        <strong>
+                                        #if( !$page.paginator.isEmpty() )
+	                                        $page.paginator.records[0].orgsCount
+	                                    #else
+	                                    	0
+	                                    #end
+                                        </strong>
                                         Organisations
                                     </div>
                                 </li>
@@ -161,19 +179,19 @@
                                         #foreach($p in $page.paginator.records)
                                             <tr>
                                                 <td class="text">
-                                                    <span title="$formatter.htmlEncode($p.fields.firstName.value) $formatter.htmlEncode($p.fields.surName.value)">
-                                                        $formatter.htmlEncode($p.fields.firstName.value)
-                                                $formatter.htmlEncode($p.fields.surName.value)
+                                                    <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)">
+                                                        $formatter.htmlEncode($p.firstName)
+                                                		$formatter.htmlEncode($p.surName)
                                                     </span>
                                                 </td>
                                                 <td class="text">
-                                                    #if( $p.fields.email.value )
-                                                        <a href="mailto:$p.fields.email.value">$p.fields.email.value</a>
+                                                    #if( $p.email )
+                                                        <a href="mailto:$p.email">$p.email</a>
                                                     #end
                                                 </td>
-                                                <td class="text">$!p.fields.phone.value</td>
+                                                <td class="text">$!p.phone</td>
                                                 <td class="group-names">
-                                                    #set( $groups = $page.primaryGroups( $p.fields.get("memberships.group").values ) )
+                                                    #set( $groups = $page.primaryGroups( $p.membershipsGroup ) )
                                                     #foreach( $group in $groups )
                                                         <div class="label label-info" style="margin-right: 5px;">
                                                             <a title="$group.name" href="/groups/$group.name/" style="color: white">
@@ -188,19 +206,19 @@
                                                 </td>
                                                 <td class="action">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="$p.fields.userId.value" class="btn btn-sm btn-primary btn-sm">
+                                                        <a href="$p.userId" class="btn btn-sm btn-primary btn-sm">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
                                                         <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
                                                             <span class="caret"></span>
                                                         </button>
                                                         <ul class="dropdown-menu pull-right" role="menu">
-                                                            <li><a href="$p.fields.userId.value"><i class="fa fa-edit"></i> User details</a></li>
-                                                            <li><a href="$p.fields.userId.value" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
+                                                            <li><a href="$p.userId"><i class="fa fa-edit"></i> User details</a></li>
+                                                            <li><a href="$p.userId" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
-                                                <td><input type="checkbox" name="toRemoveId" value="$p.fields.userId.value" /></td>
+                                                <td><input type="checkbox" name="toRemoveId" value="$p.userId" /></td>
                                             </tr>
                                         #end
                                     #end
@@ -221,8 +239,8 @@
             <div class="col-lg-3" id="aggregationsContainer">
                 #if( $page.aggregations )
                     <table class="table">
-                        #foreach($agg in $page.aggregations )
-                    #showAggregation($agg)
+                    	#foreach($agg in $page.aggregations )
+                    		#showAggregation($agg)
                     #end
                     </table>
                 #end
@@ -339,10 +357,10 @@
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                             #if(!$groups.isEmpty())
-                                <div class="btn-group btn-group-sm dropup">
-                                    <button class="btn btn-primary btn-add-and-view" type="submit">Create and view</button>
+                                <div class="btn-group btn-group-sm dropup">                                    
                                     <button type="submit" class="small btn btn-info btn-add-and-add">Create and add another</button>
                                     <button type="submit" class="small btn btn-info btn-add-and-close">Create and close</button>
+                                    <button class="btn btn-success btn-add-and-view" type="submit">Create and view</button>
                                 </div>
                             #end
                         </div>
@@ -684,7 +702,7 @@
                     var newHref = $(e.target).closest('a').attr('href');
                     window.history.pushState('', newHref, newHref);
 
-                    $('#table-users-body').reloadFragment({
+                    $('#table-users').reloadFragment({
                         url: newHref,
                         whenComplete: function (response) {
                             flog('complete', response);
@@ -693,6 +711,8 @@
                             $('#searchStats').replaceWith(newDom.find('#searchStats'));
                             var inner = $(response).find('#aggregationsContainer > *');
                             $('#aggregationsContainer').html(inner);
+                            $("#table-users").paginator();
+                            initSort();
                         }
                     });
                 });

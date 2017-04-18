@@ -553,43 +553,26 @@
             }
         },
         
-        setWidthForImg: function (img, realWidth, realHeight, ratio, isFullWidth) {
-            img.css('display', 'none');
-            var wrapper = img.parent();
-            if (wrapper.is('a')) {
-                wrapper = wrapper.parent();
-            }
-            var wrapperWidth = wrapper.width();
-            img.attr({
-                width: isFullWidth ? wrapperWidth : realWidth,
-                height: isFullWidth ? wrapperWidth / ratio : realHeight
-            });
-            img.css('display', 'block');
-        },
-        
         adjustWidthForImg: function (img, isFullWidth) {
             flog('adjustWidthForImg', img, isFullWidth);
+    
+            img.css('display', 'none');
             
-            var self = this;
-            
-            var realWidth = img.data('realWidth');
-            var realHeight = img.data('realHeight');
-            var ratio = img.data('ratio');
-            
-            if (realWidth && realHeight && ratio) {
-                self.setWidthForImg(img, realWidth, realHeight, ratio, isFullWidth);
-            } else {
-                $('<img />').attr('src', img.attr('src')).load(function () {
-                    var realWidth = this.width;
-                    var realHeight = this.height;
-                    var ratio = realWidth / realHeight;
-                    
-                    img.data('realWidth', realWidth);
-                    img.data('realHeight', realHeight);
-                    img.data('ratio', ratio);
-                    self.setWidthForImg(img, realWidth, realHeight, ratio, isFullWidth);
+            $('<img />').attr('src', img.attr('src')).load(function () {
+                var realWidth = this.width;
+                var realHeight = this.height;
+                var ratio = realWidth / realHeight;
+                var wrapper = img.parent();
+                if (wrapper.is('a')) {
+                    wrapper = wrapper.parent();
+                }
+                var wrapperWidth = wrapper.width();
+                img.attr({
+                    width: isFullWidth ? wrapperWidth : realWidth,
+                    height: isFullWidth ? wrapperWidth / ratio : realHeight
                 });
-            }
+                img.css('display', 'block');
+            });
         },
         
         onWithChanged: function (component, width, keditor) {
@@ -673,46 +656,11 @@
     // Text component
     // ---------------------------------------------------------------------
     KEditor.components['text'] = {
-        options: {
-            title: false,
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            bodyId: 'editor',
-            templates_replaceContent: false,
-            toolbarGroups: [
-                {name: 'document', groups: ['mode', 'document', 'doctools']},
-                {name: 'editing', groups: ['find', 'selection', 'spellchecker', 'editing']},
-                {name: 'forms', groups: ['forms']},
-                {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-                {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi', 'paragraph']},
-                {name: 'links', groups: ['links']},
-                {name: 'insert', groups: ['insert']},
-                '/',
-                {name: 'clipboard', groups: ['clipboard', 'undo']},
-                {name: 'styles', groups: ['styles']},
-                {name: 'colors', groups: ['colors']},
-                {name: 'tools', groups: ['tools']},
-                {name: 'others', groups: ['others']},
-                {name: 'about', groups: ['about']}
-            ],
-            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image',
-            removePlugins: 'table,magicline,tabletools',
-            removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
-            enterMode: CKEDITOR.ENTER_DIV,
-            forceEnterMode: true,
-            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6',
-            stylesSet: 'myStyles:' + stylesPath,
-            line_height: '1;1.2;1.5;2;2.2;2.5'
-        },
-
         init: function (contentArea, container, component, keditor) {
             flog('init "text" component', component);
 
             var self = this;
             var options = keditor.options;
-            self.options.skin = editorSkin;
-            self.options.templates_files = [templatesPath];
 
             var componentContent = component.children('.keditor-component-content');
             var textWrapper = componentContent.find('.text-wrapper');
@@ -720,26 +668,26 @@
             var editorDiv = $('<div class="text-editor" contenteditable="true"></div>').attr('id', keditor.generateId('text-editor')).html(textHtml);
             textWrapper.html(editorDiv);
 
-            var editor = editorDiv.ckeditor(self.options).editor;
+            var editor = editorDiv.ckeditor(keditor.options.ckeditorOptions).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
 
                 if (typeof options.onComponentReady === 'function') {
-                    options.onComponentReady.call(contentArea, component, editor);
+                    options.onComponentReady.call(keditor, component, editor, contentArea);
                 }
             });
 
             editorDiv.on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
-                    options.onComponentChanged.call(contentArea, e, component);
+                    options.onComponentChanged.call(keditor, e, component, contentArea);
                 }
 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(contentArea, e, container);
+                    options.onContainerChanged.call(keditor, e, container, contentArea);
                 }
 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    options.onContentChanged.call(keditor, e, contentArea);
                 }
             });
         },

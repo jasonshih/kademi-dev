@@ -190,43 +190,26 @@
             }
         },
         
-        setWidthForImg: function (img, realWidth, realHeight, ratio, isFullWidth) {
-            img.css('display', 'none');
-            var wrapper = img.parent();
-            if (wrapper.is('a')) {
-                wrapper = wrapper.parent();
-            }
-            var wrapperWidth = wrapper.width();
-            img.attr({
-                width: isFullWidth ? wrapperWidth : realWidth,
-                height: isFullWidth ? wrapperWidth / ratio : realHeight
-            });
-            img.css('display', 'block');
-        },
-        
         adjustWidthForImg: function (img, isFullWidth) {
             flog('adjustWidthForImg', img, isFullWidth);
+    
+            img.css('display', 'none');
             
-            var self = this;
-            
-            var realWidth = img.data('realWidth');
-            var realHeight = img.data('realHeight');
-            var ratio = img.data('ratio');
-            
-            if (realWidth && realHeight && ratio) {
-                self.setWidthForImg(img, realWidth, realHeight, ratio, isFullWidth);
-            } else {
-                $('<img />').attr('src', img.attr('src')).load(function () {
-                    var realWidth = this.width;
-                    var realHeight = this.height;
-                    var ratio = realWidth / realHeight;
-                    
-                    img.data('realWidth', realWidth);
-                    img.data('realHeight', realHeight);
-                    img.data('ratio', ratio);
-                    self.setWidthForImg(img, realWidth, realHeight, ratio, isFullWidth);
+            $('<img />').attr('src', img.attr('src')).load(function () {
+                var realWidth = this.width;
+                var realHeight = this.height;
+                var ratio = realWidth / realHeight;
+                var wrapper = img.parent();
+                if (wrapper.is('a')) {
+                    wrapper = wrapper.parent();
+                }
+                var wrapperWidth = wrapper.width();
+                img.attr({
+                    width: isFullWidth ? wrapperWidth : realWidth,
+                    height: isFullWidth ? wrapperWidth / ratio : realHeight
                 });
-            }
+                img.css('display', 'block');
+            });
         },
         
         onWithChanged: function (component, width, keditor) {

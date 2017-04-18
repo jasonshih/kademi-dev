@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
 
     KEditor.components['toggleMenu'] = {
@@ -16,8 +17,8 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-
-                    KEditor.initDefaultMenuControls(form, keditor);
+    
+                    contentEditor.initDefaultMenuControls(form, keditor);
     
                     form.find('#cbbTriggerSize').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -61,8 +62,8 @@
             form.find('#cbbTriggerColor').val(dataAttributes['data-trigger-color']);
             form.find('#txtTriggerClass').val(dataAttributes['data-trigger-class']);
             form.find('#txtTriggerAlign').val(dataAttributes['data-trigger-align']);
-
-            KEditor.showDefaultMenuControls(form, component, keditor);
+    
+            contentEditor.showDefaultMenuControls(form, component, keditor);
         }
 
     };

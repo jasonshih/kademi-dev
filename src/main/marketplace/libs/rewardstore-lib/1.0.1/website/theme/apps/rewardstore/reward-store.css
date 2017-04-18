@@ -1,0 +1,124 @@
+#cates-list .cate-item .embed-responsive-item,
+[id*="products-list"] .product-item .embed-responsive-item,
+#products-list .product-item .embed-responsive-item,
+.product-images .product-item .embed-responsive-item  {
+    background: no-repeat 50% 50%;
+    background-size: contain;
+}
+
+.variant-name {
+    text-align: left !important;
+}
+
+#cart-link div {
+    padding: 8px 15px;
+}
+
+[id*="products-list"] .product-item .product-content,
+#products-list .product-item .product-content {
+    min-height: 60px;
+}
+
+.product-item {
+    margin-bottom: 40px;
+}
+
+.product-item .thumbnail {
+    padding: 0;
+    border: 0;
+}
+
+.product-item .product-info {
+    border: 1px solid #ddd;
+    border-bottom: 0;
+    padding: 20px;
+    text-align: center;
+}
+
+.product-item .product-title {
+    font-size: 18px;
+    line-height: 20px;
+    margin: 0 0 10px;
+    font-weight: 400;
+    min-height: 42px;
+}
+
+.product-item .product-title a {
+    color: #31313f;
+}
+
+.product-item .product-content {
+    margin-top: 10px;
+}
+
+.product-item .caption {
+    position: relative;
+    background: #fff;
+    height: 65px;
+}
+
+.product-item .caption a,
+.product-item .caption h3 {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    color: #fff;
+}
+
+.product-item .caption h3 {
+    left: 0;
+    right: 68px;
+    margin: 0;
+    /*background: #675ca5;*/
+}
+
+.product-item .caption a {
+    right: 0;
+    width: 67px;
+    border: 0;
+}
+
+.product-item .caption a i {
+    font-size: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.product-item .product-price {
+    font-size: 25px;
+    font-weight: 300;
+    padding-top: 8px;
+}
+
+.product-item .product-price small {
+    color: inherit;
+    font-size: 12px;
+    display: block;
+    font-weight: 400;
+    padding-top: 5px;
+}
+
+#cates-list .cate-item .embed-responsive-item {
+    background-size: cover;
+}
+
+#cates-list .cate-item .cate-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0 20px;
+    line-height: 65px;
+}
+.list-group .selected{
+    background: #eaeaea;
+}
+#product-search {
+    margin-bottom: 20px;
+}
