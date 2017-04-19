@@ -206,7 +206,6 @@ JBNodes['decision'] = {
             }
 
             target = target.clone();
-            target.find('.title span').remove();
             toText = (target.find('.node-type').html() || '').trim() + ' ';
 
             var targetTitle = target.find('.node-title-inner').html().trim();
