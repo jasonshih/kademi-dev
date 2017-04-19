@@ -18,7 +18,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     #if( $pointsMonths.isEmpty() )
                         <tr>
-                            <td colspan="2">No points expiring in next $months months</td>
+                            <td colspan="2">No points expiring in next #if ($months != 1) $months months #else month #end </td>
                         </tr>
                     #else
                         <tr>

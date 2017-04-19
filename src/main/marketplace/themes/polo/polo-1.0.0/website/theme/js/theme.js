@@ -5,6 +5,24 @@
 
 $(function () {
     flog("init: bootstrap335/js/theme.js")
+    
+    $(document.body).on({
+        'hide.bs.collapse': function () {
+            var id = this.id;
+            var toggler = $('[data-toggle="collapse"][href="#' + id + '"]');
+            var icon = toggler.find('.glyphicon');
+            
+            icon.addClass('glyphicon-chevron-right').removeClass('glyphicon-chevron-down');
+        },
+        'show.bs.collapse': function () {
+            var id = this.id;
+            var toggler = $('[data-toggle="collapse"][href="#' + id + '"]');
+            var icon = toggler.find('.glyphicon');
+            
+            icon.addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-right');
+        }
+    }, '.list-group.collapse');
+    
     // just a nice little function to get classes
     $.fn.classes = function (f) {
         var c = [];
