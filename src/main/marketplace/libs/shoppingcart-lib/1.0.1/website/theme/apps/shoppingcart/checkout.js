@@ -234,7 +234,7 @@ function doRemoveFromCart(href) {
         },
         datatype: 'json',
         success: function (data) {
-            $('#itemsTable, #cart-link').reloadFragment({
+            $('#itemsTable, #cart-link, #checkout-info').reloadFragment({
                 whenComplete: function () {
                     Msg.info('Removed item from your shopping cart');
                 }
