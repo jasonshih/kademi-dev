@@ -12,16 +12,6 @@ function initProfile() {
         }
     });
     
-    /*
-    $(".secondFactorForm button").on('click', function(e){
-        e.preventDefault();
-        var c = confirm("Are you sure you want to enable the 2FA authentification?");
-        if (c){
-            $(".secondFactorForm").trigger('submit');
-        }
-    });
-    */
-    
     $(".secondFactorForm").forms({
         callback: function (resp, form) {
             Msg.info("Done");
