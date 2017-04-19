@@ -16,6 +16,7 @@
 .dropzone a.dz-remove, .dropzone-previews a.dz-remove {
     display: none !important;
 }
+
 /* ============================================================================
    Main content
    ============================================================================ */
@@ -216,99 +217,6 @@ label small {
 }
 
 /* ============================================================================
-   Milton tree
-   ============================================================================ */
-.milton-tree {
-    border: 1px solid #ddd !important;
-    height: 497px !important;
-    overflow-y: auto !important;
-    margin-top: 10px !important;
-}
-
-.milton-tree.jstree-default a ins.jstree-icon {
-    font-family: 'clip-font' !important;
-    font-style: normal !important;
-    font-variant: normal !important;
-    font-weight: normal !important;
-    line-height: 1 !important;
-    text-transform: none !important;
-    background: none !important;
-    font-size: inherit !important;
-}
-
-.milton-tree.jstree-default a ins.jstree-icon.folder:before {
-    content: "" !important;
-}
-
-.milton-tree.jstree-default a ins.jstree-icon.file:before {
-    content: "" !important;
-}
-
-/* ============================================================================
-   Milton tree
-   ============================================================================ */
-.milton-image-select-container .milton-image-preview,
-.vidEditor,
-.imageEditor {
-    border: 1px solid #ddd !important;
-    overflow: auto !important;
-    margin-top: 15px !important;
-    padding: 0;
-}
-
-.dropzone {
-    border: 0 !important;
-    width: 665px;
-    min-height: 200px !important;
-    background: none !important;
-}
-
-.dropzone-fullwidth {
-    width: auto;
-}
-
-.milton-image-select-container .milton-image-preview,
-.vidEditor {
-    height: 298px !important;
-}
-
-.imageEditor {
-    min-height: 400px !important;
-    min-width: 400px !important;
-}
-
-#myVidPreview .myUploaded,
-#imagePreview #imageUploaded {
-    height: 220px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    border: 1px solid #ddd !important;
-    width: 678px;
-    background: #f0f0f0;
-}
-
-#imageContainer {
-    padding: 3px;
-}
-
-#imageContainer p {
-    white-space: normal !important;
-    font-family: 'Arial', sans-serif !important;
-    font-size: 1em !important;
-    line-height: 17px !important;
-    padding: 0 0 0.7em !important;
-}
-
-.modal .milton-image-select-container .milton-image-preview {
-    margin-top: 10px !important;
-    height: 400px !important;
-}
-
-.modal .milton-tree {
-    height: 400px !important;
-}
-
-/* ============================================================================
    Dashboard report
    ============================================================================ */
 .dashboard .report .panel .panel-body {
@@ -429,10 +337,6 @@ Utilities
     display: block !important;
 }
 
-.hide {
-    display: none !important
-}
-
 .hide-text {
     text-indent: 100% !important;
     white-space: nowrap !important;
@@ -451,16 +355,6 @@ Utilities
 
 fieldset hr {
     margin: 5px 0 20px;
-}
-
-.clearfix:after {
-    clear: both;
-    content: " ";
-    display: block;
-    font-size: 0;
-    height: 0;
-    line-height: 0;
-    visibility: hidden
 }
 
 .youtube-wrapper {
@@ -571,14 +465,6 @@ body .form-control::-webkit-input-placeholder {
     font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-.ajaxLoader {
-    display: none;
-}
-
-body.ajax-loading .ajaxLoader {
-    display: block;
-}
-
 .ajax-loader {
     display: none;
 }
@@ -589,10 +475,6 @@ body.ajax-loading .ajaxLoader {
     BM: Removed because messing up resp table layouts, eg on manage search index. Not sure why i ever put this in
     overflow-x: visible;
     */
-}
-
-.summary-panel {
-    height: 200px;
 }
 
 .fluidLabel {
@@ -607,14 +489,6 @@ body.ajax-loading .ajaxLoader {
 
 .fluidLabel a {
     color: white;
-}
-
-.membershipsDiv {
-    margin-left: 100px;
-}
-
-.medium {
-    font-size: 18px;
 }
 
 .huge {

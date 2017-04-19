@@ -212,8 +212,7 @@ JBNodes['taskGoal'] = {
             }
 
             target = target.clone();
-            target.find('.title span').remove();
-            toText = target.find('.title').html().trim() + ' ';
+            toText = target.find('.node-type').html().trim() + ' ';
 
             var targetTitle = target.find('.node-title-inner').html().trim();
             if (targetTitle !== 'Enter title') {
