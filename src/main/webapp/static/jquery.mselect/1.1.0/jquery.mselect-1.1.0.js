@@ -145,7 +145,9 @@
             excludedEndPaths: config.excludedEndPaths,
             onselectFolder: function (n, selectedUrl, hash) {
                 flog('Selected folder', n, selectedUrl, hash);
-
+                if (selectedUrl.indexOf('/') !== 0){
+                    selectedUrl = '/' + selectedUrl;
+                }
                 $('#milton-btn-upload-file').mupload('setUrl', selectedUrl);
                 //previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>');
                 previewContainer.attr('data-url', selectedUrl);
@@ -153,25 +155,28 @@
             },
             onselectFile: function (n, selectedUrl, hash) {
                 flog('Selected file', n, selectedUrl, hash);
-
+                if (selectedUrl.indexOf('/') !== 0){
+                    selectedUrl = '/' + selectedUrl;
+                }
                 var newUrl = selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/';
                 newUrl = newUrl.replace(/\/\//g, '/');
                 $('#milton-btn-upload-file').mupload('setUrl', newUrl);
 
+                var hashUrl = '/_hashes/files/' + hash;
                 if (isVideo(selectedUrl)) {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWPlayer(previewContainer.find('div.jp-video'), 100, selectedUrl, selectedUrl + '/alt-640-360.png');
+                        buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
                     });
                 } else if (isAudio(selectedUrl)) {
                     previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                     $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWAudioPlayer(100, selectedUrl, false);
+                        buildJWAudioPlayer(100, hashUrl, false);
                     });
                 } else if (isImage(selectedUrl)) {
-                    previewContainer.html('<img class="img-responsive" src="' + selectedUrl + '" data-hash="' + hash + '" />');
+                    previewContainer.html('<img class="img-responsive" src="' + hashUrl + '" data-hash="' + hash + '" />');
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
                 }
@@ -268,7 +273,7 @@
             '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-8">' +
             '            <div id="milton-btn-upload-file"></div>' + extraElement +
-            '            <div class="milton-file-preview"></div>' +
+            '            <div class="milton-file-preview" style="height: 400px; overflow-y: auto;"></div>' +
             '        </div>' +
             '    </div>' +
             '</div>'
