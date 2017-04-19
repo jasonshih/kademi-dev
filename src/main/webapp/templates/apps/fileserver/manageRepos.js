@@ -2,22 +2,35 @@ function initManageRepos() {
     log('initManageRepositories');
 
     var tableWrapper = $('#table-repo');
+    
     var modal = $('#modal-new-repo');
     $('.btn-add-repo').on('click', function(e) {
         e.preventDefault();
+        
+        $('#repoModal').text("Add new repository");
+        $('#updateRepo').val("");
+        $('#newName').val("");
+        
         modal.modal('show');
     });
 
+    addEventToUpdate(modal);
+    
     modal.find('form').forms({
-        callback: function(resp) {
-            Msg.success($('#newName').val() + ' is created!');
-            tableWrapper.reloadFragment({
-                whenComplete: function () {
-                    initSwitch();
-                }
-            });
-            modal.modal('hide');
-        }
+    	callback: function(resp) {
+    		if ($('#updateRepo').val() == '') {
+    			Msg.success($('#newName').val() + ' is created!');
+    		} else {
+    			Msg.success($('#newName').val() + ' is updated!');
+    		}
+    		tableWrapper.reloadFragment({
+    			whenComplete: function () {
+    				initSwitch();
+    				addEventToUpdate(modal);
+    			}
+    		});
+    		modal.modal('hide');
+    	}
     });
 
     tableWrapper.on('click', 'a.btn-delete-repo', function(e) {
@@ -62,6 +75,18 @@ function initManageRepos() {
             var href = wrapper.closest("tr").find("a.repo").attr("href");
             setRepoPublicAccess(href, isChecked);
         }, 0);
+    });
+}
+
+function addEventToUpdate(modalUpdate) {
+    $('.btn-update-repo').on('click', function(e) {
+        e.preventDefault();
+        
+        $('#repoModal').text("Update repository");
+        $('#updateRepo').val(e.target.name);
+        $('#newName').val(e.target.name);
+        
+        modalUpdate.modal('show');
     });
 }
 

@@ -3,12 +3,30 @@
  */
 
 
-$(function() {
+$(function () {
     flog("init: bootstrap335/js/theme.js")
+    
+    $(document.body).on({
+        'hide.bs.collapse': function () {
+            var id = this.id;
+            var toggler = $('[data-toggle="collapse"][href="#' + id + '"]');
+            var icon = toggler.find('.glyphicon');
+            
+            icon.addClass('glyphicon-chevron-right').removeClass('glyphicon-chevron-down');
+        },
+        'show.bs.collapse': function () {
+            var id = this.id;
+            var toggler = $('[data-toggle="collapse"][href="#' + id + '"]');
+            var icon = toggler.find('.glyphicon');
+            
+            icon.addClass('glyphicon-chevron-down').removeClass('glyphicon-chevron-right');
+        }
+    }, '.list-group.collapse');
+    
     // just a nice little function to get classes
-    $.fn.classes = function(f) {
+    $.fn.classes = function (f) {
         var c = [];
-        $.each(this, function(i, v) {
+        $.each(this, function (i, v) {
             var _ = v.className.split(/\s+/);
             for (var j in _)
                 '' === _[j] || c.push(_[j]);
@@ -19,23 +37,22 @@ $(function() {
                 f(c[j]);
         return c;
     };
-
+    
     // Stop the login form from disappearing
-    $('.banner .dropdown-menu input, .banner .dropdown-menu label, .banner .login button').click(function(e) {
+    $('.banner .dropdown-menu input, .banner .dropdown-menu label, .banner .login button').click(function (e) {
         e.stopPropagation();
     });
     // init the login form
-    $(".login").user({
-    });
-
+    $(".login").user({});
+    
     flog("initTheme: run page init functions", pageInitFunctions.length);
-    $.each(pageInitFunctions, function(i, f) {
+    $.each(pageInitFunctions, function (i, f) {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
-
+        
     });
-    $("table.table-tappy tbody td").click(function(e) {
+    $("table.table-tappy tbody td").click(function (e) {
         var target = $(e.target);
         if (target.is("a")) {
             return;
@@ -48,10 +65,10 @@ $(function() {
     initPrintLink();
     initVideos();
     // Make sure initAudios isnt undefined
-    if(typeof initAudios === 'function'){
+    if (typeof initAudios === 'function') {
         initAudios();
     }
-    if(typeof initTablesForCkeditor === 'function'){
+    if (typeof initTablesForCkeditor === 'function') {
         initTablesForCkeditor();
     }
     initContentFeatures();
@@ -64,29 +81,29 @@ $(function() {
 function initContentFeatures() {
     flog("initContentFeatures");
     // Add or remove collapsed class to panels, so we can use that to switch the glyphicon symbol
-    $(document).on("shown.bs.collapse", function(e) {
-        var n = $(e.target);                
+    $(document).on("shown.bs.collapse", function (e) {
+        var n = $(e.target);
         n.closest(".panel.dropdown-btn")
             .removeClass("collapsed")
             .find(".glyphicon").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
     });
-    $(document).on("hidden.bs.collapse", function(e) {
+    $(document).on("hidden.bs.collapse", function (e) {
         var n = $(e.target);
         
         n.closest(".panel.dropdown-btn")
             .addClass("collapsed")
             .find(".glyphicon").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
-
+        
     });
     
     // Find any dropdown-btn and add appropriate classes and markup to allow dynamic dropdowns
     var dropdowns = $(".dropdown-btn");
     dropdowns.addClass("collapsed")
-            .find(".panel-body").wrap("<div class='panel-collapse collapse'></div>");    
+        .find(".panel-body").wrap("<div class='panel-collapse collapse'></div>");
     dropdowns.find(".panel-title").append("<span class='glyphicon glyphicon-chevron-right'></span>");
     
     // dropdown-btn needs explicit collapse, because we dont want to use ID's, required for attributes usage    
-    $(document).on("click", ".dropdown-btn .panel-heading", function(e) {
+    $(document).on("click", ".dropdown-btn .panel-heading", function (e) {
         var n = $(e.target);
         n.closest(".panel").find(".panel-collapse").collapse("toggle");
     });
@@ -105,7 +122,7 @@ function showModal(modal, title) {
     if (modal.find(".modal-body").length === 0) {
         modal.wrapInner("<div class='modal-body'></div>");
         var headerHtml = "<div class='modal-header'>"
-                + "<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>";
+            + "<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>";
         if (title) {
             headerHtml += "<h4 class='modal-title'>" + title + "</h4>"
         }
@@ -142,25 +159,25 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     var modal = body.find("div.myprompt");
     if (modal.length === 0) {
         modal = $("" +
-                "<div class='modal fade' style='display: none'>\n" +
-                "    <div class='modal-dialog'>" +
-                "    <div class='modal-content'>\n" +
-                "    <div class='modal-header'>\n" +
-                "        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\n" +
-                "        <h3>Modal header</h3>\n" +
-                "    </div>\n" +
-                "    <form method='POST' class='form-horizontal'>\n" +
-                "        <div class='modal-body'>\n" +
-                "            <div class='pageMessage'>.</div>\n" +
-                "        </div>\n" +
-                "        <div class='modal-footer'>\n" +
-                "            <a href='#' class='btn'>Close</a>\n" +
-                "            <button type='submit' href='#' class='btn btn-primary'>Save changes</button>\n" +
-                "        </div>\n" +
-                "    </form>\n" +
-                "    </div>" +
-                "    </div>" +
-                "</div>");
+            "<div class='modal fade' style='display: none'>\n" +
+            "    <div class='modal-dialog'>" +
+            "    <div class='modal-content'>\n" +
+            "    <div class='modal-header'>\n" +
+            "        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\n" +
+            "        <h3>Modal header</h3>\n" +
+            "    </div>\n" +
+            "    <form method='POST' class='form-horizontal'>\n" +
+            "        <div class='modal-body'>\n" +
+            "            <div class='pageMessage'>.</div>\n" +
+            "        </div>\n" +
+            "        <div class='modal-footer'>\n" +
+            "            <a href='#' class='btn'>Close</a>\n" +
+            "            <button type='submit' href='#' class='btn btn-primary'>Save changes</button>\n" +
+            "        </div>\n" +
+            "    </form>\n" +
+            "    </div>" +
+            "    </div>" +
+            "</div>");
         modal.attr("id", id);
         body.append(modal);
     }
@@ -170,15 +187,15 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     form.find(".modal-body").append("<p class='notes'></p>");
     form.find(".notes").html(instructions);
     form.find(".modal-body").append("<div class='form-group'><label class='col-md-4 control-label' for='inputEmail'>label</label><div class='col-md-8'><input type='text' id='inputEmail' required='true' class='required form-control'></div></div>");
-
+    
     var row1 = form.find(".form-group");
     var inputId = id + "_" + buttonName;
     row1.find("input").addClass(inputClass);
     row1.find("input").attr("name", buttonName).attr("id", inputId).attr("placeholder", inputPlaceholder);
     row1.find("label").attr("for", inputId).text(caption);
     form.find(".btn-primary").text(buttonText);
-
-    form.submit(function(e) {
+    
+    form.submit(function (e) {
         log("submit");
         e.preventDefault();
         resetValidation(form);
@@ -190,11 +207,11 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
             }
         }
     });
-
-    modal.find("a.btn").click(function() {
+    
+    modal.find("a.btn").click(function () {
         closeModals();
     });
-
+    
     showModal(modal);
 }
 

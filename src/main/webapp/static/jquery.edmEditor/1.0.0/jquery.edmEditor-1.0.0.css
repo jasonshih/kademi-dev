@@ -1,6 +1,6 @@
 body {
     background: none;
-    padding-top: 0;
+    margin: 0;
 }
 
 /* ===========================================================================
@@ -40,6 +40,7 @@ body.opened-keditor-sidebar #edm-area {
     min-height: 100px;
     outline: 3px dashed #ccc;
     outline-offset: 3px;
+    width: 600px;
 }
 
 #edm-body {
@@ -48,7 +49,8 @@ body.opened-keditor-sidebar #edm-area {
 }
 
 #edm-header,
-#edm-footer {
+#edm-footer,
+#edm-body {
     padding: 0;
 }
 
@@ -144,6 +146,24 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
     margin-right: 232px;
     margin-top: 0;
     margin-left: 0;
+}
+
+/* ====================================================================================
+   Headings settings
+/* ==================================================================================== */
+.form-group-heading .input-group + .input-group {
+    margin-top: 5px;
+}
+
+.form-group-heading .input-group .input-group-addon {
+    font-size: 80%;
+    padding: 6px 5px;
+}
+
+.form-group-heading .input-group .input-group-addon span {
+    display: block;
+    width: 55px;
+    text-align: center;
 }
 
 /* ====================================================================================

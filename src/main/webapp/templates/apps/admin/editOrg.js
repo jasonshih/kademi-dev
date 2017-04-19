@@ -5,9 +5,9 @@ function initEditOrg() {
             flog("saved", resp);
             Msg.info("Saved OK");
             var newId = $("#orgId").val();
-            if (oldId !== newId) {
-                window.location = "../" + newId + "/edit";
-            } else {
+//            if (oldId !== newId) {
+//                window.location = "../" + newId + "/edit";
+//            } else {
                 $("#form-body").reloadFragment({
                     whenComplete: function () {
                         $(".chosen-select").chosen({
@@ -16,7 +16,7 @@ function initEditOrg() {
                         initMap();
                     }
                 });
-            }
+//            }
         }
     });
     $(".chosen-select").chosen({

@@ -8,6 +8,9 @@
         <h2 style="margin-top: 0">Checkout</h2>
     </div>
     <div class="col-md-5 text-right">
-        <p>Balance <span class="badge label-primary">$!page.balance</span></p>
+        #set( $items = $page.shoppingCartItemBeans)
+        #if($items.size() > 0)
+        <p>Balance <span class="badge label-primary">$formatter.formatCurrency($!page.balance, false)</span></p>
+        #end
     </div>
 </div>

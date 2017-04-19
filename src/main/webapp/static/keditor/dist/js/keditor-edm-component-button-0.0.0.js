@@ -14,22 +14,20 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
-
+    
     KEditor.components['button'] = {
         settingEnabled: true,
-
+        
         settingTitle: 'Button Settings',
-
+        
         settingFormHtml: (
             '<form class="form-horizontal">' +
             '    <div class="form-group">' +
             '       <div class="col-md-12">' +
-            '           <label>Color</label>' +
-            '           <div class="input-group button-color-picker">' +
-            '               <span class="input-group-addon"><i></i></span>' +
-            '               <input type="text" value="" id="button-color" class="form-control" />' +
-            '           </div>' +
+            '           <label>Button color</label>' +
+            '           <input type="text" value="" id="button-color" class="form-control" />' +
             '       </div>' +
             '    </div>' +
             '    <div class="form-group">' +
@@ -43,23 +41,23 @@
             '           <label>Inner Padding (in px)</label>' +
             '           <div class="row row-sm text-center">' +
             '               <div class="col-xs-4 col-xs-offset-4">' +
-            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingTop" name="padding-top" />' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-css="padding-top" />' +
             '                   <small>top</small>' +
             '               </div>' +
             '           </div>' +
             '           <div class="row row-sm text-center">' +
             '               <div class="col-xs-4">' +
-            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingLeft" name="padding-left" />' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-css="padding-left" />' +
             '                   <small>left</small>' +
             '               </div>' +
             '               <div class="col-xs-4 col-xs-offset-4">' +
-            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingRight" name="padding-right" />' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-css="padding-right" />' +
             '                   <small>right</small>' +
             '               </div>' +
             '           </div>' +
             '           <div class="row row-sm text-center">' +
             '               <div class="col-xs-4 col-xs-offset-4">' +
-            '                   <input type="number" value="" class="button-inner-padding form-control" data-prop="paddingBottom" name="padding-bottom" />' +
+            '                   <input type="number" value="" class="button-inner-padding form-control" data-css="padding-bottom" />' +
             '                   <small>bottom</small>' +
             '               </div>' +
             '           </div>' +
@@ -80,10 +78,7 @@
             '    <div class="form-group">' +
             '       <div class="col-md-12">' +
             '           <label>Text color</label>' +
-            '           <div class="input-group button-color-text-picker">' +
-            '               <span class="input-group-addon"><i></i></span>' +
-            '               <input type="text" value="" id="button-text-color" class="form-control" />' +
-            '           </div>' +
+            '           <input type="text" value="" id="button-text-color" class="form-control" />' +
             '       </div>' +
             '    </div>' +
             '    <div class="form-group">' +
@@ -126,91 +121,74 @@
             '    </div>' +
             '</form>'
         ),
-
+        
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "button" component');
-
+            
             form.append(this.settingFormHtml);
-
+            
             form = form.find('form');
-            KEditor.initPaddingControls(keditor, form, 'prepend');
-            KEditor.initBgColorControl(keditor, form, 'prepend');
-
+            edmEditor.initDefaultComponentControls(form, keditor);
+            
             var buttonColorPicker = form.find('.button-color-picker');
-            initColorPicker(buttonColorPicker, function (color) {
+            edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                 var buttonWrapper = keditor.getSettingComponent().find('.button-wrapper');
-
-                if (color && color !== 'transparent') {
-                    setStyle(buttonWrapper, 'background-color', color);
-                    buttonWrapper.attr('bgcolor', color);
-                } else {
-                    setStyle(buttonWrapper, 'background-color', '');
-                    buttonWrapper.removeAttr('bgcolor');
-                    form.find('.button-color').val('');
-                }
+                buttonWrapper.attr('bgcolor', color);
             });
-
+            
             var txtBorderRadius = form.find('#button-border-radius');
             txtBorderRadius.on('change', function () {
                 setStyle(keditor.getSettingComponent().find('.button-wrapper'), 'border-radius', this.value + 'px');
             });
-
+            
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
-                var propName = input.attr('data-prop');
-
-                input.on('change', function () {
-                    var value = this.value > 0 ? this.value : 0;
-
-                    keditor.getSettingComponent().find('.button-inner').get(0).style[propName] = value + 'px';
+                var dataCss = input.attr('data-css');
+                
+                edmEditor.initPaddingControl(input, function (value) {
+                    edmEditor.setStyles(dataCss, value, keditor.getSettingComponent().find('.button-inner'));
                 });
             });
-
+            
             var txtText = form.find('#button-text');
             txtText.on('change', function () {
                 var text = this.value || '';
                 text = text.trim();
-
+                
                 keditor.getSettingComponent().find('.button-wrapper a').text(text);
             });
-
+            
             var txtLink = form.find('#button-link');
             txtLink.on('change', function () {
                 var href = this.value || '';
                 href = href.trim();
-
+                
                 keditor.getSettingComponent().find('.button-wrapper a').attr("href", href);
             });
-
+            
             var buttonTextColorPicker = form.find('.button-color-text-picker');
-            initColorPicker(buttonTextColorPicker, function (color) {
+            edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
                 var button = keditor.getSettingComponent().find('.button-wrapper a');
-
-                if (color && color !== 'transparent') {
-                    setStyle(button, 'color', color);
-                } else {
-                    setStyle(button, 'color', '');
-                    form.find('.button-text-color').val('');
-                }
+                edmEditor.setStyles('color', color, button);
             });
-
+            
             var txtFontSize = form.find('#button-font-size');
             txtFontSize.on('change', function () {
                 setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
             });
-
+            
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.on('change', function () {
                 setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-family', this.value);
             });
-
+            
             form.find('.btn-style').each(function () {
                 var btn = $(this);
                 var name = btn.attr('data-prop');
-
+                
                 btn.on('click', function (e) {
                     e.preventDefault();
-
+                    
                     var value = btn.attr('data-value');
                     if (btn.hasClass('active')) {
                         btn.removeClass('active');
@@ -218,25 +196,25 @@
                     } else {
                         btn.addClass('active');
                     }
-
+                    
                     keditor.getSettingComponent().find('.button-wrapper a').get(0).style[name] = value;
                 });
             });
-
+            
             var btnsAlign = form.find('.btn-align');
             btnsAlign.each(function () {
                 var btn = $(this);
                 var value = btn.attr('data-value');
-
+                
                 btn.on('click', function (e) {
                     e.preventDefault();
-
+                    
                     if (!btn.hasClass('active')) {
                         var table = keditor.getSettingComponent().find('.button-wrapper');
-
+                        
                         btnsAlign.removeClass('active');
                         btn.addClass('active');
-
+                        
                         if (value === 'full') {
                             table.attr('width', '100%').attr('align', 'center');
                         } else {
@@ -246,55 +224,54 @@
                 });
             });
         },
-
+        
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "button" component', component);
-
-            KEditor.showBgColorControl(keditor, form, component);
-            KEditor.showPaddingControls(keditor, form, component);
-
+            
+            edmEditor.showDefaultComponentControls(form, component, keditor);
+            
             var buttonWrapper = component.find('.button-wrapper');
             var buttonInner = buttonWrapper.find('.button-inner');
             var button = buttonInner.find('a');
-
+            
             var buttonColorPicker = form.find('.button-color-picker');
-            buttonColorPicker.colorpicker('setValue', buttonWrapper.css('background-color') || '');
-
+            buttonColorPicker.val(buttonWrapper.css('background-color') || '').trigger('update');
+            
             var txtBorderRadius = form.find('#button-border-radius');
             var borderRadius = buttonWrapper.css('border-radius');
             txtBorderRadius.val(borderRadius ? borderRadius.replace('px', '') : '');
-
+            
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
                 var propName = input.attr('data-prop');
                 var value = buttonInner.get(0).style[propName];
-
+                
                 input.val(value ? value.replace('px', '') : '0');
             });
-
+            
             var txtText = form.find('#button-text');
             txtText.val(button.text());
-
+            
             var txtLink = form.find('#button-link');
             txtLink.val(button.attr("href"));
-
+            
             var buttonTextColorPicker = form.find('.button-color-text-picker');
-            buttonTextColorPicker.colorpicker('setValue', button.css('color') || '');
-
+            buttonTextColorPicker.val(button.css('color') || '').trigger('update');
+            
             var txtFontSize = form.find('#button-font-size');
             var fontSize = button.css('font-size');
             txtFontSize.val(fontSize ? fontSize.replace('px', '') : '');
-
+            
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.val(button.css('font-family').toLowerCase().replace(/,\s/g, ','));
-
+            
             var btnBold = form.find('.btn-bold');
             var fontWeight = button.css('font-weight');
             btnBold[fontWeight === '700' || fontWeight === 'bold' ? 'addClass' : 'removeClass']('active');
-
+            
             var btnItalic = form.find('.btn-italic');
             btnItalic[button.css('font-style') === 'italic' ? 'addClass' : 'removeClass']('active');
-
+            
             var align = buttonWrapper.attr('align');
             if (buttonWrapper.attr('width') === '100%') {
                 align = 'full';
@@ -302,5 +279,5 @@
             form.find('.btn-align').removeClass('active').filter('[data-value=' + align + ']').addClass('active');
         }
     };
-
+    
 })(jQuery);

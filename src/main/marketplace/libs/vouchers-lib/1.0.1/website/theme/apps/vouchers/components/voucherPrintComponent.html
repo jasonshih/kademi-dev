@@ -1,0 +1,24 @@
+#set ($voucherPage = $page)
+<div style="margin: auto; display:table; width:50%; text-wrap:!important; text-align:center;">
+    <p>
+        <span style="font-size: 36px; line-height: 46.7532463073731px;">
+            <b>$!voucherPage.voucherTypeTitle</b>
+        </span>
+    </p>
+</div>
+
+<p>&nbsp;</p>
+
+<div style="margin: auto; display:table; width:50%; text-wrap:!important;">
+    <p>
+        <span style="font-size:20px;">Voucher Code: <strong>$!voucherPage.name</strong></span>
+    </p>
+
+    #if($voucherPage.expiryDate)
+    <p>&nbsp;</p>
+
+    <p>
+        <span style="font-size:20px;">Expires: <strong>#formatter.formatDate($voucherPage.expiryDate)</strong></span>
+    </p>
+    #end
+</div>

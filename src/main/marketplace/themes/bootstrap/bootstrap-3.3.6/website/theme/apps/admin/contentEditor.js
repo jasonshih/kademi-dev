@@ -7,8 +7,9 @@ function doPostMessage(data, url) {
     window.parent.postMessage(dataStr, url);
 }
 
-function initContentEditorPage(fileName) {
+function initContentEditorPage(options) {
     var body = $(document.body);
+    var fileName = options.fileName;
     var url = getParam('url') || '';
     if (url && url !== 'undefined') {
         flog('initContentEditorPage url=', url);
@@ -48,7 +49,7 @@ function initContentEditorPage(fileName) {
             }, 100);
         }).trigger('resize');
         
-        initKEditor(body, fileName);
+        initKEditor(options);
     });
     initSaving(body, fileName);
     
@@ -63,7 +64,7 @@ function initContentEditorPage(fileName) {
     });
 }
 
-function initKEditor(fileName) {
+function initKEditor(options) {
     var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
     
     if (typeof themeCssFiles !== 'undefined') {
@@ -74,9 +75,13 @@ function initKEditor(fileName) {
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
     
+    var basePath = window.location.pathname.replace('contenteditor', '');
     $('#content-area').contentEditor({
-        snippetsUrl: '_components?fileName=' + fileName,
-        allGroups: allGroups
+        snippetsUrl: options.snippetsUrl,
+        snippetsHandlersUrl: options.snippetsHandlersUrl,
+        allGroups: options.allGroups,
+        basePath: basePath,
+        pagePath: basePath,
     });
 }
 

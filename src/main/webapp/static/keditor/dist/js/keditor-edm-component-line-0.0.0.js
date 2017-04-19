@@ -14,6 +14,7 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['line'] = {
@@ -28,10 +29,13 @@
                 '    <div class="form-group">' +
                 '       <div class="col-md-12">' +
                 '           <label>Color</label>' +
-                '           <div class="input-group line-color-picker">' +
-                '               <span class="input-group-addon"><i></i></span>' +
-                '               <input type="text" value="" id="line-color" class="form-control" />' +
-                '           </div>' +
+                '           <input type="text" value="" id="line-color" class="form-control" />' +
+                '       </div>' +
+                '    </div>' +
+                '    <div class="form-group">' +
+                '       <label for="line-height" class="col-sm-12">Width</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" id="line-width" class="form-control" />' +
                 '       </div>' +
                 '    </div>' +
                 '    <div class="form-group">' +
@@ -42,27 +46,26 @@
                 '    </div>' +
                 '</form>'
             );
+    
+            form = form.find('form');
+            edmEditor.initDefaultComponentControls(form, keditor);
 
             var lineHeight = form.find('#line-height');
             lineHeight.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.wrapper div'), 'height', this.value);
+                keditor.getSettingComponent().find('.wrapper div').css('height', this.value);
             });
 
-            form = form.find('form');
-            KEditor.initPaddingControls(keditor, form, 'prepend');
-            KEditor.initBgColorControl(keditor, form, 'prepend');
-
+            var lineHeight = form.find('#line-width');
+            lineHeight.on('change', function () {
+                keditor.getSettingComponent().find('.wrapper table').attr('width', this.value);
+            });
+    
             var lineColorPicker = form.find('.line-color-picker');
-            initColorPicker(lineColorPicker, function (color) {
+            edmEditor.initSimpleColorPicker(lineColorPicker, function (color) {
                 var wrapper = keditor.getSettingComponent().find('.wrapper');
                 var div = wrapper.children('div');
-
-                if (color && color !== 'transparent') {
-                    setStyle(div, 'background-color', color);
-                } else {
-                    setStyle(div, 'background-color', '');
-                    form.find('#line-color').val('');
-                }
+    
+                edmEditor.setStyles('background-color', color, div);
             });
         },
 
@@ -70,17 +73,19 @@
             flog('showSettingForm "line" component', component);
 
             var lineHeight = form.find('#line-height');
-            var height = component.find('.wrapper > div').css('height');
+            var height = component.find('.wrapper div').css('height');
             lineHeight.val(height ? height.replace('px', '') : '0');
 
-            KEditor.showBgColorControl(keditor, form, component);
-            KEditor.showPaddingControls(keditor, form, component);
+            var lineWidth = form.find('#line-width');
+            var width = component.find('.wrapper table').attr('width');
+            lineWidth.val(width ? width.replace('px', '') : '0');
+            
+            edmEditor.showDefaultComponentControls(form, component, keditor);
 
             var wrapper = component.find('.wrapper');
             var div = wrapper.children('div');
             var lineColorPicker = form.find('.line-color-picker');
-            flog(div.css('background-color'));
-            lineColorPicker.colorpicker('setValue', div.css('background-color') || '');
+            lineColorPicker.val(div.css('background-color') || '').trigger('update');
         }
     };
 

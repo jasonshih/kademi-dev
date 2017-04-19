@@ -42,6 +42,7 @@ function initManageBlogArticle() {
     initPublish();
     initGroupEditing();
     initManageArticleImage();
+    initManageArticleGallery();
     initManageArticleFiles();
     initGraphControls();
     loadGraphData();
@@ -329,14 +330,14 @@ function initManageArticleImage() {
     upcropZone.upcropImage({
         buttonUploadText: "<i class='clip-folder'></i> Upload image",
         buttonCropText: 'Crop and use this image',
-        modalTitle: 'Upload and crop image',
+        modalTitle: 'Add and crop image',
         ratio: 0,
         isEmbedded: true,
         embeddedTemplate:
                 '<div class="upcrop-embedded" id="{{upcropId}}">' +
                 '   <div class="modal-header">' +
                 '       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '       <h4 class="modal-title">Upload and crop image</h4>' +
+                '       <h4 class="modal-title">Add and crop image</h4>' +
                 '   </div>' +
                 '   <div class="modal-body">' +
                 '       <div class="form-horizontal">' +
@@ -467,6 +468,63 @@ function initManageArticleImage() {
     });
 }
 
+
+function initManageArticleGallery() {
+    var galleryContainer = $('#images-container');
+    var addGalleryModal = $('#modal-add-gallery');
+    addGalleryModal.find('form.form-horizontal').forms({
+        callback: function () {
+            galleryContainer.reloadFragment();
+            addGalleryModal.modal("hide");
+        }
+    });
+    uploadZone = $("#uploadFileDropzone");
+    $.getScriptOnce('/static/js/jquery.milton-upload.js', function () {
+        uploadZone.mupload({
+            // url: window.location.pathname,
+            fieldName: "file",
+            useJsonPut: false, // Just do a POST
+            useDropzone: true,
+            oncomplete: function (data, name, href) {
+                flog('uploaded image:', data, name, data.result.nextHref);
+                uploadedHref = data.result.nextHref;
+                uploadedName = name;
+
+                if (data.result) {
+                    data = data.result;
+                }
+                var hash = data.data;
+                if (typeof hash == "object") {
+                    hash = hash.file;
+                }
+
+                saveManageArticleGallery(hash, uploadedName, "");
+            }
+        });
+    });
+
+    addGalleryModal.on('hide.bs.modal', function (e) {
+        galleryContainer.reloadFragment();
+    });
+}
+
+function saveManageArticleGallery(hash, name, ignoreOrientation) {
+    var objImage = {
+        hash: hash,
+        fileName: name,
+        orientation: ignoreOrientation
+    };
+
+    var saveData = $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        data: objImage,
+        success: function(resultData) {
+            flog("save galleries data success", resultData);
+        }
+    });
+    saveData.error(function() { alert("Something went wrong"); });
+}
 
 function initGroupEditing() {
     $('#modalGroup input[type=checkbox]').click(function () {

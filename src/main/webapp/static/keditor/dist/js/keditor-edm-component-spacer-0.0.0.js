@@ -14,6 +14,7 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     KEditor.components['spacer'] = {
@@ -40,7 +41,9 @@
             });
 
             form = form.find('form');
-            KEditor.initBgColorControl(keditor, form, 'prepend');
+            edmEditor.initDefaultComponentControls(form, keditor, {
+                hidePadding: true
+            });
         },
 
         showSettingForm: function (form, component, keditor) {
@@ -48,8 +51,8 @@
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.val(component.find('.spacer').attr('height'));
-
-            KEditor.showBgColorControl(keditor, form, component);
+    
+            edmEditor.showDefaultComponentControls(form, component, keditor);
         }
     };
 

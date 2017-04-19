@@ -222,25 +222,39 @@ function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
     var isEnabled = $('.btn-enable-user').is(':checked');
+
     flog('doSearch', query, groupName);
+
     var uri = URI(window.location);
+
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
     uri.setSearch('enabled', isEnabled);
+
     flog('doSearch', uri.toString());
+
     var newHref = uri.toString();
+
     window.history.pushState('', newHref, newHref);
     Msg.info('Searching...', 50000);
+
     $.ajax({
         type: 'GET',
         url: newHref,
         success: function (data) {
             Msg.info('Search complete', 5000);
+
             flog('success', data);
+
             var newDom = $(data);
-            var $fragment = newDom.find('#table-users-body');
-            $('#table-users-body').replaceWith($fragment);
+
+            var $fragment = newDom.find('#table-users');
+
+            $('#table-users').replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
+
+            initSort();
+            initLoginAs();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
@@ -501,7 +515,7 @@ function doOrgSearch() {
 }
 
 function initRemoveUsers() {
-    $('.btn-remove-users').click(function (e) {
+    $("body").on("click", ".btn-remove-users", function(e) {
         e.preventDefault();
         var node = $(e.target);
         flog('removeUsers', node, node.is(':checked'));
@@ -595,7 +609,7 @@ function doRemoveUsers(checkBoxes) {
                 doSearch();
                 Msg.success('Removed users ok');
             } else {
-                Msg.error('There was a problem removing users. Please try again and contact the administrator if you still have problems');
+                Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
             }
         },
         error: function (resp) {
@@ -679,15 +693,27 @@ function initSort() {
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
-                var $fragment = $(data).find('#table-users-body');
+
+                var newDom = $(data);
+
+                var $fragment = newDom.find('#table-users');
+
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
-                $('#table-users-body').replaceWith($fragment);
+
+                var $tableContent = newDom.find('#table-users-body');
+                $('#table-users-body').replaceWith($tableContent);
+
+                var $footer = newDom.find('#pointsFooter');
+                $('#pointsFooter').replaceWith($footer);
+
+                initLoginAs();
             },
             error: function (resp) {
                 Msg.error('err');
             }
         });
+
     });
 }
 

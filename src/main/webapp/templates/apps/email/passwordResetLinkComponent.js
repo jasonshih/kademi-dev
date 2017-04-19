@@ -1,5 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
+    var edmEditor = $.edmEditor;
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
@@ -11,14 +12,11 @@
 
             form.append(this.settingFormHtml);
             form.find('.button-link').remove();
-            form.prepend(
+            form.find('form').prepend(
                 '<div class="form-group">' +
                 '   <div class="col-md-12">' +
                 '       <label>Background</label>' +
-                '       <div class="input-group color-picker">' +
-                '           <span class="input-group-addon"><i></i></span>' +
-                '           <input type="text" value="" class="txt-bg-color form-control" />' +
-                '       </div>' +
+                '       <input type="text" value="" class="txt-bg-color form-control" />' +
                 '   </div>' +
                 '</div>' +
                 '<div class="form-group">' +
@@ -50,33 +48,23 @@
                 '</div>'
             );
 
-            var colorPicker = form.find('.color-picker');
-            initColorPicker(colorPicker, function (color) {
+            var colorPicker = form.find('.txt-bg-color');
+            edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-bg-color', color);
-                } else {
-                    component.attr('data-bg-color', '');
-                    form.find('.txt-bg-color').val('');
-                }
-
+                component.attr('data-bg-color', color);
+                form.find('.txt-bg-color').val(color);
+    
                 keditor.initDynamicContent(dynamicElement);
             });
 
-            var buttonColorPicker = form.find('.button-color-picker');
-            initColorPicker(buttonColorPicker, function (color) {
+            var buttonColorPicker = form.find('#button-color');
+            edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-color', color);
-                } else {
-                    component.attr('data-color', '');
-                    form.find('.button-color').val('');
-                }
-
+                component.attr('data-color', color);
+                form.find('.button-color').val(color);
+        
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -127,19 +115,13 @@
                 keditor.initDynamicContent(dynamicElement);
             });
 
-            var buttonTextColorPicker = form.find('.button-color-text-picker');
-            initColorPicker(buttonTextColorPicker, function (color) {
-
+            var buttonTextColorPicker = form.find('#button-text-color');
+            edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
-
-                if (color && color !== 'transparent') {
-                    component.attr('data-text-color', color);
-                } else {
-                    component.attr('data-text-color', '');
-                    form.find('.button-text-color').val('');
-                }
-
+                component.attr('data-button-text-color', color);
+                form.find('.button-text-color').val(color);
+        
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -148,7 +130,7 @@
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
 
-                component.attr('data-font-size', this.value > 0 ? this.value : 0);
+                component.attr('data-button-font-size', this.value > 0 ? this.value : 0);
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -157,7 +139,7 @@
                 var component = keditor.getSettingComponent();
                 var dynamicElement = component.find('[data-dynamic-href]');
 
-                component.attr('data-font-family', this.value);
+                component.attr('data-button-font-family', this.value);
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -210,8 +192,8 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 
-            form.find('.button-color-picker').colorpicker('setValue', dataAttributes['data-color'] || 'transparent');
-            form.find('.color-picker').colorpicker('setValue', dataAttributes['data-bg-color'] || 'transparent');
+            form.find('#button-color').val(dataAttributes['data-color'] || 'transparent').trigger('update');
+            form.find('.txt-bg-color').val(dataAttributes['data-bg-color'] || 'transparent').trigger('update');
             form.find('#button-border-radius').val(dataAttributes['data-border-radius'] || '0');
 
             form.find('.button-inner-padding').each(function () {
@@ -229,9 +211,9 @@
             });
 
             form.find('#button-text').val(dataAttributes['data-message'] || '');
-            form.find('.button-color-text-picker').colorpicker('setValue', dataAttributes['data-text-color'] || '');
-            form.find('#button-font-size').val(dataAttributes['data-font-size'] || '');
-            form.find('#button-font-family').val(dataAttributes['data-font-family'] || '');
+            form.find('#button-text-color').val(dataAttributes['data-button-text-color'] || '').trigger('update');
+            form.find('#button-font-size').val(dataAttributes['data-button-font-size'] || '');
+            form.find('#button-font-family').val(dataAttributes['data-button-font-family'] || '');
             form.find('.btn-bold')[dataAttributes['data-font-weight'] === 'bold' ? 'addClass' : 'removeClass']('active');
             form.find('.btn-italic')[dataAttributes['data-font-style'] === 'italic' ? 'addClass' : 'removeClass']('active');
             form.find('.btn-align').removeClass('active').filter('[data-value=' + (dataAttributes['data-text-align'] || '') + ']').addClass('active');
