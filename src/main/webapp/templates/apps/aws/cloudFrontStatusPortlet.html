@@ -2,10 +2,6 @@
     <label for="cloudFrontStatus" class="col-sm-3 control-label">CloudFront status</label>
     <div class="col-sm-6" id="cfStatus">
         <div class="label label-info">Loading...</div>
-        <br />
-        <div class="label label-info">
-            Domain: <a style="color: white;" target="_blank" href="http://d1e3nt0ursj70d.cloudfront.net">d1e3nt0ursj70d.cloudfront.net</a>
-        </div>
     </div>
 </div>
 
@@ -21,16 +17,89 @@
                 },
                 success: function (resp) {
                     if (resp.status) {
+                        var data = resp.data;
 
+                        if (data.found) {
+                            var icon;
+                            var status;
+                            if (data.status == 'InProgress') {
+                                icon = 'fa fa-spinner fa-spin';
+                                status = 'In Progress';
+                            } else {
+                                icon = 'fa fa-check';
+                                status = 'Deployed';
+                            }
+
+                            status = '<div class="form-control-static">'
+                                    + '    <span class="label label-success" data-status="' + data.status + '"><i class="' + icon + '"></i> ' + status + '</span>'
+                                    + '    &nbsp;'
+                                    + '    <span class="label label-info">Domain: <a target="_blank" href="http://' + data.domainName + '">' + data.domainName + '</a></span>'
+                                    + '    &nbsp;'
+                                    + '    <div class="btn-group btn-group-xs" role="group">'
+                                    + '        <button type="button" class="btn btn-info btn-cf-refresh" title="Refresh Status">'
+                                    + '            <i class="fa fa-refresh"></i> Refresh Status'
+                                    + '        </button>'
+                                    + '        <button type="button" class="btn btn-warning btn-cf-force" title="Force Update">'
+                                    + '            <i class="fa fa-exclamation"></i> Force Update'
+                                    + '        </button>'
+                                    + '    </div>'
+                                    + '</div>';
+                        } else {
+                            status = '<div class="label label-warning">You don\'t have a CloudFront instance</div>'
+                                    + '&nbsp;'
+                                    + '<button type="button" class="btn btn-xs btn-warning btn-cf-force" title="Force Create">'
+                                    + '<i class="fa fa-exclamation"></i> Force Create'
+                                    + '</button>';
+                        }
+
+                        $('#cfStatus').empty();
+                        $('#cfStatus').append(status);
                     } else {
+                        status = '<div class="label label-warning">Error fetching cloudfront status</div>';
 
+                        $('#cfStatus').empty();
+                        $('#cfStatus').append(status);
                     }
+                }
+            });
+        }
+
+        function initCfButtons() {
+            $('body').on('click', '.btn-cf-refresh', function (e) {
+                e.preventDefault();
+
+                loadCFData();
+            });
+
+            $('body').on('click', '.btn-cf-force', function (e) {
+                e.preventDefault();
+
+                if (confirm('Are you sure you want to force a CloudFront update? This may take several hours to complete')) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/awsCf',
+                        dataType: 'json',
+                        data: {
+                            forceUpdateCF: $websiteId
+                        },
+                        success: function (resp) {
+                            if (resp.status) {
+                                Msg.success(resp.messages);
+
+                                loadCFData();
+                            } else {
+                                Msg.error(resp.messages);
+                            }
+                        }
+                    });
                 }
             });
         }
 
         $(function () {
             loadCFData();
-        });
+            initCfButtons();
+        }
+        );
     })();
 </script>
