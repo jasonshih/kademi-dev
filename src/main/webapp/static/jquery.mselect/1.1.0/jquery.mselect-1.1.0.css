@@ -10,34 +10,39 @@
     height: 100%;
 }
 
-.milton-file-select-container .milton-preview {
-    border: 1px solid #ddd !important;
-    overflow: auto !important;
-    padding: 0;
-    position: absolute;
-    top: 45px;
-    left: 15px;
-    right: 15px;
-    bottom: 0;
-    height: auto !important;
-}
-
-#milton-btn-upload-file {
+.milton-file-select-container #milton-btn-upload-file {
     float: left;
 }
 
-#milton-btn-upload-file + .btn-ok {
+.milton-file-select-container .btn-ok {
     float: right;
 }
 
-.dropzone-previews {
+.milton-file-select-container .dropzone-previews {
     display: none !important;
+}
+
+.milton-file-select-container .milton-file-preview-wrapper {
+    position: relative;
+    height: 100%;
+}
+
+.milton-file-select-container .milton-file-preview {
+    position: absolute;
+    border: 1px solid #ddd !important;
+    overflow: auto !important;
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    right: 0px;
+    bottom: 0;
+    height: auto !important;
 }
 
 /* ============================================================================
    Milton tree
    ============================================================================ */
-.milton-tree {
+.milton-file-select-container .milton-tree {
     border: 1px solid #ddd !important;
     overflow-y: auto !important;
     position: absolute;
@@ -48,7 +53,7 @@
     height: auto !important;
 }
 
-.milton-tree.jstree-default a ins.jstree-icon {
+.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon {
     font-family: FontAwesome !important;
     font-style: normal !important;
     font-variant: normal !important;
@@ -60,15 +65,15 @@
     padding-top: 2px;
 }
 
-.milton-tree.jstree-default .jstree-closed > a ins.jstree-icon.folder:before {
+.milton-file-select-container .milton-tree.jstree-default .jstree-closed > a ins.jstree-icon.folder:before {
     content: "\f114" !important;
 }
 
-.milton-tree.jstree-default .jstree-open > a ins.jstree-icon.folder:before,
-.milton-tree.jstree-default .jstree-leaf > a ins.jstree-icon.folder:before {
+.milton-file-select-container .milton-tree.jstree-default .jstree-open > a ins.jstree-icon.folder:before,
+.milton-file-select-container .milton-tree.jstree-default .jstree-leaf > a ins.jstree-icon.folder:before {
     content: "\f115" !important;
 }
 
-.milton-tree.jstree-default a ins.jstree-icon.file:before {
+.milton-file-select-container .milton-tree.jstree-default a ins.jstree-icon.file:before {
     content: "\f016" !important;
 }

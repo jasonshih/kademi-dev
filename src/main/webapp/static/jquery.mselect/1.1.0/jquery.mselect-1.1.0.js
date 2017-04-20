@@ -5,14 +5,14 @@
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
-            $.error('Method ' + method + ' does not exist on jquery.mselect');
+            $.error('[jquery.mselect] Method ' + method + ' does not exist on jquery.mselect');
         }
     };
-
+    
     // since there's jquery.milton-image-select is using the same shorthand $().mselect, just create alias for this
     $.fn.mselectAll = $.fn.mselect;
-    flog('mselectAll loaded');
-
+    flog('[jquery.mselect] mselectAll is loaded');
+    
     $.fn.mselect.DEFAULT = {
         btnClass: 'btn btn-success',
         btnOkClass: 'btn btn-sm btn-primary',
@@ -29,24 +29,37 @@
         onSelectFile: function (selectedUrl, selectedRelUrl) {
         },
         onSelectFolder: function (selectedUrl, selectedRelUrl) {
-
+            
+        },
+        onPreviewFile: function (type, selectedUrl, hash) {
+            
         },
         useModal: true
     };
-
+    
     var methods = {
         init: function (options) {
             var config = $.extend({}, $.fn.mselect.DEFAULT, options);
             var target = this;
-
-            var f = function () {
+            
+            if (target.data('mselectOptions')) {
+                flog('[jquery.mselect] mselect is already initialized!', config, target);
+                return target;
+            }
+            
+            $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
+            $.when(
+                $.getScriptOnce('/static/js/jquery.jstree.js'),
+                $.getScriptOnce('/static/js/jquery.milton-tree.js'),
+                $.getScriptOnce('/static/milton-upload/1.0.1/jquery.milton-upload.js')
+            ).then(function () {
                 flog('[jquery.mselect] Initializing mselect', config, target);
                 if (config.useModal) {
                     flog('[jquery.mselect] Initializing button and modal...', config, target);
                     target.on('click', function (e) {
                         e.preventDefault();
                         e.stopPropagation();
-
+                        
                         var modal = getModal(config);
                         config.showModal(modal);
                         if (config.zIndex) {
@@ -55,36 +68,41 @@
                     });
                 } else {
                     flog('[jquery.mselect] Initializing mselect container only', config, target);
-
+                    
                     target.html(getSelectContainer(config));
                     initSelectContainer(target, config);
                 }
-
+                
+                target.data('mselectOptions', config);
                 flog('[jquery.mselect] Initialized mselect');
-            };
-            
-            var deps = ['/static/js/jquery.jstree.js', '/static/js/jquery.milton-tree.js', '/static/milton-upload/1.0.1/jquery.milton-upload.js'];
-            var i = setInterval(function () {
-                if ($.getScriptOnce.loaded[deps[0]]
-                    && $.getScriptOnce.loaded[deps[1]]
-                    && $.getScriptOnce.loaded[deps[2]]) {
-                    clearInterval(i);
-                    f();
-                }
-            }, 100);
-            $.getScriptOnce(deps[0]);
-            $.getScriptOnce(deps[1]);
-            $.getScriptOnce(deps[2]);
-            
-            $.getStyleOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.css');
+            });
+        },
+        selectFile: function (hash, callback) {
+            var target = this;
+            var tree = target.find('div.milton-tree-wrapper');
+            flog();
+            if (hash) {
+                tree.mtree('select', tree.find('[data-hash="' + hash + '"]'), callback);
+            } else {
+                var options = tree.data('options');
+                options.selectedItem = null;
+                tree.data('options', options);
+                tree.mtree('refreshSelected');
+            }
+        },
+        updateOption: function (key, value) {
+            var target = this;
+            var options = target.data('mselectOptions');
+            options[key] = value;
+            target.data('mselectOptions', options);
         }
     };
-
+    
     function getExtension(filename) {
         var parts = filename.split('.');
         return parts[parts.length - 1];
     }
-
+    
     function isImage(filename) {
         var ext = getExtension(filename);
         switch (ext.toLowerCase()) {
@@ -97,7 +115,7 @@
         }
         return false;
     }
-
+    
     function isVideo(filename) {
         var ext = getExtension(filename);
         switch (ext.toLowerCase()) {
@@ -110,7 +128,7 @@
         }
         return false;
     }
-
+    
     function isAudio(filename) {
         var ext = getExtension(filename);
         switch (ext.toLowerCase()) {
@@ -124,19 +142,19 @@
         }
         return false;
     }
-
+    
     function getAcceptedFiles(contentTypes) {
         return contentTypes.map(function (a) {
             return a + '/*'
         }).join(',');
     }
-
+    
     function initSelectContainer(container, config, onOk) {
         flog('[jquery.mselect] initSelectContainer', container, config);
-
+        
         config.basePath = config.basePath.replace(/\/\//g, '/');
         config.pagePath = config.pagePath.replace(/\/\//g, '/');
-
+        
         var tree = container.find('div.milton-tree-wrapper');
         var previewContainer = container.find('.milton-file-preview');
         var mtreeOptions = {
@@ -145,7 +163,7 @@
             excludedEndPaths: config.excludedEndPaths,
             onselectFolder: function (n, selectedUrl, hash) {
                 flog('Selected folder', n, selectedUrl, hash);
-                if (selectedUrl.indexOf('/') !== 0){
+                if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
                 $('#milton-btn-upload-file').mupload('setUrl', selectedUrl);
@@ -155,38 +173,69 @@
             },
             onselectFile: function (n, selectedUrl, hash) {
                 flog('Selected file', n, selectedUrl, hash);
-                if (selectedUrl.indexOf('/') !== 0){
+                if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
                 var newUrl = selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/';
                 newUrl = newUrl.replace(/\/\//g, '/');
                 $('#milton-btn-upload-file').mupload('setUrl', newUrl);
-
+    
+                var fileType = 'other';
+                if (isVideo(selectedUrl)) {
+                    fileType = 'video';
+                } else if (isImage(selectedUrl)) {
+                    fileType = 'image';
+                } else if (isAudio(selectedUrl)) {
+                    fileType = 'audio';
+                }
+                
                 var hashUrl = '/_hashes/files/' + hash;
                 if (isVideo(selectedUrl)) {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
-                    $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                    $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
+                        
+                        if (typeof config.onPreviewFile === 'function') {
+                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                        }
                     });
                 } else if (isAudio(selectedUrl)) {
                     previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
-                    $.getScript('/static/jwplayer/6.10/jwplayer.js', function () {
+                    $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
                         jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                         buildJWAudioPlayer(100, hashUrl, false);
+                        
+                        if (typeof config.onPreviewFile === 'function') {
+                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                        }
                     });
                 } else if (isImage(selectedUrl)) {
-                    previewContainer.html('<img class="img-responsive" src="' + hashUrl + '" data-hash="' + hash + '" />');
+                    $('<img />').attr('src', hashUrl).load(function () {
+                        var realWidth = this.width;
+                        var realHeight = this.height;
+                        var ratio = realWidth / realHeight;
+                        
+                        previewContainer.html('<img class="img-responsive" src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                        
+                        if (typeof config.onPreviewFile === 'function') {
+                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                        }
+                    });
                 } else {
-                    previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>')
+                    previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
+                    
+                    if (typeof config.onPreviewFile === 'function') {
+                        config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                    }
                 }
-
+                
                 previewContainer.attr('data-url', selectedUrl);
             },
             ondelete: function (n, isFolder) {
                 if (isFolder) {
                     flog('Deleted folder', n, isFolder);
-
+                    
                     var newUrl = config.basePath + config.pagePath;
                     newUrl = newUrl.replace(/\/\//g, '/');
                     $('#milton-btn-upload-file').mupload('setUrl', newUrl);
@@ -197,7 +246,7 @@
             mtreeOptions.includeContentTypes = config.contentTypes;
         }
         tree.mtree(mtreeOptions);
-
+        
         var muploadOptions = {
             url: config.basePath,
             buttonText: '<i class="fa fa-upload"></i>',
@@ -212,10 +261,10 @@
             muploadOptions.acceptedFiles = getAcceptedFiles(config.contentTypes);
         }
         $('#milton-btn-upload-file').mupload(muploadOptions);
-
+        
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
-
+            
             if (url) {
                 if (typeof config.onSelectFile === 'function') {
                     var relUrl = url.substring(config.basePath.length, url.length);
@@ -229,15 +278,15 @@
                     } else if (isAudio(url)) {
                         fileType = 'audio';
                     }
-
-                    config.onSelectFile.call(this, url, relUrl, fileType, hash);
+                    
+                    config.onSelectFile.call(container, url, relUrl, fileType, hash);
                 }
-
+                
                 if (typeof config.onSelectFolder === 'function') {
                     var hash = previewContainer.attr('data-hash');
-                    config.onSelectFolder.call(this, url, hash);
+                    config.onSelectFolder.call(container, url, hash);
                 }
-
+                
                 if (typeof onOk === 'function') {
                     onOk.call(this);
                 }
@@ -246,7 +295,7 @@
             }
         });
     }
-
+    
     function addFileToTree(name, href, tree) {
         var t = "/_DAV/PROPFIND?fields=milton:hash";
         flog("addFileToTree", href + t);
@@ -259,30 +308,32 @@
             tree.mtree('addFile', name, href, hash);
         });
     }
-
+    
     function getSelectContainer(config) {
         var extraElement = '';
-
+        
         if (!config.useModal) {
             extraElement += '<button type="button" class="btn btn-primary btn-ok"><i class="fa fa-check"></i></button>';
         }
-
+        
         return (
             '<div class="milton-file-select-container">' +
             '    <div class="row">' +
             '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-8">' +
-            '            <div id="milton-btn-upload-file"></div>' + extraElement +
-            '            <div class="milton-file-preview" style="height: 400px; overflow-y: auto;"></div>' +
+            '            <div class="milton-file-preview-wrapper">' +
+            '                <div id="milton-btn-upload-file"></div>' + extraElement +
+            '                <div class="milton-file-preview"></div>' +
+            '            </div>' +
             '        </div>' +
             '    </div>' +
             '</div>'
         );
     }
-
+    
     function getModal(config) {
         flog('[jquery.mselect] getModal', config);
-
+        
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
             $('body').append(
@@ -302,13 +353,13 @@
                 '</div>'
             );
             modal = $('#modal-milton-file-select');
-
+            
             initSelectContainer(modal, config, function () {
                 modal.modal('hide');
             });
         }
-
+        
         return modal;
     }
-
+    
 })(jQuery);
