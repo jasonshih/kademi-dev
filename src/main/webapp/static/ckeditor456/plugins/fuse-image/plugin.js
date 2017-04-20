@@ -160,7 +160,7 @@
                             var realHeight = this.height;
                             var ratio = realWidth / realHeight;
         
-                            previewContainer.html('<img class="img-responsive" src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
+                            previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
                             txtWidth.val(width || realWidth);
                             txtHeight.val(height || realHeight);
                         });

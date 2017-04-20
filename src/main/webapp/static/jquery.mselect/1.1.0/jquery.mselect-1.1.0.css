@@ -44,7 +44,7 @@
    ============================================================================ */
 .milton-file-select-container .milton-tree {
     border: 1px solid #ddd !important;
-    overflow-y: auto !important;
+    overflow: auto !important;
     position: absolute;
     top: 45px;
     left: 15px;

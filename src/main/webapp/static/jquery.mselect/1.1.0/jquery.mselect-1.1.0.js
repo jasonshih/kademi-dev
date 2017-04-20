@@ -216,7 +216,7 @@
                         var realHeight = this.height;
                         var ratio = realWidth / realHeight;
                         
-                        previewContainer.html('<img class="img-responsive" src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
+                        previewContainer.html('<img src="' + hashUrl + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" />');
                         
                         if (typeof config.onPreviewFile === 'function') {
                             config.onPreviewFile.call(container, fileType, selectedUrl, hash);
