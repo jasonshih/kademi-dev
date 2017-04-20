@@ -28,6 +28,7 @@
         #if(!$websiteId)
         #set( $websiteId = "" )
         #end
+        #set( $contentFileName = $page.node.contentFileName)
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
             <div class="form-group">
@@ -196,7 +197,7 @@
                     <div id="message" class="tab-pane">
                         <a href="#modalEditMessage" data-toggle="modal" class="btn btn-sm btn-warning">Edit Message</a>
                         <hr />
-                        <iframe width="100%" height="500" src="${page.name}-content.html"></iframe>
+                        <iframe width="100%" height="500" src="$contentFileName"></iframe>
                     </div>
 
                     <!-- Start content of History tab -->
@@ -268,7 +269,7 @@
 
         <div id="modalEditMessage" class="modal modal-full fade" tabindex="-1">
             <div class="modal-body">
-                <iframe src="edmeditor?fileName=${page.name}-content.html&useHash=true&iframe=true"></iframe>
+                <iframe src="edmeditor?fileName=$contentFileName&useHash=true&iframe=true"></iframe>
             </div>
             <div class="modal-footer">
                 <button data-dismiss="modal" class="btn btn-sm btn-default">Close</button>

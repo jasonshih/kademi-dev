@@ -389,7 +389,7 @@ function initSearchOrg() {
     $("#org-query, #org-query-parent").on({
         keyup: function () {
             typewatch(function () {
-                flog("do search");
+                flog("initSearchOrg: do search");
                 doSearch();
             }, 500);
         },
