@@ -693,6 +693,7 @@
         <script type="text/javascript">
             var availableProfileFields = $formatter.toJson($page.availableFields);
             $(function () {
+                flog("initManageUsers.1");
                 initManageUsers();
 
                 $('#aggregationsContainer').on('click', '.term-select', function (e) {

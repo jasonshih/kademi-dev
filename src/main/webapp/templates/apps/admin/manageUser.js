@@ -1,7 +1,9 @@
 function initManageUsers() {
+    flog("initManageUsers.2");
     initNewUserForm();
     initSettingPanel();
     initSearchBusiness();
+    flog("initSearchUser.0");
     initSearchUser();
     initOrgSearch();
     initSelectAll();
@@ -202,9 +204,10 @@ function showUnmatched(resultUploadCsv, unmatched) {
 }
 
 function initSearchUser() {
+    flog("initSearchUser.1");
     $('#user-query').keyup(function () {
         typewatch(function () {
-            flog('do search');
+            flog('initSearchUser: do search');
             doSearch();
         }, 500);
     });
@@ -223,7 +226,7 @@ function doSearch() {
     var groupName = $('#search-group').val();
     var isEnabled = $('.btn-enable-user').is(':checked');
 
-    flog('doSearch', query, groupName);
+    flog('doSearch.1', query, groupName);
 
     var uri = URI(window.location);
 
@@ -231,7 +234,7 @@ function doSearch() {
     uri.setSearch('g', groupName);
     uri.setSearch('enabled', isEnabled);
 
-    flog('doSearch', uri.toString());
+    flog('doSearch.2', uri.toString());
 
     var newHref = uri.toString();
 
@@ -244,13 +247,14 @@ function doSearch() {
         success: function (data) {
             Msg.info('Search complete', 5000);
 
-            flog('success', data);
+            var table = $('#table-users');
+            flog('doSearch.3', table);
 
             var newDom = $(data);
 
             var $fragment = newDom.find('#table-users');
 
-            $('#table-users').replaceWith($fragment);
+            table.replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
 
             initSort();
