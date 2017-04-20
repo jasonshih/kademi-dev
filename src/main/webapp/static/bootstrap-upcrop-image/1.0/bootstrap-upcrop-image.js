@@ -4,6 +4,8 @@
         buttonUploadOtherText: 'Upload other',
         buttonCropText: 'Crop',
         buttonContinueText: 'Continue',
+        buttonCameraText: 'Camera',
+        buttonTakePictureText: 'Take a picture',
         modalTitle: 'Upload and crop image',
         cropHint: '<p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> Please drag a rectangle to crop the image</p>',
         onUploadComplete: null,
@@ -33,6 +35,8 @@
             '               <div class="pull-left">' +
             '                   {{buttonUploadOther}}' +
             '               </div>' +
+            '               {{buttonCamera}} ' +
+            '               {{buttonTakePicture}} ' +
             '               <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
             '               {{buttonCrop}} ' +
             '               {{buttonContinue}}' +
@@ -73,7 +77,9 @@
                 upcropZone: getUpcropZone(config),
                 buttonUploadOther: getButtonUploadOther(config),
                 buttonCrop: getButtonCrop(config),
-                buttonContinue: getButtonContinue(config)
+                buttonContinue: getButtonContinue(config),
+                buttonCamera: getButtonCamera(config),
+                buttonTakePicture: getButtonTakePicture(config)
             };
             flog('Data upcrop: ', dataUpCrop);
 
@@ -86,6 +92,9 @@
             var upcropContainer = $('#' + uniqueId);
             var uploadZone = upcropContainer.find('.upload-zone');
             var cropZone = upcropContainer.find('.crop-zone');
+            var takePictureZone = upcropContainer.find('.take-picture');
+            var btnCamera = upcropContainer.find('.btn-camera');
+            var btnTakePicture = upcropContainer.find('.btn-take-picture');
             var btnUploadOther = upcropContainer.find('.btn-upload-other');
             var btnCrop = upcropContainer.find('.btn-crop');
             var btnContinue = upcropContainer.find('.btn-continue');
@@ -121,6 +130,70 @@
 
                 if (typeof config.onUploadOther === 'function') {
                     config.onUploadOther.apply(this, upcropContainer);
+                }
+            });
+            
+            
+                        
+                
+
+            var stream = undefined;
+            btnCamera.click(function (e) {
+                e.preventDefault();
+                
+                takePictureZone.removeClass('hide');
+                
+                uploadZone.addClass('hide');
+                cropZone.addClass('hide');
+                btnCrop.addClass('hide');
+                btnContinue.addClass('hide');
+                btnUploadOther.addClass('hide');
+                
+                // Get access to the camera!
+                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.getUserMedia !== null) {
+                    
+                    btnCamera.addClass('hide');
+                    btnTakePicture.removeClass('hide');
+                    
+                    var video = document.createElement("video");
+                    takePictureZone.append(video);
+
+                    // Not adding `{ audio: true }` since we only want video now
+                    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                        video.src = window.URL.createObjectURL(stream);
+                        video.play();
+                        
+                        console.log("PLAYING");
+
+                        console.log(stream);
+                        stream.getVideoTracks().forEach(function (track) {
+                            console.log("stoping. .. .");
+                            track.stop();
+                        });
+                    });
+                }
+            });
+
+            btnTakePicture.click(function (e) {
+                e.preventDefault();
+                if(navigator.mediaDevices.getUserMedia !== null){
+                    stream.getVideoTracks().forEach(function (track) {
+                        track.stop();
+                    });
+                    var canvas = document.createElement("canvas");
+                    takePictureZone.append(canvas);
+
+                    var context = canvas.getContext('2d');
+
+                    // Pause the image of the video
+                    document.querySelector('video').pause()
+
+                    context.drawImage(video, 0, 0, 1200, 1200);
+                    document.querySelector('video').remove();
+
+                    navigator.mediaDevices.getUserMedia.stop();
+                    var track = stream.getTracks()[0];  // if only one media track
+                    track.stop();
                 }
             });
 
@@ -368,6 +441,14 @@
         return '<button class="btn btn-info btn-continue hide" type="button">' + config.buttonContinueText + '</button>';
     }
 
+    function getButtonCamera(config) {
+        return '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';
+    }
+    
+    function getButtonTakePicture(config) {
+        return '<button class="btn btn-primary btn-take-picture hide" type="button">'+config.buttonTakePictureText+'</button>';
+    }
+
     function getUpcropZone(config) {
         return (
             '<input type="hidden" value="" name="x" />' +
@@ -375,6 +456,7 @@
             '<input type="hidden" value="" name="w" />' +
             '<input type="hidden" value="" name="h" />' +
             '<input type="hidden" value="" name="url" />' +
+            '<div class="take-picture hide"></div>' +
             '<div class="upload-zone"></div>' +
             '<div class="crop-zone hide clearfix">' +
             config.cropHint +
