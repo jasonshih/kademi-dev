@@ -42,7 +42,7 @@
                         <textarea class="form-control" name="orderNotes" placeholder="Order notes, courier instructions etc  "></textarea>
                     </div>
                 </div>
-                
+                                
                 #if( $applications.shoppingCart.cashTopupsEnabled )
                     #set( $checkoutPage = $page.find("/checkout" ) )
                     #if( $checkoutPage.balance < $checkoutPage.totalCost )
