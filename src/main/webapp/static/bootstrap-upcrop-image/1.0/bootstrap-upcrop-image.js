@@ -133,11 +133,7 @@
                 }
             });
             
-            
-                        
-                
 
-            var stream = undefined;
             btnCamera.click(function (e) {
                 e.preventDefault();
                 
@@ -156,6 +152,8 @@
                     btnTakePicture.removeClass('hide');
                     
                     var video = document.createElement("video");
+                                                video.width="640";
+                            video.height="480";
                     takePictureZone.append(video);
 
                     // Not adding `{ audio: true }` since we only want video now
@@ -163,37 +161,30 @@
                         video.src = window.URL.createObjectURL(stream);
                         video.play();
                         
-                        console.log("PLAYING");
+                        btnTakePicture.click(function (e) {
+                            e.preventDefault();
+                            
+                            var canvas = document.createElement("canvas");
+                            canvas.width="640";
+                            canvas.height="480";
+                            takePictureZone.append(canvas);
 
-                        console.log(stream);
-                        stream.getVideoTracks().forEach(function (track) {
-                            console.log("stoping. .. .");
-                            track.stop();
+                            var context = canvas.getContext('2d');
+
+                            // Pause the image of the video
+                            document.querySelector('video').pause()
+
+                            context.drawImage(video, 0, 0, 640, 480);
+                            video.remove();
+                            
+                            stream.getVideoTracks().forEach(function (track) {
+                                console.log("stoping. .. .");
+                                track.stop();
+                            });
+                            
                         });
+
                     });
-                }
-            });
-
-            btnTakePicture.click(function (e) {
-                e.preventDefault();
-                if(navigator.mediaDevices.getUserMedia !== null){
-                    stream.getVideoTracks().forEach(function (track) {
-                        track.stop();
-                    });
-                    var canvas = document.createElement("canvas");
-                    takePictureZone.append(canvas);
-
-                    var context = canvas.getContext('2d');
-
-                    // Pause the image of the video
-                    document.querySelector('video').pause()
-
-                    context.drawImage(video, 0, 0, 1200, 1200);
-                    document.querySelector('video').remove();
-
-                    navigator.mediaDevices.getUserMedia.stop();
-                    var track = stream.getTracks()[0];  // if only one media track
-                    track.stop();
                 }
             });
 
