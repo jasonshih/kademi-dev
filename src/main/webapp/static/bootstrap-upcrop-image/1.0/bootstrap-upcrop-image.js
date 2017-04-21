@@ -6,6 +6,7 @@
         buttonContinueText: 'Continue',
         buttonCameraText: 'Camera',
         buttonTakePictureText: 'Take a picture',
+        buttonTakeAnotherText: 'Take another picture',
         modalTitle: 'Upload and crop image',
         cropHint: '<p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> Please drag a rectangle to crop the image</p>',
         onUploadComplete: null,
@@ -50,9 +51,10 @@
             '   <div class="clearfix">' +
             '       <div class="pull-left">' +
             '           {{buttonUploadOther}}' +
+            '           {{buttonTakeAnother}} ASD' +
             '       </div>' +
             '       <div class="pull-right">' +
-            '           {{buttonContinue}} ' +
+            '           {{buttonContinue}}' +
             '           {{buttonCrop}}' +
             '       </div>' +
             '   </div>' +
@@ -79,7 +81,8 @@
                 buttonCrop: getButtonCrop(config),
                 buttonContinue: getButtonContinue(config),
                 buttonCamera: getButtonCamera(config),
-                buttonTakePicture: getButtonTakePicture(config)
+                buttonTakePicture: getButtonTakePicture(config),
+                buttonTakeAnother: getButtonTakeAnother(config)
             };
             flog('Data upcrop: ', dataUpCrop);
 
@@ -95,7 +98,9 @@
             var takePictureZone = upcropContainer.find('.take-picture');
             var btnCamera = upcropContainer.find('.btn-camera');
             var btnTakePicture = upcropContainer.find('.btn-take-picture');
+            var btnTakeAnother = upcropContainer.find('.btn-take-another');
             var btnUploadOther = upcropContainer.find('.btn-upload-other');
+            var btnCancel = upcropContainer.find('.btn-cancel');
             var btnCrop = upcropContainer.find('.btn-crop');
             var btnContinue = upcropContainer.find('.btn-continue');
 
@@ -133,18 +138,36 @@
                 }
             });
             
-
-            btnCamera.click(function (e) {
+            
+            btnTakeAnother.click(function (e) {
                 e.preventDefault();
+                setTakePictureZone();
+                destroyCropZone();
                 
-                takePictureZone.removeClass('hide');
+            });
+            
+            function setTakePictureZone(){
+                var videoZone = $("#videoZone");
+                if(videoZone !== undefined){
+                    videoZone.remove();
+                }
+                var takenPicture = $("#takenPicture");
+                if(takenPicture !== undefined){
+                    takenPicture.remove();
+                }
                 
+                takePictureZone.removeClass('hide');                
                 uploadZone.addClass('hide');
                 cropZone.addClass('hide');
                 btnCrop.addClass('hide');
                 btnContinue.addClass('hide');
                 btnUploadOther.addClass('hide');
-                
+            }
+
+            btnCamera.click(function (e) {
+                e.preventDefault();
+                setTakePictureZone();
+
                 // Get access to the camera!
                 if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.getUserMedia !== null) {
                     
@@ -152,8 +175,9 @@
                     btnTakePicture.removeClass('hide');
                     
                     var video = document.createElement("video");
-                                                video.width="640";
-                            video.height="480";
+                    video.id = "videoZone";
+                    video.width="572";
+                    video.height="430";
                     takePictureZone.append(video);
 
                     // Not adding `{ audio: true }` since we only want video now
@@ -164,30 +188,78 @@
                         btnTakePicture.click(function (e) {
                             e.preventDefault();
                             
+                            btnTakePicture.addClass('hide');
+                            
                             var canvas = document.createElement("canvas");
-                            canvas.width="640";
-                            canvas.height="480";
-                            takePictureZone.append(canvas);
-
+                            canvas.width="572";
+                            canvas.height="430";
+                            canvas.id = "canvas";
                             var context = canvas.getContext('2d');
 
-                            // Pause the image of the video
-                            document.querySelector('video').pause()
+                            document.querySelector('video').pause(); // Pause the image of the video
 
-                            context.drawImage(video, 0, 0, 640, 480);
-                            video.remove();
+                            context.drawImage(video, 0, 0, 572, 430); // Draw the Image
+                            video.remove(); // Remove the video tag
                             
-                            stream.getVideoTracks().forEach(function (track) {
-                                console.log("stoping. .. .");
+                            stream.getVideoTracks().forEach(function (track) { // Stop the camera hardware
+                                flog("stoping camera.");
                                 track.stop();
                             });
+                            
+                            var href = canvas.toDataURL("image/png"); // Get the canvas URL
+                            var image = new Image();
+                            image.src = href;
+                            image.id = "takenPicture";
+                            
+                            var file = convertCanvasToBlob(canvas);
+                            var form = upcropContainer.find('form');
+                            var formdata = new FormData();
+                            var name = 'webcam.png';
+                            formdata.append("overwrite", "true");
+                            formdata.append("file", file, name);
+                            $.ajax({
+                               type: form.attr("method"),
+                               url: form.attr("action"),
+                               data: formdata,
+                               processData: false,
+                               contentType: false,
+                               success: function(res){
+                                    var data = {'result': res, 'name': name};
+                                    dataContinue = [data];
+                                    flog('uploaded image: ', data, name, data.result.nextHref);
+                                    uploadedHref = data.result.nextHref;
+                                    uploadedName = name;
+                                    href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);
+                                    flog("href:", href);
+                                    txtUrl.val(href);
+                               }
+                            });
+                            takePictureZone.addClass('hide');
+                            cropZone.removeClass('hide');
+                            btnContinue.removeClass('hide');
+
+                            btnTakeAnother.removeClass('hide');
+                            
+                            takePictureZone.append(image);
+                            $("#takenPicture").addClass("image-crop");
+
+                            initCropZone(href);
                             
                         });
 
                     });
                 }
             });
-
+            
+            function convertCanvasToBlob(canvas){
+                var blobBin = atob(canvas.toDataURL('image/png').split(',')[1]);
+                var array = [];
+                for(var i = 0; i < blobBin.length; i++) {
+                    array.push(blobBin.charCodeAt(i));
+                }
+                return new Blob([new Uint8Array(array)], {type: 'image/png'});
+            }
+            
             // Action for button `Continue`
             btnContinue.on('click', function (e) {
                 e.preventDefault();
@@ -197,6 +269,7 @@
                 }
 
                 if (!config.isEmbedded) {
+                    destroyCropZone();
                     upcropContainer.modal('hide');
                 }
             });
@@ -382,6 +455,7 @@
                 uploadZone: uploadZone,
                 cropZone: cropZone,
                 btnUploadOther: btnUploadOther,
+                btnTakeAnother: btnTakeAnother,
                 btnCrop: btnCrop,
                 btnContinue: btnContinue
             };
@@ -439,7 +513,11 @@
     function getButtonTakePicture(config) {
         return '<button class="btn btn-primary btn-take-picture hide" type="button">'+config.buttonTakePictureText+'</button>';
     }
-
+    
+    function getButtonTakeAnother(config) {
+        return '<button class="btn btn-primary btn-take-another hide" type="button">' + config.buttonTakeAnotherText + '</button>';
+    }
+    
     function getUpcropZone(config) {
         return (
             '<input type="hidden" value="" name="x" />' +
@@ -469,16 +547,17 @@
 
         $(document.body).on('show.bs.modal', '#' + dataUpCrop.upcropId, function () {
             var btnUploadOther = $(this).find('.btn-upload-other');
-
+            var btnTakeAnother = $(this).find('.btn-take-another');
+            
             !btnUploadOther.hasClass('hide') && btnUploadOther.trigger('click');
+            !btnTakeAnother.hasClass('hide') && btnTakeAnother.trigger('click');
+            
         });
     }
 
     function initUpCropEmbedded(target, config, dataUpCrop) {
         flog('Init upcrop embedded');
-        target.html(
-                renderTemplate(config.embeddedTemplate, dataUpCrop)
-                );
+        target.html(renderTemplate(config.embeddedTemplate, dataUpCrop));
     }
 
     function renderTemplate(templateString, data) {
