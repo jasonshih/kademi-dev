@@ -2,7 +2,8 @@
  * Created by Anh on 10/04/2017.
  */
 controllerMappings.addComponent("rewardstore/components", "rewardProduct", "html", "Shows reward product with image, points and add to card button", "Reward Store");
-controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Add Point Range List component", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
 
 
 function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {
@@ -39,7 +40,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
             }
         },
         "min_score": 0.05,
-        "fields": ["title", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
+        "fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
         "sort": {},
         "highlight": {
             "fields": {
