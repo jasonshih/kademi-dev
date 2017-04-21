@@ -113,66 +113,6 @@ function initTable() {
         });
 	});
 	
-	
-	$('#pageSize').on('keypress', function (e) {
-		if (e.keyCode == 13) {
-			e.preventDefault();
-	        var uri = URI(window.location);
-	        var field = e.target.value;
-	
-	        uri.setSearch('pageSize', field);
-	
-	        $.ajax({
-	            type: 'GET',
-	            url: uri.toString(),
-	            success: function (data) {
-	                flog('success', data);
-	                window.history.pushState('', document.title, uri.toString());
-	
-	                var newDom = $(data);
-	
-	                var $tableContent = newDom.find('#productsTableContainer');
-	                $('#productsTableContainer').replaceWith($tableContent);
-	
-	                initTable();
-	            },
-	            error: function (resp) {
-	                Msg.error('err');
-	            }
-	        });
-		}
-	});
-	
-	$('#pageSize').on('keypress', function (e) {
-		if (e.keyCode == 13) {
-			e.preventDefault();
-	        var uri = URI(window.location);
-	        var field = e.target.value;
-	
-	        uri.setSearch('pageSize', field);
-	
-	        $.ajax({
-	            type: 'GET',
-	            url: uri.toString(),
-	            success: function (data) {
-	                flog('success', data);
-	                window.history.pushState('', document.title, uri.toString());
-	
-	                var newDom = $(data);
-	
-	                var $tableContent = newDom.find('#productsTableContainer');
-	                $('#productsTableContainer').replaceWith($tableContent);
-	
-	                initTable();
-	            },
-	            error: function (resp) {
-	                Msg.error('err');
-	            }
-	        });
-		}
-	});
-	
-	
 	flog('initSort()');
     $('.sort-field').on('click', function (e) {
         e.preventDefault();
@@ -313,6 +253,11 @@ function doHistorySearch() {
     flog('doHistorySearch');
     
     Msg.info("Doing search...", 2000);
+    
+    var uri = URI(window.location);
+
+    uri.setSearch('dataQuery', $("#data-query").val());
+    uri.setSearch('sosupplierrtdir', $("#supplier").val());
 
     var data = {
         dataQuery: $("#data-query").val(),
@@ -320,18 +265,16 @@ function doHistorySearch() {
     };
     flog("data", data);
 
-    $('.btn-export-points').attr('href', 'skus.csv?' + $.param(data));
+    $('#btn-export-products').attr('href', 'products.csv?' + $.param(data));
 
     var target = $("#productsTableContainer");
     target.load();
 
-
-    var link = window.location.pathname + "?" + $.param(data);
-    flog("new link", link);
+    flog("new link", uri.toString());
     
     $.ajax({
         type: "GET",
-        url: link,
+        url: uri.toString(),
         dataType: 'html',
         success: function (content) {
             flog('response', content);
