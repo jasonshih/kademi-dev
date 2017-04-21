@@ -1,6 +1,6 @@
 /**
  *
- * jquery.orgFinder.js
+ * jquery.orgMapFinder.js
  * @version: 1.0.1
  * @require: bootstrap-select, jquery.scrollTo
  *
@@ -13,8 +13,8 @@
  * @option {String} searchUrl Search URL. Must be link to signup page of a group or /organisations/ (if you use this plugin in Kademi admin console)
  * @option {Array} orgTypes List of organisation types. It's optional
  * @option {Array} allowedCountries List of countries which will available for searching. It's optional
- * @option {String} template Template string for orgFinder. Form search must has 'org-finder-search' class, query textbox must has 'org-finder-query', selectbox for organisation types must has 'org-finder-orgType' class and selectbox for allowed countries must has 'org-finder-allowedCountries' classs. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
- * @option {Function} onReady Callback will be called when orgFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
+ * @option {String} template Template string for orgMapFinder. Form search must has 'org-finder-search' class, query textbox must has 'org-finder-query', selectbox for organisation types must has 'org-finder-orgType' class and selectbox for allowed countries must has 'org-finder-allowedCountries' classs. Items list wrapper must has 'org-finder-list' class. Map div must has class 'org-finder-map'
+ * @option {Function} onReady Callback will be called when orgMapFinder is ready. Arguments: 'formSearch', 'itemsWrapper', 'mapDiv'
  * @option {Function} onSelect Callback will be called when click on marker on map or item in org list panel. Arguments: 'orgData', 'item', 'marker', 'infoWindow'
  * @option {Function} onSearch Callback will be called when search a keyword. Arguments: 'query'
  * @option {Function} beforeSearch Callback will be called before searching a keyword. This callback must be return data object which will be sent to server. Arguments: 'query', 'data'
@@ -25,21 +25,21 @@
  */
 
 (function ($) {
-    $.fn.orgFinder = function (method) {
+    $.fn.orgMapFinder = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
         } else if (typeof method === 'object' || !method) {
             return methods.init.apply(this, arguments);
         } else {
-            $.error('[jquery.orgFinder] Method ' + method + ' does not exist on jquery.orgFinder');
+            $.error('[jquery.orgMapFinder] Method ' + method + ' does not exist on jquery.orgMapFinder');
         }
     };
     
-    // Version for jquery.orgFinder
-    $.fn.orgFinder.version = '1.0.1';
+    // Version for jquery.orgMapFinder
+    $.fn.orgMapFinder.version = '1.0.1';
     
     // Default configuration
-    $.fn.orgFinder.DEFAULT = {
+    $.fn.orgMapFinder.DEFAULT = {
         initLatLng: [],
         showAllOrgs: true,
         initZoomLevel: 15,
@@ -162,14 +162,14 @@
         },
         
         initMap: function () {
-            flog('[jquery.orgFinder] initMap');
+            flog('[jquery.orgMapFinder] initMap');
             
             var self = this;
             var options = this.options;
             var functionName = 'init' + (new Date()).getTime();
-            var googleMapCallback = '$.fn.orgFinder.' + functionName;
+            var googleMapCallback = '$.fn.orgMapFinder.' + functionName;
             
-            $.fn.orgFinder[functionName] = function () {
+            $.fn.orgMapFinder[functionName] = function () {
                 var mapOptions = {};
                 if (options.initLatLng.length === 2) {
                     mapOptions.center = {
@@ -187,7 +187,7 @@
                 self.initFormSearch();
                 
                 if (options.showAllOrgs) {
-                    flog('[jquery.orgFinder] Show all organisations');
+                    flog('[jquery.orgMapFinder] Show all organisations');
                     self.doSearch('');
                 }
                 
@@ -197,23 +197,23 @@
             };
             
             if (window.google && window.google.maps) {
-                flog('[jquery.orgFinder] Google Map Api is already in documentation');
-                $.fn.orgFinder[functionName].call(this);
+                flog('[jquery.orgMapFinder] Google Map Api is already in documentation');
+                $.fn.orgMapFinder[functionName].call(this);
             } else {
                 var gmapApiUrl = 'https://maps.googleapis.com/maps/api/js?key=' + self.options.googleAPIKey + '&libraries=places&sensor=false&callback=' + googleMapCallback;
-                flog('[jquery.orgFinder] Load Google Map Api from "' + gmapApiUrl + '"');
+                flog('[jquery.orgMapFinder] Load Google Map Api from "' + gmapApiUrl + '"');
                 $.getScript(gmapApiUrl);
             }
         },
         
         initCurrentLocation: function () {
-            flog('[jquery.orgFinder] initCurrentLocation');
+            flog('[jquery.orgMapFinder] initCurrentLocation');
             
             var self = this;
             var map = self.map;
             
             if (navigator.geolocation) {
-                flog('[jquery.orgFinder] Geolocation is supported');
+                flog('[jquery.orgMapFinder] Geolocation is supported');
                 navigator.geolocation.getCurrentPosition(function (position) {
                     var lat = position.coords.latitude;
                     var lng = position.coords.longitude;
@@ -221,7 +221,7 @@
                     self.currentLat = lat;
                     self.currentLng = lng;
                     
-                    flog('[jquery.orgFinder] Add marker for current location of user', lat, lng);
+                    flog('[jquery.orgMapFinder] Add marker for current location of user', lat, lng);
                     var latlng = new google.maps.LatLng(lat, lng);
                     var marker = new google.maps.Marker({
                         position: latlng,
@@ -236,25 +236,25 @@
                     infoWindow.open(map, marker);
                     
                     marker.addListener('click', function () {
-                        flog('[jquery.orgFinder] Clicked on marker of current location of user', marker);
+                        flog('[jquery.orgMapFinder] Clicked on marker of current location of user', marker);
                         
                         self.doSearch('', lat, lng);
                     });
                     
                     $(document.body).on('click', '.btn-near-me', function (e) {
                         e.preventDefault();
-                        flog('[jquery.orgFinder] Clicked on link of current location of user', marker);
+                        flog('[jquery.orgMapFinder] Clicked on link of current location of user', marker);
                         
                         self.doSearch('', lat, lng);
                     });
                 });
             } else {
-                flog('[jquery.orgFinder] Geolocation is not supported');
+                flog('[jquery.orgMapFinder] Geolocation is not supported');
             }
         },
         
         initFormSearch: function () {
-            flog('[jquery.orgFinder] initFormSearch');
+            flog('[jquery.orgMapFinder] initFormSearch');
             
             var self = this;
             var options = self.options;
@@ -268,16 +268,16 @@
             var allowedCountries = options.allowedCountries;
             
             if (initQuery !== null && initQuery !== undefined && initQuery.trim() !== '') {
-                flog('[jquery.orgFinder] Init query is: ' + initQuery);
+                flog('[jquery.orgMapFinder] Init query is: ' + initQuery);
                 txtQ.val(initQuery);
             }
             
-            flog('[jquery.orgFinder] Initialize Google Map Autocomplete', txtQ);
+            flog('[jquery.orgMapFinder] Initialize Google Map Autocomplete', txtQ);
             var autocomplete = self.autocomplete = new google.maps.places.Autocomplete(txtQ.get(0));
             
             var eventHandler = function (forceSearch) {
                 var selectedPlace = autocomplete.getPlace();
-                flog('[jquery.orgFinder] Selected place', selectedPlace);
+                flog('[jquery.orgMapFinder] Selected place', selectedPlace);
                 
                 if (selectedPlace && selectedPlace.place_id) {
                     var lat = selectedPlace.geometry.location.lat();
@@ -289,18 +289,18 @@
                     self.doSearch(query, lat, lng);
                 } else {
                     if (forceSearch) {
-                        flog('[jquery.orgFinder] Force search without selected place');
+                        flog('[jquery.orgMapFinder] Force search without selected place');
 
                         self.clear();
                         self.doSearch('');
                     } else {
-                        flog('[jquery.orgFinder] No place is selected!');
+                        flog('[jquery.orgMapFinder] No place is selected!');
                     }
                 }
             };
             
             if (orgTypes && $.isArray(orgTypes) && orgTypes.length > 0) {
-                flog('[jquery.orgFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
+                flog('[jquery.orgMapFinder] Initialize "Types" select box', cbbOrgType, orgTypes);
                 var optionStr = '';
                 
                 for (var i = 0; i < orgTypes.length; i++) {
@@ -315,12 +315,12 @@
                     eventHandler(true);
                 });
             } else {
-                flog('[jquery.orgFinder] Remove "Types" select box', cbbOrgType, orgTypes);
+                flog('[jquery.orgMapFinder] Remove "Types" select box', cbbOrgType, orgTypes);
                 cbbOrgType.remove();
             }
             
             if (allowedCountries && $.isArray(allowedCountries) && allowedCountries.length > 0) {
-                flog('[jquery.orgFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
+                flog('[jquery.orgMapFinder] Initialize "Country" select box', cbbCountry, allowedCountries);
                 var optionStr = '';
                 
                 optionStr += '<option value="all" selected="selected"> - All Countries - </option>';
@@ -339,14 +339,14 @@
                     txtQ.val('');
                 });
             } else {
-                flog('[jquery.orgFinder] Remove "Country" select box', cbbCountry, allowedCountries);
+                flog('[jquery.orgMapFinder] Remove "Country" select box', cbbCountry, allowedCountries);
                 cbbCountry.remove();
             }
             
             formSearch.find('.btn-clear-query').on('click', function (e) {
                 e.preventDefault();
                 
-                flog('[jquery.orgFinder] Clear all search options');
+                flog('[jquery.orgMapFinder] Clear all search options');
                 
                 txtQ.val('');
                 cbbCountry.selectpicker('val', 'all');
@@ -366,7 +366,7 @@
         },
         
         clear: function () {
-            flog('[jquery.orgFinder] clear');
+            flog('[jquery.orgMapFinder] clear');
             
             if (this.activeInfoWidow) {
                 this.activeInfoWidow.close();
@@ -391,7 +391,7 @@
         },
         
         doSearch: function (query, lat, lng) {
-            flog('[jquery.orgFinder] doSearch', query, lat, lng);
+            flog('[jquery.orgMapFinder] doSearch', query, lat, lng);
             
             var self = this;
             var options = self.options;
@@ -403,7 +403,7 @@
             
             var searchUrl = (options.searchUrl || '').trim();
             if (searchUrl.length === 0) {
-                $.error('[jquery.orgFinder] Search Url is empty!');
+                $.error('[jquery.orgMapFinder] Search Url is empty!');
             }
             
             var data = {
@@ -431,12 +431,12 @@
                 type: 'get',
                 data: data,
                 success: function (resp) {
-                    flog('[jquery.orgFinder] Success in getting data', resp);
+                    flog('[jquery.orgMapFinder] Success in getting data', resp);
                     
                     self.clear();
                     
                     if (lat && lng && lat !== self.currentLat && lng !== self.currentLng) {
-                        flog('[jquery.orgFinder] Add marker for selected place', lat, lng);
+                        flog('[jquery.orgMapFinder] Add marker for selected place', lat, lng);
                         var latlng = new google.maps.LatLng(lat, lng);
                         var marker = new google.maps.Marker({
                             position: latlng,
@@ -457,7 +457,7 @@
                     if (resp && resp.status && resp.data && resp.data[0]) {
                         self.generateData(resp.data, lat, lng);
                     } else {
-                        flog('[jquery.orgFinder] No organisation match');
+                        flog('[jquery.orgMapFinder] No organisation match');
                         self.itemsWrapper.html(options.emptyItemText);
                         
                         if (lat && lng) {
@@ -472,13 +472,13 @@
                     
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    flog('[jquery.orgFinder] Error when getting data', jqXHR, textStatus, errorThrown);
+                    flog('[jquery.orgMapFinder] Error when getting data', jqXHR, textStatus, errorThrown);
                 }
             });
         },
         
         generateData: function (data, lat, lng) {
-            flog('[jquery.orgFinder] generateData', data, lat, lng);
+            flog('[jquery.orgMapFinder] generateData', data, lat, lng);
             
             var self = this;
             var map = self.map;
@@ -509,7 +509,7 @@
         },
         
         createDataItem: function (markerData) {
-            flog('[jquery.orgFinder] createDataItem', markerData);
+            flog('[jquery.orgMapFinder] createDataItem', markerData);
             
             var self = this;
             var options = self.options;
@@ -523,32 +523,32 @@
                 title: markerData.orgTypeDisplayName || markerData.title
             });
             marker.setMap(map);
-            flog('[jquery.orgFinder] Marker', marker);
+            flog('[jquery.orgMapFinder] Marker', marker);
             
             if (typeof options.renderItemContent !== 'function') {
-                $.error('[jquery.orgFinder] renderItemContent is not function. Please correct it!');
+                $.error('[jquery.orgMapFinder] renderItemContent is not function. Please correct it!');
             }
             
             if (typeof options.renderMarkerContent !== 'function') {
-                $.error('[jquery.orgFinder] renderMarkerContent is not function. Please correct it!');
+                $.error('[jquery.orgMapFinder] renderMarkerContent is not function. Please correct it!');
             }
             
             var itemContent = options.renderItemContent(markerData) || '';
             var markerContent = options.renderMarkerContent(markerData) || '';
             
             if (itemContent.length === 0 || markerContent.length === 0) {
-                flog('[jquery.orgFinder] Item content or Marker content is empty. Skipped on creating!');
+                flog('[jquery.orgMapFinder] Item content or Marker content is empty. Skipped on creating!');
             } else {
-                flog('[jquery.orgFinder] Creating infoWindow and item');
+                flog('[jquery.orgMapFinder] Creating infoWindow and item');
                 
                 var infoWindow = new google.maps.InfoWindow({
                     content: markerContent
                 });
-                flog('[jquery.orgFinder] Info window', infoWindow);
+                flog('[jquery.orgMapFinder] Info window', infoWindow);
                 
                 var item = $(itemContent);
                 itemsWrapper.append(item);
-                flog('[jquery.orgFinder] Item', item);
+                flog('[jquery.orgMapFinder] Item', item);
                 
                 var clickEventHandler = function (doScroll) {
                     if (self.activeInfoWidow) {
@@ -569,14 +569,14 @@
                 };
                 
                 marker.addListener('click', function () {
-                    flog('[jquery.orgFinder] Clicked on marker', marker);
+                    flog('[jquery.orgMapFinder] Clicked on marker', marker);
                     
                     clickEventHandler(true);
                 });
                 
                 item.on('click', function (e) {
                     e.preventDefault();
-                    flog('[jquery.orgFinder] Clicked on item', item);
+                    flog('[jquery.orgMapFinder] Clicked on item', item);
                     
                     clickEventHandler(false);
                 });
@@ -590,17 +590,17 @@
     
     var methods = {
         init: function (options) {
-            options = $.extend({}, $.fn.orgFinder.DEFAULT, options);
+            options = $.extend({}, $.fn.orgMapFinder.DEFAULT, options);
             
             if (options.googleAPIKey === null || options.googleAPIKey === undefined || options.googleAPIKey.trim() === '') {
-                $.error('[jquery.orgFinder] Google API Key is empty!');
+                $.error('[jquery.orgMapFinder] Google API Key is empty!');
             }
             
             $(this).each(function () {
                 var container = $(this);
-                if (!container.data('orgFinder')) {
+                if (!container.data('orgMapFinder')) {
                     var finder = new Finder(container, options);
-                    container.data('orgFinder', finder);
+                    container.data('orgMapFinder', finder);
                 }
             });
         }
