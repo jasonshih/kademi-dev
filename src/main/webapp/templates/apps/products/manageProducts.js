@@ -253,6 +253,11 @@ function doHistorySearch() {
     flog('doHistorySearch');
     
     Msg.info("Doing search...", 2000);
+    
+    var uri = URI(window.location);
+
+    uri.setSearch('dataQuery', $("#data-query").val());
+    uri.setSearch('sosupplierrtdir', $("#supplier").val());
 
     var data = {
         dataQuery: $("#data-query").val(),
@@ -260,18 +265,16 @@ function doHistorySearch() {
     };
     flog("data", data);
 
-    $('.btn-export-points').attr('href', 'skus.csv?' + $.param(data));
+    $('#btn-export-products').attr('href', 'products.csv?' + $.param(data));
 
     var target = $("#productsTableContainer");
     target.load();
 
-
-    var link = window.location.pathname + "?" + $.param(data);
-    flog("new link", link);
+    flog("new link", uri.toString());
     
     $.ajax({
         type: "GET",
-        url: link,
+        url: uri.toString(),
         dataType: 'html',
         success: function (content) {
             flog('response', content);
