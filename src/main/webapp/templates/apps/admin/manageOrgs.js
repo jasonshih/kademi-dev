@@ -46,6 +46,8 @@
             self.$form = self.$modal.find('form');
             self.$inputs = self.$form.find('input');
             self.$selects = self.$form.find('select');
+            
+            self.$inputs.filter('[name=parentOrgId]').orgFinder();
 
             self.$form.forms({
                 callback: function (resp) {
@@ -217,6 +219,7 @@
         initRemoveOrgs();
         initSortById();
         initEditPath();
+        initEditParent();
         initSort();
         initMerge();
         initMove();
@@ -502,6 +505,44 @@ function initEditPath() {
             flog("Actual Org ID", orgId, "Old Path", path, "New Path", p);
             updateOrgPath(orgId, p);
         }
+    });
+}
+
+function initEditParent() {
+    var modal = $('#modal-edit-parent');
+    var txtParent = modal.find('[name=updateOrgParent]');
+    var txtOrgId = modal.find('[name=actualID]');
+    
+    txtParent.orgFinder();
+    var txtParentTitle = modal.find('.search-input');
+    
+    $(document.body).on('click', '.btn-edit-parent', function (e) {
+        e.preventDefault();
+        
+        var btn = $(this);
+        var parent = btn.attr("data-parent");
+        var parentTitle = btn.attr("data-parent-title");
+        var orgId = btn.attr("data-orgid");
+    
+        txtParent.val(parent);
+        txtParentTitle.val(parentTitle);
+        txtOrgId.val(orgId);
+        
+        modal.modal('show');
+    });
+    
+    modal.find('form').forms({
+        onSuccess: function () {
+            doSearch();
+            Msg.success("Successfully updated parent");
+            modal.modal('hide');
+        }
+    });
+    
+    modal.on('hidden.bs.modal', function () {
+        txtParent.val('');
+        txtOrgId.val('');
+        txtParentTitle.val('');
     });
 }
 

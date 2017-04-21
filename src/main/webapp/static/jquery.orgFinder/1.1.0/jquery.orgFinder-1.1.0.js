@@ -26,9 +26,9 @@
                 var item = data[i];
                 
                 suggestionsHtml += '<li class="search-suggestion" data-org-id="' + item.orgId + '" data-title="' + item.title + '">';
-                suggestionsHtml += '    <a href="javascript:void(0)">' + item.title;
+                suggestionsHtml += '    <a href="javascript:void(0)" tabindex="-1">' + item.title;
                 suggestionsHtml += '         <small>';
-    
+                
                 if (item.phone) {
                     suggestionsHtml += '         <div><i class="fa fa-phone fa-fw"></i> ' + item.phone + '</div>';
                 }
@@ -36,7 +36,7 @@
                 if (item.email) {
                     suggestionsHtml += '         <div><i class="fa fa-envelope-o fa-fw"></i> ' + item.email + '</div>';
                 }
-    
+                
                 var address = [];
                 if (item.address) {
                     address.push(item.address);
@@ -77,26 +77,32 @@
         
         this.element.wrap('<div class="search-wrapper"></div>');
         this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="" />'
+            '<input type="text" autocomplete="off" class="form-control search-input" value="" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
         )
         this.element.after(
-            '<ul class="dropdown-menu search-suggestions" style="display: none;"></ul>'
+            '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
         );
-        this.element.css('display', 'none');
+        this.element.css('display', 'none').attr('tabindex', '-1');
         
         this.input = this.element.siblings('.search-input');
         this.suggestionsList = this.element.siblings('.search-suggestions');
         
         var timer;
         this.input.on({
+            input: function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    self.search(self.input.val());
+                }, 250);
+            },
             keydown: function (e) {
                 switch (e.keyCode) {
                     case KEYMAP.ESC:
                         self.suggestionsList.css('display', 'none');
                         break;
-                        
-                    case  KEYMAP.UP:
-                    case  KEYMAP.DOWN:
+                    
+                    case KEYMAP.UP:
+                    case KEYMAP.DOWN:
                         e.preventDefault();
                         
                         var suggestions = self.suggestionsList.find('.search-suggestion');
@@ -109,27 +115,29 @@
                         } else {
                             var activeIndex = actived.index();
                             if (e.keyCode === KEYMAP.UP) {
-                                index = activeIndex === 0 ? suggestionsLength - 1: activeIndex - 1;
+                                index = activeIndex === 0 ? suggestionsLength - 1 : activeIndex - 1;
                             } else {
-                                index = activeIndex === suggestionsLength - 1 ? 0: activeIndex + 1;
+                                index = activeIndex === suggestionsLength - 1 ? 0 : activeIndex + 1;
                             }
                         }
                         actived.removeClass('active');
                         suggestions.eq(index).addClass('active');
                         
                         break;
-                        
+                    
                     case KEYMAP.ENTER:
+                        e.preventDefault();
+                        
                         if (self.suggestionsList.is(':visible')) {
                             self.suggestionsList.find('.search-suggestion.active').trigger('click');
-                            break;
+                        } else {
+                            self.search(self.input.val());
                         }
                         
+                        break;
+                    
                     default:
-                        clearTimeout(timer);
-                        timer = setTimeout(function () {
-                            self.search(self.input.val());
-                        }, 250);
+                        // Do nothing
                 }
             },
             blur: function () {
@@ -138,7 +146,7 @@
                 }, 250);
             }
         });
-    
+        
         this.suggestionsList.on({
             mouseenter: function () {
                 self.suggestionsList.find('.search-suggestion.active').removeClass('active');
@@ -157,6 +165,8 @@
                 if (typeof self.options.onSelectSuggestion === 'function') {
                     self.options.onSelectSuggestion.call(self.element, suggestion);
                 }
+                
+                self.suggestionsList.css('display', 'none');
             }
         }, '.search-suggestion');
         
@@ -185,7 +195,7 @@
                 } else {
                     self.suggestionsList.html(self.options.renderNoSuggestion());
                 }
-    
+                
                 self.suggestionsList.css('display', 'block');
             },
             error: function (jqXhr, status, error) {

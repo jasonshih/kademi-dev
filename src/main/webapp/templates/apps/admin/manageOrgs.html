@@ -4,6 +4,7 @@
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/static/jquery.orgFinder/1.1.0/jquery.orgFinder-1.1.0.js">//</script>
         <script type="text/javascript" src="manageOrgs.js" bottom="true">//</script>
     </head>
     <body class="manage-business-unit">
@@ -129,6 +130,7 @@
                                             <ul class="dropdown-menu pull-right" role="menu">
                                                 <li><a class="btn-edit-org" role="button" href="${org.href}edit">Edit details</a></li>
                                                 <li><a class="btn-edit-path" role="button" data-path="$org.orgPath" data-orgid="$org.actualId" href="#">Edit Path</a></li>
+                                                <li><a class="btn-edit-parent" role="button" data-parent="$!org.parent" data-orgid="$org.actualId" data-parent-title="$!org.parentTitle" href="#">Edit parent</a></li>
                                                 <li><a href="${org.href}viewDetails">View users and details</a></li>
                                                 <li><a href="${org.href}organisations">Manage child orgs</a></li>
                                                 <li><a href="${org.href}manageRepos">File manager</a></li>
@@ -357,6 +359,34 @@
                 </div>
             </div>
 
+            <div id="modal-edit-parent" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Edit parent</h4>
+                        </div>
+                        <form method="post" action="" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="parentOrgId" class="control-label col-md-3">Parent organisation</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="updateOrgParent" placeholder="Indentifier of the new organisation's parent" />
+                                        <input type="hidden" name="actualID" />
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
             <div id="modal-merge-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -404,7 +434,6 @@
                     </div>
                 </div>
             </div>
-
             
             <div id="modal-move-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
