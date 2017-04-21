@@ -1,15 +1,13 @@
  $(function () {
 	 initTable();
-	 
-	 $('#data-query').on('keypress', function(e) {
-		var code = e.keyCode || e.which;
-		if (code == 13) {
-			e.preventDefault();
-			doHistorySearch();
-			return false;
-		}
-	});
 
+    $('#data-query').keyup(function () {
+        typewatch(function () {
+            flog('initSearchUser: do search');
+            doHistorySearch();
+        }, 500);
+    }); 
+	 
 	$('#supplier').on('change', function(e) {
 		doHistorySearch();
 	});
