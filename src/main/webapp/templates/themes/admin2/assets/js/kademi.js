@@ -488,8 +488,8 @@ function initAjaxStatus() {
     });
 }
 
-function initTopNavSearch() {
-    flog('initTopNavSearch');
+function initAdminTopNavSearch() {
+    flog('initAdminTopNavSearch');
     
     var txt = $('#top-nav-search-input');
     
@@ -509,7 +509,7 @@ function initTopNavSearch() {
                     var text = txt.val().trim();
                     
                     if (text.length > 0) {
-                        doTopNavSearch(text, suggestionsWrapper, backdrop);
+                        doAdminTopNavSearch(text, suggestionsWrapper, backdrop);
                     } else {
                         suggestionsWrapper.addClass('hide');
                         backdrop.addClass('hide');
@@ -596,8 +596,8 @@ function initTopNavSearch() {
     }
 }
 
-function doTopNavSearch(query, suggestionsWrapper, backdrop) {
-    flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
+function doAdminTopNavSearch(query, suggestionsWrapper, backdrop) {
+    flog('doAdminTopNavSearch', query, suggestionsWrapper, backdrop);
     
     $.ajax({
         url: '/manageUsers',
@@ -655,7 +655,7 @@ function doTopNavSearch(query, suggestionsWrapper, backdrop) {
             backdrop.removeClass('hide');
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
+            flog('Error when doAdminTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
         }
     });
 }
@@ -739,7 +739,7 @@ $(function () {
     flog("Fuse init");
     
     initLoadingOverlay();
-    initTopNavSearch();
+    initAdminTopNavSearch();
     initSwitch();
     initToggled();
     initDatePicker();
