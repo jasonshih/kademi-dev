@@ -61,7 +61,11 @@ function initUploads() {
                     	form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
                         form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
-                        form.find(".beforeImportNumInvalid").text(resp.data.invalidRows.length);
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                        	invalidRows--;
+                        }
+                        form.find(".beforeImportNumInvalid").text(invalidRows);
 
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
