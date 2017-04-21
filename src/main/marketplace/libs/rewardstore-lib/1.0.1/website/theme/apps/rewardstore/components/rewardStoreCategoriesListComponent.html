@@ -12,7 +12,7 @@
 #end
 
 #macro(renderCateList $rewardResource)
-<div class="list-group list-group-root well">
+<div class="list-group list-group-root well rewardStoreCategoriesList">
     <span href="#" class="list-group-item active lead">Categories</span>
     #foreach($cate in $rewardResource.children.ofType.category)
         #if ($cate.numProducts > 0)
