@@ -510,8 +510,8 @@ function initEditPath() {
 
 function initEditParent() {
     var modal = $('#modal-edit-parent');
-    var txtParent = modal.find('[name=updateOrgParent]');
-    var txtOrgId = modal.find('[name=actualID]');
+    var txtParent = modal.find('[name=destOrgId]');
+    var txtOrgId = modal.find('[name=mergeIds]');
     
     txtParent.orgFinder();
     var txtParentTitle = modal.find('.search-input');
