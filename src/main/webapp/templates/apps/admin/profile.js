@@ -11,6 +11,13 @@ function initProfile() {
             $('#pwdState').reloadFragment();
         }
     });
+    
+    $(".secondFactorForm").forms({
+        callback: function (resp, form) {
+            Msg.info("Done");
+            $('#secondFactorQR').reloadFragment();
+        }
+    });
 
     flog("init delete membersip");
     $(".memberships-wrapper").on("click", "a.btn-delete-membership", function (e) {
