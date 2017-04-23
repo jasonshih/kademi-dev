@@ -34,6 +34,7 @@
             '           </div>' +
             '           <div class="modal-footer">' +
             '               <div class="pull-left">' +
+            '                   {{buttonTakeAnother}}' +
             '                   {{buttonUploadOther}}' +
             '               </div>' +
             '               {{buttonCamera}} ' +
@@ -51,7 +52,6 @@
             '   <div class="clearfix">' +
             '       <div class="pull-left">' +
             '           {{buttonUploadOther}}' +
-            '           {{buttonTakeAnother}} ASD' +
             '       </div>' +
             '       <div class="pull-right">' +
             '           {{buttonContinue}}' +
@@ -100,7 +100,6 @@
             var btnTakePicture = upcropContainer.find('.btn-take-picture');
             var btnTakeAnother = upcropContainer.find('.btn-take-another');
             var btnUploadOther = upcropContainer.find('.btn-upload-other');
-            var btnCancel = upcropContainer.find('.btn-cancel');
             var btnCrop = upcropContainer.find('.btn-crop');
             var btnContinue = upcropContainer.find('.btn-continue');
 
@@ -138,118 +137,171 @@
                 }
             });
             
-            
-            btnTakeAnother.click(function (e) {
-                e.preventDefault();
-                setTakePictureZone();
-                destroyCropZone();
-                
+            // Event of hiding the modal
+            $(upcropContainer).on('hidden.bs.modal', function () {
+                flog("Hiding modal...");
+                stopCameraHardware();
+                destroyPictureZone();
             });
             
-            function setTakePictureZone(){
-                var videoZone = $("#videoZone");
-                if(videoZone !== undefined){
-                    videoZone.remove();
+            var widthVideo = 572;
+            var heightVideo = 430;
+            var constraints = {video: { mandatory: { minWidth: widthVideo, minHeight: heightVideo }}};
+            var videoStream;
+                        
+            // Action for "Camera" button
+            btnCamera.click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                setTakePictureZone();
+                if(hasGetUserMedia()) {
+                    
+                    btnCamera.addClass('hide');
+                    btnTakePicture.removeClass('hide');
+                    
+                    navigator.getUserMedia  = navigator.getUserMedia ||
+                                              navigator.webkitGetUserMedia ||
+                                              navigator.mozGetUserMedia ||
+                                              navigator.msGetUserMedia;
+
+                    var video = getTag("video");
+                    takePictureZone.append(video);
+                    
+                    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                        videoStream = stream;
+                        video.src = window.URL.createObjectURL(videoStream);
+                        video.play();
+                    });
+                    
+                }else{
+                      alert('Sorry this feature is not supported in your browser.');
                 }
-                var takenPicture = $("#takenPicture");
-                if(takenPicture !== undefined){
-                    takenPicture.remove();
-                }
+            });
+            
+            //Action for  "Take a picture" button
+            btnTakePicture.click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                flog("Taking the picture...");
+
+                btnTakePicture.addClass('hide');
+                btnTakeAnother.removeClass('hide');
+
+                var video = getTag("video");
+                var canvas = getTag("canvas");
+
+                var context = canvas.getContext('2d');
+                flog("Video paused");
+                video.pause(); // Pause the image of the video
+
+                context.drawImage(video, 0, 0, widthVideo, heightVideo); // Draw the Image
+                video.remove(); // Remove the video tag
+
+                stopCameraHardware();
+
+                var href = canvas.toDataURL("image/png"); // Get the canvas URL
+                var image = new Image();
+                image.src = href;
+                image.id = "takenPicture";
+
+                var file = convertCanvasToBlob(canvas);
+                var form = upcropContainer.find('form');
+                var formdata = new FormData();
+                var name = 'webcam.png';
+                formdata.append("overwrite", "true");
+                formdata.append("file", file, name);
                 
+                // Posting the img
+                $.ajax({
+                   type: form.attr("method"),
+                   url: form.attr("action"),
+                   data: formdata,
+                   processData: false,
+                   contentType: false,
+                   success: function(res){
+                        var data = {'result': res, 'name': name};
+                        dataContinue = [data];
+                        flog('uploaded image: ', data, name, data.result.nextHref);
+                        uploadedHref = data.result.nextHref;
+                        uploadedName = name;
+                        href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);
+                        flog("href:", href);
+                        txtUrl.val(href);
+                   }
+                });
+                takePictureZone.addClass('hide');
+                cropZone.removeClass('hide');
+                btnContinue.removeClass('hide');
+
+                takePictureZone.append(image);
+                $("#takenPicture").addClass("image-crop");
+
+                initCropZone(href);
+
+            });
+            
+            // Action for "Take another picture" button
+            btnTakeAnother.click(function (e) {
+                e.preventDefault();
+                destroyCropZone();
+                btnCamera.click();
+            });
+
+            function destroyPictureZone(){
+                $('canvas').remove();
+                $('video').remove();
+                $("#takenPicture").remove();
+                $(".take-picture").empty();
+                uploadZone.removeClass('hide');
+                btnCamera.removeClass('hide');
+                takePictureZone.addClass('hide'); 
+                btnTakePicture.addClass('hide');   
+            }
+
+            function setTakePictureZone(){                
+                destroyPictureZone();
                 takePictureZone.removeClass('hide');                
+                btnCamera.removeClass('hide');                
                 uploadZone.addClass('hide');
                 cropZone.addClass('hide');
                 btnCrop.addClass('hide');
                 btnContinue.addClass('hide');
                 btnUploadOther.addClass('hide');
+                btnTakePicture.addClass('hide');
+                btnTakeAnother.addClass('hide');
+            }
+            
+            function hasGetUserMedia() {
+                return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia || navigator.msGetUserMedia);
+            }
+            
+            function stopCameraHardware(){
+                if(videoStream !== undefined){
+                    videoStream.getVideoTracks().forEach(function (track) { // Stop the camera hardware
+                        flog("stoping camera.");
+                        track.stop();
+                    });                 
+                }
+            }
+            
+            function getTag(tagName){
+                var tag;
+                if(document.querySelector(tagName) !== undefined && document.querySelector(tagName) !== null){
+                    flog("Returning tag: ", tagName);
+                    tag = document.querySelector(tagName);
+                }else{
+                    flog("Creating tag: ", tagName);
+                    tag = document.createElement(tagName);
+                    tag.id = tagName+"Zone"; 
+                    tag.width = widthVideo;
+                    tag.height = heightVideo;
+                }
+                return tag;
             }
 
-            btnCamera.click(function (e) {
-                e.preventDefault();
-                setTakePictureZone();
-
-                // Get access to the camera!
-                if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && navigator.mediaDevices.getUserMedia !== null) {
-                    
-                    btnCamera.addClass('hide');
-                    btnTakePicture.removeClass('hide');
-                    
-                    var video = document.createElement("video");
-                    video.id = "videoZone";
-                    video.width="572";
-                    video.height="430";
-                    takePictureZone.append(video);
-
-                    // Not adding `{ audio: true }` since we only want video now
-                    navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
-                        video.src = window.URL.createObjectURL(stream);
-                        video.play();
-                        
-                        btnTakePicture.click(function (e) {
-                            e.preventDefault();
-                            
-                            btnTakePicture.addClass('hide');
-                            
-                            var canvas = document.createElement("canvas");
-                            canvas.width="572";
-                            canvas.height="430";
-                            canvas.id = "canvas";
-                            var context = canvas.getContext('2d');
-
-                            document.querySelector('video').pause(); // Pause the image of the video
-
-                            context.drawImage(video, 0, 0, 572, 430); // Draw the Image
-                            video.remove(); // Remove the video tag
-                            
-                            stream.getVideoTracks().forEach(function (track) { // Stop the camera hardware
-                                flog("stoping camera.");
-                                track.stop();
-                            });
-                            
-                            var href = canvas.toDataURL("image/png"); // Get the canvas URL
-                            var image = new Image();
-                            image.src = href;
-                            image.id = "takenPicture";
-                            
-                            var file = convertCanvasToBlob(canvas);
-                            var form = upcropContainer.find('form');
-                            var formdata = new FormData();
-                            var name = 'webcam.png';
-                            formdata.append("overwrite", "true");
-                            formdata.append("file", file, name);
-                            $.ajax({
-                               type: form.attr("method"),
-                               url: form.attr("action"),
-                               data: formdata,
-                               processData: false,
-                               contentType: false,
-                               success: function(res){
-                                    var data = {'result': res, 'name': name};
-                                    dataContinue = [data];
-                                    flog('uploaded image: ', data, name, data.result.nextHref);
-                                    uploadedHref = data.result.nextHref;
-                                    uploadedName = name;
-                                    href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);
-                                    flog("href:", href);
-                                    txtUrl.val(href);
-                               }
-                            });
-                            takePictureZone.addClass('hide');
-                            cropZone.removeClass('hide');
-                            btnContinue.removeClass('hide');
-
-                            btnTakeAnother.removeClass('hide');
-                            
-                            takePictureZone.append(image);
-                            $("#takenPicture").addClass("image-crop");
-
-                            initCropZone(href);
-                            
-                        });
-
-                    });
-                }
-            });
             
             function convertCanvasToBlob(canvas){
                 var blobBin = atob(canvas.toDataURL('image/png').split(',')[1]);
@@ -259,6 +311,7 @@
                 }
                 return new Blob([new Uint8Array(array)], {type: 'image/png'});
             }
+            
             
             // Action for button `Continue`
             btnContinue.on('click', function (e) {
@@ -270,6 +323,7 @@
 
                 if (!config.isEmbedded) {
                     destroyCropZone();
+                    destroyPictureZone();
                     upcropContainer.modal('hide');
                 }
             });
@@ -517,7 +571,7 @@
     function getButtonTakeAnother(config) {
         return '<button class="btn btn-primary btn-take-another hide" type="button">' + config.buttonTakeAnotherText + '</button>';
     }
-    
+
     function getUpcropZone(config) {
         return (
             '<input type="hidden" value="" name="x" />' +
