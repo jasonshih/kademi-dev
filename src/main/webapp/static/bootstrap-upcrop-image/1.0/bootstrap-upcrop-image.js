@@ -20,6 +20,7 @@
         bgOpacity: 0.4,
         bgColor: '#fff',
         isEmbedded: false,
+        isCameraEnabled: false,
         fieldName: "file",
         modalTemplate:
             '<div class="modal fade" id="{{upcropId}}">' +
@@ -561,7 +562,11 @@
     }
 
     function getButtonCamera(config) {
-        return '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';
+        if(config.isCameraEnabled){
+            return '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';    
+        }else{
+            return "";
+        }
     }
     
     function getButtonTakePicture(config) {
