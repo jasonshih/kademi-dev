@@ -264,7 +264,8 @@ function initTree(tree, config) {
                                 value.metadata = value;
                                 value.attr = {
                                     id: createNodeId(value.href, value.hash, config), // set the id attribute so we know its href
-                                    'class': value.templateName
+                                    'class': value.templateName,
+                                    'data-hash': value.hash
                                 };
                                 newData[newData.length] = value;
                             } else {

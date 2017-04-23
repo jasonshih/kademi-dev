@@ -58,10 +58,14 @@ function initUploads() {
                 dataType: 'json',
                 success: function (resp) {
                     if (resp.status && resp.data) {
-                        form.find('[type=submit]').removeClass('hide');
+                    	form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
                         form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
-                        form.find(".beforeImportNumInvalid").text(resp.data.invalidRows.length);
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                        	invalidRows--;
+                        }
+                        form.find(".beforeImportNumInvalid").text(invalidRows);
 
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
@@ -79,6 +83,14 @@ function initUploads() {
                         }
 
                         userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
+                        
+                        if ( userImportTotalCount > 0 ) {
+                        	form.find('#noValidRow').addClass('hide');
+                        	form.find('[type=submit]').attr('disabled', false);
+                        } else {
+                        	form.find('[type=submit]').attr('disabled', true);
+                        	form.find('#noValidRow').removeClass('hide');
+                        }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }

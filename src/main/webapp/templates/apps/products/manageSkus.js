@@ -10,6 +10,36 @@
         }
     });
 	
+	$("#pointsFooter a").on('click', function (e) {
+		e.preventDefault();
+        var uri = e.target.href;
+
+        $.ajax({
+            type: 'GET',
+            url: uri,
+            success: function (data) {
+                flog('success', data);
+                window.history.pushState('', document.title, uri.toString());
+
+                var newDom = $(data);
+
+                var $tableContent = newDom.find('#productsTableContainer');
+                $('#productsTableContainer').replaceWith($tableContent);
+
+                initUpdateSku();
+	            initUpdateSkuTitle();
+	            initUpdateBaseCost();
+	            initUploadSkuImage();
+	            initProductsCsv();
+	            initUpdateSkuStock();
+            },
+            error: function (resp) {
+                Msg.error('err');
+            }
+        });
+	});
+	
+	
 	function doHistorySearch() {
 	    flog('doHistorySearch');
 	    
@@ -37,10 +67,18 @@
 	            flog('response', content);
 	            Msg.success("Search complete", 2000);
 	            var newBody = $(content).find("#pointsTable");
+	            
 	            target.replaceWith(newBody);
 	            history.pushState(null, null, link);
+
 	            $("abbr.timeago").timeago();
-	            $("#pointsTable").paginator();
+	            
+	            initUpdateSku();
+	            initUpdateSkuTitle();
+	            initUpdateBaseCost();
+	            initUploadSkuImage();
+	            initProductsCsv();
+	            initUpdateSkuStock();
 	        }
 	    });
 	}

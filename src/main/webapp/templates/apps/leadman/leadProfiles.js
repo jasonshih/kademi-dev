@@ -214,7 +214,7 @@ function initDelContacts() {
                         deleteContacts: ids.join(',')
                     },
                     success: function () {
-                        doSearch(true);
+                        doLeadSearch(true);
                     },
                     error: function () {
                         Msg.error('Oh No! Something went wrong while trying to delete the contacts.');
@@ -228,21 +228,21 @@ function initDelContacts() {
     });
 }
 
-function initSearchUser() {
+function initSearchLead() {
     $('#user-query').on({
         input: function () {
             typewatch(function () {
                 flog('do search');
-                doSearch();
+                doLeadSearch();
             }, 500);
         }
     });
     $('#search-group').change(function () {
-        doSearch();
+        doLeadSearch();
     });
 }
 
-function doSearch(forceSearch) {
+function doLeadSearch(forceSearch) {
     var lastQuery = $('#user-query').attr('last-query');
     var query = $('#user-query').val();
     // fix the issue on IE that fire the search when focusing on input field
@@ -251,11 +251,11 @@ function doSearch(forceSearch) {
     }
     $('#user-query').attr('last-query', query);
     var groupName = $('#search-group').val();
-    flog('doSearch', query, groupName);
+    flog('doLeadSearch', query, groupName);
     var uri = URI(window.location);
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
-    flog('doSearch', uri.toString());
+    flog('doLeadSearch', uri.toString());
     var newHref = uri.toString();
     window.history.pushState('', newHref, newHref);
     Msg.info('Searching...', 50000);
@@ -297,7 +297,7 @@ function checkProcessStatus() {
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        doSearch(true);
+                        doLeadSearch(true);
                         if (typeof state.updatedProfiles !== 'undefined') {
                             $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
                         }

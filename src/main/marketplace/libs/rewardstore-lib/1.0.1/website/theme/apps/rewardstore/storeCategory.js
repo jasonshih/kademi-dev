@@ -9,6 +9,7 @@ $(function () {
         initPointsRanges();
         initCategories();
         initProductSearch();
+        initSortBy();
         $(window).scroll(function () {
             if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
                 doPaginate();
@@ -128,5 +129,32 @@ function doPaginate() {
             Msg.error("An error occured doing the product search. Please check your internet connection and try again");
             inifiniteLoader.hide();
         }
+    });
+}
+
+function initSortBy() {
+    flog('initSortBy');
+
+    var urlSort = $('.productSortDropdown');
+    var sortByItems = urlSort.find('li');
+    var newUrl = new URI(window.location.href);
+    var queries = newUrl.search(true);
+    if (queries.sort && queries.asc){
+        sortByItems.removeClass('active');
+        var text = sortByItems.find('a[data-sort='+queries.sort+'][data-asc='+queries.asc+']').parent().addClass('active').text();
+        urlSort.find('.selected-text').text(text);
+    }
+
+    sortByItems.on('click', 'a', function (e) {
+        e.preventDefault();
+        var sort = $(this).attr('data-sort');
+        var asc = $(this).attr('data-asc');
+        var newUrl = new URI(window.location.href);
+        newUrl.setSearch('sort', sort);
+        newUrl.setSearch('asc', asc);
+        $(this).parent().addClass('active').siblings('li').removeClass('active');
+        urlSort.find('.selected-text').text($(this).text());
+        window.history.pushState("", document.title, newUrl.toString());
+        doProductSearch();
     });
 }

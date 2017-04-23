@@ -32,6 +32,13 @@
                         component.attr('data-asc', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.items-per-row').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-items-per-row', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -42,6 +49,7 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-sort').val(dataAttributes['data-sort'] || 'title');
             form.find('.select-asc').val(dataAttributes['data-asc'] || 'true');
+            form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || '3');
         }
     };
 
