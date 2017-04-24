@@ -61,11 +61,16 @@
                                     
                                     #set( $subChildOrgs = $formatter.sortByProperty($childOrg.childOrgs(), "title") )
                                     #foreach( $subChildOrg in $subChildOrgs )
-                                    #if ($selectedOrg.orgId == $subChildOrg.orgId )
-                                    <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check"></i> $subChildOrg.title</a></li>
-                                    #else
-                                    <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $subChildOrg.title</a></li>
-                                    #end
+                                        #if( $foreach.count < 20 )
+                                        #if ($selectedOrg.orgId == $subChildOrg.orgId )
+                                        <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check"></i> $subChildOrg.title</a></li>
+                                        #else
+                                        <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $subChildOrg.title</a></li>
+                                        #end
+                                        #else
+                                        <li style="padding-left: 20px"><a href="#"><i class="fa fa-check" style="visibility: hidden"></i> <i><small>Results truncated. Use search for more</small></i></a></li>
+                                        #break
+                                        #end
                                     #end
                                     
                                     #else
