@@ -10,7 +10,7 @@
     height: 100%;
 }
 
-.milton-file-select-container #milton-btn-upload-file {
+.milton-file-select-container .milton-btn-upload-file {
     float: left;
 }
 

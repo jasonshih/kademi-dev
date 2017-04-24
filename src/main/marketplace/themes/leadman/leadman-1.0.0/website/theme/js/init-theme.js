@@ -365,6 +365,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     log("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
+    var isHash = src.indexOf('/_hashes/files/') === 0;
     flog("HACK using src");
     jwplayer(innerId).setup({
 //        file: src,
@@ -384,9 +385,9 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
                         file: src
                     }
                     , {
-                        file: src + "/../alt-640-360.webm"
+                        file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
                     }, {
-                        file: src + "/../alt-640-360.m4v"
+                        file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
                     }]
             }]
         , primary: "flash"
