@@ -112,7 +112,11 @@
                                         <tr>
                                             <td>$category</td>
                                             <td class="action">
+                                            #if ($velocityHasNext) 
                                                 <div class="btn-group btn-group-sm">
+                                           #else
+                                                <div class="btn-group btn-group-sm dropup"> 
+                                           #end
                                                     <a href="$category" class="cat-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
                                                     </a>
                                                     <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -161,7 +165,11 @@
                                         <tr>
                                             <td>$tag</td>
                                             <td class="action">
+                                            #if ($velocityHasNext) 
                                                 <div class="btn-group btn-group-sm">
+                                           #else
+                                                <div class="btn-group btn-group-sm dropup"> 
+                                           #end
                                                     <a href="$tag" class="tag-edit btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
                                                     </a>
                                                     <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
