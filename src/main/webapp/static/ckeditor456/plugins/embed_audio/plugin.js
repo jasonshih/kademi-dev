@@ -1,221 +1,233 @@
-var url = '';
-var src = '';
-var width = 300;
-var height = 38;
-var autoStart = false;
-var audioInitDone = false;
-function buildAudioPlayerPreview(path, container){
-    var audiotag = document.createElement("audio");
-    audiotag.setAttribute("controls", "controls");
-    var source = document.createElement('source');
-    source.setAttribute('src',path);
-    audiotag.appendChild(source);
-    audiotag.load();
-    audiotag.style.width = '300px';
-    container.appendChild(audiotag);
-    $('#myAudioSettings').removeClass('hide');
-}
-
-CKEDITOR.plugins.add('embed_audio', {
-    init: function (editor) {
-        var iconPath = this.path + 'images/icon.png';
-        var audioImage = this.path + 'images/audio.jpg';
-
-        editor.addCommand('audioDialog', new CKEDITOR.dialogCommand('audioDialog'));
-
-        editor.ui.addButton('Audio', {
-            label: 'Insert Audio',
-            command: 'audioDialog',
-            toolbar: 'insert,2',
-            icon: iconPath
-        });
-
-        if (editor.contextMenu) {
-            editor.addMenuGroup('audioGroup');
-            editor.addMenuItem('audioItem', {
-                label: 'Edit Audio',
-                icon: iconPath,
-                command: 'audioDialog',
-                group: 'audioGroup'
-            });
-            editor.contextMenu.addListener(function (element) {
-                if (element) {
-                    element = element.getAscendant('img', true);
-                }
-                if (element && !element.isReadOnly() && element.data('kaudio')) {
-                    log("Found a audio!", element);
-                    return {
-                        audioItem: CKEDITOR.TRISTATE_ON
-                    };
-                }
-                return null;
-            });
-        }
-
-        // These interfere with page themes, but might need to be put back somehow for editor layout
-        // 
-        editor.element.getDocument().appendStyleSheet(this.path + 'audioPlugin.css');
-        editor.element.getDocument().appendStyleSheet('/static/common/plugin.css');
-
-        $.getScriptOnce(('/static/js/jquery.jstree.js'));
-        //$.getScriptOnce(('/static/js/jquery.hotkeys.js'));
-        $.getScriptOnce(('/static/js/jquery.cookie.js'));
-
-        $.getScriptOnce("/static/js/jquery-fileupload-9.5.2/js/jquery.iframe-transport.js");
-        $.getScriptOnce("/static/js/jquery-fileupload-9.5.2/js/vendor/jquery.ui.widget.js");
-        $.getScriptOnce("/static/js/jquery-fileupload-9.5.2/js/jquery.fileupload.js");
-
-
-
-        var pagePath = toFolderPath(window.location.pathname);
-        CKEDITOR.dialog.add('audioDialog', function (editor) {
-            log("add to editor", editor);
-            return {
-                title: 'Insert/Edit Audio',
-                minWidth: 900,
-                minHeight: 480,
-                contents: [
-                    {
-                        id: 'audio',
-                        label: 'Insert/Edit Audio',
-                        elements: [
-                            {
-                                type: 'html',
-                                html: '<div class="row" style="width: 100%; max-width: 900px">'
-                                + '  <div class="col-md-4">'
-                                + '    <div id="myAudioTree" class="tree"></div>'
-                                + '  </div>'
-                                + '  <div class="col-md-8">'
-                                + '    <div role="tabpanel">'
-                                + '      <ul class="nav nav-tabs" role="tablist" id="imageTabs">'
-                                + '        <li role="presentation" class="active"><a href="#ckaudioupload" aria-controls="ckaudioupload" role="tab" data-toggle="tab">Upload</a></li>'
-                                + '        <li role="presentation"><a href="#ckaudiopreview" aria-controls="ckaudiopreview" role="tab" data-toggle="tab">Preview</a></li>'
-                                + '      </ul>'
-                                + '      <div class="tab-content">'
-                                + '        <div role="tabpanel" class="tab-pane fade active in" id="ckaudioupload">'
-                                + '          <div class="myUploaded"></div>'
-                                + '        </div>'
-                                + '        <div role="tabpanel" class="tab-pane fade" id="ckaudiopreview">'
-                                + '          <div id="myAudioPreview"></div>'
-                                + '          <div id="myAudioSettings" class="hide">'
-                                + '             <label for="txtWidth">Width</label>'
-                                + '             <input type="number" id="txtWidth" value="300"> <br/>'
-                                + '             <label for="txtAutoStart">Auto Play <input type="checkbox" id="txtAutoStart"></label>'
-                                + '             <p>* Please be noted that Auto Play will not work on mobile devices due to security reason</p>'
-                                + '          </div>'
-                                + '        </div>'
-                                + '      </div>'
-                                + '    </div>' // end tabpabel
-                                + '  </div>' // end col-md-8
-                                + '</div>', // end row
-                                commit: function (data) {
-                                    log("commit, data=", data);
+(function (CKEDITOR) {
+    CKEDITOR.plugins.add('embed_audio', {
+        init: function (editor) {
+            var that = this;
+            $.getScriptOnce('/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js');
+            
+            // ===========================================================
+            // Init modal for plugin
+            // ===========================================================
+            var modal = $('#modal-embed-audio');
+            if (modal.length === 0) {
+                $(document.body).append(
+                    '<div id="modal-embed-audio" class="modal fade" aria-hidden="true" tabindex="-1">' +
+                    '   <div class="modal-dialog modal-lg">' +
+                    '       <div class="modal-content">' +
+                    '           <div class="modal-header">' +
+                    '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+                    '               <h4 class="modal-title">Select audio</h4>' +
+                    '           </div>' +
+                    '           <div class="modal-body"></div>' +
+                    '       </div>' +
+                    '   </div>' +
+                    '</div>'
+                );
+                modal = $('#modal-embed-audio');
+            }
+            var modalBody = modal.find('.modal-body');
+            var previewContainer;
+            var txtWidth;
+            
+            // ===========================================================
+            // Add audioDialog for plugin
+            // ===========================================================
+            editor.addCommand('audioDialog', new CKEDITOR.command(editor, {
+                exec: function (instance) {
+                    if (!modalBody.data('mselectOptions')) {
+                        var options = {
+                            contentTypes: ['audio'],
+                            useModal: false,
+                            onSelectFile: function (url, relativeUrl, fileType, hash) {
+                                flog('[CKEDITOR.embed_audio] onSelectFile', url, relativeUrl, fileType, hash);
+                                
+                                that.element.setAttribute('src', '/static/ckeditor456/plugins/embed_audio/images/audio.jpg');
+                                that.element.setAttribute('data-kaudio', '/_hashes/files/' + hash);
+                                that.element.setAttribute('data-hash', hash);
+                                that.element.setAttribute('data-autostart', 'false');
+                                that.element.setAttribute('data-width', txtWidth.val());
+                                that.element.$.removeAttribute('data-cke-saved-src');
+                                that.element.$.style.width = txtWidth.val() + 'px';
+                                that.element.$.style.height = '30px';
+                                that.element.setAttribute("class", "audio-jw");
+                                
+                                var instance = modal.data('ckeditorInstance');
+                                if (that.insertMode) {
+                                    instance.insertElement(that.element);
+                                } else {
+                                    instance.updateElement();
                                 }
+                                
+                                that.element = null;
+                                modal.data('ckeditorInstance', null);
+                                modal.modal('hide');
+                            },
+                            onPreviewFile: function (type, selectedUrl, hash) {
+                                previewContainer.find('.jp-audio').attr('data-width', '330').css({
+                                    'width': 330,
+                                    'margin': '0 auto'
+                                });
+                                txtWidth.val('300');
+                            },
+                            onReady: function () {
+                                previewContainer = modalBody.find('.milton-file-preview');
+                                
+                                // Extra textboxes for plugin
+                                modalBody.find('.milton-btn-upload-file').after(
+                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
+                                    '    <span class="input-group-addon">Width</span>' +
+                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" />' +
+                                    '</div>'
+                                );
+                                
+                                txtWidth = modalBody.find('.txt-width');
+                                var typewatch = (function () {
+                                    var timer = 0;
+                                    return function (callback, ms) {
+                                        clearTimeout(timer);
+                                        timer = setTimeout(callback, ms);
+                                    }
+                                })();
+                                
+                                txtWidth.on('keydown', function () {
+                                    typewatch(function () {
+                                        var width = txtWidth.val();
+                                        var oldWidth = previewContainer.find('.jp-audio').attr('data-width');
+                                        
+                                        if (width) {
+                                            previewContainer.find('.jp-audio').attr('data-width', width).css({
+                                                'width': +width + 30,
+                                                'margin': '0 auto'
+                                            });
+                                        } else {
+                                            txtWidth.val(oldWidth);
+                                        }
+                                    }, 200);
+                                });
                             }
-                        ]
+                        };
+                        
+                        if (editor.config.basePath) {
+                            options.basePath = editor.config.basePath;
+                        }
+                        
+                        if (editor.config.pagePath) {
+                            options.basePath = editor.config.pagePath;
+                        }
+                        
+                        modalBody.mselect(options);
                     }
-                ],
-                onShow: function () {
-
-                    var sel = editor.getSelection();
+                    
+                    var sel = instance.getSelection();
                     var element = sel.getStartElement();
-                    flog("onShow", sel, element, editor, editor.getData());
-                    if (!element || element.getName() != 'img' || !element.data('kaudio') ) {
-                        element = editor.document.createElement('img');
-                        element.setAttribute('src', audioImage);
-                        element.setAttribute('width', width);
-                        element.setAttribute('height', height);
-                        element.setAttribute('data-kaudio', url);
-                        this.insertMode = true;
+                    if (element) {
+                        element = element.getAscendant('img', true);
+                    }
+                    
+                    if (CKEDITOR.plugins.embedAudio.isAudio(element)) {
+                        that.insertMode = false;
+                        var hash = element.getAttribute('data-hash');
+                        var url = element.getAttribute('data-kaudio');
+                        var width = element.getAttribute('data-width') || 300;
+                        modalBody.mselect('selectFile', hash);
+                        
+                        $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
+                            $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                                jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                                previewContainer.attr('data-hash', hash);
+                                previewContainer.attr('data-src', url);
+                                txtWidth.val(width);
+                                previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px; width: ' + (+width + 30) + 'px; margin: 0 auto;"><div id="kaudio-player-100" /></div>');
+                                buildJWAudioPlayer(100, url, false);
+                            });
+                        });
                     } else {
-                        this.insertMode = false;
-                        src = element.data("kaudio");
-                        url = src;
-                        log("update mode", url, src);
+                        element = instance.document.createElement('img');
+                        that.insertMode = true;
+                        modalBody.mselect('selectFile', '');
                     }
-                    this.element = element;
-                    if(url){
-                        var container = document.getElementById('myAudioPreview');
-                        container.innerHTML = '';
-                        buildAudioPlayerPreview(url, container);
-                    }
-                    this.setupContent(this.element);
-                    if(!audioInitDone){
-                        audioInitDone = true;
-                        $("#myAudioTree").mtree({
-                            basePath: pagePath,
-                            pagePath: "",
-                            excludedEndPaths: [".mil/"],
-                            includeContentTypes: ["audio"],
-                            onselectFolder: function (n) {
-                                var selectedVideoUrl = $("#myAudioTree").mtree("getSelectedFolderUrl");
-                                log("onselect: folder=", url);
-                                $(".myUploaded").mupload("setUrl", selectedVideoUrl);
-                            },
-                            onselectFile: function (n, selectedVideoUrl) {
-                                url = selectedVideoUrl;
-                                log("selected file", n, url);
-                                var container = document.getElementById('myAudioPreview');
-                                container.innerHTML = '';
-                                buildAudioPlayerPreview(url, container);
-                            },
-                            isInCkeditor: true
-                        });
-                        $(".myUploaded").mupload({
-                            isInCkeditor: true,
-                            buttonText: "Upload video",
-                            useDropzone: true,
-                            oncomplete: function (data, name, href) {
-                                log("oncomplete", data);
-                                $("#myAudioTree").mtree("addFile", name, href);
-                                url = href;
-                                var container = document.getElementById('myAudioPreview');
-                                container.innerHTML = '';
-                                buildAudioPlayerPreview(url, container);
-                            }
-                        });
-                        $('#txtWidth').on('change', function(e){
-                            width = this.value;
-                            $("#myAudioPreview").find('audio').css('width',width);
-                        });
-
-                        $('#txtAutoStart').on('change', function(e){
-                            autoStart = this.checked;
-                            $("#myAudioPreview").find('audio').prop('autoplay', autoStart);
-                        });
-                    }
-                },
-                onOk: function () {
-                    var img = this.element;
-                    var returnUrl = url;
-                    if (returnUrl.startsWith("/")) {
-                        returnUrl = returnUrl.substring(pagePath.length + 1); // convert to relative path
-                    }
-                    log("onOk", url, pagePath, "=", returnUrl);
-                    img.setAttribute("data-kaudio", returnUrl);
-                    img.setAttribute("data-kaudio", returnUrl);
-                    img.setAttribute('width', width);
-                    img.setAttribute('data-width', width);
-                    img.setAttribute('height', height);
-                    img.setAttribute('data-autostart', autoStart);
-                    if (this.insertMode) {
-                        log("inserted", img);
-                        editor.insertElement(img);
-                    } else {
-                        log('update element');
-                        editor.updateElement();
-                    }
-                    this.commitContent(img);
-                    log("commit content", img);
-                },
-                onHide: function(){
-                    var audioPreview = $('#myAudioPreview').find('audio')[0];
-                    if(audioPreview && typeof audioPreview.pause === 'function'){
-                        audioPreview.pause();
-                        audioPreview.currentTime = 0;
-                    }
+                    
+                    that.element = element;
+                    modal.data('ckeditorInstance', instance);
+                    modal.modal('show');
                 }
-            };
-        });
-    }
-});
+            }));
+            
+            // ===========================================================
+            // Add toolbar button for plugin
+            // ===========================================================
+            editor.ui.addButton('embed_audio', {
+                label: 'Browse and upload audios',
+                command: 'audioDialog',
+                toolbar: 'insert,2',
+                icon: this.path + 'images/icon.png'
+            });
+            
+            // ===========================================================
+            // Adjust statement of plugin button when selection is changed
+            // ===========================================================
+            editor.on('selectionChange', function (evt) {
+                if (editor.readOnly) {
+                    return;
+                }
+                
+                var command = editor.getCommand('audioDialog');
+                var element = evt.data.path.lastElement && evt.data.path.lastElement.getAscendant('img', true);
+                
+                if (CKEDITOR.plugins.embedAudio.isEditableAudio(element)) {
+                    command.setState(CKEDITOR.TRISTATE_ON);
+                } else {
+                    command.setState(CKEDITOR.TRISTATE_OFF);
+                }
+            });
+            
+            // ===========================================================
+            // Double-click event handle for plugin
+            // ===========================================================
+            editor.on('doubleclick', function (evt) {
+                var element = evt.data.element.getAscendant('img', true);
+                
+                if (CKEDITOR.plugins.embedAudio.isEditableAudio(element)) {
+                    editor.getSelection().selectElement(element);
+                    that.element = element;
+                    editor.execCommand('audioDialog');
+                }
+            });
+            
+            // ===========================================================
+            // Context menu for plugin
+            // ===========================================================
+            if (editor.contextMenu) {
+                editor.addMenuGroup('audioGroup');
+                
+                editor.addMenuItem('audioItem', {
+                    label: 'Edit audio',
+                    icon: this.path + 'images/icon.png',
+                    command: 'audioDialog',
+                    group: 'audioGroup'
+                });
+                
+                editor.contextMenu.addListener(function (element) {
+                    if (CKEDITOR.plugins.embedAudio.isEditableAudio(element))
+                        return {
+                            audioItem: CKEDITOR.TRISTATE_ON
+                        };
+                    return null;
+                });
+            }
+        }
+    });
+    
+    CKEDITOR.plugins.embedAudio = {
+        isEditableAudio: function (element) {
+            return CKEDITOR.plugins.embedAudio.isAudio(element) && !element.isReadOnly();
+        },
+        isAudio: function (element) {
+            if (element) {
+                element = element.getAscendant('img', true);
+            }
+            
+            return element && element.getName() === 'img' && !element.data('cke-realelement') && element.data('kaudio');
+        }
+    };
+    
+})(CKEDITOR);

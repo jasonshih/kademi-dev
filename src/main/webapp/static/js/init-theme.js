@@ -492,6 +492,24 @@ function replaceImagesWithJWPlayer(images) {
     });
 }
 
+function buildJWAudioPlayer(count, src, autostart) {
+    var playerInstance = jwplayer("kaudio-player-" + count);
+    var isHash = src.indexOf('/_hashes/files/') === 0;
+    
+    playerInstance.setup({
+        file: src + (isHash ? '.mp3' : ''),
+        width: '100%',
+        height: 30,
+        autostart: autostart,
+        flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+        html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+        primary: "flash"
+    });
+    playerInstance.onReady(function () {
+        log('jwplayer init done');
+    });
+}
+
 function buildJWPlayer(itemToReplace, count, src, posterHref) {
     var h = itemToReplace.height();
     if (h == 0) {

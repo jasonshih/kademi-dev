@@ -16,14 +16,14 @@ var themeCssFiles = new Array();
 
 function initTheme() {
     flog("initTheme-bootstrap335: init-theme.js");
-
+    
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
     $(".header .Login").user({});
     // the login form appears in content when the requested page requires a login
     // so in this case we do not give a post-login url, we will just refresh the current page
     $("#content .Login").user();
-
+    
     initEdify();
     initActiveNav(".initActive");
     initHelp();
@@ -36,18 +36,18 @@ function initTheme() {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
-
+        
     });
-
+    
     flog("finished init-theme");
 }
 
 
 function initHelp() {
     $(".helpIcon").click(function (e) {
-
+        
         e.preventDefault();
-
+        
         var page = $(document).find("meta[name=templateName]").attr("value");
         var href = "http://docs.fuselms.com/ref/screens";
         href += page;
@@ -80,10 +80,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     }
     flog("removePlugins", removePlugins);
     log("prepare html editors", elements);
-
+    
     elements.each(function (i, n) {
         var inp = $(n);
-
+        
         var inputClasses = inp.attr("class");
         var id = inp.attr("id");
         var toolbar = "Default";
@@ -98,10 +98,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         }
-
+        
         toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
-
+        
         flog("themeCssFiles", themeCssFiles);
         flog("editorSkin", editorSkin);
         var currentFolder = getFolderPath(window.location.pathname);
@@ -128,7 +128,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         };
-
+        
         if (height) {
             config.height = height;
         } else {
@@ -137,16 +137,16 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         if (width) {
             config.width = width;
         }
-
+        
         //config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
         config.stylesSet = "myStyles:" + stylesPath;
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
         //var editor = CKEDITOR.instances["body"];
         flog("editor instances", CKEDITOR.instances);
-
+        
     });
-
+    
     CKEDITOR.dtd.$removeEmpty['i'] = false;
 }
 
@@ -160,14 +160,14 @@ function initRotation() {
         }
         try {
             var rotateDegrees = 0;
-
+            
             setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
                     rotateDegrees += 2;
                 }
-
+                
                 $('.rotate.anticlockwise').rotate(-rotateDegrees);
                 $('.rotate.clockwise').rotate(rotateDegrees);
             }, 50);
@@ -228,24 +228,24 @@ function initComments(pageUrl) {
         $(".hideBtn a").text("Show comments");
         $(".hideBtn a").addClass("ishidden");
     }
-
+    
     $("body").on("click focus", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
-
+    
     var currentUser = {
         name: userName,
         href: userUrl,
         photoHref: "/profile/pic"
     };
-
+    
     // This is for deferred logins, ie someone logs in after going to a page with comments
     $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
-
+    
     var comments = $("#comments");
     if (comments.length > 0) {
         comments.comments({
@@ -300,7 +300,7 @@ function replaceImagesWithJWPlayer(images) {
     // will not transform images which in /contenteditor page
     if ($(document.body).hasClass('content-editor-page'))
         return;
-
+    
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
@@ -323,9 +323,10 @@ function replaceImagesWithJWPlayer(images) {
 
 function buildJWAudioPlayer(count, src, autostart) {
     var playerInstance = jwplayer("kaudio-player-" + count);
-
+    var isHash = src.indexOf('/_hashes/files/') === 0;
+    
     playerInstance.setup({
-        file: src,
+        file: src + (isHash ? '.mp3' : ''),
         width: '100%',
         height: 30,
         autostart: autostart,
@@ -340,8 +341,8 @@ function buildJWAudioPlayer(count, src, autostart) {
 
 function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
     flog("itemToReplace", itemToReplace);
-
-
+    
+    
     var h = itemToReplace.height();
     if (h < 100) {
         h = 360;
@@ -350,12 +351,12 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     if (w < 100) {
         w = 640;
     }
-
+    
     if (!aspectratio) {
         aspectratio = w + ":" + h;
     }
-
-
+    
+    
     var div = buildJWPlayerContainer(count);
     log("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
@@ -392,7 +393,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-
+    
 }
 
 function buildJWPlayerContainer(count) {
@@ -422,7 +423,7 @@ function replaceImagesWithAudio(images) {
     // will not transform images which in /contenteditor page
     if ($(document.body).hasClass('content-editor-page'))
         return;
-
+    
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-kaudio");
