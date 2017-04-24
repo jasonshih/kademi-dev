@@ -19,13 +19,14 @@
         url: '/organisations/map/',
         orgTypes: '',
         maxResults: 5,
+        useActualId: false,
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
             
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
                 
-                suggestionsHtml += '<li class="search-suggestion" data-org-id="' + item.orgId + '" data-title="' + item.title + '">';
+                suggestionsHtml += '<li class="search-suggestion" data-org-id="' + item.orgId + '" data-title="' + item.title + '" data-actual-id="' + item.entityId + '">';
                 suggestionsHtml += '    <a href="javascript:void(0)" tabindex="-1">' + item.title;
                 suggestionsHtml += '         <small>';
                 
@@ -77,7 +78,7 @@
         
         this.element.wrap('<div class="search-wrapper"></div>');
         this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
+            '<input type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-org-title') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
         )
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
@@ -159,7 +160,7 @@
                 e.preventDefault();
                 
                 var suggestion = $(this);
-                self.element.val(suggestion.attr('data-org-id'));
+                self.element.val(self.options.useActualId ? suggestion.attr('data-actual-id') : suggestion.attr('data-org-id'));
                 self.input.val(suggestion.attr('data-title'));
                 
                 if (typeof self.options.onSelectSuggestion === 'function') {
