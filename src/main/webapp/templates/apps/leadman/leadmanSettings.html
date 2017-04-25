@@ -1,10 +1,12 @@
 <div class="form-group">
     <label class="col-sm-4 control-label" for="providerId">Sales group</label>
     <div class="col-sm-7">
+        #set( $currentSalesGroupId = $applications.leadMan.salesGroup.id )
+        
         <select name="salesGroup" id="salesGroup" class="form-control">
             <option value="">[Please select]</option>
             #foreach($group in $rootFolder.organisation.groups )
-            <option value="$group.name" $formatter.ifEqual("selected", "", $salesGroup, $group.name)>
+            <option value="$group.name" $formatter.ifEqual("selected", "", $currentSalesGroupId, $group.id)>
                 #if( $group.title )
                 $group.title
                 #else
@@ -20,10 +22,11 @@
 <div class="form-group">
     <label class="col-sm-4 control-label" for="salesOrgType">Sales OrgType</label>
     <div class="col-sm-7">
+        #set( $currentSalesOrgTypeId = $applications.leadMan.salesOrgType.id )
         <select name="salesOrgType" id="salesOrgType" class="form-control">
             <option value="">[Please select]</option>
             #foreach($orgType in $rootFolder.organisation.orgTypes )
-            <option value="$orgType.id" $formatter.ifEqual("selected", "", $salesOrgType, $orgType.id)>
+            <option value="$orgType.name" $formatter.ifEqual("selected", "", $currentSalesOrgTypeId, $orgType.id)>
                 #if( $orgType.displayName )
                 $orgType.displayName
                 #else
@@ -42,10 +45,11 @@
 <div class="form-group">
     <label class="col-sm-4 control-label" for="leadsGroup">Leads group</label>
     <div class="col-sm-7">
+        #set( $currentLeadsGroupId = $applications.leadMan.leadsGroup.id )
         <select name="leadsGroup" id="leadsGroup" class="form-control">
             <option value="">[Please select]</option>
             #foreach($group in $rootFolder.organisation.groups )
-            <option value="$group.name" $formatter.ifEqual("selected", "", $leadsGroup, $group.name)>
+            <option value="$group.name" $formatter.ifEqual("selected", "", $currentLeadsGroupId, $group.id)>
                 #if( $group.title )
                 $group.title
                 #else
@@ -61,10 +65,12 @@
 <div class="form-group">
     <label class="col-sm-4 control-label" for="salesOrgType">Leads OrgType</label>
     <div class="col-sm-7">
+        #set( $currentLeadsOrgTypeId = $applications.leadMan.leadsOrgType.id )
+
         <select name="leadsOrgType" id="leadsOrgType" class="form-control">
             <option value="">[Please select]</option>
             #foreach($orgType in $rootFolder.organisation.orgTypes )
-            <option value="$orgType.id" $formatter.ifEqual("selected", "", $leadsOrgType, $orgType.id)>
+            <option value="$orgType.name" $formatter.ifEqual("selected", "", $currentLeadsOrgTypeId, $orgType.id)>
                 #if( $orgType.displayName )
                 $orgType.displayName
                 #else
