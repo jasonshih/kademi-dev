@@ -1,3 +1,6 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
 #set ($width = $formatter.toInteger($width))
 #set ($itemsPerRow = $formatter.toInteger($itemsPerRow))
 
@@ -62,8 +65,8 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td height="56" valign="middle" bgcolor="${backgroundItem}" style="color: #ededed; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 15px; line-height: 15px; padding-left: 15px; padding-right: 15px;">
-                                                    <a href="${prodUrl}" style="text-decoration: none; color: #ededed; font-weight: 900;" title="$p.fields.title.value">$formatter.truncate($p.fields.title.value, 20)</a><br />
+                                                <td height="56" valign="middle" bgcolor="${backgroundItem}" style="padding-left: 15px; padding-right: 15px; $baseStyles">
+                                                    <a href="${prodUrl}" style="$linkStyles" title="$p.fields.title.value">$formatter.truncate($p.fields.title.value, 20)</a><br />
                                                     <span style="font-size: 12px;">$p.fields.finalPoints.value pts</span>
                                                 </td>
                                             </tr>
@@ -102,7 +105,7 @@
                                                 <td height="122" valign="top" style="padding-left: 20px; padding-top: 50px" width="21" bgcolor="#ededed">
                                                     <img src="http://${rootFolder.domainName}${formatter.portString}/theme/apps/rewardstore/components/productListEDM_view_more.png" width="21" height="33" style="border: 0; display: block;" />
                                                 </td>
-                                                <td height="122" valign="top" style="padding-left: 13px; padding-top: 50px; color: #282828; font-family: Helvetica, Arial, sans-serif, Roboto; font-size: 20px; line-height: 20px; font-weight: 900;" bgcolor="#ededed">View more products online.</td>
+                                                <td height="122" valign="top" style="padding-left: 13px; padding-top: 50px; font-weight: 900; $linkStyles" bgcolor="#ededed">View more products online.</td>
                                             </tr>
                                         </table>
                                     </a>
@@ -162,15 +165,15 @@
                         <![endif]-->
                         <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
                             <tr>
-                                <td class="wrapper">
-                                    <h4><a href="${prodUrl}">$p.fields.title.value</a></h4>
+                                <td class="wrapper" style="$baseStyles">
+                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px"><a href="${prodUrl}" style="$linkStyles">$p.fields.title.value</a></h4>
                                     <p>
                                         <b>Price: $p.fields.finalPoints.value pts</b>
                                     </p>
                                     <p>
                                         $formatter.truncate( $formatter.toPlain( $p.fields.notes.value), 100)
                                     </p>
-                                    <p><a href="${prodUrl}">Read more</a></p>
+                                    <p><a href="${prodUrl}" style="$linkStyles">Read more</a></p>
                                 </td>
                             </tr>
                         </table>

@@ -1,4 +1,7 @@
-<a href="http://${rootFolder.domainName}${formatter.portString}/viewEmail?${login}" style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;">
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
+<a href="http://${rootFolder.domainName}${formatter.portString}/viewEmail?${login}" style="$linkStyles">
     #if($message && $message.length() > 0)
         $message
     #else

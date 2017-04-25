@@ -1,3 +1,6 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
 #set( $calendarFolder = $rootFolder.find("/Calendars").child($calendar) )
 #foreach($calEvent in $calendarFolder.upcomingEvents)
     #if($calEvent.name == $event)
@@ -14,21 +17,20 @@
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
-            <td style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
-
-                <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px"><a target="_blank" style="text-decoration: none; color: ${linkColor}" title="$calendarEvent.summary" href="$url">$calendarEvent.summary</a></h4>
+            <td style="$baseStyles">
+                <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px"><a target="_blank" style="$linkStyles" title="$calendarEvent.summary" href="$url">$calendarEvent.summary</a></h4>
             </td>
         </tr>
         <tr>
             <td height="20">&nbsp;</td>
         </tr>
         <tr>
-            <td style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
+            <td style="$baseStyles">
                 $!calendarEvent.description
             </td>
         </tr>
         <tr>
-            <td style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
+            <td style="$baseStyles">
                 <table align="center" border="0" cellpadding="0" cellspacing="0" class="button-wrapper" bgcolor="#2baadf" style="border-radius: 3px;background-color:#2baadf;">
                     <tbody>
                         <tr>
