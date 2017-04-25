@@ -1,3 +1,6 @@
+#set ($width = $formatter.toInteger($width))
+#set ($itemsPerRow = $formatter.toInteger($itemsPerRow))
+
 #set( $blogFolder = $rootFolder.find("/blogs").child($blog) )
 #set( $articles = $blogFolder.articles.sortByDate )
 #set ($width = $formatter.toInteger($width))
@@ -7,107 +10,153 @@
     #set ($articles = $articles.truncate($numberOfArticles))
 
     #if ($layout == "grid")
-        #set ($tableWidth = $width / 2)
-        #if ($itemsPerRow == 1)
-            #set ($tableWidth = "100%")
-        #elseif ($itemsPerRow == 2)
-            #set ($tableWidth = $width / 2)
-        #elseif ($itemsPerRow == 3)
-            #set ($tableWidth = $width / 3)
-        #end
+        #set ($tableWidth = $width / $itemsPerRow)
 
         #set ($blogListId = $formatter.randomGuid)
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-            <tbody>
-                <tr>
-                    <td>
-                        #foreach($article in $articles)
-                            <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
-                                <tbody>
-                                    <tr>
-                                        <td style="padding-left: 10px; padding-right: 10px;">
-                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                <tr>
-                                                    <td>
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                        #if( $article.bestSquareImageHref )
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
-                                                        #end
-                                                        <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
-                                                            <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
-                                                        </a>
-                                                        <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td height="40" valign="top">
-                                                        #set ($brief = $formatter.toPlain( $!article.brief ))
-                                                        <p>
-                                                            $formatter.truncate( $!brief, 100)
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            <tr>
+                <td>
+                    <!--[if (gte mso 9)|(IE)]>
+                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                    <![endif]-->
+                    #foreach($article in $articles)
+                        #set ($newLine = false)
+                        #if ($foreach.index % $itemsPerRow == 0)
+                            #set ($newLine = true)
                         #end
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    #else
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-            <tbody>
-                #set ($leftWidth = $width / 3)
-                #set ($rightWidth = $width - $leftWidth)
 
-                #foreach($article in $articles)
-                    <tr>
-                        <td valign="top" style="padding-bottom: 15px;">
-                            <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                        #set ($endLine = false)
+                        #if ($foreach.count % $itemsPerRow == 0)
+                            #set ($endLine = true)
+                        #end
+
+                        #if ($newLine)
+                            #if ($foreach.index != 0)
+                                <br />
+                            #end
+                            <!--[if (gte mso 9)|(IE)]>
+                            <tr>
+                                <td width="$tableWidth">
+                            <![endif]-->
+                        #else
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            <td width="$tableWidth">
+                            <![endif]-->
+                        #end
+
+                        <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                            <tbody>
                                 <tr>
-                                    <td class="wrapper" style="padding-right: 15px">
+                                    <td style="padding-left: 10px; padding-right: 10px;">
                                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                             <tr>
                                                 <td>
                                                     #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
                                                     #if( $article.bestSquareImageHref )
-                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
                                                     #end
                                                     <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
                                                         <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
                                                     </a>
+                                                    <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a>
+                                                    </h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="40" valign="top">
+                                                    #set ($brief = $formatter.toPlain( $!article.brief ))
+                                                    <p>
+                                                        $!formatter.truncate( $brief, 100)
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
                                                 </td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
-                            </table>
-                            <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
-                                <tr>
-                                    <td class="wrapper">
-                                        <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
-                                        #set ($brief = $formatter.toPlain( $!article.brief ))
-                                        <p>
-                                            $formatter.truncate( $!brief, 300)
-                                        </p>
-                                        <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
-                                    </td>
-                                </tr>
-                            </table>
+                            </tbody>
+                        </table>
+
+                        #if ($endLine)
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            </tr>
+                            <![endif]-->
+                        #end
+                    #end
+                    <!--[if (gte mso 9)|(IE)]>
+                    </table>
+                    <![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    #else
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            #set ($leftWidth = $width / 3)
+            #set ($rightWidth = $width - $leftWidth)
+
+            #foreach($article in $articles)
+                <tr>
+                    <td valign="top" style="padding-bottom: 15px;">
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                            <tr>
+                                <td width="$leftWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                            <tr>
+                                <td class="wrapper" style="padding-right: 15px">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <tr>
+                                            <td>
+                                                #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                #if( $article.bestSquareImageHref )
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}${article.bestSquareImageHref}/alt-600-400.png")
+                                                #end
+                                                <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">
+                                                    <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
                         </td>
-                    </tr>
-                #end
-            </tbody>
-        </table>
+                        <td width="$rightWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
+                            <tr>
+                                <td class="wrapper">
+                                    <h4><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">$article.title</a></h4>
+                                    #set ($brief = $formatter.toPlain( $article.brief ))
+                                    <p>
+                                        $!formatter.truncate( $brief, 300)
+                                    </p>
+                                    <p><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href">Read more</a></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+            #end
+        </tbody>
+    </table>
     #end
 #else
-    <p>No blog articles found</p>
+<p>No blog articles found</p>
 #end

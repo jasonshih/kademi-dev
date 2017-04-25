@@ -1,3 +1,6 @@
+#set ($width = $formatter.toInteger($width))
+#set ($itemsPerRow = $formatter.toInteger($itemsPerRow))
+
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
 #set( $prods = $applications.ecommerce.searchProducts($store, null, $category, 'title', false) )
 #set ($width = $formatter.toInteger($width))
@@ -8,76 +11,47 @@
     #end
 
     #if ($layout == "grid")
-        #set ($tableWidth = $width / 2)
-        #if ($itemsPerRow == 1)
-            #set ($tableWidth = "100%")
-        #elseif ($itemsPerRow == 2)
-            #set ($tableWidth = $width / 2)
-        #elseif ($itemsPerRow == 3)
-            #set ($tableWidth = $width / 3)
-        #end
+        #set ($tableWidth = $width / $itemsPerRow)
 
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-            <tbody>
-                <tr>
-                    <td>
-                        #foreach($p in $prods)
-                            #set ($prodPath = "/products/" + $p.productId)
-                            #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
-                            <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
-                                <tbody>
-                                    <tr>
-                                        <td style="padding-left: 10px; padding-right: 10px;">
-                                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                                                <tr>
-                                                    <td>
-                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
-                                                        #if( $p.primaryImageHref )
-                                                            #set($bg = "http://${rootFolder.domainName}${formatter.portString}" + $p.primaryImageHref + "/alt-600-400.png")
-                                                        #end
-                                                        <a title="$p.title" href="${prodUrl}">
-                                                            <img src="$bg" width="100%" height="auto" alt="$p.title" style="display: block; border: 0;" />
-                                                        </a>
-                                                        <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
-                                                        <b>Price: $p.finalCost</b>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td height="40" valign="top">
-                                                        <p>
-                                                            $!formatter.truncate( $formatter.toPlain( $!p.notes), 100)
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p><a title="$p.title" href="${prodUrl}">View detail</a></p>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            <tr>
+                <td>
+                    <!--[if (gte mso 9)|(IE)]>
+                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                    <![endif]-->
+                    #foreach($p in $prods)
+                        #set ($prodPath = "/products/" + $p.productId)
+                        #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
+                        #set ($newLine = false)
+                        #if ($foreach.index % $itemsPerRow == 0)
+                            #set ($newLine = true)
                         #end
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    #else
-        <table cellpadding="0" cellspacing="0" border="0" width="100%">
-            <tbody>
-                #set ($leftWidth = $width / 3)
-                #set ($rightWidth = $width - $leftWidth)
 
-                #foreach($p in $prods)
-                    #set ($prodPath = "/products/" + $p.productId)
-                    #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
-                    <tr>
-                        <td valign="top" style="padding-bottom: 15px;">
-                            <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                        #set ($endLine = false)
+                        #if ($foreach.count % $itemsPerRow == 0)
+                            #set ($endLine = true)
+                        #end
+
+                        #if ($newLine)
+                            #if ($foreach.index != 0)
+                                <br />
+                            #end
+                            <!--[if (gte mso 9)|(IE)]>
+                            <tr>
+                                <td width="$tableWidth">
+                            <![endif]-->
+                        #else
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            <td width="$tableWidth">
+                            <![endif]-->
+                        #end
+
+                        <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                            <tbody>
                                 <tr>
-                                    <td class="wrapper" style="padding-right: 15px">
+                                    <td style="padding-left: 10px; padding-right: 10px;">
                                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                             <tr>
                                                 <td>
@@ -88,32 +62,106 @@
                                                     <a title="$p.title" href="${prodUrl}">
                                                         <img src="$bg" width="100%" height="auto" alt="$p.title" style="display: block; border: 0;" />
                                                     </a>
+                                                    <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
+                                                    <b>Price: $p.finalCost</b>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="40" valign="top">
+                                                    <p>
+                                                        $!formatter.truncate( $formatter.toPlain( $!p.notes), 100)
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p><a title="$p.title" href="${prodUrl}">View detail</a></p>
                                                 </td>
                                             </tr>
                                         </table>
                                     </td>
                                 </tr>
-                            </table>
-                            <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
-                                <tr>
-                                    <td class="wrapper">
-                                        <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
-                                        <p>
-                                            <b>Price: $p.finalCost</b>
-                                        </p>
-                                        <p>
-                                            $formatter.truncate( $formatter.toPlain( $!p.notes), 100)
-                                        </p>
-                                        <p><a title="$p.title" href="${prodUrl}">Read more</a></p>
-                                    </td>
-                                </tr>
-                            </table>
+                            </tbody>
+                        </table>
+
+                        #if ($endLine)
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            </tr>
+                            <![endif]-->
+                        #end
+                    #end
+                    <!--[if (gte mso 9)|(IE)]>
+                    </table>
+                    <![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    #else
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            #set ($leftWidth = $width / 3)
+            #set ($rightWidth = $width - $leftWidth)
+
+            #foreach($p in $prods)
+                #set ($prodPath = "/products/" + $p.productId)
+                #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.name")
+                <tr>
+                    <td valign="top" style="padding-bottom: 15px;">
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                            <tr>
+                                <td width="$leftWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                            <tr>
+                                <td class="wrapper" style="padding-right: 15px">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <tr>
+                                            <td>
+                                                #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                #if( $p.primaryImageHref )
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}" + $p.primaryImageHref + "/alt-600-400.png")
+                                                #end
+                                                <a title="$p.title" href="${prodUrl}">
+                                                    <img src="$bg" width="100%" height="auto" alt="$p.title" style="display: block; border: 0;" />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
                         </td>
-                    </tr>
-                #end
-            </tbody>
-        </table>
+                        <td width="$rightWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
+                            <tr>
+                                <td class="wrapper">
+                                    <h4><a title="$p.title" href="${prodUrl}">$p.title</a></h4>
+                                    <p>
+                                        <b>Price: $p.finalCost</b>
+                                    </p>
+                                    <p>
+                                        $formatter.truncate( $formatter.toPlain( $!p.notes), 100)
+                                    </p>
+                                    <p><a title="$p.title" href="${prodUrl}">Read more</a></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+            #end
+        </tbody>
+    </table>
     #end
 #else
-    <p>Sorry, we couldnt find any products for you</p>
+<p>Sorry, we couldnt find any products for you</p>
 #end
