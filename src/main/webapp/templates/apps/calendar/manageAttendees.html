@@ -23,10 +23,19 @@
     <body>
         <section id="manageReward" class="MainContent">
             <header>
-                <div class=""><h3>People attending $page.title</h3></div>
+                #if ($page.groupProfileReport)
+                    <div class=""><h3>People without attendance $page.title</h3></div>
+                #else
+                    <div class=""><h3>People attending $page.title</h3></div>
+                #end
+                    
                 <div class="pull-right">    
-                    <a href="attendees-${page.name}?csv" download="attendees-${page.name}.csv" class="export btn-sm btn btn-default">Export as CSV</a>
-                    <button class="btn-sm btn btn-default removeAttendees">Remove Selected</button>
+                    #if ($page.groupProfileReport)
+                        <a href="mailto:?bcc=${page.mailToList}" class="export btn-sm btn btn-default">Mail users</a>
+                    #else
+                        <a href="attendees-${page.name}?csv" download="attendees-${page.name}.csv" class="export btn-sm btn btn-default">Export as CSV</a>
+                        <button class="btn-sm btn btn-default removeAttendees">Remove Selected</button>
+                    #end
                 </div>
             </header>
             <div class="Content Details">
@@ -37,9 +46,11 @@
                             <th>Full name</th>
                             <th>Organisation</th>
                             <th>Email</th>
-                            <th>Date registered</th>
-                            <th>Guest of</th>
-                            <td style="width: auto; text-align: right"><input type="checkbox" name="toRemoveId" class="entries selectAll"/></td>
+                            #if (!$page.groupProfileReport)
+                                <th>Date registered</th>
+                                <th>Guest of</th>
+                                <td style="width: auto; text-align: right"><input type="checkbox" name="toRemoveId" class="entries selectAll"/></td>
+                            #end
                         </tr>
                     </thead>
                     <tbody>
@@ -49,21 +60,23 @@
                             <td>$att.fullName</td>
                             <td>$!att.orgName</td>
                             <td>$!att.email</td>
-                            <td>$formatter.formatDate($att.registeredDate)</td>
-                            <td>
-                                #if( $att.guestOf )
-                                <a href="$att.guestOf.href">
-                                    #if( $att.guestOf.firstName )
-                                    $att.guestOf.firstName 
+                            #if (!$page.groupProfileReport)
+                                <td>$formatter.formatDate($att.registeredDate)</td>
+                                <td>
+                                    #if( $att.guestOf )
+                                    <a href="$att.guestOf.href">
+                                        #if( $att.guestOf.firstName )
+                                        $att.guestOf.firstName 
+                                        #end
+                                        #if( $att.guestOf.surName )
+                                        $att.guestOf.surName
+                                        #end
+                                        ( $att.guestOf.email )
+                                    </a>
                                     #end
-                                    #if( $att.guestOf.surName )
-                                    $att.guestOf.surName
-                                    #end
-                                    ( $att.guestOf.email )
-                                </a>
-                                #end
-                            </td>
-                            <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
+                                </td>
+                                <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
+                            #end    
                         </tr>
                         #end
                     </tbody>

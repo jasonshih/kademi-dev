@@ -24,23 +24,23 @@
                 '       <label>Padding (in px)</label>' +
                 '       <div class="row row-sm text-center">' +
                 '           <div class="col-xs-4 col-xs-offset-4">' +
-                '               <input type="number" value="" class="txt-padding form-control" name="padding-top" />' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-top" />' +
                 '               <small>top</small>' +
                 '           </div>' +
                 '       </div>' +
                 '       <div class="row row-sm text-center">' +
                 '           <div class="col-xs-4">' +
-                '               <input type="number" value="" class="txt-padding form-control" name="padding-left" />' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-left" />' +
                 '               <small>left</small>' +
                 '           </div>' +
                 '           <div class="col-xs-4 col-xs-offset-4">' +
-                '               <input type="number" value="" class="txt-padding form-control" name="padding-right" />' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-right" />' +
                 '               <small>right</small>' +
                 '           </div>' +
                 '       </div>' +
                 '       <div class="row row-sm text-center">' +
                 '           <div class="col-xs-4 col-xs-offset-4">' +
-                '               <input type="number" value="" class="txt-padding form-control" name="padding-bottom" />' +
+                '               <input type="number" value="" class="txt-padding form-control" data-css="padding-bottom" />' +
                 '               <small>bottom</small>' +
                 '           </div>' +
                 '       </div>' +
@@ -75,33 +75,29 @@
                 component.attr('data-border-radius', this.value);
                 keditor.initDynamicContent(dynamicElement);
             });
-
+            
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
-                var name = input.attr('name');
-
-                input.on('change', function () {
-                    var value = this.value > 0 ? this.value : 0;
-
+                var dataCss = input.attr('data-css');
+        
+                edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
                     var dynamicElement = component.find('[data-dynamic-href]');
-
-                    component.attr('data-inner-' + name, value);
+    
+                    component.attr('data-inner-' + dataCss, value);
                     keditor.initDynamicContent(dynamicElement);
                 });
             });
 
             form.find('.txt-padding').each(function () {
                 var input = $(this);
-                var name = input.attr('name');
-
-                input.on('change', function () {
-                    var value = this.value > 0 ? this.value : 0;
-
+                var dataCss = input.attr('data-css');
+    
+                edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
                     var dynamicElement = component.find('[data-dynamic-href]');
-
-                    component.attr('data-' + name, value);
+        
+                    component.attr('data-' + dataCss, value);
                     keditor.initDynamicContent(dynamicElement);
                 });
             });

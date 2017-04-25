@@ -13,6 +13,18 @@
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js">//</script>
         <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css"/>
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
+        
+        <style>
+            .group-list {
+                margin-bottom: 5px;
+                display: inline-block;
+                border-radius: 5px;
+                margin-right: 5px;
+                padding: 5px 10px;
+                padding-right: 5px;
+            }
+        </style>
+        
     </head>
     <body class="directory">
         <!--<div class="input pull-right" id='myUploaded' style="width: 200px"></div>-->
@@ -78,6 +90,43 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="clip-list"></i>Calendar group settings
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        </p>
+                        <div class="GroupList">
+                            #foreach($g in $page.selectedGroups)
+                                #genGroup($g)
+                            #end
+                        </div>
+                     </div>
+                </div>                        
+                  
+                #macro(genGroup $group)
+                    #set($gc = "")
+                    #set($gIcon = "")
+                    #if( $group.groupType == "P" || !$group.groupType)
+                        #set($gc = "alert alert-success")
+                        #set($gIcon = "clip-users")
+                    #elseif( $group.groupType == "S" )
+                        #set($gc = "alert alert-info")
+                        #set($gIcon = "fa fa-trophy")
+                    #elseif( $group.groupType == "M" )
+                        #set($gc = "alert alert-info")
+                        #set($gIcon = "fa fa-envelope")
+                    #end
+                    <span id="group_$group.name" class="group-list $gc">
+                        <i class="$gIcon"></i>
+                        <span class="block-name" title="$group.name">$group.name</span>
+                        <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+                    </span>
+                #end
+                
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="clip-list"></i>Calendar settings
@@ -109,9 +158,8 @@
                                     <i>If you would like to enable anonymous users to register to events, select a group to add their automatically created profiles to.</i>
                                 </div>
                             </div>
-
-
-                            <div class="form-group">
+                        
+                        <div class="form-group">
                                 <div class="col-md-offset-3 col-lg-offset-2">
                                     <button class="btn btn-success" type="submit">Save details</button>
                                 </div>
@@ -127,6 +175,29 @@
                     </div>
                     <div class="panel-body">
                         <div id="calendar" class="calendar-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modalGroup" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose groups</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ListItem">
+                            #foreach($g in $page.allGroups)
+                                <div class="panel panel-default">
+                                    <div class="panel-body membership">
+                                        <label for="$g.name">$g.name</label>
+                                        <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                                    </div>
+                                </div>
+                            #end
+                        </div>
                     </div>
                 </div>
             </div>
@@ -186,6 +257,7 @@
         <script type="text/javascript">
             $(function () {
                 initManageCalendar();
+                initGroupEditing();
 
                 $(".calendarSettings").forms({
                     onSuccess : function() {
