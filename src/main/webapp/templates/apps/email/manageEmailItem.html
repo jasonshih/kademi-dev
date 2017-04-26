@@ -6,8 +6,7 @@
     </head>
     <body>
         <div id="email-item-info">
-
-            <div class="pull-right">
+            <div class="text-right">
                 <div class="btn-group simulateEvent">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Simulate event <span class="caret"></span>
@@ -19,140 +18,141 @@
                         <li><a href="Converted">Converted</a></li>
                     </ul>
                 </div>
-                <a class="btn btn-primary" href="$page.href" target="_blank">
+                <a class="btn btn-info" href="$page.href" target="_blank">
                     Open in new window
                     <span class="glyphicon glyphicon-arrow-right"></span>
                 </a>
             </div>
-            <table class="table status-$page.sendStatus">
+            <br />
+            <table class="table table-striped status-$page.sendStatus" style="margin-bottom: 0;">
                 <tr>
-                    <td>Status</td>
+                    <th width="150">Status</th>
                     <td>
                         #if( $page.edmConverted )
-                        <p class="label label-success">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            Converted
-                        </p>
+                            <p class="label label-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Converted
+                            </p>
                         #elseif( $page.readStatus )
-                        <p class="label label-primary">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            Opened
-                        </p>
+                            <p class="label label-primary">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Opened
+                            </p>
 
                         #elseif( $page.sendStatus == 'r' )
-                        <p class="label label-warning">
-                            <span class="glyphicon glyphicon-repeat"></span>
-                            $page.statusText - $!page.numAttempts
-                        </p>
+                            <p class="label label-warning">
+                                <span class="glyphicon glyphicon-repeat"></span>
+                                $page.statusText - $!page.numAttempts
+                            </p>
                         #elseif( $page.sendStatus == 'c' )
-                        <p class="label label-default">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            $page.statusText
-                        </p>
+                            <p class="label label-default">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                $page.statusText
+                            </p>
                         #elseif( $page.sendStatus == 'p' )
-                        <p class="label label-warning">
-                            <span class="glyphicon glyphicon-time"></span>
-                            $page.statusText
-                        </p>
+                            <p class="label label-warning">
+                                <span class="glyphicon glyphicon-time"></span>
+                                $page.statusText
+                            </p>
                         #elseif( $page.sendStatus == 'f' )
-                        <p class="label label-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                            $page.statusText
-                        </p>
+                            <p class="label label-danger">
+                                <span class="glyphicon glyphicon-remove"></span>
+                                $page.statusText
+                            </p>
                         #else
-                        <span class="glyphicon glyphicon-time"></span> Preparing..
+                            <span class="glyphicon glyphicon-time"></span> Preparing..
                         #end
                     </td>
                 </tr>
                 <tr>
-                    <td>From</td>
+                    <th>From</th>
                     <td>
                         #if( $page.emailItem.sender )
-                        <a href="/manageUsers/$page.emailItem.sender.id">$page.fromAddress</a>
+                            <a href="/manageUsers/$page.emailItem.sender.id">$page.fromAddress</a>
                         #else
-                        $page.fromAddress
+                            $page.fromAddress
                         #end
                     </td>
                 </tr>
                 <tr>
-                    <td>Reply to</td>
+                    <th>Reply to</th>
                     <td>
                         #if( $page.replyToAddress )
                         $page.replyToAddress
                         #else
-                        $page.fromAddress
+                            $page.fromAddress
                         #end
                     </td>
                 </tr>
                 <tr>
-                    <td>To</td>
+                    <th>To</th>
                     <td>
                         #if( $page.emailItem.recipient )
-                        <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.name)
+                            <a href="/manageUsers/$page.emailItem.recipient.id">$page.recipientAddress</a> ($page.emailItem.recipient.name)
                         #else
-                        $page.recipientAddress
+                            $page.recipientAddress
                         #end
                     </td>
                 </tr>
                 <tr>
-                    <td>Subject</td>
+                    <th>Subject</th>
                     <td>$page.subject</td>
                 </tr>
 
                 <tr>
-                    <td style='vertical-align: top'>Attachments</td>
+                    <th style='vertical-align: top'>Attachments</th>
                     <td>
                         <ul>
                             #foreach($attachment in $page.attachments)
-                            <li><a href="/_hashes/files/$attachment.fileHash" download="$attachment.fileName">$attachment.fileName</a></li>
+                                <li><a href="/_hashes/files/$attachment.fileHash" download="$attachment.fileName">$attachment.fileName</a></li>
                             #end
                         </ul>
                     </td>
                 </tr>
                 <tr>
-                    <td style='vertical-align: top'>Send attempts</td>
+                    <th style='vertical-align: top'>Send attempts</th>
                     <td>
                         #if( $page.sendAttempts.size() > 0 )
-                        <ul>
-                            #foreach($attempt in $page.sendAttempts)
-                            <li>$!attempt.status, at $attempt.statusDate</li>
-                            #end
-                        </ul>
+                            <ul>
+                                #foreach($attempt in $page.sendAttempts)
+                                    <li>$!attempt.status, at $attempt.statusDate</li>
+                                #end
+                            </ul>
                         #else
-                        No send attempts
+                            No send attempts
                         #end
                     </td>
                 </tr>
             </table>
         </div>
         <h4>Message content</h4>
-        <hr/>
+        <hr />
         <iframe style="border: none; width: 100%; min-height: 400px" srcdoc="$formatter.htmlEncode($page.emailHtml).replace('ack?', '')"></iframe>
-        <br/>
-        <hr/>
-        <br/>
-        <br/>
+        <br />
+        <hr />
+        <br />
+        <br />
 
         <script>
-            $(function() {
-                $(".simulateEvent").on("click", "a", function(e) {
+            $(function () {
+                $(".simulateEvent").on("click", "a", function (e) {
                     e.preventDefault();
                     var action = $(e.target).attr("href");
                     $.ajax({
                         type: 'POST',
                         url: window.location.pathname,
                         data: {
-                            eventAction : action
+                            eventAction: action
                         },
                         dataType: 'json',
                         success: function (content) {
-                            if( content.status ) {
+                            if (content.status) {
                                 Msg.info("Done");
                             } else {
                                 Msg.error("Hmm ... not so good. " + content.messages);
                             }
                         }
-                    });                    
+                    });
                 });
             });
         </script>

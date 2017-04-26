@@ -14,27 +14,27 @@ var pageArea;
         return function debounced() {
             var obj = this,
                 args = arguments;
-
+            
             function delayed() {
                 if (!execAsap)
                     func.apply(obj, args);
                 timeout = null;
             }
-
+            
             if (timeout)
                 clearTimeout(timeout);
             else if (execAsap)
                 func.apply(obj, args);
-
+            
             timeout = setTimeout(delayed, threshold || 100);
         };
     };
-
+    
     // smartresize
     jQuery.fn[sr] = function (fn) {
         return fn ? this.bind('resize', debounce(fn)) : this.trigger(sr);
     };
-
+    
 })(jQuery, 'clipresize');
 
 // Main Function
@@ -50,21 +50,9 @@ var Main = function () {
             }
         }
     };
-
+    
     var initPerfectScrollbar = function (target) {
         if (target.length > 0 && typeof $.fn.perfectScrollbar === 'function') {
-            //target.niceScroll({
-            //    cursorcolor: '#999',
-            //    cursorwidth: 6,
-            //    railpadding: {
-            //        top: 0,
-            //        right: 0,
-            //        left: 0,
-            //        bottom: 0
-            //    },
-            //    cursorborder: '',
-            //    disablemutationobserver: true
-            //});
             target.perfectScrollbar({
                 wheelSpeed: 1,
                 minScrollbarLength: 20,
@@ -72,14 +60,13 @@ var Main = function () {
             });
         }
     };
-
+    
     var updatePerfectScrollbar = function (target) {
-        if($.fn.perfectScrollbar){
-            //target.getNiceScroll().resize();
+        if ($.fn.perfectScrollbar) {
             target.perfectScrollbar('update');
         }
     };
-
+    
     // function to adjust the template elements based on the window size
     var runElementsPosition = function () {
         windowWidth = $(window).width();
@@ -88,7 +75,7 @@ var Main = function () {
         $('.sidebar-search input').removeAttr('style').removeClass('open');
         runContainerHeight();
     };
-
+    
     // function to activate the ToDo list, if present
     var runToDoAction = function () {
         if ($(".todo-actions").length) {
@@ -114,21 +101,21 @@ var Main = function () {
             });
         }
     };
-
+    
     // function to activate the Tooltips, if present
     var runTooltips = function () {
         if ($(".tooltips").length) {
             $('.tooltips').tooltip();
         }
     };
-
+    
     // function to activate the Popovers, if present
     var runPopovers = function () {
         if ($(".popovers").length) {
             $('.popovers').popover();
         }
     };
-
+    
     // function to allow a button or a link to open a tab
     var runShowTab = function () {
         if ($(".show-tab").length) {
@@ -144,14 +131,14 @@ var Main = function () {
             $('a[href="#' + getParameterByName('tabId') + '"]').tab('show');
         }
     };
-
+    
     var runPanelScroll = function () {
         var scrollPanel = $(".panel-scroll");
         if (scrollPanel.length > 0) {
             initPerfectScrollbar(scrollPanel);
         }
     };
-
+    
     // function to extend the default settings of the Accordion
     var runAccordionFeatures = function () {
         if ($('.accordion').length) {
@@ -162,7 +149,7 @@ var Main = function () {
             });
         }
         $(".accordion").collapse().height('auto');
-
+        
         $('.accordion .accordion-toggle').bind('click', function () {
             currentTab = $(this);
             $('html,body').animate({
@@ -170,13 +157,13 @@ var Main = function () {
             }, 1000);
         });
     };
-
+    
     // function to reduce the size of the Main Menu
     var runNavigationToggler = function () {
         var kademiContainer = $('#kademi-container');
         $('.navigation-toggler').on('click', function (e) {
             e.preventDefault();
-
+            
             if (!kademiContainer.hasClass('navigation-small')) {
                 kademiContainer.addClass('navigation-small');
                 $.cookie('admin-sidebar', 'collapsed', {
@@ -190,11 +177,11 @@ var Main = function () {
                     expires: 999
                 });
             }
-
+            
             window.dispatchEvent(new Event('resize'));
         });
     };
-
+    
     // function to activate the panel tools
     var runModuleTools = function () {
         $('.panel-tools .panel-expand').bind('click', function (e) {
@@ -262,29 +249,29 @@ var Main = function () {
             }
         });
     };
-
+    
     // function to activate the 3rd and 4th level menus
     var runNavigationMenu = function () {
         var mainMenu = $('#main-navigation-menu');
         var callback = null;
-
+        
         if (windowWidth >= 980) {
             initPerfectScrollbar(mainMenu);
             callback = function () {
                 updatePerfectScrollbar(mainMenu);
             };
         }
-
+        
         mainMenu.find('li.active').addClass('open');
         mainMenu.find('> li a').on('click', function () {
-
+            
             var link = $(this);
             var li = link.parent();
             var ul = li.parent();
-
+            
             if (li.children('ul').hasClass('sub-menu') && !$('body').hasClass('navigation-small')) {
                 var activeItem = mainMenu.find('> li.active');
-
+                
                 if (li.hasClass('open')) {
                     if (li.hasClass('active')) {
                         ul.children('li.open').removeClass('open').children('ul').slideUp(200, callback);
@@ -299,18 +286,18 @@ var Main = function () {
             }
         });
     };
-
+    
     // function to activate the Go-Top button
     var runGoTop = function () {
         $('.go-top').bind('click', function (e) {
             e.preventDefault();
-
+            
             $("html, body").animate({
                 scrollTop: 0
             }, "slow");
         });
     };
-
+    
     // function to avoid closing the dropdown on click
     var runDropdownEnduring = function () {
         if ($('.dropdown-menu.dropdown-enduring').length) {
@@ -319,7 +306,7 @@ var Main = function () {
             });
         }
     };
-
+    
     // function to return the querystring parameter with a given name.
     var getParameterByName = function (name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -327,15 +314,15 @@ var Main = function () {
             results = regex.exec(location.search);
         return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
     };
-
+    
     initPerfectScrollbar($('.drop-down-wrapper'));
-
+    
     $('.navbar-tools .dropdown').on('shown.bs.dropdown', function () {
         var dropdown = $(this).find('.drop-down-wrapper');
         dropdown.scrollTop(0);
         updatePerfectScrollbar(dropdown);
     });
-
+    
     var runColorPalette = function () {
         if ($('.colorpalette').length) {
             $('.colorpalette').colorPalette().on('selectColor', function (e) {
@@ -344,7 +331,7 @@ var Main = function () {
             });
         }
     };
-
+    
     // function to activate Less style
     var runActivateLess = function () {
         $('.icons-color img').removeClass('active');
@@ -359,7 +346,7 @@ var Main = function () {
             '@badge': $('.color-badge').val()
         });
     };
-
+    
     // Window Resize Function
     var runWindowResize = function (func, threshold, execAsap) {
         // wait until the user is done resizing the window, then execute
@@ -367,21 +354,21 @@ var Main = function () {
             runElementsPosition();
         });
     };
-
+    
     // function to adapt the Main Content height to the Main Navigation height
     var runContainerHeight = function () {
         var mainContainer = $('.main-content > .container');
         var footer = $('.footer');
         var navbar = $('.navbar');
         mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight() - 1);
-
+        
         var sidebarWrapper = $('#page-sidebar .sidebar-wrapper');
         sidebarWrapper.css('height', windowHeight - $('body > .navbar').outerHeight()).scrollTop(0);
         if (windowWidth >= 768) {
             updatePerfectScrollbar(sidebarWrapper);
         }
     };
-
+    
     return {
         // main function to initiate template pages
         init: function (orgId) {
@@ -401,7 +388,7 @@ var Main = function () {
             runAccordionFeatures();
             runColorPalette();
             runContainerHeight();
-
+            
             $(document).ajaxStart(function () {
                 flog("ajax start");
                 $("body").addClass("ajax-loading");
@@ -410,7 +397,7 @@ var Main = function () {
                 flog("ajax stop");
                 $("body").removeClass("ajax-loading");
             });
-
+            
             // Check for login tokens, if so reload the URL without them
             var s = window.location + "";
             if (s.indexOf("miltonUserUrl") > 1) {
