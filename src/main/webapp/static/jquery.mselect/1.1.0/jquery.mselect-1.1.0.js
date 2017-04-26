@@ -80,14 +80,9 @@
         selectFile: function (hash, callback) {
             var target = this;
             var tree = target.find('div.milton-tree-wrapper');
-            flog();
-            if (hash) {
+            try {
                 tree.mtree('select', tree.find('[data-hash="' + hash + '"]'), callback);
-            } else {
-                var options = tree.data('options');
-                options.selectedItem = null;
-                tree.data('options', options);
-                tree.mtree('refreshSelected');
+            } catch (e) {
             }
         },
         updateOption: function (key, value) {
@@ -166,7 +161,7 @@
                 if (selectedUrl.indexOf('/') !== 0) {
                     selectedUrl = '/' + selectedUrl;
                 }
-                $('#milton-btn-upload-file').mupload('setUrl', selectedUrl);
+                container.find('.milton-btn-upload-file').mupload('setUrl', selectedUrl);
                 //previewContainer.html('<p class="alert alert-warning">Unsupported preview folder</p>');
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
@@ -178,8 +173,8 @@
                 }
                 var newUrl = selectedUrl.substr(0, selectedUrl.lastIndexOf('/')) + '/';
                 newUrl = newUrl.replace(/\/\//g, '/');
-                $('#milton-btn-upload-file').mupload('setUrl', newUrl);
-    
+                container.find('.milton-btn-upload-file').mupload('setUrl', newUrl);
+                
                 var fileType = 'other';
                 if (isVideo(selectedUrl)) {
                     fileType = 'video';
@@ -190,27 +185,31 @@
                 }
                 
                 var hashUrl = '/_hashes/files/' + hash;
-                if (isVideo(selectedUrl)) {
+                if (fileType === 'video') {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                        jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
-                        
-                        if (typeof config.onPreviewFile === 'function') {
-                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                        }
+                        $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                            jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                            buildJWPlayer(previewContainer.find('div.jp-video'), 100, hashUrl, hashUrl + '/alt-640-360.png');
+                            
+                            if (typeof config.onPreviewFile === 'function') {
+                                config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
+                        });
                     });
-                } else if (isAudio(selectedUrl)) {
+                } else if (fileType === 'audio') {
                     previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
-                        jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
-                        buildJWAudioPlayer(100, hashUrl, false);
-                        
-                        if (typeof config.onPreviewFile === 'function') {
-                            config.onPreviewFile.call(container, fileType, selectedUrl, hash);
-                        }
+                        $.getScriptOnce('/static/jwplayer/jwplayer.html5.js', function () {
+                            jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
+                            buildJWAudioPlayer(100, hashUrl, false);
+                            
+                            if (typeof config.onPreviewFile === 'function') {
+                                config.onPreviewFile.call(container, fileType, selectedUrl, hash);
+                            }
+                        });
                     });
-                } else if (isImage(selectedUrl)) {
+                } else if (fileType === 'image') {
                     $('<img />').attr('src', hashUrl).load(function () {
                         var realWidth = this.width;
                         var realHeight = this.height;
@@ -231,6 +230,7 @@
                 }
                 
                 previewContainer.attr('data-url', selectedUrl);
+                previewContainer.attr('data-hash', hash);
             },
             ondelete: function (n, isFolder) {
                 if (isFolder) {
@@ -238,7 +238,7 @@
                     
                     var newUrl = config.basePath + config.pagePath;
                     newUrl = newUrl.replace(/\/\//g, '/');
-                    $('#milton-btn-upload-file').mupload('setUrl', newUrl);
+                    container.find('.milton-btn-upload-file').mupload('setUrl', newUrl);
                 }
             }
         };
@@ -260,16 +260,16 @@
         if (!config.mselectAll) {
             muploadOptions.acceptedFiles = getAcceptedFiles(config.contentTypes);
         }
-        $('#milton-btn-upload-file').mupload(muploadOptions);
+        container.find('.milton-btn-upload-file').mupload(muploadOptions);
         
         container.find('.btn-ok').click(function () {
             var url = previewContainer.attr('data-url');
+            var hash = previewContainer.attr('data-hash');
             
             if (url) {
                 if (typeof config.onSelectFile === 'function') {
                     var relUrl = url.substring(config.basePath.length, url.length);
                     flog('[jquery.mselect] Selected', url, relUrl);
-                    var hash = previewContainer.children('[data-hash]').attr('data-hash');
                     var fileType = 'other';
                     if (isVideo(url)) {
                         fileType = 'video';
@@ -283,7 +283,6 @@
                 }
                 
                 if (typeof config.onSelectFolder === 'function') {
-                    var hash = previewContainer.attr('data-hash');
                     config.onSelectFolder.call(container, url, hash);
                 }
                 
@@ -294,6 +293,10 @@
                 flog('[jquery.mselect] No selected file!');
             }
         });
+        
+        if (typeof config.onReady === 'function') {
+            config.onReady.call(config);
+        }
     }
     
     function addFileToTree(name, href, tree) {
@@ -322,7 +325,7 @@
             '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
             '        <div class="col-xs-8">' +
             '            <div class="milton-file-preview-wrapper">' +
-            '                <div id="milton-btn-upload-file"></div>' + extraElement +
+            '                <div class="milton-btn-upload-file"></div>' + extraElement +
             '                <div class="milton-file-preview"></div>' +
             '            </div>' +
             '        </div>' +
@@ -336,7 +339,7 @@
         
         var modal = $('#modal-milton-file-select');
         if (modal.length === 0) {
-            $('body').append(
+            $(document.body).append(
                 '<div id="modal-milton-file-select" class="modal fade" aria-hidden="true" tabindex="-1">' +
                 '   <div class="modal-dialog modal-md">' +
                 '       <div class="modal-content">' +

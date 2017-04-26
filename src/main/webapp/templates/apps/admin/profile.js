@@ -1,7 +1,6 @@
 function initProfile() {
     flog("initProfile - profile.js");
     initProfileLoginAs();
-    initOrgSearch();
     initNewMembershipForm();
     initEnableDisable();
     initTabLazyLoading();
@@ -9,6 +8,13 @@ function initProfile() {
         callback: function (resp, form) {
             Msg.info("Done");
             $('#pwdState').reloadFragment();
+        }
+    });
+    
+    $(".secondFactorForm").forms({
+        callback: function (resp, form) {
+            Msg.info("Done");
+            $('#secondFactorQR').reloadFragment();
         }
     });
 

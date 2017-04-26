@@ -5,7 +5,6 @@ function initManageUsers() {
     initSearchBusiness();
     flog("initSearchUser.0");
     initSearchUser();
-    initOrgSearch();
     initSelectAll();
     initRemoveUsers();
     initAddToGroup();
@@ -13,6 +12,7 @@ function initManageUsers() {
     initLoginAs();
     initAggregations();
     initSort();
+    initOrgFinder();
 
     //initUploadUsersFile();
 }
@@ -394,6 +394,12 @@ function initSearchBusiness() {
     });
 }
 
+function initOrgFinder() {
+    $('#orgId').orgFinder({
+        useActualId: true
+    });
+}
+
 function initNewUserForm() {
     var modal = $('#modal-new-user');
     var form = modal.find('form');
@@ -468,52 +474,6 @@ function initNewUserForm() {
             }
 
             Msg.info('Saved');
-        }
-    });
-}
-
-function initOrgSearch() {
-    var orgTitle = $('#orgTitle');
-    var orgId = $('#orgId');
-    var orgSearch = $('#org-search');
-
-    flog('initOrgSearch', orgTitle);
-    orgTitle.on('focus click', function () {
-        orgSearch.show();
-        flog('show', orgSearch);
-    });
-    orgTitle.keyup(function () {
-        typewatch(function () {
-            flog('do search');
-            doOrgSearch();
-        }, 500);
-    });
-    $('div.groups').on('click', 'a', function (e) {
-        flog('clicked', e.target);
-        e.preventDefault();
-        e.stopPropagation();
-        var orgLink = $(e.target);
-        orgId.val(orgLink.attr('href'));
-        orgTitle.val(orgLink.text());
-        $('#org-search').hide();
-        flog('clicked', orgId.val(), orgTitle.val());
-    });
-}
-
-function doOrgSearch() {
-    $.ajax({
-        type: 'GET',
-        url: window.location.pathname + '?orgSearch=' + $('#orgTitle').val(),
-        success: function (data) {
-            flog('success', data);
-
-            var $fragment = $(data).find('#org-search');
-            $('#org-search').replaceWith($fragment);
-            $fragment.show();
-            flog('frag', $fragment);
-        },
-        error: function (resp) {
-            Msg.error('An error occurred searching for organisations');
         }
     });
 }

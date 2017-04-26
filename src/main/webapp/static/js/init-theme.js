@@ -23,15 +23,14 @@ Array.min = function (array) {
 
 function initTheme() {
     flog("initTheme: init-theme.js");
-
+    
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
-    $(".header .Login").user({
-    });
+    $(".header .Login").user({});
     // the login form appears in content when the requested page requires a login
     // so in this case we do not give a post-login url, we will just refresh the current page
     $("#content .Login").user();
-
+    
     initEdify();
     initNav();
     initActiveNav(".initActive");
@@ -44,22 +43,22 @@ function initTheme() {
     initPrintLink();
     initLoginDropDown();
     initVideos();
-
+    
     flog("initTheme: run page init functions", pageInitFunctions.length);
     $.each(pageInitFunctions, function (i, f) {
         flog("run function" + i);
         pageInitFunctions[i]();
         flog("done run function", i);
-
+        
     });
-
+    
     $(".DropdownWrapper").click(function (e, node) {
         flog("initDropDown click", e);
         var div = $(e.target).closest("div.DropdownControl");
         flog("dropdown", $(".DropdownContent", div));
         $(".DropdownContent", div).toggle(300);
     });
-
+    
     flog("finished init-theme");
 }
 
@@ -86,9 +85,9 @@ function initLoginDropDown() {
 
 function initHelp() {
     $(".helpIcon").click(function (e) {
-
+        
         e.preventDefault();
-
+        
         var page = $(document).find("meta[name=templateName]").attr("value");
         var href = "http://docs.fuselms.com/ref/screens";
         href += page;
@@ -113,7 +112,7 @@ function initNav() {
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
     flog("static: initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
-
+    
     if (!elements) {
         elements = $(".htmleditor");
     }
@@ -123,11 +122,11 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
     if (!removePlugins) {
         removePlugins = standardRemovePlugins;
     }
-
+    
     flog("prepare html editors", elements, "using templates:", templatesPath); // see toolbars.js for templatesPath
     elements.each(function (i, n) {
         var inp = $(n);
-
+        
         var inputClasses = inp.attr("class");
         var id = inp.attr("id");
         // Add id for editor if dont have id
@@ -147,14 +146,14 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
                 }
             }
         }
-
+        
         //toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
         flog("using templates and styles", templatesPath, stylesPath);
-
+        
         themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
-
+        
         var config = {
             skin: editorSkin,
             allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
@@ -178,7 +177,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
             },
             minimumChangeMilliseconds: 100
         };
-
+        
         if (height) {
             if (height !== 'auto') {
                 config.height = height;
@@ -189,26 +188,26 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, c
         if (width) {
             config.width = width;
         }
-
+        
         config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
-
+        
         editor.on('instanceReady', function (evt) {
             if (!ADDED_EXTRA_CSS) {
                 var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
                 flog("loading ckeditor extra css");
                 $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo("head");
-
+                
                 ADDED_EXTRA_CSS = true;
             }
-
+            
             if (typeof callback === 'function') {
                 callback.call(this, editor);
             }
         });
     });
-
+    
     CKEDITOR.dtd.$removeEmpty['i'] = false;
 }
 
@@ -221,9 +220,9 @@ function initTabPanel() {
         var href = $(this).attr("href");
         $(this).addClass("Active").siblings().removeClass("Active");
         $(".TabContent").hide().filter("[rel=" + href + "]").show();
-
+        
     });
-
+    
     var tabLinks = $("body").find("nav.TabNav a");
     var url = window.location.href;
     if (url.contains("#")) {
@@ -263,13 +262,13 @@ if (!Date.prototype.toISOString) {
         function pad(n) {
             return n < 10 ? '0' + n : n
         }
-
+        
         return this.getUTCFullYear() + '-'
-                + pad(this.getUTCMonth() + 1) + '-'
-                + pad(this.getUTCDate()) + 'T'
-                + pad(this.getUTCHours()) + ':'
-                + pad(this.getUTCMinutes()) + ':'
-                + pad(this.getUTCSeconds()) + 'Z';
+            + pad(this.getUTCMonth() + 1) + '-'
+            + pad(this.getUTCDate()) + 'T'
+            + pad(this.getUTCHours()) + ':'
+            + pad(this.getUTCMinutes()) + ':'
+            + pad(this.getUTCSeconds()) + 'Z';
     };
 }
 
@@ -300,14 +299,14 @@ function initRotation() {
         log("initRotation");
         try {
             var rotateDegrees = 0;
-
+            
             setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
                     rotateDegrees += 2;
                 }
-
+                
                 $('.rotate.anticlockwise').rotate(-rotateDegrees);
                 $('.rotate.clockwise').rotate(rotateDegrees);
             }, 50);
@@ -378,24 +377,24 @@ function initComments(pageUrl) {
         $(".hideBtn a").text("Show comments");
         $(".hideBtn a").addClass("ishidden");
     }
-
+    
     $("body").on("click", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
-
+    
     var currentUser = {
         name: userName,
         href: userUrl,
         photoHref: "/profile/pic"
     };
-
+    
     // This is for deferred logins, ie someone logs in after going to a page with comments
     $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
-
+    
     $("#comments").comments({
         currentUser: currentUser,
         pageUrl: pageUrl,
@@ -411,7 +410,7 @@ function initComments(pageUrl) {
             var commentPara = $("<p></p>");
             commentPara.html(comment);
             //var dateSpan = $("<span class='auxText'>" + toDisplayDateNoTime(date) + "<a href='#'>Reply to this comment</a></span>");
-
+            
             var dateSpan = $("<abbr title='" + date.toISOString() + "' class='auxText'>" + toDisplayDateNoTime(date) + "</abbr>");
             var toolsDiv = $("<div></div>");
             /**
@@ -427,7 +426,7 @@ function initComments(pageUrl) {
             outerDiv.append(dateSpan);
             outerDiv.append(toolsDiv);
             outerDiv.insertAfter($("#comments .fBox"));
-
+            
             jQuery("abbr.auxText", outerDiv).timeago();
         }
     });
@@ -493,6 +492,24 @@ function replaceImagesWithJWPlayer(images) {
     });
 }
 
+function buildJWAudioPlayer(count, src, autostart) {
+    var playerInstance = jwplayer("kaudio-player-" + count);
+    var isHash = src.indexOf('/_hashes/files/') === 0;
+    
+    playerInstance.setup({
+        file: src + (isHash ? '.mp3' : ''),
+        width: '100%',
+        height: 30,
+        autostart: autostart,
+        flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
+        html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
+        primary: "flash"
+    });
+    playerInstance.onReady(function () {
+        log('jwplayer init done');
+    });
+}
+
 function buildJWPlayer(itemToReplace, count, src, posterHref) {
     var h = itemToReplace.height();
     if (h == 0) {
@@ -502,11 +519,13 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
     if (w == 0) {
         w = 640;
     }
-
+    
     var div = buildJWPlayerContainer(count);
-    log("buildJWPlayer", src, "size=", h, w);
+    flog("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
+    var isHash = src.indexOf('/_hashes/files/') === 0;
+    
     jwplayer(innerId).setup({
         file: src,
         flashplayer: "/static/jwplayer/6.8/jwplayer.flash.swf",
@@ -517,23 +536,22 @@ function buildJWPlayer(itemToReplace, count, src, posterHref) {
             {
                 image: posterHref,
                 sources: [{
-                        file: src
-                    }
-                    , {
-                        file: src + "/../alt-640-360.webm"
-                    }, {
-                        file: src + "/../alt-640-360.m4v"
-                    }]
+                    file: src
+                }, {
+                    file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
+                }, {
+                    file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
+                }]
             }
         ]
-                //,primary: "flash"
+        //,primary: "flash"
     });
     jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-
+    
 }
 
 function buildJWPlayerContainer(count) {
