@@ -2569,7 +2569,10 @@ td.column-right {
 /* ---------------------------------------------------------------------- */
 body.login {
   color: #fff;
-  background: #252836 url("/theme/assets/images/bg_login.png") no-repeat 50% 50%; }
+  background: #252836 url("/theme/assets/images/bg_login.png") no-repeat 50% 50%;
+  height: 100%;
+  min-height: 460px;
+  position: relative; }
   body.login.example1 {
     background-image: url("../images/bg.png");
     background-color: transparent; }
@@ -2577,8 +2580,9 @@ body.login {
     background-image: url("../images/bg_2.png");
     background-color: rgba(255, 255, 255, 0); }
   body.login .main-login {
-    position: relative;
-    transform: translate(0, 50%); }
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%); }
   body.login .logo {
     text-align: center;
     margin-bottom: 50px; }
