@@ -21,6 +21,14 @@ function initForms() {
     });
 
     $("#mainForm").forms({
+        validate: function( resp){
+            var valid = true;
+            var auctionDescription = $("form textarea[name=auctionDescription]").text();
+            if(auctionDescription.length > 2048){
+                valid = false;
+            }
+            return valid;
+        },
         callback: function (resp) {
             flog("done", resp);
             Msg.success(resp.messages[0]);
