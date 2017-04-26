@@ -32,71 +32,79 @@
         </div>
 
         #macro( showAppBuilder )
-            <div class="">
-                <p>
-                    <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addAppModal"><i class="fa fa-plus"></i> Create new app</a>
-                </p>
-
-                <div class="modal fade" id="addAppModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="myModalLabel">Add new app</h4>
-                            </div>
-                            <form class="form-horizontal" method="POST" action="$page.href">
-                                <div class="modal-body">
-                                    <div class="form-message alert alert-danger" style="display: none;"></div>
-                                    <div class="form-group">
-                                        <label for="newAppName" class="col-sm-3 control-label">Simple name</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control regex required" required="true" id="newAppName" name="newAppName" data-regex="^[a-zA-Z0-9-]+$" />
-                                            <span class="help-block">
-                                                <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newTitle" class="col-sm-3 control-label">Title</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" class="form-control required" required="true" id="newTitle" name="newTitle" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="providesTheme" class="col-sm-3 control-label">Theme Provider</label>
-                                        <div class="col-sm-8">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value="true" id="providesTheme" name="providesTheme" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="providesApp" class="col-sm-3 control-label">App Provider</label>
-                                        <div class="col-sm-8">
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" value="true" id="providesApp" name="providesApp" />
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                    <button class="btn btn-sm btn-primary" type="submit">Create app</button>
-                                </div>
-                            </form>
-                        </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <p>
+                        <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addAppModal"><i class="fa fa-plus"></i> Create new app</a>
+                    </p>
+                </div>
+                <div class="col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Type to search" id="txt-search-app-builder" />
                     </div>
-                </div><!-- /.modal -->
+                </div>
             </div>
+
+            <div class="modal fade" id="addAppModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Add new app</h4>
+                        </div>
+                        <form class="form-horizontal" method="POST" action="$page.href">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label for="newAppName" class="col-sm-3 control-label">Simple name</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control regex required" required="true" id="newAppName" name="newAppName" data-regex="^[a-zA-Z0-9-]+$" />
+                                        <span class="help-block">
+                                            <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newTitle" class="col-sm-3 control-label">Title</label>
+                                    <div class="col-sm-8">
+                                        <input type="text" class="form-control required" required="true" id="newTitle" name="newTitle" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="providesTheme" class="col-sm-3 control-label">Theme Provider</label>
+                                    <div class="col-sm-8">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="true" id="providesTheme" name="providesTheme" />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="providesApp" class="col-sm-3 control-label">App Provider</label>
+                                    <div class="col-sm-8">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="true" id="providesApp" name="providesApp" />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Create app</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div><!-- /.modal -->
 
             <!-- End Settings Modal -->
 
             <div class="table-responsive">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="custom-apps">
                     <colgroup>
                         <col style="width: 25%" />
                         <col style="width: 30%" />
@@ -163,6 +171,11 @@
                 <p>Applications control large chunks of functionality, like forums or emails. You can add them to websites</p>
                 <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
             </div>
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input type="text" class="form-control" placeholder="Type to search" id="txt-search-app" />
+            </div>
+            <br />
             #set($apps = $page.apps)
             #if( $apps.isEmpty() )
                 <div class="well">
@@ -172,9 +185,14 @@
             <div class="appsContainer">
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
+                        <colgroup>
+                            <col width="120" />
+                            <col />
+                            <col />
+                        </colgroup>
                         #foreach($app in $apps )
                             #set( $coreClass = $formatter.ifTrue($app.core, "iscore", "") )
-                            <tr data-isCore="$app.core" class="${coreClass}">
+                            <tr data-isCore="$app.core" class="app ${coreClass}">
                                 <td class="CheckBoxWrapper">
                                     #if( !$app.core || !$app.enabled)
                                         $formatter.bsswitch("chk_${app.appId}", $app.appId, $app.enabled, $app.appId)
@@ -228,6 +246,38 @@
         <script type="text/javascript">
             $(function () {
                 initApps();
+
+                $('#txt-search-app').domFinder({
+                    container: $('.appsContainer'),
+                    items: 'tr',
+                    showItems: function (items) {
+                        items.css('display', '');
+                    }
+                });
+                $('#txt-search-app-builder').domFinder({
+                    container: $('#custom-apps'),
+                    items: 'tbody tr',
+                    filter: function (items, query) {
+                        query = query.toLowerCase();
+
+                        return items.filter(function () {
+                            var tds = $(this).find('td').not('.action');
+                            for (var i = 0; i < tds.length; i++) {
+                                var text = (tds.eq(i).text() || '').toLowerCase();
+
+                                if (text.indexOf(query) !== -1) {
+                                    return true;
+                                }
+                            }
+
+                            return false;
+                        });
+                    },
+                    showItems: function (items) {
+                        items.css('display', '');
+                    }
+                });
+
                 var modal = $("#addAppModal");
                 var form = modal.find("form");
 

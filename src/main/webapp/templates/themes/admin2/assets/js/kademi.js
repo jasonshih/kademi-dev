@@ -1179,7 +1179,7 @@ function initMenuSearch() {
     navMenu.find('.search-menu input').domFinder({
         container: navMenu,
         items: '> li:not(.search-menu)',
-        showItem: function (items, query) {
+        showItems: function (items, query) {
             query = query.toLowerCase();
             
             if (query === '') {
@@ -1212,7 +1212,7 @@ function initMenuSearch() {
             
             items.css('display', 'block');
         },
-        hideItem: function (items, query) {
+        hideItems: function (items, query) {
             items.css('display', 'none');
         },
         onSearched: function () {

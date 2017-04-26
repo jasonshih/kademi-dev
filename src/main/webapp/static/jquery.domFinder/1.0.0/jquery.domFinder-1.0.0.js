@@ -9,12 +9,12 @@
             $.error('[DomFinder] "filter" option is not function!');
         }
         
-        if (typeof this.options.showItem !== 'function') {
-            $.error('[DomFinder] "showItem" option is not function!');
+        if (typeof this.options.showItems !== 'function') {
+            $.error('[DomFinder] "showItems" option is not function!');
         }
         
-        if (typeof this.options.hideItem !== 'function') {
-            $.error('[DomFinder] "hideItem" option is not function!');
+        if (typeof this.options.hideItems !== 'function') {
+            $.error('[DomFinder] "hideItems" option is not function!');
         }
         
         this.init();
@@ -34,10 +34,10 @@
                 return text.indexOf(query) !== -1;
             });
         },
-        showItem: function (items) {
+        showItems: function (items) {
             items.css('display', 'block');
         },
-        hideItem: function (items) {
+        hideItems: function (items) {
             items.css('display', 'none');
         },
         onSearched: function (query) {
@@ -59,11 +59,11 @@
                 var items = container.find(self.options.items);
                 
                 if (query === '') {
-                    self.options.showItem.call(self, items, query);
+                    self.options.showItems.call(self, items, query);
                 } else {
                     var matched = self.options.filter.call(self, items, query);
-                    self.options.showItem.call(self, matched, query);
-                    self.options.hideItem.call(self, items.not(matched), query);
+                    self.options.showItems.call(self, matched, query);
+                    self.options.hideItems.call(self, items.not(matched), query);
                 }
                 
                 if (typeof self.options.onSearched === 'function') {
