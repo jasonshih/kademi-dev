@@ -54,19 +54,41 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="input-group">
                             <label for="data-query" class="input-group-addon">Search</label>
                             <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="input-group">
                             <label for="searchReward" class="input-group-addon">Reward</label>
                             <select name="searchReward" id="searchReward" class="form-control">
                                 <option value="">&nbsp;</option>
                                 #foreach($r in $page.rewards)
                                     <option value="$r.name">$r.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <label for="pointsTag" class="input-group-addon">Tag</label>
+                            <select name="tagId" id="tagId" class="form-control">
+                                <option value="">&nbsp;</option>
+                                #foreach($pointTag in $page.pointTags)
+                                    <option value="$pointTag.id">$pointTag.title</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <label for="reasonCode" class="input-group-addon">Reason Code</label>
+                            <select name="reasonCode" id="reasonCode" class="form-control">
+                                <option value="">&nbsp;</option>
+                                #foreach($code in $page.reasonCodes)
+                                    <option value="$code">$code</option>
                                 #end
                             </select>
                         </div>
