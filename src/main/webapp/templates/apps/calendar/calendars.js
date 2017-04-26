@@ -172,6 +172,9 @@ function initRsvpForm() {
 
                     }
                 });
+            } else if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "groupCalendarRequired") {
+                ajaxLoadingOff();
+                alert("In order to register for this event you must be in at least one of the calendar's groups.");
             } else {
                 ajaxLoadingOff();
                 alert("Sorry, for some reason we couldnt register your attendance. Maybe you could try again, or contact the site administrator for help");

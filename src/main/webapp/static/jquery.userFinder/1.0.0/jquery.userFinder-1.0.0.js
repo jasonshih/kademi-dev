@@ -5,58 +5,40 @@
         UP: 38,
         DOWN: 40
     };
-    var OrgFinder = function (element, options) {
-        flog('[OrgFinder]', element, options);
+    var UserFinder = function (element, options) {
+        flog('[UserFinder]', element, options);
         
         this.element = $(element)
-        this.options = $.extend({}, OrgFinder.DEFAULTS, options);
+        this.options = $.extend({}, UserFinder.DEFAULTS, options);
         this.init();
     };
     
-    OrgFinder.version = '1.1.0';
+    UserFinder.version = '1.0.0';
     
-    OrgFinder.DEFAULTS = {
-        url: '/organisations/map/',
-        orgTypes: '',
+    UserFinder.DEFAULTS = {
+        url: '/manageUsers',
         maxResults: 5,
-        useActualId: false,
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
             
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
+                var userName = item.fields.userName[0];
+                var email;
+                if (item.fields.email) {
+                    email = item.fields.email[0];
+                } else {
+                    email = "";
+                }
+                var firstName = item.fields.firstName ? item.fields.firstName[0] : '';
+                var surName = item.fields.surName ? item.fields.surName[0] : '';
                 
-                suggestionsHtml += '<li class="search-suggestion" data-org-id="' + item.orgId + '" data-title="' + item.title + '" data-actual-id="' + item.entityId + '">';
-                suggestionsHtml += '    <a href="javascript:void(0)" tabindex="-1">' + item.title;
-                suggestionsHtml += '         <small>';
-                
-                if (item.phone) {
-                    suggestionsHtml += '         <div><i class="fa fa-phone fa-fw"></i> ' + item.phone + '</div>';
+                suggestionsHtml += '<li class="search-suggestion" data-user-id="' + userName + '">';
+                suggestionsHtml += '    <a href="javascript:void(0);">';
+                suggestionsHtml += '        <span>' + userName + '</span> &ndash; <span class="text-info">' + email + '</span>';
+                if (firstName || surName) {
+                    suggestionsHtml += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
                 }
-                
-                if (item.email) {
-                    suggestionsHtml += '         <div><i class="fa fa-envelope-o fa-fw"></i> ' + item.email + '</div>';
-                }
-                
-                var address = [];
-                if (item.address) {
-                    address.push(item.address);
-                }
-                if (item.addressLine2) {
-                    address.push(item.addressLine2);
-                }
-                var temp = (item.addressState || '') + ' ' + (item.postcode || '')
-                if (temp.trim() !== '') {
-                    address.push(temp);
-                }
-                if (item.country) {
-                    address.push(item.country);
-                }
-                if (address.length > 0) {
-                    suggestionsHtml += '         <div><i class="fa fa-map-marker fa-fw"></i> ' + address.join(', ') + '</div>';
-                }
-                
-                suggestionsHtml += '         </small>';
                 suggestionsHtml += '    </a>';
                 suggestionsHtml += '</li>';
             }
@@ -71,14 +53,14 @@
         }
     };
     
-    OrgFinder.prototype.init = function () {
-        flog('[OrgFinder] Initializing...');
+    UserFinder.prototype.init = function () {
+        flog('[UserFinder] Initializing...');
         
         var self = this;
         
         this.element.wrap('<div class="search-wrapper"></div>');
         this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-org-title') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
+            '<input type="text" autocomplete="off" class="form-control search-input" value="" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
         )
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
@@ -160,8 +142,8 @@
                 e.preventDefault();
                 
                 var suggestion = $(this);
-                self.element.val(self.options.useActualId ? suggestion.attr('data-actual-id') : suggestion.attr('data-org-id'));
-                self.input.val(suggestion.attr('data-title'));
+                self.element.val(suggestion.attr('data-user-id'));
+                self.input.val(suggestion.attr('data-user-id'));
                 
                 if (typeof self.options.onSelectSuggestion === 'function') {
                     self.options.onSelectSuggestion.call(self.element, suggestion);
@@ -171,11 +153,11 @@
             }
         }, '.search-suggestion');
         
-        flog('[OrgFinder] Initialized');
+        flog('[UserFinder] Initialized');
     };
     
-    OrgFinder.prototype.search = function (query) {
-        flog('[OrgFinder] Search: ' + query);
+    UserFinder.prototype.search = function (query) {
+        flog('[UserFinder] Search: ' + query);
         
         var self = this;
         
@@ -184,15 +166,21 @@
             dataType: 'json',
             url: self.options.url,
             data: {
-                jsonQuery: query,
-                orgTypes: self.options.orgTypes,
-                maxResults: self.options.maxResults
+                omni: query
             },
             success: function (resp) {
-                flog('[OrgFinder] Get response from server', resp);
+                flog('[UserFinder] Get response from server', resp);
                 
-                if (resp && resp.status && $.isArray(resp.data) && resp.data.length > 0) {
-                    self.suggestionsList.html(self.options.renderSuggestions(resp.data));
+                if (resp && resp.hits && resp.hits.total > 0) {
+                    var data = [];
+                    for (var i = 0; i < resp.hits.hits.length; i++) {
+                        var hit = resp.hits.hits[i];
+                        
+                        if (hit && hit.fields && hit.fields.userId && data.length < 5) {
+                            data.push(hit);
+                        }
+                    }
+                    self.suggestionsList.html(self.options.renderSuggestions(data));
                 } else {
                     self.suggestionsList.html(self.options.renderNoSuggestion());
                 }
@@ -200,20 +188,20 @@
                 self.suggestionsList.css('display', 'block');
             },
             error: function (jqXhr, status, error) {
-                flog('[OrgFinder] Get error response from server', jqXhr, status, error);
+                flog('[UserFinder] Get error response from server', jqXhr, status, error);
                 self.suggestionsList.html(self.options.renderNoSuggestion());
                 self.suggestionsList.css('display', 'block');
             }
         });
     };
     
-    $.fn.orgFinder = function (options) {
+    $.fn.userFinder = function (options) {
         return this.each(function () {
             var element = $(this)
-            var data = element.data('orgFinder');
+            var data = element.data('userFinder');
             
             if (!data) {
-                element.data('orgFinder', (data = new OrgFinder(this, options)));
+                element.data('userFinder', (data = new UserFinder(this, options)));
             }
             
             if (typeof options == 'string') {
@@ -222,6 +210,6 @@
         })
     };
     
-    $.fn.orgFinder.constructor = OrgFinder;
+    $.fn.userFinder.constructor = UserFinder;
     
 })(jQuery);

@@ -1,3 +1,6 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tbody>
         <tr>
@@ -5,7 +8,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tbody>
                         <tr>
-                            <td class="text-wrapper" style="font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};">
+                            <td class="text-wrapper" style="$baseStyles">
                                 <strong>
                                     #if ($titleText && $titleText != "")
                                         $titleText

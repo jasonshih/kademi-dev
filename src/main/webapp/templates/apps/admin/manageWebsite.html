@@ -744,6 +744,11 @@
                         <p>Applications are made available for websites by activating them on your organisation's Manage Applications page. Available apps are then shown on the website apps list where they can be turned on or off as required.</p>
                     </div>
 
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Type to search" id="txt-search-app" />
+                    </div>
+                    <br />
                     #set($apps = $page.apps)
                     #if( $apps.isEmpty() )
                     <div class="well">
@@ -753,6 +758,11 @@
                     <div class="appsContainer">
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
+                                <colgroup>
+                                    <col width="120" />
+                                    <col />
+                                    <col />
+                                </colgroup>
                                 #foreach($app in $apps )
                                 <tr data-isCore="$app.core">
                                     <td class="CheckBoxWrapper">

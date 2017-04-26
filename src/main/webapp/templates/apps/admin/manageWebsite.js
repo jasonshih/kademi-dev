@@ -12,11 +12,22 @@ function initManageWebsite() {
     initHttpsTab();
     initHstsSettings();
     initXFrameOptionSettings();
+    initAppsFinder();
 
     $("form.details").forms({
         callback: function (resp) {
             flog("Saved Ok!");
             Msg.info("Saved");
+        }
+    });
+}
+
+function initAppsFinder() {
+    $('#txt-search-app').domFinder({
+        container: $('.appsContainer'),
+        items: 'tr',
+        showItems: function (items) {
+            items.css('display', '');
         }
     });
 }

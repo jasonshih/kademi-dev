@@ -14,18 +14,16 @@ CKEDITOR_BASEPATH = "/static/ckeditor456/";
 var themeCssFiles = new Array();
 
 
-
 function initTheme() {
     flog("initTheme-bootstrap335: init-theme.js");
-
+    
     // the login box in header is normally for logging in from a public page. So
     // in this case we want to navigate to the user's dashboard
-    $(".header .Login").user({
-    });
+    $(".header .Login").user({});
     // the login form appears in content when the requested page requires a login
     // so in this case we do not give a post-login url, we will just refresh the current page
     $("#content .Login").user();
-
+    
     initEdify();
     initActiveNav(".initActive");
     initHelp();
@@ -38,26 +36,24 @@ function initTheme() {
         log("run function" + i);
         pageInitFunctions[i]();
         log("done run function", i);
-
+        
     });
-
+    
     flog("finished init-theme");
 }
 
 
 function initHelp() {
     $(".helpIcon").click(function (e) {
-
+        
         e.preventDefault();
-
+        
         var page = $(document).find("meta[name=templateName]").attr("value");
         var href = "http://docs.fuselms.com/ref/screens";
         href += page;
         window.open(href);
     });
 }
-
-
 
 
 /**
@@ -84,10 +80,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
     }
     flog("removePlugins", removePlugins);
     log("prepare html editors", elements);
-
+    
     elements.each(function (i, n) {
         var inp = $(n);
-
+        
         var inputClasses = inp.attr("class");
         var id = inp.attr("id");
         var toolbar = "Default";
@@ -102,10 +98,10 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         }
-
+        
         toolbar = "Default"; // HACK!!
         flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
-
+        
         flog("themeCssFiles", themeCssFiles);
         flog("editorSkin", editorSkin);
         var currentFolder = getFolderPath(window.location.pathname);
@@ -132,7 +128,7 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
                 }
             }
         };
-
+        
         if (height) {
             config.height = height;
         } else {
@@ -141,16 +137,16 @@ function initHtmlEditors(elements, height, width, extraPlugins, removePlugins) {
         if (width) {
             config.width = width;
         }
-
+        
         //config.stylesSet = 'myStyles:/theme/styles.js'; // TODO: needs to be configurable, based on theme
         config.stylesSet = "myStyles:" + stylesPath;
         flog("create editor", inp, config);
         var editor = inp.ckeditor(config).editor;
         //var editor = CKEDITOR.instances["body"];
         flog("editor instances", CKEDITOR.instances);
-
+        
     });
-
+    
     CKEDITOR.dtd.$removeEmpty['i'] = false;
 }
 
@@ -164,14 +160,14 @@ function initRotation() {
         }
         try {
             var rotateDegrees = 0;
-
+            
             setInterval(function () {
                 if (rotateDegrees === 360) {
                     rotateDegrees = 0;
                 } else {
                     rotateDegrees += 2;
                 }
-
+                
                 $('.rotate.anticlockwise').rotate(-rotateDegrees);
                 $('.rotate.clockwise').rotate(rotateDegrees);
             }, 50);
@@ -186,13 +182,12 @@ function initRotation() {
 function initPrintLink() {
     var links = $("a.print2");
     flog("initPrintLink", links);
-    links.off('click').on('click',function (e) {
+    links.off('click').on('click', function (e) {
         e.preventDefault();
         window.print();
         return false;
     });
 }
-
 
 
 /**
@@ -233,24 +228,24 @@ function initComments(pageUrl) {
         $(".hideBtn a").text("Show comments");
         $(".hideBtn a").addClass("ishidden");
     }
-
+    
     $("body").on("click focus", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
     $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
-
+    
     var currentUser = {
         name: userName,
         href: userUrl,
         photoHref: "/profile/pic"
     };
-
+    
     // This is for deferred logins, ie someone logs in after going to a page with comments
     $('body').on('userLoggedIn', function (event, userUrl, userName) {
         currentUser.name = userName;
         currentUser.href = userUrl;
     });
-
+    
     var comments = $("#comments");
     if (comments.length > 0) {
         comments.comments({
@@ -303,16 +298,16 @@ function doInitVideos() {
 
 function replaceImagesWithJWPlayer(images) {
     // will not transform images which in /contenteditor page
-    if($(document.body).hasClass('content-editor-page'))
+    if ($(document.body).hasClass('content-editor-page'))
         return;
-
+    
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-video-src");
         var posterUrl = img.attr("src");
         var aspectratio = img.attr("data-aspectratio");
-        var autostart = img.attr('data-autostart')==='true';
-        var repeat = img.attr('data-repeat')==='true';
+        var autostart = img.attr('data-autostart') === 'true';
+        var repeat = img.attr('data-repeat') === 'true';
         var controls = true; // Force showing controls for now
         if (src == null) {
             flog("replaceImagesWithJWPlayer: derive video base path from src", posterUrl);
@@ -326,11 +321,12 @@ function replaceImagesWithJWPlayer(images) {
     });
 }
 
-function buildJWAudioPlayer(count, src, autostart){
-    var playerInstance = jwplayer("kaudio-player-"+count);
-
+function buildJWAudioPlayer(count, src, autostart) {
+    var playerInstance = jwplayer("kaudio-player-" + count);
+    var isHash = src.indexOf('/_hashes/files/') === 0;
+    
     playerInstance.setup({
-        file: src,
+        file: src + (isHash ? '.mp3' : ''),
         width: '100%',
         height: 30,
         autostart: autostart,
@@ -345,8 +341,8 @@ function buildJWAudioPlayer(count, src, autostart){
 
 function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autostart, repeat, controls) {
     flog("itemToReplace", itemToReplace);
-
-
+    
+    
     var h = itemToReplace.height();
     if (h < 100) {
         h = 360;
@@ -355,16 +351,17 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     if (w < 100) {
         w = 640;
     }
-
-    if(!aspectratio){
+    
+    if (!aspectratio) {
         aspectratio = w + ":" + h;
     }
-
-
+    
+    
     var div = buildJWPlayerContainer(count);
     log("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
     var innerId = div.find(".jw-video").attr("id");
+    var isHash = src.indexOf('/_hashes/files/') === 0;
     flog("HACK using src");
     jwplayer(innerId).setup({
 //        file: src,
@@ -379,16 +376,16 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         controls: controls,
         androidhls: true, //enable hls on android 4.1+
         playlist: [{
-                image: posterHref,
-                sources: [{
-                        file: src
-                    }
-                    , {
-                        file: src + "/../alt-640-360.webm"
-                    }, {
-                        file: src + "/../alt-640-360.m4v"
-                    }]
-            }]
+            image: posterHref,
+            sources: [{
+                file: src
+            }
+                , {
+                    file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
+                }, {
+                    file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
+                }]
+        }]
         , primary: "flash"
     });
     jwplayer(innerId).onReady(function () {
@@ -396,7 +393,7 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-
+    
 }
 
 function buildJWPlayerContainer(count) {
@@ -404,7 +401,7 @@ function buildJWPlayerContainer(count) {
     return $(c);
 }
 
-function doInitAudio(){
+function doInitAudio() {
     var images = $('img[data-kaudio]');
     if (images.length === 0) {
         return;
@@ -424,21 +421,21 @@ function initAudios() {
 }
 function replaceImagesWithAudio(images) {
     // will not transform images which in /contenteditor page
-    if($(document.body).hasClass('content-editor-page'))
+    if ($(document.body).hasClass('content-editor-page'))
         return;
-
+    
     images.each(function (i, n) {
         var img = $(n);
         var src = img.attr("data-kaudio");
         var width = img.attr("data-width");
-        if(!width){
+        if (!width) {
             width = 300;
         }
-        var autostart = img.attr("data-autostart")==='true';
+        var autostart = img.attr("data-autostart") === 'true';
         img.wrap('<div style="width: ' + width + 'px; max-width: 100%; margin-left: auto; margin-right: auto" ></div>');
         if (src) {
             log("replaceImagesWithAudio: Using data-kaudio", src);
-            var audioWrap = $('<div id="kaudio-player-'+i+'" />');
+            var audioWrap = $('<div id="kaudio-player-' + i + '" />');
             audioWrap.insertAfter(img);
             img.hide();
             buildJWAudioPlayer(i, src, autostart);
@@ -448,12 +445,12 @@ function replaceImagesWithAudio(images) {
     });
 }
 
-function initTablesForCkeditor(){
+function initTablesForCkeditor() {
     flog('checking tables for cellpadding or cellspacing, if yes make a workaround since bootstrap doesnt support this');
-    $('table').each(function(){
+    $('table').each(function () {
         var cellPadding = $(this).attr('cellpadding');
         var cellSpacing = $(this).attr('cellspacing');
-        if(cellSpacing){
+        if (cellSpacing) {
             // Support cellpadding and cellspacing in css way
             flog('cellspacing found', this, cellSpacing);
             $(this).css({
@@ -462,7 +459,7 @@ function initTablesForCkeditor(){
             });
             $(this).removeAttr('cellspacing');
         }
-        if(cellPadding){
+        if (cellPadding) {
             flog('cellPadding found', this, cellPadding);
             $(this).find('th,td').css({'padding': cellPadding + 'px'});
             $(this).removeAttr('cellpadding');

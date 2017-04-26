@@ -2,7 +2,6 @@ var iframeUrl;
 var win = $(window);
 
 function initManagePoints() {
-    initSelectAll();
 
     var editModal = $("#modalEditPoints");
     var modalForm = editModal.find("form");
@@ -19,28 +18,7 @@ function initManagePoints() {
         }
     });
 
-    $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
-        e.preventDefault();
-        var href = $(e.target).closest("a").attr("href");
-        modalForm.attr("action", href);
-        $.ajax({
-            url: href,
-            dataType: "json",
-            success: function (data) {
-                flog("success", data)
-                if (data.status) {
-                    modalForm.find("input[name=numPoints]").val(data.data.numPoints);
-                    modalForm.find("input[name=reason]").val(data.data.reason);
-                    editModal.modal("show");
-                } else {
-                    Msg.error("There was a problem loading the points record");
-                }
-            },
-            error: function (resp) {
-                Msg.error("There was a problem loading the point record");
-            }
-        });
-    });
+    refreshTableEvents();
 
     $(".removeUsers").click(function (e) {
         var node = $(e.target);
@@ -177,6 +155,70 @@ function initManagePoints() {
         var a = $(e.target).closest("a");
         var code = a.attr("href");
         a.closest(".input-group").find("input").val(code);
+    });
+}
+
+function refreshTableEvents() {
+    initSelectAll();
+    $('.sort-field').on('click', function (e) {
+        e.preventDefault();
+        var a = $(e.target);
+        var uri = URI(window.location);
+        var field = a.attr('id');
+
+        var dir = 'asc';
+        if (field == getSearchValue(window.location.search, 'sortfield')
+            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+            dir = 'desc';
+        }
+        uri.setSearch('sortfield', field);
+        uri.setSearch('sortdir', dir);
+
+        $.ajax({
+            type: 'GET',
+            url: uri.toString(),
+            success: function (data) {
+                flog('success', data);
+                window.history.pushState('', document.title, uri.toString());
+
+                var newDom = $(data);
+
+                var $tableContent = newDom.find('#pointsBody');
+                $('#pointsBody').replaceWith($tableContent);
+                
+                var $tableContent = newDom.find('#pointsFooter');
+                $('#pointsFooter').replaceWith($tableContent);
+                
+                refreshTableEvents();
+            },
+            error: function (resp) {
+                Msg.error('err');
+            }
+        });
+
+    });
+    
+    $("#pointsContainer").on("click", ".btnEditPoints", function (e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        modalForm.attr("action", href);
+        $.ajax({
+            url: href,
+            dataType: "json",
+            success: function (data) {
+                flog("success", data)
+                if (data.status) {
+                    modalForm.find("input[name=numPoints]").val(data.data.numPoints);
+                    modalForm.find("input[name=reason]").val(data.data.reason);
+                    editModal.modal("show");
+                } else {
+                    Msg.error("There was a problem loading the points record");
+                }
+            },
+            error: function (resp) {
+                Msg.error("There was a problem loading the point record");
+            }
+        });
     });
 }
 
@@ -705,6 +747,16 @@ function initHistorySearch() {
         e.preventDefault();
         doHistorySearch();
     });
+    
+    $(document.body).on('change', '#tagId', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
+    
+    $(document.body).on('change', '#reasonCode', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
 }
 
 function doHistorySearch() {
@@ -715,6 +767,8 @@ function doHistorySearch() {
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),
+        tagId: $("#tagId").val(),
+        reasonCode: $("#reasonCode").val()
     };
     flog("data", data);
 
@@ -748,8 +802,27 @@ function doHistorySearch() {
             var newBody = $(content).find("#pointsTable");
             target.replaceWith(newBody);
             history.pushState(null, null, link);
+            
+            refreshTableEvents();
+            
             $("abbr.timeago").timeago();
-            $("#pointsTable").paginator();
+            $("#pointsFooter").paginator();
         }
     });
+}
+
+function getSearchValue(search, key) {
+    if (search.charAt(0) == '?') {
+        search = search.substr(1);
+    }
+    parts = search.split('&');
+    if (parts) {
+        for (var i = 0; i < parts.length; i++) {
+            entry = parts[i].split('=');
+            if (entry && key == entry[0]) {
+                return entry[1];
+            }
+        }
+    }
+    return '';
 }

@@ -5,7 +5,8 @@
         <link rel="stylesheet" type="text/css" href="/static/common/jquery-ui-1.8.11.custom.css" />
        	<script type="text/javascript" src="manageReward.js">//</script>        
         <link href="/static/common/fileuploader.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>         
+        <script type="text/javascript" src="/static/js/fileuploader.js">//</script>    
+        <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>     
     </head>
     <body>
         <section id="manageReward" class="MainContent">
@@ -29,7 +30,7 @@
             </header>
             <div class="Content Details">
                 <div class="table-responsive">
-                    <table class="entries table table-striped table-hover table-full-width">
+                    <table class="entries table table-striped table-hover table-full-width pagination-container">
                         <thead>
                             <tr>
                                 <th>Full name</th>
@@ -46,8 +47,8 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            #foreach($entry in $page.entries)
+                        <tbody class="pagination-results" >
+                            #foreach($entry in $page.paginator.records)
                             <tr>
                                 <td>$entry.awardedTo.formattedName</td>
                                 <td>$page.orgForEntry($entry)</td>
@@ -77,6 +78,13 @@
 
                             #end
                         </tbody>
+                        <tfoot id="pointsFooter">
+                            <tr>
+                                <td colspan="8">
+                                    $!page.paginator.html
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>                                                
             </div>			
