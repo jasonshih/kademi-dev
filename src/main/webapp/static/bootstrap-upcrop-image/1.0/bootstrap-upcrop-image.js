@@ -4,6 +4,9 @@
         buttonUploadOtherText: 'Upload other',
         buttonCropText: 'Crop',
         buttonContinueText: 'Continue',
+        buttonCameraText: 'Camera',
+        buttonTakePictureText: 'Take a picture',
+        buttonTakeAnotherText: 'Take another picture',
         modalTitle: 'Upload and crop image',
         cropHint: '<p class="alert alert-info"><i class="glyphicon glyphicon-info-sign"></i> Please drag a rectangle to crop the image</p>',
         onUploadComplete: null,
@@ -17,6 +20,7 @@
         bgOpacity: 0.4,
         bgColor: '#fff',
         isEmbedded: false,
+        isCameraEnabled: false,
         fieldName: "file",
         modalTemplate:
             '<div class="modal fade" id="{{upcropId}}">' +
@@ -31,8 +35,11 @@
             '           </div>' +
             '           <div class="modal-footer">' +
             '               <div class="pull-left">' +
+            '                   {{buttonTakeAnother}}' +
             '                   {{buttonUploadOther}}' +
             '               </div>' +
+            '               {{buttonCamera}} ' +
+            '               {{buttonTakePicture}} ' +
             '               <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button> ' +
             '               {{buttonCrop}} ' +
             '               {{buttonContinue}}' +
@@ -48,7 +55,7 @@
             '           {{buttonUploadOther}}' +
             '       </div>' +
             '       <div class="pull-right">' +
-            '           {{buttonContinue}} ' +
+            '           {{buttonContinue}}' +
             '           {{buttonCrop}}' +
             '       </div>' +
             '   </div>' +
@@ -73,7 +80,10 @@
                 upcropZone: getUpcropZone(config),
                 buttonUploadOther: getButtonUploadOther(config),
                 buttonCrop: getButtonCrop(config),
-                buttonContinue: getButtonContinue(config)
+                buttonContinue: getButtonContinue(config),
+                buttonCamera: getButtonCamera(config),
+                buttonTakePicture: getButtonTakePicture(config),
+                buttonTakeAnother: getButtonTakeAnother(config)
             };
             flog('Data upcrop: ', dataUpCrop);
 
@@ -86,6 +96,10 @@
             var upcropContainer = $('#' + uniqueId);
             var uploadZone = upcropContainer.find('.upload-zone');
             var cropZone = upcropContainer.find('.crop-zone');
+            var takePictureZone = upcropContainer.find('.take-picture');
+            var btnCamera = upcropContainer.find('.btn-camera');
+            var btnTakePicture = upcropContainer.find('.btn-take-picture');
+            var btnTakeAnother = upcropContainer.find('.btn-take-another');
             var btnUploadOther = upcropContainer.find('.btn-upload-other');
             var btnCrop = upcropContainer.find('.btn-crop');
             var btnContinue = upcropContainer.find('.btn-continue');
@@ -123,7 +137,183 @@
                     config.onUploadOther.apply(this, upcropContainer);
                 }
             });
+            
+            // Event of hiding the modal
+            $(upcropContainer).on('hidden.bs.modal', function () {
+                flog("Hiding modal...");
+                stopCameraHardware();
+                destroyPictureZone();
+            });
+            
+            var widthVideo = 572;
+            var heightVideo = 430;
+            var constraints = {video: { mandatory: { minWidth: widthVideo, minHeight: heightVideo }}};
+            var videoStream;
+                        
+            // Action for "Camera" button
+            btnCamera.click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
 
+                setTakePictureZone();
+                if(hasGetUserMedia()) {
+                    
+                    btnCamera.addClass('hide');
+                    btnTakePicture.removeClass('hide');
+                    
+                    navigator.getUserMedia  = navigator.getUserMedia ||
+                                              navigator.webkitGetUserMedia ||
+                                              navigator.mozGetUserMedia ||
+                                              navigator.msGetUserMedia;
+
+                    var video = getTag("video");
+                    takePictureZone.append(video);
+                    
+                    navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+                        videoStream = stream;
+                        video.src = window.URL.createObjectURL(videoStream);
+                        video.play();
+                    });
+                    
+                }else{
+                      alert('Sorry this feature is not supported in your browser.');
+                }
+            });
+            
+            //Action for  "Take a picture" button
+            btnTakePicture.click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                flog("Taking the picture...");
+
+                btnTakePicture.addClass('hide');
+                btnTakeAnother.removeClass('hide');
+
+                var video = getTag("video");
+                var canvas = getTag("canvas");
+
+                var context = canvas.getContext('2d');
+                flog("Video paused");
+                video.pause(); // Pause the image of the video
+
+                context.drawImage(video, 0, 0, widthVideo, heightVideo); // Draw the Image
+                video.remove(); // Remove the video tag
+
+                stopCameraHardware();
+
+                var href = canvas.toDataURL("image/png"); // Get the canvas URL
+                var image = new Image();
+                image.src = href;
+                image.id = "takenPicture";
+
+                var file = convertCanvasToBlob(canvas);
+                var form = upcropContainer.find('form');
+                var formdata = new FormData();
+                var name = 'webcam.png';
+                formdata.append("overwrite", "true");
+                formdata.append("file", file, name);
+                
+                // Posting the img
+                $.ajax({
+                   type: form.attr("method"),
+                   url: form.attr("action"),
+                   data: formdata,
+                   processData: false,
+                   contentType: false,
+                   success: function(res){
+                        var data = {'result': res, 'name': name};
+                        dataContinue = [data];
+                        flog('uploaded image: ', data, name, data.result.nextHref);
+                        uploadedHref = data.result.nextHref;
+                        uploadedName = name;
+                        href = data.result.nextHref + '?' + Math.round(Math.random() * 123456789);
+                        flog("href:", href);
+                        txtUrl.val(href);
+                   }
+                });
+                takePictureZone.addClass('hide');
+                cropZone.removeClass('hide');
+                btnContinue.removeClass('hide');
+
+                takePictureZone.append(image);
+                $("#takenPicture").addClass("image-crop");
+
+                initCropZone(href);
+
+            });
+            
+            // Action for "Take another picture" button
+            btnTakeAnother.click(function (e) {
+                e.preventDefault();
+                destroyCropZone();
+                btnCamera.click();
+            });
+
+            function destroyPictureZone(){
+                $('canvas').remove();
+                $('video').remove();
+                $("#takenPicture").remove();
+                $(".take-picture").empty();
+                uploadZone.removeClass('hide');
+                btnCamera.removeClass('hide');
+                takePictureZone.addClass('hide'); 
+                btnTakePicture.addClass('hide');   
+            }
+
+            function setTakePictureZone(){                
+                destroyPictureZone();
+                takePictureZone.removeClass('hide');                
+                btnCamera.removeClass('hide');                
+                uploadZone.addClass('hide');
+                cropZone.addClass('hide');
+                btnCrop.addClass('hide');
+                btnContinue.addClass('hide');
+                btnUploadOther.addClass('hide');
+                btnTakePicture.addClass('hide');
+                btnTakeAnother.addClass('hide');
+            }
+            
+            function hasGetUserMedia() {
+                return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                          navigator.mozGetUserMedia || navigator.msGetUserMedia);
+            }
+            
+            function stopCameraHardware(){
+                if(videoStream !== undefined){
+                    videoStream.getVideoTracks().forEach(function (track) { // Stop the camera hardware
+                        flog("stoping camera.");
+                        track.stop();
+                    });                 
+                }
+            }
+            
+            function getTag(tagName){
+                var tag;
+                if(document.querySelector(tagName) !== undefined && document.querySelector(tagName) !== null){
+                    flog("Returning tag: ", tagName);
+                    tag = document.querySelector(tagName);
+                }else{
+                    flog("Creating tag: ", tagName);
+                    tag = document.createElement(tagName);
+                    tag.id = tagName+"Zone"; 
+                    tag.width = widthVideo;
+                    tag.height = heightVideo;
+                }
+                return tag;
+            }
+
+            
+            function convertCanvasToBlob(canvas){
+                var blobBin = atob(canvas.toDataURL('image/png').split(',')[1]);
+                var array = [];
+                for(var i = 0; i < blobBin.length; i++) {
+                    array.push(blobBin.charCodeAt(i));
+                }
+                return new Blob([new Uint8Array(array)], {type: 'image/png'});
+            }
+            
+            
             // Action for button `Continue`
             btnContinue.on('click', function (e) {
                 e.preventDefault();
@@ -133,6 +323,8 @@
                 }
 
                 if (!config.isEmbedded) {
+                    destroyCropZone();
+                    destroyPictureZone();
                     upcropContainer.modal('hide');
                 }
             });
@@ -318,6 +510,7 @@
                 uploadZone: uploadZone,
                 cropZone: cropZone,
                 btnUploadOther: btnUploadOther,
+                btnTakeAnother: btnTakeAnother,
                 btnCrop: btnCrop,
                 btnContinue: btnContinue
             };
@@ -368,6 +561,22 @@
         return '<button class="btn btn-info btn-continue hide" type="button">' + config.buttonContinueText + '</button>';
     }
 
+    function getButtonCamera(config) {
+        if(config.isCameraEnabled){
+            return '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';    
+        }else{
+            return "";
+        }
+    }
+    
+    function getButtonTakePicture(config) {
+        return '<button class="btn btn-primary btn-take-picture hide" type="button">'+config.buttonTakePictureText+'</button>';
+    }
+    
+    function getButtonTakeAnother(config) {
+        return '<button class="btn btn-primary btn-take-another hide" type="button">' + config.buttonTakeAnotherText + '</button>';
+    }
+
     function getUpcropZone(config) {
         return (
             '<input type="hidden" value="" name="x" />' +
@@ -375,6 +584,7 @@
             '<input type="hidden" value="" name="w" />' +
             '<input type="hidden" value="" name="h" />' +
             '<input type="hidden" value="" name="url" />' +
+            '<div class="take-picture hide"></div>' +
             '<div class="upload-zone"></div>' +
             '<div class="crop-zone hide clearfix">' +
             config.cropHint +
@@ -396,16 +606,17 @@
 
         $(document.body).on('show.bs.modal', '#' + dataUpCrop.upcropId, function () {
             var btnUploadOther = $(this).find('.btn-upload-other');
-
+            var btnTakeAnother = $(this).find('.btn-take-another');
+            
             !btnUploadOther.hasClass('hide') && btnUploadOther.trigger('click');
+            !btnTakeAnother.hasClass('hide') && btnTakeAnother.trigger('click');
+            
         });
     }
 
     function initUpCropEmbedded(target, config, dataUpCrop) {
         flog('Init upcrop embedded');
-        target.html(
-                renderTemplate(config.embeddedTemplate, dataUpCrop)
-                );
+        target.html(renderTemplate(config.embeddedTemplate, dataUpCrop));
     }
 
     function renderTemplate(templateString, data) {

@@ -747,6 +747,16 @@ function initHistorySearch() {
         e.preventDefault();
         doHistorySearch();
     });
+    
+    $(document.body).on('change', '#tagId', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
+    
+    $(document.body).on('change', '#reasonCode', function (e) {
+        e.preventDefault();
+        doHistorySearch();
+    });
 }
 
 function doHistorySearch() {
@@ -757,6 +767,8 @@ function doHistorySearch() {
         dataQuery: $("#data-query").val(),
         searchGroup: $("#searchGroup").val(),
         searchReward: $("#searchReward").val(),
+        tagId: $("#tagId").val(),
+        reasonCode: $("#reasonCode").val()
     };
     flog("data", data);
 
