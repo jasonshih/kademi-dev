@@ -1,8 +1,8 @@
-JBNodes['cancelLead'] = {
+JBNodes['end'] = {
     icon: 'fa fa-stop-circle',
-    title: 'Cancel lead',
+    title: 'End',
     type: JB_NODE_TYPE.ACTION,
-    previewUrl: '/theme/apps/funnels/jb/cancelLeadNode.png',
+    previewUrl: '/theme/apps/funnels/jb/endNode.png',
     ports: {
         nextNodeId: {
             label: 'then',
