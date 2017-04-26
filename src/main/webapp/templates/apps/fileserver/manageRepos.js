@@ -1,5 +1,13 @@
 function initManageRepos() {
     log('initManageRepositories');
+    
+    $('#txt-search-repo').domFinder({
+        container: $('#table-repo'),
+        items: 'tbody tr',
+        showItems: function (items) {
+            items.css('display', '');
+        }
+    });
 
     var tableWrapper = $('#table-repo');
     
