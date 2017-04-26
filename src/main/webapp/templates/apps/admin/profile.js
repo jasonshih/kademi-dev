@@ -1,7 +1,6 @@
 function initProfile() {
     flog("initProfile - profile.js");
     initProfileLoginAs();
-    initOrgSearch();
     initNewMembershipForm();
     initEnableDisable();
     initTabLazyLoading();

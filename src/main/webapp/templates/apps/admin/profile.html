@@ -3,6 +3,7 @@
         <title>Profile</title>
         <link href="profile.css" rel="stylesheet" type="text/css" />
         <link href="manageUser.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/static/jquery.orgFinder/1.1.0/jquery.orgFinder-1.1.0.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/profile.js">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
@@ -501,8 +502,7 @@
                                     <p>Please select a group and an organisation to make this user a member of</p>
                                     <div class="form-group">
                                         <div class="col-md-12">
-                                            <input type="text" class="form-control required" autocomplete="off" name="orgTitle" id="orgTitle" value="$page.organisation.formattedName" />
-                                            <input type="hidden" class="required" autocomplete="off" name="orgId" id="orgId" value="$page.organisation.id" />
+                                            <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-org-title="$page.organisation.formattedName" />
                                         </div>
                                         <div id="org-search">
                                             <div class="">
@@ -588,6 +588,7 @@
                 initChangeUserId();
                 initRemoveCreds();
                 initRemoveOAuthCred();
+                initOrgFinder();
             });
         </script>
 
