@@ -808,6 +808,11 @@
                 '    <tbody>' +
                 '        <tr>' +
                 '            <td id="edm-wrapper-td" align="center">' +
+                '            <!--[if (gte mso 9)|(IE)]>' +
+                '                <table cellspacing="0" cellpadding="0" width="600" border="0">' +
+                '                    <tr>' +
+                '                        <td>' +
+                '            <![endif]-->' +
                 '                <table cellpadding="0" cellspacing="0" border="0" style="max-width: 600px;" id="edm-container">' +
                 '                    <tbody>' +
                 '                        <tr>' +
@@ -837,6 +842,11 @@
                 '                        </tr>' +
                 '                    </tbody>' +
                 '                </table>' +
+                '            <!--[if (gte mso 9)|(IE)]>' +
+                '                        </td>' +
+                '                    </tr>' +
+                '                </table>' +
+                '            <![endif]-->' +
                 '            </td>' +
                 '        </tr>' +
                 '    </tbody>' +
