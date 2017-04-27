@@ -37,6 +37,11 @@
                 graphOptions.dateFormat = component.attr('data-date-format') || "%e %b";
                 graphOptions.valueFormat = component.attr('data-value-format') || ",.2f";
                 graphOptions.colors = component.attr('data-colors');
+                graphOptions.left = component.attr('data-left') || 30;
+                graphOptions.bottom = component.attr('data-bottom') || 30;
+                graphOptions.top = component.attr('data-top') || 0;
+                graphOptions.right = component.attr('data-right') || 0;
+                graphOptions.rightAlign = component.attr('data-align') == 'right'; // default to left
                 graphOptions.stacked = toBool(component.attr("data-stacked"));
                 graphOptions.showControls = toBool(component.attr("data-controls"));
                 graphOptions.showLegend = toBool(component.attr("data-legend"));
@@ -133,15 +138,15 @@
             var chart = null;
             if (graphOptions.type == 'line') {
                 chart = nv.models.lineChart()
-                    .margin({right: 50, left: 0, bottom: 30, top: 0})
-                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                    .margin({left: +graphOptions.left, right: +graphOptions.right, bottom: +graphOptions.bottom, top: +graphOptions.top})
+                    .rightAlignYAxis(graphOptions.rightAlign)
                     .showLegend(graphOptions.showLegend)
                     .showYAxis(true)
                     .clipEdge(true);
             } else {
                 chart = nv.models.multiBarChart()
-                    .margin({right: 50, left: 0, bottom: 30, top: 0})
-                    .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+                    .margin({left: +graphOptions.left, right: +graphOptions.right, bottom: +graphOptions.bottom, top: +graphOptions.top})
+                    .rightAlignYAxis(graphOptions.rightAlign)
                     .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
                     .showLegend(graphOptions.showLegend)
                     .stacked(graphOptions.stacked)
@@ -155,6 +160,7 @@
             chart.xAxis.tickFormat(function (d) {
                 return d3.time.format(graphOptions.dateFormat)(new Date(d))
             });
+
 
             chart.yAxis.tickFormat(d3.format(graphOptions.valueFormat));
 
@@ -242,20 +248,20 @@
             var chart = null;
             if (graphOptions.type == 'line') {
                 chart = nv.models.lineChart()
-                        .margin({right: 50, left: 0, bottom: 30, top: 0})
-                        .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                        .showLegend(graphOptions.showLegend)
-                        .showYAxis(true)
-                        .clipEdge(true);
+                    .margin({left: +graphOptions.left, right: +graphOptions.right, bottom: +graphOptions.bottom, top: +graphOptions.top})
+                    .rightAlignYAxis(graphOptions.rightAlign)
+                    .showLegend(graphOptions.showLegend)
+                    .showYAxis(true)
+                    .clipEdge(true);
             } else {
                 chart = nv.models.multiBarChart()
-                        .margin({right: 50, left: 0, bottom: 30, top: 0})
-                        .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                        .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                        .showLegend(graphOptions.showLegend)
-                        .stacked(graphOptions.stacked)
-                        .showYAxis(true)
-                        .clipEdge(true);
+                    .margin({left: +graphOptions.left, right: +graphOptions.right, bottom: +graphOptions.bottom, top: +graphOptions.top})
+                    .rightAlignYAxis(graphOptions.rightAlign)
+                    .showControls(graphOptions.showControls)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .showLegend(graphOptions.showLegend)
+                    .stacked(graphOptions.stacked)
+                    .showYAxis(true)
+                    .clipEdge(true);
             }
             if (graphOptions.userColors){
                 chart.color(graphOptions.userColors);

@@ -5,13 +5,27 @@
     <body>
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
             <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        $formatter.checkbox("onePerProfile", $page.node.onePerProfile)
-                        One per profile
-                    </label>
-                </div>                
-                <small class="text-muted help-block">Set this if you want only one lead to be created for each profile</small>
+                <div class="col-sm-12">
+                    <div class="checkbox">
+                        <label>
+                            $formatter.checkbox("onePerProfile", $page.node.onePerProfile)
+                            One per profile
+                        </label>
+                    </div>                
+                    <small class="text-muted help-block">Set this if you want only one lead to be created for each profile</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="checkbox">
+                        <label>
+                            $formatter.checkbox("initialGoal", $page.node.initialGoal)
+                            Initial Goal
+                        </label>
+                    </div>                
+                    <small class="text-muted help-block">Set this to specify that this begin node is the initial goal</small>
+                </div>
             </div>
 
         </form>
