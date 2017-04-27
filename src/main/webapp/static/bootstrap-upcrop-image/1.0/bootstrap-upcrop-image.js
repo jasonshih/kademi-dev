@@ -32,6 +32,7 @@
             '           </div>' +
             '           <div class="modal-body">' +
             '               {{upcropZone}}' +
+            '               {{takePictureZone}}'+
             '           </div>' +
             '           <div class="modal-footer">' +
             '               <div class="pull-left">' +
@@ -78,6 +79,7 @@
             var dataUpCrop = {
                 upcropId: uniqueId,
                 upcropZone: getUpcropZone(config),
+                takePictureZone: getTakePictureZone(config),
                 buttonUploadOther: getButtonUploadOther(config),
                 buttonCrop: getButtonCrop(config),
                 buttonContinue: getButtonContinue(config),
@@ -111,6 +113,18 @@
             var txtUrl = upcropContainer.find('[name=url]');
 
             var dataContinue;
+            
+                    
+            // Event of hiding the modal
+            $(upcropContainer).on('hidden.bs.modal', function () {
+                flog("Hiding modal...");
+                stopCameraHardware();
+                destroyPictureZone();
+                destroyCropZone();
+                cropZone.addClass("hide");
+                btnTakeAnother.addClass("hide");
+                btnContinue.addClass("hide");
+            });
 
             // Action for button `Upload other`
             btnUploadOther.click(function (e) {
@@ -137,14 +151,7 @@
                     config.onUploadOther.apply(this, upcropContainer);
                 }
             });
-            
-            // Event of hiding the modal
-            $(upcropContainer).on('hidden.bs.modal', function () {
-                flog("Hiding modal...");
-                stopCameraHardware();
-                destroyPictureZone();
-            });
-            
+                        
             var widthVideo = 572;
             var heightVideo = 430;
             var constraints = {video: { mandatory: { minWidth: widthVideo, minHeight: heightVideo }}};
@@ -562,11 +569,11 @@
     }
 
     function getButtonCamera(config) {
+        var button = "";
         if(config.isCameraEnabled){
-            return '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';    
-        }else{
-            return "";
+            button = '<button class="btn btn-success btn-camera" type="button">'+config.buttonCameraText+'</button>';    
         }
+        return button;
     }
     
     function getButtonTakePicture(config) {
@@ -584,13 +591,20 @@
             '<input type="hidden" value="" name="w" />' +
             '<input type="hidden" value="" name="h" />' +
             '<input type="hidden" value="" name="url" />' +
-            '<div class="take-picture hide"></div>' +
             '<div class="upload-zone"></div>' +
             '<div class="crop-zone hide clearfix">' +
             config.cropHint +
             '<div class="image-wrapper"><img class="image-crop" src="" width="100%" /></div>' +
             '</div>'
         );
+    }
+    
+    function getTakePictureZone(config){
+        var html = "";
+        if(config.isCameraEnabled){
+            html = ('<div class="take-picture hide clearfix"></div>');    
+        }
+        return html;
     }
 
     function initUpCropModal(target, config, dataUpCrop) {
@@ -606,11 +620,8 @@
 
         $(document.body).on('show.bs.modal', '#' + dataUpCrop.upcropId, function () {
             var btnUploadOther = $(this).find('.btn-upload-other');
-            var btnTakeAnother = $(this).find('.btn-take-another');
-            
             !btnUploadOther.hasClass('hide') && btnUploadOther.trigger('click');
-            !btnTakeAnother.hasClass('hide') && btnTakeAnother.trigger('click');
-            
+            $(".btn-continue").addClass("hide");
         });
     }
 
