@@ -21,7 +21,7 @@ function initEcommerceCheckout() {
     initPaymentOptionSelect();
     initLoginForm();
 
-    $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item').prop('disabled', false);
+    $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-remove-item').prop('disabled', false);
 }
 
 function initCartForm() {
@@ -32,7 +32,7 @@ function initCartForm() {
             icon.show();
 
             var cvv = form.find('[name=cardcvn]');
-            if(cvv.val() && isNaN(cvv.val())){
+            if (cvv.val() && isNaN(cvv.val())) {
                 icon.hide();
                 return {
                     error: 1,
@@ -41,7 +41,7 @@ function initCartForm() {
                 };
             }
 
-            if(cvv.val() && cvv.val().length<3){
+            if (cvv.val() && cvv.val().length < 3) {
                 icon.hide();
                 return {
                     error: 1,
@@ -52,10 +52,10 @@ function initCartForm() {
 
             var phone = form.find('[name=phone]');
             var phoneValue = phone.val();
-            if(phoneValue){
+            if (phoneValue) {
                 var regex = /-|\+|\s|\(|\)|x|ext|,|\.|\//ig;
                 var phoneValue = phoneValue.replace(regex, '');
-                if(isNaN(phoneValue)){
+                if (isNaN(phoneValue)) {
                     icon.hide();
                     return {
                         error: 1,
@@ -140,7 +140,7 @@ function initItemQuantity() {
     var body = $(document.body);
     var changeQuantity = function (trigger, isIncrease) {
         var inputGroup = trigger.closest('.input-group');
-        var txtQuantity = inputGroup.find('.txt-quantity');
+        var txtQuantity = inputGroup.find('.ecom-txt-quantity');
         var quantity = txtQuantity.val().trim();
 
         if (isNaN(quantity)) {
@@ -179,7 +179,7 @@ function initItemQuantity() {
     });
 
     var quantityUpdateTimer = null;
-    body.on('change', '.txt-quantity', function (e) {
+    body.on('change', '.ecom-txt-quantity', function (e) {
         e.preventDefault();
 
         var inpt = $(this);
@@ -200,7 +200,7 @@ function initItemQuantity() {
 function doQuantityUpdate(href, quantity) {
     flog("doQuantityUpdate", href);
 
-    var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item');
+    var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-remove-item');
     actors.prop('disabled', true);
 
     $.ajax({
