@@ -7,6 +7,10 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.8.1"
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
         }
     ],
     
@@ -38,12 +42,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/moment/2.4.0/moment-2.4.0.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js"
             }
         },
@@ -69,12 +67,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/easy-pie-chart/2.1.7/jquery.easypiechart.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/moment/2.11.2/moment-with-locales.js"
             }
         },
         {
