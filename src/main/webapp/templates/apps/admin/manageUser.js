@@ -7,6 +7,7 @@ function initManageUsers() {
     initSearchUser();
     initSelectAll();
     initRemoveUsers();
+    initUnsubscribeUsers();
     initAddToGroup();
     initUploadUsers();
     initLoginAs();
@@ -488,7 +489,23 @@ function initRemoveUsers() {
             Msg.error('Please select the users you want to remove by clicking the checkboxs to the right');
         } else {
             if (confirm('Are you sure you want to remove ' + checkBoxes.length + ' users?')) {
-                doRemoveUsers(checkBoxes);
+                doRemoveUsers(checkBoxes, "remove");
+            }
+        }
+    });
+}
+
+function initUnsubscribeUsers() {
+    $("body").on("click", ".btn-unsubscribe-users", function(e) {
+        e.preventDefault();
+        var node = $(e.target);
+        flog('unsubscribeUsers', node, node.is(':checked'));
+        var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]:checked');
+        if (checkBoxes.length == 0) {
+            Msg.error('Please select the users you want to unsubscribe by clicking the checkboxs to the right');
+        } else {
+            if (confirm('Are you sure you want to unsubscribe ' + checkBoxes.length + ' users?')) {
+                doRemoveUsers(checkBoxes, "unsubscribe");
             }
         }
     });
@@ -553,7 +570,7 @@ function doAddUsersToGroup(data) {
     });
 }
 
-function doRemoveUsers(checkBoxes) {
+function doRemoveUsers(checkBoxes, action) {
     var ids = [];
 
     checkBoxes.each(function (a, item) {
@@ -563,7 +580,8 @@ function doRemoveUsers(checkBoxes) {
     $.ajax({
         type: 'POST',
         data: {
-            toRemoveId: ids.join(',')
+            toRemoveId: ids.join(','),
+            action: action
         },
         dataType: 'json',
         url: '',
@@ -571,13 +589,25 @@ function doRemoveUsers(checkBoxes) {
             flog('success', data);
             if (data.status) {
                 doSearch();
-                Msg.success('Removed users ok');
+                if (action == "remove") { 
+                    Msg.success('Removed users ok');
+                } else {
+                    Msg.success('Unsubscribe users ok');
+                }
             } else {
-                Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
+                if (action == "remove") {
+                    Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
+                } else {
+                    Msg.error('There was a problem unsubscribing users. Please try again and contact the adm strator if you still have problems');
+                }
             }
         },
         error: function (resp) {
-            Msg.error('An error occurred removing users. You might not have permission to do this');
+            if (action == "remove") {
+                Msg.error('An error occurred removing users. You might not have permission to do this');
+            } else {
+                Msg.error('An error occurred unsubcribing users. You might not have permission to do this');
+            }
         }
     });
 }
