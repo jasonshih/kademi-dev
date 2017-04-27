@@ -12,7 +12,7 @@
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
 
-            $.getScriptOnce('/static/moment/2.11.2/moment-with-locales.js', function () {
+            $.getScriptOnce('/static/moment/2.17.1/moment.js', function () {
                 $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
                     $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
                         $.getScriptOnce('/theme/apps/reporting/jquery.pieChartAgg.js', function () {
