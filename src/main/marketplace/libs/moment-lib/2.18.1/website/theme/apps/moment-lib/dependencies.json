@@ -1,0 +1,11 @@
+{
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/moment-lib/moment-with-locales.js"
+            }
+        }
+    ]
+}
+

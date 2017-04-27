@@ -11,6 +11,10 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.8.1"
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
         }
     ],
     "dependencies": [
@@ -30,12 +34,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/moment/2.11.2/moment-with-locales.js"
             }
         },
         {
