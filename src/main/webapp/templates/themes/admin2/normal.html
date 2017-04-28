@@ -99,6 +99,7 @@
         <script type="text/javascript" src="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
+        <script type="text/javascript" src="/static/jquery.orgFinder/1.1.0/jquery.orgFinder-1.1.0.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/main.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/kademi.js">//</script>
 
@@ -393,10 +394,10 @@
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                         <h4 class="modal-title">New user</h4>
                     </div>
-                    #set($groups = $page.groups)
-                    <form method="post" action="new" class="form-horizontal">
+                    #set($groups = $page.find("/manageUsers").groups)
+                    <form method="post" action="/manageUsers/new" class="form-horizontal">
                         <div class="modal-body">
-                            #set($groups = $page.groups)
+                            #set($groups = $page.find("/manageUsers").groups)
                             #if($groups.isEmpty())
                                 <p class="alert alert-error">You must create at least one group
                                     in this or a parent organisation before you can add users</p>
@@ -445,7 +446,7 @@
                                         <div class="col-md-10">
                                             <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
                                                 <option></option>
-                                                #foreach($group in $groups)
+                                                #foreach($group in $groups )
                                                     $formatter.option($group.name, $group.name, false)
                                                 #end
                                             </select>
@@ -462,7 +463,7 @@
                                         <div id="org-search">
                                             <div class="table-responsive">
                                                 <table class="table table-striped table-hover table-condensed">
-                                                    #if( $page.orgSearchResults.isEmpty() )
+                                                    #if( $page.find("/manageUsers").orgSearchResults.isEmpty() )
                                                         <tbody>
                                                             <tr>
                                                                 <td>No matching organisations found</td>
@@ -476,7 +477,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            #foreach($org in $page.orgSearchResults)
+                                                            #foreach($org in $page.find("/manageUsers").orgSearchResults)
                                                                 <tr>
                                                                     <td><a href="$org.id">$org.orgId</a></td>
                                                                     <td><a href="$org.id">$!org.title</a></td>

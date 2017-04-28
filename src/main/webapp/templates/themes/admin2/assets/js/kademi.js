@@ -457,6 +457,11 @@ function initNewUserForm() {
             Msg.info('Saved');
         }
     });
+
+    $('#orgId').orgFinder({
+        useActualId: true
+    });
+
 }
 
 function openFuseModal(modal, callback, time) {

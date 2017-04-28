@@ -33,11 +33,6 @@
 	border-radius: 0 !important;
 }
 
-#org-search {
-	margin: -1px 15px 0;
-	display: none;
-}
-
 .groups-list {
 	list-style: none;
 	padding: 0;

@@ -581,6 +581,12 @@ body .form-control::-webkit-input-placeholder {
     color: #fff;
 }
 
+/* New User Modal */
+#org-search {
+	margin: -1px 15px 0;
+	display: none;
+}
+
 /*
     End of mkhoudary modifications for invoices
 */

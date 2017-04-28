@@ -12,8 +12,6 @@ function initManageUsers() {
     initLoginAs();
     initAggregations();
     initSort();
-    initOrgFinder();
-
     //initUploadUsersFile();
 }
 
@@ -391,12 +389,6 @@ function initSearchBusiness() {
         } else {
             content.html('');
         }
-    });
-}
-
-function initOrgFinder() {
-    $('#orgId').orgFinder({
-        useActualId: true
     });
 }
 
