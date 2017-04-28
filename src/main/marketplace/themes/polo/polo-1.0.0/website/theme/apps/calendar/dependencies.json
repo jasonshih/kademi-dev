@@ -3,6 +3,10 @@
     {
       "appId": "calendar-lib",
       "branch": "1.0.0"
+    },
+    {
+      "appId": "moment-lib",
+      "branch": "2.18.1"
     }
   ],
   "dependencies": [
@@ -34,12 +38,6 @@
       "js": {
         "group": "main",
         "path": "/static/js/fullcalendar-1.6.4.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/static/moment/2.4.0/moment-2.4.0.js"
       }
     },
     {

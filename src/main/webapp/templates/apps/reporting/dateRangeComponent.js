@@ -16,7 +16,7 @@
                 $('head').append('<link href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" rel="stylesheet" type="text/css" />');
             }
 
-            $.getScriptOnce('/static/moment/2.11.2/moment-with-locales.js', function () {
+            $.getScriptOnce('/static/moment/2.17.1/moment.js', function () {
                 $.getScriptOnce('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
                     $.getScriptOnce('/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js', function () {
                         self.initPicker();

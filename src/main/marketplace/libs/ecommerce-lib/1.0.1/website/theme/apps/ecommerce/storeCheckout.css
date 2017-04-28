@@ -1,4 +1,4 @@
-.item-row .btn-remove-item{
+.item-row .btn-ecom-remove-item{
     color: black;
 }
 
@@ -24,7 +24,7 @@
     width: 100px !important;
 }
 
-.item-row .item-quantity .txt-quantity {
+.item-row .item-quantity .ecom-txt-quantity {
     padding-left: 3px;
     padding-right: 3px;
 }

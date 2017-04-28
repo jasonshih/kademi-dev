@@ -7,6 +7,10 @@
         {
             "appId": "nvd3-lib",
             "branch": "1.0.0"
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
         }
     ],
     "dependencies": [
@@ -38,12 +42,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/moment/2.11.2/moment-with-locales.js"
             }
         },
         {

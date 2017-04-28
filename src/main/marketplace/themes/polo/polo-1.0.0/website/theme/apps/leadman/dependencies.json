@@ -11,6 +11,10 @@
     {
       "appId": "leadman-lib",
       "branch": "1.0.0"
+    },
+    {
+      "appId": "moment-lib",
+      "branch": "2.18.1"
     }
   ],
   "dependencies": [
@@ -30,12 +34,6 @@
       "js": {
         "group": "main",
         "path": "/static/uri/1.15.1/URI.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/static/moment/2.4.0/moment-2.4.0.js"
       }
     },
     {
@@ -66,12 +64,6 @@
       "js": {
         "group": "main",
         "path": "/static/easy-pie-chart/2.1.7/jquery.easypiechart.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/static/moment/2.11.2/moment-with-locales.js"
       }
     },
     {
