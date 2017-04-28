@@ -17,6 +17,7 @@
             var img = componentContent.find('img');
 
             img.css('display', 'inline-block');
+            img.css('vertical-align', 'middle');
 
             var options = keditor.options;
             if (typeof options.onComponentReady === 'function') {
@@ -48,6 +49,16 @@
                 '               <option value="left">Left</option>' +
                 '               <option value="center">Center</option>' +
                 '               <option value="right">Right</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label for="vertical-alignment" class="col-sm-12">V Align</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control" id="v-align">' +
+                '               <option value="top">Top</option>' +
+                '               <option value="middle">Middle</option>' +
+                '               <option value="bottom">Bottom</option>' +
                 '           </select>' +
                 '       </div>' +
                 '   </div>' +
@@ -161,6 +172,12 @@
                 panel.css('text-align', this.value);
             });
 
+            var inputVAlign = form.find('#v-align');
+            inputVAlign.on('change', function () {
+                var panel = keditor.getSettingComponent().find('.photo-panel').find('img');
+                panel.css('vertical-align', this.value);
+            });
+
             var inputResponsive = form.find('#photo-responsive');
             inputResponsive.on('click', function () {
                 keditor.getSettingComponent().find('img')[this.checked ? 'addClass' : 'removeClass']('img-responsive');
@@ -220,6 +237,7 @@
 
             var self = this;
             var inputAlign = form.find('#photo-align');
+            var inputVAlign = form.find('#v-align');
             var inputResponsive = form.find('#photo-responsive');
             var inputWidth = form.find('#photo-width');
             var inputHeight = form.find('#photo-height');
@@ -250,6 +268,8 @@
                 algin = 'left';
             }
 
+            var valign = img.css('vertical-align');
+
             if (img.hasClass('img-rounded')) {
                 cbbStyle.val('img-rounded');
             } else if (img.hasClass('img-circle')) {
@@ -259,8 +279,9 @@
             } else {
                 cbbStyle.val('');
             }
-
+            debugger;
             inputAlign.val(algin);
+            inputVAlign.val(valign);
             inputResponsive.prop('checked', img.hasClass('img-responsive'));
             inputWidth.val(img.width());
             inputHeight.val(img.height());
