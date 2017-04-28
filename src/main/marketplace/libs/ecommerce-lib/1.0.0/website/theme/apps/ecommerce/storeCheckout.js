@@ -21,7 +21,7 @@ function initEcommerceCheckout() {
     initPaymentOptionSelect();
     initLoginForm();
 
-    $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-remove-item').prop('disabled', false);
+    $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item').prop('disabled', false);
 }
 
 function initCartForm() {
@@ -200,7 +200,7 @@ function initItemQuantity() {
 function doQuantityUpdate(href, quantity) {
     flog("doQuantityUpdate", href);
 
-    var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-remove-item');
+    var actors = $('.btn-decrease-quantity, .btn-increase-quantity, .ecom-txt-quantity, .btn-ecom-remove-item');
     actors.prop('disabled', true);
 
     $.ajax({
@@ -212,7 +212,7 @@ function doQuantityUpdate(href, quantity) {
         },
         datatype: "json",
         success: function (data) {
-            $("#itemsTable, #cart-link").reloadFragment({
+            $("#ecomItemsTable, #cart-link").reloadFragment({
                 whenComplete: function (resp) {
                     Msg.info("Updated item in your shopping cart");
                     actors.prop('disabled', false);
@@ -228,7 +228,7 @@ function doQuantityUpdate(href, quantity) {
 function initRemoveItem() {
     flog('initRemoveItem');
 
-    $(document.body).on('click', '.btn-remove-item', function (e) {
+    $(document.body).on('click', '.btn-ecom-remove-item', function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -250,7 +250,7 @@ function doRemoveFromCart(href) {
         },
         datatype: "json",
         success: function (data) {
-            $("#itemsTable, #cart-link").reloadFragment({
+            $("#ecomItemsTable, #cart-link").reloadFragment({
                 whenComplete: function () {
                     Msg.info("Removed item from your shopping cart");
                 }
