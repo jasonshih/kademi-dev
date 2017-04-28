@@ -279,7 +279,6 @@
             } else {
                 cbbStyle.val('');
             }
-            debugger;
             inputAlign.val(algin);
             inputVAlign.val(valign);
             inputResponsive.prop('checked', img.hasClass('img-responsive'));
