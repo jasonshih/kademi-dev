@@ -713,7 +713,6 @@
                             $('#searchStats').replaceWith(newDom.find('#searchStats'));
                             var inner = $(response).find('#aggregationsContainer > *');
                             $('#aggregationsContainer').html(inner);
-                            $("#table-users").paginator();
                             initSort();
                         }
                     });
