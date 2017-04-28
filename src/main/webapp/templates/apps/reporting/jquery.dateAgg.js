@@ -82,7 +82,7 @@
         if (!$.contains(document, container[0])) {
             return;
         }
-        href = href + "?run&" + $.param(opts);
+        href = href + "?run";
 
         flog("loadGraphData", container, graphOptions, href);
         $.ajax({
@@ -99,7 +99,7 @@
         if (!$.contains(document, container[0])) {
             return;
         }
-        href = href + "?as=json&" + $.param(opts);
+        href = href + "?as=json";
 
         flog("loadGraphDataQueryTable", container, graphOptions, href);
         $.ajax({
@@ -232,16 +232,18 @@
 
                 });
             } else {
-                var series = {
-                    key: aggName,
-                    values: []
-                };
-                myData.push(series);
+                if (aggName){
+                    var series = {
+                        key: aggName,
+                        values: []
+                    };
+                    myData.push(series);
+                    $.each(aggr.buckets, function (b, dateBucket) {
+                        var v = findValue( dateBucket, graphOptions );
+                        series.values.push({x: dateBucket.key, y: v});
+                    });
+                }
 
-                $.each(aggr.buckets, function (b, dateBucket) {
-                    var v = findValue( dateBucket, graphOptions );
-                    series.values.push({x: dateBucket.key, y: v});
-                });
             }
 
             flog("graph opts", graphOptions);
