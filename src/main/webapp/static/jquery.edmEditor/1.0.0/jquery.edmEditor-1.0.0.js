@@ -758,6 +758,7 @@
                             component.removeAttr('data-line-height-h5');
                             component.removeAttr('data-font-size-h6');
                             component.removeAttr('data-line-height-h6');
+                            component.attr('data-width', component.closest('td').width());
                         },
                         onInitContentArea: function (contentArea) {
                             contentArea[contentArea.children().length === 0 ? 'addClass' : 'removeClass']('empty');
