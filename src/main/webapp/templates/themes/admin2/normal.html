@@ -90,9 +90,10 @@
         <script type="text/javascript" src="/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.min.js" bottom="true">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-switch/3.3.3/dist/js/bootstrap-switch.min.js">//</script>
-        <script type="text/javascript" src="/static/moment/2.17.1/moment.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-datepicker/1.6.1/js/bootstrap-datepicker.min.js">//</script>
         <script type="text/javascript" src="/static/daterangepicker/2.0.11/daterangepicker.js">//</script>
+        <script type="text/javascript" src="/static/moment/2.18.1/moment-with-locales.js">//</script>
+        <script type="text/javascript" src="/static/moment-timezone/0.5.13-2017b/moment-timezone-with-data.js">//</script>
         <script type="text/javascript" src="/static/jquery-colorbox/1.6.3/jquery.colorbox-min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.js">//</script>
         <script type="text/javascript" src="/static/iCheck/1.0.2/icheck.min.js">//</script>
@@ -321,9 +322,21 @@
         #set($useHash = $params.useHash)
         <script type="text/javascript">
             var useHash = "$!useHash";
+            var timezone = '$!page.organisation.timezone';
+
             $(function () {
                 Main.init('$page.organisation.id');
                 initTheme(); // init the fuse extensions
+
+                (function ($, moment) {
+                    // Use moment-timezone if available
+                    var momentFunc = moment;
+                    moment = function () {
+                        console.log('aaaaaaaaaaaaaa')
+                        return momentFunc.tz(arguments[0], timezone);
+                    };
+
+                })(jQuery, moment);
 
                 // Init page date picker at the end for make sure that when first time it triggers pageDateChanged event, all other js stuffs could listen!
                 initPageDatePicker();
@@ -336,13 +349,6 @@
                 } catch (e) {
                     flog("Ckedior exception");
                 }
-
-                //JQuery Case Insensitive :Contains Selector
-                jQuery.expr[":"].Contains = jQuery.expr.createPseudo(function (arg) {
-                    return function (elem) {
-                        return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
-                    };
-                });
             });
         </script>
 
