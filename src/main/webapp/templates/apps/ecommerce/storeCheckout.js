@@ -39,7 +39,7 @@ function initItemQuantity() {
     var body = $(document.body);
     var changeQuantity = function (trigger, isIncrease) {
         var inputGroup = trigger.closest('.input-group');
-        var txtQuantity = inputGroup.find('.txt-quantity');
+        var txtQuantity = inputGroup.find('.ecom-txt-quantity');
         var quantity = txtQuantity.val().trim();
 
         if (isNaN(quantity)) {
@@ -77,7 +77,7 @@ function initItemQuantity() {
         changeQuantity(btn, true);
     });
 
-    body.on('change', '.txt-quantity', function (e) {
+    body.on('change', '.ecom-txt-quantity', function (e) {
         e.preventDefault();
         var inpt = $(this);
         var val = inpt.val();
@@ -101,7 +101,7 @@ function doQuantityUpdate(href, quantity) {
         datatype: "json",
         success: function (data) {
             Msg.info("Updated item in your shopping cart");
-            $("#itemsTable").reloadFragment();
+            $("#ecomItemsTable").reloadFragment();
         },
         error: function (resp) {
             Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
@@ -112,7 +112,7 @@ function doQuantityUpdate(href, quantity) {
 function initRemoveItem() {
     flog('initRemoveItem');
 
-    $(document.body).on('click', '.btn-remove-item', function (e) {
+    $(document.body).on('click', '.btn-ecom-remove-item', function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -135,7 +135,7 @@ function doRemoveFromCart(href) {
         datatype: "json",
         success: function (data) {
             Msg.info("Removed item from your shopping cart");
-            $("#itemsTable").reloadFragment();
+            $("#ecomItemsTable").reloadFragment();
         },
         error: function (resp) {
             Msg.error("An error occured adding the product to your shopping cart. Please check your internet connection and try again");
