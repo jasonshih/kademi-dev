@@ -63,7 +63,7 @@
                                                     <a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">
                                                         <img src="$bg" width="100%" height="auto" alt="$article.title" style="display: block; border: 0;" />
                                                     </a>
-                                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a>
+                                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a>
                                                     </h4>
                                                 </td>
                                             </tr>
@@ -140,7 +140,7 @@
                         <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
                             <tr>
                                 <td class="wrapper" style="$baseStyles">
-                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a></h4>
+                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a title="$article.title" href="http://${rootFolder.domainName}${formatter.portString}/$article.href" style="$linkStyles">$article.title</a></h4>
                                     #set ($brief = $formatter.toPlain( $article.brief ))
                                     <p>
                                         $!formatter.truncate( $brief, 300)
