@@ -211,7 +211,7 @@ function doHistorySearch(startDate, endDate) {
         url: href,
         dataType: 'html',
         success: function (content) {
-            flog('response', content);
+            // flog('response', content);
             var newBody = $(content).find("#history-table-body");
             flog("newBody", newBody);
             target.replaceWith(newBody);
@@ -243,7 +243,7 @@ function doSMSHistorySearch(startDate, endDate) {
         url: href,
         dataType: 'html',
         success: function (content) {
-            flog('response', content);
+            // flog('response', content);
             var newBody = $(content).find("#sms-history-table-body");
             target.replaceWith(newBody);
             $('#sms-history-table').find("abbr.timeago").timeago();
@@ -296,7 +296,7 @@ function loadData() {
                 json = JSON.parse(resp);
             }
 
-            flog('response', json);
+            // flog('response', json);
             var aggr = (json !== null ? json.aggregations : null);
 
             initHistogram(aggr);
