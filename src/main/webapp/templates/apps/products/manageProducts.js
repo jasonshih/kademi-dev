@@ -75,6 +75,8 @@
             $('body').find('.check-all').check(false).change();
             flog(listToDelete.join(','));
             deleteProducts(listToDelete.join(','));
+        } else {
+            Msg.error('Please select the products you want to remove by clicking the checkboxes on the right');
         }
     });
 
