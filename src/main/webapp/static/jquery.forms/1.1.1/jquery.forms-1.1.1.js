@@ -181,7 +181,7 @@
                     form.data('formOptions', config);
                 }
 
-                $.getScriptOnce('/static/js/moment-with-langs.min.js');
+                $.getScriptOnce('/static/moment/2.18.1/moment-with-locales.js');
                 flog('[jquery.forms] Initializing forms plugin...', form);
 
                 form.off('submit').on('submit', function (e) {
