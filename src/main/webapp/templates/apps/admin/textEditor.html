@@ -5,6 +5,9 @@
         <script type="text/javascript" src="/static/ace/1.2.0/src-noconflict/ace.js">//</script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/static/jquery.fullscreen/jquery.fullscreen-0.4.1.min.js">//</script>
+        <script type="text/javascript" src="/static/js-beautify/1.6.12/js/lib/beautify-css.js">//</script>
+        <script type="text/javascript" src="/static/js-beautify/1.6.12/js/lib/beautify.js">//</script>
+        <script type="text/javascript" src="/static/js-beautify/1.6.12/js/lib/beautify-html.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/textEditor.js">//</script>
         <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
         <link rel="template" href="editorBase" />
@@ -18,14 +21,15 @@
                 <a class="btn btn-lg btn-default visible-sm visible-xs pull-right btn-toolbar-toggle" data-toggle="collapse" href="#editor-menu"><i class="fa fa-bars"></i></a>
                 <div class="btn-toolbar collapse" role="toolbar" id="editor-menu">
                     <i class="fa fa-spinner fa-spin fa-3x fa-fw" id="editor-loading"></i>
-                    <div class="btn-group btn-group-sm hidden-sm hidden-xs">
+                    <div class="btn-group hidden-sm hidden-xs">
                         <a class="btn btn-default btn-save-file" href="$fname" title="Save file"><i class="fa fa-save"></i></a>
                         <a class="btn btn-default btn-restore-file hide" href="#" title="We found the different version of this file in your local storage. Please click this button for restoring"><i class="fa fa-undo"></i></a>
                         <a class="btn btn-default" href="./#files-tab" title="Back to parent folder"><i class="fa fa-reply"></i></a>
                     </div>
-                    <div class="btn-group btn-group-sm hidden-sm hidden-xs">
+                    <div class="btn-group hidden-sm hidden-xs">
                         <a class="btn btn-default btn-word-wrap" title="Word wrap"><i class="fa fa-align-justify"></i></a>
                         <a class="btn btn-default btn-fullscreen" href="#" title="Enter fullscreen mode"><i class="fa fa-window-maximize"></i></a>
+                        <a class="btn btn-default btn-format" href="#" title="Format source code - available only for HTML, CSS and JavaScript"><i class="fa fa-dedent"></i></a>
                     </div>
 
                     <div class="visible-sm visible-xs">
@@ -45,10 +49,13 @@
                             <div class="btn-group">
                                 <a class="btn btn-default btn-fullscreen" href="#" title="Enter fullscreen mode"><i class="fa fa-window-maximize"></i></a>
                             </div>
+                            <div class="btn-group">
+                                <a class="btn btn-default btn-format" href="#" title="Format source code - available only for HTML, CSS and JavaScript"><i class="fa fa-dedent"></i></a>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="input-group input-group-sm file-type-wrapper">
+                    <div class="input-group file-type-wrapper">
                         <span class="input-group-addon">File type</span>
                         <select class="form-control" id="file-type">
                             <option value="ace/mode/abap">abap</option>
@@ -177,7 +184,7 @@
                             <option value="ace/mode/django">django</option>
                         </select>
                     </div>
-                    <div class="input-group input-group-sm theme-switcher-wrapper">
+                    <div class="input-group theme-switcher-wrapper">
                         <span class="input-group-addon">Theme</span>
                         <select class="form-control" id="theme-switcher">
                             <optgroup label="Bright">
@@ -220,7 +227,7 @@
                             </optgroup>
                         </select>
                     </div>
-                    <div class="input-group input-group-sm shortcut-switcher-wrapper">
+                    <div class="input-group shortcut-switcher-wrapper">
                         <span class="input-group-addon">Shortcut</span>
                         <select class="form-control" id="shortcut-switcher">
                             <option value="">Ace</option>
@@ -230,7 +237,7 @@
                             <option value="ace/keyboard/sublime">Sublime Text</option>
                         </select>
                     </div>
-                    <div class="input-group input-group-sm font-size-switcher-wrapper">
+                    <div class="input-group font-size-switcher-wrapper">
                         <span class="input-group-addon">Font size</span>
                         <select class="form-control" id="font-size-switcher">
                             <option value="10px">10px</option>
@@ -245,13 +252,11 @@
                         </select>
                     </div>
                 </div>
-                <h3 class="pull-left">
-                    #if( $page.editFile.name )
-                    $page.editFile.name
-                    #else
-                    New file
-                    #end
-                </h3>
+                #set ($editorTitle = "New file")
+                #if( $page.editFile.name )
+                    #set ($editorTitle = $page.editFile.name)
+                #end
+                <h3 class="editor-title" title="$editorTitle">$editorTitle</h3>
             </div>
             #set($text = "")
             #set($text = $page.textContent)
