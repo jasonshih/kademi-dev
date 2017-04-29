@@ -1186,7 +1186,7 @@ function initMenuSearch() {
                 items.each(function () {
                     var item = $(this);
                     var subMenu = item.find('.sub-menu');
-        
+                    
                     if (subMenu.length > 0) {
                         item[item.hasClass('active') ? 'addClass' : 'removeClass']('open');
                         subMenu.css('display', item.hasClass('active') ? 'block' : 'none');
@@ -1196,14 +1196,14 @@ function initMenuSearch() {
                 items.each(function () {
                     var item = $(this);
                     var subMenu = item.find('.sub-menu');
-        
+                    
                     if (subMenu.length > 0) {
                         item.addClass('open');
                         subMenu.css('display', 'block');
                         subMenu.find('li').each(function () {
                             var subItem = $(this);
                             var text = (subItem.text() || '').toLowerCase();
-                
+                            
                             subItem.css('display', text.indexOf(query) !== -1 ? 'block' : 'none');
                         });
                     }
