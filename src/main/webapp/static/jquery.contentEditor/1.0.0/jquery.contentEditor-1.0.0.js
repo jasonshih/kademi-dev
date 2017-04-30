@@ -644,6 +644,14 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
+        form.on('click', '.cbb-show-sub-menu-on-hover', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-show-sub-menu-on-hover', this.checked);
+            keditor.initDynamicContent(dynamicElement);
+        });
+        
         var menuItemEditor = form.find('.editMenuItem');
         var menuEditor = form.find('.menuEditor');
         
@@ -795,6 +803,7 @@
         form.find('.cbb-show-lang-selector').prop('checked', dataAttributes['data-show-lang-selector'] === 'true');
         form.find('.cbb-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
         form.find('.cbb-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
+        form.find('.cbb-show-sub-menu-on-hover').prop('checked', dataAttributes['data-show-sub-menu-on-hover'] === 'true');
         
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
         
