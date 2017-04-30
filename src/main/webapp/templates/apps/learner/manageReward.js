@@ -25,7 +25,7 @@ function initManagePoints() {
         log("removeUsers", node, node.is(":checked"));
         var checkBoxes = node.closest(".Content").find("tbody td input[name=toRemoveId]:checked");
         if (checkBoxes.length == 0) {
-            Msg.error("Please select the points you want to remove by clicking the checkboxs to the right");
+            Msg.error("Please select the points you want to remove by clicking the checkboxes on the right");
         } else {
             if (confirm("Are you sure you want to remove " + checkBoxes.length + " points records?")) {
                 doRemovePoints(checkBoxes);

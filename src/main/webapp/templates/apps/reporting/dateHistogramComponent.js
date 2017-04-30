@@ -52,18 +52,25 @@
                         var cls = this.value;
 
                         form.find('.select-query').val('');
+                        form.find('.select-agg').val('');
+                        form.find('.sub-agg').val('');
+                        form.find('.metric-agg').val('');
                         form.find('.select-query option').addClass('hide');
                         form.find('.'+cls).removeClass('hide');
 
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
+                        component.attr('data-queryname', '');
+                        component.attr('data-agg', '');
+                        component.attr('data-sub-agg', '');
                         component.attr('data-querytype', cls);
                         if (cls === 'queryTable'){
                             form.find('.aggregation, .sub-aggregation, .metric-aggregation').addClass('hide');
                         } else {
                             form.find('.aggregation, .sub-aggregation, .metric-aggregation').removeClass('hide');
                         }
+
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -75,8 +82,9 @@
 
                         if (selectedQuery) {
                             component.attr('data-queryname', selectedQuery);
+                            var queryType = component.attr('data-querytype');
                             var aggsSelect = form.find(".select-agg");
-                            self.initSelect(aggsSelect, selectedQuery, null);
+                            self.initSelect(aggsSelect, selectedQuery, null, queryType);
 
                             keditor.initDynamicContent(dynamicElement).done(function () {
                                 self.initDateAgg();
@@ -97,6 +105,7 @@
                                 self.initDateAgg();
                             });
                         } else {
+                            component.attr('data-agg', '');
                             dynamicElement.html('<p>Please select a data histogram aggregation</p>');
                         }
                     });
@@ -110,7 +119,7 @@
                             self.initDateAgg();
                         });
                     });
-                    
+
                     form.find('.metric-agg').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -119,7 +128,7 @@
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initDateAgg();
                         });
-                    });                    
+                    });
 
                     form.find('.chart-type').on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -193,17 +202,26 @@
                 }
             });
         },
-        initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
+        initSelect: function (aggsSelect, selectedQuery, selectedAgg, selectedQueryType) {
             flog("initSelect", selectedQuery, selectedAgg);
-
+            if (!selectedQuery){
+                return;
+            }
+            var url = "/queries/" + selectedQuery;
+            if (selectedQueryType=='query'){
+                url += '?run';
+            } else if (selectedQueryType == 'queryTable'){
+                url += '?as=json';
+            }
+            debugger;
             $.ajax({
-                url: "/queries/" + selectedQuery + "?run",
+                url: url,
                 type: 'GET',
                 dataType: 'json',
                 success: function (resp) {
                     flog('initSelect resp', resp);
 
-                    var aggsHtml = '<option value""> - None - </option>';
+                    var aggsHtml = '<option value=""> - None - </option>';
                     var aggs = resp.aggregations;
                     for (var key in aggs) {
                         aggsHtml += '<option value="' + key + '">' + key + '</option>';
@@ -221,12 +239,13 @@
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "dateHistogram" component');
-
             var self = this;
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            var selectedQuery = dataAttributes['data-query'];
+            var selectedQuery = dataAttributes['data-queryname'];
+            var selectedQueryType = dataAttributes['data-querytype'];
             var selectedAgg = dataAttributes['data-agg'];
 
+            form.find('.queryType[value='+selectedQueryType+']').prop('checked', true);
             form.find('.select-query').val(selectedQuery);
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
@@ -241,7 +260,7 @@
             form.find('.txt-title').val(dataAttributes['data-title']);
 
             var aggsSelect = form.find(".select-agg");
-            self.initSelect(aggsSelect, selectedQuery, selectedAgg);
+            self.initSelect(aggsSelect, selectedQuery, selectedAgg, selectedQueryType);
         }
     };
 

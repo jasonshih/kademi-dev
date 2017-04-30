@@ -18,41 +18,40 @@ JBNodes['moduleProgressGoal'] = {
     settingEnabled: true,
     initSettingForm: function (form) {
         form.append(
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Website</label>' +
-                '        <input type="text" class="form-control website-name" value="" />' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Program</label>' +
-                '        <input type="text" class="form-control program-code" value="" />' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Course</label>' +
-                '        <input type="text" class="form-control course-code" value="" />' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Module</label>' +
-                '        <input type="text" class="form-control module-code" value="" />' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Action</label>' +
-                '        <input type="text" class="form-control module-action" value="" />' +
-                '    </div>' +
-                '</div>' +
-                +JBApp.standardGoalSettingControls
-                );
-
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Website</label>' +
+            '        <input type="text" class="form-control website-name" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Program</label>' +
+            '        <input type="text" class="form-control program-code" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Course</label>' +
+            '        <input type="text" class="form-control course-code" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Module</label>' +
+            '        <input type="text" class="form-control module-code" value="" />' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Action</label>' +
+            '        <input type="text" class="form-control module-action" value="" />' +
+            '    </div>' +
+            '</div>' + JBApp.standardGoalSettingControls
+        );
+        
         JBApp.initStandardGoalSettingControls(form);
-
+        
         form.forms({
             allowPostForm: false,
             onValid: function () {
@@ -61,9 +60,9 @@ JBNodes['moduleProgressGoal'] = {
                 JBApp.currentSettingNode.courseCode = formVal(form, "course-code");
                 JBApp.currentSettingNode.moduleCode = formVal(form, "module-code");
                 JBApp.currentSettingNode.action = formVal(form, "module-action");
-
+                
                 JBApp.saveStandardGoalSetting(form);
-
+                
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -76,7 +75,7 @@ JBNodes['moduleProgressGoal'] = {
         form.find('.course-code').val(node.courseCode !== null ? node.courseCode : '');
         form.find('.module-code').val(node.moduleCode !== null ? node.moduleCode : '');
         form.find('.module-action').val(node.action !== null ? node.action : '');
-
+        
         JBApp.showSettingPanel(node);
     }
 };

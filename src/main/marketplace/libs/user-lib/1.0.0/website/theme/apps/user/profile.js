@@ -49,6 +49,7 @@ function initProfile() {
     
     $('#btn-change-ava').upcropImage({
         url: window.location.pathname, // this is actually the default value anyway
+        buttonContinueText: 'Save',
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
             $(".profile-photo img, img.avatar").attr("src", resp.nextHref);

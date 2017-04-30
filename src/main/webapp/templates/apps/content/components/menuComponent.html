@@ -28,6 +28,11 @@
     #set( $inverseMenu = false )
 #end
 
+#if( $showSubMenuOnHover )
+#else
+    #set( $showSubMenuOnHover = false )
+#end
+
 #set( $memberships = $userResource.primaryMemberships )
 #set( $currentOrgId = $request.getCookie("org").value )
 #if( $currentOrgId )
@@ -159,7 +164,7 @@
     <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
     #else
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle nav-${item.id}"" data-toggle="dropdown" title="${item.text}">
+        <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover, 'data-hover="dropdown"', '') title="${item.text}">
         $item.text
         <span class="caret"></span>
         </a>

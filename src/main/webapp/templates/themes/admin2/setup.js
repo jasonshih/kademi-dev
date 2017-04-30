@@ -23,20 +23,12 @@ function initPlaceHolderForDateTime() {
     var format = "D/M/YYYY";    
     
     $("input.DateTime").each(function() {        
-        var _this = $(this);
-        flog("initPlaceHolderForDateTime", format, _this);
+        var input = $(this);
+        flog("initPlaceHolderForDateTime", format, input);
         
-        _this.datetimepicker({
-            format : format
+        input.datetimepicker({
+            format : input.attr('data-format') || format
         });
-//        _this.after(
-//                $('<img src="/static/common/icon_calendar.png" alt="" width="21" height="24" class="DateTimeIcon" />')
-//                .bind("click", function(e) {
-//                    e.preventDefault();
-//                    _this.trigger("focus");
-//                })
-//        );
-        log("datepicker", _this);
     });
 }
 

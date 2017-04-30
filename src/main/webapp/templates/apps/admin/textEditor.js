@@ -62,11 +62,63 @@ function initTextEditor(fileName) {
             editor.getSession().setUseWrapMode('');
         }
     };
+    
+    var btnFormat = $('.btn-format');
+    btnFormat.on('click', function (e) {
+        e.preventDefault();
+        
+        var btn = $(this);
+        if (!btn.hasClass('disabled')) {
+            var format = btn.attr('data-format');
+            var content = editor.getValue();
+            
+            flog('Format ' + format);
+            
+            switch (format) {
+                case 'javascript':
+                    content = js_beautify(content, {
+                        'indent_size': '4',
+                        'indent_char': ' ',
+                        'space_after_anon_function': true,
+                        'end_with_newline': true
+                    });
+                    break;
+                    
+                case 'html':
+                    content = html_beautify(content, {
+                        'indent_size': '4',
+                        'indent_char': ' ',
+                        'indent_inner_html': true,
+                        'end_with_newline': true
+                    });
+                    break;
+                    
+                case 'css':
+                    content = css_beautify(content, {
+                        'indent_size': '4',
+                        'indent_char': ' ',
+                        'space_around_selector_separator': true,
+                        'end_with_newline': true
+                    });
+                    break;
+            }
+            
+            editor.setValue(content);
+        }
+    });
 
     // Format of editor
     var extension = fileName.substr(fileName.lastIndexOf('.') + 1, fileName.length) || 'txt';
     $('#file-type').val("ace/mode/" + (extension === 'js' ? 'javascript' : extension)).on('change', function () {
         editor.getSession().setMode(this.value);
+        
+        if (this.value === 'ace/mode/javascript' || this.value === 'ace/mode/html' || this.value === 'ace/mode/css') {
+            btnFormat.removeClass('disabled');
+            btnFormat.attr('data-format', this.value.replace('ace/mode/', ''));
+        } else {
+            btnFormat.addClass('disabled');
+            btnFormat.removeAttr('data-format');
+        }
     }).trigger('change');
 
     // Theme of editor

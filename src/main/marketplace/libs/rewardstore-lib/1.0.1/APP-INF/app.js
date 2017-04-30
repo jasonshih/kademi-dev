@@ -4,6 +4,7 @@
 controllerMappings.addComponent("rewardstore/components", "rewardProduct", "html", "Shows reward product with image, points and add to card button", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 
 
 function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {

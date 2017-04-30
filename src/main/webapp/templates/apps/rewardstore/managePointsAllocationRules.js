@@ -105,6 +105,8 @@ function initDeleteCheckbox() {
             $('body').find('.check-all').check(false).change();
             flog(listToDelete.join(','));
             deleteRules(listToDelete);
+        } else {
+            Msg.error('Please select the rules you want to remove by clicking the checkboxes on the right');
         }
     });
 }

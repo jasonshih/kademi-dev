@@ -1,6 +1,6 @@
 <form id="cart-items" method="POST" action="/storeCheckout">
     <!-- TODO: Currency should be configurable -->
-    <div id="itemsTable" class="panel panel-default">
+    <div id="ecomItemsTable" class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title"><small>Order Summary</small></div>
         </div>
@@ -25,12 +25,12 @@
                         $item.ItemPage.title
                     </div>
                 </div>
-                <div class="col-sm-3 item-quantity center-content">
+                <div class="col-sm-3 ecom-item-quantity center-content">
                     <div class="input-group input-group-sm">
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
                         </span>
-                        <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control txt-quantity text-center" />
+                        <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center" />
                         <span class="input-group-btn">
                             <button class="btn btn-default btn-increase-quantity" type="button">+</button>
                         </span>
@@ -44,7 +44,7 @@
                 </div>
                 <div class="col-sm-1 item-action text-right center-content">
                     <div>
-                        <a href="#" class="btn-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                        <a href="#" class="btn-ecom-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
                     </div>
                 </div>
             </div>
