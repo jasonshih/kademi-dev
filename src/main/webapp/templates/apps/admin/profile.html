@@ -399,9 +399,9 @@
                                             <div id="secondFactorQR">
                                             <fieldset>
                                                 #if($enabled2FA)
-                                                    <div>Enable 2FA and connect your profile to a 2FA device.</div>
-                                                #else
                                                     <div>Disable 2FA and remove the 2FA credentials from your profile.</div>
+                                                #else
+                                                    <div>Enable 2FA and connect your profile to a 2FA device.</div>
                                                 #end 
                                                 <hr />
                                                 #if( $page.QRImageUrl )
@@ -588,7 +588,7 @@
                 initChangeUserId();
                 initRemoveCreds();
                 initRemoveOAuthCred();
-                initOrgFinder();
+                //initOrgFinder();
             });
         </script>
 
