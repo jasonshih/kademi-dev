@@ -245,8 +245,16 @@
 
                 takePictureZone.append(image);
                 $("#takenPicture").addClass("image-crop");
+                
+                dimMultiplier = widthVideo / cropZone.find('.image-wrapper').width();
 
                 initCropZone(href);
+                if (typeof config.onUploadComplete === 'function') {
+                    flog("onUploadComplete callback..");
+                    config.onUploadComplete(data, name, href);
+                } else {
+                    flog("No onUploadComplete function");
+                }
 
             });
             
@@ -492,7 +500,7 @@
 
                         // Load the href into an img not attached to the DOM to get the original sizes
                         var sizingImg = new Image();
-                        sizingImg.onload = function () {
+                        sizingImg.onload = function () {                           
                             realWidth = sizingImg.width;
                             realHeight = sizingImg.height;
                             dimMultiplier = realWidth / cropZone.find('.image-wrapper').width();
