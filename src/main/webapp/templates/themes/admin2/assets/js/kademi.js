@@ -458,10 +458,14 @@ function initNewUserForm() {
         }
     });
 
-    $('#orgId').orgFinder({
-        useActualId: true
-    });
+    initOrgFinder();
 
+}
+
+function initOrgFinder(){
+    $('#orgId').orgFinder({
+       useActualId: true
+   });   
 }
 
 function openFuseModal(modal, callback, time) {
