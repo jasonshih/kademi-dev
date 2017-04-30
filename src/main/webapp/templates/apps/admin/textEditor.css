@@ -21,6 +21,11 @@ h3 {
     float: right;
 }
 
+.btn.disabled {
+    opacity: .5;
+    pointer-events: auto !important;
+}
+
 .editor-title {
     white-space: nowrap;
     overflow: hidden;
@@ -42,7 +47,7 @@ h3 {
 }
 
 .font-size-switcher-wrapper {
-    width: 145px;
+    width: 165px;
 }
 
 .theme-switcher-wrapper {

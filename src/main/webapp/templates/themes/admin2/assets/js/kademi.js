@@ -381,6 +381,84 @@ function initFuseModal(modal, callback) {
     }
 }
 
+function initNewUserForm() {
+    var modal = $('#modal-new-user');
+    var form = modal.find('form');
+    var nextAction = 'view';
+
+    $('.btn-add-user').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        modal.modal('show');
+    });
+
+    $('.btn-add-and-view').on('click', function (e) {
+        nextAction = 'view';
+    });
+
+    $('.btn-add-and-add').on('click', function (e) {
+        nextAction = 'add';
+    });
+
+    $('.btn-add-and-close').on('click', function (e) {
+        nextAction = 'close';
+    });
+
+    modal.on('hidden.bs.modal', function () {
+        resetForm(form);
+    });
+
+    form.forms({
+        validate: function () {
+            var newUserEmail = $('#newUserEmail');
+            var newUserEmailStr = newUserEmail.val();
+
+            if (newUserEmailStr == null || newUserEmailStr == "") {
+                return true; // blank is ok now!
+            }
+
+            var error = 0;
+
+            if (!validateFuseEmail(newUserEmailStr)) {
+                error++;
+                showErrorField(newUserEmail);
+            }
+
+            if (error === 0) {
+                return true;
+            } else {
+                showMessage('Email address is invalid!', form);
+
+                return false;
+            }
+        },
+        callback: function (resp) {
+            flog('done new user', resp);
+
+            switch (nextAction) {
+                case 'view':
+                    if (resp.nextHref) {
+                        window.location.href = resp.nextHref;
+                    }
+
+                    modal.modal('hide');
+                    break;
+
+                case 'close':
+                    modal.modal('hide');
+                    break;
+
+                case 'add':
+                    $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
+                    break;
+            }
+
+            Msg.info('Saved');
+        }
+    });
+}
+
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
     
@@ -751,6 +829,7 @@ $(function () {
     initMasonryPanel();
     initTimeago();
     initMultiLingual();
+    initNewUserForm();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
@@ -1172,53 +1251,6 @@ function initColorPicker(target, onChangeHandle) {
     } else {
         flog('ERROR! You need bootstrap-colorpicker plugin to continue this method!');
     }
-}
-
-function initMenuSearch() {
-    var navMenu = $('#main-navigation-menu');
-    navMenu.find('.search-menu input').domFinder({
-        container: navMenu,
-        items: '> li:not(.search-menu)',
-        showItems: function (items, query) {
-            query = query.toLowerCase();
-            
-            if (query === '') {
-                items.each(function () {
-                    var item = $(this);
-                    var subMenu = item.find('.sub-menu');
-        
-                    if (subMenu.length > 0) {
-                        item[item.hasClass('active') ? 'addClass' : 'removeClass']('open');
-                        subMenu.css('display', item.hasClass('active') ? 'block' : 'none');
-                    }
-                });
-            } else {
-                items.each(function () {
-                    var item = $(this);
-                    var subMenu = item.find('.sub-menu');
-        
-                    if (subMenu.length > 0) {
-                        item.addClass('open');
-                        subMenu.css('display', 'block');
-                        subMenu.find('li').each(function () {
-                            var subItem = $(this);
-                            var text = (subItem.text() || '').toLowerCase();
-                
-                            subItem.css('display', text.indexOf(query) !== -1 ? 'block' : 'none');
-                        });
-                    }
-                });
-            }
-            
-            items.css('display', 'block');
-        },
-        hideItems: function (items, query) {
-            items.css('display', 'none');
-        },
-        onSearched: function () {
-            navMenu.perfectScrollbar("update");
-        }
-    });
 }
 
 var K = window.K || {};
