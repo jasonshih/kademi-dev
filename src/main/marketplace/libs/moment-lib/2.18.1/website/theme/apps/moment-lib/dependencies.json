@@ -3,7 +3,8 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/moment-lib/moment-with-locales.js"
+                "path": "/theme/apps/moment-lib/moment-with-locales.js",
+                "position" : 0
             }
         }
     ]
