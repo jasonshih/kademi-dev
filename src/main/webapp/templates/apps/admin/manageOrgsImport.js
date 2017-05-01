@@ -2,10 +2,10 @@
  * Created by Anh on 4/8/2016.
  */
 
-var usersImportUrl = '/organisations/upload';
+var OrgsImportUrl = '/organisations/upload';
 var importWizardStarted = false;
-var userImportTotalCount = 0;
-function initManageUsersImport() {
+var OrgImportTotalCount = 0;
+function initManageOrgsImport() {
     initUploads();
 }
 
@@ -22,12 +22,12 @@ function initUploads() {
         $('#myWizard').wizard('selectedItem', curStep);
     });
     $('#myWizard').on('finished.fu.wizard', function (evt, data) {
-        $('.btn-upload-users-csv').trigger('click');
+        $('.btn-upload-Orgs-csv').trigger('click');
         $('#myWizard').wizard('selectedItem', {step: 1});
         $('#myWizard').find('form').trigger('reset');
         form.find("input[name=fileHash]").val('');
         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
-        userImportTotalCount = 0;
+        OrgImportTotalCount = 0;
         var resultStatus = $('#job-status');
         resultStatus.text('');
     });
@@ -52,15 +52,15 @@ function initUploads() {
             });
             form.find('[type=submit]').addClass('hide');
             $.ajax({
-                url: usersImportUrl,
+                url: OrgsImportUrl,
                 data: formData,
                 type: 'post',
                 dataType: 'json',
                 success: function (resp) {
                     if (resp.status && resp.data) {
                     	form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
-                        form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
                         var invalidRows = resp.data.invalidRows.length;
                         if (resp.data.invalidRows.length != 0) {
                         	invalidRows--;
@@ -82,9 +82,9 @@ function initUploads() {
                             }
                         }
 
-                        userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
+                        OrgImportTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
                         
-                        if ( userImportTotalCount > 0 ) {
+                        if ( OrgImportTotalCount > 0 ) {
                         	form.find('#noValidRow').addClass('hide');
                         	form.find('[type=submit]').attr('disabled', false);
                         } else {
@@ -160,7 +160,7 @@ function initUploads() {
 
     flog("Init importer form", form);
     form.forms({
-        postUrl: usersImportUrl,
+        postUrl: OrgsImportUrl,
         beforePostForm: function(form, config, data){
             importWizardStarted = true;
             return data;
@@ -172,7 +172,7 @@ function initUploads() {
     });
 
     $('#btn-upload').mupload({
-        url: usersImportUrl,
+        url: OrgsImportUrl,
         useJsonPut: false,
         buttonText: '<i class="clip-folder"></i> Upload CSV, XLS, XLSX',
         acceptedFiles: '.csv,.xlsx,.xls,.txt',
@@ -234,7 +234,7 @@ function initUploads() {
         }
         $.ajax({
             type: 'post',
-            url: usersImportUrl,
+            url: OrgsImportUrl,
             data: {cancel: 'cancel'},
             success: function (data) {
                 Msg.success('Import task cancelled');
@@ -253,7 +253,7 @@ function checkProcessStatus() {
     $.ajax({
         type: 'GET',
         dataType: "json",
-        url: usersImportUrl + "?importStatus",
+        url: OrgsImportUrl + "?importStatus",
         success: function (result) {
             flog("success", result);
             if (result.status) {
@@ -267,21 +267,14 @@ function checkProcessStatus() {
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        if (typeof state.updatedProfiles !== 'undefined') {
-                            $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
+                        if (typeof state.updatedCount !== 'undefined') {
+                            $('#myWizard').find('.updatedCount').text(state.updatedCount)
                         }
-                        if (typeof state.createdProfiles !== 'undefined') {
-                            $('#myWizard').find('.createdProfiles').text(state.createdProfiles)
+                        if (typeof state.createdCount !== 'undefined') {
+                            $('#myWizard').find('.createdCount').text(state.createdCount)
                         }
-
-                        if (typeof state.removedProfiles !== 'undefined') {
-                            $('#myWizard').find('.removedProfiles').text(state.removedProfiles)
-                        }
-                        if (typeof state.unsubbedProfiles !== 'undefined') {
-                            $('#myWizard').find('.unsubbedProfiles').text(state.unsubbedProfiles)
-                        }
-                        if (typeof state.errorProfiles !== 'undefined') {
-                            $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
+                        if (typeof state.errorCount !== 'undefined') {
+                            $('#myWizard').find('.errorCount').text(state.errorCount)
                         }
                         flog("finished state", state, state.resultHash);
                         if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
@@ -292,21 +285,21 @@ function checkProcessStatus() {
                         }
 
                         $('#myWizard').wizard("next");
-                        $('#table-users-body').reloadFragment({url: '/manageUsers/'});
-                        $('#aggregationsContainer').reloadFragment({url: '/manageUsers/'});
+                        $('#table-Orgs-body').reloadFragment({url: '/organisations/'});
+                        $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
                         importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
-                        userImportTotalCount = 0;
+                        OrgImportTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
-                        var percentComplete = result.messages[0].split(' ').reverse()[0] / userImportTotalCount * 100;
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / OrgImportTotalCount * 100;
                         if (isNaN(percentComplete)){
                             percentComplete = 0;
                         }
-                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not.
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }

@@ -59,8 +59,8 @@ function initUploads() {
                 success: function (resp) {
                     if (resp.status && resp.data) {
                     	form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportNumNew").text(resp.data.newProfilesCount);
-                        form.find(".beforeImportNumExisting").text(resp.data.existingProfilesCount);
+                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
                         var invalidRows = resp.data.invalidRows.length;
                         if (resp.data.invalidRows.length != 0) {
                         	invalidRows--;
@@ -82,7 +82,7 @@ function initUploads() {
                             }
                         }
 
-                        userImportTotalCount = resp.data.newProfilesCount + resp.data.existingProfilesCount;
+                        userImportTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
                         
                         if ( userImportTotalCount > 0 ) {
                         	form.find('#noValidRow').addClass('hide');

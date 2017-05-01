@@ -47,8 +47,8 @@ function initUploads() {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportInfo").text(
-                                'Data status: New profiles found: ' + resp.data.newProfilesCount
-                                + ', existing profiles found: ' + resp.data.existingProfilesCount
+                                'Data status: New profiles found: ' + resp.data.newImportsCount
+                                + ', existing profiles found: ' + resp.data.existingImportsCount
                                 + ', invalid records: ' + (resp.data.invalidRows ? resp.data.invalidRows.length : 0)
                                 );
 
