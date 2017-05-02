@@ -1,1 +1,49 @@
-Hello World
+<section>
+    <div class="container-bg">
+        <div class="container-layout container-fluid">
+            <div class="container-content-wrapper">
+                <div class="row">
+                    <div class="col-sm-12" data-type="container-content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-inline">
+                                    <div class="form-group leadDropFilter">
+                                        #set($quotes = $page.children.ofType("quote"))
+                                        #set($state = $request.params.state)
+
+                                        #set($newQuotes = $quotes.ofType('New'))
+                                        #set($acceptedQuotes = $quotes.ofType('Accepted'))
+                                        #set($invoicedQuotes = $quotes.ofType('Invoiced'))
+
+                                        <div class="btn-group" data-toggle="buttons">
+                                            <label class="btn btn-info $formatter.ifEqual('active', '', $request.params.leadType, 'active')">
+                                                <input type="radio" name="quoteStatus" id="New" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $newQuotes, 'true')/> <span id="newQuotesTotal">$newQuotes.size()</span> New
+                                            </label>
+                                            <label class="btn btn-success $formatter.ifEqual('active', '', $request.params.leadType, 'closed')">
+                                                <input type="radio" name="quoteStatus" id="Accepted" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $acceptedQuotes, 'true')/> <span id="acceptedQuotesTotal">$acceptedQuotes.size()</span> Accepted
+                                            </label>
+                                            <label class="btn btn-warning $formatter.ifEqual('active', '', $request.params.leadType, 'cancelled')">
+                                                <input type="radio" name="quoteStatus" id="Invoiced" autocomplete="off" $formatter.ifEqual('checked="checked"', '', $invoicedQuotes, 'true')/> <span id="invoicedQuotesTotal">$invoicedQuotes.size()</span> Invoiced
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="button">New Quote</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        #macro(isActive $state)
+                        #if($request.params.state == $state)
+                        active            
+                        #end
+                        #end
+                        <!-- Other Stuff -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
