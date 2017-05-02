@@ -17,13 +17,13 @@ and open the template in the editor.
 }
 
 .invoices-table tbody td.last {
-    width: 200px;
+    width: 200px !important;
 }
 
 .invoices-table tbody td input, .invoices-table tbody td select {
     border: none !important;
-    display: block;
-    width: 100%;
+    display: block !important;
+    width: 100% !important;
 }
 
 .invoices-table tfoot td {
@@ -32,7 +32,7 @@ and open the template in the editor.
 }
 
 .invoices-table tfoot td:last-child {
-    padding-right: 50px;
+    padding-right: 50px !important;
 }
 
 .invoices-table tfoot .gst td {
@@ -41,8 +41,8 @@ and open the template in the editor.
 
 .invoices-table tfoot .total td {
     border-bottom: 4px solid gray !important;
-    font-size: 180%;
-    font-weight: bold;
+    font-size: 180% !important;
+    font-weight: bold !important;
 }
 
 .invoices-table tbody tr.highlighted input, 
@@ -52,7 +52,7 @@ and open the template in the editor.
 }
 
 .invoices-table tbody tr.template-row {
-    display: none;
+    display: none !important;
 }
 
 .invoices-table tbody tr.new-line-add {
@@ -60,31 +60,45 @@ and open the template in the editor.
 }
 
 .invoices-table tbody tr:not(.new-line-add) td:last-child span {
-    width: calc(100% - 50px);
-    display: inline-block;
-    background-color: white;
-    padding: 8px 4px;
-    text-align: right;
+    width: calc(100% - 50px) !important;
+    display: inline-block !important;
+    background-color: white !important;
+    padding: 8px 4px !important;
+    text-align: right !important;
 }
 
 .invoices-table tbody tr:not(.new-line-add) td:last-child button {
-    width: 50px;
-    display: inline-block;
-    padding: 8px 4px;
-    border: none;
-    background-color: white;
-    border-left: 1px solid #ddd;
-    outline: none;
+    width: 50px !important;
+    display: inline-block !important;
+    padding: 8px 4px !important;
+    border: none !important;
+    background-color: white !important;
+    border-left: 1px solid #ddd !important;
+    outline: none !important;
 }
 
 .invoices-table tbody tr:not(.new-line-add) td:last-child button:hover {
-    background-color: #fafafa;
+    background-color: #fafafa !important;
 }
 
 .invoices-table tbody .new-line-add td {
     padding: 5px !important; 
-    text-align: center;
-    font-style: italic;
-    color: gray;
-    cursor: pointer;
+    text-align: center !important;
+    font-style: italic !important;
+    color: gray !important;
+    cursor: pointer !important;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    list-style: none;
+    width: calc(100% - 61.6px);
+    border: 1px solid #cfcfcf;
+    border-top: none;
+    padding: 0;
+}
+
+.search-suggestions li {
+    padding-left: 6px;
 }

@@ -8,6 +8,18 @@
                 "group": "main",
                 "path": "/theme/apps/payment/quotesList.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/manageQuote.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/payment/invoices-table.css"
+            }
         }
     ]
 }
