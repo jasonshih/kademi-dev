@@ -291,7 +291,7 @@ Number.prototype.formatMoney = function (c, d, t) {
                     for (var i = 0; i < resp.hits.hits.length; i++) {
                         var suggestion = resp.hits.hits[i];
                         if (suggestion.fields.leadId) {
-                            var userId = suggestion.fields.leadId[0];
+                            var userId = suggestion.fields['profile.id'];
                             var email;
                             if (suggestion.fields['profile.email']) {
                                 email = suggestion.fields['profile.email'][0];

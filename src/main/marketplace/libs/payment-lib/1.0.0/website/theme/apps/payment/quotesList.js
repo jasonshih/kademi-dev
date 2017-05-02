@@ -97,5 +97,15 @@
         initDateTimePicker();
         initQuoteStatusSelect();
     };
+    
+    w.newProposal = function() {
+        if ($('input[ name = "quote-for-proposal" ]:checked').length === 0) {
+            alert("You Must at least pick up one quotation for a proposal!");
+            
+            return;
+        }
+        
+        $("#addProposalModal").modal("show");
+    };
 
 })(this);

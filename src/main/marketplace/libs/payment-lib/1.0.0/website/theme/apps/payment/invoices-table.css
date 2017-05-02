@@ -47,7 +47,7 @@ and open the template in the editor.
 
 .invoices-table tbody tr.highlighted input, 
 .invoices-table tbody tr.highlighted select,
-.invoices-table tbody tr.highlighted span {
+.invoices-table tbody tr.highlighted td>span {
     background-color: #fafafa !important;
 }
 
@@ -101,4 +101,22 @@ and open the template in the editor.
 
 .search-suggestions li {
     padding-left: 6px;
+}
+
+.suggestion.active {
+    background-color: #efefef;
+}
+
+td .search-wrapper {
+    position: relative;
+}
+
+td .search-suggestions {
+    z-index: 10;
+    border-top: 1px solid #cfcfcf;
+    width: 100%;
+}
+
+td .search-suggestions li {
+    background-color: white;
 }
