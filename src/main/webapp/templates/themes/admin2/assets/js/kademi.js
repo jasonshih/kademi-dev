@@ -1152,7 +1152,6 @@ function initBackgroundJobStatus(options) {
         var href = div.data("task-href");
         var templateHtml = div.siblings('.backgroundTaskTemplate').html();
         var template = Handlebars.compile(templateHtml);
-        
         checkBackgroundJobStatus(href, div, template, options);
     });
 }
@@ -1170,7 +1169,6 @@ function checkBackgroundJobStatus(href, div, template, options) {
             if (resp.status) {
                 var htmlStr = template(resp);
                 flog('Background task status HTML:', htmlStr);
-                
                 div.html(htmlStr);
                 div.show(400);
                 
@@ -1192,7 +1190,6 @@ function checkBackgroundJobStatus(href, div, template, options) {
             } else {
                 var htmlStr = template(null);
                 flog('Background task status HTML:', htmlStr);
-                
                 div.html(htmlStr);
                 div.show(400);
                 
@@ -1209,7 +1206,6 @@ function checkBackgroundJobStatus(href, div, template, options) {
             
             var htmlStr = template(null);
             flog('Background task status HTML:', htmlStr);
-            
             div.html(htmlStr);
             div.show(400);
             div.find('.timeago').timeago();

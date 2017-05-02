@@ -32,6 +32,19 @@ function initContentSearch() {
     });
 }
 
+function prettyPrintJson() {
+    flog('prettyPrintJson');
+
+    $('.prettyPrintJson pre').each(function (i, n) {
+        var target = $(n);
+        var json = target.text();
+        var obj = JSON.parse(json);
+        var str = JSON.stringify(obj, null, 2);
+        target.text(str);
+        flog('set json', target, str);
+    });
+}
+
 function initReindexForms() {
     $(".manage-search form").forms({
         confirmMessage: "Processing, Please Wait...",
