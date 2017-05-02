@@ -11,7 +11,11 @@
         {
             "appId": "moment-lib",
             "branch": "2.18.1"
-        }
+        },
+        {
+            "appId": "datetimepicker-lib",
+            "branch": "4.17.37"
+        }        
     ],
     
     "dependencies": [
@@ -67,12 +71,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/easy-pie-chart/2.1.7/jquery.easypiechart.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.js"
             }
         },
         {
@@ -175,12 +173,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/typeahead/0.11.1/typeahead.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.css"
             }
         },
         {

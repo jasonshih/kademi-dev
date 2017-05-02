@@ -1,3 +1,14 @@
+/**
+ * Created by Anh on 4/8/2016.
+ */
+
+var OrgsImportUrl = '/organisations/upload';
+var importWizardStarted = false;
+var OrgImportTotalCount = 0;
+function initManageOrgsImport() {
+    initUploads();
+}
+
 
 function initUploads() {
     var form = $("#importerWizard form");
@@ -11,10 +22,14 @@ function initUploads() {
         $('#myWizard').wizard('selectedItem', curStep);
     });
     $('#myWizard').on('finished.fu.wizard', function (evt, data) {
-        $('.importerWizard').trigger('click');
+        $('.btn-upload-Orgs-csv').trigger('click');
         $('#myWizard').wizard('selectedItem', {step: 1});
         $('#myWizard').find('form').trigger('reset');
-        form.find("input[name=fileHash]").val('')
+        form.find("input[name=fileHash]").val('');
+        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+        OrgImportTotalCount = 0;
+        var resultStatus = $('#job-status');
+        resultStatus.text('');
     });
 
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
@@ -36,35 +51,45 @@ function initUploads() {
                 }
             });
             form.find('[type=submit]').addClass('hide');
-            form.find('.beforeImportInfo').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
-
             $.ajax({
-                url: window.location.pathname,
+                url: OrgsImportUrl,
                 data: formData,
                 type: 'post',
                 dataType: 'json',
                 success: function (resp) {
                     if (resp.status && resp.data) {
-                        form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportInfo").text(
-                                'Data status: New profiles found: ' + resp.data.newImportsCount
-                                + ', existing profiles found: ' + resp.data.existingImportsCount
-                                + ', invalid records: ' + (resp.data.invalidRows ? resp.data.invalidRows.length : 0)
-                                );
+                    	form.find('[type=submit]').removeClass('hide');
+                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                        	invalidRows--;
+                        }
+                        form.find(".beforeImportNumInvalid").text(invalidRows);
 
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
-                        if (resp.data.invalidRows) {
-                            for (var i = 0; i < resp.data.invalidRows.length; i++) {
+                        if( resp.data.invalidRows ) {
+                            for( var i=0; i<resp.data.invalidRows.length; i++) {
                                 var row = resp.data.invalidRows[i];
                                 flog("row", row);
                                 var tr = $("<tr>");
-                                for (var col = 0; col < row.length; col++) {
+                                for( var col=0; col<row.length; col++) {
                                     var colText = row[col];
                                     tr.append("<td>" + colText + "</td>");
                                 }
                                 invalidRowsBody.append(tr);
                             }
+                        }
+
+                        OrgImportTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
+                        
+                        if ( OrgImportTotalCount > 0 ) {
+                        	form.find('#noValidRow').addClass('hide');
+                        	form.find('[type=submit]').attr('disabled', false);
+                        } else {
+                        	form.find('[type=submit]').attr('disabled', true);
+                        	form.find('#noValidRow').removeClass('hide');
                         }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
@@ -78,12 +103,10 @@ function initUploads() {
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
-        if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
+        if (data.step === 1) {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
-                    alert("Please select a file to upload");
-                } else {
-                    alert("Sale Group hasn't been set. Please contact administrator for assistant.");
+                    Msg.error("Please select a file to upload");
                 }
                 evt.preventDefault();
             }
@@ -92,7 +115,7 @@ function initUploads() {
         if (data.step === 2) {
             var startRow = $('#startRow').val();
             if (!startRow) {
-                alert('Please enter start row value');
+                Msg.error('Please enter start row value');
                 $('#startRow').trigger('focus').parents('.form-group').addClass('has-error');
                 evt.preventDefault();
                 return false;
@@ -102,32 +125,57 @@ function initUploads() {
 
             var importerHead = $('#importerHead');
             var selectedCols = [];
+            var requiredField = 'orgId';
+            
             importerHead.find('select').each(function () {
-                if (this.value === 'email') {
+                if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
 
-            if (selectedCols.length < 1) {
-                alert('Please select column data that contains email to continue');
+            if (!selectedCols.length){
+                Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
+                return false;
+            }
+
+            if (selectedCols.indexOf(requiredField) === -1) {
+                // mode is auto and no default group selected and no group field selected
+                Msg.error('Please indicate Organisation Id field in data table');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+                return false;
+            }
+        }
+
+        if (data.step === 3) {
+            if (!importWizardStarted) {
+                Msg.error("Importing process hasn't been started yet");
+                evt.preventDefault();
+                return false;
             }
         }
     });
 
     flog("Init importer form", form);
     form.forms({
+        postUrl: OrgsImportUrl,
+        beforePostForm: function(form, config, data){
+            importWizardStarted = true;
+            return data;
+        },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
-            doCheckProcessStatus();
+            checkProcessStatus();
         }
     });
 
     $('#btn-upload').mupload({
-        url: window.location.pathname,
+        url: OrgsImportUrl,
         useJsonPut: false,
-        buttonText: '<i class="clip-folder"></i> Upload CSV',
+        buttonText: '<i class="clip-folder"></i> Upload CSV, XLS, XLSX',
+        acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
 
@@ -136,12 +184,14 @@ function initUploads() {
             var table = data.table;
             form.find("input[name=fileHash]").val(table.hash);
             var fields = data.destFields;
+            fields = sortObjectByValue(fields);
             var thead = $("#importerHead");
             thead.html("");
             flog("headers:", data.numCols);
+            $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none', minWidth: '100%'});
             thead.append("<th>#</th>");
             for (var col = 0; col < data.numCols; col++) {
-                var td = $("<th>");
+                var td = $('<th style="min-width: 200px">');
                 thead.append(td);
                 var select = $("<select class='form-control' name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
@@ -178,10 +228,13 @@ function initUploads() {
 
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-
+        var c = confirm('Are you sure you want to cancel this process?');
+        if (!c) {
+            return;
+        }
         $.ajax({
             type: 'post',
-            url: '/custs',
+            url: OrgsImportUrl,
             data: {cancel: 'cancel'},
             success: function (data) {
                 Msg.success('Import task cancelled');
@@ -193,89 +246,6 @@ function initUploads() {
     });
 }
 
-function initDelContacts() {
-    $('body').on('click', '.btn-del-contacts', function (e) {
-        e.preventDefault();
-
-        var ids = [];
-        var checkBoxes = $('[name=select-contact]:checked');
-
-        checkBoxes.each(function (i, item) {
-            var chk = $(item);
-            ids.push(chk.data('userid'));
-        });
-
-        if (ids.length >= 1) {
-            if (confirm('Are you sure you want to delete ' + ids.length + ' contacts and all the leads associated with each contact?')) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        deleteContacts: ids.join(',')
-                    },
-                    success: function () {
-                        doLeadSearch(true);
-                    },
-                    error: function () {
-                        Msg.error('Oh No! Something went wrong while trying to delete the contacts.');
-                    }
-                });
-            }
-        } else {
-            Msg.info('Please select at least 1 contact to delete.');
-        }
-
-    });
-}
-
-function initSearchLead() {
-    $('#user-query').on({
-        input: function () {
-            typewatch(function () {
-                flog('do search');
-                doLeadSearch();
-            }, 500);
-        }
-    });
-    $('#search-group').change(function () {
-        doLeadSearch();
-    });
-}
-
-function doLeadSearch(forceSearch) {
-    var lastQuery = $('#user-query').attr('last-query');
-    var query = $('#user-query').val();
-    // fix the issue on IE that fire the search when focusing on input field
-    if (!forceSearch && (lastQuery === query || (typeof lastQuery === 'undefined' && query === ''))) {
-        return;
-    }
-    $('#user-query').attr('last-query', query);
-    var groupName = $('#search-group').val();
-    flog('doLeadSearch', query, groupName);
-    var uri = URI(window.location);
-    uri.setSearch('q', query);
-    uri.setSearch('g', groupName);
-    flog('doLeadSearch', uri.toString());
-    var newHref = uri.toString();
-    window.history.pushState('', newHref, newHref);
-    Msg.info('Searching...', 50000);
-    $.ajax({
-        type: 'GET',
-        url: newHref,
-        success: function (data) {
-            Msg.info('Search complete', 2000);
-            flog('success', data);
-            var newDom = $(data);
-            var $fragment = newDom.find('#searchResults');
-            $('#searchResults').replaceWith($fragment);
-            $('abbr.timeago').timeago();
-        },
-        error: function (resp) {
-            Msg.error('An error occured doing the user search. Please check your internet connection and try again');
-        }
-    });
-}
-
 function checkProcessStatus() {
     flog("checkProcessStatus");
     var jobTitle = $(".job-title");
@@ -283,7 +253,7 @@ function checkProcessStatus() {
     $.ajax({
         type: 'GET',
         dataType: "json",
-        url: window.location.pathname + "?importStatus",
+        url: OrgsImportUrl + "?importStatus",
         success: function (result) {
             flog("success", result);
             if (result.status) {
@@ -297,28 +267,47 @@ function checkProcessStatus() {
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        doLeadSearch(true);
-                        if (typeof state.updatedProfiles !== 'undefined') {
-                            $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
+                        if (typeof state.updatedCount !== 'undefined') {
+                            $('#myWizard').find('.updatedCount').text(state.updatedCount)
                         }
-                        if (typeof state.createdProfiles !== 'undefined') {
-                            $('#myWizard').find('.createdProfiles').text(state.createdProfiles)
+                        if (typeof state.createdCount !== 'undefined') {
+                            $('#myWizard').find('.createdCount').text(state.createdCount)
                         }
-                        $('#myWizard').wizard("next");
+                        if (typeof state.errorCount !== 'undefined') {
+                            $('#myWizard').find('.errorCount').text(state.errorCount)
+                        }
+                        flog("finished state", state, state.resultHash);
+                        if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
+                            var href = "/_hashes/files/" + state.resultHash + ".csv";
+                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                        }else{
+                            $('#myWizard').find('.errorRows').closest("a").hide();
+                        }
 
+                        $('#myWizard').wizard("next");
+                        $('#table-Orgs-body').reloadFragment({url: '/organisations/'});
+                        $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
+                        importWizardStarted = false;
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+                        OrgImportTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / OrgImportTotalCount * 100;
+                        if (isNaN(percentComplete)){
+                            percentComplete = 0;
+                        }
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
                         jobTitle.text("Process running...");
                     }
-
                 } else {
                     // waiting to start
                     jobTitle.text("Waiting for process job to start ...");
                 }
-                window.setTimeout(doCheckProcessStatus, 2500);
+                window.setTimeout(checkProcessStatus, 2500);
 
             } else {
                 flog("No task");
@@ -328,4 +317,29 @@ function checkProcessStatus() {
             flog("weird..", resp);
         }
     });
+}
+
+function sortObjectByValue(obj) {
+    var sorted = {};
+    var prop;
+    var arr = [];
+
+    for (prop in obj) {
+        if (obj.hasOwnProperty(prop)) {
+            var o = {key: prop, value: obj[prop]};
+            arr.push(o);
+        }
+    }
+
+    arr.sort(function(a,b){
+        if (a.value > b.value) return 1;
+        if (a.value < b.value) return -1;
+        return 0;
+    });
+
+    for (i = 0; i < arr.length; i++) {
+        sorted[arr[i].key] = arr[i].value;
+    }
+
+    return sorted;
 }
