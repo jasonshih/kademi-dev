@@ -180,16 +180,21 @@
         <div class="completeTaskDiv" style="display: none">
             <hr/>
 
-            $page.outcomes
             
             #if( $page.outcomes.size() > 0 )
             <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
                 <input type="hidden" name="completedTask" />
                 #foreach( $outcome in $page.outcomes )
                 <div class="row">
-                    $outcome
+                    <div class="col-md-12">
+                    <label>
+                        <input type="checkbox" name="outcome" value="$outcome.id" />
+                        $outcome.title
+                    </label>
+                    </div>
                 </div>
                 #end
+                <button class="btn btn-success" type="submit">Complete task</button>
             </form>
             #else 
             
