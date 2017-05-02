@@ -3,5 +3,11 @@
     ],
     
     "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/quotesList.js"
+            }
+        }
     ]
 }

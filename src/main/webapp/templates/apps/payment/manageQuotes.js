@@ -53,9 +53,9 @@ function initDateTimePicker() {
         minDate: moment()
     };
     
-    $('#quoteDueDate').datetimepicker(opts);
+    $('#quoteExpiryDate').datetimepicker(opts);
 
-    $('#quoteDueDate').on('dp.show', function() {
+    $('#quoteExpiryDate').on('dp.show', function() {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();
