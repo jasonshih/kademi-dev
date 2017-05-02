@@ -105,7 +105,32 @@
             return;
         }
         
-        $("#addProposalModal").modal("show");
+        var proposalData = {
+            "selectedQuotes[]": [],
+            createProposalFolder: true
+        };
+        
+        $('input[ name = "quote-for-proposal" ]:checked').each(function() {
+            proposalData['selectedQuotes[]'].push($(this).val());
+        });
+        
+        $.ajax({
+           url: "/proposals/",
+           method: "POST", 
+           dataType: "json",
+           data: proposalData,
+           success: function(data) {
+               if (data.status) {
+                    Msg.success('Proposal Added Successfully');
+               } else {
+                   if (data.messages.length > 0) {
+                       Msg.error(data.messages[0]);
+                   } else {
+                       Msg.error('Could not create proposal');
+                   }
+               }
+           }
+        });
     };
 
 })(this);
