@@ -10,14 +10,14 @@
 </div>
 #elseif($task.is("canceled"))
 <span class="label label-warning">
-            Canceled
-        </span>
+    Canceled
+</span>
 &nbsp;-
 <abbr title="$formatter.formatDateISO8601($page.completedDate)" class="timeago">$page.completedDate</abbr>
 #else
 <span class="label label-success">
-            Completed
-        </span>
+    Completed
+</span>
 &nbsp;-
 <abbr title="$formatter.formatDateISO8601($page.completedDate)" class="timeago"> $page.completedDate</abbr>
 #end
@@ -50,9 +50,9 @@
                                 <div class="col-md-10">
                                     <div class="input-group">
                                         <input $formatter.ifTrue($isNotEditable, 'disabled="true"', '') type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
-                                                <span class="input-group-addon">
-                                                    <span class="fa fa-calendar"></span>
-                                                </span>
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
 
                                     </div>
                                 </div>
@@ -126,9 +126,9 @@
 
                     <div class="input-group">
                         <input type="text" name="dueDate" class="form-control date-time immediateUpdate" data-href="$page.href" data-original-value="$formatter.formatDateTime($page.dueDate)" value="$formatter.formatDateTime($page.dueDate)">
-                                <span class="input-group-addon">
-                                    <span class="fa fa-calendar"></span>
-                                </span>
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
 
                     </div>
                 </div>
@@ -141,13 +141,13 @@
                         <div class="btn-group mb-sm dropdown">
                             <button id="assignedBlockTask" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" title="Assign this task to someone" >
                                 <i class="fa fa-user"></i>
-                                        <span>
-                                            #if( $page.assignedTo )
-                                            $page.assignedTo.name
-                                            #else
-                                            Not assigned
-                                            #end
-                                        </span>
+                                <span>
+                                    #if( $page.assignedTo )
+                                    $page.assignedTo.name
+                                    #else
+                                    Not assigned
+                                    #end
+                                </span>
                             </button>
                             <ul class="dropdown-menu" data-href="$page.href" id="assignToMenuTask" role="menu">
                                 <li><a href="$user.name">Assign to me</a></li>
@@ -179,25 +179,24 @@
 
         <div class="completeTaskDiv" style="display: none">
             <hr/>
-
-            
             #if( $page.outcomes.size() > 0 )
             <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
                 <input type="hidden" name="completedTask" />
-                #foreach( $outcome in $page.outcomes )
+                <h4>What happened?</h4>
                 <div class="row">
-                    <div class="col-md-12">
-                    <label>
-                        <input type="checkbox" name="outcome" value="$outcome.id" />
-                        $outcome.title
-                    </label>
-                    </div>
+                    <ul id="lead-task-outcomes" class="col-md-12">
+                        #foreach( $outcome in $page.outcomes ) 
+                        <li>
+                            <input id="outcome-$outcome.id" type="radio" name="outcome" value="$outcome.id" />
+                            <label for="outcome-$outcome.id"><i class="fa fa-cogs"></i><br />$outcome.title</label>
+                        </li>
+                        #end
+                    </ul>
                 </div>
-                #end
                 <button class="btn btn-success" type="submit">Complete task</button>
             </form>
             #else 
-            
+
             <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
                 <input type="hidden" name="completedTask" />
                 <div class="row">
@@ -242,9 +241,9 @@
                         <br/>
                         <div class="input-group">
                             <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
-                                    <span class="input-group-addon">
-                                        <span class="fa fa-calendar"></span>
-                                    </span>
+                            <span class="input-group-addon">
+                                <span class="fa fa-calendar"></span>
+                            </span>
                         </div>
                     </div>
 

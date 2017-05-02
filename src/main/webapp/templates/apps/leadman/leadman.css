@@ -130,3 +130,37 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     line-height: 37px;
 
 }
+
+#lead-task-outcomes {
+    list-style: none;
+}
+
+#lead-task-outcomes li {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#lead-task-outcomes li input {
+    position: absolute;
+    opacity: 0;
+}
+
+#lead-task-outcomes li label {
+    display: block;
+    background-color: #efefef;
+    color: #6c6c6c;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 300ms;
+}
+
+#lead-task-outcomes li i {
+    font-size: 250%;
+}
+
+#lead-task-outcomes li :checked ~ label {
+    color: white;
+    background-color: #ee145b;
+}
