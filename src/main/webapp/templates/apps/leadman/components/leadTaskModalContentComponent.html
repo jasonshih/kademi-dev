@@ -180,6 +180,19 @@
         <div class="completeTaskDiv" style="display: none">
             <hr/>
 
+            $page.outcomes
+            
+            #if( $page.outcomes.size() > 0 )
+            <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
+                <input type="hidden" name="completedTask" />
+                #foreach( $outcome in $page.outcomes )
+                <div class="row">
+                    $outcome
+                </div>
+                #end
+            </form>
+            #else 
+            
             <form method="post" action="$page.href" class="form-horizontal completeTaskForm">
                 <input type="hidden" name="completedTask" />
                 <div class="row">
@@ -240,6 +253,7 @@
                     <button class="btn btn-success" type="submit">Done</button>
                 </div>
             </form>
+            #end
         </div>
     </div>
 </div>

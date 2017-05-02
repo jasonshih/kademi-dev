@@ -239,6 +239,6 @@ JBNodes['taskGoal'] = {
             outcomesStr += '<hr />';
         }
 
-        form.find('.outcomes-wrapper').html(outcomesStr);
+        form.find('.outcomes-wrapper').html("<div class='well'>" + outcomesStr + "</div>");
     }
 };
