@@ -2,9 +2,17 @@
     #set ($rewardPath = "/" + $reward)
     #set ($rewardResource = $rootFolder.find($rewardPath))
 
+#if (!$numberOfProducts)
+#set ($numberOfProducts = 99)
+#else
+#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+#end
+
+#set ($count = 0)
 <div class="row" id="cates-list">
     #foreach($cat in $rewardResource.children.ofType.category)
         #if ($cat.numProducts > 0)
+        #if ($count < $numberOfProducts)
             <div class="col-sm-6 col-md-4 product-item">
                 #set($bg = "/theme/img/photo_holder.png")
                 #if( $cat.imageHref )
@@ -19,14 +27,18 @@
                     </div>
                 </a>
             </div>
+            #set ($count = $count + 1)
+        #end
         #end
     #end
 </div>
 #else
     #if ($page)
     <div class="row" id="cates-list">
+        #set ($count = 0)
         #foreach($cat in $page.children.ofType.category)
             #if ($cat.numProducts > 0)
+                #if ($count < $numberOfProducts)
                 <div class="col-sm-6 col-md-4 product-item">
                     #set($bg = "/theme/img/photo_holder.png")
                     #if( $cat.imageHref )
@@ -41,6 +53,8 @@
                         </div>
                     </a>
                 </div>
+                #set ($count = $count + 1)
+                #end
             #end
         #end
     </div>

@@ -1,7 +1,7 @@
 #if ($page)
 
 #set ($rewardStoreFolder = $page)
-#if ($reward)
+#if ($reward && $reward != "")
 #set ($rewardUrl = "/" + $reward)
 #set ($rewardStoreFolder = $page.find($rewardUrl))
 #end
@@ -61,7 +61,7 @@
 #set ($app = $applications.get("rewardstore-lib"))
 
 #set( $products = $app.call("findProducts", $params.q, $category, $rewardStoreId, $fromRange, $toRange, $startPrice, $endPrice, $sortParam, $ascParam ) )
-<div id="products-list" class="rewardStoreCategoryProductsComponent">
+<div id="products-list" class="rewardStoreCategoryProductsComponent #if ($numberOfProducts) shouldLoadMore #end">
     #set ($products = $request.attributes.products)
     #if( $products.hits.hits.size() == 0 )
     <p class="alert alert-info">No products were found matching the critieria</p>

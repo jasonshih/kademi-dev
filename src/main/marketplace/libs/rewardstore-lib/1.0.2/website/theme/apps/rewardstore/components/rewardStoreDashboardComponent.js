@@ -23,7 +23,22 @@
 
                         component.attr('data-reward', this.value);
                         keditor.initDynamicContent(dynamicElement);
-                    })
+                    });
+
+                    form.find('.number-of-products').on('change', function () {
+                        var number = this.value;
+
+                        if (isNaN(number) || +number <= 0) {
+                            number = 1;
+                            this.value = number;
+                        }
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-number-of-products', number);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -33,6 +48,7 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-reward').val(dataAttributes['data-reward'] || '');
+            form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
         }
     };
 

@@ -5,16 +5,21 @@ var startFrom = 12;
 var currentURI = new URI(window.location.href);
 
 $(function () {
-    if (!window.contentEditing && $('.rewardStoreCategoryProductsComponent').length) {
+    var shouldLoadMore = $('.shouldLoadMore').length > 0;
+    var shouldInit = $('.rewardStoreCategoryProductsComponent').length > 0;
+    if (!window.contentEditing && shouldInit) {
         initPointsRanges();
         initCategories();
         initProductSearch();
         initSortBy();
-        $(window).scroll(function () {
-            if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
-                doPaginate();
-            }
-        });
+        if (!shouldLoadMore){
+            $(window).scroll(function () {
+                if (!$('#inifiniteLoader').hasClass('limited') && $('#inifiniteLoader').is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
+                    doPaginate();
+                }
+            });
+        }
+
     }
 });
 
