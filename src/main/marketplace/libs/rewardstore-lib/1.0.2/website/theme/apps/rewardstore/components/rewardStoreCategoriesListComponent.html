@@ -1,0 +1,49 @@
+#if ($reward && $reward != "")
+    #set ($rewardPath = "/" + $reward)
+    #set ($rewardResource = $rootFolder.find($rewardPath))
+    #renderCateList($rewardResource)
+#else
+    #if ($page)
+        #set ($rewardResource = $page.closest("store") )
+        #renderCateList($rewardResource)
+    #else
+    <p class="alert alert-warning">No reward store selected</p>
+    #end
+#end
+
+#macro(renderCateList $rewardResource)
+<div class="list-group list-group-root well rewardStoreCategoriesList">
+    <span href="#" class="list-group-item active lead">Categories</span>
+    #foreach($cate in $rewardResource.children.ofType.category)
+        #if ($cate.numProducts > 0)
+
+            #if($cate.children.ofType.category.size() > 0)
+                <a href="#item-$cate.name" class="#if($page.href == $cate.href) selected #end list-group-item" data-toggle="collapse" data-num-products="$cate.numProducts">
+                    <i class="glyphicon #if($page.href != $cate.href && $page.href.contains($cate.href)) glyphicon-chevron-down #else glyphicon-chevron-right #end"></i>$cate.title
+                </a>
+            #else
+                <a href="$cate.href" class="#if($page.href == $cate.href) selected #end list-group-item" data-num-products="$cate.numProducts">
+                    $cate.title
+                </a>
+            #end
+            #if($cate.children.ofType.category.size() > 0)
+                <div class="list-group collapse #if($page.href != $cate.href && $page.href.contains($cate.href)) in #end" id="item-$cate.name">
+                    #set ( $subCates = $formatter.sortByProperty( $cate.children.ofType.category, "title" ) )
+                    <a href="$cate.href" class="list-group-item">All</a>
+                    #foreach($subcat in $subCates)
+                        #if ($page.href == $subcat.href)
+                            <a href="$subcat.href" class="list-group-item selected">
+                                $subcat.title
+                            </a>
+                        #else
+                            <a href="$subcat.href" class="list-group-item">
+                                $subcat.title
+                            </a>
+                        #end
+                    #end
+                </div>
+            #end
+        #end
+    #end
+</div>
+#end
