@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <style>
             .expressionEditor {
-                height: 250px;
+                height: 150px;
                 border: 1px solid #DDD;
                 border-radius: 4px;
                 border-bottom-right-radius: 0px;
@@ -25,23 +25,22 @@
                 <div class="tab-content">
                     <div id="general" class="tab-pane active">
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="name">Name</label>
-                            <div class="col-md-8">
-                                <input type="hidden" disabled="disabled" value="$page.rule.name" id="originalName"/>
-                                <input type="text" name="name" id="name" value="$page.rule.name" placeholder="Name" class="required simpleChars form-control" required="required" />
-                            </div>
-                        </div>
-                        <div class="form-group">
                             <label class="control-label col-md-3" for="title">Title</label>
                             <div class="col-md-8">
                                 <input type="text" name="title" id="title" value="$page.rule.title" placeholder="Title" class="required form-control" required="required" />
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="title">Points Bucket</label>
-                            <div class="col-md-8">
+                            <label class="control-label col-md-3" for="name">Name</label>
+                            <div class="col-md-3">
+                                <input type="hidden" disabled="disabled" value="$page.rule.name" id="originalName"/>
+                                <input type="text" name="name" id="name" value="$page.rule.name" placeholder="Name" class="required simpleChars form-control" required="required" />
+                            </div>
+
+                            <label class="control-label col-md-2" for="title">Points Bucket</label>
+                            <div class="col-md-3">
                                 <select name="rewardDest" class="form-control">
-                                    $formatter.option("", "[None]", null)
                                     #foreach($p in $page.pointsBuckets)
                                     $formatter.option($p.name, $p.title, $page.rule.rewardDest.name)
                                     #end
@@ -50,18 +49,17 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="startDate">Start Date</label>
-                            <div class="col-md-8">
+                            <div class="col-md-3">
                                 <input type="text" name="startDate" id="startDate" value="$!formatter.formatJodaDate($page.rule.startDate, 'dd/MM/YYYY HH:mm')" placeholder="Start Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="endDate">End Date</label>
-                            <div class="col-md-8">
+
+                            <label class="control-label col-md-2" for="endDate">End Date</label>
+                            <div class="col-md-3">
                                 <input type="text" name="endDate" id="endDate" value="$!formatter.formatJodaDate($page.rule.endDate, 'dd/MM/YYYY HH:mm')" placeholder="End Date" data-date-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-md-3" for="issueTo">Awarded To<small>Will apply to everyone if blank.</small></label>
+                            <label class="control-label col-md-3" for="issueTo">When awarded To<small>Will apply to everyone if blank.</small></label>
                             <div class="col-md-8">
                                 <input type="text" name="issueTo" id="issueTo" value="$!page.rule.issueTo.entityName" placeholder="User ID or Org ID" class="form-control" />
                             </div>
@@ -74,13 +72,12 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="addValue">Add Value</label>
-                            <div class="col-md-8">
+                            <div class="col-md-3">
                                 <input type="text" name="addValue" id="addValue" value="$!page.rule.addValue" placeholder="Add Value" class="numeric form-control" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-md-3" for="multValue">Multiplier Value</label>
-                            <div class="col-md-8">
+
+                            <label class="control-label col-md-2" for="multValue">Multiplier Value</label>
+                            <div class="col-md-3    ">
                                 <input type="text" name="multValue" id="multValue" value="$!page.rule.multValue" placeholder="Multiplier Value" class="numeric form-control" />
                             </div>
                         </div>

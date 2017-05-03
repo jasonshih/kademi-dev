@@ -1,0 +1,19 @@
+#parse("/theme/apps/content/components/menuMacros.html")
+
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Navbar layout</label>
+        <div class="col-sm-12">
+            <select class="form-control navbar-layout">
+                <option selected value="container-fluid">Wide</option>
+                <option value="container">Box</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="menuEditor">
+        #defaultMenuControls()
+    </div>
+
+    #editMenuItemForm()
+</form>

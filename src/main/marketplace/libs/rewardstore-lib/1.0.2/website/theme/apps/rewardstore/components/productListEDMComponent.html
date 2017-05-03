@@ -1,0 +1,193 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
+#set ($width = $formatter.toInteger($width))
+#set ($itemsPerRow = $formatter.toInteger($itemsPerRow))
+
+#set( $pointsBucket = $applications.rewardStore.findStore($store).reward )
+#set( $userBalance = $applications.rewardStore.pointsBalance($pointsBucket.name, $user) )
+
+#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+#set( $prods = $applications.rewardStore.productSearch($store, null, $category, $userBalance, 0, $numberOfProducts, 'finalPoints', false) )
+
+#if( $prods.hits.totalHits > 0 )
+
+    #if ($layout == "grid")
+        #set ($tableWidth = $width / $itemsPerRow)
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            <tr>
+                <td>
+                    <!--[if (gte mso 9)|(IE)]>
+                    <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                    <![endif]-->
+                    #foreach($p in $prods.hits.hits )
+                        #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.fields.product.value")
+                        #set ($newLine = false)
+                        #if ($foreach.index % $itemsPerRow == 0)
+                            #set ($newLine = true)
+                        #end
+
+                        #set ($endLine = false)
+                        #if ($foreach.count % $itemsPerRow == 0)
+                            #set ($endLine = true)
+                        #end
+
+                        #if ($newLine)
+                            #if ($foreach.index != 0)
+                                <br />
+                            #end
+                            <!--[if (gte mso 9)|(IE)]>
+                            <tr>
+                                <td width="$tableWidth">
+                            <![endif]-->
+                        #else
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            <td width="$tableWidth">
+                            <![endif]-->
+                        #end
+                        <table data-index="$foreach.index" data-count="$foreach.count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                            <tbody>
+                                <tr>
+                                    <td style="padding-left: 4px; padding-right: 4px; padding-bottom: 8px;">
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                            <tr>
+                                                <td align="center">
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                    #if( $p.fields.primaryImageHref.value )
+                                                        #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}/alt-600-400.png")
+                                                    #end
+                                                    <a title="$p.fields.title.value" href="${prodUrl}">
+                                                        <img src="$bg" width="" height="116" alt="$p.fields.title.value" style="display: block; border: 0;" />
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td height="56" valign="middle" bgcolor="${backgroundItem}" style="padding-left: 15px; padding-right: 15px; $baseStyles">
+                                                    <a href="${prodUrl}" style="$linkStyles" title="$p.fields.title.value">$formatter.truncate($p.fields.title.value, 20)</a><br />
+                                                    <span style="font-size: 12px;">$p.fields.finalPoints.value pts</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        #if ($endLine)
+                            <!--[if (gte mso 9)|(IE)]>
+                            </td>
+                            </tr>
+                            <![endif]-->
+                        #end
+                    #end
+
+                    #if ($numberOfProducts % $itemsPerRow == 0)
+                        <br />
+                        <!--[if (gte mso 9)|(IE)]>
+                        <tr>
+                            <td width="$tableWidth">
+                        <![endif]-->
+                    #else
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        <td width="$tableWidth">
+                        <![endif]-->
+                    #end
+                    <table cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                        <tbody>
+                            <tr>
+                                <td style="padding-left: 4px; padding-right: 4px;">
+                                    <a href="http://${rootFolder.domainName}${formatter.portString}/$store" target="_blank" style="text-decoration: none">
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" bgcolor="#ededed">
+                                            <tr>
+                                                <td height="122" valign="top" style="padding-left: 20px; padding-top: 50px" width="21" bgcolor="#ededed">
+                                                    <img src="http://${rootFolder.domainName}${formatter.portString}/theme/apps/rewardstore/components/productListEDM_view_more.png" width="21" height="33" style="border: 0; display: block;" />
+                                                </td>
+                                                <td height="122" valign="top" style="padding-left: 13px; padding-top: 50px; font-weight: 900; $linkStyles" bgcolor="#ededed">View more products online.</td>
+                                            </tr>
+                                        </table>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!--[if (gte mso 9)|(IE)]>
+                    </td>
+                    </tr>
+                    <![endif]-->
+
+                    <!--[if (gte mso 9)|(IE)]>
+                    </table>
+                    <![endif]-->
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    #else
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tbody>
+            #set ($leftWidth = $width / 3)
+            #set ($rightWidth = $width - $leftWidth)
+
+            #foreach($p in $products.hits.hits )
+                #set ($prodUrl = "http://${rootFolder.domainName}${formatter.portString}/$store/$category/$p.fields.product.value")
+                <tr>
+                    <td valign="top" style="padding-bottom: 15px;">
+                        <!--[if (gte mso 9)|(IE)]>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                            <tr>
+                                <td width="$leftWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$leftWidth" align="left" class="col">
+                            <tr>
+                                <td class="wrapper" style="padding-right: 15px">
+                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <tr>
+                                            <td>
+                                                #set($bg = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                                                #if( $p.fields.primaryImageHref.value )
+                                                    #set($bg = "http://${rootFolder.domainName}${formatter.portString}${p.fields.primaryImageHref.value}")
+                                                #end
+                                                <a title="$p.fields.title.value" href="${prodUrl}">
+                                                    <img src="$bg" width="100%" height="auto" alt="$p.fields.title.value" style="display: block; border: 0;" />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        <td width="$rightWidth">
+                        <![endif]-->
+                        <table cellpadding="0" cellspacing="0" border="0" width="$rightWidth" align="right" class="col">
+                            <tr>
+                                <td class="wrapper" style="$baseStyles">
+                                    <h4 style="font-size: ${fontSizeH4}px; line-height: ${lineHeightH4}px;margin-top:0;margin-bottom: 0;"><a href="${prodUrl}" style="$linkStyles">$p.fields.title.value</a></h4>
+                                    <p>
+                                        <b>Price: $p.fields.finalPoints.value pts</b>
+                                    </p>
+                                    <p>
+                                        $formatter.truncate( $formatter.toPlain( $p.fields.notes.value), 100)
+                                    </p>
+                                    <p><a href="${prodUrl}" style="$linkStyles">Read more</a></p>
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+            #end
+        </tbody>
+    </table>
+    #end
+#else
+<p>Sorry, we couldnt find any products for you</p>
+#end

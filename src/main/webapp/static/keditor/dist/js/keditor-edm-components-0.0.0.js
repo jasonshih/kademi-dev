@@ -138,7 +138,7 @@
             
             var txtBorderRadius = form.find('#button-border-radius');
             txtBorderRadius.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-wrapper'), 'border-radius', this.value + 'px');
+                edmEditor.setStyles('border-radius', this.value + 'px', keditor.getSettingComponent().find('.button-wrapper'));
             });
             
             form.find('.button-inner-padding').each(function () {
@@ -174,12 +174,12 @@
             
             var txtFontSize = form.find('#button-font-size');
             txtFontSize.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-size', (this.value > 0 ? this.value : 0) + 'px');
+                edmEditor.setStyles('font-size', (this.value > 0 ? this.value : 0) + 'px', keditor.getSettingComponent().find('.button-wrapper a'));
             });
             
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.on('change', function () {
-                setStyle(keditor.getSettingComponent().find('.button-wrapper a'), 'font-family', this.value);
+                edmEditor.setStyles('font-family', this.value, keditor.getSettingComponent().find('.button-wrapper a'));
             });
             
             form.find('.btn-style').each(function () {
