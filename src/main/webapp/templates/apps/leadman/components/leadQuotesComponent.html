@@ -67,24 +67,26 @@
                 #if( $quotes.size() > 0 )
                 <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
                     #foreach($quote in $quotes)
+                    #if ($quote.quoteStatus == 'NEW')
                     <div class="note-item">
                         <div>
                             <input type="checkbox" name="quote-for-proposal" value="$quote.id" />
                             <a href="/quotes/$quote.id">$quote.title</a>
                             #if($quote.quoteStatus == "NEW")
-                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteState"></i>
+                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "ACCEPTED")
-                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "INVOICED")
-                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "REJECTED")
-                            <i class="fa fa-check-circle text-danger" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
                             #else
-                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteState"></i>
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
                             #end
                             <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
                         </div>
                     </div>
+                    #end
                     #end
                 </div>
                 #else
@@ -94,28 +96,38 @@
                 #end
                 <hr />
                 <h5><strong>Proposals</strong></h5>
+                #set( $proposals = $page.proposals )
+                #if( $proposals.size() > 0 )
                 <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
-                    #foreach($quote in $quotes)
+                    #foreach($proposal in $proposals)
+                    <span>Proposal $proposal.id</span>
+                    #foreach($quote in $proposal.quotes)
                     <div class="note-item">
                         <div>
-                            <input type="checkbox" name="quote-for-proposal" value="$quote.id" />
                             <a href="/quotes/$quote.id">$quote.title</a>
-                            #if($quote.quoteStatus == "NEW")
-                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteState"></i>
+                            #if($quote.quoteStatus == "ASSIGNED")
+                            <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "ACCEPTED")
-                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "INVOICED")
-                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
                             #elseif($quote.quoteStatus == "REJECTED")
-                            <i class="fa fa-check-circle text-danger" title="$quote.quoteState"></i>
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
                             #else
-                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteState"></i>
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
                             #end
                             <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
                         </div>
                     </div>
                     #end
+                    <hr />
+                    #end
                 </div>
+                #else
+                <p>
+                    <span class="label label-warning">No proposals has been added to lead yet</span>
+                </p>
+                #end
             </div>
         </div>
     </div>
