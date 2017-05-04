@@ -7,6 +7,12 @@
                 "group": "main",
                 "path": "/theme/apps/proposals-lib/proposals.js"
             }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/proposals-lib/proposals.css"
+            }
         }
     ]
 }

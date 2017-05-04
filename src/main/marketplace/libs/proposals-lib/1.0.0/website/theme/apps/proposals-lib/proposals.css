@@ -1,0 +1,47 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : May 4, 2017, 9:21:15 AM
+    Author     : m.elkhoudary
+*/
+
+.proposals-container {
+    margin-top: 15px;
+}
+
+.quotes .quote ul {
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+    list-style: none;
+}
+
+.quote.accepted {
+    background-color: #ffffcc;
+}
+
+.quote h3 {
+    text-align: right;
+    font-weight: bold;
+}
+
+.quote h3 span {
+    font-weight: normal;
+    font-size: 50%;
+}
+
+.quote .total-quotation {
+    vertical-align: top;
+    padding-right: 10px;
+    color: silver;
+}
+
+.quote .currency {
+    vertical-align: bottom;
+    padding-left: 5px;
+    color: green;
+}
