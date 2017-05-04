@@ -40,9 +40,9 @@
                         </colgroup>
                         <thead>
                             <tr class="series-row odd ui-draggable">
-                                <th>Name</th>
                                 <th>Title</th>
                                 <th>Reward</th>
+                                <th>Recipient</th>
                                 <th>Add Value</th>
                                 <th>Multiply Value</th>
                                 <th class="action text-center">Action</th>
@@ -52,9 +52,17 @@
                         <tbody>
                             #foreach($p in $page.children.ofType('rule'))
                             <tr>
-                                <td>$p.name</td>
                                 <td>$p.title</td>
-                                <td>$!p.rule.rewardDest.title</td>
+                                <td>$!p.rule.rewardDest.title</td>                                
+                                <td>
+                                    #if( $p.recipient )
+                                    #if( $p.recipient.asProfile() )
+                                    <a href="/manageUsers/$p.recipient.id">$p.recipient.formattedName</a>                                    
+                                    #else
+                                    <a href="/organisations/$p.recipient.id">$p.recipient.formattedName</a>                                    
+                                    #end
+                                    #end
+                                </td>
                                 <td>$!p.rule.addValue</td>
                                 <td>$!p.rule.multValue</td>
                                 <td class="text-center action">
@@ -100,6 +108,17 @@
                             <input type="text" name="ruleTitle" required="required" id="ruleTitle" class="required regex form-control" data-regex=".{1,}" />
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="ruleTitle">Reward</label>
+                        <div class="col-md-9">
+                            <select class="form-control select-store required" name="rewardName">
+                                <option value="" selected="selected">- None -</option>
+                                #foreach($store in $applications.rewardStore.pointsBuckets)
+                                <option value="$store.name">$store.title</option>
+                                #end
+                            </select>                            
+                        </div>
+                    </div>                    
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
