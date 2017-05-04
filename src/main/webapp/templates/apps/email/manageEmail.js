@@ -224,6 +224,40 @@ function initAdvanceRecipients() {
     }
 }
 
+function extractRootDomain(url) {
+    var hostname, domain;
+
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }else {
+        hostname = url.split('/')[0];
+    }
+    hostname = hostname.split(':')[0];
+     
+    var splitArr = hostname.split('.'),
+        arrLen = splitArr.length;
+    
+    if (arrLen > 2) {
+        domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
+    }else{
+        domain = hostname;
+    }
+    return domain;
+}
+
+function getValidEmail(emailAddress) {
+    var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
+    if (pattern.test(emailAddress)) {
+        return emailAddress;
+    } else {
+        emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, "$1");
+        if (pattern.test(emailAddress)){
+            return emailAddress;    
+        }
+    }
+    return false;
+}
+
 function initFormDetailEmail() {
     var form = $('form[name=frmDetails]');
 
@@ -238,7 +272,11 @@ function initFormDetailEmail() {
             var subject = $('#subject');
             var subjectStr = subject.val();
             var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
-
+            var domainCurrentSite = $("#domainCurrentSite");
+            var domainCurrentSiteStr = domainCurrentSite.val().trim();
+            var emailToCheck;
+            var errorField;
+            
             flog('manageEmail.js: isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
@@ -257,7 +295,11 @@ function initFormDetailEmail() {
                     if (errorEmail > 0) {
                         error++;
                         showMessage('Email address is invalid!', form);
+                    }else{
+                        emailToCheck = getValidEmail(fromAddressStr);
+                        errorField = fromAddress;
                     }
+                    
                 } else {
                     if (replyToAddressStr != "") {
                         if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
@@ -265,6 +307,8 @@ function initFormDetailEmail() {
                             error++;
                             showErrorField(replyToAddress);
                         }
+                        emailToCheck = getValidEmail(replyToAddressStr);
+                        errorField = replyToAddress;
                     }
                 }
 
@@ -273,7 +317,21 @@ function initFormDetailEmail() {
                     showErrorField(subject);
                     showMessage('Subject should not contain newline', form);
                 }
+                
+                flog("validating email: ", emailToCheck, " against domain: ", domainCurrentSiteStr);
+                if(emailToCheck !== false && validateFuseEmail(emailToCheck)){
+                    var emailDomain = emailToCheck.replace(/.*@/, "");
+                    var rootDomain = extractRootDomain(domainCurrentSiteStr);
+                    flog("emailDomain: ", emailDomain, " rootDomain: ", rootDomain);
+                    if(emailDomain !== rootDomain){
+                        error++;
+                        showErrorField(errorField);
+                        showMessage('The email address must have a domain name the same as the domain on the website selected.', form);   
+                    }
+                }
             }
+           
+            
 
             if ($('#timerExpressionEditor').length > 0) {
                 var editorVal = ace.edit('timerExpressionEditor').getValue();

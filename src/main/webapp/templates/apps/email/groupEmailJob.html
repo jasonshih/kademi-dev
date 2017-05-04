@@ -496,11 +496,32 @@
             <div class="modal-body" id="send-test-body">
             </div>
         </div>
-
+        <input type="hidden" id="domainCurrentSite" /> 
         <script type="text/javascript">
             $(function () {
                 initManageGroupEmail();
-                //initEditEmailPage();
+                //initEditEmailPage();                
+
+                var domains = {
+                    #foreach($website in $page.websites)
+                        #if($foreach.index>  0),#end
+                        #if ($website.domainName) 
+                            '$website.name':'$website.domainName'
+                        #end
+                    #end
+                };
+                
+                function selectDomain(sel){
+                    var selectedValue = $(sel).find(":selected").text();
+                    var domainSelected = domains[selectedValue];
+                    flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
+                    $("#domainCurrentSite").val(domainSelected);
+                }
+                var themeSiteId = $("#themeSiteId");
+                themeSiteId.change(function(){
+                    selectDomain(this);
+                });
+                selectDomain(themeSiteId);
             });
         </script>
     </body>
