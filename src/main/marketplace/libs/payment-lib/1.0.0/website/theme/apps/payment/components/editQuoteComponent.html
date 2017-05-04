@@ -8,12 +8,16 @@
                             <section style="padding-top: 15px">
                                 <header>
                                     <h2>
-                                        $page.title - $page.quoteState
+                                        $page.title - $page.quoteState #if (!$formatter.isNull($page.lead)) - For Lead $page.lead.profile.formattedName #end
                                         <div class="btn-group pull-right">
-                                            <button type="submit" class="btn btn-sm btn-success">
+                                            <!--<button type="submit" class="btn btn-sm btn-success">
                                                 <i class="fa fa-arrow-circle-right"></i> Accept Now
-                                            </button>
+                                            </button>-->
 
+                                            <button data-toggle="modal" data-target="#cloneQuoteModal" type="button" class="btn btn-sm btn-success">
+                                                <i class="fa fa-copy"></i> Clone Quote
+                                            </button>
+                                            
                                             <a href="#" class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Preview
                                             </a>
@@ -32,6 +36,17 @@
                                         <form id="invoice-details-form" action="" method="POST" enctype="multipart/form-data" class="form-horizontal">
                                             <div class="form-group">
                                                 <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-sm-5">
+                                                            <label class="control-label" for="name">Title</label>
+                                                            <input type="text" name="title" class="form-control search-input" placeholder="Quote Title" value="$formatter.ifNull($page.title, '')" />
+                                                        </div>
+
+                                                        <div class="col-sm-7">
+                                                            <label class="control-label" for="name">Description</label>
+                                                            <input type="text" name="description" class="form-control search-input" placeholder="Quote Description" value="$formatter.ifNull($page.description, '')" />
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-sm-3">
                                                             <label class="control-label" for="name">Vendor</label>
@@ -215,6 +230,33 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="cloneQuoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Clone Quote</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="clone-quote-form" class="form-horizontal" method="POST" action="$page.href">
+                        <div class="form-group">
+                            <label for="quoteNumber" class="col-sm-3 control-label">New Quote Number</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control required" required="true" id="quoteNumber" name="number" />
+                            </div>
+                        </div>
+                        
+                        <input type="hidden" name="cloneQuote" value="true" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button id="clone-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit">Clone Quote</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
 </section>
 
 <script type="text/javascript">

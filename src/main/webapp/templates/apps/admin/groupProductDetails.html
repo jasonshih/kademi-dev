@@ -3,8 +3,10 @@
     <div class="col-sm-9">
         <select class="form-control" name="relatedItemId">
             <option value="">[No group selected]</option>
-            #foreach($group in $page.organisation.groups )
-            $formatter.option($group.id, $group.title, $page.relatedItemId)
+            #foreach($group in $page.groups )
+                #if( !$group.deleted )
+                    $formatter.option($group.id, $group.title, $page.relatedItemId)
+                #end
             #end
         </select>
         <span class="text-muted">Select the group this product is for. Then when a user purchases this product they will be added to the group. <a target="_blank" href="/groups/">Manage groups</a></span>

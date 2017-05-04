@@ -12,7 +12,7 @@ Number.prototype.formatMoney = function (c, d, t) {
 (function (w) {
     var columnId = 0;
     var currentQuoteId = 0;
-    
+
     function initEditQuote() {
         initGenericSearch('vendor-search-input');
         initGenericSearch('customer-search-input');
@@ -373,7 +373,7 @@ Number.prototype.formatMoney = function (c, d, t) {
         });
     }
 
-    w.removeRow = function(event, caller) {
+    w.removeRow = function (event, caller) {
         if ($(caller).parents("tr").data("item-id") !== 'NEW') {
             if (confirm("Are you sure you want to delete this item?")) {
 
@@ -405,11 +405,36 @@ Number.prototype.formatMoney = function (c, d, t) {
 
             refreshTotals();
         }
+    };
+
+
+    function initModalForm() {
+        var modal = $("#cloneQuoteModal");
+        var form = modal.find(" form");
+
+        form.forms({
+            callback: function (resp) {
+                if (resp.nextHref) {
+                    window.location.href = "/quotes/" + resp.nextHref;
+                }
+
+                flog("done", resp);
+                modal.modal('hide');
+                Msg.success('Quote is cloned!');
+                reloadQuoteTable();
+            }
+        });
+
+        $("#clone-quote-button").on("click", function () {
+            $("#clone-quote-form").submit();
+        });
     }
-    
-    w.initializeQuoteComponent = function(quoteId) {
+    ;
+
+    w.initializeQuoteComponent = function (quoteId) {
         currentQuoteId = quoteId;
         initEditQuote();
+        initModalForm();
     };
 
 })(this);
