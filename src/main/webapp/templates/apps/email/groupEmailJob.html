@@ -504,10 +504,10 @@
 
                 var domains = {
                     #foreach($website in $page.websites)
-                        #if($foreach.index>  0),#end
-                        #if ($website.domainName) 
-                            '$website.name':'$website.domainName'
+                        #if ($website.domainName && $website.name)
+                            $website.name:'$website.domainName'
                         #end
+                        #if($foreach.index >  0),#end
                     #end
                 };
                 
