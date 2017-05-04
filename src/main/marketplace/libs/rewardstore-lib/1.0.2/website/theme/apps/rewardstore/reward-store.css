@@ -36,15 +36,13 @@
 }
 
 .rewardStoreCategoryProductsComponent .product-item .product-title {
-    font-size: 18px;
-    line-height: 20px;
-    margin: 0 0 10px;
-    font-weight: 400;
-    min-height: 42px;
+    font-size: 25px;
+    margin: 0 0 30px;
+    font-weight: 300;
+    min-height: 55px;
 }
 
 .rewardStoreCategoryProductsComponent .product-item .product-title a {
-    color: #31313f;
 }
 
 .rewardStoreCategoryProductsComponent .product-item .product-content {
@@ -69,7 +67,6 @@
     left: 0;
     right: 68px;
     margin: 0;
-    /*background: #675ca5;*/
 }
 
 .rewardStoreCategoryProductsComponent .product-item .caption a {
@@ -103,6 +100,13 @@
     padding-top: 5px;
 }
 
+#cates-list .cate-item{
+    display: block;
+    margin-bottom: 20px;
+    border: 1px solid #e3e3e6;
+    text-decoration: none;
+}
+
 #cates-list .cate-item .embed-responsive-item {
     background-size: cover;
 }
@@ -111,14 +115,50 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    font-size: 16px;
-    font-weight: 400;
-    padding: 0 20px;
-    line-height: 65px;
+    font-size: 25px;
+    font-weight: 300;
+    padding: 25px 20px;
+    color: #fff;
+    margin-top: 0;
 }
-.list-group .selected{
-    background: #eaeaea;
+
+.rewardStoreCategoriesList .list-group-item,
+.pointsRangeList .list-group-item
+{
+    border-color: #fff;
+    margin-bottom: 0;
 }
+
+.rewardStoreCategoriesList.list-group .selected,
+.pointsRangeList.list-group .selected
+{
+    background: #f6f6f8;
+}
+
+.rewardStoreCategoriesList .list-group-item:focus,
+.pointsRangeList .list-group-item:focus{
+    background: #fff;
+}
+
+.rewardStoreCategoriesList.list-group i.fa-angle-right,
+.pointsRangeList.list-group i.fa-angle-right
+{
+    display: none;
+}
+.rewardStoreCategoriesList.list-group .selected i.fa-angle-right,
+.pointsRangeList.list-group .selected i.fa-angle-right
+{
+    display: inline-block;
+}
+
+.rewardStoreCategoriesList .list-group-item.lead,
+.pointsRangeList .list-group-item.lead
+{
+    padding-left: 0;
+    border-bottom: 1px solid #e2e2e5;
+    margin-bottom: 6px;
+}
+
 #product-search {
     margin-bottom: 20px;
 }

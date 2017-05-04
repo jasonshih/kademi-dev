@@ -1,0 +1,134 @@
+<div class="modal fade" id="addQuoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
+            </div>
+            <div class="modal-body">
+                <form id="add-quote-form" class="form-horizontal" method="POST" action=".">
+                    <div class="form-group">
+                        <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control required" required="true" id="quoteNumber" name="number" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="quoteTitle" class="col-sm-3 control-label">Quote Title</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control required" required="true" id="quoteTitle" name="title" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-3 control-label">Description</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" required="true" id="description" name="description" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="quoteExpiryDate" class="col-sm-3 control-label">Expiry Date</label>
+                        <div class="col-sm-8">
+                            <input type='text' class="form-control date required" id="quoteExpiryDate" name="expiryDate" style="cursor:pointer;"/>
+                        </div>
+                    </div>
+                    <input type="hidden" name="leadId" id="createQuoteLeadId"  />
+                    <input type="hidden" name="createQuoteFolder" value="true" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button id="add-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal -->
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="notes">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="panel-title"> Quotes</div>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
+                            <span class="fa fa-plus"></span> New quote
+                        </a>
+                        <a class="btn btn-xs btn-warning createProposal" data-lead-id="$page.name" href="/proposals/">
+                            <span class="fa fa-plus"></span> New proposal
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="leadQuotesBody">
+                <h5><strong>Quotes Not Assigned to a Proposal</strong></h5>
+                #set( $quotes = $page.quotes )
+                #if( $quotes.size() > 0 )
+                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                    #foreach($quote in $quotes)
+                    #if ($quote.quoteStatus == 'NEW')
+                    <div class="note-item">
+                        <div>
+                            <input type="checkbox" name="quote-for-proposal" value="$quote.id" />
+                            <a href="/quotes/$quote.id">$quote.title</a>
+                            #if($quote.quoteStatus == "NEW")
+                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "ACCEPTED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "INVOICED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "REJECTED")
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
+                            #else
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
+                            #end
+                            <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                        </div>
+                    </div>
+                    #end
+                    #end
+                </div>
+                #else
+                <p>
+                    <span class="label label-warning">No quotes has been added to lead yet</span>
+                </p>
+                #end
+                <hr />
+                <h5><strong>Proposals</strong></h5>
+                #set( $proposals = $page.proposals )
+                #if( $proposals.size() > 0 )
+                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                    #foreach($proposal in $proposals)
+                    <span>Proposal $proposal.id</span>
+                    #foreach($quote in $proposal.quotes)
+                    <div class="note-item">
+                        <div>
+                            <a href="/quotes/$quote.id">$quote.title</a>
+                            #if($quote.quoteStatus == "ASSIGNED")
+                            <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "ACCEPTED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "INVOICED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                            #elseif($quote.quoteStatus == "REJECTED")
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
+                            #else
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
+                            #end
+                            <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                        </div>
+                    </div>
+                    #end
+                    <hr />
+                    #end
+                </div>
+                #else
+                <p>
+                    <span class="label label-warning">No proposals has been added to lead yet</span>
+                </p>
+                #end
+            </div>
+        </div>
+    </div>
+</div>

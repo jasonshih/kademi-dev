@@ -55,10 +55,14 @@ function initPointsRanges() {
         newUrl.removeSearch('startPrice');
         newUrl.removeSearch('endPrice');
 
-        pointRangeItems.filter('.selected').removeClass('selected');
-        item.addClass('selected');
-        newUrl.addSearch('startPrice', item.attr('data-startprice'));
-        newUrl.addSearch('endPrice', item.attr('data-endprice'));
+        if (item.hasClass('selected')){
+            item.removeClass('selected');
+        } else {
+            pointRangeItems.filter('.selected').removeClass('selected');
+            item.addClass('selected');
+            newUrl.addSearch('startPrice', item.attr('data-startprice'));
+            newUrl.addSearch('endPrice', item.attr('data-endprice'));
+        }
 
         window.history.pushState("", document.title, newUrl.toString());
         doProductSearch();
@@ -71,11 +75,16 @@ function initCategories() {
     categoryItems.filter('[href='+window.location.pathName+']').addClass('selected');
     categoryItems.on('click', function (e) {
         e.preventDefault();
-
-        categoryItems.filter('.selected').removeClass('selected');
         var item = $(this);
-        item.addClass('selected');
-        var newUrl = item.attr('href') + window.location.search;
+        var newUrl = "";
+        if (item.hasClass('selected')){
+            item.removeClass('selected');
+            newUrl = item.attr('href').split('/').slice(0,2).join('/') + window.location.search;
+        } else {
+            categoryItems.filter('.selected').removeClass('selected');
+            item.addClass('selected');
+            newUrl = item.attr('href') + window.location.search;
+        }
 
         window.history.pushState("", "", newUrl);
         doProductSearch();
@@ -95,7 +104,13 @@ function doProductSearch() {
             // flog("success", data);
             var fragment = $(data).find("#products-list");
             $("#products-list").replaceWith(fragment);
-            // truncateProductContent();
+            $('.product-title').dotdotdot({
+                height: 55
+            });
+
+            $('.product-content').dotdotdot({
+                height: 60
+            });
             startFrom = 12;
             inifiniteLoader.removeClass('limited').hide();
         },
@@ -122,7 +137,6 @@ function doPaginate() {
 
             if (products.length > 0) {
                 $("#products-list .row").append(products);
-                // truncateProductContent();
                 startFrom = startFrom + 12;
             } else {
                 inifiniteLoader.addClass('limited');

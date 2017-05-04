@@ -20,12 +20,12 @@ $(function () {
     $(window).on('resize', function () {
         clearTimeout(timer);
         timer = setTimeout(function () {
-            $('.cate-title').dotdotdot({
-                height: 44
-            });
-
+            // $('.cate-title').dotdotdot({
+            //     height: 44
+            // });
+            //
             $('.product-title').dotdotdot({
-                height: 26
+                height: 55
             });
 
             $('.product-content').dotdotdot({

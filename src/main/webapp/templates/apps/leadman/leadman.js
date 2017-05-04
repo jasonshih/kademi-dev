@@ -1,13 +1,14 @@
 $(function () {
     flog("leadman.js - init");
-    
+
     window.Msg.iconMode = "fa";
     jQuery.timeago.settings.allowFuture = true;
-    
+
     initNewLeadForm();
     initNewLeadFromEmail();
     initNewQuickLeadForm();
     initNewContactForm();
+    initNewQuoteForm();
     initNewNoteForm();
     initTakeTasks();
     initLeadActions();
@@ -28,16 +29,16 @@ $(function () {
     initLeadmanModal();
     initDotdotdot();
     initSearchFilter();
-    
+
     // init the login form
     $(".login").user({});
-    
-    
+
+
     // Clear down modals when closed
     $(document.body).on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
     });
-    
+
     $(document.body).on('loaded.bs.modal', function (e) {
         flog("modal show");
         var modal = $(e.target).closest(".modal");
@@ -46,7 +47,7 @@ $(function () {
         flog("date picker", modal, modal.find('.date-time'));
         modal.find('.date-time').datetimepicker({
             format: "d/m/Y H:m"
-            //,startDate: date
+                    //,startDate: date
         });
         var form = modal.find(".completeTaskForm");
         flog("complete task form", form);
@@ -117,7 +118,7 @@ function initCloseDealModal() {
 
 function initCancelLeadModal() {
     var cancelLeadModal = $("#modalCancelLead");
-    
+
     cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             callback: function (resp) {
@@ -134,7 +135,7 @@ function initCancelLeadModal() {
             }
         });
     });
-    
+
     $(document.body).on("click", ".btnLeadCancelLead", function (e) {
         e.preventDefault();
         var href = $(e.target).attr("href");
@@ -152,7 +153,7 @@ function initCancelTaskModal() {
             cancelTaskModal.modal("hide");
         }
     });
-    
+
     $(document.body).on("click", ".btnCancelTask", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
@@ -175,7 +176,7 @@ function initImmediateUpdate() {
             t = clearTimeout(t);
             timers[id] = null;
         }
-        
+
         var value = target.val();
         var form = target.parents('.form-horizontal');
         var oldValue = target.data("original-value");
@@ -183,9 +184,9 @@ function initImmediateUpdate() {
             updateField(href, name, value, form);
         }
     };
-    
+
     var timers = {};
-    
+
     $(document.body).on("keyup", ".immediateUpdate", function (e) {
         var target = $(e.target);
         var href = target.data("href");
@@ -196,13 +197,13 @@ function initImmediateUpdate() {
             t = clearTimeout(t);
             timers[id] = null;
         }
-        
+
         timers[id] = setTimeout(function () {
             onchange(e);
         }, 1000);
     });
     $(document.body).on("change", ".immediateUpdate", function (e) {
-        
+
         onchange(e);
     });
     $(document.body).on("dp.change", ".immediateUpdate", function (e) {
@@ -217,20 +218,20 @@ function initTasks() {
         var href = $(this).closest('ul').data('href');
         mAssignTo(name, href, "assignedBlock");
     });
-    
+
     $(document.body).on("click", "#assignToMenuTask a", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         var href = $(this).closest('ul').data('href');
         mAssignTo(name, href, "assignedBlockTask");
     });
-    
+
     $(document.body).on("click", ".btnTaskDelete", function (e) {
         e.preventDefault();
         var link = $(e.target).closest("a");
         var href = link.attr("href");
         var name = getFileName(href);
-        
+
         var c = confirm('Are you sure to cancel this task?');
         if (!c)
             return;
@@ -266,7 +267,7 @@ function initOrgSelector() {
             window.location.reload();
         }
     }
-    
+
     $(".selectOrg").on("click", "a", function (e) {
         e.preventDefault();
         var orgId = $(e.target).closest("a").attr("href");
@@ -278,7 +279,7 @@ function initOrgSelector() {
 
 function initLeadActions() {
     flog("initLeadActions");
-    
+
     $(document.body).on("click", ".closeLead", function (e) {
         flog("initLeadActions click - close");
         e.preventDefault();
@@ -289,33 +290,33 @@ function initLeadActions() {
         //var href = $(this).attr("href");
         //closeLead(href);
     });
-    
+
     $(document.body).on("click", ".updateCreatedDate", function (e) {
         flog("initLeadActions click - updateCreatedDate");
         e.preventDefault();
-        
+
         var a = $(this);
         var href = a.attr("href");
-        
+
         showCreatedDateModal(href, a);
     });
 }
 
 function initCreatedDateModal() {
     flog('initCreatedDateModal');
-    
+
     var modal = $('#updateCreatedDateModal');
     var form = modal.find('form');
-    
+
     form.forms({
         onSuccess: function () {
             var targetId = form.find('[name=leadId]').val();
             var target = $('#' + targetId);
             var createdDate = $('#createDate').val();
             var createdDateISO = moment(createdDate, 'DD/MM/YYYY hh:mm').toISOString();
-            
+
             flog('Update createdDate', target.find('.timeago'), createdDate, createdDateISO);
-            
+
             target.find('.timeago').attr({
                 title: createdDateISO,
                 'data-iso': createdDateISO
@@ -328,18 +329,18 @@ function initCreatedDateModal() {
 
 function showCreatedDateModal(href, link) {
     flog('showCreatedDateModal', href, link);
-    
+
     var modal = $('#updateCreatedDateModal');
     var form = modal.find('form');
-    
+
     var media = link.closest('.media');
     var id = media.attr('id');
     var createDate = media.find('.timeago').attr('data-iso');
-    
+
     form.attr('action', href);
     form.find('[name=leadId]').val(id);
     form.find('[name=createDate]').val(moment(createDate).format('DD/MM/YYYY hh:mm'));
-    
+
     modal.modal('show');
 }
 
@@ -356,48 +357,48 @@ function initNewLeadForm() {
     flog("initNewLeadForm");
     var modal = $('#newLeadModal');
     var form = modal.find('form');
-    
+
     modal.on('hidden.bs.modal', function () {
         form.trigger('reset');
         $('input[name=newOrgId]', form).val('');
     });
-    
+
     $('#newOrgTitle', form).on('change', function () {
         var inp = $(this);
-        
+
         if (inp.val().length < 1) {
             $('input[name=newOrgId]', form).val('');
         }
     });
-    
+
     $('.dropdown-menu [class*="nav-menuAddLead"]').click(function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
         form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
-        
+
     });
-    
+
     $('select[name=funnel]', form).on('change', function (e) {
         var s = $(this);
         flog("funnel change", s.val(), s);
         $('#source-frm').reloadFragment({
             url: window.location.pathname + '?leadName=' + s.val(),
             whenComplete: function () {
-                
+
             }
         });
-        
+
         $('#newLeadStage').reloadFragment({
             url: window.location.pathname + '?leadName=' + s.val(),
         });
     });
-    
+
     $('#source-frm', form).select2({
         tags: "true"
     });
-    
+
     form.forms({
         beforePostForm: function (form, config, data) {
             flog('beforePost', data);
@@ -409,7 +410,7 @@ function initNewLeadForm() {
             flog('done new lead', resp, event);
             var btn = form.find(".clicked");
             //flog("btn", btn, btn.hasClass("btnCreateAndClose"));
-            
+
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
@@ -427,13 +428,13 @@ function initNewLeadForm() {
                         }
                     });
                 }
-                
+
                 if ($('#leadTable').length) {
                     if (typeof doSearchLeadmanPage === 'function') {
                         doSearchLeadmanPage();
                     }
                 }
-                
+
                 if ($('#leadAnalyticsPage').length) {
                     if (typeof loadFunnel === 'function') {
                         loadFunnel();
@@ -458,16 +459,16 @@ function initNewQuickLeadForm() {
     var modal = $('#newQuickLeadModal');
     var form = modal.find('form');
     var formData = null;
-    
+
     $(document.body).on('click', '.dropdown-menu [class*="nav-menuQuickLead"]', function (e) {
         e.preventDefault();
         var funnelName = $(this).attr("href");
-        
+
         modal.find('input[name=quickLead]').val(funnelName);
         formData = new FormData();
-        
+
         modal.modal('show');
-        
+
         if (navigator.geolocation) {
             navigator.geolocation.watchPosition(function (position) {
                 var geoTag = position.coords.latitude + ":" + position.coords.longitude;
@@ -480,31 +481,31 @@ function initNewQuickLeadForm() {
             flog('GeoLocation not supported');
         }
     });
-    
+
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     navigator.getUserMedia = (navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia);
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia);
     window.URL = window.URL || window.webkitURL;
     var audio_context;
     var recorder = null;
-    
+
     if (!navigator.getUserMedia) {
         // IE 11 doesnt support this API for now
         form.find('.voiceMemo').remove();
     }
-    
+
     modal.on('click', '#recordMemo', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         if (btn.hasClass('btn-success')) { // Not Recording
             audio_context = new AudioContext();
             navigator.getUserMedia({audio: true}, function (stream) {
                 var input = audio_context.createMediaStreamSource(stream);
                 recorder = new Recorder(input);
-                
+
                 recorder && recorder.record();
                 btn.removeClass('btn-success').addClass('btn-danger');
                 formData = null;
@@ -519,14 +520,14 @@ function initNewQuickLeadForm() {
             recorder && recorder.stop();
             recorder && recorder.exportWAV(function (blob) {
                 var url = URL.createObjectURL(blob);
-                
+
                 $('.audio-rec', form).html('<audio controls="true" src="' + url + '"></audio>');
                 $('.audio-rec', form).show();
                 flog('Audio URL', url);
                 recorder.clear();
                 formData = new FormData();
                 formData && formData.append('recording', blob, 'recording_' + (new Date()).getTime() + '.wav');
-                
+
                 recorder = null;
                 audio_context.close();
             });
@@ -534,7 +535,7 @@ function initNewQuickLeadForm() {
             $('.recording', modal).hide();
         }
     });
-    
+
     modal.on('hidden.bs.modal', function (e) {
         form.trigger('reset');
         $('.audio-rec', form).empty();
@@ -542,10 +543,10 @@ function initNewQuickLeadForm() {
         $('.progress', form).hide();
         $('.capture-msg', form).empty();
     });
-    
+
     $('#quickInputFile', form).on('change', function (e) {
         var msg = $('.capture-msg', form);
-        
+
         var files = this.files;
         if (files.length > 0) {
             var f = files[0];
@@ -553,32 +554,32 @@ function initNewQuickLeadForm() {
             if (fname.length > 20) {
                 fname = fname.substr(0, 17) + '...';
             }
-            
+
             msg.html(fname + ' | ' + bytesToSize(f.size));
-            
+
         } else {
             msg.empty();
         }
     });
-    
+
     form.on('submit', function (e) {
         e.preventDefault();
         form.find('button[type=submit]').html('<i class="fa fa-spin fa-refresh"></i> Upload').attr('disabled', true);
-        
+
         if (formData == null) {
             formData = new FormData();
         }
-        
+
         var images = $('input[name=image]', form)[0];
         $.each(images.files, function (i, file) {
             formData.append(images.name, file);
         });
-        
+
         formData.append('notes', $('[name=notes]', form).val());
         formData.append('quickLead', $('[name=quickLead]', form).val());
         formData.append('geoLocation', $('[name=geoLocation]', form).val());
         formData.append('assignedToOrgId', $.cookie('org'));
-        
+
         $.ajax({
             type: 'POST',
             url: '/leads/',
@@ -593,8 +594,8 @@ function initNewQuickLeadForm() {
                     if (evt.lengthComputable) {
                         var percentComplete = (evt.loaded / evt.total) * 100;
                         $('.progress-bar', form)
-                            .html(round(percentComplete, 1) + '%')
-                            .css('width', percentComplete + '%');
+                                .html(round(percentComplete, 1) + '%')
+                                .css('width', percentComplete + '%');
                         $('.progress', form).show();
                     }
                 }, false);
@@ -612,7 +613,7 @@ function initNewQuickLeadForm() {
                         }
                     });
                 } else {
-                    
+
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -634,13 +635,13 @@ function bytesToSize(bytes) {
 function initNewContactForm() {
     var modal = $('#newContactModal');
     var form = modal.find('form');
-    
+
     $(".nav-menuAddContact, .createContact").click(function (e) {
         flog("click");
         e.preventDefault();
         modal.modal("show");
     });
-    
+
     form.forms({
         callback: function (resp) {
             var btn = form.find('.clicked');
@@ -649,15 +650,118 @@ function initNewContactForm() {
                     window.location.href = resp.nextHref;
                 }
             }
-            
+
             Msg.info('Created contact');
             modal.modal("hide");
         }
     });
-    
+
     form.find("button").on('click', function (e) {
         form.find(".clicked").removeClass("clicked");
         $(this).addClass("clicked");
+    });
+}
+
+function initNewQuoteForm() {
+    var modal = $('#addQuoteModal');
+    var form = modal.find('form');
+
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    $('body').css('position', 'relative');
+    var opts = {
+        widgetParent: 'body',
+        format: "DD/MM/YYYY HH:mm",
+        minDate: moment()
+    };
+
+    $('#quoteExpiryDate').datetimepicker(opts);
+
+    $('#quoteExpiryDate').on('dp.show', function () {
+        var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
+        if (datepicker.hasClass('bottom')) {
+            var top = $(this).offset().top - $(this).outerHeight();
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        } else if (datepicker.hasClass('top')) {
+            var top = $(this).offset().top - datepicker.outerHeight() - 40;
+            var left = $(this).offset().left;
+            datepicker.css({
+                'top': top + 'px',
+                'bottom': 'auto',
+                'left': left + 'px',
+                'z-index': 9999
+            });
+        }
+    });
+
+    $("#add-quote-button").on("click", function () {
+        form.submit();
+    });
+
+    $(document.body).on('click', '.createQuote', function (e) {
+        e.preventDefault();
+        var href = $(e.target).closest("a").attr("href");
+        form.attr("action", href);
+
+        var leadId = $(e.target).closest("a").data("lead-id");
+
+        $("#createQuoteLeadId").val(leadId);
+
+        modal.modal("show");
+    });
+
+    $(document.body).on('click', '.createProposal', function (e) {
+        e.preventDefault();
+        
+        if ($('input[ name = "quote-for-proposal" ]:checked').length === 0) {
+            alert("You Must at least pick up one quotation for a proposal!");
+
+            return;
+        }
+
+        var proposalData = {
+            "selectedQuotes[]": [],
+            createProposalFolder: true
+        };
+
+        $('input[ name = "quote-for-proposal" ]:checked').each(function () {
+            proposalData['selectedQuotes[]'].push($(this).val());
+        });
+
+        $.ajax({
+            url: "/proposals/",
+            method: "POST",
+            dataType: "json",
+            data: proposalData,
+            success: function (data) {
+                if (data.status) {
+                    Msg.success('Proposal Added Successfully');
+                } else {
+                    if (data.messages.length > 0) {
+                        Msg.error(data.messages[0]);
+                    } else {
+                        Msg.error('Could not create proposal');
+                    }
+                }
+            }
+        });
+    });
+
+    form.forms({
+        onSuccess: function (resp) {
+            if (resp.nextHref) {
+                window.location.href = "/quotes/" + resp.nextHref;
+            }
+
+            Msg.info('Created quote');
+            modal.modal("hide");
+        }
     });
 }
 
@@ -665,14 +769,14 @@ function initNewNoteForm() {
     var modal = $('#newNoteModal');
     var form = modal.find('form');
     form.find('.newLeadForm').hide();
-    
+
     $(document.body).on('click', '.createNote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         form.attr("action", href);
         modal.modal("show");
     });
-    
+
     form.forms({
         onSuccess: function (resp) {
             if (resp.nextHref) {
@@ -680,7 +784,7 @@ function initNewNoteForm() {
             }
             Msg.info('Created note');
             modal.modal("hide");
-            
+
             var leadNotesBody = $('#leadNotesBody');
             var viewProfilePage = $('#view-profile-page');
             if (leadNotesBody.length) {
@@ -695,11 +799,11 @@ function initNewNoteForm() {
             }
         }
     });
-    
+
     form.find('#note_newTask').on('change', function (e) {
         var btn = $(this);
         var checked = btn.is(':checked');
-        
+
         if (checked) {
             form.find('.newLeadForm').show();
             form.find('.required-if-shown').addClass('required');
@@ -708,25 +812,25 @@ function initNewNoteForm() {
             form.find('.required-if-shown').removeClass('required');
         }
     });
-    
+
     var editModal = $('#editNoteModal');
     var editForm = editModal.find('form');
-    
+
     $(document.body).on('click', '.note-edit', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var noteId = btn.attr('href');
         var type = btn.data('type');
         var notes = btn.data('notes');
-        
+
         editModal.find('[name=action]').val(type);
         editModal.find('[name=note]').val(notes);
         editModal.find('[name=editNote]').val(noteId);
-        
+
         editModal.modal('show');
     });
-    
+
     editForm.forms({
         callback: function (resp) {
             if (resp.nextHref) {
@@ -822,7 +926,7 @@ function setLead(href, status, actionDescription) {
 
 function initDateTimePickers() {
     flog('initDateTimePickers');
-    
+
     var pickers = $('.date-time');
     flog("pickers", pickers);
     pickers.datetimepicker({
@@ -832,7 +936,7 @@ function initDateTimePickers() {
 
 function initDateTimePikersForModal() {
     flog('initDateTimePikersForModal');
-    
+
     $('.modal').on('shown.bs.modal loaded.bs.modal', function (e) {
         var pickers = $(this).find('.date-time');
         flog("pickers", pickers);
@@ -856,7 +960,7 @@ function mAssignTo(name, href, blockId) {
                 $("#" + blockId).reloadFragment({
                     url: href || window.location.pathname
                 });
-                
+
                 var dashboard = $('.dash-secondary');
                 if (dashboard.length) {
                     reloadTasks();
@@ -899,7 +1003,7 @@ function updateField(href, fieldName, fieldValue, form) {
 
 function initTopNavSearch() {
     flog('initTopNavSearch');
-    
+
     var txt = $('#lead-search-input');
     var suggestionsWrapper = $('#lead-search-suggestions');
     var backdrop = $('<div />', {
@@ -909,13 +1013,13 @@ function initTopNavSearch() {
         backdrop.addClass('hide');
         suggestionsWrapper.addClass('hide');
     }).appendTo(document.body);
-    
+
     txt.on({
         input: function () {
             typewatch(function () {
                 var text = txt.val().trim();
                 var status = $('#leadSearchFilterButton').find('span').text();
-                
+
                 if (text.length > 0) {
                     doTopNavSearch(text, status, suggestionsWrapper, backdrop);
                 } else {
@@ -928,21 +1032,21 @@ function initTopNavSearch() {
             switch (e.keyCode) {
                 case keymap.ESC:
                     flog('Pressed ESC button');
-                    
+
                     suggestionsWrapper.addClass('hide');
                     backdrop.addClass('hide');
-                    
+
                     e.preventDefault();
                     break;
-                
+
                 case keymap.UP:
                     flog('Pressed UP button');
-                    
+
                     var suggestions = suggestionsWrapper.find('.suggestion');
                     if (suggestions.length > 0) {
                         var actived = suggestions.filter('.active');
                         var prev = actived.prev();
-                        
+
                         actived.removeClass('active');
                         if (prev.length > 0) {
                             prev.addClass('active');
@@ -950,18 +1054,18 @@ function initTopNavSearch() {
                             suggestions.last().addClass('active');
                         }
                     }
-                    
+
                     e.preventDefault();
                     break;
-                
+
                 case keymap.DOWN:
                     flog('Pressed DOWN button');
-                    
+
                     var suggestions = suggestionsWrapper.find('.suggestion');
                     if (suggestions.length > 0) {
                         var actived = suggestions.filter('.active');
                         var next = actived.next();
-                        
+
                         actived.removeClass('active');
                         if (next.length > 0) {
                             next.addClass('active');
@@ -969,29 +1073,29 @@ function initTopNavSearch() {
                             suggestions.first().addClass('active');
                         }
                     }
-                    
+
                     e.preventDefault();
                     break;
-                
+
                 case keymap.ENTER:
                     flog('Pressed DOWN button');
-                    
+
                     var actived = suggestionsWrapper.find('.suggestion').filter('.active');
                     if (actived.length > 0) {
                         var link = actived.find('a').attr('href');
-                        
+
                         window.location.href = link;
                     }
-                    
+
                     e.preventDefault();
                     break;
-                
+
                 default:
                 // Nothing
             }
         }
     });
-    
+
     suggestionsWrapper.on({
         mouseenter: function () {
             suggestionsWrapper.find('.suggestion').removeClass('active');
@@ -1005,7 +1109,7 @@ function initTopNavSearch() {
 
 function doTopNavSearch(query, status, suggestionsWrapper, backdrop) {
     flog('doTopNavSearch', query, status, suggestionsWrapper, backdrop);
-    
+
     $.ajax({
         url: '/leads',
         type: 'GET',
@@ -1016,9 +1120,9 @@ function doTopNavSearch(query, status, suggestionsWrapper, backdrop) {
         dataType: 'JSON',
         success: function (resp) {
             flog('Got search response from server', resp);
-            
+
             var suggestionStr = '';
-            
+
             if (resp && resp.hits && resp.hits.total > 0) {
                 for (var i = 0; i < resp.hits.hits.length; i++) {
                     var suggestion = resp.hits.hits[i];
@@ -1027,12 +1131,12 @@ function doTopNavSearch(query, status, suggestionsWrapper, backdrop) {
                     var companyTitle = suggestion.fields['organisation.title'] ? suggestion.fields['organisation.title'][0] : '';
                     var firstName = suggestion.fields['profile.firstName'] ? suggestion.fields['profile.firstName'][0] : '';
                     var surName = suggestion.fields['profile.surName'] ? suggestion.fields['profile.surName'][0] : '';
-                    
+
                     var a = firstName + ' ' + surName;
                     if (a.trim().length < 1) {
                         a = companyTitle;
                     }
-                    
+
                     suggestionStr += '<li class="suggestion">';
                     suggestionStr += '    <a href="/leads/' + leadId + '">';
                     suggestionStr += '        <span class="email">' + email + '</span>';
@@ -1045,7 +1149,7 @@ function doTopNavSearch(query, status, suggestionsWrapper, backdrop) {
             } else {
                 suggestionStr = '<li>No result.</li>';
             }
-            
+
             suggestionsWrapper.html(suggestionStr).removeClass('hide');
             //backdrop.removeClass('hide');
         },
@@ -1064,7 +1168,7 @@ function initOrgSearch() {
             wildcard: '%QUERY'
         }
     });
-    
+
     $('#newOrgTitle').typeahead({
         highlight: true
     }, {
@@ -1078,26 +1182,26 @@ function initOrgSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{title}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                + '</div>')
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
         }
     });
-    
+
     $('#newOrgTitle').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-        
+
         form.find('input[name=newOrgId]').val(sug.orgId);
     });
 }
 
 function initProfileSearchTable() {
-    
+
     var txt = $('.contact-finder');
     txt.on({
         input: function () {
@@ -1107,7 +1211,7 @@ function initProfileSearchTable() {
             }, 500);
         }
     });
-    
+
     $(document.body).on('click', '#table-result tbody tr', function (e) {
         e.preventDefault();
         var jsonString = $(this).attr('data-json');
@@ -1142,7 +1246,7 @@ function buildTable(resp) {
             html += '</tr>';
         }
     }
-    
+
     $('#table-result').find('tbody').html(html);
     $('#table-result').find('table').removeClass('hide');
 }
@@ -1175,7 +1279,7 @@ function initProfileSearch() {
             wildcard: '%QUERY'
         }
     });
-    
+
     $('#newUserFirstName').typeahead({
         highlight: true
     }, {
@@ -1189,20 +1293,20 @@ function initProfileSearch() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{name}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{email}}</span>'
-                + '</div>')
+                    '<div>'
+                    + '<strong>{{name}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{email}}</span>'
+                    + '</div>')
         }
     });
-    
+
     $('#newUserFirstName').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-        
+
         form.find('input[name=firstName]').val(sug.firstName);
         form.find('input[name=surName]').val(sug.surName);
         form.find('input[name=email]').val(sug.email);
@@ -1213,13 +1317,13 @@ function initProfileSearch() {
 function initAudioPlayer() {
     $('#files').on('click', '.play-audio', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var pId = btn.data('id');
-        
+
         var player = $('#' + pId);
         var playerDom = player[0];
-        
+
         if (playerDom.paused) {
             $('.lead-audio-file').trigger('pause');
             playerDom.play();
@@ -1227,30 +1331,30 @@ function initAudioPlayer() {
             playerDom.pause();
         }
     });
-    
+
     $('.lead-audio-file').on('playing', function (e) {
         var player = $(this);
         var td = player.closest('td');
         var btn = td.find('.play-audio');
-        
+
         btn.find('i').removeClass('fa-play').addClass('fa-pause');
     });
-    
+
     $('.lead-audio-file').on('pause', function (e) {
         var player = $(this);
         var td = player.closest('td');
         var btn = td.find('.play-audio');
-        
+
         btn.find('i').removeClass('fa-pause').addClass('fa-play');
     });
-    
+
     $('.lead-audio-file').on('timeupdate', function (e) {
         var player = $(this);
         var td = player.closest('td');
         var span = td.find('.lead-audio-duration');
         span.html(formatSecondsAsTime(this.currentTime) + '/' + formatSecondsAsTime(this.duration));
     });
-    
+
     /* Populate all players with their time */
     var audioFiles = $('.lead-audio-file');
     audioFiles.on('loadedmetadata', function () {
@@ -1265,21 +1369,21 @@ function formatSecondsAsTime(secs, format) {
     var hr = Math.floor(secs / 3600);
     var min = Math.floor((secs - (hr * 3600)) / 60);
     var sec = Math.floor(secs - (hr * 3600) - (min * 60));
-    
+
     if (min < 10) {
         min = "0" + min;
     }
     if (sec < 10) {
         sec = "0" + sec;
     }
-    
+
     return min + ':' + sec;
 }
 
 function initDeleteFile() {
     $('#files').on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var tr = btn.closest('tr');
         var fname = btn.data('fname');
@@ -1335,7 +1439,7 @@ function initDotdotdot() {
 function initSearchFilter() {
     $('#leadSearchFilterButton').siblings('ul').find('a').on('click', function (e) {
         e.preventDefault();
-        
+
         $('#leadSearchFilterButton').find('span').text(this.innerText);
         var status = this.innerText;
         var txt = $('#lead-search-input');

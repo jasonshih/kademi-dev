@@ -1,26 +1,46 @@
 <div class="proposals-container" id="propsContainer">
-    
+
     #if( $page.accepted )
     <div class="alert alert-info">This proposal has already been accepted</div>
     #end
-    
+
+    <h1>Insurance Proposal</h1>
+
+    <p>Following are the quotations proposed to you based upon your request, please revise carefully and accept the appropriate quotation:</p>
+
     <div class="quotes">
         #foreach($quote in $page.quotes)
-        <div class="well col-md-4 pull-left">
-            <h2>$quote.title</h2>    
-            
-            $page.accepted
-            
-            <h3>Total: $quote.total</h3>
-            <a href="$page.href" class="btn btn-success proposal-accept-btn" data-quote="$quote.id">Accept</a>
+        <div class="col-md-4 pull-left">
+            <div class="well quote clearfix #if ($quote.quoteStatus == 'ACCEPTED') accepted #end">
+                <h2>$quote.title</h2>  
+                <hr />
+                <ul>
+                    #foreach($lineItem in $quote.lineItems)
+                    <li>$lineItem.description</li>
+                    #end
+                </ul>
+                <hr />
+                <h3><span class="total-quotation">Quotation Toal</span>$quote.total<span class="currency">NZD</span></h3>
+                <hr />
+                #if( $page.accepted && $quote.quoteStatus == 'ACCEPTED' )
+                <button class="btn btn-default pull-right" disabled="">Accepted</button>
+                #elseif( $page.accepted )
+                <button class="btn btn-default pull-right" disabled="">Other Quote Accepted</button>
+                #else
+                <a href="$page.href" class="btn btn-success proposal-accept-btn pull-right" data-quote="$quote.id">Accept</a>
+                #end
+            </div>
         </div>
         #end
     </div>
-    
-    <div class="clearfix"></div>
-    
-    <div id="proposal-thankyou" style="display: none">
-        Thanks!
-    </div>    
 </div>
+
+<div class="clearfix"></div>  
+
+<div class="proposal-thankyou" style="display: none">
+
+    <h1>Thank you!</h1>
+
+    <p>We have received your quotation acceptance, we will get back to you shortly.</p>
+</div>  
 
