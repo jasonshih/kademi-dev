@@ -1,4 +1,4 @@
-JBNodes['formGoal'] = {
+JBNodes['acceptQuoteGoal'] = {
     icon: 'fa fa-dollar',
     title: 'Quote accepted',
     type: JB_NODE_TYPE.GOAL,
