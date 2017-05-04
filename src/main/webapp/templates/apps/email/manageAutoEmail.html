@@ -1191,13 +1191,34 @@ return false;</pre>
                 </div>
             </div>
         </div>
-
+        <input type="hidden" id="domainCurrentSite" /> 
         <script type="text/javascript">
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
 
             $(function () {
                 initManageAutoEmail(emailEnabled, smsEnabled);
+                
+                var domains = {
+                    #foreach($website in $rootFolder.websites)
+                        #if ($website.domainName && $website.name)
+                            $website.name:'$website.domainName'
+                        #end
+                        #if($foreach.index >  0),#end
+                    #end
+                };
+                
+                function selectDomain(sel){
+                    var selectedValue = $(sel).find(":selected").text();
+                    var domainSelected = domains[selectedValue];
+                    flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
+                    $("#domainCurrentSite").val(domainSelected);
+                }
+                var themeSiteId = $("#themeSiteId");
+                themeSiteId.change(function(){
+                    selectDomain(this);
+                });
+                selectDomain(themeSiteId);
             });
         </script>
     </body>

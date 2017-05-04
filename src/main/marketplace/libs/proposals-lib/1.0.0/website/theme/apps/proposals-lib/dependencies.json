@@ -1,7 +1,11 @@
 {
     "appDependencies": [
     ],
-    
     "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/proposals-lib/proposals.js"
+            }
+        }
     ]
-}
