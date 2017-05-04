@@ -55,20 +55,35 @@
                         <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
                             <span class="fa fa-plus"></span> New quote
                         </a>
+                        <a class="btn btn-xs btn-warning createProposal" data-lead-id="$page.name" href="/proposals/">
+                            <span class="fa fa-plus"></span> New proposal
+                        </a>
                     </div>
                 </div>
             </div>
             <div id="leadQuotesBody">
+                <h5><strong>Quotes Not Assigned to a Proposal</strong></h5>
                 #set( $quotes = $page.quotes )
                 #if( $quotes.size() > 0 )
                 <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
                     #foreach($quote in $quotes)
                     <div class="note-item">
                         <div>
+                            <input type="checkbox" name="quote-for-proposal" value="$quote.id" />
                             <a href="/quotes/$quote.id">$quote.title</a>
+                            #if($quote.quoteStatus == "NEW")
+                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "ACCEPTED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "INVOICED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "REJECTED")
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteState"></i>
+                            #else
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteState"></i>
+                            #end
                             <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
                         </div>
-                        <div style="white-space: pre-wrap">$!note.notes</div>
                     </div>
                     #end
                 </div>
@@ -77,6 +92,30 @@
                     <span class="label label-warning">No quotes has been added to lead yet</span>
                 </p>
                 #end
+                <hr />
+                <h5><strong>Proposals</strong></h5>
+                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                    #foreach($quote in $quotes)
+                    <div class="note-item">
+                        <div>
+                            <input type="checkbox" name="quote-for-proposal" value="$quote.id" />
+                            <a href="/quotes/$quote.id">$quote.title</a>
+                            #if($quote.quoteStatus == "NEW")
+                            <i class="fa fa-pencil-square-o text-muted" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "ACCEPTED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "INVOICED")
+                            <i class="fa fa-check-circle text-success" title="$quote.quoteState"></i>
+                            #elseif($quote.quoteStatus == "REJECTED")
+                            <i class="fa fa-check-circle text-danger" title="$quote.quoteState"></i>
+                            #else
+                            <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteState"></i>
+                            #end
+                            <abbr title="$formatter.formatDateISO8601($quote.createDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                        </div>
+                    </div>
+                    #end
+                </div>
             </div>
         </div>
     </div>

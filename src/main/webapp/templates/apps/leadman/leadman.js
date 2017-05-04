@@ -699,8 +699,8 @@ function initNewQuoteForm() {
             });
         }
     });
-    
-    $("#add-quote-button").on("click", function() {
+
+    $("#add-quote-button").on("click", function () {
         form.submit();
     });
 
@@ -708,12 +708,49 @@ function initNewQuoteForm() {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         form.attr("action", href);
-        
+
         var leadId = $(e.target).closest("a").data("lead-id");
-        
+
         $("#createQuoteLeadId").val(leadId);
-        
+
         modal.modal("show");
+    });
+
+    $(document.body).on('click', '.createProposal', function (e) {
+        e.preventDefault();
+        
+        if ($('input[ name = "quote-for-proposal" ]:checked').length === 0) {
+            alert("You Must at least pick up one quotation for a proposal!");
+
+            return;
+        }
+
+        var proposalData = {
+            "selectedQuotes[]": [],
+            createProposalFolder: true
+        };
+
+        $('input[ name = "quote-for-proposal" ]:checked').each(function () {
+            proposalData['selectedQuotes[]'].push($(this).val());
+        });
+
+        $.ajax({
+            url: "/proposals/",
+            method: "POST",
+            dataType: "json",
+            data: proposalData,
+            success: function (data) {
+                if (data.status) {
+                    Msg.success('Proposal Added Successfully');
+                } else {
+                    if (data.messages.length > 0) {
+                        Msg.error(data.messages[0]);
+                    } else {
+                        Msg.error('Could not create proposal');
+                    }
+                }
+            }
+        });
     });
 
     form.forms({
@@ -721,7 +758,7 @@ function initNewQuoteForm() {
             if (resp.nextHref) {
                 window.location.href = "/quotes/" + resp.nextHref;
             }
-            
+
             Msg.info('Created quote');
             modal.modal("hide");
         }
