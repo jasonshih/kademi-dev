@@ -1,0 +1,26 @@
+<div class="proposals-container" id="propsContainer">
+    
+    #if( $page.accepted )
+    <div class="alert alert-info">This proposal has already been accepted</div>
+    #end
+    
+    <div class="quotes">
+        #foreach($quote in $page.quotes)
+        <div class="well col-md-4 pull-left">
+            <h2>$quote.title</h2>    
+            
+            $page.accepted
+            
+            <h3>Total: $quote.total</h3>
+            <a href="$page.href" class="btn btn-success proposal-accept-btn" data-quote="$quote.id">Accept</a>
+        </div>
+        #end
+    </div>
+    
+    <div class="clearfix"></div>
+    
+    <div id="proposal-thankyou" style="display: none">
+        Thanks!
+    </div>    
+</div>
+
