@@ -159,7 +159,11 @@
                                         <td class="center">
                                             <div class="checkbox-table">
                                                 <label>
-                                                    <input type="checkbox" name="toRemoveId" value="$p.id" />
+                                                    #if($isDebit)
+                                                        <input type="checkbox" name="toRemoveId" value="D-$p.id" />
+                                                    #else
+                                                        <input type="checkbox" name="toRemoveId" value="C-$p.id" />
+                                                    #end
                                                 </label>
                                             </div>
                                         </td>
