@@ -1,0 +1,43 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor};")
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tbody>
+        <tr>
+            <td class="wrapper" style="padding-left: 10px; padding-right: 10px;">
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tbody>
+                        <tr>
+                            <td class="text-wrapper" style="$baseStyles">
+                                <strong>
+                                    #if ($titleText && $titleText != "")
+                                        $titleText
+                                    #else
+                                        Shipping Address
+                                    #end
+                                </strong>
+                                <ul>
+                                    #if ($event)
+                                        <li>Name: $!event.attributes.shoppingCart.firstName $!event.attributes.shoppingCart.surName</li>
+                                        <li>Phone: $!event.attributes.shoppingCart.phone</li>
+                                        <li>Address: $!event.attributes.shoppingCart.addressLine1</li>
+                                        <li>Address Line 2: $!event.attributes.shoppingCart.addressLine2</li>
+                                        <li>State: $!event.attributes.shoppingCart.addressState</li>
+                                        <li>Postcode: $!event.attributes.shoppingCart.postcode</li>
+                                    #else
+                                        <li>Name: Jame Bond</li>
+                                        <li>Phone: +61 01 2345 6789</li>
+                                        <li>Address: 200 Broadway Av</li>
+                                        <li>Address Line 2: WEST BEACH</li>
+                                        <li>State: SA</li>
+                                        <li>Postcode: 5024</li>
+                                    #end
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>

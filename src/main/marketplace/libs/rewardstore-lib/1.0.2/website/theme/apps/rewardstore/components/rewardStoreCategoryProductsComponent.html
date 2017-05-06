@@ -76,7 +76,7 @@
         <div class="$prodClass product-item">
             <div class="thumbnail product">
                 <div class="product-info">
-                    <h3 class="product-title" title="$p.fields.title.value"><a href="/$p.fields.path.value">$p.fields.title.value</a></h3>
+                    <h3 class="product-title" title="$p.fields.title.value"><a class="text-primary" href="/$p.fields.path.value">$p.fields.title.value</a></h3>
                     <div class="embed-responsive embed-responsive-4by3">
                         <span class="embed-responsive-item" style="background-image: url($bg);"></span>
                     </div>
@@ -96,7 +96,7 @@
     </div>
     #end
 </div>
-<p id="inifiniteLoader" class="text-center" style="display: none;"><img src="/templates/ajax-loader.gif" /></p>
+<p id="inifiniteLoader" class="text-center" style="display: none; padding: 20px 0"><i class="fa fa-circle-o-notch fa-spin fa-2x" aria-hidden="true"></i></p>
 
 
 #else

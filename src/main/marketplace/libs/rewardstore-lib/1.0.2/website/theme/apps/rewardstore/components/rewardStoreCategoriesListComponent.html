@@ -13,17 +13,17 @@
 
 #macro(renderCateList $rewardResource)
 <div class="list-group list-group-root rewardStoreCategoriesList">
-    <span href="#" class="list-group-item active lead">Categories</span>
+    <span href="#" class="list-group-item active lead">Browse by categories</span>
     #foreach($cate in $rewardResource.children.ofType.category)
         #if ($cate.numProducts > 0)
 
             #if($cate.children.ofType.category.size() > 0)
                 <a href="#item-$cate.name" class="#if($page.href == $cate.href) selected #end list-group-item" data-toggle="collapse" data-num-products="$cate.numProducts">
-                    <i class="glyphicon #if($page.href != $cate.href && $page.href.contains($cate.href)) glyphicon-chevron-down #else glyphicon-chevron-right #end"></i>$cate.title
+                    <i class="glyphicon #if($page.href != $cate.href && $page.href.contains($cate.href)) glyphicon-chevron-down #else glyphicon-chevron-right #end"></i>$cate.title <i class="fa fa-angle-right  pull-right"></i>
                 </a>
             #else
                 <a href="$cate.href" class="#if($page.href == $cate.href) selected #end list-group-item" data-num-products="$cate.numProducts">
-                    $cate.title
+                    $cate.title <i class="fa fa-angle-right  pull-right"></i>
                 </a>
             #end
             #if($cate.children.ofType.category.size() > 0)
@@ -33,11 +33,11 @@
                     #foreach($subcat in $subCates)
                         #if ($page.href == $subcat.href)
                             <a href="$subcat.href" class="list-group-item selected">
-                                $subcat.title
+                                $subcat.title <i class="fa fa-angle-right  pull-right"></i>
                             </a>
                         #else
                             <a href="$subcat.href" class="list-group-item">
-                                $subcat.title
+                                $subcat.title <i class="fa fa-angle-right  pull-right"></i>
                             </a>
                         #end
                     #end
