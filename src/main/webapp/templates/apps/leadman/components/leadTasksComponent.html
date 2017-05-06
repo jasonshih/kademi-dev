@@ -7,6 +7,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="clearfix task-item">
+                        #if( $task.completedDate )
+                            <div class="pull-left">
+                                <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                    <s class="task-title">$task.title</s>
+                                </a>
+                            </div>
+                        #else
                             <div class="pull-left">
                                 <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
                                     <span class="task-title">$task.title</span>
@@ -15,17 +22,19 @@
                             <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
                                 <span class="task-edit text-success fa fa-pencil"></span>
                             </a>
+                        #end
                         </h4>
                     </div>
                     <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            #if($task.assignedTo)
-                                Assigned to <strong>$task.assignedTo.formattedName()</strong>
-                            #else
-                                Not assigned
-                            #end
-                            <br />
                             #if( $task.is("open") )
+                                #if($task.assignedTo)
+                                    Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                #else
+                                    Not assigned
+                                #end
+                                <br />
+
                                 <div class="btn-task-panel-wrap pull-right">
                                     <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
                                         <span class="fa fa-remove"></span>
@@ -43,16 +52,18 @@
                                         <span class="fa fa-refresh"></span>
                                     </button>
                                 </div>
-                                <span class="label label-warning">Canceled</span> -
+                                <span class="label label-warning">Canceled</span>
                                 <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                by <strong>$task.assignedTo.formattedName()</strong>
                             #else
                                 <div class="btn-task-panel-wrap pull-right">
-                                    <button class="btn btn-success btn-sm btn-reopen-task" data-taskid="$task.name" title="Re-open task">
+                                    <button class="btn btn-info btn-sm btn-reopen-task" data-taskid="$task.name" title="Re-open task">
                                         <span class="fa fa-refresh"></span>
                                     </button>
                                 </div>
-                                <span class="label label-success">Completed</span> -
+                                <span class="label label-info">Completed</span>
                                 <abbr title="$formatter.formatDateISO8601($task.completedDate)" class="timeago">$task.completedDate</abbr>
+                                by <strong>$task.assignedTo.formattedName()</strong>
                             #end
                             <br />
                             $!task.taskDescription
