@@ -27,7 +27,7 @@
             '    <div class="form-group">' +
             '       <div class="col-md-12">' +
             '           <label>Button color</label>' +
-            '           <input type="text" value="" id="button-color" class="form-control" />' +
+            '           <input type="text" value="" id="button-color" class="form-control button-color-picker" />' +
             '       </div>' +
             '    </div>' +
             '    <div class="form-group">' +
@@ -78,7 +78,7 @@
             '    <div class="form-group">' +
             '       <div class="col-md-12">' +
             '           <label>Text color</label>' +
-            '           <input type="text" value="" id="button-text-color" class="form-control" />' +
+            '           <input type="text" value="" id="button-text-color" class="form-control button-color-text-picker" />' +
             '       </div>' +
             '    </div>' +
             '    <div class="form-group">' +
@@ -263,7 +263,7 @@
             txtFontSize.val(fontSize ? fontSize.replace('px', '') : '');
             
             var cbbFontFamily = form.find('#button-font-family');
-            cbbFontFamily.val(button.css('font-family').toLowerCase().replace(/,\s/g, ','));
+            cbbFontFamily.val(button.css('font-family').toLowerCase().replace(/,\s/g, ',').replace(/"/g, ''));
             
             var btnBold = form.find('.btn-bold');
             var fontWeight = button.css('font-weight');
