@@ -55,14 +55,14 @@
                         <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
                             <span class="fa fa-plus"></span> New quote
                         </a>
-                        <a class="btn btn-xs btn-warning createProposal" data-lead-id="$page.name" href="/proposals/">
+                        <!--<a class="btn btn-xs btn-warning createProposal" data-lead-id="$page.name" href="/proposals/">
                             <span class="fa fa-plus"></span> New proposal
-                        </a>
+                        </a>-->
                     </div>
                 </div>
             </div>
             <div id="leadQuotesBody">
-                <h5><strong>Quotes Not Assigned to a Proposal</strong></h5>
+                <!-- <h5><strong>Quotes Not Assigned to a Proposal</strong></h5>
                 #set( $quotes = $page.quotes )
                 #if( $quotes.size() > 0 )
                 <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
@@ -94,7 +94,7 @@
                     <span class="label label-warning">No quotes has been added to lead yet</span>
                 </p>
                 #end
-                <hr />
+                <hr />-->
                 <h5><strong>Proposals</strong></h5>
                 #set( $proposals = $page.proposals )
                 #if( $proposals.size() > 0 )
