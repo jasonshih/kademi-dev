@@ -6,8 +6,8 @@ $(function () {
         
         flog("click");
         
-        $(".outcome-options:visible").slideUp(300);
-        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300);
+        $(".outcome-options:visible").slideUp(300).find(":input").removeProp("required");
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").prop("required", true);
     });
     
     $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
