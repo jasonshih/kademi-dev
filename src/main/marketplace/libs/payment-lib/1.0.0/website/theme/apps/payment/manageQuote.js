@@ -428,6 +428,23 @@ Number.prototype.formatMoney = function (c, d, t) {
         $("#clone-quote-button").on("click", function () {
             $("#clone-quote-form").submit();
         });
+        
+        var modal = $('#uploadFileModal');
+        var form = modal.find('form');
+
+        $('body').on('click', '.upload-files', function (e) {
+            e.preventDefault();
+
+            modal.modal('show');
+        });
+
+        form.forms({
+            callback: function (resp) {
+                Msg.info('Files Uploaded');
+                reloadFileList();
+                modal.modal('hide');
+            }
+        });
     }
     ;
 
