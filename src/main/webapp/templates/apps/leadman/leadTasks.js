@@ -1,5 +1,15 @@
 $(function () {
-
+    $("body").on("click", ".task-outcome", function (e) {
+        if ($(e.target).is("input")) {
+            return;
+        }
+        
+        flog("click");
+        
+        $(".outcome-options:visible").slideUp(300);
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300);
+    });
+    
     $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
         var t = $(this);
         var uri = new URI(window.location.search);
