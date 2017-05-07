@@ -11,6 +11,7 @@ $(function () {
     initNewQuoteForm();
     initNewNoteForm();
     initTakeTasks();
+    initTaskOutcomes();
     initLeadActions();
     initOrgSelector();
     initDateTimePickers();
@@ -350,6 +351,19 @@ function initTakeTasks() {
         e.preventDefault();
         var href = $(e.target).attr("href");
         takeTask(href);
+    });
+}
+
+function initTaskOutcomes() {
+    $("body").on("click", ".task-outcome", function (e) {
+        if ($(e.target).is("input")) {
+            return;
+        }
+        
+        flog("click");
+        
+        $(".outcome-options:visible").slideUp(300);
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300);
     });
 }
 
