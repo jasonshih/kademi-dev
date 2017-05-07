@@ -372,6 +372,14 @@ Number.prototype.formatMoney = function (c, d, t) {
             }
         });
     }
+    
+    function reloadFileList() {
+        $('#files-body').reloadFragment({
+            whenComplete: function () {
+                
+            }
+        });
+    }
 
     w.removeRow = function (event, caller) {
         if ($(caller).parents("tr").data("item-id") !== 'NEW') {

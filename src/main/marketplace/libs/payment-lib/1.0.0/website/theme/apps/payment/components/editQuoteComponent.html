@@ -113,7 +113,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-body">
                                         <h4 class="page-header">Quote Attachments</h4>
-                                        <div class="form-group attachment-container">
+                                        <div id="files-body" class="form-group attachment-container">
                                             <div class="col-md-12">
                                                 #foreach($attachment in $page.attachments)
                                                 <a href="/_hashes/files/$attachment.fileHash" target="_blank" class="attachment btn btn-default pull-left">$attachment.fileName</a>
