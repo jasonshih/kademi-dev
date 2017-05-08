@@ -6,7 +6,7 @@ $(function () {
         
         flog("click");
         
-        $(".outcome-options:visible").slideUp(300).find(".required:input").each(function() {
+        $(".outcome-options").slideUp(300).find(".required:input").each(function() {
             $(this).data("required", true).removeClass("required");
         });
         
