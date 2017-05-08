@@ -1,0 +1,74 @@
+#if ($userResource)
+<div class="panel-user-wrapper">
+    <div class="panel panel-default panel-user">
+        <div class="panel-body">
+            #set ($ava = '/theme/apps/user/profile-photo.png')
+            #if ($userResource.profilePicHref && $userResource.profilePicHref != "/templates/apps/user/profile.png")
+                #set ($ava = $userResource.profilePicHref)
+            #end
+
+            #set ($name = "User")
+            #if ($user.firstName)
+                #set ($name = $user.firstName)
+            #end
+
+            <div class="profile-avatar-wrapper">
+                <span class="profile-avatar" style="background-image: url($ava)"></span>
+            </div>
+
+            <div class="profile-welcome text-center">
+                <span>Welcome back</span>
+
+                <h3 class="profile-welcome-name"><b>$name</b></h3>
+            </div>
+
+            #if ($rewards != "")
+                #set ($rewards = $rewards.split(","))
+                #set ($rewardsTitles = $rewardsTitles.split(","))
+                #set( $rewardStoreApp = $applications.rewardStore )
+
+                #set ($availablePanel = 0)
+                #foreach($reward in $rewards)
+                    #set( $myPoint = false )
+                    #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
+                    #if ($myPoint)
+                        #set ($availablePanel = $availablePanel + 1)
+                    #end
+                #end
+
+                #if ($availablePanel > 0)
+                    <div class="">
+                        #foreach($reward in $rewards)
+                            #set ($rewardPath = "/" + $reward)
+                            #set( $rewardFolder = $page.find($rewardPath))
+                            #set( $myPoint = false )
+                            #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
+
+                            #if ($myPoint)
+                                #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
+                                <div class="">
+                                    <div class="user-total-points bg-primary text-center">
+                                        <h2>
+                                            <span id="user-total-points" title="$myPointString">$myPointString</span>
+                                        </h2>
+                                        <small>
+                                            #if ($rewardsTitles[$foreach.index] && $rewardsTitles[$foreach.index] != " ")
+                                                $rewardsTitles[$foreach.index]
+                                            #else
+                                                Points
+                                            #end
+                                        </small>
+                                    </div>
+                                </div>
+                            #end
+                        #end
+                    </div>
+                #end
+
+            #end
+        </div>
+    </div>
+</div>
+#else
+<p class="alert alert-warning">Please login to view this panel</p>
+#end

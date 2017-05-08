@@ -14,8 +14,22 @@ Number.prototype.formatMoney = function (c, d, t) {
     var currentQuoteId = 0;
 
     function initEditQuote() {
-        initGenericSearch('vendor-search-input');
-        initGenericSearch('customer-search-input');
+        $("#vendor-search-input").entityFinder({
+            url: '/custs',
+            onSelectSuggestion: function (suggestion, id, actualId, type) {
+                $("#vendorName").val(actualId);
+            }
+        });
+        
+        $("#customer-search-input").entityFinder({
+            url: '/custs',
+            onSelectSuggestion: function (suggestion, id, actualId, type) {
+                $("#customerName").val(actualId);
+            }
+        });
+        
+        //initGenericSearch('vendor-search-input');
+        //initGenericSearch('customer-search-input');
 
         initDateTimePickers();
 

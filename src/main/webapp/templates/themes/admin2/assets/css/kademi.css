@@ -531,52 +531,6 @@ body .form-control::-webkit-input-placeholder {
 /*
     Mkhoudary Modifications for Invoices
 */
-
-.search-wrapper {
-    position: relative;
-}
-
-.search-input {
-    position: relative;
-    z-index: 2;
-}
-
-.search-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background: #fff;
-    border: 1px solid #dfeaf1;
-    padding: 0;
-    min-width: 100%;
-    list-style: none;
-    z-index: 1;
-    margin-top: -1px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-}
-
-.search-suggestions li a {
-    display: block;
-    padding: 5px;
-    color: #000 !important;
-    text-decoration: none !important;
-    white-space: normal;
-}
-
-.search-wrapper .search-suggestions li.active a,
-.search-wrapper .search-suggestions li.active a:hover {
-    background: #f0f5f8;
-}
-
-.search-wrapper .search-suggestions li.no-result {
-    padding: 5px;
-}
-
-.search-wrapper .search-suggestions li + li {
-    border-top: 1px solid #dfeaf1;
-}
-
 .label a {
     color: #fff;
 }

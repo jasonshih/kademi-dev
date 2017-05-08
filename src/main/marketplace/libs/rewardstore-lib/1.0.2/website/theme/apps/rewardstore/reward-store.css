@@ -76,7 +76,7 @@
 }
 
 .rewardStoreCategoryProductsComponent .product-item .caption a i {
-    font-size: 20px;
+    font-size: 28px;
     position: absolute;
     top: 0;
     left: 0;
@@ -87,9 +87,9 @@
 }
 
 .rewardStoreCategoryProductsComponent .product-item .product-price {
-    font-size: 25px;
+    font-size: 24px;
     font-weight: 300;
-    padding-top: 8px;
+    padding-top: 9px;
 }
 
 .rewardStoreCategoryProductsComponent .product-item .product-price small {
@@ -120,6 +120,7 @@
     padding: 25px 20px;
     color: #fff;
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 .rewardStoreCategoriesList .list-group-item,

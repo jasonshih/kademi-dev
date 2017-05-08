@@ -1,4 +1,6 @@
 
+var importTotalCount = 0;
+
 function initUploads() {
     var form = $("#importerWizard form");
 
@@ -36,6 +38,7 @@ function initUploads() {
                 }
             });
             form.find('[type=submit]').addClass('hide');
+            form.find("#result").hide();
             form.find('.beforeImportInfo').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
 
             $.ajax({
@@ -46,15 +49,20 @@ function initUploads() {
                 success: function (resp) {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                            invalidRows--;
+                        }
+                        
                         form.find(".beforeImportInfo").text(
                                 'Data status: New profiles found: ' + resp.data.newImportsCount
                                 + ', existing profiles found: ' + resp.data.existingImportsCount
-                                + ', invalid records: ' + (resp.data.invalidRows ? resp.data.invalidRows.length : 0)
-                                );
+                                + ', invalid records: ' + invalidRows);
 
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
                         if (resp.data.invalidRows) {
+                            form.find("#result").show();
                             for (var i = 0; i < resp.data.invalidRows.length; i++) {
                                 var row = resp.data.invalidRows[i];
                                 flog("row", row);
@@ -65,6 +73,15 @@ function initUploads() {
                                 }
                                 invalidRowsBody.append(tr);
                             }
+                        }
+                        
+                        importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount
+                        if ( importTotalCount > 0 ) {
+                            form.find('#noValidRow').addClass('hide');
+                            form.find('[type=submit]').attr('disabled', false);
+                        } else {
+                            form.find('[type=submit]').attr('disabled', true);
+                            form.find('#noValidRow').removeClass('hide');
                         }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
@@ -311,6 +328,14 @@ function checkProcessStatus() {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount  * 100;
+                        if (isNaN(percentComplete)){
+                            percentComplete = 0;
+                        }
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
+                        
                         jobTitle.text("Process running...");
                     }
 
