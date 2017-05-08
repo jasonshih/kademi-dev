@@ -224,27 +224,6 @@ function initAdvanceRecipients() {
     }
 }
 
-function extractRootDomain(url) {
-    var hostname, domain;
-
-    if (url.indexOf("://") > -1) {
-        hostname = url.split('/')[2];
-    }else {
-        hostname = url.split('/')[0];
-    }
-    hostname = hostname.split(':')[0];
-     
-    var splitArr = hostname.split('.'),
-        arrLen = splitArr.length;
-    
-    domain = hostname;
-    if (arrLen > 2 && (splitArr[arrLen - 2] !== "co" && splitArr[arrLen - 2] !== "com")) {
-        domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
-    }
-    
-    return domain;
-}
-
 function getValidEmail(emailAddress) {
     var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
     if (pattern.test(emailAddress)) {
@@ -321,7 +300,7 @@ function initFormDetailEmail() {
                 flog("validating email: ", emailToCheck, " against domain: ", domainCurrentSiteStr);
                 if(emailToCheck !== false && validateFuseEmail(emailToCheck)){
                     var emailDomain = emailToCheck.replace(/.*@/, "");
-                    var rootDomain = extractRootDomain(domainCurrentSiteStr);
+                    var rootDomain = domainCurrentSiteStr;
                     flog("emailDomain: ", emailDomain, " rootDomain: ", rootDomain);
                     if(emailDomain !== rootDomain){
                         error++;
