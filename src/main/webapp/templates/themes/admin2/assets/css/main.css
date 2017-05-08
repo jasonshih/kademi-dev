@@ -668,45 +668,10 @@ a.bricky:hover {
 .header-default .navbar {
   position: relative !important; }
 
-.search-backdrop {
-  position: fixed;
-  z-index: 1020;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: transparent; }
-
 .navbar-tools .navbar-form .input-group-addon {
   background-color: #f0f5f8; }
-.navbar-tools .search-wrapper {
-  position: relative;
-  z-index: 1; }
-  .navbar-tools .search-wrapper .search-input {
-    width: 300px; }
-  .navbar-tools .search-wrapper .search-suggestions {
-    position: absolute;
-    top: 33px;
-    left: 0;
-    background: #fff;
-    border: 1px solid #dfeaf1;
-    padding: 0;
-    min-width: 100%;
-    list-style: none;
-    white-space: nowrap; }
-    .navbar-tools .search-wrapper .search-suggestions li a {
-      display: block;
-      padding: 5px;
-      color: #000;
-      text-decoration: none !important; }
-      .navbar-tools .search-wrapper .search-suggestions li a .email {
-        color: #337ab7; }
-    .navbar-tools .search-wrapper .search-suggestions li.active a, .navbar-tools .search-wrapper .search-suggestions li.active a:hover {
-      background: #f0f5f8; }
-    .navbar-tools .search-wrapper .search-suggestions li.search-no-result {
-      padding: 5px; }
-    .navbar-tools .search-wrapper .search-suggestions li + li {
-      border-top: 1px solid #dfeaf1; }
+.navbar-tools .search-input {
+  width: 300px !important; }
 .navbar-tools > ul {
   list-style: none; }
   .navbar-tools > ul > li {
@@ -911,6 +876,47 @@ li.dropdown.current-user > a > img {
       width: 28px; }
       .sidebar-search .form-group button i {
         color: #999999; }
+
+/* ---------------------------------------------------------------------- */
+/*	Search input
+/* ---------------------------------------------------------------------- */
+.search-wrapper {
+  position: relative; }
+  .search-wrapper:before, .search-wrapper:after {
+    content: " ";
+    display: table; }
+  .search-wrapper:after {
+    clear: both; }
+
+.search-input {
+  position: relative;
+  z-index: 2; }
+
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #dfeaf1;
+  padding: 0;
+  min-width: 100%;
+  list-style: none;
+  z-index: 1;
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0; }
+  .search-suggestions li a {
+    display: block;
+    padding: 5px;
+    color: #000 !important;
+    text-decoration: none !important;
+    white-space: normal; }
+  .search-suggestions li.active a, .search-suggestions li.active a:hover {
+    background: #f0f5f8; }
+  .search-suggestions li.no-result {
+    padding: 5px; }
+  .search-suggestions li + li {
+    border-top: 1px solid #dfeaf1; }
 
 /* ---------------------------------------------------------------------- */
 /*	Buttons
