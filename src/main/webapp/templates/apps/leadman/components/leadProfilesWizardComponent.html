@@ -122,8 +122,29 @@
 
                         </div>
                         <div class="step-pane sample-pane alert" data-step="5">
-                            <h4>Profiles updated: <span class="updatedProfiles"></span></h4>
-                            <h4>Profiles created: <span class="createdProfiles"></span></h4>
+                            <table class="table table-bordered">
+                                    <tr>
+                                        <th>Number created</th>
+                                        <td class="createdProfiles"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Number updated:</th>
+                                        <td class="updatedProfiles"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Number with errors</th>
+                                        <td class="errorProfiles"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Errors file</th>
+                                        <td class="">
+                                            <a href="" class="errorRows btn btn-warning">
+                                                <span class="fa fa-download"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                </table>
                         </div>
 
                     </div>
