@@ -6,8 +6,15 @@ $(function () {
         
         flog("click");
         
-        $(".outcome-options:visible").slideUp(300).find(":input").removeProp("required");
-        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").prop("required", true);
+        $(".outcome-options:visible").slideUp(300).find(".required:input").each(function() {
+            $(this).data("required", true).removeClass("required");
+        });
+        
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").each(function() {
+            if ($(this).data("required") === true) {
+                $(this).addClass("required");
+            }
+        });
     });
     
     $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
