@@ -81,7 +81,7 @@
         
         this.element.wrap('<div class="search-wrapper"></div>');
         this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
+            '<input type="text" autocomplete="off" class="form-control search-input" value="' + this.element.attr('data-text') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
         )
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
