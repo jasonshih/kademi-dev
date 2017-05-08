@@ -1,0 +1,38 @@
+.search-wrapper {
+    position: relative;
+}
+
+.search-wrapper:before, .search-wrapper:after {
+    content: " ";
+    display: table;
+}
+
+.search-wrapper:after {
+    clear: both;
+}
+
+.search-input {
+    position: relative;
+    z-index: 2;
+}
+
+.search-suggestions {
+    z-index: 1;
+    margin-top: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.search-suggestions li a {
+    display: block;
+    padding: 5px;
+    color: #000 !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.search-suggestions li.no-result {
+    padding: 5px;
+}

@@ -5,6 +5,9 @@
         UP: 38,
         DOWN: 40
     };
+    
+    $.getStyleOnce('/static/jquery.entityFinder/1.0.0/jquery.entityFinder-1.0.0.css');
+    
     var EntityFinder = function (element, options) {
         flog('[EntityFinder]', element, options);
         
@@ -18,6 +21,7 @@
     EntityFinder.DEFAULTS = {
         url: '/manageUsers',
         maxResults: 5,
+        actualId: false,
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
             
@@ -35,12 +39,14 @@
                     }
                     var firstName = item.fields.firstName ? item.fields.firstName[0] : '';
                     var surName = item.fields.surName ? item.fields.surName[0] : '';
+                    var displayText = (firstName || surName) ? firstName + ' ' + surName : '';
+                    displayText = displayText.trim();
                     
-                    suggestionsHtml += '<li class="search-suggestion" data-id="' + userName + '" data-actual-id="' + userId + '" data-type="user">';
+                    suggestionsHtml += '<li class="search-suggestion" data-id="' + userName + '" data-actual-id="' + userId + '" data-type="user" data-text="' + (displayText || userName) + '">';
                     suggestionsHtml += '    <a href="javascript:void(0);">';
                     suggestionsHtml += '        <span>' + userName + '</span> &ndash; <span class="text-info">' + email + '</span>';
-                    if (firstName || surName) {
-                        suggestionsHtml += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
+                    if (displayText) {
+                        suggestionsHtml += '    <br /><small class="text-muted">' + displayText + '</small>';
                     }
                     suggestionsHtml += '    </a>';
                     suggestionsHtml += '</li>';
@@ -49,8 +55,7 @@
                     var orgId = item.fields.orgId[0];
                     var orgTitle = item.fields.title[0];
                     
-                    
-                    suggestionsHtml += '<li class="search-suggestion" data-id="' + orgId + '" data-actual-id="' + id + '" data-type="org">';
+                    suggestionsHtml += '<li class="search-suggestion" data-id="' + orgId + '" data-actual-id="' + id + '" data-type="org" data-text="' + orgTitle + '">';
                     suggestionsHtml += '    <a href="javascript:void(0);">';
                     suggestionsHtml += '        <span>' + orgTitle + '</span>';
                     suggestionsHtml += '        <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
@@ -161,8 +166,10 @@
                 var type = suggestion.attr('data-type');
                 var id = suggestion.attr('data-id');
                 var actualId = suggestion.attr('data-actual-id');
-                self.element.val(id);
-                self.input.val(id);
+                var text = suggestion.attr('data-text');
+                
+                self.element.val(self.options.actualId ? actualId : id);
+                self.input.val(text);
                 
                 if (typeof self.options.onSelectSuggestion === 'function') {
                     self.options.onSelectSuggestion.call(self.element, suggestion, id, actualId, type);

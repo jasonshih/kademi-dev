@@ -673,7 +673,7 @@ a.bricky:hover {
 .navbar-tools .navbar-form .search-wrapper .search-input {
   width: 300px; }
 .navbar-tools .navbar-form .search-wrapper .search-suggestions {
-  max-width: 600px;
+  max-width: 100%;
   min-width: 100%; }
 .navbar-tools > ul {
   list-style: none; }
