@@ -237,11 +237,11 @@ function extractRootDomain(url) {
     var splitArr = hostname.split('.'),
         arrLen = splitArr.length;
     
-    if (arrLen > 2) {
+    domain = hostname;
+    if (arrLen > 2 && (splitArr[arrLen - 2] !== "co" && splitArr[arrLen - 2] !== "com")) {
         domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
-    }else{
-        domain = hostname;
     }
+    
     return domain;
 }
 

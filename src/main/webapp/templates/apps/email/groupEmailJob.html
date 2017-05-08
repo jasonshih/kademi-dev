@@ -502,14 +502,13 @@
                 initManageGroupEmail();
                 //initEditEmailPage();                
 
-                var domains = {
-                    #foreach($website in $page.websites)
-                        #if ($website.domainName && $website.name)
-                            $website.name:'$website.domainName'
-                        #end
-                        #if($foreach.index >  0),#end
-                    #end
-                };
+    var domains = {
+#foreach($website in $page.websites)
+#if ($website.domainName && $website.name)
+#if($foreach.index >  0),#end $website.name:'$website.domainName'
+#end
+#end
+    };
                 
                 function selectDomain(sel){
                     var selectedValue = $(sel).find(":selected").text();
