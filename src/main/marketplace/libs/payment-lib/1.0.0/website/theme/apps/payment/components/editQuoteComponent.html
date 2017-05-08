@@ -8,7 +8,7 @@
                             <section style="padding-top: 15px">
                                 <header>
                                     <h2>
-                                        $page.title - $page.quoteState #if (!$formatter.isNull($page.lead)) - For Lead $page.lead.profile.formattedName #end
+                                        $page.title - $page.quoteState #if (!$formatter.isNull($page.lead)) - For Lead <a href="/leads/$page.lead.id">$page.lead.profile.formattedName</a> #end
                                         <div class="btn-group pull-right">
                                             <!--<button type="submit" class="btn btn-sm btn-success">
                                                 <i class="fa fa-arrow-circle-right"></i> Accept Now
@@ -17,7 +17,7 @@
                                             <button data-toggle="modal" data-target="#cloneQuoteModal" type="button" class="btn btn-sm btn-success">
                                                 <i class="fa fa-copy"></i> Clone Quote
                                             </button>
-                                            
+
                                             <a href="#" class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Preview
                                             </a>
@@ -108,6 +108,22 @@
                                             </div>
                                             <input type="hidden" name="updateQuoteFolder" value="$page.name" />
                                         </form>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        <h4 class="page-header">Quote Attachments</h4>
+                                        <div id="files-body" class="form-group attachment-container">
+                                            <div class="col-md-12">
+                                                #foreach($attachment in $page.attachments)
+                                                <a href="/_hashes/files/$attachment.fileHash" target="_blank" class="attachment btn btn-default pull-left">$attachment.fileName</a>
+                                                #end
+                                                <button class="btn btn-success pull-left upload-files" type="button">
+                                                    <i class="fa fa-plus"></i>
+                                                    Add File
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -230,7 +246,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="cloneQuoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -246,7 +262,7 @@
                                 <input type="text" class="form-control required" required="true" id="quoteNumber" name="number" />
                             </div>
                         </div>
-                        
+
                         <input type="hidden" name="cloneQuote" value="true" />
                     </form>
                 </div>
@@ -256,7 +272,38 @@
                 </div>
             </div>
         </div>
-    </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="uploadFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Upload Files</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" name="addAttachment" value="addAttachment">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <label for="exampleInputFile">File to Attach</label>
+                                <input name="files" type="file" class="required" id="exampleInputFile" />  
+                                <br />
+                                <label for="exampleInputFile">Description</label>
+                                <input name="description" class="form-control" value="" placeholder="Leave Blank to Consider File name as description" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
 </section>
 
 <script type="text/javascript">

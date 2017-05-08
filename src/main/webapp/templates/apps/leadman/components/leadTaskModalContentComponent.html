@@ -186,7 +186,7 @@
                 <div class="row">
                     <ul id="lead-task-outcomes" class="col-md-12">
                         #foreach( $outcome in $page.outcomes ) 
-                        <li>
+                        <li class="task-outcome" data-outcome-id="$outcome.id">
                             <input id="outcome-$outcome.id" type="radio" name="outcome" class="outcome" value="$outcome.id" />
                             <label for="outcome-$outcome.id"><i class="fa fa-cogs"></i><br />$outcome.title</label>
                         </li>
@@ -197,7 +197,7 @@
                 <hr/>
 
                 #foreach( $outcome in $page.outcomes ) 
-                <div id="outcome-$outcome.id-options" class="row outcome-options">
+                <div id="outcome-options-$outcome.id" class="row outcome-options" style="display: none;">
                     #if( $outcome.formPath )
                     #parse( $outcome.formPath )
                     #else
@@ -283,9 +283,11 @@
 </div>
 
 <script type="text/javascript">
-    $('body').on('loaded.bs.modal', '#modalEditTask', function (e) {
-        flog('Modal Loaded');
-        $(".completeTaskDiv").show(300);
-        $(".hideOnComplete").hide(300);
+    $(document).ready(function() {
+        $('body').on('loaded.bs.modal', '#modalEditTask', function (e) {
+            flog('Modal Loaded');
+            $(".completeTaskDiv").show(300);
+            $(".hideOnComplete").hide(300);
+        });
     });
 </script>

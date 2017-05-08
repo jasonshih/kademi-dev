@@ -23,16 +23,6 @@ $.fn.check = function (check) {
 };
 
 /**
- * Make input be focused and set caret at end of value
- * @method focusAtEnd
- */
-$.fn.focusAtEnd = function () {
-    var value = this.val();
-    
-    return this.val('').focus().val(value);
-};
-
-/**
  * Check value or innerHTML of element is empty or not
  * @method isEmpty
  * @return {Boolean}

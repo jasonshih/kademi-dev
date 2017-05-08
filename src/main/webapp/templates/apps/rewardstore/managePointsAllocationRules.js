@@ -34,6 +34,7 @@ function initDeleteRule() {
         confirmDelete(href, title, function () {
             row.hide('fast', function () {
                 row.remove();
+                Msg.success("Successfully deleted.");
             });
         });
     });

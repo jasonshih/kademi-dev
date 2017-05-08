@@ -20,6 +20,17 @@
                     #end
                 </ul>
                 <hr />
+                <h2>Attachments</h2>  
+                <ul>
+                    #if ($quote.attachments.empty)
+                    <li style="color: silver !important;">No Attachments</li>
+                    #else
+                    #foreach($attachment in $quote.attachments)
+                    <li><a target="_blank" href="/_hashes/files/$attachment.fileHash">$attachment.fileName</a></li>
+                    #end
+                    #end
+                </ul>
+                <hr />
                 <h3><span class="total-quotation">Quotation Toal</span>$quote.total<span class="currency">NZD</span></h3>
                 <hr />
                 #if( $page.accepted && $quote.quoteStatus == 'ACCEPTED' )

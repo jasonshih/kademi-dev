@@ -33,8 +33,8 @@ $(function () {
                         Msg.error('An error occured accepting the quote');
                     }
                 } else {
-                    container.find(".proposals-container").slideUp(300);
-                    container.find(".proposal-thankyou").slideDown(300);
+                    $(".proposals-container").slideUp(300);
+                    $(".proposal-thankyou").slideDown(300);
                 }
             },
             error: function (resp) {

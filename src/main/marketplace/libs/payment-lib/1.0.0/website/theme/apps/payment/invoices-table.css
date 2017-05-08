@@ -120,3 +120,7 @@ td .search-suggestions {
 td .search-suggestions li {
     background-color: white;
 }
+
+.attachment {
+    margin-right: 10px;
+}
