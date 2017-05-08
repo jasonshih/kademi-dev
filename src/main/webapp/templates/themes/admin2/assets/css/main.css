@@ -670,8 +670,11 @@ a.bricky:hover {
 
 .navbar-tools .navbar-form .input-group-addon {
   background-color: #f0f5f8; }
-.navbar-tools .search-input {
-  width: 300px !important; }
+.navbar-tools .navbar-form .search-wrapper .search-input {
+  width: 300px; }
+.navbar-tools .navbar-form .search-wrapper .search-suggestions {
+  max-width: 600px;
+  min-width: 100%; }
 .navbar-tools > ul {
   list-style: none; }
   .navbar-tools > ul > li {

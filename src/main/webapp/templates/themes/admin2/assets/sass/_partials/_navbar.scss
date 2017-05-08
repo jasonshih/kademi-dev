@@ -71,8 +71,17 @@
         //}
     }
 
-    .search-input {
-        width: 300px !important;
+    .navbar-form {
+        .search-wrapper {
+            .search-input {
+                width: 300px;
+            }
+
+            .search-suggestions {
+                max-width: 600px;
+                min-width: 100%;
+            }
+        }
     }
 
     & > ul {

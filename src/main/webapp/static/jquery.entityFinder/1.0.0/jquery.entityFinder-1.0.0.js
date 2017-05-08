@@ -18,7 +18,6 @@
     EntityFinder.DEFAULTS = {
         url: '/manageUsers',
         maxResults: 5,
-        extraAjaxData: null,
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
             
@@ -180,15 +179,15 @@
         flog('[EntityFinder] Search: ' + query);
         
         var self = this;
-        var data = $.extend({}, self.options.extraAjaxData, {
-            omni: query
-        });
         
         $.ajax({
             type: 'get',
             dataType: 'json',
             url: self.options.url,
-            data: data,
+            data: {
+                asJson: true,
+                omni: query
+            },
             success: function (resp) {
                 flog('[EntityFinder] Get response from server', resp);
                 
