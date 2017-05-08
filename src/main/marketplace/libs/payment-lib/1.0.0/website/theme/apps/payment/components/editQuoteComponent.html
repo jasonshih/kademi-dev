@@ -53,12 +53,9 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" value="$formatter.ifNull($page.vendor.formattedName, '')" />
+                                                                <input type="hidden" id="vendorName" name="vendorName" value="$formatter.ifNull($page.vendor.id, '')" />
 
-                                                                <div class="search-wrapper">
-                                                                    <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" data-value-input-id="vendor-name" value="$formatter.ifNull($page.vendor.formattedName, '')" />
-                                                                    <input type="hidden" id="vendor-name" name="vendorName" value="$formatter.ifNull($page.vendor.id, '')" />
-                                                                    <ul class="search-suggestions hide" id="vendor-search-input-suggestions"></ul>
-                                                                </div>
                                                             </div>
                                                         </div>
 
@@ -67,11 +64,8 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                                <div class="search-wrapper">
-                                                                    <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" data-value-input-id="customer-name" value="$formatter.ifNull($page.customer.formattedName, '')" />
-                                                                    <input type="hidden" id="customer-name" name="customerName" value="$formatter.ifNull($page.customer.id, '')" />
-                                                                    <ul class="search-suggestions hide" id="customer-search-input-suggestions"></ul>
-                                                                </div>
+                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" value="$formatter.ifNull($page.customer.formattedName, '')" />
+                                                                <input type="hidden" id="customerN" name="customerName" value="$formatter.ifNull($page.customer.id, '')" />
                                                             </div>
                                                         </div>
 
