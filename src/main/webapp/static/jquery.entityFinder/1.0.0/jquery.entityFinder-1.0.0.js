@@ -22,6 +22,7 @@
         url: '/manageUsers',
         maxResults: 5,
         actualId: false,
+        type: '',
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
             
@@ -81,7 +82,7 @@
         
         this.element.wrap('<div class="search-wrapper"></div>');
         this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="' + this.element.attr('data-text') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
+            '<input type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-text') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
         )
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
@@ -193,6 +194,7 @@
             url: self.options.url,
             data: {
                 asJson: true,
+                type: self.options.type,
                 omni: query
             },
             success: function (resp) {
@@ -202,8 +204,14 @@
                     var data = [];
                     for (var i = 0; i < resp.hits.hits.length; i++) {
                         var hit = resp.hits.hits[i];
+                        var isCorrectType = false;
+                        if (self.options.type) {
+                            isCorrectType = hit['_type'] === self.options.type;
+                        } else {
+                            isCorrectType = hit['_type'] === 'profile' || hit['_type'] === 'organisation';
+                        }
                         
-                        if (hit && hit.fields && (hit['_type'] === 'profile' || hit['_type'] === 'organisation') && data.length < self.options.maxResults) {
+                        if (hit && hit.fields && isCorrectType && data.length < self.options.maxResults) {
                             data.push(hit);
                         }
                     }
