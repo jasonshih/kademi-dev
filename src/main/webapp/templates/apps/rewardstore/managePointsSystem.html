@@ -218,9 +218,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tablePointsBody" class="pagination-results">
-                                #set($pointsHistory = $page.history)
-                                #set($pointsPaginator = $formatter.paginator().totalRecords($pointsHistory.size()).pageSize(100))
-                                #foreach($points in $pointsPaginator.records($pointsHistory))
+                                #foreach($points in $page.paginator.records)
                                     <tr>
                                         <td>$points.numPoints</td>
                                         <td>$formatter.formatDateTime($points.issuedDate)</td>
@@ -254,7 +252,7 @@
                             <tfoot id="pointsFooter">
                                 <tr>
                                     <td colspan="6">
-                                        $!pointsPaginator.html
+                                        $!page.paginator.html
                                     </td>
                                 </tr>
                             </tfoot>

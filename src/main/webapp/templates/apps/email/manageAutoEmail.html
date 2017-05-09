@@ -1198,15 +1198,14 @@ return false;</pre>
 
             $(function () {
                 initManageAutoEmail(emailEnabled, smsEnabled);
-                
-                var domains = {
-                    #foreach($website in $rootFolder.websites)
-                        #if ($website.domainName && $website.name)
-                            '$website.name': '$website.domainName'
-                            #if($foreach.index > 0),#end
-                        #end
-                    #end
-                };
+
+var domains = {
+#foreach($website in $rootFolder.websites)
+#if ($website.domainName && $website.name)
+#if($foreach.index >  0),#end $website.name:'$website.domainName'
+#end
+#end
+};
                 
                 function selectDomain(sel){
                     var selectedValue = $(sel).find(":selected").text();
