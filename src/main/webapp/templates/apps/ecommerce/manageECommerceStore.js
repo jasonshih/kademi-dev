@@ -98,7 +98,7 @@ function initEditProductSettings() {
     $("body").on("click", ".product-instore-details", function (e) {
         e.preventDefault();
         var target = $(e.target).closest("a");
-        loadProductInReward(target.attr("href"), productInStoreModal);
+        loadProductInReward(target.prop("href"), productInStoreModal);
     });
     productInStoreModal.find("form").forms({
         callback: function () {
