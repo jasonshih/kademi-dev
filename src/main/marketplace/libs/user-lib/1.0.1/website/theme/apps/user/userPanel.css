@@ -43,7 +43,7 @@
     height: 108px;
     background: #e2e2e5 no-repeat 50% 50%;
     z-index: 2;
-    background-size: contain;
+    background-size: cover;
 }
 
 .panel-user .profile-welcome {
@@ -70,5 +70,5 @@
 
 .panel-user .profile-welcome-name{
     font-size: 28px;
-    margin-top: 12px;
+    margin-top: 2px;
 }
