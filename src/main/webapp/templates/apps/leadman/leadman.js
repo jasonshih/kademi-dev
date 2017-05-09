@@ -1,9 +1,13 @@
 $(function () {
+    initLeadManEvents();
+});
+
+function initLeadManEvents() {
     flog("leadman.js - init");
 
     window.Msg.iconMode = "fa";
     jQuery.timeago.settings.allowFuture = true;
-
+    
     initNewLeadForm();
     initNewLeadFromEmail();
     initNewQuickLeadForm();
@@ -29,11 +33,10 @@ $(function () {
     initLeadmanModal();
     initDotdotdot();
     initSearchFilter();
-
-    // init the login form
+    
+ // init the login form
     $(".login").user({});
-
-
+    
     // Clear down modals when closed
     $(document.body).on('hidden.bs.modal', '.modal', function () {
         $(this).removeData('bs.modal');
@@ -82,7 +85,7 @@ $(function () {
         inp.val(text);
     });
     $('abbr.timeago').timeago();
-});
+}
 
 function initNewLeadFromEmail() {
     $('.nav-menuLeadFromEmail').on('click', function () {
@@ -100,6 +103,7 @@ function initCloseDealModal() {
                     $('#maincontentContainer').reloadFragment({
                         whenComplete: function () {
                             $('abbr.timeago').timeago();
+                            initLeadManEvents();
                         }
                     });
                 }
@@ -128,6 +132,7 @@ function initCancelLeadModal() {
                     $('#maincontentContainer').reloadFragment({
                         whenComplete: function () {
                             $('abbr.timeago').timeago();
+                            initLeadManEvents();
                         }
                     });
                 }
