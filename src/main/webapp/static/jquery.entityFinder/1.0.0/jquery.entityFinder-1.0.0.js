@@ -21,7 +21,7 @@
     EntityFinder.DEFAULTS = {
         url: '/manageUsers',
         maxResults: 5,
-        actualId: false,
+        useActualId: false,
         type: '',
         renderSuggestions: function (data) {
             var suggestionsHtml = '';
@@ -169,7 +169,7 @@
                 var actualId = suggestion.attr('data-actual-id');
                 var text = suggestion.attr('data-text');
                 
-                self.element.val(self.options.actualId ? actualId : id);
+                self.element.val(self.options.useActualId ? actualId : id);
                 self.input.val(text);
                 
                 if (typeof self.options.onSelectSuggestion === 'function') {
