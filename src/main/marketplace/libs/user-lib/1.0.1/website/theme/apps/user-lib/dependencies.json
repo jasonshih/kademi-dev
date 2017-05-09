@@ -3,9 +3,9 @@
   ],
   "dependencies": [
     {
-      "css": {
-        "cssMedia": "all",
-        "path": "/theme/apps/user/profile.css"
+      "less": {
+        "lessMedia": "all",
+        "path": "/theme/apps/user/profile.less"
       }
     },
     {

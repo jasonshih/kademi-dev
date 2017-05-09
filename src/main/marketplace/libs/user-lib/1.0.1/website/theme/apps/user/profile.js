@@ -121,3 +121,15 @@ function updateOptin(on, group) {
         }
     });
 }
+
+function initUserPanel() {
+    $('.panel-user-wrapper .profile-avatar, .panel-user-wrapper .profile-welcome-name').on('click', function (e) {
+        e.preventDefault();
+
+        window.location.pathname = '/profile';
+    })
+}
+
+$(function () {
+    initUserPanel();
+});
