@@ -2,10 +2,13 @@
     <p class="confirm">Your profile photo has been updated</p>
     <div>
         #set ($ava = '/theme/apps/user/profile-icon.png')
+        #set ($bgsize = "background-size: contain")
         #if ($page.photoHref && $page.photoHref != "/templates/apps/user/profile.png")
+        #set ($bgsize = "")
         #set ($ava = $page.photoHref)
         #end
-        <img src="$ava" class="avatar" /><h4>Update photo</h4>
+        <span class="avatar img-circle" style="background: url($ava) no-repeat center; $!bgsize"></span>
+        <h4>Update photo</h4>
         <p>Update your profile image below. This must be less then 10Mb</p>
     </div>
     <button id="btn-change-ava" class="btn btn-success">Change avatar</button>
