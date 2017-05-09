@@ -47,7 +47,9 @@
             self.$inputs = self.$form.find('input');
             self.$selects = self.$form.find('select');
             
-            self.$inputs.filter('[name=parentOrgId]').orgFinder();
+            self.$inputs.filter('[name=parentOrgId]').entityFinder({
+                type: 'organisation'
+            });
 
             self.$form.forms({
                 callback: function (resp) {
@@ -513,7 +515,9 @@ function initEditParent() {
     var txtParent = modal.find('[name=destOrgId]');
     var txtOrgId = modal.find('[name=mergeIds]');
     
-    txtParent.orgFinder();
+    txtParent.entityFinder({
+        type: 'organisation'
+    });
     var txtParentTitle = modal.find('.search-input');
     
     $(document.body).on('click', '.btn-edit-parent', function (e) {
