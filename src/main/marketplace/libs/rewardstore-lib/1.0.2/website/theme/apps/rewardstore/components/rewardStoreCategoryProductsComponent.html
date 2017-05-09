@@ -78,7 +78,7 @@
                 <div class="product-info">
                     <h3 class="product-title" title="$p.fields.title.value"><a class="text-primary" href="/$p.fields.path.value">$p.fields.title.value</a></h3>
                     <div class="embed-responsive embed-responsive-4by3">
-                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                        <a href="/$p.fields.path.value" class="embed-responsive-item" style="background-image: url($bg);"></a>
                     </div>
                     <div class="product-content">$!formatter.truncate( $formatter.encodeAsHtmlEntities($p.fields.content.value.trim()), 65)</div>
                 </div>
