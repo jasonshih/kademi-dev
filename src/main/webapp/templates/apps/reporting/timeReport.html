@@ -24,32 +24,6 @@
             </div>
             <div class="panel-body">
                 <div class="clearfix">
-                    <div class="pull-right">
-                        <div class="dropdown">
-                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-                                Report entity: $page.entity
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$page.name">This organisation - $page.organisation.formattedName</a></li>
-                                <li role="presentation" class="divider"></li>
-                                #foreach( $website in $page.websites)
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/reporting/$website.name/$page.name">website - $website.name</a></li>
-                                #end
-                                #if( $page.orgSelection )
-                                    <li role="presentation" class="divider"></li>
-                                    #foreach( $org in $page.find("/organisations").children.ofType.organisation )
-                                        <li role="presentation">
-                                            <a role="menuitem" class="toggle-select-org" tabindex="-1" href="$org.thisId">
-                                                <span class="fa fa-play-circle"></span>
-                                                $org.title
-                                            </a>
-                                        </li>
-                                    #end
-                                #end
-                            </ul>
-                        </div>
-                    </div>
 
                     <p class="btn-group pull-left">
                         <a class="btn btn-orange dated" href="${page.name}.csv$formatter.queryString">Export as CSV</a>
