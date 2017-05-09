@@ -453,7 +453,7 @@ function initNewUserForm() {
 }
 
 function initOrgFinder() {
-    $('#orgId').entityFinder({
+    $('input#orgId').entityFinder({
         useActualId: true,
         type: 'organisation'
     });
