@@ -330,7 +330,7 @@ function validateFuseEmail(emailAddress) {
     if (pattern.test(emailAddress)) {
         return true;
     } else {
-        emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, '$1');
+        emailAddress = (emailAddress || '').replace(/^.*\<(.*)\>$/, '$1');
         
         return pattern.test(emailAddress);
     }
