@@ -1,0 +1,12 @@
+<div class="well well-avatar profilePic">
+    <p class="confirm">Your profile photo has been updated</p>
+    <div>
+        #set ($ava = '/theme/apps/user/profile-icon.png')
+        #if ($page.photoHref && $page.photoHref != "/templates/apps/user/profile.png")
+        #set ($ava = $page.photoHref)
+        #end
+        <img src="$ava" class="avatar" /><h4>Update photo</h4>
+        <p>Update your profile image below. This must be less then 10Mb</p>
+    </div>
+    <button id="btn-change-ava" class="btn btn-success">Change avatar</button>
+</div>
