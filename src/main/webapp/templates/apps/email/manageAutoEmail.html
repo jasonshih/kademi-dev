@@ -7,7 +7,7 @@
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
         <script type="text/javascript" src="manageEmail.js">//</script>
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
-        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+        <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
         <script src="/static/x-editable/1.5.1/dist/bootstrap3-editable/js/bootstrap-editable.min.js">//</script>
         <script type="text/javascript" src="/static/easy-pie-chart/2.1.7/jquery.easypiechart.min.js">//</script>
@@ -16,9 +16,10 @@
         <link rel="stylesheet" href="/static/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css" />
         <link rel="stylesheet" href="/static/x-editable/1.5.1/dist/bootstrap3-editable/css/bootstrap-editable.css" />
         <script src="/static/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js">//</script>
-        <link href="/templates/apps/admin/dashboard.css" rel="stylesheet" type="text/css"/>
-        <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css"/>
-    </head> bv
+        <link href="/templates/apps/admin/dashboard.css" rel="stylesheet" type="text/css" />
+        <link href="/templates/apps/email/manageAutoEmail.css" rel="stylesheet" type="text/css" />
+    </head>
+    bv
     <body class="manageAutoEmail">
         <small class="pull-right" style="opacity: 0.5">
             <em>
@@ -33,7 +34,8 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="enabledSwitchContainer">
-                            <input class='make-switch' type='checkbox' data-on-color='success' data-size="small" data-off-color='danger' $formatter.ifTrue($page.enabled,'checked','') value="true" id="enabled" />
+                            <input class='make-switch' type='checkbox' data-on-color='success' data-size="small" data-off-color='danger' $formatter.ifTrue($page.enabled,'checked',
+                                '') value="true" id="enabled" />
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -63,7 +65,7 @@
                                 $page.description
                             </p>
                         </div>
-                        <hr/>
+                        <hr />
                         <div class="form-group">
                             <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -107,7 +109,7 @@
                                                                 </div>
                                                                 <div style="bottom: 42.5%; padding: 3px 10px;" class="ktile-footer text-center">
                                                                     Emails Delivered: $formatter.ifNull($stats.deliveredOk, 0)
-                                                                    <br/>
+                                                                    <br />
                                                                     Emails Failed: $formatter.ifNull($stat.failed, 0)
                                                                 </div>
                                                             </div>
@@ -191,7 +193,9 @@
                     <!-- Start content of Notes tab -->
                     <div id="notes" class="tab-pane">
                         <div class="form-group">
-                            <label class="control-label col-md-3 col-lg-2" for="notes">Notes<small>These notes are for internal purposes only.</small></label>
+                            <label class="control-label col-md-3 col-lg-2" for="notes">Notes
+                                <small>These notes are for internal purposes only.</small>
+                            </label>
                             <div class="col-md-9 col-lg-10">
                                 <textarea cols="100" name="notes" id="notes" rows="10" placeholder="" class="form-control">$!page.notes</textarea>
                             </div>
@@ -210,21 +214,21 @@
                                         <select id="eventId" name="eventId" class="form-control">
                                             <option value="-">[Choose]</option>
                                             #foreach($eventId in $mapOfTriggerTypes.keySet())
-                                            $formatter.option($eventId, $eventId, $page.trigger.eventId)
+                                                $formatter.option($eventId, $eventId, $page.trigger.eventId)
                                             #end
                                         </select>
                                     </div>
                                 </div>
                                 #foreach($eventId in $mapOfTriggerTypes.keySet())
-                                #set($triggerType = $mapOfTriggerTypes.get($eventId))
-                                #foreach($optionCode in $triggerType.keySet())
-                                <div class="form-group event-type $eventId" style="display: none">
-                                    <label class="control-label col-md-4" for="$optionCode">$page.triggerOptionLabel($eventId, $optionCode)</label>
-                                    <div class="col-md-8">
-                                        $triggerType.get($optionCode).toHtml($optionCode, $page.triggerOptionValue($optionCode) )
-                                    </div>
-                                </div>
-                                #end
+                                    #set($triggerType = $mapOfTriggerTypes.get($eventId))
+                                    #foreach($optionCode in $triggerType.keySet())
+                                        <div class="form-group event-type $eventId" style="display: none">
+                                            <label class="control-label col-md-4" for="$optionCode">$page.triggerOptionLabel($eventId, $optionCode)</label>
+                                            <div class="col-md-8">
+                                                $triggerType.get($optionCode).toHtml($optionCode, $page.triggerOptionValue($optionCode) )
+                                            </div>
+                                        </div>
+                                    #end
                                 #end
                                 <div class="form-group">
                                     <label class="control-label col-md-4" for="createTimerEnabled">Enable event delay</label>
@@ -239,21 +243,22 @@
                                                     <span class="input-group-addon">Fire the next event after:</span>
                                                     <input type="text" class="text-center form-control" value="$!page.job.timerMultiple" name="timerMultiple" />
                                                     <div class="input-group-btn">
-                                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.job.timerUnit <span class="caret"></span></button>
+                                                        <button data-toggle="dropdown" class="btn btn-default dropdown-toggle timer-unit" type="button">$!page.job.timerUnit
+                                                            <span class="caret"></span></button>
                                                         <ul role="menu" class="dropdown-menu pull-right timer-units">
                                                             #foreach($unit in $page.timerUnits)
-                                                            <li><a href="#">$unit</a></li>
+                                                                <li><a href="#">$unit</a></li>
                                                             #end
                                                         </ul>
                                                     </div>
-                                                    <input type="hidden" name="timerUnitName" class="timer-unit" value="$!page.job.timerUnit"/>
+                                                    <input type="hidden" name="timerUnitName" class="timer-unit" value="$!page.job.timerUnit" />
                                                 </div>
                                             </div>
-                                            <br/>
+                                            <br />
                                             <div class="clearfix">
                                                 <label class="col-md-4">Specify Timer Time  $formatter.checkbox("useTimerTime","useTimerTime", $page.useTimerTime)</label>
                                             </div>
-                                            <br/>
+                                            <br />
                                             #set( $hideTimerStyle = $formatter.ifTrue( $page.useTimerTime , "", "none" ) )
                                             <div class="clearfix" id="fireAtTime" style="display: ${hideTimerStyle};">
                                                 <div class="input-group pull-left">
@@ -266,7 +271,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br/>
+                                            <br />
                                             <div class="clearfix">
                                                 <div class="form-group">
                                                     <label class="control-label col-md-2" for="timerExpressionEditor">MVEL Expression</label>
@@ -276,13 +281,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <br/>
+                                            <br />
                                             <a class="btn btn-info" href="timerTriggers.html">View Queued triggers</a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <hr/>
+                                <hr />
 
                                 <div class="form-group">
                                     <label class="control-label col-md-2" for="conditionScriptMvel">Advanced</label>
@@ -298,7 +303,7 @@
                                         <pre>user.isInGroup('Customers') && event.attributes.comment.length()>=150</pre>
 
                                         <i>To check if a particular product has been purchased</i>
-                                                <pre>foreach( po : event.cart.productOrders ) {
+                                        <pre>foreach( po : event.cart.productOrders ) {
   if( po.product.name == "transfer" ) {
     return true;
   }
@@ -351,7 +356,7 @@ return false;</pre>
                                                     $formatter.option("", "[Please select]", $page.themeSiteId)
                                                     #foreach($website in $rootFolder.websites)
                                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -365,7 +370,9 @@ return false;</pre>
                                             <label class="control-label col-md-4" for="fromAddress">Email from address</label>
                                             <div class="col-md-8">
                                                 <input type="text" name="fromAddress" id="fromAddress" value="$!formatter.htmlEncode( $page.fromAddress )" placeholder="admin@mybusinessname.com" class="form-control" />
-                                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but <b>Reply to address</b> will be required!</small>
+                                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but
+                                                    <b>Reply to address</b> will be required!
+                                                </small>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -396,38 +403,38 @@ return false;</pre>
                                         <div class="add-attachment btn-upload"></div>
                                         <div class="article-wrapper article-sm showed-action attachments-list">
                                             #foreach($att in $page.job.attachments)
-                                            <article>
-                                                <span class="article-name">
-                                                    <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
-                                                </span>
-                                                <aside class="article-action">
-                                                    <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
-                                                </aside>
-                                            </article>
+                                                <article>
+                                                    <span class="article-name">
+                                                        <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                                                    </span>
+                                                    <aside class="article-action">
+                                                        <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                                                    </aside>
+                                                </article>
                                             #end
                                         </div>
                                     </div>
                                 </div>
-                                <hr style="clear: both"/>
+                                <hr style="clear: both" />
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                                        <a href="htmleditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary">
                                             <span class="fa fa-globe"></span> Rich text editor
                                         </a>
-                                        <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary" >
+                                        <a href="edmeditor?fileName=index.html&useHash=true" target="_blank" class="btn btn-primary">
                                             <span class="fa fa-globe"></span> EDM editor
                                             <i class="clip-new" style="color: red"></i>
                                         </a>
-                                        <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary" >
+                                        <a href="texteditor?fileName=index.html" target="_blank" class="btn btn-primary">
                                             <span class="fa fa-pencil"></span> Raw text editor
                                         </a>
-                                        <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info" >
+                                        <a href="http://docs.kademi.co/howtos/getting-started/6-send-emails.html#templating" target="_blank" class="btn btn-info">
                                             <span class="glyphicon glyphicon-question-sign"></span> Help with templating
                                         </a>
 
                                     </div>
                                 </div>
-                                <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="./?rawBodyHtml" >
+                                <iframe id="rawBody" class="well" style="width: 100%; height: 400px; overflow: scroll; margin-top: 15px" src="./?rawBodyHtml">
 
                                 </iframe>
                             </div>
@@ -464,7 +471,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", null )
                                                     #foreach($app in $page.smsProviders )
                                                     $formatter.option( $app.instanceId, $app.getTitle($page.organisation, null), $page.job.smsProvider )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -489,7 +496,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.groupToJoin.name )
                                                     #foreach($group in $page.allGroups)
                                                     $formatter.option( $group.name, $group.name, $page.job.groupToJoin.name )
-                                                    #end
+                                                #end
                                                 </select>
                                                 <div class="help-block with-errors"></div>
                                             </div>
@@ -515,7 +522,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.removeFromGroup.name )
                                                     #foreach($group in $page.allGroups)
                                                     $formatter.option( $group.name, $group.name, $page.job.removeFromGroup.name )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -546,7 +553,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.reward.name )
                                                     #foreach($reward in $page.allRewards)
                                                     $formatter.option( $reward.name, $reward.title, $page.job.reward.name )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -578,7 +585,7 @@ return false;</pre>
                                             <label class="control-label col-md-4" for="groupToJoin">Reason</label>
                                             <div class="col-md-8">
                                                 <input type="text" name="rewardReason" id="rewardReason" value="$!page.job.rewardReason" class="form-control required-when-checked" />
-                                                <br/>
+                                                <br />
                                                 <i>The reason to show the user why they received the points.</i>
                                             </div>
                                         </div>
@@ -593,7 +600,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.rewardPointsTag )
                                                     #foreach($tag in $page.pointsTags)
                                                     $formatter.option( $tag.name, $tag.title, $page.job.rewardPointsTag )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -624,7 +631,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.alert.id )
                                                     #foreach($alert in $page.allAlerts)
                                                     $formatter.option( $alert.id, $alert.title, $page.job.alert.id )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -655,7 +662,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", $page.job.awardCpdForCert.id )
                                                     #foreach($cert in $page.find("/certificates").children.ofType.certificate )
                                                     $formatter.option( $cert.id, $cert.title, $page.job.awardCpdForCert.id )
-                                                    #end
+                                                #end
                                                 </select>
                                                 <small><i>Awarding these points wont issue the certificate, only allocate points/hours towards it</i></small>
                                             </div>
@@ -666,7 +673,7 @@ return false;</pre>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="control-label col-md-4" for="awardCpdModulePath">Module path</label>
-                                            <div class="col-md-8" >
+                                            <div class="col-md-8">
                                                 <input type="text" class="form-control" name="awardCpdModulePath" id="awardCpdModulePath" value="$!page.job.awardCpdModulePath" />
                                                 <small><i>If empty we'll try to get the module from the event, ie if its a module progress event</i></small>
                                             </div>
@@ -677,7 +684,7 @@ return false;</pre>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <label class="control-label col-md-4" for="awardCpdNumPoints">No. points to award</label>
-                                            <div class="col-md-8" >
+                                            <div class="col-md-8">
                                                 <input type="text" class="form-control required-when-checked" name="awardCpdNumPoints" id="awardCpdNumPoints" value="$!page.job.awardCpdNumPoints" />
                                                 <small><i>How many points to award when this event is triggered</i></small>
                                             </div>
@@ -701,8 +708,9 @@ return false;</pre>
                                 </p>
                                 <div class="alert alert-info">
                                     Expressions are evaluated using the MVEL language. The event is the source object, so properties of the event can be referenced directly.
-                                    <br/>
-                                    Please see the <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
+                                    <br />
+                                    Please see the
+                                    <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
@@ -733,7 +741,7 @@ return false;</pre>
                                                     $formatter.option( "", "[Please select]", null )
                                                     #foreach($series in $page.find("/sales").children )
                                                     $formatter.option( $series.name, $series.title, $page.job.dataSeriesName )
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -742,28 +750,28 @@ return false;</pre>
                                 <div class="form-group">
                                     #set($fieldNames = $formatter.newArrayList())
                                     #foreach($a in $page.dataSeriesCustomFields.entrySet())
-                                    #if($fieldNames.add($a.key)) #end
+                                        #if($fieldNames.add($a.key)) #end
                                     #end
                                     #foreach($i in [0..2])
-                                    <div class="customField-wrapper">
-                                        <div class="customField clearfix">
-                                            <label class="control-label col-md-2" for="dataSeriesAmountMvel${i}">Custom Field ${i}</label>
-                                            <div class="col-md-8 input-group input-group-sm">
-                                                <label for="dataSeriesCustomFieldName${i}" class="input-group-addon">Name</label>
-                                                #set($keyName = "")
-                                                #set($keyValue = "")
-                                                #if($fieldNames.size() > $i)
-                                                #set($keyName = $fieldNames[$i])
-                                                #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
-                                                #end
-                                                <input type="text" class="form-control" value="$!keyName" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName"/>
-                                            </div>
-                                            <div class="input-group input-group-sm">
-                                                <label for="dataSeriesCustomFieldMvel${i}" class="input-group-addon">MVEL</label>
-                                                <textarea type="text" class="form-control" id="dataSeriesCustomFieldMvel${i}" name="dataSeriesCustomFieldMvel${i}" data-basename="dataSeriesCustomFieldMvel">$!keyValue</textarea>
+                                        <div class="customField-wrapper">
+                                            <div class="customField clearfix">
+                                                <label class="control-label col-md-2" for="dataSeriesAmountMvel${i}">Custom Field ${i}</label>
+                                                <div class="col-md-8 input-group input-group-sm">
+                                                    <label for="dataSeriesCustomFieldName${i}" class="input-group-addon">Name</label>
+                                                    #set($keyName = "")
+                                                    #set($keyValue = "")
+                                                    #if($fieldNames.size() > $i)
+                                                        #set($keyName = $fieldNames[$i])
+                                                        #set($keyValue = $page.dataSeriesCustomFields.get($keyName))
+                                                    #end
+                                                    <input type="text" class="form-control" value="$!keyName" id="dataSeriesCustomFieldName${i}" name="dataSeriesCustomFieldName${i}" data-basename="dataSeriesCustomFieldName" />
+                                                </div>
+                                                <div class="input-group input-group-sm">
+                                                    <label for="dataSeriesCustomFieldMvel${i}" class="input-group-addon">MVEL</label>
+                                                    <textarea type="text" class="form-control" id="dataSeriesCustomFieldMvel${i}" name="dataSeriesCustomFieldMvel${i}" data-basename="dataSeriesCustomFieldMvel">$!keyValue</textarea>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     #end
                                 </div>
                             </div>
@@ -780,7 +788,8 @@ return false;</pre>
                                     Execute JavaScript
                                 </p>
                                 <div class="alert alert-info">
-                                    Please see the <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
+                                    Please see the
+                                    <a href="http://docs.kademi.co/ref/templating/TriggerEvent.html">TriggerEvent documentation</a> for available trigger event types and their properties
                                 </div>
                                 <div class="form-group">
                                     <div class="row">
@@ -791,7 +800,7 @@ return false;</pre>
                                                     $formatter.option("", "[Please select]", $!page.job.jsWebsite.id)
                                                     #foreach($website in $rootFolder.websites)
                                                     $formatter.option($website.id, $website.name, $!page.job.jsWebsite.id)
-                                                    #end
+                                                #end
                                                 </select>
                                             </div>
                                         </div>
@@ -831,21 +840,23 @@ return false;</pre>
                             </div>
                             <div class="panel-body">
                                 <div class="alert alert-warning">
-                                    Warning: ALL members of selected groups will be emailed each time this trigger is fired. <br/>
+                                    Warning: ALL members of selected groups will be emailed each time this trigger is fired. <br />
                                     <b>If you only want a single recipient from an event use the originating user checkbox above</b>
                                 </div>
 
-                                <button class="btn btn-sm btn-success btn-add-recipient-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add recipient groups</button>
+                                <button class="btn btn-sm btn-success btn-add-recipient-group" data-toggle="modal" data-target="#modal-choose-group">
+                                    <i class="fa fa-plus"></i> Add recipient groups
+                                </button>
                                 <hr class="hr-sm" />
 
                                 <div class="blocks-wrapper recipient">
                                     #foreach($g in $page.groupRecipients)
-                                    <span class="block $g.name">
-                                        <span class="block-name">$g.name</span>
-                                        #if( $page.status == "Draft" )
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">
+                                            <span class="block-name">$g.name</span>
+                                            #if( $page.status == "Draft" )
+                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                            #end
+                                        </span>
                                     #end
                                 </div>
                             </div>
@@ -857,17 +868,19 @@ return false;</pre>
                                 Excluded groups
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-sm btn-success btn-add-excluded-group" data-toggle="modal" data-target="#modal-choose-group"><i class="fa fa-plus"></i> Add excluded groups</button>
+                                <button class="btn btn-sm btn-success btn-add-excluded-group" data-toggle="modal" data-target="#modal-choose-group">
+                                    <i class="fa fa-plus"></i> Add excluded groups
+                                </button>
                                 <hr class="hr-sm" />
 
                                 <div class="blocks-wrapper excluded">
                                     #foreach($g in $page.excludedGroups)
-                                    <span class="block $g.name">
-                                        <span class="block-name">$g.name</span>
-                                        #if( $page.status == "Draft" )
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">
+                                            <span class="block-name">$g.name</span>
+                                            #if( $page.status == "Draft" )
+                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                            #end
+                                        </span>
                                     #end
                                 </div>
                             </div>
@@ -913,36 +926,36 @@ return false;</pre>
                                                             <h6>Expression types</h6>
                                                             <ul>
                                                                 <li>
-                                                                    <b>const</b>: Constants, eg <br/>&lt;const type='Integer'&gt;1&lt;/const&gt;
+                                                                    <b>const</b>: Constants, eg <br />&lt;const type='Integer'&gt;1&lt;/const&gt;
                                                                 </li>
                                                                 <li>
                                                                     <b>comparison</b>:
                                                                     Compare 2 expressions, Eg
-                                                                    <br/>
-                                                                    &lt;comparison operator='EQUALS'&gt;<br/>
-                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br/>
-                                                                    &lt;/comparison&gt;<br/>
+                                                                    <br />
+                                                                    &lt;comparison operator='EQUALS'&gt;<br />
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br />
+                                                                    &lt;const type='Integer'&gt;1&lt;/const&gt;<br />
+                                                                    &lt;/comparison&gt;<br />
                                                                 </li>
                                                                 <li>
                                                                     <b>app-prop</b>: a property from an application. See below for a full list of app-id's and prop-name's. Eg:
-                                                                    <br/>
+                                                                    <br />
                                                                     &lt;app-prop app-id='userApp' prop-name='firstName' /&gt;
                                                                 </li>
                                                             </ul>
                                                         </li>
                                                         #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                                        <li>
-                                                            <h6>$app.instanceId</h6>
-                                                            <ul>
-                                                                #foreach( $expr in $app.allProperties )
-                                                                <li>
-                                                                    <b>$expr.name</b>:
-                                                                    $expr.description
-                                                                </li>
-                                                                #end
-                                                            </ul>
-                                                        </li>
+                                                            <li>
+                                                                <h6>$app.instanceId</h6>
+                                                                <ul>
+                                                                    #foreach( $expr in $app.allProperties )
+                                                                        <li>
+                                                                            <b>$expr.name</b>:
+                                                                            $expr.description
+                                                                        </li>
+                                                                    #end
+                                                                </ul>
+                                                            </li>
                                                         #end
                                                     </ul>
                                                 </div>
@@ -974,7 +987,7 @@ return false;</pre>
                             </div>
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         <div class="table-responsive" id="history-table">
                             <table class="table table-striped table-hover">
@@ -984,51 +997,51 @@ return false;</pre>
                                         <th>Subject</th>
                                         <th colspan="3">Recipient</th>
                                         <th style="text-align: right">Status Date</th>
-                                        <th class="text-center"><input type="checkbox" class="selectAll" name="markIgnored"/></th>
+                                        <th class="text-center"><input type="checkbox" class="selectAll" name="markIgnored" /></th>
                                     </tr>
                                 </thead>
                                 <tbody id="history-table-body">
                                     #foreach($item in $page.history)
-                                    <tr href="/emails/$item.id">
-                                        <td class="icon email-item clickable" title="$!email.status">
-                                            <span class="fa-stack fa-lg">
-                                                #if($item.sendStatus == "c" )
-                                                <i class="fa fa-check-circle fa-stack-1x text-success"></i>
-                                                #else
-                                                <i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>
-                                                #end
-                                                #if($item.ignored)
-                                                <i class="fa fa-ban fa-stack-2x text-danger"></i>
-                                                #end
-                                            </span>
+                                        <tr href="/emails/$item.id">
+                                            <td class="icon email-item clickable" title="$!email.status">
+                                                <span class="fa-stack fa-lg">
+                                                    #if($item.sendStatus == "c" )
+                                                        <i class="fa fa-check-circle fa-stack-1x text-success"></i>
+                                                    #else
+                                                        <i class="fa fa-exclamation-circle fa-stack-1x text-muted"></i>
+                                                    #end
+                                                    #if($item.ignored)
+                                                        <i class="fa fa-ban fa-stack-2x text-danger"></i>
+                                                    #end
+                                                </span>
 
-                                            <abbr title="EmailItemID: $item.id">
-                                                #if( $item.edmConverted )
-                                                <span class="label label-success">Converted</span>
-                                                #else
-                                                <span class="label label-default">$item.statusText</span>
+                                                <abbr title="EmailItemID: $item.id">
+                                                    #if( $item.edmConverted )
+                                                        <span class="label label-success">Converted</span>
+                                                    #else
+                                                        <span class="label label-default">$item.statusText</span>
+                                                    #end
+                                                </abbr>
+                                                #if( $item.sendStatus == "r" )
+                                                    <small>( retry at $formatter.formatDateTime( $item.nextAttempt ) )</small>
+                                                #elseif( $item.sendStatus == "p" )
+                                                    #if( $item.numAttempts )
+                                                        <small>( $item.numAttempts attempts )</small>
+                                                    #end
+                                                #elseif( $item.sendStatus == "f" )
+                                                    <small>( $item.numAttempts attempts; last error $item.lastAttempt.status )</small>
                                                 #end
-                                            </abbr>
-                                            #if( $item.sendStatus == "r" )
-                                            <small>( retry at $formatter.formatDateTime( $item.nextAttempt ) )</small>
-                                            #elseif( $item.sendStatus == "p" )
-                                            #if( $item.numAttempts )
-                                            <small>( $item.numAttempts attempts )</small>
-                                            #end
-                                            #elseif( $item.sendStatus == "f" )
-                                            <small>( $item.numAttempts attempts; last error $item.lastAttempt.status )</small>
-                                            #end
-                                        </td>
+                                            </td>
 
-                                        <td class="email-item clickable">$item.subject</td>
-                                        <td class="email-item clickable">$item.recipientAddress</td>
-                                        <td class="email-item clickable">$!item.recipient.firstName</td>
-                                        <td class="email-item clickable">$!item.recipient.surName</td>
-                                        <td class="email-item clickable">
-                                            <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">$item.sendStatusDate</abbr>
-                                        </td>
-                                        <td class="text-center"><input data-edmid="$item.id" type="checkbox" name="markIgnored"/></td>
-                                    </tr>
+                                            <td class="email-item clickable">$item.subject</td>
+                                            <td class="email-item clickable">$item.recipientAddress</td>
+                                            <td class="email-item clickable">$!item.recipient.firstName</td>
+                                            <td class="email-item clickable">$!item.recipient.surName</td>
+                                            <td class="email-item clickable">
+                                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($item.sendStatusDate)">$item.sendStatusDate</abbr>
+                                            </td>
+                                            <td class="text-center"><input data-edmid="$item.id" type="checkbox" name="markIgnored" /></td>
+                                        </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -1050,7 +1063,7 @@ return false;</pre>
                                 </button>
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
 
                         <div class="table-responsive" id="sms-history-table">
                             <table class="table table-striped table-hover">
@@ -1063,21 +1076,21 @@ return false;</pre>
                                 </thead>
                                 <tbody id="sms-history-table-body">
                                     #foreach($sms in $page.smsHistory)
-                                    <tr href="/smsHistory/$sms.id" class="sms-item clickable">
-                                        <td class="icon" title="$!sms.statusText">
-                                            #if($sms.sendStatus == "s" || $sms.sendStatus == "d")
-                                            <i class="fa fa-check-circle text-success"></i>
-                                            #else
-                                            <i class="fa fa-exclamation-circle text-muted"></i>
-                                            #end
-                                        </td>
-                                        <td>$sms.smsRecipient.phone</td>
-                                        <td>$!sms.smsRecipient.firstName</td>
-                                        <td>$!sms.smsRecipient.surName</td>
-                                        <td>
-                                            <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($sms.sendStatusDate)">$sms.sendStatusDate</abbr>
-                                        </td>
-                                    </tr>
+                                        <tr href="/smsHistory/$sms.id" class="sms-item clickable">
+                                            <td class="icon" title="$!sms.statusText">
+                                                #if($sms.sendStatus == "s" || $sms.sendStatus == "d")
+                                                    <i class="fa fa-check-circle text-success"></i>
+                                                #else
+                                                    <i class="fa fa-exclamation-circle text-muted"></i>
+                                                #end
+                                            </td>
+                                            <td>$sms.smsRecipient.phone</td>
+                                            <td>$!sms.smsRecipient.firstName</td>
+                                            <td>$!sms.smsRecipient.surName</td>
+                                            <td>
+                                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($sms.sendStatusDate)">$sms.sendStatusDate</abbr>
+                                            </td>
+                                        </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -1153,7 +1166,7 @@ return false;</pre>
                     <form method="POST" action="$page.path" class="form-horizontal">
                         <div class="modal-body">
                             <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <input type="hidden" name="sendTest" value="true"/>
+                            <input type="hidden" name="sendTest" value="true" />
                             <div class="form-group">
                                 <label class="col-md-2 control-label" for="name">Recipient</label>
                                 <div class="col-md-8">
@@ -1168,11 +1181,11 @@ return false;</pre>
                                     <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -1191,31 +1204,30 @@ return false;</pre>
                 </div>
             </div>
         </div>
-        <input type="hidden" id="domainCurrentSite" /> 
+        <input type="hidden" id="domainCurrentSite" />
         <script type="text/javascript">
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
+            var domains = {
+                #foreach($website in $rootFolder.websites)
+                    #if ($website.domainName && $website.name)
+                        #if($foreach.index >  0),#end '$website.name':'$website.domainName'
+                    #end
+                #end
+            };
 
             $(function () {
                 initManageAutoEmail(emailEnabled, smsEnabled);
                 
-                var domains = {
-                    #foreach($website in $rootFolder.websites)
-                        #if ($website.domainName && $website.name)
-                            $website.name:'$website.domainName'
-                        #end
-                        #if($foreach.index >  0),#end
-                    #end
-                };
-                
-                function selectDomain(sel){
+                function selectDomain(sel) {
                     var selectedValue = $(sel).find(":selected").text();
                     var domainSelected = domains[selectedValue];
                     flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
                     $("#domainCurrentSite").val(domainSelected);
                 }
+
                 var themeSiteId = $("#themeSiteId");
-                themeSiteId.change(function(){
+                themeSiteId.change(function () {
                     selectDomain(this);
                 });
                 selectDomain(themeSiteId);

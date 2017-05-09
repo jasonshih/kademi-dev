@@ -330,7 +330,7 @@ function validateFuseEmail(emailAddress) {
     if (pattern.test(emailAddress)) {
         return true;
     } else {
-        emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, '$1');
+        emailAddress = (emailAddress || '').replace(/^.*\<(.*)\>$/, '$1');
         
         return pattern.test(emailAddress);
     }
@@ -375,87 +375,88 @@ function initNewUserForm() {
     var modal = $('#modal-new-user');
     var form = modal.find('form');
     var nextAction = 'view';
-
+    
     $('.btn-add-user').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-
+        
         modal.modal('show');
     });
-
+    
     $('.btn-add-and-view').on('click', function (e) {
         nextAction = 'view';
     });
-
+    
     $('.btn-add-and-add').on('click', function (e) {
         nextAction = 'add';
     });
-
+    
     $('.btn-add-and-close').on('click', function (e) {
         nextAction = 'close';
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         resetForm(form);
     });
-
+    
     form.forms({
         validate: function () {
             var newUserEmail = $('#newUserEmail');
             var newUserEmailStr = newUserEmail.val();
-
+            
             if (newUserEmailStr == null || newUserEmailStr == "") {
                 return true; // blank is ok now!
             }
-
+            
             var error = 0;
-
+            
             if (!validateFuseEmail(newUserEmailStr)) {
                 error++;
                 showErrorField(newUserEmail);
             }
-
+            
             if (error === 0) {
                 return true;
             } else {
                 showMessage('Email address is invalid!', form);
-
+                
                 return false;
             }
         },
         callback: function (resp) {
             flog('done new user', resp);
-
+            
             switch (nextAction) {
                 case 'view':
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
-
+                    
                     modal.modal('hide');
                     break;
-
+                
                 case 'close':
                     modal.modal('hide');
                     break;
-
+                
                 case 'add':
                     $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
                     break;
             }
-
+            
             Msg.info('Saved');
         }
     });
-
+    
     initOrgFinder();
-
+    
 }
 
-function initOrgFinder(){
-    $('#orgId').orgFinder({
-       useActualId: true
-   });   
+function initOrgFinder() {
+    $('input#orgId').entityFinder({
+        useActualId: true,
+        type: 'organisation'
+    });
 }
 
 function openFuseModal(modal, callback, time) {
@@ -569,170 +570,13 @@ function initAdminTopNavSearch() {
     flog('initAdminTopNavSearch');
     
     var txt = $('#top-nav-search-input');
-    
-    if (txt.length > 0) {
-        var suggestionsWrapper = $('#top-nav-search-suggestions');
-        var backdrop = $('<div />', {
-            id: 'top-nav-search-backdrop',
-            class: 'hide search-backdrop'
-        }).on('click', function () {
-            backdrop.addClass('hide');
-            suggestionsWrapper.addClass('hide');
-        }).appendTo(document.body);
-        
-        txt.on({
-            input: function () {
-                typewatch(function () {
-                    var text = txt.val().trim();
-                    
-                    if (text.length > 0) {
-                        doAdminTopNavSearch(text, suggestionsWrapper, backdrop);
-                    } else {
-                        suggestionsWrapper.addClass('hide');
-                        backdrop.addClass('hide');
-                    }
-                }, 500);
-            },
-            keydown: function (e) {
-                switch (e.keyCode) {
-                    case keymap.ESC:
-                        flog('Pressed ESC button');
-                        
-                        suggestionsWrapper.addClass('hide');
-                        backdrop.addClass('hide');
-                        
-                        e.preventDefault();
-                        break;
-                    
-                    case keymap.UP:
-                        flog('Pressed UP button');
-                        
-                        var suggestions = suggestionsWrapper.find('.suggestion');
-                        if (suggestions.length > 0) {
-                            var actived = suggestions.filter('.active');
-                            var prev = actived.prev();
-                            
-                            actived.removeClass('active');
-                            if (prev.length > 0) {
-                                prev.addClass('active');
-                            } else {
-                                suggestions.last().addClass('active');
-                            }
-                        }
-                        
-                        e.preventDefault();
-                        break;
-                    
-                    case keymap.DOWN:
-                        flog('Pressed DOWN button');
-                        
-                        var suggestions = suggestionsWrapper.find('.suggestion');
-                        if (suggestions.length > 0) {
-                            var actived = suggestions.filter('.active');
-                            var next = actived.next();
-                            
-                            actived.removeClass('active');
-                            if (next.length > 0) {
-                                next.addClass('active');
-                            } else {
-                                suggestions.first().addClass('active');
-                            }
-                        }
-                        
-                        e.preventDefault();
-                        break;
-                    
-                    case keymap.ENTER:
-                        flog('Pressed DOWN button');
-                        
-                        var actived = suggestionsWrapper.find('.suggestion').filter('.active');
-                        if (actived.length > 0) {
-                            var link = actived.find('a').attr('href');
-                            
-                            window.location.href = link;
-                        }
-                        
-                        e.preventDefault();
-                        break;
-                    
-                    default:
-                    // Nothing
-                }
-            }
-        });
-        
-        suggestionsWrapper.on({
-            mouseenter: function () {
-                suggestionsWrapper.find('.suggestion').removeClass('active');
-                $(this).addClass('active');
-            },
-            mouseleave: function () {
-                $(this).removeClass('active');
-            }
-        }, '.suggestion');
-    }
-}
-
-function doAdminTopNavSearch(query, suggestionsWrapper, backdrop) {
-    flog('doAdminTopNavSearch', query, suggestionsWrapper, backdrop);
-    
-    $.ajax({
-        url: '/manageUsers',
-        type: 'POST',
-        data: {
-            omni: query
-        },
-        dataType: 'JSON',
-        success: function (resp) {
-            flog('Got search response from server', resp);
-            
-            var suggestionStr = '';
-            
-            if (resp && resp.hits && resp.hits.total > 0) {
-                for (var i = 0; i < resp.hits.hits.length; i++) {
-                    var suggestion = resp.hits.hits[i];
-                    suggestionStr += '<li class="suggestion">';
-                    if (suggestion.fields.userId) {
-                        var userId = suggestion.fields.userId[0];
-                        var userName = suggestion.fields.userName[0];
-                        var email;
-                        if (suggestion.fields.email) {
-                            var email = suggestion.fields.email[0];
-                        } else {
-                            email = "";
-                        }
-                        var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
-                        var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
-                        
-                        suggestionStr += '    <a href="/manageUsers/' + userId + '">';
-                        suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
-                        if (firstName || surName) {
-                            suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
-                        }
-                        suggestionStr += '    </a>';
-                    } else if (suggestion.fields.entityId) {
-                        var id = suggestion.fields.entityId[0];
-                        var orgId = suggestion.fields.orgId[0];
-                        var orgTitle = suggestion.fields.title[0];
-                        
-                        var href = "/organisations/" + id + "/edit";
-                        suggestionStr += "    <a href='" + href + "'>";
-                        suggestionStr += '        <span>' + orgTitle + '</span>';
-                        suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
-                        suggestionStr += '    </a>';
-                        
-                    }
-                    suggestionStr += '</li>';
-                }
+    txt.entityFinder({
+        onSelectSuggestion: function (suggestion, id, actualId, type) {
+            if (type === 'user') {
+                window.location.href = '/manageUsers/' + actualId;
             } else {
-                suggestionStr = '<li class="search-no-result">No result.</li>';
+                window.location.href = '/organisations/' + actualId + '/edit';
             }
-            
-            suggestionsWrapper.html(suggestionStr).removeClass('hide');
-            backdrop.removeClass('hide');
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            flog('Error when doAdminTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
         }
     });
 }

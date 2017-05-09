@@ -99,7 +99,7 @@
         <script type="text/javascript" src="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
-        <script type="text/javascript" src="/static/jquery.orgFinder/1.1.0/jquery.orgFinder-1.1.0.js">//</script>
+        <script type="text/javascript" src="/static/jquery.entityFinder/1.0.0/jquery.entityFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/main.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/kademi.js">//</script>
 
@@ -149,11 +149,7 @@
                                 <form class="navbar-form" role="search">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-
-                                        <div class="search-wrapper">
-                                            <input type="text" class="form-control search-input" placeholder="Search for..." id="top-nav-search-input" />
-                                            <ul class="search-suggestions hide" id="top-nav-search-suggestions"></ul>
-                                        </div>
+                                        <input type="text" class="form-control search-input" placeholder="Search for..." id="top-nav-search-input" value="" />
                                     </div>
                                 </form>
                             </li>
@@ -449,7 +445,7 @@
                                         <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
 
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control required" name="orgId" id="orgId" autocomplete="off" value="$page.organisation.id" data-org-title="$page.organisation.formattedName" />
+                                            <input type="text" class="form-control required" name="orgId" id="orgId" autocomplete="off" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -488,7 +484,7 @@
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                             #if(!$groups.isEmpty())
-                                <div class="btn-group btn-group-sm dropup">                                    
+                                <div class="btn-group btn-group-sm dropup">
                                     <button type="submit" class="small btn btn-info btn-add-and-add">Create and add another</button>
                                     <button type="submit" class="small btn btn-info btn-add-and-close">Create and close</button>
                                     <button class="btn btn-success btn-add-and-view" type="submit">Create and view</button>
@@ -500,7 +496,7 @@
             </div>
         </div>
         <!-- end: NEW USER MODAL -->
-        
+
     </body>
     <!-- end: BODY -->
 </html>

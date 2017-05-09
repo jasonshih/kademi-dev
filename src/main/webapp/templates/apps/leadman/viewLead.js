@@ -419,6 +419,7 @@
                             $('#maincontentContainer').reloadFragment({
                                 whenComplete: function () {
                                     $('abbr.timeago').timeago();
+                                    initViewLeadsPage();
                                 }
                             });
                         }
@@ -588,6 +589,10 @@
 
     // Run init functions
     $(function () {
+        initViewLeadsPage();
+    });
+    
+    function initViewLeadsPage(){
         initNewTaskModal();
         initFileUploads();
         initFileNoteEdit();
@@ -600,5 +605,6 @@
         initJobTitleSearch();
         initLeadTimerControls();
         initUnlinkCompany();
-    });
+        initLeadManEvents();
+    }
 })();
