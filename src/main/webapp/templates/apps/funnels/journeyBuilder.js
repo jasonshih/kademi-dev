@@ -843,6 +843,7 @@ function initSideBar() {
     flog('initSideBar');
     
     var rightPanel = $('.right-panel');
+    var nodesPreviewWrapper = rightPanel.find('.nodes-preview-list .row');
     
     var snippetsStr = '';
     for (var nodeType in JBNodes) {
@@ -873,7 +874,12 @@ function initSideBar() {
         snippetsStr += '    </div>';
         snippetsStr += '</div>';
     }
-    rightPanel.find('.nodes-preview-list .row').html(snippetsStr);
+    nodesPreviewWrapper.html(snippetsStr);
+    
+    rightPanel.find('.nodes-preview-list-search input').domFinder({
+        container: nodesPreviewWrapper,
+        items: '.node-preview',
+    });
     
     rightPanel.find('.nodes-preview-list, .panel-body').niceScroll({
         cursorcolor: '#999',
