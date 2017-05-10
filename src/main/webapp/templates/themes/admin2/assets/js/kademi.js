@@ -372,9 +372,41 @@ function initFuseModal(modal, callback) {
 }
 
 function initNewUserForm() {
-    var modal = $('#modal-new-user');
-    var form = modal.find('form');
-    var nextAction = 'view';
+    var modal = $('#modal-new-user'),
+        form = modal.find('form'),
+        newOrganisationBtn = modal.find(".newOrganisation"),
+        existingOrganisationBtn = modal.find(".existingOrganisation"),
+        orgIdTxt = modal.find("#newOrgId"),
+        nextAction = 'view';
+    
+    $(newOrganisationBtn).click(function(){
+       $("#existingOrganisation").addClass("hide");
+       $("#createNewOrganisation").removeClass("hide");
+    });
+
+    $(existingOrganisationBtn).click(function(){
+       $("#existingOrganisation").removeClass("hide");
+       $("#createNewOrganisation").addClass("hide");
+    });
+    
+    
+    form.on("input", ".orgTitle", function (e) {
+        var inp = $(e.target);
+        var val = inp.val();
+        if (val) {
+            // new page
+            var newVal = val.toLowerCase();
+            newVal = newVal.replaceAll("[", "-");
+            newVal = newVal.replaceAll("]", "-");
+            newVal = newVal.replaceAll(" ", "-");
+            newVal = newVal.replaceAll("{", "-");
+            newVal = newVal.replaceAll("}", "-");
+            newVal = newVal.replaceAll("(", "-");
+            newVal = newVal.replaceAll(")", "-");
+            flog("on change", val, newVal);
+            orgIdTxt.val(newVal);
+        }
+    });
     
     $('.btn-add-user').click(function (e) {
         e.preventDefault();

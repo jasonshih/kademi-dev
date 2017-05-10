@@ -15,8 +15,14 @@ JBNodes['startFunnel'] = {
 
     initSettingForm: function (form) {
         form.forms({
-            onSuccess: function () {
-                JBApp.reloadFunnelJson();
+            allowPostForm: false,
+            onValid: function () {
+                var funnelName = form.find('[name=funnelName]').val();
+                var numPoints = form.find('[name=numPoints]').val();
+                JBApp.currentSettingNode.funnelName = funnelName || null;
+                JBApp.currentSettingNode.numPoints = numPoints || null;
+            
+                JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
         });
@@ -30,8 +36,11 @@ JBNodes['startFunnel'] = {
         href = href + node.nodeId + '?mode=settings';
 
         form.load(href + ' #frmDetails > *', function () {
-            form.attr('action', href);
-
+            form.removeAttr('action');
+    
+            form.find('[name=funnelName]').val(node.funnelName || '');
+            form.find('[name=numPoints]').val(node.numPoints || '');
+    
             JBApp.showSettingPanel(node);
         });
     }

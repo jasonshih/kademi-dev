@@ -1,4 +1,5 @@
 var importUrl = 'importLeads';
+var totalCount = 0;
 
 function initUploads() {
     var form = $("#importerWizard form");
@@ -36,7 +37,13 @@ function initUploads() {
                     formData[this.name] = this.value;
                 }
             });
+            
+            form.find('#noValidRow').addClass('hide');
             form.find('[type=submit]').addClass('hide');
+            
+            $('#processing').show(); 
+            $('#result').hide();
+            
             $.ajax({
                 url: importUrl,
                 data: formData,
@@ -45,6 +52,42 @@ function initUploads() {
                 success: function (resp) {
                     if (resp.status && resp.data) {
                         form.find('[type=submit]').removeClass('hide');
+                        
+                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                            invalidRows--;
+                        }
+                        form.find(".beforeImportNumInvalid").text(invalidRows);
+
+                        var invalidRowsBody = form.find(".beforeImportInvalidRows");
+                        invalidRowsBody.html("");
+                        
+                        if( resp.data.invalidRows ) {
+                            for( var i=0; i<resp.data.invalidRows.length; i++) {
+                                var row = resp.data.invalidRows[i];
+                                flog("row", row);
+                                var tr = $("<tr>");
+                                for( var col=0; col<row.length; col++) {
+                                    var colText = row[col];
+                                    tr.append("<td>" + colText + "</td>");
+                                }
+                                invalidRowsBody.append(tr);
+                            }
+                        }
+
+                        totalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
+                        
+                        $('#result').show(); 
+                        $('#processing').hide(); 
+                        if ( OrgImportTotalCount > 0 ) {
+                            form.find('#noValidRow').addClass('hide');
+                            form.find('[type=submit]').attr('disabled', false);
+                        } else {
+                            form.find('[type=submit]').attr('disabled', true);
+                            form.find('#noValidRow').removeClass('hide');
+                        }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
@@ -81,17 +124,27 @@ function initUploads() {
 
             var importerHead = $('#importerHead');
             var selectedCols = [];
-            var requiredFields = [];
+            var requiredField = 'leadProfileEmail';
+            
             importerHead.find('select').each(function () {
-                if (requiredFields.indexOf(this.value) !== -1) {
+                if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
-
-            if (selectedCols.length !== requiredFields.length) {
-                alert('Import data must contain Email and Group column. Please try again!');
+            
+            if (!selectedCols.length){
+                Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
+                return false;
+            }
+
+            if (selectedCols.indexOf(requiredField) === -1) {
+                // mode is auto and no default group selected and no group field selected
+                Msg.error('Please indicate "Lead Profile Email field" in data table');
+                importerHead.find('select').first().trigger('focus');
+                evt.preventDefault();
+                return false;
             }
         }
     });
@@ -191,19 +244,43 @@ function checkProcessStatus() {
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        if (typeof state.updatedProfiles !== 'undefined') {
-                            $('#myWizard').find('.updatedProfiles').text(state.updated)
+                        if (typeof state.updatedCount !== 'undefined') {
+                            $('#myWizard').find('.updatedCount').text(state.updatedCount)
                         }
-                        if (typeof state.createdProfiles !== 'undefined') {
-                            $('#myWizard').find('.createdProfiles').text(state.created)
+                        if (typeof state.createdCount !== 'undefined') {
+                            $('#myWizard').find('.createdCount').text(state.createdCount)
                         }
+                        if (typeof state.errorCount !== 'undefined') {
+                            $('#myWizard').find('.errorCount').text(state.errorCount)
+                        }
+                        flog("finished state", state, state.resultHash);
+                        if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
+                            var href = "/_hashes/files/" + state.resultHash + ".csv";
+                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                        }else{
+                            $('#myWizard').find('.errorRows').closest("a").hide();
+                        }
+                        
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+                        
                         $('#myWizard').wizard("next");
                         $('#lead-tbody').reloadFragment();
+                        
+                        totalCount = 0;
+                        
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / totalCount * 100;
+                        if (isNaN(percentComplete)){
+                            percentComplete = 0;
+                        }
+                        percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
+                        
                         jobTitle.text("Process running...");
                     }
 

@@ -10,7 +10,7 @@
                     <label for="funnelName">Journey</label>
                     <select name="funnelName" id="funnelName" class="form-control required-if-shown">
                         $formatter.option("", "[Please select]", $page.node.funnelName)
-                        #foreach($funnel in $page.funnels)
+                        #foreach($funnel in $page.find("/funnels").children)
                         $formatter.option($funnel.name, $funnel.title, $page.node.funnelName)
                         #end
                     </select>
