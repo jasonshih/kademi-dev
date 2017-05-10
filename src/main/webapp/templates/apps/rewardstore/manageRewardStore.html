@@ -219,7 +219,7 @@
                                                         "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
                                                 </td>
                                                 <td>
-                                                    <a href="$p.productId" class="product-inreward-details">
+                                                    <a href="$p.productId/" class="product-inreward-details">
                                                         <span class="glyphicon glyphicon-cog"></span>
                                                     </a>
                                                 </td>
@@ -278,7 +278,7 @@
                 $("#table-products").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
                     var target = $(e.target).closest("a");
-                    loadProductInReward(target.attr("href"), productInRewardModal);
+                    loadProductInReward(target.prop("href"), productInRewardModal);
                 });
                 productInRewardModal.find("form").forms({
                     callback: function () {

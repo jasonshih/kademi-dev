@@ -51,7 +51,7 @@
 #set( $leadsPage = $page.find("/leads") )
 #set( $kpis = $page.find("/sales").availableKpis )
 
-#if($userResource.hasRole('Sales'))
+#if(false && $userResource.hasRole('Sales'))
 <div class="fw-boxed hidden-xs">
     <div class="panel panel-default ">
         <div class="row">
@@ -128,7 +128,32 @@
 </div>
 #end
 
-#if($leadsPage.teamStats)
+
+#parse('/theme/apps/leadman/leadManMacros.html')
+#if($userResource.hasRole('Sales'))
+<div class="">
+    <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
+        #set( $leads = $leadsPage.myLeads )
+
+        <ul class="list-group leadsList" id="dashLeadsList">
+            #foreach($lead in $leads)
+                <li class="list-group-item">
+                    #showLead($lead)
+                </li>
+            #end
+        </ul>
+        #if( $leads.size() > 0 )
+
+        #else
+            <p class="lead">Couldnt find any leads</p>
+        #end
+    </div>
+</div>
+#end
+
+
+
+#if( false && $leadsPage.teamStats)
 <div class="fw-boxed hidden-xs">
     <div class="panel panel-default ">
         <div class="row">
@@ -186,7 +211,6 @@
         </div>
     </div>
 </div>
-#end
 
 <!-- Show teams geographically, but only to uses with the sales manager role -->
 <div class="">
@@ -200,27 +224,8 @@
 
     <div class="map-donutchart" style="width: 100%; height: 400px; display: none; margin-bottom: 20px;"></div>
 </div>
-#parse('/theme/apps/leadman/leadManMacros.html')
-#if($userResource.hasRole('Sales'))
-<div class="">
-    <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-        #set( $leads = $leadsPage.myLeads )
-
-        <ul class="list-group leadsList" id="dashLeadsList">
-            #foreach($lead in $leads)
-                <li class="list-group-item">
-                    #showLead($lead)
-                </li>
-            #end
-        </ul>
-        #if( $leads.size() > 0 )
-
-        #else
-            <p class="lead">Couldnt find any leads</p>
-        #end
-    </div>
-</div>
 #end
+
 
 <input type="hidden" class="dashboardPieColor" disabled="disabled" />
 

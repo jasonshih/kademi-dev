@@ -1,0 +1,148 @@
+#cates-list .cate-item .embed-responsive-item,
+[id*="products-list"] .product-item .embed-responsive-item,
+#products-list .product-item .embed-responsive-item,
+.product-images .product-item .embed-responsive-item  {
+    background: no-repeat 50% 50%;
+    background-size: contain;
+}
+
+.variant-name {
+    text-align: left !important;
+}
+
+#cart-link div {
+    padding: 8px 15px;
+}
+
+[id*="products-list"] .product-item .product-content,
+#products-list .product-item .product-content {
+    min-height: 60px;
+}
+
+.rewardStoreCategoryProductsComponent {
+    .product-item {
+        margin-bottom: 40px;
+        .thumbnail {
+            padding: 0;
+            border: 0;
+        }
+        .product-info {
+            border: 1px solid @gray-light;
+            border-bottom: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .product-title {
+            font-size: 25px;
+            margin: 0 0 30px;
+            font-weight: 300;
+            min-height: 55px;
+        }
+        .product-content {
+            margin-top: 10px;
+        }
+        .caption {
+            position: relative;
+            background: #fff;
+            height: 65px;
+            h3, a {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                color: #fff;
+            }
+            h3 {
+                left: 0;
+                right: 68px;
+                margin: 0;
+            }
+            a {
+                right: 0;
+                width: 67px;
+                border: 0;
+                i {
+                    font-size: 28px;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    text-align: center;
+                    top: 50%;
+                    transform: translate(0, -50%);
+                }
+            }
+            .product-price{
+                font-size: 24px;
+                font-weight: 300;
+                padding-top: 9px;
+                small {
+                    color: inherit;
+                    font-size: 12px;
+                    display: block;
+                    font-weight: 400;
+                    padding-top: 3px;
+                }
+            }
+        }
+    }
+}
+
+#cates-list {
+    .cate-item{
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #e3e3e6;
+        text-decoration: none;
+        .embed-responsive-item {
+            background-size: cover;
+        }
+        .cate-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 25px;
+            font-weight: 300;
+            padding: 25px 20px;
+            color: #fff;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+}
+
+.rewardStoreCategoriesList,
+.pointsRangeList{
+    &.list-group{
+        i.fa-angle-right{
+            display: none;
+        }
+        .selected{
+            background: @gray-lighter;
+            i.fa-angle-right {
+                display: inline-block;
+                font-size: larger;
+                margin-top: 1px;
+            }
+        }
+    }
+    .list-group-item {
+        border-color: #fff;
+        margin-bottom: 0;
+        &.lead {
+            padding-left: 0;
+            border-bottom: 1px solid #e2e2e5;
+            margin-bottom: 6px;
+        }
+        &:focus{
+            background: #fff;
+        }
+    }
+}
+
+#product-search {
+    margin-bottom: 20px;
+}
+
+.btn-decrease-quantity,.btn-increase-quantity{
+    border-left-width: 1px !important;
+}

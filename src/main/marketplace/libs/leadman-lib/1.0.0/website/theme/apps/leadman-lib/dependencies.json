@@ -1,6 +1,10 @@
 {
     "appDependencies": [
         {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
+        },
+        {
             "appId": "d3-lib",
             "branch": "3.4.1"
         },

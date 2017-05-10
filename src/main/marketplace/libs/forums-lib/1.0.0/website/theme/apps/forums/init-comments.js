@@ -46,7 +46,7 @@ function initComments(pageUrl) {
     $("body").on("click focus", ".commentContainer textarea", function (e) {
         $(e.target).closest("div").find(".commentControls").show();
     });
-    $('.commentContainer textarea').css('overflow', 'hidden').autogrow()
+    $('.commentContainer textarea').autogrow()
 
     var currentUser = {
         name: userName,

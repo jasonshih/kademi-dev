@@ -1,0 +1,13 @@
+{
+    "appDependencies": [
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/autogrow/1.0.3/autogrow.min.js"
+            }
+        }
+    ]
+}

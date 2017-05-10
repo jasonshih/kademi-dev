@@ -33,19 +33,10 @@ function initManagePointsSystem() {
     });
 
     $(document.body).on('keypress', '#data-query', function (e) {
-        var code = e.keyCode || e.which;
-        if (code == 13) {
-            e.preventDefault();
-
+        typewatch(function () {
+            flog('initSearchPoints: do search');
             doHistorySearch();
-            return false;
-        }
-    });
-
-    $(document.body).on('change', '#data-query', function (e) {
-        e.preventDefault();
-
-        doHistorySearch();
+        }, 500);
     });
 
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
@@ -341,6 +332,7 @@ function doHistorySearch() {
     uri.setSearch('startDate', searchOptions.startDate);
     uri.setSearch('finishDate', searchOptions.endDate);
     uri.setSearch('dataQuery', dataQuery);
+    uri.setSearch('startPos', 0);
 
     var target = $("#tablePointsBody");
     var pointsFooter = $("#pointsFooter");
