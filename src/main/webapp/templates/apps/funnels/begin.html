@@ -8,8 +8,6 @@
                 <div class="col-sm-12">
                     <div class="checkbox">
                         <label>
-                            #set($onePerProfile = $page.node.onePerProfile ? "checked" : "")
-                            <input type="checkbox" name="onePerProfile" $onePerProfile />
                             $formatter.checkbox("onePerProfile", $page.node.onePerProfile)
                             One per profile
                         </label>
