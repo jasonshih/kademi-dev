@@ -292,22 +292,24 @@ function checkProcessStatus() {
                         }
 
                         $('#myWizard').wizard("next");
-                        $('#table-Orgs-body').reloadFragment({url: '/organisations/'});
-                        $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
-                        importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+
+                        importWizardStarted = false;
                         OrgImportTotalCount = 0;
+
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        
                         var percentComplete = result.messages[0].split(' ').reverse()[0] / OrgImportTotalCount * 100;
                         if (isNaN(percentComplete)){
                             percentComplete = 0;
                         }
                         percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
+                        
                         jobTitle.text("Process running...");
                     }
                 } else {
