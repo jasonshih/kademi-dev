@@ -88,11 +88,13 @@
                                 so may take some time depending on the size of the file</p>
                             <p class="beforeImportInfo text-info" style="margin-bottom: 5px"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
                                 <span class="sr-only">Loading...</span></p>
-                            <button type="submit" class="btn btn-success">Import now</button>
-                            
-                            <span id="noValidRow">There are no valid row in the file, please review it</span>
-                            
+
                             <div id="result">
+                                <button type="submit" class="btn btn-success">Import now</button>
+                                
+                                <span id="noValidRow">There are no valid row in the file, please review it</span>
+                                <span id="toManyErrors">There are to many errors in the file, please review it</span>
+                                
                                 <hr>
                                 
                                 <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>

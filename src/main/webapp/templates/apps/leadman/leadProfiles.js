@@ -37,8 +37,12 @@ function initUploads() {
                     formData[this.name] = this.value;
                 }
             });
+            
             form.find('[type=submit]').addClass('hide');
             form.find("#result").hide();
+            form.find('#noValidRow').addClass('hide');
+            $('#toManyErrors').hide();
+            
             form.find('.beforeImportInfo').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
 
             $.ajax({
@@ -76,12 +80,20 @@ function initUploads() {
                         }
                         
                         importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount
-                        if ( importTotalCount > 0 ) {
+                        
+                        $('#result').show(); 
+                        $('#processing').hide();
+                        if ( importTotalCount == 0 || resp.data.toManyErrors) {
+                            form.find('[type=submit]').attr('disabled', true);
+
+                            if (resp.data.toManyErrors) {
+                                $('#toManyErrors').show();
+                            } else {
+                                form.find('#noValidRow').removeClass('hide');
+                            }
+                        } else {
                             form.find('#noValidRow').addClass('hide');
                             form.find('[type=submit]').attr('disabled', false);
-                        } else {
-                            form.find('[type=submit]').attr('disabled', true);
-                            form.find('#noValidRow').removeClass('hide');
                         }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');

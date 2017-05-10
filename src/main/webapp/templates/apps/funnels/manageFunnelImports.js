@@ -43,6 +43,7 @@ function initUploads() {
             
             $('#processing').show(); 
             $('#result').hide();
+            $('#toManyErrors').hide();
             
             $.ajax({
                 url: importUrl,
@@ -80,13 +81,18 @@ function initUploads() {
                         totalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
                         
                         $('#result').show(); 
-                        $('#processing').hide(); 
-                        if ( OrgImportTotalCount > 0 ) {
+                        $('#processing').hide();
+                        if ( totalCount == 0 || resp.data.toManyErrors) {
+                            form.find('[type=submit]').attr('disabled', true);
+
+                            if (resp.data.toManyErrors) {
+                                $('#toManyErrors').show();
+                            } else {
+                                form.find('#noValidRow').removeClass('hide');
+                            }
+                        } else {
                             form.find('#noValidRow').addClass('hide');
                             form.find('[type=submit]').attr('disabled', false);
-                        } else {
-                            form.find('[type=submit]').attr('disabled', true);
-                            form.find('#noValidRow').removeClass('hide');
                         }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
