@@ -135,37 +135,44 @@
 
                                 <hr/>
 
-                                <button type="submit" class="btn btn-success btn-large">
-                                    <span class="fa fa-arrow-circle-right"></span>
-                                    Import now
-                                </button>
-
-								<span id="noValidRow">There are no valid row in the file, please review it</span>
-
-                                <hr/>
-
-                                <table class="table">
-                                    <tr>
-                                        <th>New profiles to be inserted</th>
-                                        <td class="beforeImportNumNew"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Existing profiles to be updated</th>
-                                        <td class="beforeImportNumExisting"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Invalid records</th>
-                                        <td class="beforeImportNumInvalid"></td>
-                                    </tr>
-                                </table>
-
-                                <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                <div class="table-responsive" style="max-height: 300px">
-                                    <table class="table table-bordered table-striped">
-                                        <tbody class="beforeImportInvalidRows">
-
-                                        </tbody>
+                                <div id="processing">
+                                    <h4>Processing the file validations. Please wait...</h4>
+                                </div>
+    
+                                <div id="result">
+                                    <button type="submit" class="btn btn-success btn-large">
+                                        <span class="fa fa-arrow-circle-right"></span>
+                                        Import now
+                                    </button>
+    
+    								<span id="noValidRow">There are no valid row in the file, please review it</span>
+                                    <span id="toManyErrors">There are to many errors in the file, please review it</span>
+    
+                                    <hr/>
+    
+                                    <table class="table">
+                                        <tr>
+                                            <th>New profiles to be inserted</th>
+                                            <td class="beforeImportNumNew"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Existing profiles to be updated</th>
+                                            <td class="beforeImportNumExisting"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Invalid records</th>
+                                            <td class="beforeImportNumInvalid"></td>
+                                        </tr>
                                     </table>
+    
+                                    <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
+                                    <div class="table-responsive" style="max-height: 300px">
+                                        <table class="table table-bordered table-striped">
+                                            <tbody class="beforeImportInvalidRows">
+    
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
