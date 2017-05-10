@@ -454,11 +454,55 @@
                                                 so may take some time depending on the size of the file</p>
 
                                             <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
-                                            <button type="submit" class="btn btn-success">Import now</button>
+
+                                            <hr/>
+
+                                            <div id="processing">
+                                                <h4>Processing the file validations. Please wait...</h4>
+                                            </div>
+                
+                                            <div id="result">
+                                                <button type="submit" class="btn btn-success btn-large">
+                                                    <span class="fa fa-arrow-circle-right"></span>
+                                                    Import now
+                                                </button>
+                
+                                                <span id="noValidRow">There are no valid row in the file, please review it</span>
+                
+                                                <hr/>
+                
+                                                <table class="table">
+                                                    <tr>
+                                                        <th>New leads to be inserted</th>
+                                                        <td class="beforeImportNumNew"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Existing leads to be updated</th>
+                                                        <td class="beforeImportNumExisting"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Invalid records</th>
+                                                        <td class="beforeImportNumInvalid"></td>
+                                                    </tr>
+                                                </table>
+                
+                                                <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
+                                                <div class="table-responsive" style="max-height: 300px">
+                                                    <table class="table table-bordered table-striped">
+                                                        <tbody class="beforeImportInvalidRows">
+                
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="step-pane sample-pane alert" data-step="4">
                                             <h4>Import running</h4>
 
+                                            <div class="progress" id="importProgressbar">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                                </div>
+                                            </div>
                                             <div class="process-results">
                                                 <p>
                                                     <strong>Process Status:</strong>
@@ -470,8 +514,31 @@
 
                                         </div>
                                         <div class="step-pane sample-pane alert" data-step="5">
-                                            <h4>Leads updated: <span class="updatedProfiles"></span></h4>
-                                            <h4>Leads created: <span class="createdProfiles"></span></h4>
+                                            <table
+                                                class="table table-bordered">
+                                                <tr>
+                                                    <th>Number created</th>
+                                                    <td class="createdCount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number updated:</th>
+                                                    <td class="updatedCount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Number with
+                                                        errors</th>
+                                                    <td class="errorCount"></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Errors file</th>
+                                                    <td class=""><a
+                                                        href=""
+                                                        class="errorRows btn btn-warning">
+                                                            <span
+                                                            class="fa fa-download"></span>
+                                                    </a></td>
+                                                </tr>
+                                            </table>
                                         </div>
 
                                     </div>
