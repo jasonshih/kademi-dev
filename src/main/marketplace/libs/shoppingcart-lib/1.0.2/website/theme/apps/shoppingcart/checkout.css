@@ -126,3 +126,8 @@
 #loginRegisterModal .row .devider:not(:last-child) {
     border-right: 1px solid #ccc;
 }
+
+#successfull-div .well-lg{
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
