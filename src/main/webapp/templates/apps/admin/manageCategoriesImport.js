@@ -4,7 +4,7 @@
 
 var catImportUrl = '/categories/upload';
 var importWizardStarted = false;
-var OrgImportTotalCount = 0;
+var importTotalCount = 0;
 function initManageCategoriesImport() {
     initUploads();
 }
@@ -27,7 +27,7 @@ function initUploads() {
         $('#myWizard').find('form').trigger('reset');
         form.find("input[name=fileHash]").val('');
         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
-        OrgImportTotalCount = 0;
+        importTotalCount = 0;
         var resultStatus = $('#job-status');
         resultStatus.text('');
     });
@@ -55,6 +55,7 @@ function initUploads() {
             
             $('#processing').show(); 
             $('#result').hide();
+            $('#toManyErrors').hide();
             
             $.ajax({
                 url: catImportUrl,
@@ -87,16 +88,21 @@ function initUploads() {
                             }
                         }
 
-                        OrgImportTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
+                        importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
                         
                         $('#result').show(); 
                         $('#processing').hide(); 
-                        if ( OrgImportTotalCount > 0 ) {
-                        	form.find('#noValidRow').addClass('hide');
-                        	form.find('[type=submit]').attr('disabled', false);
+                        if ( importTotalCount == 0 || resp.data.toManyErrors) {
+                            form.find('[type=submit]').attr('disabled', true);
+
+                            if (resp.data.toManyErrors) {
+                                $('#toManyErrors').show();
+                            } else {
+                                form.find('#noValidRow').removeClass('hide');
+                            }
                         } else {
-                        	form.find('[type=submit]').attr('disabled', true);
-                        	form.find('#noValidRow').removeClass('hide');
+                            form.find('#noValidRow').addClass('hide');
+                            form.find('[type=submit]').attr('disabled', false);
                         }
                     } else {
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
@@ -296,13 +302,13 @@ function checkProcessStatus() {
                         $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
                         importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
-                        OrgImportTotalCount = 0;
+                        importTotalCount = 0;
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
-                        var percentComplete = result.messages[0].split(' ').reverse()[0] / OrgImportTotalCount * 100;
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
                         if (isNaN(percentComplete)){
                             percentComplete = 0;
                         }
