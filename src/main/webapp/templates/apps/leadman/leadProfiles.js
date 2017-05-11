@@ -1,5 +1,6 @@
 
 var importTotalCount = 0;
+importWizardStarted = false;
 
 function initUploads() {
     var form = $("#importerWizard form");
@@ -147,6 +148,27 @@ function initUploads() {
 
     flog("Init importer form", form);
     form.forms({
+        validate: function () {
+            if (importWizardStarted) {
+                $('#myWizard').wizard("next");
+                
+                var resultCustomValidate = {
+                    error : 1,
+                    errorMessages : [" That task is already in progress. Please cancel it or wait until it finishes"]
+                };
+
+                return resultCustomValidate;
+            }  
+        },
+        onError: function (resp, form, config) {
+            Msg.error(resp.messages[0]);
+            doCheckProcessStatus();
+            $('#myWizard').wizard("next");
+        },
+        beforePostForm: function(form, config, data){
+            importWizardStarted = true;
+            return data;
+        },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
             doCheckProcessStatus();
@@ -343,6 +365,8 @@ function checkProcessStatus() {
                         }else{
                             $('#myWizard').find('.errorRows').closest("a").hide();
                         }
+                        
+                        importWizardStarted = false;
                         
                         $('#myWizard').wizard("next");
 
