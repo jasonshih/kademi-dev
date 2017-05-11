@@ -174,6 +174,23 @@ function initUploads() {
     flog("Init importer form", form);
     form.forms({
         postUrl: OrgsImportUrl,
+        validate: function () {
+            if (importWizardStarted) {
+                $('#myWizard').wizard("next");
+                
+                var resultCustomValidate = {
+                    error : 1,
+                    errorMessages : [" That task is already in progress. Please cancel it or wait until it finishes"]
+                };
+
+                return resultCustomValidate;
+            }  
+        },
+        onError: function (resp, form, config) {
+            Msg.error(resp.messages[0]);
+            checkProcessStatus();
+            $('#myWizard').wizard("next");
+        },
         beforePostForm: function(form, config, data){
             importWizardStarted = true;
             return data;

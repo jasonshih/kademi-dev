@@ -2,7 +2,7 @@
  * Created by Diego.
  */
 
-var OrgsImportUrl = '/products/upload';
+var importUrl = '/products/upload';
 var importWizardStarted = false;
 var importTotalCount = 0;
 function initManageProdsImport() {
@@ -58,7 +58,7 @@ function initUploads() {
             $('#toManyErrors').hide();
             
             $.ajax({
-                url: OrgsImportUrl,
+                url: importUrl,
                 data: formData,
                 type: 'post',
                 dataType: 'json',
@@ -174,7 +174,24 @@ function initUploads() {
 
     flog("Init importer form", form);
     form.forms({
-        postUrl: OrgsImportUrl,
+        postUrl: importUrl,
+        validate: function () {
+            if (importWizardStarted) {
+                $('#myWizard').wizard("next");
+                
+                var resultCustomValidate = {
+                    error : 1,
+                    errorMessages : [" That task is already in progress. Please cancel it or wait until it finishes"]
+                };
+
+                return resultCustomValidate;
+            }  
+        },
+        onError: function (resp, form, config) {
+            Msg.error(resp.messages[0]);
+            checkProcessStatus();
+            $('#myWizard').wizard("next");
+        },
         beforePostForm: function(form, config, data){
             importWizardStarted = true;
             return data;
@@ -186,7 +203,7 @@ function initUploads() {
     });
 
     $('#btn-upload').mupload({
-        url: OrgsImportUrl,
+        url: importUrl,
         useJsonPut: false,
         buttonText: '<i class="clip-folder"></i> Upload CSV, XLS, XLSX',
         acceptedFiles: '.csv,.xlsx,.xls,.txt',
@@ -248,7 +265,7 @@ function initUploads() {
         }
         $.ajax({
             type: 'post',
-            url: OrgsImportUrl,
+            url: importUrl,
             data: {cancel: 'cancel'},
             success: function (data) {
                 Msg.success('Import task cancelled');
@@ -267,7 +284,7 @@ function checkProcessStatus() {
     $.ajax({
         type: 'GET',
         dataType: "json",
-        url: OrgsImportUrl + "?importStatus",
+        url: importUrl + "?importStatus",
         success: function (result) {
             flog("success", result);
             if (result.status) {
