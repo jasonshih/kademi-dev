@@ -17,6 +17,10 @@
         }
         .media-left{
             padding: 10px;
+            a{
+                text-align: center;
+                display: block;
+            }
         }
         .media-body{
             padding-top: 10px;
@@ -26,7 +30,7 @@
             height: 115px;
             background: no-repeat 50% 50%;
             background-size: contain;
-
+            display: inline-block;
         }
 
         .item-quantity {
@@ -36,13 +40,16 @@
 
         .item-price{
             float: left;
-            margin-left: 5px;
+            margin-left: 15px;
         }
 
         .item-detail{
             border-left: 1px solid @gray-light;
             background: @gray-lighter;
             padding-left: 25px;
+            @media (max-width: 767px){
+                border-left: none;
+            }
         }
     }
 
@@ -116,9 +123,4 @@
 
 #loginRegisterModal .row .devider:not(:last-child) {
     border-right: 1px solid #ccc;
-}
-
-#successfull-div .well-lg{
-    padding-top: 30px;
-    padding-bottom: 30px;
 }
