@@ -99,10 +99,10 @@
                 <div class="col-md-2">
                     <h5>
                         <label class="label-control">Showing: </label>
-                        <label class="label-control count">$page.members.size()</label>
+                        <label class="label-control count">$page.paginator.records.size()</label>
                         <label class="label-control"> users
-                            #if( $page.members.size() < $page.totalMembers )
-                            of $page.totalMembers
+                            #if( $page.paginator.records.size() < $page.paginator.totalRecords )
+                            of $page.paginator.totalRecords
                             #end
                         </label>
                     </h5>
@@ -130,7 +130,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        #foreach($member in $page.members)
+                        
+                        #foreach($member in $page.paginator.records)
                         #set($pwdDate = false)
                         #set($pwdDate = $member.thisUser.passwordCredentialDate)
                         #set($rowClass = "")
@@ -162,6 +163,13 @@
                         </tr>
                         #end
                     </tbody>
+                        <tfoot id="pointsFooter">
+                            <tr>
+                                <td colspan="6">
+                                    $!page.paginator.html
+                                </td>
+                            </tr>
+                        </tfoot>
                 </table>
             </div>
         </div>
