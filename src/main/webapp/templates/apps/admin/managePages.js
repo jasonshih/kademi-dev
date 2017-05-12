@@ -21,7 +21,7 @@ function initCRUDPages() {
         flog('initManageFiles: add folder');
         var parentHref = window.location.pathname;
         showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function () {
-            $('#subFoldersList').reloadFragment();
+            $('#page-list').reloadFragment();
         });
     });
 
@@ -272,7 +272,7 @@ function initDeleteFolders() {
 
 function initPjax() {
     var container = $('#filesContainer');
-    var files = $('#files');
+    var files = $('#page-list');
     flog('initPjax', container);
     container.on('click', 'a.pjax', function (e) {
         e.preventDefault();
@@ -291,22 +291,15 @@ function initPjax() {
                 document.title = name;
                 window.history.pushState('', href, href);
 
-                var formAction = window.location.pathname + '_DAV/PUT?overwrite=true';
-                $('#modal-upload form').attr('action', formAction);
-                var dz = Dropzone.forElement('#uploadFileDropzone');
-                dz.options.url = formAction;
-
-                var zipFormAction = window.location.pathname;
-                $('#modal-upload-zip form').attr('action', zipFormAction);
-                var dz2 = Dropzone.forElement('#uploadZipDropzone');
-                dz2.options.url = zipFormAction;
                 setRecentItem(window.location.pathname, window.location.pathname);
 
                 var dom = $(response);
                 var pages = $('#pages');
+                var templates = $('#templates');
 
                 flog('update pages', pages);
                 pages.html(dom.find('#pages > *'));
+                templates.html(dom.find('#templates > *'));
 
                 initFilesLayout();
                 initCopyCutPaste();
