@@ -9,6 +9,10 @@
             "branch": "1.8.1"
         },
         {
+            "appId": "dropzone-lib",
+            "branch": "4.3.0"
+        },
+        {
             "appId": "moment-lib",
             "branch": "2.18.1"
         },
@@ -23,12 +27,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/DataTables/datatables.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/dropzone/v3.10.2/dropzone.min.js"
             }
         },
         {
@@ -143,12 +141,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/DataTables/datatables.min.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/dropzone/v3.10.2/css/dropzone.css"
             }
         },
         {

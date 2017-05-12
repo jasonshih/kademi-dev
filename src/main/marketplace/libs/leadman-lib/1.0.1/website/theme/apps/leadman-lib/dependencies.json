@@ -32,12 +32,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/dropzone/v3.10.2/dropzone.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "//www.fuelcdn.com/fuelux/3.13.0/js/fuelux.min.js"
             }
         },
@@ -147,12 +141,6 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/static/DataTables/datatables.min.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/dropzone/v3.10.2/css/dropzone.css"
             }
         },
         {
