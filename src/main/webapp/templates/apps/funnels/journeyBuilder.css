@@ -1,3 +1,7 @@
+.tabbable {
+    margin: 0;
+}
+
 #builder {
     position: relative;
     overflow: hidden;
@@ -21,6 +25,12 @@
     bottom: 1px;
     right: 250px;
     background: url("/theme/apps/funnels/img/bg_jb.png");
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* ====================================================================
@@ -34,6 +44,12 @@
     width: 250px;
     z-index: 10;
     margin-bottom: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #builder .right-panel .panel {
@@ -237,15 +253,11 @@
     font-weight: 300;
 }
 
-.node.action .node-body {
-    padding: 0 20px;
-}
-
-.node.action .node-body .node-title-inner {
+.node .node-body .node-title-inner {
     color: #fff;
 }
 
-.node.action .node-body .node-title {
+.node .node-body .node-title {
     cursor: pointer;
 }
 

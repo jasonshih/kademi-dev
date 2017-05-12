@@ -310,7 +310,7 @@ var Main = function () {
         var mainContainer = $('.main-content > .container');
         var footer = $('.footer');
         var navbar = $('.navbar');
-        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight() - 1);
+        mainContainer.css('min-height', windowHeight - footer.innerHeight() - navbar.innerHeight() - 2);
         
         var sidebarWrapper = $('#page-sidebar .sidebar-wrapper');
         sidebarWrapper.css('height', windowHeight - $('body > .navbar').outerHeight()).scrollTop(0);
