@@ -91,14 +91,12 @@
 
         <hr class="clearfix" />
 
-        <div class="tabbable" id="filesContainer">
-            <ul class="nav nav-tabs tab-bricky">
-                <li><a data-toggle="tab" href="#pages">Edit Pages</a></li>
-                <li><a data-toggle="tab" href="#templates">Edit Templates</a></li>
-            </ul>
-            <div class="tab-content">
+        <div id="filesContainer">
+            <div class="row">
                 <!-- Start content of Pages tab -->
-                <div id="pages" class="tab-pane">
+                <div id="pages" class="col-sm-6">
+                    <h4>Pages</h4>
+                    <hr>
                     <div id="pages-inner">
                         <div class="btn-group pull-right">
                             <a class="btn btn-sm btn-success btn-add-page" data-toggle="modal" href="#modal-save-page" title="Add page"><i class="fa fa-pencil"></i> New Page</a>
@@ -107,8 +105,8 @@
                         </div>
 
                         <div class="btn-group">
-                            <a class="btn btn-primary" href="/repositories/$page.closest('repository').name/$page.closest('branch').name"><i class="fa fa-folder-open"></i> File manager</a>
-                            <a class="btn btn-info" href="/websites/$page.closest('repository').name/$page.closest('branch').name"><i class="fa fa-desktop"></i> Website manager</a>
+                            <a class="btn btn-primary btn-sm" href="/repositories/$page.closest('repository').name/$page.closest('branch').name"><i class="fa fa-folder-open"></i> File manager</a>
+                            <a class="btn btn-info btn-sm" href="/websites/$page.closest('repository').name/$page.closest('branch').name"><i class="fa fa-desktop"></i> Website manager</a>
                         </div>
 
                         <p class="clearfix"></p>
@@ -124,7 +122,7 @@
                                 #else
                                 <article class="page">
 
-                                    <a href="../" class="article-name"><i class="fa fa-reply"></i> Parent directory</a>
+                                    <a href="../" class="article-name pjax"><i class="fa fa-reply"></i> Parent directory</a>
                                 </article>
                                 #end
 
@@ -132,7 +130,7 @@
                                     #if ($f.name != "theme")
                                     <article class="page">
                                         <i class="clip-folder"></i>
-                                        <a href="$f.href" class="article-name">$f.title</a>
+                                        <a href="$f.href" class="article-name pjax">$f.title</a>
                                         <aside class="article-action">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="javascript:void(0)" class="btn btn-sm btn-info" title="Edit Folder"><i class="fa fa-cog"></i></a>
@@ -161,9 +159,9 @@
                                             <aside class="article-action">
                                                 <div class="btn-group btn-group-sm">
                                                     #if ($isKEditor)
-                                                        <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-cog"></i></a>
+                                                        <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i></a>
                                                     #else
-                                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-cog"></i> Edit</a>
+                                                        <a href="?htmleditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i></a>
                                                     #end
                                                     <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                                                     <ul class="dropdown-menu pull-right" role="menu">
@@ -194,7 +192,12 @@
                     </div>
                     <!-- End content of Pages tab -->
                 </div>
-                <div id="templates" class="tab-pane">
+
+
+                <div id="templates" class="col-sm-6">
+                    #if( $page.is("branch") )
+                    <h4>Templates</h4>
+                    <hr>
                     <table class="table">
                         <tbody>
                         #foreach($templateList in $page.allTemplates.entrySet() )
@@ -217,7 +220,9 @@
                         #end
                         </tbody>
                     </table>
+                    #end
                 </div>
+
             </div>
         </div>
 
