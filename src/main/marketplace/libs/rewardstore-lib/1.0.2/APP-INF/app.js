@@ -32,11 +32,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
         "query": {
             "bool": {
                 "must": [
-                    {
-                        "term": {
-                            "rewardStoreId": rewardStoreId
-                        }
-                    }
+
                 ]
             }
         },
@@ -52,7 +48,13 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
             }
         }
     };
-
+    if (rewardStoreId && !isNaN(rewardStoreId)){
+        searchConfig.query.bool.must.push({
+            "term": {
+                "rewardStoreId": rewardStoreId
+            }
+        });
+    }
     if (!isBlank(category)) {
         var catQ = {
             "terms": {
