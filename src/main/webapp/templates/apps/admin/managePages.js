@@ -64,6 +64,8 @@ function initAddPageModal() {
         clearForm(form);
         $('.meta-wrapper').html('');
         $('.param-wrapper').html('');
+        form.find('.defaultFolderPageTrigger').val('0');
+        form.find('.fileNameTrigger').val('1');
         txtNewFileNameHidden.val('index');
         form.find('.fileNameTrigger').trigger('click');
     });
@@ -116,6 +118,7 @@ function initAddPageModal() {
         onSuccess: function (resp) {
             if (resp.status) {
                 $('#page-list').reloadFragment({
+                    url: window.location.href,
                     whenComplete: function () {
                         Msg.success('Page is saved!');
                         modal.modal('hide');
