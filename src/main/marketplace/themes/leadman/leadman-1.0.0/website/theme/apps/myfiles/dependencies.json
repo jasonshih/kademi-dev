@@ -1,15 +1,15 @@
 {
+    "appDependencies": [
+        {
+            "appId": "dropzone-lib",
+            "branch": "4.3.0"
+        }
+    ],
     "dependencies": [
         {
             "css": {
                 "cssMedia": "all",
                 "path": "/static/css/jquery.lightbox-0.5.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/dropzone/v3.10.2/css/dropzone.css"
             }
         },
         {
@@ -22,12 +22,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/js/jquery.lightbox-0.5.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/dropzone/v3.10.2/dropzone.min.js"
             }
         },
         {
