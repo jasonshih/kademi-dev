@@ -95,7 +95,7 @@
             <div class="row">
                 <!-- Start content of Pages tab -->
                 <div id="pages" class="col-sm-6">
-                    <h4>Pages</h4>
+                    <h4>Web pages</h4>
                     <hr>
                     <div id="pages-inner">
                         <div class="btn-group pull-right">
@@ -110,6 +110,16 @@
                         </div>
 
                         <p class="clearfix"></p>
+
+                        <div style="padding: 15px">
+                            <ol class="breadcrumb">
+                                #foreach($p in $page.asList.parents.reverse)
+                                #if( $p.is("physicalFolder") || $p.is("branch") )
+                                <li><a href="$p.href" class="pjax">$p.name</a></li>
+                                #end
+                                #end
+                            </ol>
+                        </div>
 
                         <form method="POST" action="" class="">
                             <div class="article-wrapper" id="page-list">
@@ -198,8 +208,12 @@
                     #if( $page.is("branch") )
                     <h4>Templates</h4>
                     <hr>
+                    <div class="alert alert-info">Below is a list of templates provided by applications currently enabled for this website. Click the link
+                        to override and customise the template. <b>Not all applications are integrated with template management</b>, and might not appear here</div>
+
                     <table class="table">
                         <tbody>
+
                         #foreach($templateList in $page.allTemplates.entrySet() )
                         <tr>
                             <th colspan="2">$page.appTitle($templateList.key)</th>

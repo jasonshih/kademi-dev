@@ -21,7 +21,9 @@ function initCRUDPages() {
         flog('initManageFiles: add folder');
         var parentHref = window.location.pathname;
         showCreateFolder(parentHref, 'New folder', 'Please enter a name for the new folder', function () {
-            $('#page-list').reloadFragment();
+            $('#page-list').reloadFragment({
+                url: window.location.href
+            });
         });
     });
 
