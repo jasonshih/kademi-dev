@@ -108,6 +108,12 @@
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
     </head>
     <body>
+        <script type="text/javascript">
+            $(function () {
+                Main.init('$page.organisation.id');
+            });
+        </script>
+
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
             #foreach($cssFile in $groupEntry.value)
@@ -304,7 +310,7 @@
                             <li class="pull-right" id="commonControlsRange"></li>
                         </ol>
 
-                        <div style="padding-top: 15px">
+                        <div class="main-content-inner">
                             #content
                         </div>
                     </div>
@@ -328,7 +334,6 @@
             var timezone = '$!page.organisation.timezone';
 
             $(function () {
-                Main.init('$page.organisation.id');
                 initTheme(); // init the fuse extensions
 
                 // Init page date picker at the end for make sure that when first time it triggers pageDateChanged event, all other js stuffs could listen!

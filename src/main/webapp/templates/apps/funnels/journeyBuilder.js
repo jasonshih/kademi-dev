@@ -753,6 +753,33 @@ function initJourneyBuilder() {
     initNodeActions();
     initSettingPanel();
     initBuilderHeight();
+    initBuilderDragScroll();
+}
+
+function initBuilderDragScroll() {
+    var paper = $('#paper');
+    var clicked = false;
+    var clickX;
+    var clickY;
+    
+    paper.on({
+        'mousemove': function (e) {
+            if (clicked) {
+                $('html').css('cursor', 'move');
+                paper.scrollTop(paper.scrollTop() + (clickY - e.pageY) / 5);
+                paper.scrollLeft(paper.scrollLeft() + (clickX - e.pageX) / 5);
+            }
+        },
+        'mousedown': function (e) {
+            clicked = true;
+            clickY = e.pageY;
+            clickX = e.pageX;
+        },
+        'mouseup': function () {
+            clicked = false;
+            $('html').css('cursor', 'auto');
+        }
+    });
 }
 
 function initSettingPanel() {
@@ -833,10 +860,12 @@ function initBuilderHeight() {
     
     var builder = $('#builder');
     var tabbable = builder.closest('.tabbable');
-    var navTabs = tabbable.find('.nav-tabs');
+    var navTabsWrapper = tabbable.find('.nav-tabs').parent();
     var container = builder.closest('.container');
+    var breadcrumb = $('.breadcrumb');
+    var mainContainerInner = $('.main-content-inner');
     
-    builder.css('height', container.innerHeight() - navTabs.innerHeight() - 1);
+    builder.css('height', container.height() - +mainContainerInner.css('padding-top').replace('px', '') - breadcrumb.innerHeight() - navTabsWrapper.innerHeight() - 1);
 }
 
 function initSideBar() {
