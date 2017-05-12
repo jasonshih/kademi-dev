@@ -1,5 +1,6 @@
 var importUrl = 'importLeads';
 var totalCount = 0;
+var importWizardStarted = false;
 
 function initUploads() {
     var form = $("#importerWizard form");
@@ -158,6 +159,27 @@ function initUploads() {
     flog("Init importer form", form);
     form.forms({
         postUrl: importUrl,
+        validate: function () {
+            if (importWizardStarted) {
+                $('#myWizard').wizard("next");
+                
+                var resultCustomValidate = {
+                    error : 1,
+                    errorMessages : [" That task is already in progress. Please cancel it or wait until it finishes"]
+                };
+
+                return resultCustomValidate;
+            }  
+        },
+        onError: function (resp, form, config) {
+            Msg.error(resp.messages[0]);
+            doCheckProcessStatus(importUrl);
+            $('#myWizard').wizard("next");
+        },
+        beforePostForm: function(form, config, data){
+            importWizardStarted = true;
+            return data;
+        },
         onSuccess: function (resp, form, config) {
             $('#myWizard').wizard("next");
             doCheckProcessStatus(importUrl);
@@ -268,6 +290,7 @@ function checkProcessStatus() {
                         }
                         
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width','0%');
+                        importWizardStarted = false;
                         
                         $('#myWizard').wizard("next");
                         $('#lead-tbody').reloadFragment();
