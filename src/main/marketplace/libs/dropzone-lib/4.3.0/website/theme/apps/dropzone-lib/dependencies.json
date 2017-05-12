@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/dropzone-lib/dropzone.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/dropzone-lib/dropzone.css"
+            }
+        }
+    ]
+}
