@@ -1,22 +1,22 @@
 $(function () {
-    $("body").on("click", ".task-outcome", function (e) {
+    $(document.body).on("click", ".task-outcome", function (e) {
         if ($(e.target).is("input")) {
             return;
         }
-        
+
         flog("click");
-        
-        $(".outcome-options").slideUp(300).find(".required:input").each(function() {
+
+        $(".outcome-options").slideUp(300).find(".required:input").each(function () {
             $(this).data("required", true).removeClass("required");
         });
-        
-        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").each(function() {
+
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").each(function () {
             if ($(this).data("required") === true) {
                 $(this).addClass("required");
             }
         });
     });
-    
+
     $('#lead-tasks-page input[name=taskType]').on('change', function (e) {
         var t = $(this);
         var uri = new URI(window.location.search);
@@ -26,7 +26,7 @@ $(function () {
         window.location.search = uri.search();
     });
 
-    $('body').on('click', '#lead-tasks-page .filter', function (e) {
+    $(document.body).on('click', '#lead-tasks-page .filter', function (e) {
         e.preventDefault();
 
         var btn = $(this);
@@ -40,7 +40,7 @@ $(function () {
         window.location.search = uri.search();
     });
 
-    $('body').on('submit', '#search-tasks-form', function (e) {
+    $(document.body).on('submit', '#search-tasks-form', function (e) {
         e.preventDefault();
 
         var form = $(this);
@@ -55,35 +55,36 @@ $(function () {
     });
 
     window.doReloadTasksPage = function () {
-        $('body').find('#search-tasks-form').trigger('submit');
+        $(document.body).find('#search-tasks-form').trigger('submit');
     };
 
     $('#tasksCsv').attr('href', 'tasks.csv?' + window.location.search);
 
-    function initUpload() {
-        Dropzone.autoDiscover = false;
+    var modalUpload = $('#modal-upload');
+    if (modalUpload.length > 0) {
+        if (typeof Dropzone !== 'undefined') {
+            Dropzone.autoDiscover = false;
 
-        $('#modal-upload .dropzone').dropzone({
-            paramName: 'file', // The name that will be used to transfer the file
-            maxFilesize: 2000.0, // MB
-            addRemoveLinks: true,
-            parallelUploads: 1,
-            uploadMultiple: false,
-            acceptedFiles: 'text/csv,.csv,.txt'
-        });
+            modalUpload.find('.dropzone').dropzone({
+                paramName: 'file', // The name that will be used to transfer the file
+                maxFilesize: 2000.0, // MB
+                addRemoveLinks: true,
+                parallelUploads: 1,
+                uploadMultiple: false,
+                acceptedFiles: 'text/csv,.csv,.txt'
+            });
 
-        if ($('#uploadFileDropzone').length > 0) {
-            var dz = Dropzone.forElement('#uploadFileDropzone');
-            flog('dropz', Dropzone, dz, dz.options.url);
-            dz.on('success', function (file) {
-                flog('added file', file);
-                doReloadTasksPage();
-            });
-            dz.on('error', function (file, errorMessage) {
-                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
-            });
+            if ($('#uploadFileDropzone').length > 0) {
+                var dz = Dropzone.forElement('#uploadFileDropzone');
+                flog('dropz', Dropzone, dz, dz.options.url);
+                dz.on('success', function (file) {
+                    flog('added file', file);
+                    doReloadTasksPage();
+                });
+                dz.on('error', function (file, errorMessage) {
+                    Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+                });
+            }
         }
     }
-
-    initUpload();
 });

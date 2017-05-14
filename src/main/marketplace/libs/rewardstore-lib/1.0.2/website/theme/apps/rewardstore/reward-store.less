@@ -19,6 +19,9 @@
     min-height: 60px;
 }
 
+#products-list{
+    min-height: 200px;
+}
 .rewardStoreCategoryProductsComponent {
     .product-item {
         margin-bottom: 40px;
@@ -112,33 +115,26 @@
 
 .rewardStoreCategoriesList,
 .pointsRangeList{
-    &.list-group{
-        i.fa-angle-right{
-            display: none;
-        }
-        .selected{
-            background: @gray-lighter !important;
-            border: 1px solid @gray-light !important;
-            i.fa-angle-right {
-                display: inline-block;
-                font-size: larger;
-                margin-top: 1px;
-            }
+    i.fa-angle-right{
+        display: none;
+    }
+    .selected{
+        background: @gray-lighter !important;
+        border: 1px solid @gray-light !important;
+        margin-bottom: 0;
+        i.fa-angle-right {
+            display: inline-block;
+            font-size: larger;
+            margin-top: 1px;
+
         }
     }
-    .list-group-item {
-        border-color: #fff;
-        margin-bottom: 0;
-        &.lead {
-            padding-left: 0;
-            border-bottom: 1px solid #e2e2e5;
-            margin-bottom: 6px;
-            font-size: 20px;
-            font-weight: 700;
-        }
-        &:focus{
-            background: #fff;
-        }
+    .heading-item {
+        padding-left: 0;
+        border-bottom: 1px solid @gray-light !important;
+        margin-bottom: 6px;
+        font-size: 20px;
+        font-weight: 700;
     }
 }
 

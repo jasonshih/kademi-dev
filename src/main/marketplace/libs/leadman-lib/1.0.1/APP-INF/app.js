@@ -1,0 +1,1 @@
+controllerMappings.addComponent("leadman/components", "leadCompanies", "html", "Show list of companies in table format", "Leadman");

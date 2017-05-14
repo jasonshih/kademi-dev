@@ -1,0 +1,26 @@
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th width="90">Members</th>
+            <th width="120"></th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($com in $page.organisation.childOrgs)
+            <tr>
+                <td>$com.title</td>
+                <td>$!com.email</td>
+                <td>$!com.phone</td>
+                <td>
+                    $!com.address<br />$!com.addressLine2
+                </td>
+                <td>$com.members.size()</td>
+                <td><a href="./$com.id"><i class="fa fa-eye"></i> View details</a></td>
+            </tr>
+        #end
+    </tbody>
+</table>

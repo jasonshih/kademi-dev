@@ -178,8 +178,8 @@
                                 #foreach($prop in $page.find("/proposals").proposals)
                                 <tr>
                                     <td>$prop.id</td>
-                                    <td>$prop.quotes[0].vendor.name</td>
-                                    <td>$prop.quotes[0].customer.name</td>
+                                    <td>#if ($prop.quotes.size > 0) $prop.quotes[0].vendor.name #end</td>
+                                    <td>#if ($prop.quotes.size > 0) $prop.quotes[0].customer.name #end</td>
                                 </tr>
                                 #end
                             </tbody>

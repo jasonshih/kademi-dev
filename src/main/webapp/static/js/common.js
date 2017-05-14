@@ -690,7 +690,7 @@ function deleteFile(href, callback) {
             log('deleted', href);
             ajaxLoadingOff();
             if (callback) {
-                callback();
+                callback(resp);
             }
         },
         error: function (resp) {

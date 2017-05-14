@@ -1,6 +1,6 @@
-$(function () {
+/*$(function () {
     initLeadManEvents();
-});
+});*/
 
 function initLeadManEvents() {
     flog("leadman.js - init");

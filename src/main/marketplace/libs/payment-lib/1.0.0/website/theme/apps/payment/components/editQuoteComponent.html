@@ -1,5 +1,5 @@
 <section>
-    <div class="container-bg">
+    <div id="manageQuote" class="container-bg">
         <div class="container-layout container-fluid">
             <div class="container-content-wrapper">
                 <div class="row">
@@ -18,13 +18,14 @@
                                                 <i class="fa fa-copy"></i> Clone Quote
                                             </button>
 
+                                            <!--
                                             <a href="#" class="btn btn-sm btn-info">
                                                 <i class="fa fa-eye"></i> Preview
                                             </a>
 
                                             <a href="#" class="btn btn-sm btn-info">
                                                 <i class="fa fa-print"></i> Print
-                                            </a>
+                                            </a>-->
                                         </div>
                                     </h2>                
                                 </header>
@@ -53,7 +54,7 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" data-text="$formatter.ifNull($page.vendor.formattedName, '')" />
+                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" data-text="$formatter.ifNull($page.vendor.formattedName, '')" value="$formatter.ifNull($page.vendor.formattedName, '')" />
                                                                 <input type="hidden" id="vendorName" name="vendorName" value="$formatter.ifNull($page.vendor.id, '')" />
 
                                                             </div>
@@ -64,7 +65,7 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" data-text="$formatter.ifNull($page.customer.formattedName, '')" />
+                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" data-text="$formatter.ifNull($page.customer.formattedName, '')" value="$formatter.ifNull($page.customer.formattedName, '')" />
                                                                 <input type="hidden" id="customerN" name="customerName" value="$formatter.ifNull($page.customer.id, '')" />
                                                             </div>
                                                         </div>
@@ -72,14 +73,14 @@
                                                         <div class="col-sm-2">
                                                             <label class="control-label" for="name">Issue Date</label>
                                                             <div class="input-group col-sm-12"> 
-                                                                <input name="issueDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate, "dd/MM/yyyy HH:mm")" />
+                                                                <input name="issueDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate, 'dd/MM/yyyy HH:mm')" />
                                                             </div> 
                                                         </div>
 
                                                         <div class="col-sm-2">
                                                             <label class="control-label" for="name">Expiry Date</label>
                                                             <div class="input-group col-sm-12"> 
-                                                                <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate, "dd/MM/yyyy HH:mm")" />
+                                                                <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate, 'dd/MM/yyyy HH:mm')" />
                                                             </div> 
                                                         </div>
 
@@ -92,7 +93,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group remove-uneditable">
                                                 <div class="col-md-12">
                                                     <button class="btn btn-sm btn-success pull-right" type="submit">
                                                         <i class="fa fa-check"></i>
@@ -112,7 +113,7 @@
                                                 #foreach($attachment in $page.attachments)
                                                 <a href="/_hashes/files/$attachment.fileHash" target="_blank" class="attachment btn btn-default pull-left">$attachment.fileName</a>
                                                 #end
-                                                <button class="btn btn-success pull-left upload-files" type="button">
+                                                <button class="remove-uneditable btn btn-success pull-left upload-files" type="button">
                                                     <i class="fa fa-plus"></i>
                                                     Add File
                                                 </button>
@@ -302,6 +303,6 @@
 
 <script type="text/javascript">
     $(function () {
-        initializeQuoteComponent("$page.name");
+        initializeQuoteComponent("$!page.name", "$!page.quoteState");
     });
 </script>
