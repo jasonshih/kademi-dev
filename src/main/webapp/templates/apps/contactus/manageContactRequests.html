@@ -69,6 +69,8 @@
                     </div>
                 </div>
                 <div class="col-md-2">
+                    #set( $formTypes = $page.formTypes )
+                    #if ($formTypes.size() > 0)
                     <table class="table">
                         <tbody>
                             <tr>
@@ -77,7 +79,7 @@
                                 </td>
                             </tr>
                             #set( $p = $params.get("contactForm") )
-                            #foreach ($formType in $page.formTypes)
+                            #foreach ($formType in $formTypes)
                                 #set ($class = "")
                                 #if( $p == $formType )
                                     #set ($class = "success")
@@ -90,6 +92,7 @@
                             #end
                         </tbody>
                     </table>
+                    #end
                 </div>
             </div>
             <div class="table-responsive">
@@ -194,7 +197,7 @@
                     $(e.target).closest('tr').toggleClass('success');
                     var uri = URI(window.location);
                     if(window.location.href.indexOf("contactForm") != -1){
-                        uri.setSearch("contactForm", "");    
+                        uri.removeSearch("contactForm");   
                     }else{
                         var formType = $(this).text();
                         uri.setSearch("contactForm", formType);                        
