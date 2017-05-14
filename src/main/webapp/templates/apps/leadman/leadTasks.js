@@ -62,27 +62,29 @@ $(function () {
 
     var modalUpload = $('#modal-upload');
     if (modalUpload.length > 0) {
-        Dropzone.autoDiscover = false;
+        if (typeof Dropzone !== 'undefined') {
+            Dropzone.autoDiscover = false;
 
-        modalUpload.find('.dropzone').dropzone({
-            paramName: 'file', // The name that will be used to transfer the file
-            maxFilesize: 2000.0, // MB
-            addRemoveLinks: true,
-            parallelUploads: 1,
-            uploadMultiple: false,
-            acceptedFiles: 'text/csv,.csv,.txt'
-        });
+            modalUpload.find('.dropzone').dropzone({
+                paramName: 'file', // The name that will be used to transfer the file
+                maxFilesize: 2000.0, // MB
+                addRemoveLinks: true,
+                parallelUploads: 1,
+                uploadMultiple: false,
+                acceptedFiles: 'text/csv,.csv,.txt'
+            });
 
-        if ($('#uploadFileDropzone').length > 0) {
-            var dz = Dropzone.forElement('#uploadFileDropzone');
-            flog('dropz', Dropzone, dz, dz.options.url);
-            dz.on('success', function (file) {
-                flog('added file', file);
-                doReloadTasksPage();
-            });
-            dz.on('error', function (file, errorMessage) {
-                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
-            });
+            if ($('#uploadFileDropzone').length > 0) {
+                var dz = Dropzone.forElement('#uploadFileDropzone');
+                flog('dropz', Dropzone, dz, dz.options.url);
+                dz.on('success', function (file) {
+                    flog('added file', file);
+                    doReloadTasksPage();
+                });
+                dz.on('error', function (file, errorMessage) {
+                    Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+                });
+            }
         }
     }
 });
