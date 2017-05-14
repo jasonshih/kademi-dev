@@ -58,15 +58,38 @@
                 </div>
             </div><!-- /.row -->
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div id='chart'>
                         <svg id="visualisation" width="100%" height="300"></svg>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div id="donut-chart">
                         <svg id="donutChart" width="100%" height="300"></svg>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <td class="first text-left">
+                                    Form Types
+                                </td>
+                            </tr>
+                            #set( $p = $params.get("contactForm") )
+                            #foreach ($formType in $page.formTypes)
+                                #set ($class = "")
+                                #if( $p == $formType )
+                                    #set ($class = "success")
+                                #end
+                                <tr class="$class">
+                                    <td>
+                                        <a href="#" class="formTypeFilter">$formType</a>
+                                    </td>
+                                </tr>
+                            #end
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div class="table-responsive">
@@ -127,7 +150,6 @@
         <script src="/theme/apps/contactus/jquery.contactRequests.js"></script>
         <script src="/static/d3/d3.v3.js">//</script>
         <script src="/static/nvd3/nv.d3.js">//</script>
-
         <script type="text/javascript">
             $(function () {
                 initAcknowledge();
@@ -166,7 +188,19 @@
                         doSearch(null, null, null, true);
                     }
                 });
-
+                
+                $('.formTypeFilter').on('click', function (e) {
+                    e.preventDefault();
+                    $(e.target).closest('tr').toggleClass('success');
+                    var uri = URI(window.location);
+                    if(window.location.href.indexOf("contactForm") != -1){
+                        uri.setSearch("contactForm", "");    
+                    }else{
+                        var formType = $(this).text();
+                        uri.setSearch("contactForm", formType);                        
+                    }
+                    window.location = uri.toString();
+                });
 
                 var dateRange = {
                     startDate: null,
