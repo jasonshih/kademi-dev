@@ -13,108 +13,109 @@ Number.prototype.formatMoney = function (c, d, t) {
     var columnId = 0;
     var currentQuoteId = 0;
 
-    function initEditQuote() {
-        $("#vendor-search-input").entityFinder({
-            url: '/custs',
-            onSelectSuggestion: function (suggestion, id, actualId, type) {
-                $("#vendorName").val(actualId);
-            }
-        });
-        
-        $("#customer-search-input").entityFinder({
-            url: '/custs',
-            onSelectSuggestion: function (suggestion, id, actualId, type) {
-                $("#customerName").val(actualId);
-            }
-        });
-        
-        //initGenericSearch('vendor-search-input');
-        //initGenericSearch('customer-search-input');
+    function initEditQuote(editable) {
+        if (editable) {
+            $("#vendor-search-input").entityFinder({
+                url: '/custs',
+                onSelectSuggestion: function (suggestion, id, actualId, type) {
+                    $("#vendorName").val(actualId);
+                }
+            });
 
-        initDateTimePickers();
+            $("#customer-search-input").entityFinder({
+                url: '/custs',
+                onSelectSuggestion: function (suggestion, id, actualId, type) {
+                    $("#customerName").val(actualId);
+                }
+            });
 
-        $(".old-supplier").each(function () {
-            initGenericSearch($(this).prop("id"));
-        });
+            initDateTimePickers();
 
-        $("tr:not(.template-row) .total-field").each(function () {
-            $(this).html(Number($(this).html()).formatMoney(2, '.', ','));
-        });
+            $(".old-supplier").each(function () {
+                initGenericSearch($(this).prop("id"));
+            });
 
-        refreshTotals();
+            $("tr:not(.template-row) .total-field").each(function () {
+                $(this).html(Number($(this).html()).formatMoney(2, '.', ','));
+            });
 
-        $("#invoice-details-form").forms({
-            callback: function () {
-                Msg.success("done!");
-            }
-        });
+            refreshTotals();
 
-        $("#line-items").on("blur", "input", function () {
-            var row = $(this).parents("tr");
+            $("#invoice-details-form").forms({
+                callback: function () {
+                    Msg.success("done!");
+                }
+            });
 
-            saveChangedRow(row);
-        });
-
-        $("#line-items").on("keyup", "input", function (event) {
-            if (event.keyCode === 13) {
+            $("#line-items").on("blur", "input", function () {
                 var row = $(this).parents("tr");
 
                 saveChangedRow(row);
-            }
-        });
+            });
+
+            $("#line-items").on("keyup", "input", function (event) {
+                if (event.keyCode === 13) {
+                    var row = $(this).parents("tr");
+
+                    saveChangedRow(row);
+                }
+            });
 
 
-        $("#line-items").on("focus", "input", function () {
-            $(this).parents("tr").addClass("highlighted");
-        }).on("blur", "input", function () {
-            $(this).parents("tbody").find(".highlighted").removeClass("highlighted");
-        });
+            $("#line-items").on("focus", "input", function () {
+                $(this).parents("tr").addClass("highlighted");
+            }).on("blur", "input", function () {
+                $(this).parents("tbody").find(".highlighted").removeClass("highlighted");
+            });
 
-        $(".new-line-add").on("click", function () {
-            $(".template-row").clone().removeClass("template-row").insertBefore(".new-line-add").find(".supplier").prop("id", "supplier-" + columnId).end().find(".supplier-suggestions").prop("id", "supplier-" + columnId + "-suggestions").end().find("input:eq(0)").focus();
+            $(".new-line-add").on("click", function () {
+                $(".template-row").clone().removeClass("template-row").insertBefore(".new-line-add").find(".supplier").prop("id", "supplier-" + columnId).end().find(".supplier-suggestions").prop("id", "supplier-" + columnId + "-suggestions").end().find("input:eq(0)").focus();
 
-            initGenericSearch('supplier-' + columnId);
+                initGenericSearch('supplier-' + columnId);
 
-            columnId++;
-        });
+                columnId++;
+            });
 
-        $("#line-items tbody").on("blur", ".last-field", function () {
-            $(".new-line-add").click();
-        });
+            $("#line-items tbody").on("blur", ".last-field", function () {
+                $(".new-line-add").click();
+            });
 
-        $("#line-items tbody").on("keydown", "input", function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
+            $("#line-items tbody").on("keydown", "input", function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
 
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
 
-        $("#line-items tbody").on("keyup", ".discount-field, .price-field, .quantity-field", function () {
-            var parentRow = $(this).parents("tr");
+            $("#line-items tbody").on("keyup", ".discount-field, .price-field, .quantity-field", function () {
+                var parentRow = $(this).parents("tr");
 
-            var quantity = Number(parentRow.find(".quantity-field").val());
-            var price = Number(parentRow.find(".price-field").val());
-            var discount = Number(parentRow.find(".discount-field").val());
+                var quantity = Number(parentRow.find(".quantity-field").val());
+                var price = Number(parentRow.find(".price-field").val());
+                var discount = Number(parentRow.find(".discount-field").val());
 
-            var amount = parentRow.find(".total-field");
+                var amount = parentRow.find(".total-field");
 
-            if (isNaN(quantity) || isNaN(price)) {
-                amount.html((0).formatMoney(2, '.', ','));
-                amount.data("total", 0);
+                if (isNaN(quantity) || isNaN(price)) {
+                    amount.html((0).formatMoney(2, '.', ','));
+                    amount.data("total", 0);
+
+                    refreshTotals();
+
+                    return;
+                }
+
+                amount.data("total", (quantity * price) - (quantity * price * (isNaN(discount) ? 0 : (discount / 100))));
+                amount.html(Number(amount.data("total")).formatMoney(2, '.', ','));
 
                 refreshTotals();
+            });
 
-                return;
-            }
-
-            amount.data("total", (quantity * price) - (quantity * price * (isNaN(discount) ? 0 : (discount / 100))));
-            amount.html(Number(amount.data("total")).formatMoney(2, '.', ','));
-
-            refreshTotals();
-        });
-
-        $(".new-line-add").click();
+            $(".new-line-add").click();
+        } else {
+            
+        }
     }
 
     function saveChangedRow(row) {
@@ -386,11 +387,11 @@ Number.prototype.formatMoney = function (c, d, t) {
             }
         });
     }
-    
+
     function reloadFileList() {
         $('#files-body').reloadFragment({
             whenComplete: function () {
-                
+
             }
         });
     }
@@ -450,7 +451,7 @@ Number.prototype.formatMoney = function (c, d, t) {
         $("#clone-quote-button").on("click", function () {
             $("#clone-quote-form").submit();
         });
-        
+
         var modal = $('#uploadFileModal');
         var form = modal.find('form');
 
@@ -472,7 +473,7 @@ Number.prototype.formatMoney = function (c, d, t) {
 
     w.initializeQuoteComponent = function (quoteId) {
         currentQuoteId = quoteId;
-        initEditQuote();
+        initEditQuote(true);
         initModalForm();
     };
 
