@@ -114,7 +114,11 @@ Number.prototype.formatMoney = function (c, d, t) {
 
             $(".new-line-add").click();
         } else {
+            $("#manageQuote :input").prop("disabled", true);
             
+            $(".remove-uneditable").remove();
+
+            refreshTotals();
         }
     }
 
@@ -425,7 +429,7 @@ Number.prototype.formatMoney = function (c, d, t) {
             if ($("#line-items tbody tr").size() === 2) {
                 $(".new-line-add").click();
             }
-
+            
             refreshTotals();
         }
     };
@@ -471,9 +475,9 @@ Number.prototype.formatMoney = function (c, d, t) {
     }
     ;
 
-    w.initializeQuoteComponent = function (quoteId) {
-        currentQuoteId = quoteId;
-        initEditQuote(true);
+    w.initializeQuoteComponent = function (quoteId, quoteLevel) {
+        currentQuoteId = quoteId; 
+        initEditQuote(quoteLevel === "New" || quoteLevel === "Assigned");
         initModalForm();
     };
 

@@ -135,12 +135,12 @@
 </div>
 <script type="text/javascript">
     function removeQuote(href, quoteId) {
-        confirmDelete(href, getFileName(href), function () {
-            Msg.success('Deleted ' + href);
-
-            $("#quote-" + quoteId).slideUp(300, function() {
-                $(this).remove();
-            })
+        confirmDelete(href, getFileName(href), function (data) {
+            $("#quoteComponent").reloadFragment({
+                whenComplete: function () {
+                    $('abbr.timeago').timeago();
+                }
+            });
         });
     }
     ;
