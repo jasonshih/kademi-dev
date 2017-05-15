@@ -4,12 +4,9 @@ var win = $(window);
 function initManageEvent() {
     flog('initManageEvent');
     useHash = true;
-
-    if (isKEditor) {
-        initEditorFrame();
-        initPostMessage();
-    }
+    
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
+    initContentEditor();
 
     var form = initEventForm();
     initConfirmationTab();
@@ -26,34 +23,28 @@ window.onbeforeunload = function () {
     }
 };
 
+function initContentEditor() {
+    flog('initContentEditor');
+    
+    var contentEditor = $('.contenteditor');
+    if (contentEditor.length > 0) {
+        var pageName = getFileName(window.location.href);
+        
+        contentEditor.contentEditor({
+            iframeMode: true,
+            snippetsUrl: './_components?fileName=' + pageName,
+            snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+            basePath: '',
+            pagePath: '',
+        });
+    }
+}
+
 function initChosen() {
     flog('initChosen');
 
     $(".chosen-select").chosen({
         search_contains: true
-    });
-}
-
-function initEditorFrame() {
-    flog('initEditorFrame');
-
-    var editorFrame = $('#editor-frame');
-    editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
-}
-
-function initPostMessage() {
-    flog('initPostMessage');
-
-    win.on('message', function (e) {
-        flog('On got message', e, e.originalEvent);
-
-        var data = $.parseJSON(e.originalEvent.data);
-        if (data.isSaved) {
-            Msg.info('Saved!');
-            $('.manageEventForm').removeClass('dirty');
-        } else {
-            iframeUrl = data.url;
-        }
     });
 }
 
@@ -118,6 +109,11 @@ function initEventForm() {
 
     form.forms({
         onValid: function (form) {
+            var contentEditor = $('.contenteditor');
+            if (contentEditor.length > 0) {
+                contentEditor.val(contentEditor.contentEditor('getContent'));
+            }
+            
             // Renumber reminder inputs
             form.find('.reminders tr').each(function (i, n) {
                 var tr = $(n);
@@ -130,20 +126,8 @@ function initEventForm() {
             });
         },
         callback: function () {
-            if (isKEditor) {
-                var editorFrame = $('#editor-frame');
-                var pageName = getFileName(window.location.pathname);
-                var postData = {
-                    url: window.location.href.split('#')[0],
-                    triggerSave: true,
-                    pageName: pageName
-                };
-
-                editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
-            } else {
-                Msg.info('Saved!');
-                form.removeClass('dirty');
-            }
+            Msg.info('Saved!');
+            form.removeClass('dirty');
         }
     });
 
