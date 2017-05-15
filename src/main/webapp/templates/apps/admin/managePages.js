@@ -277,7 +277,7 @@ function initDeleteFolders() {
 
 function initPjax() {
     var container = $('#filesContainer');
-    var files = $('#page-list');
+    // var files = $('#page-list');
     flog('initPjax', container);
     container.on('click', 'a.pjax', function (e) {
         e.preventDefault();
@@ -288,7 +288,7 @@ function initPjax() {
 
         flog('click pjax', a);
 
-        files.reloadFragment({
+        container.reloadFragment({
             url: href,
             whenComplete: function (response, status, xhr) {
                 flog('done', response, status, xhr);
@@ -299,12 +299,12 @@ function initPjax() {
                 setRecentItem(window.location.pathname, window.location.pathname);
 
                 var dom = $(response);
-                var pages = $('#pages');
-                var templates = $('#templates');
+                // var pages = $('#pages');
+                // var templates = $('#templates');
 
-                flog('update pages', pages);
-                pages.html(dom.find('#pages > *'));
-                templates.html(dom.find('#templates > *'));
+                // flog('update pages', pages);
+                container.html(dom.find('#filesContainer > *'));
+                // templates.html(dom.find('#templates > *'));
 
                 initFilesLayout();
                 initCopyCutPaste();

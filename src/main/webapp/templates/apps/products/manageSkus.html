@@ -72,7 +72,7 @@
                                 #if($variant.sku)
                                     #set($foundSku = true)
                                 #end
-                                <tr data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
+                                <tr id="product-row-$product.id" data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
                                     <td>
                                         #if($variant.imageUrl)
                                             <div class="col-md-12 product-image-thumb">

@@ -890,27 +890,26 @@ function checkRegexes(form, config) {
  */
 function checkPhones(form, config) {
     flog('[jquery.forms] checkPhones', form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('.phone, #phone').each(function () {
-        flog(this);
         var input = $(this);
         var shouldCheck = shouldCheckValue(input, config);
-
+        
         if (shouldCheck) {
             var val = input.val();
             flog('[jquery.forms] Input: ' + val + ', Region Code: ' + config.phoneRegionCode + ', Carrier Code: ' + config.phoneCarrierCode);
             var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
             flog('[jquery.forms] Parsing result', parsingResult);
-
-            if (!(parsingResult.isPossibleNumber && parsingResult.isNumberValid)) {
+            
+            if (parsingResult.error || (input.hasClass('allow-dodgy-phone') && !parsingResult.isPossibleNumber) || (!input.hasClass('allow-dodgy-phone') && !(parsingResult.isPossibleNumber && parsingResult.isNumberValid))) {
                 flog('[jquery.forms] Phone field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
-                input.attr('error-message', config.requiredErrorMessage);
+                input.attr('error-message', config.phoneErrorMessage);
             }
         }
     });
