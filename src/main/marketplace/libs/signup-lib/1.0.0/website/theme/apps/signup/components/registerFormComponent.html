@@ -19,7 +19,7 @@
 #end
 
 <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
-<form method="post" id="registerForm" action="$formUrl" class="form-horizontal">
+<form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal" >
     <div class="row">
         #if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
         <div class="col-md-8 col-md-offset-2">

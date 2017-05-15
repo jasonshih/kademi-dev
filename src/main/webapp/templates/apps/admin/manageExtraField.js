@@ -83,6 +83,7 @@ function openExtraFieldModal(key, value) {
         var txtName = $('#extra-field-name');
         var chkRequire = $('#extra-field-required');
         var chkIndexed = $('#extra-field-indexed');
+        var chkFileUpload = $('#extra-field-fileUpload');
         var txtText = $('#extra-field-text');
         var optionWrapper = $('#options-wrapper');
         var orgSel = $('#org-sel');
@@ -95,6 +96,7 @@ function openExtraFieldModal(key, value) {
         chkRequire.prop('checked', values.require);
         flog("indexed", chkIndexed, values);
         chkIndexed.prop('checked', values.indexed);
+        chkFileUpload.prop('checked', values.fileUpload);
         orgSel.prop('checked', values.orgSel);
         profId.prop('checked', values.profId);
 
@@ -137,6 +139,7 @@ function initExtraFieldModal() {
     var modal = $('#modal-extra-field');
     var chkRequire = $('#extra-field-required');
     var chkIndex = $('#extra-field-indexed');
+    var chkFileUpload = $('#extra-field-fileUpload');
     var txtText = $('#extra-field-text');
     var optionWrapper = $('#options-wrapper');
     var btnAddOption = modal.find('.btn-add-option');
@@ -215,6 +218,10 @@ function initExtraFieldModal() {
             if (chkIndex.is(":checked")) {
                 valueString += 'indexed;';
             }
+            
+            if (chkFileUpload.is(":checked")) {
+                valueString += 'fileUpload;';
+            }
 
             // Options
             if (orgSel.prop('checked')) {
@@ -265,6 +272,7 @@ function getValue(value, key) {
     var isRequired = false;
     var isOrgSel = false;
     var isIndexed = false;
+    var isfileUpload = false;
     var isProfId = false;
 
     var text = key;
@@ -280,6 +288,8 @@ function getValue(value, key) {
             isRequired = true;
         } else if (s === "indexed") {
             isIndexed = true;
+        } else if (s === "fileUpload") {
+            isfileUpload = true;
         } else if (s.startsWith("orgs(")) {
             isOrgSel = true;
         } else if (s.startsWith('profid(')) {
@@ -292,6 +302,7 @@ function getValue(value, key) {
         text: text,
         options: options,
         orgSel: isOrgSel,
+        fileUpload: isfileUpload,
         indexed: isIndexed,
         profId: isProfId
     };
