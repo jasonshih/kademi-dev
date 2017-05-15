@@ -221,7 +221,7 @@
                         #foreach($template in $templateList.value)
                         <tr>
                             <td>
-                                <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                <a href="/websites/${page.repository.name}/${page.branch.name}?editTemplate=$template.path" target="_blank">$template.fileName</a>
                             </td>
                             <td>$template.description</td>
                             <td>
