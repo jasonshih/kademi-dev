@@ -68,6 +68,7 @@
                     }
                     if (id !== null) {
                         $('#' + id).reloadFragment({
+                            url: window.location.pathname,
                             whenComplete: function () {
                                 checkRequiresClipboard(config.clipboardName);
                                 if (config.afterReload) {
@@ -124,6 +125,7 @@
                     }
                     if (id !== null) {
                         $('#' + id).reloadFragment({
+                            url: window.location.pathname,
                             whenComplete: function () {
                                 checkRequiresClipboard(config.clipboardName);
                                 if (config.afterReload) {
