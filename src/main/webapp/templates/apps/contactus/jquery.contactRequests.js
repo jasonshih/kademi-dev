@@ -3,12 +3,14 @@
         init: function (options) {
             var config = $.extend({
                 "href": "/contactRequestSearch",
-                "templateSource": $("#entry-template").html()
+                "templateSource": $("#entry-template").html(),
+                "templateFormSource": $("#forms-template").html()
             }, options);
 
             flog("init contactRequestSearch", config.templateSource);
 
             template = Handlebars.compile(config.templateSource);
+            templateForms = Handlebars.compile(config.templateFormSource);
 
             Handlebars.registerHelper('dateFromLong', function (millis) {
                 if (millis) {
@@ -18,6 +20,18 @@
                     return "";
                 }
             });
+            
+            Handlebars.registerHelper("debug", function(optionalValue) {
+                flog("Current Context");
+                flog("====================");
+                flog(this);
+
+                if (optionalValue) {
+                  flog("Value");
+                  flog("====================");
+                  flog(optionalValue);
+                }
+              });
 
             this.data("config", config);
         },
@@ -25,6 +39,7 @@
             flog("load stream", this);
             var config = this.data("config");
             var container = this;
+            var containerForms = $("#formsBody");
             var href = config.href;
             if (explicitHref) {
                 href = explicitHref;
@@ -38,6 +53,10 @@
                     container.html(html);
                     flog("template", container, html);
                     $(".timeago", container).timeago();
+                    
+                    var htmlForms = templateForms(resp);
+                    containerForms.html(htmlForms);
+                    
                     initCharts(resp);
                 },
                 error: function (resp) {
