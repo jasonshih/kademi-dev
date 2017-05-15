@@ -21,8 +21,9 @@ function initRegisterForms(afterRegisterHref, callback) {
     log('initRegisterForms - bootstrap335', registerForm);
 
     var params = {};
-    for (var a in window.location.search.substr(1).split("&")) {
-        var t = window.location.search.substr(1).split("&")[a].split("=");
+    var datas = window.location.search.substr(1).split("&");
+    for (var i = 0; i < datas.length; i++) {
+        var t = datas[i].split("=");
         params[t[0]] = t[1] || null;
     }
 
