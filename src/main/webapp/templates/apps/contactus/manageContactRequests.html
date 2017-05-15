@@ -4,6 +4,27 @@
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" />
     </head>
     <body class="manageEmail">
+        <style>
+            #table-wrapper {
+                position:relative;
+            }
+            #table-scroll {
+              height:240px;
+              overflow:auto;  
+              margin-top:20px;
+            }
+            #table-wrapper table {
+              width:100%;
+
+            }
+            #table-wrapper table thead th .text {
+              position:absolute;   
+              top:-20px;
+              z-index:2;
+              height:20px;
+              width:35%;
+            }
+        </style>
         #if( $page.dbCount == 0 )
             #showWelcome()
         #else
@@ -58,15 +79,31 @@
                 </div>
             </div><!-- /.row -->
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div id='chart'>
                         <svg id="visualisation" width="100%" height="300"></svg>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div id="donut-chart">
                         <svg id="donutChart" width="100%" height="300"></svg>
                     </div>
+                </div>
+                <div class="col-md-2">
+                    #set( $formTypes = $page.formTypes )
+                    #if ($formTypes.size() > 0)
+                    <div id="table-wrapper">
+                    <div id="table-scroll">
+                    <table class="table" style="height:300; overflow: scroll;">
+                        <tbody id="formsBody">
+                        <tr>
+                            <td style="text-align: center">Please wait <i class="fa fa-spinner fa-spin"></i></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    </div>
+                    #end
                 </div>
             </div>
             <div class="table-responsive">
@@ -123,11 +160,24 @@
             </tr>
             {{/each}}
         </script>
+        
+        <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
+        <script id="forms-template" class="hide"  type="text/x-handlebars-template">
+            <tr><td class="first text-left">
+                Form Types {{debug aggregations.form.buckets}}
+            </td></tr>
+            {{#each aggregations.form.buckets}}
+            <tr class="">
+                <td>
+                    <a href="#{{key}}" class="formTypeFilter">{{key}}</a>
+                </td>
+            </tr>
+            {{/each}}
+        </script>
 
-        <script src="/theme/apps/contactus/jquery.contactRequests.js"></script>
+        <script src="/theme/apps/contactus/jquery.contactRequests.js?v100"></script>
         <script src="/static/d3/d3.v3.js">//</script>
         <script src="/static/nvd3/nv.d3.js">//</script>
-
         <script type="text/javascript">
             $(function () {
                 initAcknowledge();
@@ -166,7 +216,19 @@
                         doSearch(null, null, null, true);
                     }
                 });
-
+                
+                $(document.body).on('click', '.formTypeFilter', function (e) {
+                    e.preventDefault();
+                    $(e.target).closest('tr').toggleClass('success');
+                    var uri = URI(window.location);
+                    if(window.location.href.indexOf("contactForm") != -1){
+                        uri.removeSearch("contactForm");
+                    }else{
+                        var formType = $(this).text();
+                        uri.setSearch("contactForm", formType);                        
+                    }
+                    window.location = uri.toString();
+                });
 
                 var dateRange = {
                     startDate: null,

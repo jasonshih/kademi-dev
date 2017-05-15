@@ -179,20 +179,24 @@
                 jQuery("abbr.timeago").timeago();
                 jQuery("#showUserSelect").val("").change(function () {
                     var type = $(this).val();
-                    log("change", type);
+                    flog("change", type);
+                    var value = false;
+                    
                     if (type == "noPassword") {
-                        log("1");
-                        $("table.members tbody tr").hide();
-                        $("table.members tbody tr.noPassword").show();
+                        value = "false";
                     } else if (type == "withPassword") {
-                        log("2");
-                        $("table.members tbody tr").hide();
-                        $("table.members tbody tr.withPassword").show();
-                    } else {
-                        log("3");
-                        $("table.members tbody tr").show();
+                        value = "true";
+                    }else{
+                        value = "noFilter";
                     }
-                    $("span.count").text($("table.members tbody tr:visible").length);
+                    
+                    var uri = URI(window.location);
+
+                    uri.setSearch("password", value);
+                    
+                    var newHref = uri.toString();
+                    flog("new location", newHref);
+                    window.location = newHref;
                 });
                 initSelectAll();
                 initRemoveUsers();
