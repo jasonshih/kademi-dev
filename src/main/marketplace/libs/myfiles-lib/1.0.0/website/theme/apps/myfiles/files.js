@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     initFiles();
     initCRUDFiles();
     initUpload();
@@ -11,32 +11,34 @@ function initFiles() {
 }
 
 function initUpload() {
-    Dropzone.autoDiscover = false;
-    $('#modal-upload .dropzone').dropzone({
-        paramName: 'file', // The name that will be used to transfer the file
-        maxFilesize: 2000.0, // MB
-        addRemoveLinks: true,
-        parallelUploads: 1,
-        uploadMultiple: true
-    });
-    var uploadFileDropzone = $('#uploadFileDropzone');
-    if (uploadFileDropzone.length){
-        var dz = Dropzone.forElement('#uploadFileDropzone');
-        flog('dropz', Dropzone, dz, dz.options.url);
-        dz.on('success', function (file) {
-            flog('added file', file);
-            reloadFileList();
+    if (typeof Dropzone !== 'undefined') {
+        Dropzone.autoDiscover = false;
+        $('#modal-upload .dropzone').dropzone({
+            paramName: 'file', // The name that will be used to transfer the file
+            maxFilesize: 2000.0, // MB
+            addRemoveLinks: true,
+            parallelUploads: 1,
+            uploadMultiple: true
         });
-        dz.on('error', function (file, errorMessage) {
-            Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
-        });
+        var uploadFileDropzone = $('#uploadFileDropzone');
+        if (uploadFileDropzone.length) {
+            var dz = Dropzone.forElement('#uploadFileDropzone');
+            flog('dropz', Dropzone, dz, dz.options.url);
+            dz.on('success', function (file) {
+                flog('added file', file);
+                reloadFileList();
+            });
+            dz.on('error', function (file, errorMessage) {
+                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+            });
+        }
     }
 }
 
 
 function initCRUDFiles() {
     var container = $('#filesContainer');
-
+    
     container.on('click', '.btn-create-folder', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -44,11 +46,11 @@ function initCRUDFiles() {
             reloadFileList();
         });
     });
-
+    
     container.on('click', '.btn-upload-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        
         $('#modal-upload').modal('show');
     });
 }
@@ -68,24 +70,24 @@ function initFiles() {
     var container = $('#filesContainer');
     container.on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
-
+        
         var target = $(this);
         var href = target.attr('href');
         flog('click delete href: ', href);
         var name = getFileName(href);
         var tr = target.closest('tr');
-
+        
         confirmDelete(href, name, function () {
             flog('deleted', tr);
             tr.remove();
             Msg.success('Deleted ' + name);
         });
     });
-
+    
     container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
         e.stopPropagation();
-
+        
         var target = $(this);
         var href = target.attr('href');
         promptRename(href, function (resp, sourceHref, destHref) {
@@ -95,12 +97,12 @@ function initFiles() {
             Msg.success(sourceName + ' is renamed to ' + destName);
         });
     });
-
+    
     container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
         e.stopPropagation();
     });
-
+    
     // Call history stuff directly, so we can reload
     //var config = {
     //    'pageUrl': null,
@@ -141,7 +143,7 @@ function initFiles() {
 function initFilesLayout() {
     flog('initFiles');
     var tableFiles = $('#table-files');
-
+    
     tableFiles.find('a.show-color-box').each(function (i, n) {
         var href = $(n).attr('href');
         $(n).attr('href', href + '/alt-640-360.png');
