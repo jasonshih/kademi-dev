@@ -83,11 +83,11 @@ function openExtraFieldModal(key, value) {
         var txtName = $('#extra-field-name');
         var chkRequire = $('#extra-field-required');
         var chkIndexed = $('#extra-field-indexed');
-        var chkFileUpload = $('#extra-field-fileUpload');
+        
+        var fieldType = $('#fieldType');
+        
         var txtText = $('#extra-field-text');
         var optionWrapper = $('#options-wrapper');
-        var orgSel = $('#org-sel');
-        var profId = modal.find('#prof-id');
 
         txtName.val(key);
 
@@ -96,9 +96,8 @@ function openExtraFieldModal(key, value) {
         chkRequire.prop('checked', values.require);
         flog("indexed", chkIndexed, values);
         chkIndexed.prop('checked', values.indexed);
-        chkFileUpload.prop('checked', values.fileUpload);
-        orgSel.prop('checked', values.orgSel);
-        profId.prop('checked', values.profId);
+        
+        fieldType.prop('value', values.fieldType);
 
         txtText.val(values.text);
 
@@ -139,12 +138,11 @@ function initExtraFieldModal() {
     var modal = $('#modal-extra-field');
     var chkRequire = $('#extra-field-required');
     var chkIndex = $('#extra-field-indexed');
-    var chkFileUpload = $('#extra-field-fileUpload');
     var txtText = $('#extra-field-text');
     var optionWrapper = $('#options-wrapper');
     var btnAddOption = modal.find('.btn-add-option');
-    var orgSel = $('#org-sel');
-    var profId = modal.find('#prof-id');
+    
+    var fieldType = $('#fieldType');
 
     modal.on('hidden.bs.modal', function () {
         modal.find('input').prop('disabled', false);
@@ -154,32 +152,19 @@ function initExtraFieldModal() {
     // Add options
     btnAddOption.on('click', function (e) {
         e.preventDefault();
-        if (!orgSel.prop('checked')) {
+        if (fieldType.prop('value') == '') {
             optionWrapper.append(
                 renderOption()
             );
         }
     });
-
-    // Add group selector
-    orgSel.on('click', function (e) {
-        if (orgSel.prop('checked')) {
+    
+    fieldType.on('change', function (e) {
+        if (e.target.value != '') {
             optionWrapper.html('');
             btnAddOption.addClass('disabled');
         } else {
             btnAddOption.removeClass('disabled');
-        }
-    });
-
-    profId.on('click', function (e) {
-        if (profId.is(':checked')) {
-            optionWrapper.html('');
-            btnAddOption.addClass('disabled');
-            orgSel.check(false);
-            orgSel.disable(true);
-        } else {
-            btnAddOption.removeClass('disabled');
-            orgSel.disable(false);
         }
     });
 
@@ -219,14 +204,14 @@ function initExtraFieldModal() {
                 valueString += 'indexed;';
             }
             
-            if (chkFileUpload.is(":checked")) {
+            if ($('#fieldType').prop('value') == 'fileUpload') {
                 valueString += 'fileUpload;';
             }
 
             // Options
-            if (orgSel.prop('checked')) {
+            if ($('#fieldType').prop('value') == 'org-sel') {
                 valueString += 'orgs();';
-            } else if (profId.is(':checked')) {
+            } else if ($('#fieldType').prop('value')  == 'prof-id') {
                 valueString += 'profid();';
             } else {
                 valueString += 'options(';
@@ -270,10 +255,9 @@ function initExtraFieldModal() {
 function getValue(value, key) {
     var values = value.split(';');
     var isRequired = false;
-    var isOrgSel = false;
     var isIndexed = false;
-    var isfileUpload = false;
-    var isProfId = false;
+    
+    var fieldType = "";
 
     var text = key;
     var options = "";
@@ -289,11 +273,11 @@ function getValue(value, key) {
         } else if (s === "indexed") {
             isIndexed = true;
         } else if (s === "fileUpload") {
-            isfileUpload = true;
+            fieldType = "fileUpload";
         } else if (s.startsWith("orgs(")) {
-            isOrgSel = true;
+            fieldType = "org-sel";
         } else if (s.startsWith('profid(')) {
-            isProfId = true;
+            fieldType = "prof-id";
         }
     }
 
@@ -301,10 +285,8 @@ function getValue(value, key) {
         require: isRequired,
         text: text,
         options: options,
-        orgSel: isOrgSel,
-        fileUpload: isfileUpload,
-        indexed: isIndexed,
-        profId: isProfId
+        fieldType: fieldType,
+        indexed: isIndexed
     };
 }
 
@@ -330,6 +312,17 @@ function buildExtraField(key, value) {
 
     string += '<td>' + indexed + '</td>';
 
+    // Type
+    if ( values.fieldType === "fileUpload") {
+        string += '<td>File Upload</td>';
+    } else if ( values.fieldType === "org-sel") {
+        string += '<td>Organisation selection</td>';
+    } else if ( values.fieldType === 'prof-id' ) {
+        string += '<td>Profile Identifier</td>';
+    } else {
+        string += '<td>text</td>';
+    }
+    
     // Options
     string += '<td>' + options + '</td>';
 
