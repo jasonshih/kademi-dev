@@ -379,14 +379,14 @@ function initNewUserForm() {
         orgIdTxt = modal.find("#newOrgId"),
         nextAction = 'view';
     
-    $(newOrganisationBtn).click(function(){
-       $("#existingOrganisation").addClass("hide");
-       $("#createNewOrganisation").removeClass("hide");
+    $(newOrganisationBtn).click(function () {
+        $("#existingOrganisation").addClass("hide");
+        $("#createNewOrganisation").removeClass("hide");
     });
-
-    $(existingOrganisationBtn).click(function(){
-       $("#existingOrganisation").removeClass("hide");
-       $("#createNewOrganisation").addClass("hide");
+    
+    $(existingOrganisationBtn).click(function () {
+        $("#existingOrganisation").removeClass("hide");
+        $("#createNewOrganisation").addClass("hide");
     });
     
     
@@ -705,11 +705,35 @@ $(function () {
     initTimeago();
     initMultiLingual();
     initNewUserForm();
+    initEmailEventSimulator();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
 });
+
+function initEmailEventSimulator() {
+    $(document.body).on('click', '.simulateEvent a', function (e) {
+        e.preventDefault();
+        var action = $(e.target).attr("href");
+        $.ajax({
+            type: 'POST',
+            url: window.location.pathname,
+            data: {
+                eventAction: action
+            },
+            dataType: 'json',
+            success: function (content) {
+                if (content.status) {
+                    Msg.info("Done");
+                } else {
+                    Msg.error("Hmm ... not so good. " + content.messages);
+                }
+            }
+        });
+    });
+}
+
 
 $(window).load(function () {
     if ((typeof CKEDITOR != 'undefined')) {
