@@ -94,7 +94,7 @@
         <div id="filesContainer">
             <div class="row">
                 <!-- Start content of Pages tab -->
-                <div id="pages" class="col-sm-6">
+                <div id="pages" class=" #if( $page.is("branch") ) col-sm-6 #else col-sm-12 #end">
                     <h4>Web pages</h4>
                     <hr>
                     <div id="pages-inner">
@@ -140,7 +140,7 @@
                                     #if ($f.name != "theme")
                                     <article class="page">
                                         <i class="clip-folder"></i>
-                                        <a href="$f.href" class="article-name pjax">$f.title</a>
+                                        <a href="$f.href" class="article-name pjax">$f.name</a>
                                         <aside class="article-action">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="javascript:void(0)" class="btn btn-sm btn-info" title="Edit Folder"><i class="fa fa-cog"></i></a>
@@ -204,7 +204,7 @@
                 </div>
 
 
-                <div id="templates" class="col-sm-6">
+                <div id="templates" class="col-sm-6 #if( !$page.is("branch") ) hide #end">
                     #if( $page.is("branch") )
                     <h4>Templates</h4>
                     <hr>
