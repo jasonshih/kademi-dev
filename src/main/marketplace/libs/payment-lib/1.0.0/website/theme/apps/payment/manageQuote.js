@@ -92,9 +92,7 @@ Number.prototype.formatMoney = function (c, d, t) {
             columnId++;
         }).trigger('click');
         
-        itemsWrapper.on('blur', '.last-field', function () {
-            btnAddLine.trigger('click');
-        }).on('keyup', '.discount-field, .price-field, .quantity-field', function () {
+        itemsWrapper.on('keyup', '.discount-field, .price-field, .quantity-field', function () {
             var parentRow = $(this).parents('tr');
             
             var quantity = Number(parentRow.find('.quantity-field').val());
