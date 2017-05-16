@@ -90,8 +90,6 @@
                     </div>
                 </div>
                 <div class="col-md-2">
-                    #set( $formTypes = $page.formTypes )
-                    #if ($formTypes.size() > 0)
                     <div id="table-wrapper">
                     <div id="table-scroll">
                     <table class="table" style="height:300; overflow: scroll;">
@@ -103,7 +101,6 @@
                     </table>
                     </div>
                     </div>
-                    #end
                 </div>
             </div>
             <div class="table-responsive">
@@ -164,8 +161,9 @@
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script id="forms-template" class="hide"  type="text/x-handlebars-template">
             <tr><td class="first text-left">
-                Form Types {{debug aggregations.form.buckets}}
+                Form Types
             </td></tr>
+            {{debug aggregations.form.buckets}}
             {{#each aggregations.form.buckets}}
             <tr class="">
                 <td>

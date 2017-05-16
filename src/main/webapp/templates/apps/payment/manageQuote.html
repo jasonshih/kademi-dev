@@ -5,7 +5,7 @@
     </head>
     <body>
         <section style="padding-top: 15px">
-
+            
             <header>
                 <h2>
                     $page.title - $page.quoteState
@@ -13,18 +13,18 @@
                         <button type="submit" class="btn btn-sm btn-success">
                             <i class="fa fa-arrow-circle-right"></i> Accept Now
                         </button>
-
+                        
                         <a href="#" class="btn btn-sm btn-info">
                             <i class="fa fa-eye"></i> Preview
                         </a>
-
+                        
                         <a href="#" class="btn btn-sm btn-info">
                             <i class="fa fa-print"></i> Print
                         </a>
                     </div>
-                </h2>                
+                </h2>
             </header>
-
+            
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="clip-file-2"></i>
@@ -37,595 +37,187 @@
                                 <div class="row">
                                     <div class="col-sm-3">
                                         <label class="control-label" for="name">Vendor</label>
-
+                                        
                                         <div class="input-group col-sm-12">
                                             <span class="input-group-addon"><i class="fa fa-search"></i></span>
-
-                                            <div class="search-wrapper">
-                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" data-value-input-id="vendor-name" value="$formatter.ifNull($page.vendor.formattedName, '')" />
-                                                <input type="hidden" id="vendor-name" name="vendorName" value="$formatter.ifNull($page.vendor.id, '')" />
-                                                <ul class="search-suggestions hide" id="vendor-search-input-suggestions"></ul>
-                                            </div>
+                                            <input type="text" class="form-control entity-finder" placeholder="Search for Customer" data-text="$formatter.ifNull($page.vendor.formattedName,
+                                                    '')" value="$formatter.ifNull($page.vendor.id, '')" data-use-actual-id="true" name="vendorName" />
                                         </div>
                                     </div>
-
+                                    
                                     <div class="col-sm-3">
                                         <label class="control-label" for="name">Customer</label>
-
+                                        
                                         <div class="input-group col-sm-12">
                                             <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                            <div class="search-wrapper">
-                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" data-value-input-id="customer-name" value="$formatter.ifNull($page.customer.formattedName, '')" />
-                                                <input type="hidden" id="customer-name" name="customerName" value="$formatter.ifNull($page.customer.id, '')" />
-                                                <ul class="search-suggestions hide" id="customer-search-input-suggestions"></ul>
-                                            </div>
+                                            <input type="text" class="form-control entity-finder" placeholder="Search for Customer" data-text="$formatter.ifNull($page.customer.formattedName, '')" value="$formatter.ifNull($page.customer.id, '')" data-use-actual-id="true" name="customerName" />
                                         </div>
                                     </div>
-
+                                    
                                     <div class="col-sm-2">
                                         <label class="control-label" for="name">Issue Date</label>
-                                        <div class="input-group col-sm-12"> 
+                                        <div class="input-group col-sm-12">
                                             <input name="issueDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.issuedDate, "dd/MM/yyyy HH:mm")" />
-                                    </div> 
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <label class="control-label" for="name">Expiry Date</label>
+                                        <div class="input-group col-sm-12">
+                                            <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate, "dd/MM/yyyy HH:mm")" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-sm-2">
+                                        <label class="control-label" for="name">Quote #</label>
+                                        <div class="input-group col-sm-12">
+                                            <input name="quoteNumber" class="form-control" value="$page.number" />
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <div class="col-sm-2">
-                                    <label class="control-label" for="name">Expiry Date</label>
-                                    <div class="input-group col-sm-12"> 
-                                        <input name="expiryDate" class="form-control date-pickers" value="$formatter.formatJodaDate($page.expiryDate, "dd/MM/yyyy HH:mm")" />
-                                </div> 
                             </div>
-
-                            <div class="col-sm-2">
-                                <label class="control-label" for="name">Quote #</label>
-                                <div class="input-group col-sm-12"> 
-                                    <input name="quoteNumber" class="form-control" value="$page.number" />
-                                </div> 
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <button class="btn btn-sm btn-success pull-right" type="submit">
+                                    <i class="fa fa-check"></i>
+                                    Save
+                                </button>
                             </div>
+                        </div>
+                        <input type="hidden" name="updateQuoteFolder" value="$page.name" />
+                    </form>
+                </div>
+            </div>
+            
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="clip-file-2"></i>
+                    Update Quote Items
+                </div>
+
+                <script id="template-row" type="text/html">
+                    <tr data-item-id="NEW">
+                        <td>
+                            <input name="description" placeholder="Item Description" class="form-control" type="text" />
+                        </td>
+                        <td>
+                            <input name="account" placeholder="Account Name" class="form-control" type="text" />
+                        </td>
+                        <td>
+                            <div class="search-wrapper">
+                                <input name="supplier" type="text" class="form-control supplier" placeholder="Search for Supplier" data-use-actual-id="true" />
+                            </div>
+                        </td>
+                        <td>
+                            <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" />
+                        </td>
+                        <td>
+                            <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" />
+                        </td>
+                        <td>
+                            <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" type="number" />
+                        </td>
+                        <td>
+                            <select name="taxRate" class="form-control last-field">
+                                <option value="0">No Tax</option>
+                            </select>
+                        </td>
+                        <td>
+                            <span data-total="0" class="total-field">0.00</span>
+                            <button class="btn-remove-quote"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </script>
+                
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="container">
+                            <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px">
+                                <thead>
+                                    <tr>
+                                        <th class="description">Description</th>
+                                        <th class="supplier">Account</th>
+                                        <th class="supplier">Supplier</th>
+                                        <th class="quantity">Quantity</th>
+                                        <th class="price">Unit Price</th>
+                                        <th class="discount">Discount %</th>
+                                        <th class="tax-rate">Tax Rate</th>
+                                        <th class="amount">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    #foreach($lineItem in $page.lineItems)
+                                        <tr data-item-id="$lineItem.id">
+                                            <td>
+                                                <input name="description" placeholder="Item Description" class="form-control" type="text" value="$lineItem.description" />
+                                            </td>
+                                            <td>
+                                                <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account, '')" />
+                                            </td>
+                                            <td>
+                                                    <input name="supplier" type="text" class="form-control old-supplier" data-text="$formatter.ifNull($lineItem.supplier.formattedName, '')" value="$formatter.ifNull($lineItem.supplier.id, '')" placeholder="Search for Supplier" data-use-actual-id="true" />
+                                            </td>
+                                            <td>
+                                                <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" value="$lineItem.quantity" />
+                                            </td>
+                                            <td>
+                                                <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" value="$lineItem.unitPrice" />
+                                            </td>
+                                            <td>
+                                                <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" value="$lineItem.discountRate" type="number" />
+                                            </td>
+                                            <td>
+                                                <select name="taxRate" class="form-control last-field">
+                                                    <option #if ($lineItem.taxRate == 0) selected #else #end value="0">No Tax</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span>
+                                                <button class="btn-remove-quote"><i class="fa fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    #end
+                                    <tr>
+                                        <td colspan="8"><a href="#" class="new-line-add">Click to add a new line</a></td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="subtotal">
+                                        <td colspan="6" rowspan="3"></td>
+                                        <td>Subtotal</td>
+                                        <td class="subtotal-field">0.00</td>
+                                    </tr>
+                                    
+                                    <tr class="gst">
+                                        <td>GST</td>
+                                        <td>0.00</td>
+                                    </tr>
+                                    
+                                    <tr class="total">
+                                        <td>Total</td>
+                                        <td class="global-total-field">0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <button class="btn btn-sm btn-success pull-right" type="submit">
-                            <i class="fa fa-check"></i>
-                            Save
-                        </button>
-                    </div>
-                </div>
-                <input type="hidden" name="updateQuoteFolder" value="$page.name" />
-            </form>
-        </div>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="clip-file-2"></i>
-            Update Quote Items
-        </div>
-
-        <div class="panel-body">
-            <div class="form-group">
-                <div class="container">
-                    <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px">
-                        <thead>
-                            <tr>
-                                <th class="description">Description</th>
-                                <th class="supplier">Account</th>
-                                <th class="supplier">Supplier</th>
-                                <th class="quantity">Quantity</th>
-                                <th class="price">Unit Price</th>
-                                <th class="discount">Discount %</th>
-                                <th class="tax-rate">Tax Rate</th>
-                                <th class="amount">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="template-row" data-item-id="NEW">
-                                <td>
-                                    <input name="description" placeholder="Item Description" class="form-control" type="text" />
-                                </td>
-                                <td>
-                                    <input name="account" placeholder="Account Name" class="form-control" type="text" />
-                                </td>
-                                <td>
-                                    <div class="search-wrapper">
-                                        <input name="supplier" type="text" class="form-control search-input supplier" placeholder="Search for Supplier" />
-                                        <ul class="search-suggestions hide supplier-suggestions"></ul>
-                                    </div>
-                                </td>
-                                <td>
-                                    <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" />
-                                </td>
-                                <td>
-                                    <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" />
-                                </td>
-                                <td>
-                                    <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" type="number" />
-                                </td>
-                                <td>
-                                    <select name="taxRate" class="form-control last-field">
-                                        <option value="0">No Tax</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <span data-total="0" class="total-field">0.00</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            #foreach($lineItem in $page.lineItems)
-                            <tr data-item-id="$lineItem.id">
-                                <td>
-                                    <input name="description" placeholder="Item Description" class="form-control" type="text" value="$lineItem.description" />
-                                </td>
-                                <td>
-                                    <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account, '')" />
-                                </td>
-                                <td>
-                                    <div class="search-wrapper">
-                                        #set($suggestionListId = 'old-supplier-' + $lineItem.id + '-suggestions')
-
-                                        <input name="supplier" id="old-supplier-$lineItem.id" type="text" class="form-control search-input supplier old-supplier" value="$formatter.ifNull($lineItem.supplier.formattedName, '')" placeholder="Search for Supplier" />
-                                        <ul id="$suggestionListId" class="search-suggestions hide old-supplier-suggestions"></ul>
-                                    </div>
-                                </td>
-                                <td>
-                                    <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" value="$lineItem.quantity" />
-                                </td>
-                                <td>
-                                    <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" value="$lineItem.unitPrice" />
-                                </td>
-                                <td>
-                                    <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" value="$lineItem.discountRate" type="number" />
-                                </td>
-                                <td>
-                                    <select name="taxRate" class="form-control last-field">
-                                        <option #if ($lineItem.taxRate == 0) selected #else #end value="0">No Tax</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
-                                </td>
-                            </tr>
-                            #end
-                            <tr class="new-line-add">
-                                <td colspan="8">Click to add a new line</td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="subtotal">
-                                <td colspan="6" rowspan="3"></td>
-                                <td>Subtotal</td>
-                                <td class="subtotal-field">0.00</td>
-                            </tr>
-
-                            <tr class="gst">
-                                <td>GST</td>
-                                <td>0.00</td>
-                            </tr>
-
-                            <tr class="total">
-                                <td>Total</td>
-                                <td class="global-total-field">0.00</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
             </div>
-        </div>
-    </div>
-</section>
-
-#macro(isActive $state)
-#if($request.params.state == $state)
-active            
-#end
-#end
-<script type="text/javascript">
-    Number.prototype.formatMoney = function (c, d, t) {
-        var n = this,
-                c = isNaN(c = Math.abs(c)) ? 2 : c,
-                d = d == undefined ? "." : d,
-                t = t == undefined ? "," : t,
-                s = n < 0 ? "-" : "",
-                i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-                j = (j = i.length) > 3 ? j % 3 : 0;
-        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-    };
-
-    var columnId = 0;
-
-    $(document).ready(function () {
-        initGenericSearch('vendor-search-input');
-        initGenericSearch('customer-search-input');
-
-        initDateTimePickers();
-
-        $(".old-supplier").each(function () {
-            initGenericSearch($(this).prop("id"));
-        });
-
-        $("tr:not(.template-row) .total-field").each(function () {
-            $(this).html(Number($(this).html()).formatMoney(2, '.', ','));
-        });
-
-        refreshTotals();
-
-        $("#invoice-details-form").forms({
-            callback: function () {
-                Msg.success("done!");
-            }
-        });
-
-        $("#line-items").on("blur", "input", function () {
-            var row = $(this).parents("tr");
-
-            saveChangedRow(row);
-        });
-
-        $("#line-items").on("keyup", "input", function (event) {
-            if (event.keyCode === 13) {
-                var row = $(this).parents("tr");
-
-                saveChangedRow(row);
-            }
-        });
-
-
-        $("#line-items").on("focus", "input", function () {
-            $(this).parents("tr").addClass("highlighted");
-        }).on("blur", "input", function () {
-            $(this).parents("tbody").find(".highlighted").removeClass("highlighted");
-        });
-
-        $(".new-line-add").on("click", function () {
-            $(".template-row").clone().removeClass("template-row").insertBefore(".new-line-add").find(".supplier").prop("id", "supplier-" + columnId).end().find(".supplier-suggestions").prop("id", "supplier-" + columnId + "-suggestions").end().find("input:eq(0)").focus();
-
-            initGenericSearch('supplier-' + columnId);
-
-            columnId++;
-        });
-
-        $("#line-items tbody").on("blur", ".last-field", function () {
-            $(".new-line-add").click();
-        });
-
-        $("#line-items tbody").on("keydown", "input", function (event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-
-                return false;
-            }
-        });
-
-        $("#line-items tbody").on("keyup", ".discount-field, .price-field, .quantity-field", function () {
-            var parentRow = $(this).parents("tr");
-
-            var quantity = Number(parentRow.find(".quantity-field").val());
-            var price = Number(parentRow.find(".price-field").val());
-            var discount = Number(parentRow.find(".discount-field").val());
-
-            var amount = parentRow.find(".total-field");
-
-            if (isNaN(quantity) || isNaN(price)) {
-                amount.html((0).formatMoney(2, '.', ','));
-                amount.data("total", 0);
-
-                refreshTotals();
-
-                return;
-            }
-
-            amount.data("total", (quantity * price) - (quantity * price * (isNaN(discount) ? 0 : (discount / 100))));
-            amount.html(Number(amount.data("total")).formatMoney(2, '.', ','));
-
-            refreshTotals();
-        });
-
-        $(".new-line-add").click();
-    });
-
-    function saveChangedRow(row) {
-        var data = {
-            "description": row.find('[name="description"]').val(),
-            "account": row.find('[name="account"]').val(),
-            "supplierName": row.find('[name="supplier"]').data("selected-id") == undefined ? 0 : row.find('[name="supplier"]').data("selected-id"),
-            "quantity": row.find('[name="quantity"]').val(),
-            "unitPrice": row.find('[name="unitPrice"]').val(),
-            "discountRate": row.find('[name="discountRate"]').val(),
-            "taxRate": row.find('[name="taxRate"] :selected').val(),
-        };
-
-        if (row.data("item-id") === "NEW") {
-            data["addLineItem"] = "$page.name";
-        } else {
-            data["modifyLineItem"] = "$page.name";
-            data["lineItemId"] = row.data("item-id");
-        }
-
-        $.ajax({
-            method: "POST",
-            dataType: "json",
-            data: data,
-            success(data) {
-                if (row.data("item-id") === "NEW") {
-                    if (data.data !== undefined) {
-                        row.data("item-id", data.data.id);
-                    }
-                }
-            }
-        });
-    }
-
-    function refreshTotals() {
-        var total = 0;
-
-        $("#line-items tbody tr:not(.template-row)").each(function () {
-            var totalField = $(this).find(".total-field");
-
-            if (totalField.length > 0) {
-                total += Number(totalField.data("total"));
-            }
-
-            $(".subtotal-field").text(total.formatMoney(2, '.', ','));
-            $(".global-total-field").text(total.formatMoney(2, '.', ','));
-        });
-    }
-
-    function removeRow(event, caller) {
-        if ($(caller).parents("tr").data("item-id") !== 'NEW') {
-            if (confirm("Are you sure you want to delete this item?")) {
-
-                $.ajax({
-                    method: "POST",
-                    dataType: "json",
-                    data: {
-                        "removeLineItem": "$page.name",
-                        "lineItemId": $(caller).parents("tr").data("item-id")
-                    },
-                    success(data) {
-                        $(caller).parents("tr").remove();
-
-                        if ($("#line-items tbody tr").size() === 2) {
-                            $(".new-line-add").click();
-                        }
-
-                        refreshTotals();
-                    }
-                });
-
-            }
-        } else {
-            $(caller).parents("tr").remove();
-
-            if ($("#line-items tbody tr").size() === 2) {
-                $(".new-line-add").click();
-            }
-
-            refreshTotals();
-        }
-    }
-
-    function selectSuggestion(inputId) {
-        var suggestionsWrapper = $('#' + inputId + '-suggestions');
-        var txt = $('#' + inputId);
-        var hiddenField = $('#' + txt.data('value-input-id'));
-        var backdrop = $('#' + inputId + '-backdrop')
-
-        var actived = suggestionsWrapper.find('.suggestion').filter('.active');
-
-        if (actived.length > 0) {
-            txt.val(actived.data('name')).data('selected-id', actived.data('user-id'));
-            hiddenField.val(actived.data('user-id'));
-
-            suggestionsWrapper.addClass('hide');
-            backdrop.addClass('hide');
-        }
-    }
-
-    function initGenericSearch(inputId) {
-        flog('initGenericSearch');
-
-        var txt = $('#' + inputId);
-
-        if (txt.length > 0) {
-            var suggestionsWrapper = $('#' + inputId + '-suggestions');
-
-            var backdrop = $('<div />', {
-                id: '' + inputId + '-backdrop',
-                class: 'hide search-backdrop'
-            }).on('click', function () {
-                backdrop.addClass('hide');
-                suggestionsWrapper.addClass('hide');
-            }).appendTo(document.body);
-
-            txt.on({
-                input: function () {
-                    typewatch(function () {
-                        var text = txt.val().trim();
-
-                        if (text.length > 0) {
-                            doTopNavSearch(text, suggestionsWrapper, backdrop, inputId);
-                        } else {
-                            suggestionsWrapper.addClass('hide');
-                            backdrop.addClass('hide');
-                        }
-                    }, 500);
-                },
-                keydown: function (e) {
-                    switch (e.keyCode) {
-                        case keymap.ESC:
-                            flog('Pressed ESC button');
-
-                            suggestionsWrapper.addClass('hide');
-                            backdrop.addClass('hide');
-
-                            e.preventDefault();
-                            break;
-
-                        case keymap.UP:
-                            flog('Pressed UP button');
-
-                            var suggestions = suggestionsWrapper.find('.suggestion');
-                            if (suggestions.length > 0) {
-                                var actived = suggestions.filter('.active');
-                                var prev = actived.prev();
-
-                                actived.removeClass('active');
-                                if (prev.length > 0) {
-                                    prev.addClass('active');
-                                } else {
-                                    suggestions.last().addClass('active');
-                                }
-                            }
-
-                            e.preventDefault();
-                            break;
-
-                        case keymap.DOWN:
-                            flog('Pressed DOWN button');
-
-                            var suggestions = suggestionsWrapper.find('.suggestion');
-                            if (suggestions.length > 0) {
-                                var actived = suggestions.filter('.active');
-                                var next = actived.next();
-
-                                actived.removeClass('active');
-                                if (next.length > 0) {
-                                    next.addClass('active');
-                                } else {
-                                    suggestions.first().addClass('active');
-                                }
-                            }
-
-                            e.preventDefault();
-                            break;
-
-                        case keymap.ENTER:
-                            flog('Pressed DOWN button');
-
-                            selectSuggestion(inputId);
-
-                            e.preventDefault();
-                            break;
-
-                        default:
-                        // Nothing
-                    }
-                }
+        </section>
+
+        #macro(isActive $state)
+            #if($request.params.state == $state)
+                active
+            #end
+        #end
+
+        <script src="/theme/apps/payment/manageQuote.js" type="text/javascript">//</script>
+        <script type="text/javascript">
+            var currentQuoteId = '$page.name';
+            $(function () {
+                initEditableQuote();
             });
-
-            suggestionsWrapper.on({
-                mouseenter: function () {
-                    suggestionsWrapper.find('.suggestion').removeClass('active');
-                    $(this).addClass('active');
-                },
-                mouseleave: function () {
-                    $(this).removeClass('active');
-                }
-            }, '.suggestion');
-        }
-    }
-
-    function doTopNavSearch(query, suggestionsWrapper, backdrop, inputId) {
-        flog('doTopNavSearch', query, suggestionsWrapper, backdrop);
-
-        $.ajax({
-            url: '/manageUsers',
-            type: 'POST',
-            data: {
-                omni: query
-            },
-            dataType: 'JSON',
-            success: function (resp) {
-                flog('Got search response from server', resp);
-
-                var suggestionStr = '';
-
-                if (resp && resp.hits && resp.hits.total > 0) {
-                    for (var i = 0; i < resp.hits.hits.length; i++) {
-                        var suggestion = resp.hits.hits[i];
-                        if (suggestion.fields.userId) {
-                            var userId = suggestion.fields.userId[0];
-                            var userName = suggestion.fields.userName[0];
-                            var email;
-                            if (suggestion.fields.email) {
-                                var email = suggestion.fields.email[0];
-                            } else {
-                                email = "";
-                            }
-                            var firstName = suggestion.fields.firstName ? suggestion.fields.firstName[0] : '';
-                            var surName = suggestion.fields.surName ? suggestion.fields.surName[0] : '';
-
-                            suggestionStr += '<li class="suggestion" data-user-id="' + userId + '" data-name="' + firstName + ' ' + surName + '">';
-
-                            suggestionStr += '    <a href="#" onclick="selectSuggestion(\'' + inputId + '\')">';
-                            suggestionStr += '        <span>' + userName + '</span> &ndash; <span class="email">' + email + '</span>';
-                            if (firstName || surName) {
-                                suggestionStr += '    <br /><small class="text-muted">' + firstName + ' ' + surName + '</small>';
-                            }
-                            suggestionStr += '    </a>';
-                        } else if (suggestion.fields.entityId) {
-                            var id = suggestion.fields.entityId[0];
-                            var orgId = suggestion.fields.orgId[0];
-                            var orgTitle = suggestion.fields.title[0];
-
-                            suggestionStr += '<li class="suggestion" data-user-id="' + id + '" data-name="' + orgTitle + '">';
-
-                            suggestionStr += '    <a href="#" onclick="selectSuggestion(\'' + inputId + '\')">';
-                            suggestionStr += '        <span>' + orgTitle + '</span>';
-                            suggestionStr += '    <br /><small class="text-muted">OrgID: ' + orgId + '</small>';
-                            suggestionStr += '    </a>';
-
-                        }
-                        suggestionStr += '</li>';
-                    }
-                } else {
-                    suggestionStr = '<li class="search-no-result">No result.</li>';
-                }
-
-                suggestionsWrapper.html(suggestionStr).removeClass('hide');
-                backdrop.removeClass('hide');
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                flog('Error when doTopNavSearch with query: ' + query, jqXHR, textStatus, errorThrown);
-            }
-        });
-    }
-
-    function initDateTimePickers() {
-        var date = new Date();
-        date.setDate(date.getDate() - 1);
-        $('body').css('position', 'relative');
-        var opts = {
-            widgetParent: 'body',
-            format: "DD/MM/YYYY HH:mm"
-        };
-
-        $('.date-pickers').datetimepicker(opts);
-
-        $('.date-pickers').on('dp.show', function () {
-            var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
-            if (datepicker.hasClass('bottom')) {
-                var top = $(this).offset().top - $(this).outerHeight();
-                var left = $(this).offset().left;
-                datepicker.css({
-                    'top': top + 'px',
-                    'bottom': 'auto',
-                    'left': left + 'px',
-                    'z-index': 9999
-                });
-            } else if (datepicker.hasClass('top')) {
-                var top = $(this).offset().top - datepicker.outerHeight() - 40;
-                var left = $(this).offset().left;
-                datepicker.css({
-                    'top': top + 'px',
-                    'bottom': 'auto',
-                    'left': left + 'px',
-                    'z-index': 9999
-                });
-            }
-        });
-    }
-</script>
-</body>
+        </script>
+    </body>
 </html>

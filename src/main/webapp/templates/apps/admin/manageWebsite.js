@@ -26,6 +26,15 @@ function initAppsFinder() {
     $('#txt-search-app').domFinder({
         container: $('.appsContainer'),
         items: 'tr',
+        filter: function (items, query) {
+            query = query.toLowerCase();
+        
+            return items.filter(function () {
+                var text = ($(this).find('h4').text() || '').toLowerCase();
+            
+                return text.indexOf(query) !== -1;
+            });
+        },
         showItems: function (items) {
             items.css('display', '');
         }
