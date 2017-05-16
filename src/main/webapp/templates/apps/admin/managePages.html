@@ -14,7 +14,7 @@
         <script type="text/javascript" src="/templates/apps/admin/managePages.js?v=1.0.0">//</script>
         <script type="text/javascript" src="/static/js/types.js">// </script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-        <script type="text/javascript" src="/static/jquery.cutcopy/1.0.0/jquery.cutcopy-1.0.0.js">//</script>
+        <script type="text/javascript" src="/static/jquery.cutcopy/1.0.1/jquery.cutcopy-1.0.1.js">//</script>
         <style type="text/css">
             .input-group .form-control {
                 width: 50%;
@@ -94,7 +94,7 @@
         <div id="filesContainer">
             <div class="row">
                 <!-- Start content of Pages tab -->
-                <div id="pages" class="col-sm-6">
+                <div id="pages" class=" #if( $page.is("branch") ) col-sm-6 #else col-sm-12 #end">
                     <h4>Web pages</h4>
                     <hr>
                     <div id="pages-inner">
@@ -140,7 +140,7 @@
                                     #if ($f.name != "theme")
                                     <article class="page">
                                         <i class="clip-folder"></i>
-                                        <a href="$f.href" class="article-name pjax">$f.title</a>
+                                        <a href="$f.href" class="article-name pjax">$f.name</a>
                                         <aside class="article-action">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="javascript:void(0)" class="btn btn-sm btn-info" title="Edit Folder"><i class="fa fa-cog"></i></a>
@@ -204,7 +204,7 @@
                 </div>
 
 
-                <div id="templates" class="col-sm-6">
+                <div id="templates" class="col-sm-6 #if( !$page.is("branch") ) hide #end">
                     #if( $page.is("branch") )
                     <h4>Templates</h4>
                     <hr>
@@ -221,7 +221,7 @@
                         #foreach($template in $templateList.value)
                         <tr>
                             <td>
-                                <a href="$page.href?editTemplate=$template.path" target="_blank">$template.fileName</a>
+                                <a href="/websites/${page.repository.name}/${page.branch.name}?editTemplate=$template.path" target="_blank">$template.fileName</a>
                             </td>
                             <td>$template.description</td>
                             <td>

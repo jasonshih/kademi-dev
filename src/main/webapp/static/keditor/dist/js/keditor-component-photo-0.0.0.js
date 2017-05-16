@@ -24,7 +24,9 @@
             var img = componentContent.find('img');
 
             img.css('display', 'inline-block');
-            img.css('vertical-align', 'middle');
+            if (!img.css('vertical-align')){
+                img.css('vertical-align', 'middle');
+            }
 
             var options = keditor.options;
             if (typeof options.onComponentReady === 'function') {
