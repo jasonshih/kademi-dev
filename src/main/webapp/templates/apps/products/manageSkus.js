@@ -121,12 +121,15 @@
         $("#productsTableBody").on("change", ".input-sku", function (e) {
             var target = $(e.target);
             var newSku = target.val();
-
             var row = target.closest('tr');
             var rowId = $(row).attr("id");
-            var productId = row.data("product");
-            var skuId = row.data("skuid");
-            var options = row.data("options");
+            
+            var td = $(row).find('td:first-child');
+            
+            var productId = td.data("product");
+            var skuId = td.data('skuid');
+            var options = td.data("options");
+            
             updateSku(productId, options, skuId, newSku, rowId);
         });
 
@@ -136,10 +139,12 @@
                 var newSku = target.val();
 
                 var row = target.closest('tr');
+                var td = $(row).find('td:first-child');
+                
                 var rowId = $(row).attr("id");
-                var productId = row.data("product");
-                var skuId = row.data("skuid");
-                var options = row.data("options");
+                var productId = td.data("product");
+                var skuId = td.data('skuid');
+                var options = td.data("options");
                 updateSku(productId, options, skuId, newSku, rowId);
             }
         });
@@ -150,8 +155,11 @@
             var target = $(e.target);
             var newSkuTitle = target.val();
             var row = target.closest('tr');
-            var skuId = row.data("skuid");
             var rowId = $(row).attr("id");
+            var td = $(row).find('td:first-child');
+            
+            var skuId = td.data('skuid');
+            
             
             updateSkuTitle(skuId, newSkuTitle, rowId);
         });
@@ -160,10 +168,13 @@
             if ((e.keyCode || e.which) == keymap.ENTER) {
                 var target = $(e.target);
                 var newSkuTitle = target.val();
-                var row = target.closest('tr');
-                var skuId = row.data("skuid");
-                var rowId = $(row).attr("id");
                 
+                var row = target.closest('tr');
+                var rowId = $(row).attr("id");
+                var td = $(row).find('td:first-child');
+                
+                var skuId = td.data('skuid');
+               
                 updateSkuTitle(skuId, newSkuTitle, rowId);
             }
         });
@@ -174,8 +185,11 @@
             var target = $(e.target);
             var newSkuTitle = target.val();
             var row = target.closest('tr');
-            var skuId = row.data("skuid");
             var rowId = $(row).attr("id");
+            var td = $(row).find('td:first-child');
+                
+            var skuId = td.data('skuid');
+            
             updateSkuBaseCost(skuId, newSkuTitle, rowId);
         });
     }
@@ -186,8 +200,10 @@
             var newSkuStock = target.val();
             var locid = target.data('locid');
             var row = target.closest('tr');
-            var skuId = row.data("skuid");
             var rowId = $(row).attr("id");
+            var td = $(row).find('td:first-child');
+            var skuId = td.data('skuid');
+            
             updateSkuStock(skuId, locid, newSkuStock, rowId, rowId);
         });
     }
@@ -198,8 +214,10 @@
 
             var btn = $(this);
             var row = btn.closest('tr');
-            var skuId = row.data("skuid");
-            var imgHashes = row.data('selectableimg').split(',');
+            var td = $(row).find('td:first-child');
+            
+            var skuId = td.data('skuid');
+            var imgHashes = td.data('selectableimg').split(',');
 
             $('#modal-option-img').find('input[name=skuId]').val(skuId);
             $('#modal-option-img').find('.img-list').empty();
@@ -236,8 +254,9 @@
 
             var btn = $(this);
             var row = btn.closest('tr');
-            var skuId = row.data("skuid");
-            var imgHashes = row.data('selectableimg').split(',');
+            var td = $(row).find('td:first-child');
+            var skuId = td.data('skuid');
+            var imgHashes = td.data('selectableimg').split(',');
 
             $('#modal-option-img').find('input[name=skuId]').val(skuId);
             $('#modal-option-img').find('.img-list').empty();
@@ -271,7 +290,9 @@
             var btn = $(this);
             var row = btn.closest('tr');
             var rowId = $(row).attr("id");
-            var skuId = row.data("skuid");
+            var td = $(row).find('td:first-child');
+
+            var skuId = td.data('skuid');
 
             removeSkuImage(skuId, rowId);
         });
@@ -282,6 +303,42 @@
             $('#modal-option-img').find('.btn-image-selected ').removeClass('image-selected');
         });
     }
+    
+    function initUpCropImage(btn, skuId, rowId, ){
+        btn.upcropImage({
+            buttonContinueText: 'Save',
+            url: window.location.pathname + '?skuId=' + skuId,
+            fieldName: 'skuImg',
+            onCropComplete: function (resp) {
+                flog("onCropComplete:", resp, resp.nextHref);
+                reloadRow(rowId);
+            },
+            onContinue: function (resp) {
+                flog("onContinue:", resp, resp.result.nextHref);
+                $.ajax({
+                    url: window.location.pathname+ '?skuId=' + skuId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        uploadedHref: resp.result.nextHref,
+                        applyImage: true
+                    },
+                    success: function (resp) {
+                        flog("success");
+                        if (resp.status) {
+                            Msg.info("Done");
+                            reloadRow(rowId);
+                        } else {
+                            Msg.error("An error occured processing the variant image.");
+                        }
+                    },
+                    error: function () {
+                        alert('An error occured processing the variant image.');
+                    }
+                });
+            }
+        });
+    }
 
     function initSkuImgUpload() {
         
@@ -289,41 +346,11 @@
             var btn = $(item);
             var row = btn.closest('tr');
             var rowId = $(row).attr("id");
-            var skuId = row.data('skuid');
+            var td = $(row).find('td:first-child');
+
+            var skuId = td.data('skuid');
             
-            btn.upcropImage({
-                buttonContinueText: 'Save',
-                url: window.location.pathname + '?skuId=' + skuId,
-                fieldName: 'skuImg',
-                onCropComplete: function (resp) {
-                    flog("onCropComplete:", resp, resp.nextHref);
-                    reloadRow(rowId);
-                },
-                onContinue: function (resp) {
-                    flog("onContinue:", resp, resp.result.nextHref);
-                    $.ajax({
-                        url: window.location.pathname,
-                        type: 'POST',
-                        dataType: 'json',
-                        data: {
-                            uploadedHref: resp.result.nextHref,
-                            applyImage: true
-                        },
-                        success: function (resp) {
-                            flog("success");
-                            if (resp.status) {
-                                Msg.info("Done");
-                                reloadRow(rowId);
-                            } else {
-                                Msg.error("An error occured processing the variant image.");
-                            }
-                        },
-                        error: function () {
-                            alert('An error occured processing the variant image.');
-                        }
-                    });
-                }
-            });
+            initUpCropImage(btn, skuId, rowId);
         });
     }
 
@@ -460,7 +487,16 @@
         flog("Reloading row", reloadId);
         $("#"+reloadId).reloadFragment({
             whenComplete: function () {
-                initSkuImgUpload();
+                $("#"+reloadId+" td:first-child .btn-option-img-upload").each(function (i, item) {
+                    var btn = $(item);
+                    var row = btn.closest('tr');
+                    var rowId = $(row).attr("id");
+                    var td = $(row).find('td:first-child');
+
+                    var skuId = td.data('skuid');
+
+                    initUpCropImage(btn, skuId, rowId);
+                });
             },
             url: window.location.href
         });

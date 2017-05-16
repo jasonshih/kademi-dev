@@ -72,8 +72,8 @@
                                 #if($variant.sku)
                                     #set($foundSku = true)
                                 #end
-                                <tr id="product-row-$product.id" data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
-                                    <td>
+                                <tr id="product-row-$product.id">
+                                    <td data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
                                         #if($variant.imageUrl)
                                             <div class="col-md-12 product-image-thumb">
                                                 <a href="$variant.imageUrl" class="thumbnail image-change">
@@ -84,7 +84,7 @@
                                         #else
                                             <div class="btn-group btn-group-sm">
                                                 <button type="button" title="Select Image" class="btn btn-success btn-option-img"><i class="fa fa-image"></i></button>
-                                                <button type="button" title="Upload Image" class="btn btn-success btn-option-img-upload"><i class="fa fa-upload"></i></button>
+                                                <button type="button" title="Upload Image" class="btn btn-success #if($foundSku) btn-option-img-upload #end"><i class="fa fa-upload"></i></button>
                                             </div>
                                         #end
                                     </td>
@@ -108,7 +108,7 @@
                                     </td>
                                     #foreach($loc in $page.allLocations)
                                         <td>
-                                            <input data-locid="$loc.id" type="number" class="input-sku-stock form-control" value="$!variant.getStock($loc)" />
+                                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="$!variant.getStock($loc)" />
                                         </td>
                                     #end
                                 </tr>
@@ -194,6 +194,6 @@
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script src="/theme/apps/products/manageSkus.js" type="text/javascript">// </script>
+        <script src="/theme/apps/products/manageSkus.js?v100" type="text/javascript">// </script>
     </body>
 </html>
