@@ -491,6 +491,21 @@ function initOrgFinder() {
     });
 }
 
+function initEntityFinder(targets) {
+    if (!targets) {
+        targets = $('.entity-finder');
+    }
+    
+    targets.each(function () {
+        var input = $(this);
+        
+        input.entityFinder({
+            useActualId: input.attr('data-use-actual-id') === 'true',
+            type: 'organisation'
+        });
+    });
+}
+
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
     
@@ -706,6 +721,7 @@ $(function () {
     initMultiLingual();
     initNewUserForm();
     initEmailEventSimulator();
+    initEntityFinder();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
