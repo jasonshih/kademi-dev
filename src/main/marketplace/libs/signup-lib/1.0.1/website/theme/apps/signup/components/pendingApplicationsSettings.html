@@ -1,12 +1,12 @@
-#if( $membershipApplications.size() > 0 )
-<div class="col-sm-12">
-    <div class="panel panel-default">
+#if( $applications.signup.pendingApplications.size() > 0 )
+    <div class="panel panel-default panel-pending-membership">
         <div class="panel-heading">
-            <i class="fa fa-users"></i>
+            <i class="clip-home"></i>
             Pending membership applications
         </div>
-        <div class="panel-body pendingAccounts">
-            <p class="alert alert-info">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
+        <div class="panel-body">
+            <p class="alert alert-info">This portlet shows membership applications which have not been processed. Please review them and
+                accept those which appear legitimate, this will allow those users access to your site
             </p>
             <table class="data table table-striped">
                 <colgroup>
@@ -29,7 +29,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                #foreach($app in $membershipApplications)
+                #foreach($app in $applications.signup.pendingApplications)
                     <tbody>
                         <tr data-toggle="collapse" data-target=".det-$app.id">
                             <td>$app.member.nickName</td>
@@ -38,7 +38,7 @@
                             <td>$app.withinOrg.titleOrId</td>
                             <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
                             <td>
-                                <input type="hidden" name="appId" value="$app.id" />
+                                <input type="hidden" name="appId" value="$app.id"/>
                                 <button class="accept btn btn-success">Accept</button>
                             </td>
                             <td>
@@ -96,9 +96,6 @@
                     </tbody>
                 #end
             </table>
-            <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-            <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
         </div>
     </div>
-</div>
 #end

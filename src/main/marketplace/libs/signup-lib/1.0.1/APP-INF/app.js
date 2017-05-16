@@ -1,0 +1,1 @@
+controllerMappings.addComponent("signup/components", "pendingApplications", "html", "Shows membership applications which have not been processed in table format", "Signup App component");
