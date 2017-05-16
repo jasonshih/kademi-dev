@@ -1,0 +1,127 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Edit: $!params.fileName</title>
+        <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript">
+            // Templates should push page init function into this array. It will then be run after outer template init functions.
+            var pageInitFunctions = new Array();
+        </script>
+
+        <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
+        <script src="/static/js/common.js">//</script>
+
+        <script src="/theme/js/jqBootstrapValidation.js">//</script>
+        <script src="/theme/js/jqExtras.js">//</script>
+        <script src="/theme/js/theme.js">//</script>
+        <script src="/theme/js/bootstrap.min.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js" >//</script>
+        <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
+        <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
+        <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js" >//</script>
+
+        <script type="text/javascript" src="/theme/js/init-theme.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
+        <script type="text/javascript" src="/theme/toolbars.js">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
+        <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
+        <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
+
+
+        $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
+        $templater.pushLess("/theme/theme-params.less", "all")
+        $templater.pushLess("/theme/ktoolbar.less", "all")
+
+        #foreach( $lessSource in $templater.lessSources.entrySet())
+        <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+        #end
+
+        <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
+
+        <!-- Injected CSS sources -->
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+        #foreach($cssFile in $groupEntry.value)
+        <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
+        #end
+        #end
+        <!-- End injected CSS sources -->
+
+        <!-- Injected JS sources -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+        #foreach($jsFile in $groupEntry.value)
+        <script charset="utf-8" src="$jsFile">//</script>
+        #end
+        #end
+        <!-- End injected CSS sources -->
+
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+          <script src="/js/html5shiv.js"></script>
+        <![endif]-->
+        <!--[if lt IE 8]>
+            <link href="/css/bootstrap-ie7.css" rel="stylesheet">
+        <![endif]-->
+    </head>
+    <body class="content-editor-page">
+        #set($fname = $params.fileName)
+        #if( $fname )
+        #set($file = $folder.child($fname))
+        #else
+        #set($file = $page)
+        #end
+        #set($useHash = $params.useHash)
+
+        <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand">
+                        #if( $file.title )
+                        $file.title
+                        <small class="pull-right text-muted">
+                            -
+                            $file.name
+                        </small>
+                        #else
+                        $file.fileName
+                        #end
+                    </a>
+                </div>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./$file.name" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                    <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                    <li><a href="texteditor?fileName=$!params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div id="content-area">$!file.body</div>
+
+        <script type="text/javascript">
+            var useHash = "$!useHash";
+            var allGroups = {
+                #foreach ($group in $page.find("/").allGroups)
+                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
+                #end};
+
+            $(function () {
+                initContentEditorPage({
+                    fileName: '$!fname',
+                    snippetsUrl: '_components?fileName=$!{params.fileName}',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!{params.fileName}"',
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath'
+                });
+            });
+        </script>
+
+    </body>
+</html>
+#macro( groupTitle $group )
+    #if($group.title) '$group.title' #else '$group.name' #end
+#end
