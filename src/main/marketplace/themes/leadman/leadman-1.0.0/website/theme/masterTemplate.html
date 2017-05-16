@@ -6,7 +6,8 @@
         <meta charset="utf-8">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="class" content="$page.class">
+        <meta name="templateName" content="$templateName" />
+        <meta name='pageType' value='$templater.getClassName($page)' />
         <script type="text/javascript">
             // Templates should push page init function into this array. It will then be run after outer template init functions.
             var pageInitFunctions = [];
