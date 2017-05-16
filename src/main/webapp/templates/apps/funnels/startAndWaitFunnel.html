@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Start Funnel Goal</title>
+    </head>
+    <body>
+
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="funnelName">Journey</label>
+                    <select name="funnelName" id="funnelName" class="form-control required-if-shown">
+                        $formatter.option("", "[Please select]", $page.node.funnelName)
+                        #foreach($funnel in $page.find("/funnels").children)
+                        $formatter.option($funnel.name, $funnel.title, $page.node.funnelName)
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="initialGoal">Initial goal</label>
+                    <input type="text" name="initialGoal" value="$!page.node.initialGoal" class="form-control"/>
+                </div>
+            </div>
+
+        </form>
+
+    </body>
+</html>
