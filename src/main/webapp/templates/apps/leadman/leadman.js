@@ -1245,9 +1245,9 @@ function buildTable(resp) {
             var jsonString = JSON.stringify(profile);
             jsonString = encodeURI(jsonString);
             html += '<tr title="Click to select this contact" style="cursor: pointer" data-json="' + jsonString + '">';
-            html += '<td>' + profile.name + '</td>';
-            html += '<td>' + profile.email + '</td>';
-            html += '<td>' + profile.phone + '</td>';
+            html += '<td>' + (profile.userName != null ? profile.userName : 'No value') + '</td>';
+            html += '<td>' + (profile.email != null ? profile.email : 'No value') + '</td>';
+            html += '<td>' + (profile.phone != null ? profile.phone : 'No value') + '</td>';
             html += '</tr>';
         }
     }
