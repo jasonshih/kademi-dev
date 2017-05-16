@@ -16,14 +16,16 @@ and open the template in the editor.
     padding: 0 !important;
 }
 
+.invoices-table tbody tr.new-line-add-wrapper td {
+    padding: 12px 8px !important;
+}
+
 .invoices-table tbody td.last {
     width: 200px !important;
 }
 
 .invoices-table tbody td input, .invoices-table tbody td select {
     border: none !important;
-    display: block !important;
-    width: 100% !important;
 }
 
 .invoices-table tfoot td {
@@ -87,38 +89,6 @@ and open the template in the editor.
     font-style: italic !important;
     color: gray !important;
     cursor: pointer !important;
-}
-
-.search-suggestions {
-    position: absolute;
-    top: 100%;
-    list-style: none;
-    width: calc(100% - 61.6px);
-    border: 1px solid #cfcfcf;
-    border-top: none;
-    padding: 0;
-}
-
-.search-suggestions li {
-    padding-left: 6px;
-}
-
-.suggestion.active {
-    background-color: #efefef;
-}
-
-td .search-wrapper {
-    position: relative;
-}
-
-td .search-suggestions {
-    z-index: 10;
-    border-top: 1px solid #cfcfcf;
-    width: 100%;
-}
-
-td .search-suggestions li {
-    background-color: white;
 }
 
 .attachment {

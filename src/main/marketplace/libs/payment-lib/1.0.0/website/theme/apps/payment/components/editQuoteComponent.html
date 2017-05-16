@@ -54,8 +54,7 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Vendor" id="vendor-search-input" data-text="$formatter.ifNull($page.vendor.formattedName, '')" value="$formatter.ifNull($page.vendor.formattedName, '')" />
-                                                                <input type="hidden" id="vendorName" name="vendorName" value="$formatter.ifNull($page.vendor.id, '')" />
+                                                                <input type="text" class="form-control" placeholder="Search for Vendor" name="vendorName" id="vendor-search-input" data-text="$formatter.ifNull($page.vendor.formattedName, '')" value="$formatter.ifNull($page.vendor.id, '')" />
 
                                                             </div>
                                                         </div>
@@ -65,8 +64,7 @@
 
                                                             <div class="input-group col-sm-12">
                                                                 <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                                                <input type="text" autocomplete="off" class="form-control search-input" placeholder="Search for Customer" id="customer-search-input" data-text="$formatter.ifNull($page.customer.formattedName, '')" value="$formatter.ifNull($page.customer.formattedName, '')" />
-                                                                <input type="hidden" id="customerN" name="customerName" value="$formatter.ifNull($page.customer.id, '')" />
+                                                                <input type="text" class="form-control" placeholder="Search for Customer" id="customer-search-input" name="customerName" data-text="$formatter.ifNull($page.customer.formattedName, '')" value="$formatter.ifNull($page.customer.id, '')" />
                                                             </div>
                                                         </div>
 
@@ -142,37 +140,6 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr class="template-row" data-item-id="NEW">
-                                                            <td>
-                                                                <input name="description" placeholder="Item Description" class="form-control" type="text" />
-                                                            </td>
-                                                            <td>
-                                                                <input name="account" placeholder="Account Name" class="form-control" type="text" />
-                                                            </td>
-                                                            <td>
-                                                                <div class="search-wrapper">
-                                                                    <input name="supplier" type="text" class="form-control search-input supplier" placeholder="Search for Supplier" />
-                                                                    <ul class="search-suggestions hide supplier-suggestions"></ul>
-                                                                </div>
-                                                            </td>
-                                                            <td>
-                                                                <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" />
-                                                            </td>
-                                                            <td>
-                                                                <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" />
-                                                            </td>
-                                                            <td>
-                                                                <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" type="number" />
-                                                            </td>
-                                                            <td>
-                                                                <select name="taxRate" class="form-control last-field">
-                                                                    <option value="0">No Tax</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <span data-total="0" class="total-field">0.00</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
-                                                            </td>
-                                                        </tr>
                                                         #foreach($lineItem in $page.lineItems)
                                                         <tr data-item-id="$lineItem.id">
                                                             <td>
@@ -182,12 +149,7 @@
                                                                 <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account, '')" />
                                                             </td>
                                                             <td>
-                                                                <div class="search-wrapper">
-                                                                    #set($suggestionListId = 'old-supplier-' + $lineItem.id + '-suggestions')
-
-                                                                    <input name="supplier" id="old-supplier-$lineItem.id" type="text" class="form-control search-input supplier old-supplier" value="$formatter.ifNull($lineItem.supplier.formattedName, '')" placeholder="Search for Supplier" />
-                                                                    <ul id="$suggestionListId" class="search-suggestions hide old-supplier-suggestions"></ul>
-                                                                </div>
+                                                                <input name="supplier" type="text" class="form-control supplier old-supplier" data-text="$formatter.ifNull($lineItem.supplier.formattedName, '')" value="$formatter.ifNull($lineItem.supplier.id, '')" placeholder="Search for Supplier" />
                                                             </td>
                                                             <td>
                                                                 <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" value="$lineItem.quantity" />
@@ -204,12 +166,12 @@
                                                                 </select>
                                                             </td>
                                                             <td>
-                                                                <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
+                                                                <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span><button class="btn-remove-quote"><i class="fa fa-trash"></i></button>
                                                             </td>
                                                         </tr>
                                                         #end
-                                                        <tr class="new-line-add">
-                                                            <td colspan="8">Click to add a new line</td>
+                                                        <tr class="new-line-add-wrapper">
+                                                            <td colspan="8"><a href="" class="new-line-add">Click to add a new line</a></td>
                                                         </tr>
                                                     </tbody>
                                                     <tfoot>
@@ -300,6 +262,39 @@
     </div>
     <!-- /.modal -->
 </section>
+
+<script id="template-row" type="text/html">
+    <tr data-item-id="NEW">
+        <td>
+            <input name="description" placeholder="Item Description" class="form-control" type="text" />
+        </td>
+        <td>
+            <input name="account" placeholder="Account Name" class="form-control" type="text" />
+        </td>
+        <td>
+            <div class="search-wrapper">
+                <input name="supplier" type="text" class="form-control supplier" placeholder="Search for Supplier" />
+            </div>
+        </td>
+        <td>
+            <input name="quantity" placeholder="Quantity Taken" class="quantity-field form-control" type="number" />
+        </td>
+        <td>
+            <input name="unitPrice" placeholder="Price per Unit" class="price-field form-control" type="number" />
+        </td>
+        <td>
+            <input name="discountRate" placeholder="Discount if Applicable" class="discount-field form-control" type="number" />
+        </td>
+        <td>
+            <select name="taxRate" class="form-control last-field">
+                <option value="0">No Tax</option>
+            </select>
+        </td>
+        <td>
+            <span data-total="0" class="total-field">0.00</span><button class="btn-remove-quote"><i class="fa fa-trash"></i></button>
+        </td>
+    </tr>
+</script>
 
 <script type="text/javascript">
     $(function () {
