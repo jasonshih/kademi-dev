@@ -7,7 +7,13 @@
         #set ($rewardResource = $page.closest("store") )
         #renderCateList($rewardResource)
     #else
-    <p class="alert alert-warning">No reward store selected</p>
+        <div class="list-group list-group-root rewardStoreCategoriesList">
+            <span href="#" class="list-group-item heading-item">Browse by category</span>
+
+            <a href="/dolar/category1/" class=" list-group-item" data-num-products="1">
+                Example Category <i class="fa fa-angle-right  pull-right"></i>
+            </a>
+        </div>
     #end
 #end
 

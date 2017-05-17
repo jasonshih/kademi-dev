@@ -80,5 +80,41 @@
 #end
 
 #else
-<p class="alert alert-warning">Kpoll component will go here</p>
+<form method="post" action="/kpoll/${poll.name}/answer" id="form-kpoll">
+    <div class="kpoll">
+        <div class="kpoll-question clearfix">
+            Example Poll
+        </div>
+        <hr />
+        <div class="kpoll-anwsers">
+            <div class="radio">
+                <label>
+                    <input required="required" name="test" value="0" type="radio"> Answer 1
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input required="required" name="test" value="0" type="radio"> Answer 2
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input required="required" name="test" value="0" type="radio"> Answer 3
+                </label>
+            </div>
+
+            <div class="radio">
+                <label>
+                    <input required="required" name="test" value="0" type="radio"> Answer 4
+                </label>
+            </div>
+        </div>
+        <div class="kpoll-action">
+            <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
+            <button type="button" class="btn btn-success btn-see-result btn-sm btn-small">See result</button>
+        </div>
+    </div>
+</form>
 #end

@@ -1,4 +1,3 @@
-#if ($page)
 
 #set ($rewardStoreFolder = $page)
 #if ($reward && $reward != "")
@@ -11,14 +10,14 @@
 #set($fromRange = $formatter.toInteger($params.fromRange))
 #end
 #if ($numberOfProducts && $numberOfProducts != '')
-    #set($fromRange = 0)
-    #set($toRange = $formatter.toInteger($numberOfProducts))
+#set($fromRange = 0)
+#set($toRange = $formatter.toInteger($numberOfProducts))
 #else
-    #if($params.toRange)
-    #set($toRange = $formatter.toInteger($params.toRange))
-    #else
-    #set($toRange = $fromRange + 12)
-    #end
+#if($params.toRange)
+#set($toRange = $formatter.toInteger($params.toRange))
+#else
+#set($toRange = $fromRange + 12)
+#end
 #end
 
 #set($startPrice = '')
@@ -97,15 +96,4 @@
     #end
 </div>
 <p id="inifiniteLoader" class="text-center" style="display: none; padding: 20px 0"><i class="fa fa-circle-o-notch fa-spin fa-2x" aria-hidden="true"></i></p>
-
-
-#else
-<div class="alert alert-warning">Products go here</div>
-<script type="text/javascript">
-    var contentEditing = true;
-</script>
-#end
-
-
-
 

@@ -1,24 +1,47 @@
-#set( $allPoints = $reward.myPointsInfo.myPoints)
-#if( $allPoints.size() > 0  )
-<h3>My points</h3>
-<div class="table-responsive">
-    <table style="width: 100%" class="table table-striped vcenter rewards table-tappy">
-        <thead>
-        <tr class="bar">
-            <th>Points</th>
-            <th>Date</th>
-            <th>Reason</th>
-        </tr>
-        </thead>
-        <tbody>
-        #foreach( $points in $allPoints )
-        <tr>
-            <td>$points.numPoints</td>
-            <td>$points.awardedDate</td>
-            <td>$points.reason</td>
-        </tr>
-        #end
-        </tbody>
-    </table>
-</div>
+
+#if($page)
+    #set( $allPoints = $reward.myPointsInfo.myPoints)
+    #if( $allPoints.size() > 0  )
+    <h3>My points</h3>
+    <div class="table-responsive">
+        <table style="width: 100%" class="table table-striped vcenter rewards table-tappy">
+            <thead>
+            <tr class="bar">
+                <th>Points</th>
+                <th>Date</th>
+                <th>Reason</th>
+            </tr>
+            </thead>
+            <tbody>
+            #foreach( $points in $allPoints )
+            <tr>
+                <td>$points.numPoints</td>
+                <td>$points.awardedDate</td>
+                <td>$points.reason</td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+    #end
+#else
+    <h3>My points</h3>
+    <div class="table-responsive">
+        <table style="width: 100%" class="table table-striped vcenter rewards table-tappy">
+            <thead>
+            <tr class="bar">
+                <th>Points</th>
+                <th>Date</th>
+                <th>Reason</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>1</td>
+                <td>2-2-2017</td>
+                <td>Example reason</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 #end

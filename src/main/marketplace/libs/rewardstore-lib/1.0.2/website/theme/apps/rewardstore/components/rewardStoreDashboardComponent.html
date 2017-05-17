@@ -59,6 +59,18 @@
         #end
     </div>
     #else
-    <p class="alert alert-warning">Categories list goes here</p>
+    <div class="row" id="fake-cates-list">
+        <div class="col-sm-6 col-md-4 product-item">
+            #set($bg = "/theme/img/photo_holder.png")
+            <a href="$cate.href" class="cate-item">
+                <div class="thumbnail cate">
+                    <div class="embed-responsive embed-responsive-4by3">
+                        <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
+                    </div>
+                    <div class="caption h3 text-center cate-title" title="$cate.title">Example Category Title</div>
+                </div>
+            </a>
+        </div>
+    </div>
     #end
 #end

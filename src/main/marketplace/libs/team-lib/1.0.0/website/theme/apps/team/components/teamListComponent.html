@@ -120,7 +120,34 @@
         </div><!-- /.modal-dialog -->
     </div>
 #else
-    <p class="alert alert-warning">
-        Team List goes here.
-    </p>
+<div class="row">
+    <div class="col-md-4">
+        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-add-member">Add team member</button>
+    </div>
+</div>
+<p>&nbsp;</p>
+<div class="fw-boxed">
+    <div class="panel panel-default">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table id="teamTable" class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody id="leadBody">
+                        <tr class="text-center">
+                            <td colspan="6">No Team members found...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 #end

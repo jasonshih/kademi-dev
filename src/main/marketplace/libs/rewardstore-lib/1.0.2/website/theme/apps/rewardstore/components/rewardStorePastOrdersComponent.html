@@ -33,5 +33,27 @@
 #end
 
 #if (!$page)
-<div class="alert alert-warning">Past orders goes here</div>
+<div class="row">
+    <div class="col-sm-12">
+        <h4>My Past Orders</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Example ID</td>
+                    <td>Example Product Name</td>
+                    <td><abbr title="$formatter.formatDateISO8601($order.orderedDate)" class="info timeago">2/2/2017</abbr></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 #end
