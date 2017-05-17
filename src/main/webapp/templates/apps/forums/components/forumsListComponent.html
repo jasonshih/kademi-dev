@@ -1,3 +1,43 @@
+#if($page)
+
+#else
+<div>
+    <div class="forumPosts">
+        <div class="media">
+            <div class="media-left">
+                <a href="/community/Forum1/">
+                    <img class="media-object" width="100" src="/theme/img/photo_holder.png" alt="Forum1">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading"><a href="/community/Forum1/">Example Forum 1</a></h4>
+                <abbr title="" class="info timeago"></abbr>
+                <p>Topics: 0</p>
+                <abbr title="" class="info timeago"></abbr>
+            </div>
+        </div>
+    </div>
+
+    <div class="forumPosts">
+        <div class="media">
+            <div class="media-left">
+                <a href="/community/Forum1/">
+                    <img class="media-object" width="100" src="/theme/img/photo_holder.png" alt="Forum1">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading"><a href="/community/Forum1/">Example Forum 2 </a></h4>
+                <abbr title="" class="info timeago"></abbr>
+                <p>Topics: 0</p>
+                <abbr title="" class="info timeago"></abbr>
+            </div>
+        </div>
+    </div>
+
+</div>
+#end
+
+
 #foreach($forum in $page.children)
 <div class="forumPosts">
     <div class="media">
@@ -16,7 +56,7 @@
             <p>Topics: $!forum.numTopics</p>
             <abbr title="$formatter.formatDateISO8601($forum.mostRecentPostDate)" class="info timeago">$!forum.mostRecentPostDate</abbr>
             #if( $forum.notes )
-                <p>$forum.notes</p>
+            <p>$forum.notes</p>
             #end
         </div>
     </div>

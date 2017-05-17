@@ -127,5 +127,58 @@
 Vouchers app is not enabled
 #end
 #else
-<p class="alert alert-warning">Voucher Redemption component will go here</p>
+<div class="panel panel-default panel-voucherRedemption">
+    <div class="panel-heading">
+        <i class="fa fa-cog"></i> Vouchers
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="input-group" id="voucher-query-container">
+                    <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
+                    <span class="input-group-btn">
+                                <button class="btn btn-default btnClearQueryVoucher" type="button">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </span>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="pull-right">
+                    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
+                    <!--<button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>-->
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#pendingVoucherModal">Change status</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="vouchers-table" class="table table-striped table-hover" style="width: 100%">
+                <colgroup>
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="" />
+                    <col width="100px" />
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>By</th>
+                    <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
+                </tr>
+                </thead>
+                <tbody id="vouchers-table-body">
+                <tr>
+                    <td colspan="6">No vouchers</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 #end

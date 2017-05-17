@@ -158,7 +158,53 @@
 </div>
 
 #else
-<div class="alert alert-warning">Survey Detail Component will go here</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12" id="ksurvey-wrap">
+
+            <h3>Example Name</h3>
+
+            <p>Example Description</p>
+            <hr>
+            <form id="surveyform" data-survey="$survey.name" action="/ksurvey/$survey.name/" method="post">
+                <div id="questions">
+
+                    <div class="question-item">
+                        <h4>Question 1</h4>
+                        <div class="question-description">description</div>
+                        <div class="answers">
+                            <div class="radio">
+                                <label>
+                                    <input required="required" name="test" value="0" type="radio"> Answer 1
+                                </label>
+                            </div>
+
+                            <div class="radio">
+                                <label>
+                                    <input required="required" name="test" value="0" type="radio"> Answer 2
+                                </label>
+                            </div>
+
+                            <div class="radio">
+                                <label>
+                                    <input required="required" name="test" value="0" type="radio"> Answer 3
+                                </label>
+                            </div>
+
+                            <div class="radio">
+                                <label>
+                                    <input required="required" name="test" value="0" type="radio"> Answer 4
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="text-right"><button type="submit" class="btn btn-primary">Submit</button></div>
+            </form>
+        </div>
+    </div>
+</div>
 #end
 
 #if ($page)

@@ -31,6 +31,28 @@
             </div>
         </div>
     </div>
-    #else
-    <div class="alert alert-warning">Product component goes here</div>
-    #end
+</div>
+#else
+<div class="rewardStoreCategoryProductsComponent ">
+    #set ($productImage = "/theme/img/photo_holder.png")
+
+    <div class="product-item">
+        <div class="thumbnail product">
+            <div class="product-info">
+                <div class="embed-responsive embed-responsive-4by3" style="padding-bottom: 10%;">
+                    <a href="#" class="embed-responsive-item" style="background-image: url('${productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center"></a>
+                </div>
+            </div>
+            <div class="caption">
+
+                <h3 class="text-center product-price bg-info">
+                    10
+                    <small>POINTS</small>
+                </h3>
+
+                <a href="#" class="btn btn-info btn-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+#end
