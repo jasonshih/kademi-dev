@@ -101,12 +101,12 @@
 <div id="products-list" class="rewardStoreCategoryProductsComponent">
     <div class="row">
         #set($bg = "/theme/img/photo_holder.png")
-
-        <div class="$prodClass product-item">
+        #foreach($i in [1..3])
+        <div class="$prodClass product-item col-sm-6 col-md-4">
             <div class="thumbnail product">
                 <div class="product-info">
                     <h3 class="product-title" title="$p.fields.title.value"><a class="text-primary" href="/$p.fields.path.value">Example Content</a></h3>
-                    <div class="embed-responsive embed-responsive-4by3" style="padding-bottom: 20%;">
+                    <div class="embed-responsive embed-responsive-4by3">
                         <a href="/$p.fields.path.value" class="embed-responsive-item" style="background-image: url($bg);"></a>
                     </div>
                     <div class="product-content">Example Content</div>
@@ -121,6 +121,8 @@
                 </div>
             </div>
         </div>
+        #end
     </div>
 </div>
+<div class="clearfix"></div>
 #end

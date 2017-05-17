@@ -2,6 +2,7 @@
  * Created by Anh on 10/04/2017.
  */
 controllerMappings.addComponent("rewardstore/components", "rewardProduct", "html", "Shows reward product with image, points and add to card button", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "recentlyViewedProducts", "html", "Shows products sliders which are recently viewed by current user", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
@@ -98,6 +99,89 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
     var result = sm.search(JSON.stringify(searchConfig), 'rewardstore');
 
     return result;
+}
+
+function getRecentlyViewedRewardProducts(page, size) {
+    var list = formatter.newArrayList();
+
+    var curUser = securityManager.currentUser;
+
+    if (curUser == null) {
+        return list;
+    }
+
+    if (!size){
+        size = 20;
+    }
+
+    var searchConfig = {
+        "size": 0,
+        "query": {
+            "bool": {
+                "must": [
+                    {
+                        "term": {
+                            "reqUser": curUser.name
+                        }
+                    },
+                    {
+                        "term": {
+                            "resultCode": 200
+                        }
+                    },
+                    {
+                        "term": {
+                            "reqMethod": "GET"
+                        }
+                    },
+                    {
+                        "prefix": {
+                            "contentType": "text/html"
+                        }
+                    }
+                ]
+            }
+        },
+        "aggs": {
+            "products": {
+                "terms": {
+                    "field": "url",
+                    "size": 100,
+                    "order": {
+                        "reqDate": "desc"
+                    }
+                },
+                "aggs": {
+                    "reqDate": {
+                        "max": {
+                            "field": "reqDate"
+                        }
+                    }
+                }
+            }
+        }
+    };
+    log.info ("recentlyViewedRewardProductsComponent {}", JSON.stringify(searchConfig));
+    var sm = applications.search.searchManager;
+    var result = sm.search(JSON.stringify(searchConfig), 'log');
+
+    if (result != null) {
+        var resultString = result.toString();
+
+        var json = JSON.parse(resultString);
+        var buckets = json.aggregations.products.buckets;
+
+        for (var a in buckets) {
+            var b = buckets[a];
+            var url = b.key;
+            var item = page.find(url);
+            if (item && item.is('rewardProduct') && list.size() < size ) {
+                list.add(item);
+            }
+        }
+    }
+
+    return list;
 }
 
 function isNotBlank(val) {
