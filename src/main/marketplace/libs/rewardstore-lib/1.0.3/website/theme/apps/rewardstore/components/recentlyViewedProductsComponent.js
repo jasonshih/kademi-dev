@@ -30,7 +30,7 @@
 
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "recentlyViewedProducts" component');
-
+            var self = this;
             return $.ajax({
                 url: '_components/recentlyViewedProducts?settings',
                 type: 'get',
@@ -50,7 +50,10 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-number-of-products', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initSlickSlider();
+                        });
+
                     });
                 }
             });
