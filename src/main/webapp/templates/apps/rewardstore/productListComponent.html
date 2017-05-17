@@ -1,6 +1,7 @@
+#if($page)
+
 #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
 #set( $prods = $applications.rewardStore.searchProducts($store, null, $category, 'title', false) )
-
 #set ($prodsListId = $formatter.randomGuid)
 #if( $prods.size() > 0 )
     #if ($prods.size() > $numberOfProducts)
@@ -136,4 +137,34 @@
     </script>
 #else
     <p>Sorry, we couldnt find any products for you</p>
+#end
+
+#else
+    #set($bg = "/static/images/photo_holder.png")
+
+    <div class="row products-list" id="products-list-${prodsListId}">
+        <div class="$clsName product-item">
+            <div class="thumbnail product">
+                <a href="$prodUrl">
+                    <div class="embed-responsive embed-responsive-4by3" style="padding-bottom: 20%;">
+                        <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                    </div>
+                </a>
+                <div class="caption">
+                    <h3 class="product-title" title="$p.title"><a href="$prodUrl">Example Title</a></h3>
+
+                    <p><span class="label label-default">10 Pts</span></p>
+
+                    <div class="product-content">Notes</div>
+                    <div class="product-actions text-right">
+                        <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                        <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
 #end
