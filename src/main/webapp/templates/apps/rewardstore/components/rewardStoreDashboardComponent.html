@@ -17,6 +17,7 @@
     </div>
     #else
     <div class="row" id="fake-cates-list">
+        #foreach($i in [1..3])
         <div class="col-sm-6 col-md-4 product-item">
             #set($bg = "/theme/img/photo_holder.png")
             <a href="$cate.href" class="cate-item">
@@ -28,6 +29,7 @@
                 </div>
             </a>
         </div>
+        #end
     </div>
     #end
 #end
