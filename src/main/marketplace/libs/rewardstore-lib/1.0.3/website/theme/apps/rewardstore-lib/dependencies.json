@@ -47,6 +47,24 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/slick/1.5.7/slick/slick-theme.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/slick/1.5.7/slick/slick.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/slick/1.5.7/slick/slick.min.js"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/rewardstore/storeCategory.js"
@@ -68,6 +86,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/rewardstore/jquery.pointsActivityChart.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/recentlyViewedProducts.js"
             }
         }
     ]

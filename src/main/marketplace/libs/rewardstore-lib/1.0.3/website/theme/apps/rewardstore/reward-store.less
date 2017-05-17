@@ -145,3 +145,17 @@
 .btn-decrease-quantity,.btn-increase-quantity{
     border-left-width: 1px !important;
 }
+
+.recentlyViewedRewardProducts{
+    padding-left: 0;
+    .slickItem{
+        .embed-responsive-item{
+            background-position: center;
+            background-size: cover;
+        }
+    }
+    .slick-prev::before,
+    .slick-next::before {
+        color: @brand-primary;
+    }
+}
