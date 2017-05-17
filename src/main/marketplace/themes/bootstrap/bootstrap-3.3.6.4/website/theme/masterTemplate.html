@@ -31,7 +31,7 @@
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/jquery.forms/1.1.1/jquery.forms-1.1.1.js">//</script>
         <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
-        
+
         <script type="text/javascript" src="/static/bootstrap-dropdown/1.0.0/js/bootstrap-dropdown-hover.js">//</script>
 
         <script type="text/javascript" src="/static/jquery.placeholder/2.3.1/jquery.placeholder.min.js">//</script>
@@ -50,7 +50,7 @@
 
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
         <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css" />
-        
+
         <link rel="stylesheet" href="/static/bootstrap-dropdown/1.0.0/css/bootstrap-dropdown-hover.css" type="text/css" />
 
         <!-- Injected CSS sources -->
@@ -109,8 +109,8 @@
                     #set( $templatePageName = $formatter.getFileName($templateName) )
                     #set( $themeTemplatePageName = $formatter.getFileName($themeTemplate) )
 
-                    <a target="_blank" href="/?editTemplate=$themeTemplatePath" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Theme</a>
-                    <a target="_blank" href="/?editTemplate=$templatePath" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Template</a>
+                    <a target="_blank" href="/?editTemplate=$themeTemplatePath" class="pull-right btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Theme</a>
+                    <a target="_blank" href="/?editTemplate=$templatePath" class="pull-right btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Template</a>
                     #if( $page.is("folder") )
                         <a target="_blank" href="../contenteditor?fileName=$page.name" class="pull-right btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
                     #else
