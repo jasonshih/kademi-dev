@@ -2,21 +2,25 @@
     #set ( $height = 100 )
 #end
 
+#if( $bucket )
 #if (!$title)
     #set ( $title = "Points Activity")
 #end
+#else
+    #set ( $title = "Points Activity")
+#end
 
-#if( $bucket )
     <div class="panel panel-default panel-points-activity-chart">
         <div class="panel-heading">
             <i class="fa fa-bar-chart"></i> $title
         </div>
         <div class="panel-body" style="height: ${height}px;">
+#if( $bucket )
             <div class="points-activity-chart" style="height: 100%;">
                 <svg></svg>
             </div>
-        </div>
-    </div>
 #else
     Please select your points bucket
 #end
+        </div>
+    </div>
