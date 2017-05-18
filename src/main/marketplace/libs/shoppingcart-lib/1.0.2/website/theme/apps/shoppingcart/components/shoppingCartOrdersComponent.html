@@ -1,14 +1,23 @@
-#set ($searchResults = $applications.shoppingCart.searchCarts())
+#if ($numberOfRecords)
+    #set ($numberOfRecords = $formatter.toInteger($numberOfRecords))
+#else
+    #set ($numberOfRecords = 1000)
+#end
+#set ($fulfillment = "")
+#if ($params.fulfillment)
+    #set ($fulfillment = $params.fulfillment)
+#end
+#set ($searchResults = $page.find("/shopping-carts/").searchCarts($fulfillment, $numberOfRecords, ''))
 
-<div class="panel panel-default">
+<div class="panel panel-default panel-shoppingcart-orders">
     <div class="panel-heading">
-        <i class="fa fa-shopping-cart"></i> Shopping Carts - showing $page.searchResults.size()
+        <i class="fa fa-shopping-cart"></i> Shopping Carts - showing $searchResults.size()
     </div>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-6">
                 <div class="input-group col-md-6">
-                    <select id="searchFulfillmentState" class="form-control">
+                    <select class="form-control cbb-fulfillment">
                         <option value="">Any fulfillment state</option>
                         $formatter.option("N", "Not fulfilled", $params.fulfillment)
                         $formatter.option("C", "Fulfilled", $params.fulfillment)
@@ -17,13 +26,13 @@
             </div>
             <div class="col-md-6 text-right">
                 <div class="btn-group" role="group">
-                    <a href="carts.csv" download="carts.csv" id="cartCSV" class="btn btn-sm btn-info"><i class="fa fa-download"></i> Download CSV</a>
+                    <a href="/shopping-carts/carts.csv" download="carts.csv" class="btn btn-sm btn-info btn-download-csv"><i class="fa fa-download"></i> Download CSV</a>
                     <div class="btn-group">
                         <a role="button" href="#" class="btn btn-success btn-sm markFulfilled"><i class="fa fa-check"></i> Fulfilled</a>
                         <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
                             <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu" role="menu">
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
                             <li class="presentation" role="menuitem"><a href="#" class="deleteCart"><i class="glyphicon glyphicon-trash"></i> Delete</a></li>
                         </ul>
                     </div>
@@ -32,7 +41,7 @@
         </div>
         <hr />
         <div class="table-responsive">
-            <table id="auction-wrapper" class="table table-striped table-hover">
+            <table class="table table-striped table-hover">
                 <colgroup>
                     <col />
                     <col width="10%" />
@@ -53,13 +62,13 @@
                         <th><input type="checkbox" class="check-all" /></th>
                     </tr>
                 </thead>
-                <tbody id="shoppingCartList">
-                    #foreach($v in $page.searchResults)
+                <tbody>
+                    #foreach($v in $searchResults)
                         <tr>
                             #genStatus($v)
-                            <td><a href="/manageUsers/$v.cart.profile.id" target="_blank">$v.cart.profile.formattedName</a></td>
+                            <td><a href="/public/$v.cart.profile.id" target="_blank">$v.cart.profile.formattedName</a></td>
                             <td><abbr class="timeago" title="$formatter.formatDateISO8601($v.cart.orderedDate)">$v.cart.orderedDate</abbr></td>
-                            <td class="clickable" data-href="$v.href">$v.description</td>
+                            <td><a href="$v.href">$!v.description</a></td>
                             <td class="text-center">$formatter.toDecimal($v.totalItems, 0)</td>
                             <td class="text-center">$formatter.formatCurrency($v.totalCost)</td>
                             <th><input type="checkbox" data-carthref="$v.href" data-cartid="$v.cart.id" class="cart-check" /></th>
@@ -76,14 +85,14 @@
     #set($statusClass = false)
     #if($statusMsg == "N")
         #set($statusMsg = "Not fulfilled")
-        #set($statusClass = "fa fa-exclamation text-info")
+        #set($statusClass = "fa fa-exclamation-circle text-info")
     #elseif($statusMsg == "C")
         #set($statusMsg = "Fulfilled")
         #set($statusClass = "fa fa-check-circle text-success")
     #end
-<td class="icon clickable" data-href="$v.href" title="$statusMsg">
+<td title="$statusMsg">
     #if($statusClass)
-        <i class="$statusClass"></i>
+        <a href="$v.href"><i class="$statusClass fa-2x fa-fw"></i></a>
     #end
 </td>
 #end

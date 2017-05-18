@@ -23,6 +23,12 @@
                 "group": "main",
                 "path": "/theme/apps/shoppingcart/checkout.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/shoppingcart/shoppingCartOrders.js"
+            }
         }
     ]
 }
