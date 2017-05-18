@@ -515,7 +515,7 @@
                 //initEditEmailPage();
 
             var domains = {};
-            #foreach($website in $rootFolder.child("websites").children))
+            #foreach($website in $rootFolder.child("websites").children)
                 #if ($website.domainName && $website.name)
                     domains['$website.name'] = '$website.domainName';
                 #end
