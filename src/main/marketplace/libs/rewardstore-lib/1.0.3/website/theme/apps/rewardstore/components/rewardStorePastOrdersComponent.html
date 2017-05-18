@@ -31,9 +31,17 @@
             </div>
         </div>
     </div>
+
+    #else
+        #fakeUI()
     #end
 
 #else
+    #fakeUI()
+#end
+
+
+#macro(fakeUI)
 <div class="row">
     <div class="col-sm-12">
         <h4>My Past Orders</h4>

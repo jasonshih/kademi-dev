@@ -1,0 +1,48 @@
+<!-- testtttt $page / $!page -->
+
+#if($page)
+    #if ( !$height )
+    #set ( $height = 100 )
+    #end
+    #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+
+    #if( $pointsBucket )
+    #set($bucketId = $pointsBucket.id)
+    #set($daysInt = $formatter.toInteger($days, false))
+
+    <div class="panel panel-default debits-activity">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Debits activity in
+            $pointsBucket.title
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
+                <svg></svg>
+            </div>
+        </div>
+    </div>
+
+
+    #else
+    #fakeUI()
+    #end
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i>
+        Debits activity in example
+    </div>
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+        <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
+            Points bucket not found
+        </div>
+    </div>
+</div>
+#end
+
+
