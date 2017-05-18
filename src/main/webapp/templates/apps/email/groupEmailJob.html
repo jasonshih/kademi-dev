@@ -475,7 +475,7 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="name">Recipient</label>
                                 <div class="col-md-8">
-                                    <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
+                                    <input type="text" name="recipient" value="" placeholder="An email address" class="required form-control" />
                                     <p>A single email will be sent to this address</p>
                                 </div>
                             </div>
@@ -514,15 +514,12 @@
                 initManageGroupEmail();
                 //initEditEmailPage();
 
-            var domains = {
-                #foreach($website in $rootFolder.websites)
-                    #if ($website.domainName && $website.name)
-                        #if($foreach.index >  0),#end '$website.name':
-                        '$website.domainName'
-                    #end
+            var domains = {};
+            #foreach($website in $rootFolder.child("websites").children)
+                #if ($website.domainName && $website.name)
+                    domains['$website.name'] = '$website.domainName';
                 #end
-            }
-                ;
+            #end
                 
                 function selectDomain(sel) {
                     var selectedValue = $(sel).find(":selected").text();

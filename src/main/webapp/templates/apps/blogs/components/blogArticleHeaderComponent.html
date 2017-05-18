@@ -3,9 +3,18 @@
         margin-top: 30px;
     }
 </style>
-<h2><a href="$page.href">$page.title</a></h2>
+<h2>
+    #if( $page.title )
+    <a href="$page.href">$page.title</a>
+    #else
+    <a href="#">Page title</a>
+    #end
+</h2>
 <div class="clearfix">
-    <span class="pull-left timeago" title="$formatter.formatDateISO8601($page.articleDate)">$page.articleDate</span>
+    #set( $artDate = $formatter.ifNull($page.articleDate, $formatter.now) )
+    <span class="pull-left timeago" title="$formatter.formatDateISO8601($artDate)">
+        $artDate
+    </span>
     <div class="pull-right">
         #if( $page.category )
         <span class="label label-primary">$page.category</span>
