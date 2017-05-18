@@ -93,6 +93,12 @@
                 "group": "main",
                 "path": "/theme/apps/rewardstore/recentlyViewedProducts.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/debitsActivityComponent.js"
+            }
         }
     ]
 }

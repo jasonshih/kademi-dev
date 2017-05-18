@@ -1,20 +1,32 @@
-#if ($reward && $reward != "")
-    #set ($rewardPath = "/" + $reward)
-    #set ($rewardResource = $rootFolder.find($rewardPath))
-    #renderCateList($rewardResource)
-#else
-    #if ($page)
-        #set ($rewardResource = $page.closest("store") )
-        #renderCateList($rewardResource)
-    #else
-        <div class="list-group list-group-root rewardStoreCategoriesList">
-            <span href="#" class="list-group-item heading-item">Browse by category</span>
 
-            <a href="/dolar/category1/" class=" list-group-item" data-num-products="1">
-                Example Category <i class="fa fa-angle-right  pull-right"></i>
-            </a>
-        </div>
+#if($page)
+
+    #if($rewardResource.children.ofType.category)
+        #if ($reward && $reward != "")
+            #set ($rewardPath = "/" + $reward)
+            #set ($rewardResource = $rootFolder.find($rewardPath))
+            #renderCateList($rewardResource)
+        #else
+            #set ($rewardResource = $page.closest("store") )
+            #renderCateList($rewardResource)
+        #end
+    #else
+        #fakeUI()
     #end
+
+
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="list-group list-group-root rewardStoreCategoriesList">
+    <span href="#" class="list-group-item heading-item">Browse by category</span>
+
+    <a href="#" class=" list-group-item" data-num-products="1">
+        Example Category <i class="fa fa-angle-right  pull-right"></i>
+    </a>
+</div>
 #end
 
 #macro(renderCateList $rewardResource)

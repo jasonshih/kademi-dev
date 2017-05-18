@@ -123,6 +123,7 @@ function initPropertiesForm() {
             });
 
             JBApp.funnel.title = form.find('[name=title]').val().trim();
+            JBApp.funnel.hiddenToSales = form.find('[name=hiddenToSales]').prop("checked");
             JBApp.funnel.leadsGroup = form.find('[name=leadsGroup]').val();
             JBApp.funnel.sources = sources;
             JBApp.funnel.stages = stages;
