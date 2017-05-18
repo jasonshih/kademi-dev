@@ -1,3 +1,9 @@
+#if($page)
+
+#else
+
+#end
+
 #if ($reward && $reward != "")
     #set ($rewardPath = "/" + $reward)
     #set ($rewardResource = $rootFolder.find($rewardPath))
@@ -33,6 +39,9 @@
     </div>
     #end
 #end
+
+
+
 
 #macro(renderCate $cate)
     #if ($cate.numProducts > 0)
