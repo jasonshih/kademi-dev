@@ -364,7 +364,11 @@ function checkProcessStatus() {
                         resultStatus.text(result.messages[0]);
                         var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
                         if (isNaN(percentComplete)){
-                            percentComplete = 0;
+                            if (result.messages[0].indexOf('Preparing to start') != -1){
+                                percentComplete = 0;
+                            } else {
+                                percentComplete = 100;
+                            }
                         }
                         percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the user doesnt think they're finished when they're not.
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
