@@ -148,5 +148,90 @@
 #portlets("userDataModal")
 #end
 #else
-<div class="alert alert-warning">Event form component will go here</div>
+<div class="eventFormAllowRegistration" data-rsvpstatus="ACCEPTED">
+    <div class="well well-rsvp rsvp-nouser" style="display: none;">
+        <button class="btn btn-sm btn-info">Register now</button>
+    </div>
+
+    <div class="well well-rsvp rsvp-yes" style="display: block;">
+        <h3>You're attending
+            <span class="num-guests">
+                with <b class="num-guests-count">1</b> guest(s)
+            </span>
+        </h3>
+        <p>You've accepted the invitation</p>
+        <button class="btn btn-sm btn-info rsvp-change">Change</button>
+    </div>
+
+    <div class="well well-rsvp rsvp-no" style="display: none;">
+        <h3>You're not attending</h3>
+        <p>You've indicated that you will not be attending</p>
+        <button class="btn btn-sm btn-info rsvp-change">Change</button>
+    </div>
+
+    <div class="well well-rsvp rsvp-form" style="display: none;">
+        <form method="POST" action="/" class="form-horizontal rsvp" role="form">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="rsvp" value="ACCEPTED">
+                    Yes, I'm coming
+                </label>
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <label class="control-label col-md-4" for="">Email</label>
+                <div class="col-md-8">
+                    <input type="text" name="email" value="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-4" for="firstName">First name</label>
+                <div class="col-md-8">
+                    <input type="text" id="firstName" name="firstName" value="" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-4" for="surName">Surname</label>
+                <div class="col-md-8">
+                    <input type="text" id="surName" name="surName" value="" class="form-control">
+                </div>
+            </div>
+
+            <button class="btn btn-sm btn-primary guests-add pull-right">Add a guest</button>
+            <div class="guests" style="clear: both">
+                <br>
+                <p class="guests-intro">I'm bringing the following guests:</p>
+                <ul class="guests">
+                    <li>
+                        <a class="pull-right guests-delete" href="#"><span class="glyphicon glyphicon-remove-circle"></span></a>
+                        <a href="#" class="guest-edit">tan nguyen</a>
+                        of <b>oreganisation</b>
+                        <input type="hidden" name="guestFirstName" value="tan">
+                        <input type="hidden" name="guestSurname" value="nguyen">
+                        <input type="hidden" name="guestEmail" value="tannguyen3489@gmail.com">
+                        <input type="hidden" name="guestOrgName" value="oreganisation">
+                    </li>
+                </ul>
+                <hr>
+            </div>
+
+
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <br>
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                        Submit attendance
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+</div>
 #end

@@ -211,6 +211,40 @@
 #if ($blog && $blog != "")
 <p>No blog articles found</p>
 #else
-<div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
+
+    #if($page)
+        <div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
+    #else
+        <div class="media blog-article">
+            <div class="media-left hidden-sm hidden-xs">
+                <a href="#">
+                    <img class="media-object" alt="Blog Article 1" src="/static/images/photo_holder.png" width="200" height="">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">
+                    <a href="#">Example Blog Article Title</a>
+                </h4>
+                <div class="media-content clearfix">
+                    Example Blog Article Content
+
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <i class="fa fa-clock-o"></i> <abbr class="timeago" title="08/05/2017 15:23">9 days ago</abbr>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="text-right hidden-sm hidden-xs">
+                            <span class="label label-warning">Featured</span>
+                        </div>
+                        <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                            <span class="label label-warning">Featured</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    #end
+
 #end
 #end

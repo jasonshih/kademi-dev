@@ -1,4 +1,4 @@
-#if ($page)
+#if($page)
 <div id="search-results">
     #if ($page.searchResults.totalHits)
     <p class="totals text-muted">
@@ -81,5 +81,47 @@
     });
 </script>
 #else
-<div class="alert alert-warning">Search result goes here</div>
+<div id="fake-search-results">
+    <p class="totals text-muted">
+        <small>
+            Found a few results
+        </small>
+    </p>
+    <div class="results-wrapper">
+        <div class="result">
+            <div class="pull-right">
+                <span class="label label-info">Example Type</span>
+                <span class="label label-primary">Example Category</span>
+                <span class="label label-info">Example Tag</span>
+            </div>
+            <h3>
+                <a href="#">Example Title</a>
+            </h3>
+            <p class="text-success">Example matches</p>
+            <p>
+                Matches 1
+            </p>
+        </div>
+    </div>
+
+    <div class="pagination-wrapper">
+        <ul class="pagination">
+            <li class="">
+                <a href="#">&laquo;</a>
+            </li>
+
+            <li class="active">
+                <a href="#">1</a>
+            </li>
+
+            <li class="">
+                <a href="#">2</a>
+            </li>
+
+            <li class="">
+                <a href="#">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+</div>
 #end

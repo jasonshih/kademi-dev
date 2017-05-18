@@ -14,21 +14,21 @@
                 <tbody>
                 <tr>
                     <th>Contacted</th>
-                    <td>$page.contactRequest.createdDate</td>
+                    <td>$!page.contactRequest.createdDate</td>
                 </tr>
                 <tr>
                     <th>Website</th>
-                    <td>$page.website.name</td>
+                    <td>$!page.website.name</td>
                 </tr>
                 <tr>
                     <th>Contact form</th>
-                    <th>$page.contactRequest.contactForm</th>
+                    <th>$!page.contactRequest.contactForm</th>
                 </tr>
                 <tr>
                     <th>Email</th>
                     <td>
                         #if( $page.contactRequest.email )
-                        <a href="mailto:$page.contactRequest.email">$page.contactRequest.email</a>
+                        <a href="mailto:$page.contactRequest.email">$!page.contactRequest.email</a>
                         #end
                     </td>
                 </tr>
@@ -39,7 +39,7 @@
                 #if( $page.contactRequest.company )
                 <tr>
                     <th>Company</th>
-                    <td>$page.contactRequest.company</td>
+                    <td>$!page.contactRequest.company</td>
                 </tr>
                 #end
                 <tr>

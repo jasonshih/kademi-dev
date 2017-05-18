@@ -1,31 +1,48 @@
-#if ($page)
-#if ($calendar && $event)
 #set ($eventPath = "/Calendars/$calendar/$event")
-#set( $calendarEvent = $rootFolder.find($eventPath) )
-#elseif ($page.startDate)
-#set( $calendarEvent = $page )
-#end
-#if ($calendarEvent)
-<h3>$calendarEvent.title</h3>
+#set( $calendarEvent = $rootFolder.find($eventPath))
+#if (!$page and !$calendar and !$event)
+    <h3>Example Event</h3>
+    <div class="calendar-event-byline">
+        <small class="author">By <a href="#">admin</a>
+        </small>
+        <small>
+            Starts 12/06/2017
+            (<abbr title="12/06/2017 06:00" class="timeago">12/06/2017 06:00</abbr>)
+        </small>
+    </div>
 
-<div class="calendar-event-byline">
-    #if( $calendarEvent.organisor )
-    <small class="author">By <a href="/users/$page.organisor.name/public">$calendarEvent.organisor.formattedName</a></small>
-    #end
-    #if( $calendarEvent.location )
-    <small class="location">At $calendarEvent.location</small>
-    #end
-    <small>
-        Starts $formatter.formatDate( $calendarEvent.startDate, $calendarEvent.timezone )
-        (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($calendarEvent.startDate, $calendarEvent.timezone)</abbr>)
-    </small>
-</div>
+    <div class="calendar-event-content">
 
-<div class='calendar-event-content'>
-    $!calendarEvent.description
-</div>
+    </div>
 #else
+    #if ($calendar && $event)
+    #set ($eventPath = "/Calendars/$calendar/$event")
+    #set( $calendarEvent = $rootFolder.find($eventPath) )
+    #elseif ($page.startDate)
+    #set( $calendarEvent = $page )
+    #end
+    #if ($calendarEvent)
+    <h3>$calendarEvent.title</h3>
+
+    <div class="calendar-event-byline">
+        #if( $calendarEvent.organisor )
+        <small class="author">By <a href="/users/$page.organisor.name/public">$calendarEvent.organisor.formattedName</a>
+        </small>
+        #end
+        #if( $calendarEvent.location )
+        <small class="location">At $calendarEvent.location</small>
+        #end
+        <small>
+            Starts $formatter.formatDate( $calendarEvent.startDate, $calendarEvent.timezone )
+            (<abbr title="$formatter.formatDateISO8601($page.startDate)" class="timeago">$formatter.formatDateTime($calendarEvent.startDate,
+            $calendarEvent.timezone)</abbr>)
+        </small>
+    </div>
+
+    <div class='calendar-event-content'>
+        $!calendarEvent.description
+    </div>
+    #else
+    #end
 #end
-#else
-<div class="alert alert-warning">Event detail component will go here</div>
-#end
+

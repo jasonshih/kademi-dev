@@ -1,19 +1,37 @@
-#if( $page.optins.size() gt 0 )
-<div class="well">
-    <form action="." method="POST" class="form-inline optins">
-        <img class='ajax-loader' src='/static/common/loading.gif'/>
-        <h4>Optional Mailing Lists</h4>
-        <ul class='list memberships'>
-            #foreach($optin in $page.optins)
-            <li>
-                #set($id = "optins_" + $optin.optinGroup.name)
-                <label for="$id" class="optin">
-                    $formatter.checkbox($id, "optins", $user.isInGroup($optin.optinGroup) , $optin.optinGroup.name)
-                    $optin.message
-                </label>
-            </li>
-            #end
-        </ul>
-    </form>
-</div>
+#if($page)
+    #set($profiles = $page.find('/profile').getMailingLists())
+    #if( $profiles.size() gt 0 )
+    <div class="well">
+        <form action="." method="POST" class="form-inline optins">
+            <img class='ajax-loader' src='/static/common/loading.gif'/>
+            <h4>Optional Mailing Lists</h4>
+            <ul class='list memberships'>
+                #foreach($optin in $profiles)
+                <li>
+                    #set($id = "optins_" + $optin.optinGroup.name)
+                    <label for="$id" class="optin">
+                        $formatter.checkbox($id, "optins", $user.isInGroup($optin.optinGroup) , $optin.optinGroup.name)
+                        $optin.message
+                    </label>
+                </li>
+                #end
+            </ul>
+        </form>
+    </div>
+    #end
+#else
+    <div class="well">
+        <form action="." method="POST" class="form-inline optins">
+            <img class="ajax-loader" src="/static/common/loading.gif">
+            <h4>Optional Mailing Lists</h4>
+            <ul class="list memberships">
+                <li>
+                    <label for="optins_tammailling" class="optin">
+                        <input type="hidden" value="false" name="optins_checkbox"><input type="checkbox" name="optins" value="tammailling" id="optins_tammailling">
+                        Example Profile
+                    </label>
+                </li>
+            </ul>
+        </form>
+    </div>
 #end

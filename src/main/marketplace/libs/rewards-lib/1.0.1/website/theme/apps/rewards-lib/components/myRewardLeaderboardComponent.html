@@ -1,0 +1,101 @@
+<!-- Begin leaderboards -->
+#if($page)
+    #set($since = $formatter.addDays( $formatter.now, -7 ) )
+    #foreach( $reward in $page.children.ofType.reward )
+
+    #set( $myPointsInfo = $reward.myPointsInfo(5, $since) )
+
+    #if( $myPointsInfo.hasPoints )
+    <div class="well">
+        <h3>$myPointsInfo.teamName</h3>
+        <table class="table">
+            <colgroup>
+                <col style="width: 150px"/>
+                <col/>
+            </colgroup>
+            <tbody>
+            #foreach($leader in $myPointsInfo.teamMemberPoints )
+            #set($foundThis = false)
+            #if( $leader.member.userId == $user.userId)
+            #set($foundThis = true)
+            #end
+            <tr>
+                <td>
+                    <a href="$leader.member.href" class="profilePic">
+                        #set($photo = "/templates/apps/user/profile.png")
+                        #if( $leader.member.photoHash )
+                        #set($photo = "/_hashes/files/" + $leader.member.photoHash)
+                        #end
+                        <img alt="$leader.member.name" src="$photo"/>
+                    </a>
+                    <a href="$leader.member.href" class="user">$leader.member.name</a>
+                </td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="$leader.percent" aria-valuemin="0" aria-valuemax="100" style="width: ${leader.percent}%;">
+                            $!leader.numPoints pts
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            #end
+
+            <!-- Now display the current user, if we didnt find it in the leaders list -->
+            #if( !$foundThis )
+            #set( $thisProfile = $userResource.thisProfile )
+            <tr>
+                <td>
+                    <a href="$thisProfile.href" class="profilePic">
+                        #set($photo = "/templates/apps/user/profile.png")
+                        #if( $thisProfile.photoHash )
+                        #set($photo = "/_hashes/files/" + $thisProfile.photoHash)
+                        #end
+                        <img alt="$thisProfile.name" src="$photo"/>
+                    </a>
+                    <a href="$thisProfile.href" class="user">$thisProfile.name</a>
+                </td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="$myPointsInfo.myPercent" aria-valuemin="0" aria-valuemax="100" style="width: ${myPointsInfo.myPercent}%;">
+                            $myPointsInfo.myPoints pts
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            #end
+            </tbody>
+        </table>
+    </div>
+    #end
+    #end
+#else
+    <div class="well">
+        <h3>Example Team Name</h3>
+        <table class="table">
+            <colgroup>
+                <col style="width: 150px"/>
+                <col/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <td>
+                    <a href="#" class="profilePic">
+                        <img alt="$leader.member.name" src="/templates/apps/user/profile.png"/>
+                    </a>
+                    <a href="#" class="user">Example Member Name</a>
+                </td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
+                            100 pts
+                        </div>
+                    </div>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+#end
+
+<!-- End leaderboards -->
