@@ -35,7 +35,11 @@
                             <td>$app.member.nickName</td>
                             <td>$app.groupEntity.name</td>
                             <td>$app.member.email</td>
-                            <td>$app.withinOrg.titleOrId</td>
+                            #if ($app.newOrgProvided) 
+                                <td>$app.newOrgProvided (Pending to be created)</td>
+                            #else 
+                                <td>$app.withinOrg.titleOrId</td>
+                            #end
                             <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
                             <td>
                                 <input type="hidden" name="appId" value="$app.id" />
