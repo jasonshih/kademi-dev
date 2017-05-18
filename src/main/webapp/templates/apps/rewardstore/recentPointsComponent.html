@@ -1,9 +1,14 @@
 #if ( !$height )
-    #set ( $height = 100 )
+#set ( $height = 100 )
 #end
-#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
 
-#if( $pointsBucket )
+
+
+#if($page)
+
+    #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+
+    #if( $pointsBucket )
     <div class="panel panel-default">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
@@ -13,33 +18,48 @@
         <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
             #set( $recentPoints = $applications.rewardStore.findPointsByLimit($bucket, 100, $profile) )
             #if( $recentPoints.size() > 0 )
-                <p>You have been awarded $recentPoints.size() times in the last $days days</p>
-                <table class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>No. Points</th>
-                            <th>Awarded date/time</th>
-                            <th>Reason</th>
-                        </tr>
-                    </thead>
-                        <tbody>
-                        #foreach( $pt in $recentPoints )
-                            <tr>
-                                <td>$pt.numPoints</td>
-                                <td>
-                                    $formatter.formatDateTime($pt.issuedDate, $page.organisation.timezone)</td>
-                                <td>$pt.reason</td>
-                            </tr>
-                        #end
-                    </tbody>
-                </table>
+            <p>You have been awarded $recentPoints.size() times in the last $days days</p>
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>No. Points</th>
+                    <th>Awarded date/time</th>
+                    <th>Reason</th>
+                </tr>
+                </thead>
+                <tbody>
+                #foreach( $pt in $recentPoints )
+                <tr>
+                    <td>$pt.numPoints</td>
+                    <td>
+                        $formatter.formatDateTime($pt.issuedDate, $page.organisation.timezone)</td>
+                    <td>$pt.reason</td>
+                </tr>
+                #end
+                </tbody>
+            </table>
             #else
-                <p>
-                    <i>You have not been awarded any points in the last $days days</i>
-                </p>
+            <p>
+                <i>You have not been awarded any points in the last $days days</i>
+            </p>
             #end
         </div>
     </div>
-#else
+    #else
     Points bucket not found
+    #end
+#else
+    <!--<h2>Component: recentPoints</h2>-->
+    <div class="clearfix panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Recent points in example
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <p>
+                <i>You have not been awarded any points in the last 10 days</i>
+            </p>
+        </div>
+    </div>
 #end
+

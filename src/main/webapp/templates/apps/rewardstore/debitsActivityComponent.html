@@ -1,102 +1,119 @@
-#if ( !$height )
-#set ( $height = 100 )
-#end
-#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+#if($page)
+    #if ( !$height )
+    #set ( $height = 100 )
+    #end
+    #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
 
-#if( $pointsBucket )
-#set($bucketId = $pointsBucket.id)
-#set($daysInt = $formatter.toInteger($days, false))
+    #if( $pointsBucket )
+    #set($bucketId = $pointsBucket.id)
+    #set($daysInt = $formatter.toInteger($days, false))
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-table"></i>
-        Debits activity in
-        $pointsBucket.title
-    </div>
-    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
-            <svg></svg>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Debits activity in
+            $pointsBucket.title
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
+                <svg></svg>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    $(function () {
-        // Parse JSON
-        var jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
+    <script>
+        $(function () {
+            // Parse JSON
+            var jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
 
-        function initActivityChart(resp) {
-            nv.addGraph(function () {
-                var chart = nv.models.multiBarChart()
-                        .margin({top: 0, right: 0, bottom: 0, left: 0})
-                        .showControls(false)
-                        .showLegend(false)
-                        .showYAxis(false)
-                        .showXAxis(false);
+            function initActivityChart(resp) {
+                nv.addGraph(function () {
+                    var chart = nv.models.multiBarChart()
+                            .margin({top: 0, right: 0, bottom: 0, left: 0})
+                            .showControls(false)
+                            .showLegend(false)
+                            .showYAxis(false)
+                            .showXAxis(false);
 
-                chart.xAxis     //Chart x-axis settings
-                        .axisLabel('Date')
-                        .tickFormat(function (d) {
-                            return moment(d).format("DD MMM");
-                        });
+                    chart.xAxis     //Chart x-axis settings
+                            .axisLabel('Date')
+                            .tickFormat(function (d) {
+                                return moment(d).format("DD MMM");
+                            });
 
-                chart.yAxis     //Chart y-axis settings
-                        .axisLabel('Count')
-                        .tickFormat(d3.format('.02f'));
+                    chart.yAxis     //Chart y-axis settings
+                            .axisLabel('Count')
+                            .tickFormat(d3.format('.02f'));
 
-                /* Generate data*/
-                var debits = [];
-                var myData = [
-                    {
-                        values: debits,
-                        key: 'Debits',
-                        color: '#2ca02c'
+                    /* Generate data*/
+                    var debits = [];
+                    var myData = [
+                        {
+                            values: debits,
+                            key: 'Debits',
+                            color: '#2ca02c'
+                        }
+                    ];
+
+                    if (resp.aggregations) {
+                        var d = resp.aggregations;
+                        var sBuckets = d.debits.dates.buckets;
+
+                        /* generate valid stats */
+                        for (var i in sBuckets) {
+                            var b = sBuckets[i];
+                            debits.push({
+                                x: b.key,
+                                y: b.sum.value || 0
+                            });
+                        }
                     }
-                ];
 
-                if (resp.aggregations) {
-                    var d = resp.aggregations;
-                    var sBuckets = d.debits.dates.buckets;
+                    debits.sort(dynamicSort('x'));
 
-                    /* generate valid stats */
-                    for (var i in sBuckets) {
-                        var b = sBuckets[i];
-                        debits.push({
-                            x: b.key,
-                            y: b.sum.value || 0
-                        });
-                    }
-                }
+                    d3.select('#rewardDebitsActivityChart-${bucketId} svg')    //Select the <svg> element you want to render the chart in.
+                            .datum(myData)         //Populate the <svg> element with chart data...
+                            .call(chart);          //Finally, render the chart!
 
-                debits.sort(dynamicSort('x'));
-
-                d3.select('#rewardDebitsActivityChart-${bucketId} svg')    //Select the <svg> element you want to render the chart in.
-                        .datum(myData)         //Populate the <svg> element with chart data...
-                        .call(chart);          //Finally, render the chart!
-
-                //Update the chart when window resizes.
-                nv.utils.windowResize(function () {
-                    chart.update()
+                    //Update the chart when window resizes.
+                    nv.utils.windowResize(function () {
+                        chart.update()
+                    });
+                    return chart;
                 });
-                return chart;
-            });
-        }
-
-        function dynamicSort(property) {
-            var sortOrder = 1;
-            if (property[0] === "-") {
-                sortOrder = -1;
-                property = property.substr(1);
             }
-            return function (a, b) {
-                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-                return result * sortOrder;
-            };
-        }
 
-        initActivityChart(jsonResp);
-    });
-</script>
+            function dynamicSort(property) {
+                var sortOrder = 1;
+                if (property[0] === "-") {
+                    sortOrder = -1;
+                    property = property.substr(1);
+                }
+                return function (a, b) {
+                    var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                    return result * sortOrder;
+                };
+            }
+
+            initActivityChart(jsonResp);
+        });
+    </script>
+    #else
+    Points bucket not found
+    #end
 #else
-Points bucket not found
+    <!--<h2>Component: debitsActivity</h2>-->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Debits activity in example
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
+                Points bucket not found
+            </div>
+        </div>
+    </div>
 #end
+
+

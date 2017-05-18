@@ -1,4 +1,5 @@
+#if ($page)
 <div class="productNotes">$!page.description</div>
-#if (!$page)
+#else
 <div class="productNotes">Example Product Description</div>
 #end
