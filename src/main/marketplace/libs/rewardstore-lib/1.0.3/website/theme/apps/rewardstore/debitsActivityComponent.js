@@ -3,7 +3,7 @@ $(function () {
     var jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
 
     function initActivityChart(resp) {
-        if($('.debits-activity').length > 0) {
+        if ($('.debits-activity').length > 0) {
             nv.addGraph(function () {
                 var chart = nv.models.multiBarChart()
                     .margin({top: 0, right: 0, bottom: 0, left: 0})
