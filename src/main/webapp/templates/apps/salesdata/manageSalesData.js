@@ -76,6 +76,10 @@ function initManageSalesData() {
     initDelpoints();
     initDupKpi();
     initDataQuery();
+
+    $("#series-tab-general").on('shown.bs.tab', function (e) {
+        $("#seriesHistogram").seriesVis();
+    });
     
     $("#seriesHistogram").seriesVis();
 }
