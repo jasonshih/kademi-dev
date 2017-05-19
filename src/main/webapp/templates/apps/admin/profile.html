@@ -30,6 +30,11 @@
                 overflow-y: auto;
             }
 
+            #modal-edit-membership .search-wrapper{
+                display: inline-block;
+                min-width: 200px;
+            }
+
             @media (min-width: 768px) {
                 .bootstrap-wysihtml5-insert-link-modal .modal-dialog {
                     width: auto;
@@ -95,19 +100,7 @@
                 </div>
                 <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
                     #foreach($m in $page.children.ofType.membership)
-                    #if( $m.groupType == "P" )
-                        #showGroupTag( $m "clip-users", "success" )
-
-                    #elseif( $m.groupType == "S" )
-                        #showGroupTag( $m "fa fa-trophy", "info" )
-
-                    #elseif( $m.groupType == "M" )
-                        #showGroupTag( $m "fa fa-envelope", "info" )
-
-                    #else
-                        #showGroupTag( $m "fa fa-envelope", "info" )
-
-                    #end
+                    #showGroupTag( $m )
                     #end
                 </div>
                 <div style="clear: both"></div>
@@ -506,34 +499,6 @@
                                         <div class="col-md-12">
                                             <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
                                         </div>
-                                        <div id="org-search">
-                                            <div class="">
-                                                <table class="table table-striped table-hover table-condensed">
-                                                    #if( $page.orgSearchResults.isEmpty() )
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>No matching organisations found</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    #else
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Id</th>
-                                                                <th>Title</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            #foreach($org in $page.orgSearchResults)
-                                                                <tr>
-                                                                    <td><a href="$org.id">$org.orgId</a></td>
-                                                                    <td><a href="$org.id">$!org.title</a></td>
-                                                                </tr>
-                                                            #end
-                                                    <tbody>
-                                                    #end
-                                                </table>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div class="memberships-wrapper">
@@ -582,6 +547,40 @@
             </div>
         </div>
 
+        <div id="modal-edit-membership" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit membership</h4>
+                    </div>
+                    <div class="modal-body">
+                        #if ($params.membershipName)
+                        #set ($memHref = $page.path + "/" + $params.membershipName)
+                        #set ($m = $page.find($memHref))
+                        <div class="well">
+                            <h3 title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
+                                <a href="/groups/$m.groupName/">$m.groupName</a>
+                                in
+                                <a id="changeOrgFinder" href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
+                                <input type="hidden" name="newOrgId" value="" class="newOrgId">
+                                <br>
+                                <br>
+                                <a class="btn btn-info btn-change-org" title="Change organisation" href="#"><i class="fa fa-edit"></i> Change org</a>
+                                <a class="btn btn-primary btn-update-membership hide" title="Change organisation" href="$m.href" data-group="$m.groupName"><i class="fa fa-save"></i> Change</a>
+                                <a class="btn btn-default btn-change-org-cancel hide" title="Cancel" href="$m.href" data-group-href="?membershipName=$m.name">Cancel</a>
+                                <a class="btn btn-danger btn-delete-membership" title="Delete this membership" href="$m.href"><i class="fa fa-trash"></i> Delete</a>
+                            </h3>
+                        </div>
+                        #end
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             $(function () {
@@ -591,10 +590,24 @@
                 initRemoveCreds();
                 initRemoveOAuthCred();
                 initOrgFinder();
+                initEditMemberships();
             });
         </script>
 
-        #macro( showGroupTag $m $icon $type )
+        #macro( showGroupTag $m)
+            #if( $m.groupType == "P" )
+                #set($icon = "clip-users" )
+                #set($type = "success" )
+            #elseif( $m.groupType == "S" )
+                #set($icon = "fa fa-trophy" )
+                #set($type = "info" )
+            #elseif( $m.groupType == "M" )
+                #set($icon = "fa fa-envelope" )
+                #set($type = "info" )
+            #else
+                #set($icon = "fa fa-envelope" )
+                #set($type = "info" )
+            #end
             <span class="block membership alert alert-$type">
                 <i class="$icon"></i>
                 <span class="block-name" title="$m.groupName in $m.orgName, created $formatter.formatDateTime($m.createdDate)">
@@ -604,7 +617,7 @@
                         <a href="/organisations/$m.withinOrgId/viewDetails">$m.orgName</a>
                     #end
                 </span>
-                <a href="$m.name" class="btn btn-xs text-muted btn-delete-membership" title="Delete membership"><i href="$m.name" class="fa fa-times"></i></a>
+                <a href="#" class="btn btn-xs text-muted btn-edit-membership" data-group-href="?membershipName=$m.name" title="Edit membership"><i class="fa fa-ellipsis-v"></i></a>
             </span>
         #end
     </body>
