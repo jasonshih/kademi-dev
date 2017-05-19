@@ -26,9 +26,76 @@ function initSendTest() {
     $("#modal-send-test").find("form").forms({
         callback: function (resp) {
             flog("resp", resp);
-            onTestResponse(resp);
+            onTestMultipleResponse(resp);
         }
     });
+}
+
+function onTestMultipleResponse(resp) {
+    flog("onTestMultipleResponse", resp);
+    if (resp.status) {
+        var modal = $("#modal-send-test-progress");
+        modal.modal();
+        var target = modal.find(".modal-body");
+        if(resp.messages.length == 1){
+            loadEmailItemContent(target, "/emails/"+resp.messages[0]);
+        }else{
+            loadMultipleEmailItemContent(target, resp.messages);    
+        }
+        
+    } else {
+        Msg.info("Couldnt not send test email: " + resp.messages);
+    }
+}
+
+function loadMultipleEmailItemContent(target, ids) {
+    flog("loadMultipleEmailItemContent", ids);
+    setInterval(function () {
+        var tbody = document.createElement("tbody");
+        for (i = 0; i < ids.length; i++) { 
+            var id = ids[i];
+            $(tbody).append(loadEmailItemDetails(target, id));    
+        }
+        $(target).find("tbody").replaceWith(tbody);
+   }, 3000);
+}
+
+function loadEmailItemDetails(target, id){
+    flog("loadEmailItemDetails", id);
+    var template = $("#row-email-template").html();
+    var emailRow = Handlebars.compile(template);
+
+    Handlebars.registerHelper("debug", function(optionalValue) {
+        flog("Current Context");
+        flog("====================");
+        flog(this);
+
+        if (optionalValue) {
+          flog("Value");
+          flog("====================");
+          flog(optionalValue);
+        }
+    });
+    var myRow;
+    
+    $.ajax({
+        type: 'GET',
+        url: "/emails/"+id,
+        datatype: 'json',
+        async: false,
+        data: {
+            asJson: true,
+            status: true,
+            id: id
+        },
+        success: function (resp) {
+            var json = JSON.parse(resp);
+             row = emailRow(json);
+            myRow = row;
+        }
+    });
+    
+    return myRow;
 }
 
 function doSendTest() {

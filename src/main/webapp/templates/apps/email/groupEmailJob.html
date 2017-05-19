@@ -392,9 +392,11 @@
                                             <th>Name</th>
                                             <th>Status</th>
                                             <th>Attempt</th>
+                                            <th>-</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <tr><td colspan="5">Loading...</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -475,8 +477,8 @@
                             <div class="form-group">
                                 <label class="col-md-3 control-label" for="name">Recipient</label>
                                 <div class="col-md-8">
-                                    <input type="text" name="recipient" value="" placeholder="An email address" class="required form-control" />
-                                    <p>A single email will be sent to this address</p>
+                                    <input type="text" name="recipient" value="" placeholder="Email addresses separated by comma" class="required form-control" />
+                                    <p>A single email will be sent to these addresses</p>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -496,6 +498,17 @@
             </div>
         </div>
 
+        <script id="row-email-template" type="text/x-handlebars-template">
+            <tr class="tr-{{id}}">
+                <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td> 
+                <td>{{from}}</td> 
+                <td>{{to}}</td>
+                <td>{{subject}}</td>
+                <td>{{attempts}}</td>
+                <td><a class="btn btn-info" href="/emails/{{id}}" target="_blank">Open<span class="glyphicon glyphicon-arrow-right"></span></a></td>
+            </tr>
+        </script>
+
         <div id="modal-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -504,6 +517,18 @@
                         <h4 class="modal-title">Test send progress</h4>
                     </div>
                     <div class="modal-body" id="send-test-body">
+                        <table class="table table-striped" style="margin-bottom: 0;">
+                            <thead>
+                            <tr>
+                              <th>Status</th>
+                              <th>From</th> 
+                              <th>To</th>
+                              <th>Subject</th>
+                              <th>Attempts</th>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                          </table>
                     </div>
                 </div>
             </div>
