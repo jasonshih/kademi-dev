@@ -90,7 +90,7 @@
                             #set ($subTotal = 0)
                             #set ($subTotal = $item.discountAmount)
                             #set($totalCost = $totalCost + $subTotal)
-                            $formatter.formatCurrency($subTotal) Pts
+                            $formatter.formatCurrency($subTotal, false) Pts
                         </span>
                         </div>
                     </div>
