@@ -53,32 +53,36 @@
         </div>
     </div>
     #else
-    Points bucket not found
+        #fakeUI()
     #end
 #else
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-table"></i>
-            Top $limit balances in example
-        </div>
-        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-            <div class="panel-body" style="overflow-y: auto;">
-                <div class="panel-body" style=" overflow-y: auto;">
-                    <table class="table table-hover table-striped">
-                        <thead>
-                        <tr>
-                            <th>Balance</th>
-                            <th>User</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+        #fakeUI()
+#end
+
+#macro(fakeUI)
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-table"></i>
+                Top $limit balances in example
+            </div>
+            <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+                <div class="panel-body" style="overflow-y: auto;">
+                    <div class="panel-body" style=" overflow-y: auto;">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>Balance</th>
+                                <th>User</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
 #end
 
 

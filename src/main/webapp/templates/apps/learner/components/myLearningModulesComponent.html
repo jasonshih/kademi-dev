@@ -1,5 +1,6 @@
 
 #if($page)
+    #if($!curProgram.title != "" && $!curCourse.title != "")
     <div class="my-learning-container">
         <div class="btn-group program-course-module-mix" style="z-index: 2">
             #set($programs = $page.find("/programs"))
@@ -70,20 +71,28 @@
             storeCourseCookie(courseHref);
         }
     </script>
-#else
-    <div class="my-learning-container">
-        <div class="btn-group program-course-module-mix" style="z-index: 2">
-            <button class="btn btn-primary btn-lg course-selector btn-show-mix dropdown-toggle">
-                <span class="current-module">Example Program Title / Example Module Title </span>
-                <span class="caret"></span>
-            </button>
-            <div class="dropdown-menu container">
-                <ul role="menu" class="row list-unstyled">
 
-                </ul>
-            </div>
+    #else
+    #fakeUI()
+    #end
+#else
+#fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="my-learning-container">
+    <div class="btn-group program-course-module-mix" style="z-index: 2">
+        <button class="btn btn-primary btn-lg course-selector btn-show-mix dropdown-toggle">
+            <span class="current-module">Example Program Title / Example Module Title </span>
+            <span class="caret"></span>
+        </button>
+        <div class="dropdown-menu container">
+            <ul role="menu" class="row list-unstyled">
+
+            </ul>
         </div>
     </div>
+</div>
 #end
 
 

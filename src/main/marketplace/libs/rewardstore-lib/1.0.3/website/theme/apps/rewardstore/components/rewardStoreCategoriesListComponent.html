@@ -1,15 +1,25 @@
 
 #if($page)
-    #if ($reward && $reward != "")
-        #set ($rewardPath = "/" + $reward)
-        #set ($rewardResource = $rootFolder.find($rewardPath))
-        #renderCateList($rewardResource)
+
+    #if($rewardResource.children.ofType.category)
+        #if ($reward && $reward != "")
+            #set ($rewardPath = "/" + $reward)
+            #set ($rewardResource = $rootFolder.find($rewardPath))
+            #renderCateList($rewardResource)
+        #else
+            #set ($rewardResource = $page.closest("store") )
+            #renderCateList($rewardResource)
+        #end
     #else
-        #set ($rewardResource = $page.closest("store") )
-        #renderCateList($rewardResource)
+        #fakeUI()
     #end
 
+
 #else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
 <div class="list-group list-group-root rewardStoreCategoriesList">
     <span href="#" class="list-group-item heading-item">Browse by category</span>
 

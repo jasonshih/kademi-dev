@@ -1,8 +1,15 @@
 #if (!$tag ||  $tag == "")
-    #set ($tag = 'h1')
+	#set ($tag = 'h1')
 #end
 #if ($page)
-<$tag>$page.title</$tag>
+	#if ($page.title)
+    <$tag>$page.title</$tag>
+	#else
+		#fakeUI()
+	#end
 #else
+	#fakeUI()
+#end
+#macro(fakeUI)
 <$tag class="alert alert-warning">Page Title</$tag>
 #end

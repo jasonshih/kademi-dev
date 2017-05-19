@@ -46,20 +46,26 @@
         </div>
     </div>
     #else
-    Points bucket not found
+    #fakeUI()
     #end
 #else
-    <!--<h2>Component: recentPoints</h2>-->
-    <div class="clearfix panel panel-default">
-        <div class="panel-heading">
-            <i class="fa fa-table"></i>
-            Recent points in example
-        </div>
-        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-            <p>
-                <i>You have not been awarded any points in the last 10 days</i>
-            </p>
-        </div>
+    #fakeUI()
+#end
+
+
+
+#macro(fakeUI)
+<!--<h2>Component: recentPoints</h2>-->
+<div class="clearfix panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i>
+        Recent points in example
     </div>
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+        <p>
+            <i>You have not been awarded any points in the last 10 days</i>
+        </p>
+    </div>
+</div>
 #end
 
