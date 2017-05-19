@@ -320,7 +320,7 @@
 
     function initBodyForm() {
         var form = $("#leadDetails");
-        var body = $(document.body);
+        var body = $('body.leadsPage');
         form.forms({
             callback: function (resp) {
                 Msg.info('Saved');
