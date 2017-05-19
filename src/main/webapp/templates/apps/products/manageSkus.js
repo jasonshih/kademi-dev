@@ -9,7 +9,7 @@
             return false;
         }
     });
-	
+
 	$("#pointsFooter a").on('click', function (e) {
 		e.preventDefault();
         var uri = e.target.href;
@@ -38,11 +38,11 @@
             }
         });
 	});
-	
-	
+
+
 	function doHistorySearch() {
 	    flog('doHistorySearch');
-	    
+
 	    Msg.info("Doing search...", 2000);
 
 	    var data = {
@@ -58,7 +58,7 @@
 
 	    var link = window.location.pathname + "?" + $.param(data);
 	    flog("new link", link);
-	    
+
 	    $.ajax({
 	        type: "GET",
 	        url: link,
@@ -67,12 +67,12 @@
 	            flog('response', content);
 	            Msg.success("Search complete", 2000);
 	            var newBody = $(content).find("#pointsTable");
-	            
+
 	            target.replaceWith(newBody);
 	            history.pushState(null, null, link);
 
 	            $("abbr.timeago").timeago();
-	            
+
 	            initUpdateSku();
 	            initUpdateSkuTitle();
 	            initUpdateBaseCost();
@@ -116,20 +116,20 @@
             tbody.append(tr);
         });
     }
-	
+
     function initUpdateSku() {
         $("#productsTableBody").on("change", ".input-sku", function (e) {
             var target = $(e.target);
             var newSku = target.val();
             var row = target.closest('tr');
             var rowId = $(row).attr("id");
-            
+
             var td = $(row).find('td:first-child');
-            
+
             var productId = td.data("product");
             var skuId = td.data('skuid');
             var options = td.data("options");
-            
+
             updateSku(productId, options, skuId, newSku, rowId);
         });
 
@@ -140,7 +140,7 @@
 
                 var row = target.closest('tr');
                 var td = $(row).find('td:first-child');
-                
+
                 var rowId = $(row).attr("id");
                 var productId = td.data("product");
                 var skuId = td.data('skuid');
@@ -157,10 +157,10 @@
             var row = target.closest('tr');
             var rowId = $(row).attr("id");
             var td = $(row).find('td:first-child');
-            
+
             var skuId = td.data('skuid');
-            
-            
+
+
             updateSkuTitle(skuId, newSkuTitle, rowId);
         });
 
@@ -168,13 +168,13 @@
             if ((e.keyCode || e.which) == keymap.ENTER) {
                 var target = $(e.target);
                 var newSkuTitle = target.val();
-                
+
                 var row = target.closest('tr');
                 var rowId = $(row).attr("id");
                 var td = $(row).find('td:first-child');
-                
+
                 var skuId = td.data('skuid');
-               
+
                 updateSkuTitle(skuId, newSkuTitle, rowId);
             }
         });
@@ -187,9 +187,9 @@
             var row = target.closest('tr');
             var rowId = $(row).attr("id");
             var td = $(row).find('td:first-child');
-                
+
             var skuId = td.data('skuid');
-            
+
             updateSkuBaseCost(skuId, newSkuTitle, rowId);
         });
     }
@@ -203,7 +203,7 @@
             var rowId = $(row).attr("id");
             var td = $(row).find('td:first-child');
             var skuId = td.data('skuid');
-            
+
             updateSkuStock(skuId, locid, newSkuStock, rowId, rowId);
         });
     }
@@ -215,7 +215,7 @@
             var btn = $(this);
             var row = btn.closest('tr');
             var td = $(row).find('td:first-child');
-            
+
             var skuId = td.data('skuid');
             var imgHashes = td.data('selectableimg').split(',');
 
@@ -303,8 +303,8 @@
             $('#modal-option-img').find('.btn-image-selected ').removeClass('image-selected');
         });
     }
-    
-    function initUpCropImage(btn, skuId, rowId, ){
+
+    function initUpCropImage(btn, skuId, rowId ){
         btn.upcropImage({
             buttonContinueText: 'Save',
             url: window.location.pathname + '?skuId=' + skuId,
@@ -341,7 +341,7 @@
     }
 
     function initSkuImgUpload() {
-        
+
         $('.btn-option-img-upload').each(function (i, item) {
             var btn = $(item);
             var row = btn.closest('tr');
@@ -349,7 +349,7 @@
             var td = $(row).find('td:first-child');
 
             var skuId = td.data('skuid');
-            
+
             initUpCropImage(btn, skuId, rowId);
         });
     }
@@ -476,13 +476,13 @@
     function reloadSkuTable() {
         $("#productsTableBody").reloadFragment({
             whenComplete: function () {
-            	
+
                 //initSkuImgUpload();
             },
             url: window.location.href
         });
     }
-    
+
     function reloadRow(reloadId) {
         flog("Reloading row", reloadId);
         $("#"+reloadId).reloadFragment({
@@ -501,7 +501,7 @@
             url: window.location.href
         });
     }
-    
+
 
     // Run Init functions
     $(function () {

@@ -29,6 +29,18 @@
                 "group": "main",
                 "path": "/theme/apps/salesdata/circle-progress.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/manageDataRecord.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/salesdata/manageDataRecord.css"
+            }
         }
     ]
 }
