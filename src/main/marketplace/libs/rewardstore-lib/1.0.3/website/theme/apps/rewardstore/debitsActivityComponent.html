@@ -9,7 +9,7 @@
 		#set($bucketId = $pointsBucket.id)
 		#set($daysInt = $formatter.toInteger($days, false))
 
-    <div class="panel panel-default debits-activity">
+    <div class="panel panel-default debits-activity" data-jsonResp="$applications.rewardStore.getDebitsHistogram($bucketId, $daysInt)">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
             Debits activity in
