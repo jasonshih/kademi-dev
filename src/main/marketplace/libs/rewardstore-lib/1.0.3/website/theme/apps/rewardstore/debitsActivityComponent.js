@@ -1,6 +1,7 @@
 $(function () {
     // Parse JSON
-    var jsonResp = $applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
+    var jsonResp = $('.debits-activity').data("jsonResp");
+    console.info("jsonResp", jsonResp);
 
     function initActivityChart(resp) {
         if ($('.debits-activity').length > 0) {
