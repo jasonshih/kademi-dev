@@ -117,8 +117,9 @@ function initPropertiesForm() {
 
                 funnelTesters.push({
                     emailDomain: funnelTester.find('[name=funnelTesterEmailDomain]').val().trim(),
-                    delayMins: +funnelTester.find('[name=funnelTesterDelay]').val().trim(),
-                    accelerator: +funnelTester.find('[name=funnelTesterAcce]').val().trim()
+                    delayMins: +funnelTester.find('[name=funnelTesterDelay]').val().trim()
+                    //,
+                    //accelerator: +funnelTester.find('[name=funnelTesterAcce]').val().trim()
                 });
             });
 
