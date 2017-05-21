@@ -21,12 +21,12 @@
 
                 if (queryType === 'queryTable') {
                     loadQueryTable(panel);
-                } else if(queryType === 'query') {
+                } else if (queryType === 'query') {
                     loadQuery(panel);
                     initRawESCSV(panel);
                 }
             }
-            function loadQuery(panel){
+            function loadQuery(panel) {
                 var queryName = panel.attr('data-queryname');
                 var from = panel.attr('data-from');
                 var size = panel.attr('data-items-per-page');
@@ -37,7 +37,7 @@
                     size = 100;
                 }
                 $.ajax({
-                    url: '/queries/' + queryName + '/?run&from='+from+'&size='+size,
+                    url: '/queries/' + queryName + '/?run&from=' + from + '&size=' + size,
                     dataType: 'json',
                     success: function (resp) {
                         var tbody = '';
@@ -94,8 +94,8 @@
                         return;
                     }
                     totalPages = Math.ceil(resp.numRows / size);
-                } else if (queryType == 'query'){
-                    if (!resp.hits.total || resp.hits.total <= size){
+                } else if (queryType == 'query') {
+                    if (!resp.hits.total || resp.hits.total <= size) {
                         panel.find('.panel-footer .pagination').html('').parent().addClass('hide');
                         return;
                     }
@@ -163,9 +163,9 @@
                     }
                     panel.attr('data-from', from);
 
-                    if (queryType == 'queryTable'){
+                    if (queryType == 'queryTable') {
                         loadQueryTable(panel);
-                    } else if(queryType == 'query') {
+                    } else if (queryType == 'query') {
                         loadQuery(panel);
                     }
                 })
@@ -174,10 +174,18 @@
             function renderRow(row) {
                 var rowStr = '<tr>';
                 for (var i in row) {
-                    rowStr += '<td>' + row[i] + '</td>';
+                    var val = row[i];
+                    if( !isFunction(val)) {
+                        rowStr += '<td>' + val + '</td>';
+                    }
                 }
                 rowStr += '</tr>';
                 return rowStr;
+            }
+
+            function isFunction(functionToCheck) {
+                var getType = {};
+                return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
             }
 
             function renderRowRawES(row, panel) {
@@ -196,15 +204,15 @@
                 return rowStr;
             }
 
-            function initRawESCSV(panel){
-                panel.find('.btnDownloadCSV').on('click', function(e){
+            function initRawESCSV(panel) {
+                panel.find('.btnDownloadCSV').on('click', function (e) {
                     e.preventDefault();
 
                     var panel = $(this).parents('.panel');
 
                     var arr = [];
                     var csvHeader = [];
-                    panel.find('table thead tr th').each(function(){
+                    panel.find('table thead tr th').each(function () {
                         csvHeader.push($(this).text());
                     });
                     arr.push(csvHeader);
@@ -218,7 +226,7 @@
                             if (hits.total > 0) {
                                 for (var i = 0; i < hits.hits.length; i++) {
                                     var childArr = [];
-                                    for(var j = 0; j < csvHeader.length; j++){
+                                    for (var j = 0; j < csvHeader.length; j++) {
                                         var hit = hits.hits[i];
                                         var field = csvHeader[j];
                                         if (hit.fields[field] && hit.fields[field].length) {
@@ -231,9 +239,9 @@
                                 }
                             }
                             var csvContent = "data:text/csv;charset=utf-8,";
-                            arr.forEach(function(infoArray, index){
+                            arr.forEach(function (infoArray, index) {
                                 dataString = infoArray.join(",");
-                                csvContent += index < arr.length ? dataString+ "\n" : dataString;
+                                csvContent += index < arr.length ? dataString + "\n" : dataString;
                             });
 
                             var encodedUri = encodeURI(csvContent);
@@ -253,7 +261,7 @@
         });
     };
 
-    $(function(){
+    $(function () {
         var panels = $(".panel-query-table");
         panels.queryTable();
     });

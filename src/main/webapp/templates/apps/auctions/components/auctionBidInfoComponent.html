@@ -1,64 +1,123 @@
-<div id="BidInfo" class="auction-bid-info">
-    #if(!$page.auctionClosed)
-    <div id="bidFromDiv" class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">Current Bid</div>
-            </div>
-        <div class="panel-body">
-            <form id="bidForm" method="POST" action="." class="form-horizontal">
-                <div class="form-group">
-                    <div class="col-md-8">
-                        <p><input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" /></p>
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-md btn-primary">
-                            Place Bid
-                        </button>
-                    </div>
+#if($page)
+    <div id="BidInfo" class="auction-bid-info">
+        #if(!$page.auctionClosed)
+        <div id="bidFromDiv" class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Current Bid</div>
                 </div>
-            </form>
+            <div class="panel-body">
+                <form id="bidForm" method="POST" action="." class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <p><input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" /></p>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-md btn-primary">
+                                Place Bid
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
-            <p><i class="fa fa-dollar fa-fw"></i>
-                #if($page.currentBidValue)
-                Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
-                #else
-                Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
-                #end
-            </p>
+                <p><i class="fa fa-dollar fa-fw"></i>
+                    #if($page.currentBidValue)
+                    Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+                    #else
+                    Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+                    #end
+                </p>
 
-            <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">$page.auctionBidCount</span></p>
+                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">$page.auctionBidCount</span></p>
 
-            <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$page.auctionEndDate</abbr></p>
+                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$page.auctionEndDate</abbr></p>
+            </div>
+            </div>
+        #end
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Bid History</div>
+            </div>
+            <table id="bidHistory" class="table table-hover table-striped">
+                <tbody class="small">
+                    #if ($page.bidHistory.size() > 0)
+                    #foreach($c in $page.bidHistory)
+                    <tr>
+                        <td>$c.bidValue</td>
+                        <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                        <td>$c.changedBy.name</td>
+                    </tr>
+                    #end
+                    #else
+                    <tr>
+                        <td colspan="99">No bid history</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
         </div>
-        </div>
-    #end
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">Bid History</div>
-        </div>
-        <table id="bidHistory" class="table table-hover table-striped">
-            <tbody class="small">
-                #if ($page.bidHistory.size() > 0)
-                #foreach($c in $page.bidHistory)
-                <tr>
-                    <td>$c.bidValue</td>
-                    <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
-                    <td>$c.changedBy.name</td>
-                </tr>
-                #end
-                #else
-                <tr>
-                    <td colspan="99">No bid history</td>
-                </tr>
-                #end
-            </tbody>
-        </table>
     </div>
-</div>
 
-<script type="text/javascript">
-    $(function () {
-        initViewAuction("$page.wSUri");
-    });
-</script>
+    <script type="text/javascript">
+        $(function () {
+            initViewAuction("$page.wSUri");
+        });
+    </script>
+#else
+    <div id="BidInfo" class="auction-bid-info">
+        <div id="bidFromDiv" class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Current Bid</div>
+            </div>
+            <div class="panel-body">
+                <form id="bidForm" method="POST" action="." class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-8">
+                            <p><input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" /></p>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-md btn-primary">
+                                Place Bid
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <p><i class="fa fa-dollar fa-fw"></i>
+                    Current Bid: $<span id="bidCurrentValue">0</span>
+                </p>
+
+                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">10</span></p>
+
+                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Bid History</div>
+            </div>
+            <table id="bidHistory" class="table table-hover table-striped">
+                <tbody class="small">
+                    #if ($page.bidHistory.size() > 0)
+                    #foreach($c in $page.bidHistory)
+                    <tr>
+                        <td>$c.bidValue</td>
+                        <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
+                        <td>$c.changedBy.name</td>
+                    </tr>
+                    #end
+                    #else
+                    <tr>
+                        <td colspan="99">No bid history</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+        </div>
+    </div>
+#end
+
+
+
+

@@ -1,4 +1,4 @@
-#if ($page)
+#if ($page && $recentlyViewedRewardProducts && $recentlyViewedRewardProducts.size() > 0)
 #set ($app = $applications.get("rewardstore-lib"))
 #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $numberOfProducts))
 <div class="row">
@@ -20,6 +20,11 @@
     </ul>
 </div>
 #else
+#fakeUI()
+#end
+
+
+#macro(fakeUI)
 <div class="row">
     <ul class="recentlyViewedRewardProducts">
         #set ($fakeArr = [1,2,3,4,5,6,7,8,9,10])

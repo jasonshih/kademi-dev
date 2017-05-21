@@ -19,7 +19,7 @@ function initProfile() {
     });
 
     flog("init delete membersip");
-    $(".memberships-wrapper").on("click", "a.btn-delete-membership", function (e) {
+    $(document).on("click", ".btn-delete-membership", function (e) {
         flog("click", this);
         e.preventDefault();
         e.stopPropagation();
@@ -27,7 +27,8 @@ function initProfile() {
             var a = $(this);
             var href = a.attr("href");
             deleteFile(href, function () {
-                a.closest("span.membership").remove();
+                reloadMemberships();
+                $('#modal-edit-membership').modal('hide');
             });
         }
     });
@@ -261,4 +262,79 @@ function doAddToGroup(groupName) {
         }
     })
 
+}
+
+function initEditMemberships() {
+    var modal = $("#modal-edit-membership");
+
+    modal.on('hide.bs.modal', function () {
+        modal.find('.newOrgId').val('');
+    });
+    $(document).on('click', '.btn-edit-membership', function (e) {
+        e.preventDefault();
+
+        var groupHref = $(this).attr('data-group-href');
+        modal.find('.modal-body').html('<p>Please wait...</p>');
+        modal.modal('show');
+        modal.reloadFragment({
+            url: groupHref,
+            whenComplete: function () {
+            }
+        })
+    });
+
+    modal.on('click', '.btn-change-org', function (e) {
+        e.preventDefault();
+
+        modal.find('#changeOrgFinder').entityFinder({
+            type: 'organisation',
+            onSelectSuggestion: function (el, suggestion, id, actualId, type) {
+                modal.find('.newOrgId').val(id);
+            }
+        });
+
+        modal.find('.btn-update-membership, .btn-change-org-cancel').removeClass('hide');
+        modal.find('.btn-change-org, .btn-delete-membership').addClass('hide');
+    });
+
+    modal.on('click', '.btn-change-org-cancel', function (e) {
+        e.preventDefault();
+        modal.find('.modal-body').html('<p>Please wait...</p>');
+        var groupHref = $(this).attr('data-group-href');
+        modal.reloadFragment({
+            url: groupHref,
+            whenComplete: function () {
+            }
+        })
+    });
+
+    modal.on('click', '.btn-update-membership', function (e) {
+        e.preventDefault();
+        var a = $(this);
+        var href = a.attr('href');
+        deleteFile(href, function () {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'post',
+                data: {
+                    orgId: modal.find('.newOrgId').val(),
+                    group: a.attr('data-group')
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp.status) {
+                        reloadMemberships();
+                    } else {
+                        Msg.error("Couldnt add group: " + resp.messages);
+                    }
+                    modal.modal('hide');
+                },
+                error: function (e) {
+                    Msg.error(e.status + ': ' + e.statusText);
+                    hideLoadingIcon();
+                    modal.modal('hide');
+                }
+            })
+        });
+    })
 }
