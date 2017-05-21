@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
-        <script type="text/javascript" src="manageEmail.js">//</script>
+        <script type="text/javascript" src="manageEmail.js?v100">//</script>
     </head>
     <body>
         <form name="frmDetails" action="." method="post" class="form-horizontal">
@@ -498,6 +498,20 @@
             </div>
         </div>
 
+        <div id="modal-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Test send progress</h4>
+                    </div>
+                    <div class="modal-body" id="send-test-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
         <script id="row-email-template" type="text/x-handlebars-template">
             <tr class="tr-{{id}}">
                 <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td> 
@@ -508,8 +522,7 @@
                 <td><a class="btn btn-info" href="/emails/{{id}}" target="_blank">Open<span class="glyphicon glyphicon-arrow-right"></span></a></td>
             </tr>
         </script>
-
-        <div id="modal-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
+        <div id="modal-multiple-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -525,14 +538,16 @@
                               <th>To</th>
                               <th>Subject</th>
                               <th>Attempts</th>
+                              <th></th>
                             </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody><tr><td colspan="6">Loading ...</td></tbody>
                           </table>
                     </div>
                 </div>
             </div>
         </div>
+
         <input type="hidden" id="domainCurrentSite" />
         <script type="text/javascript">
             $(function () {

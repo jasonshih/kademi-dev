@@ -34,12 +34,15 @@ function initSendTest() {
 function onTestMultipleResponse(resp) {
     flog("onTestMultipleResponse", resp);
     if (resp.status) {
-        var modal = $("#modal-send-test-progress");
-        modal.modal();
-        var target = modal.find(".modal-body");
         if(resp.messages.length == 1){
+            var modal = $("#modal-send-test-progress");
+            modal.modal();
+            var target = modal.find(".modal-body");
             loadEmailItemContent(target, "/emails/"+resp.messages[0]);
         }else{
+            var modal = $("#modal-multiple-send-test-progress");
+            modal.modal();
+            var target = modal.find(".modal-body");
             loadMultipleEmailItemContent(target, resp.messages);    
         }
         
@@ -51,12 +54,14 @@ function onTestMultipleResponse(resp) {
 function loadMultipleEmailItemContent(target, ids) {
     flog("loadMultipleEmailItemContent", ids);
     setInterval(function () {
+
         var tbody = document.createElement("tbody");
         for (i = 0; i < ids.length; i++) { 
             var id = ids[i];
             $(tbody).append(loadEmailItemDetails(target, id));    
         }
         $(target).find("tbody").replaceWith(tbody);
+
    }, 3000);
 }
 
