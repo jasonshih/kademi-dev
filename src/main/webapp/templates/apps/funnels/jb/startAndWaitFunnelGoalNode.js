@@ -23,9 +23,9 @@ JBNodes['startAndWaitFunnel'] = {
             allowPostForm: false,
             onValid: function () {
                 var funnelName = form.find('[name=funnelName]').val();
-                var initialGoal = form.find('[name=initialGoal]').val();
+                var startGoal = form.find('[name=startGoal]').val();
                 JBApp.currentSettingNode.funnelName = funnelName || null;
-                JBApp.currentSettingNode.initialGoal = initialGoal || null;
+                JBApp.currentSettingNode.startGoal = startGoal || null;
             
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
@@ -44,7 +44,7 @@ JBNodes['startAndWaitFunnel'] = {
             form.removeAttr('action');
     
             form.find('[name=funnelName]').val(node.funnelName || '');
-            form.find('[name=initialGoal]').val(node.initialGoal || '');
+            form.find('[name=startGoal]').val(node.startGoal || '');
     
             JBApp.showSettingPanel(node);
         });
