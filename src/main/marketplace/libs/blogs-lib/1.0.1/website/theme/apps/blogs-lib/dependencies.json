@@ -3,25 +3,6 @@
 
     ],
     "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/blogs/manageBlog.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/blogs/manageBlogArticle.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/blogs/manageBlogs.js"
-            }
-        }
-
 
     ]
 }

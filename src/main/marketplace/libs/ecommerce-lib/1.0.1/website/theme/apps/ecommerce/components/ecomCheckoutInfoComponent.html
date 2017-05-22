@@ -1,0 +1,64 @@
+#if ($page)
+<div id="successfull-div" style="display:none;">
+    <div class="well well-lg text-center">
+        <h2><i class="fa fa fa-check-circle"></i>Your order has been placed successfully</h2>
+    </div>
+</div>
+
+<!-- Form for encrypting -->
+<form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
+
+<div id="loginRegisterModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Login to your account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 devider login-form">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group email">
+                                <div class="col-md-12">
+                                    <input type="text" id="inputEmail" name="email" placeholder="Email" required="true" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <small><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" class="btn btn-default pull-right">Sign in</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p>or Login with:</p>
+                        #portlets("socialLoginForm")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initEcommerceCheckout();
+    });
+</script>
+#else
+<div id="successfull-div">
+    <div class="well well-lg text-center">
+        <h2><i class="fa fa fa-check-circle"></i>Your order has been placed successfully</h2>
+    </div>
+</div>
+
+#end

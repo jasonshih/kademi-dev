@@ -1,0 +1,62 @@
+#parse("/theme/apps/ecommerce/ecommerceMacros.html")
+
+#set($fromRange = 0)
+#if($params.fromRange)
+#set($fromRange = $formatter.toInteger($params.fromRange))
+#end
+
+#set($toRange = 12)
+#if($params.toRange)
+#set($toRange = $formatter.toInteger($params.toRange))
+#end
+
+#set($sort = 'product')
+#if($params.sort)
+#set($sort = $params.sort)
+#end
+
+#set($asc = false)
+#if($params.asc)
+#set($asc = $formatter.toBool($params.asc))
+#end
+
+#set($showBy = "grid")
+#if($request.getCookie("show-by").value)
+#set($showBy = $request.getCookie("show-by").value)
+#end
+
+#set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, $sort, $asc))
+<div class="clearfix" id="product-tools">
+    <div class="product-filter">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default">Sort by</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                &nbsp;<span class="caret"></span>&nbsp;
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-sort-by">
+                <li #if($sort == 'sortableTitle' && $asc == true) class="active" #end><a href="?sort=sortableTitle&asc=true"><i class="fa fa-fw fa-sort-alpha-asc"></i> Name A-Z</a></li>
+                <li #if($sort == 'sortableTitle' && $asc == false) class="active" #end><a href="?sort=sortableTitle&asc=false"><i class="fa fa-fw fa-sort-alpha-desc"></i> Name Z-A</a></li>
+                <li #if($sort == 'finalCost' && $asc == true) class="active" #end><a href="?sort=finalCost&asc=true"><i class="fa fa-fw fa-sort-numeric-asc"></i> Price Low-High</a></li>
+                <li #if($sort == 'finalCost' && $asc == false) class="active" #end><a href="?sort=finalCost&asc=false"><i class="fa fa-fw fa-sort-numeric-desc"></i> Price High-Low</a></li>
+            </ul>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default">Show by</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                &nbsp;<span class="caret"></span>&nbsp;
+                <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-right dropdown-show-by">
+                <li #if ($showBy == "grid") class="active" #end><a href="#grid"><i class="fa fa-fw fa-th"></i> Grid</a></li>
+                <li #if ($showBy == "list") class="active" #end><a href="#list"><i class="fa fa-fw fa-list"></i> List</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="$page.parent.href">$page.parent.title</a></li>
+        <li class="active">$page.title</li>
+    </ol>
+</div>
