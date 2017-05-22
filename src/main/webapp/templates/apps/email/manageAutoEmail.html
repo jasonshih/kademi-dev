@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageAutoEmail.js">//</script>
-        <script type="text/javascript" src="manageEmail.js">//</script>
+        <script type="text/javascript" src="manageEmail.js?v101">//</script>
         <script src="/static/d3/d3.v3.js" type="text/javascript">//</script>
         <link href="/static/nvd3/nv.d3.css" rel="stylesheet" type="text/css" />
         <script src="/static/nvd3/nv.d3.js" type="text/javascript">//</script>
@@ -1204,11 +1204,10 @@ return false;</pre>
                 </div>
             </div>
         </div>
-        <input type="hidden" id="domainCurrentSite" />
+        <input type="hidden" id="availableDomains" />
         <script type="text/javascript">
             var emailEnabled = $formatter.format($page.emailEnabled);
             var smsEnabled = $formatter.format($page.smsEnabled);
-            
             
             var domains = {};
             #foreach($website in $rootFolder.child("websites").children)
@@ -1216,22 +1215,11 @@ return false;</pre>
                     domains['$website.name'] = '$website.domainName';
                 #end
             #end
+            $("#availableDomains").val(JSON.stringify( domains ));
 
             $(function () {
                 initManageAutoEmail(emailEnabled, smsEnabled);
                 
-                function selectDomain(sel) {
-                    var selectedValue = $(sel).find(":selected").text();
-                    var domainSelected = domains[selectedValue];
-                    flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
-                    $("#domainCurrentSite").val(domainSelected);
-                }
-
-                var themeSiteId = $("#themeSiteId");
-                themeSiteId.change(function () {
-                    selectDomain(this);
-                });
-                selectDomain(themeSiteId);
             });
         </script>
     </body>

@@ -323,8 +323,8 @@ function initFormDetailEmail() {
             var subject = $('#subject');
             var subjectStr = subject.val();
             var isEmailEnabled = emailEnabled.length > 0 ? emailEnabled.is(':checked') : true;
-            var domainCurrentSite = $("#domainCurrentSite");
-            var domainCurrentSiteStr = domainCurrentSite.val().trim();
+            var availableDomainsStr = $("#availableDomains");
+            var availableDomains = JSON.parse(availableDomainsStr.val().trim());
             var emailToCheck;
             var errorField;
             
@@ -369,16 +369,25 @@ function initFormDetailEmail() {
                     showMessage('Subject should not contain newline', form);
                 }
                 
-                flog("validating email: ", emailToCheck, " against domain: ", domainCurrentSiteStr);
+                flog("validating email: ", emailToCheck, " against domains: ", availableDomains);
                 if(emailToCheck !== false && validateFuseEmail(emailToCheck)){
                     var emailDomain = emailToCheck.replace(/.*@/, "");
-                    var rootDomain = domainCurrentSiteStr;
-                    flog("emailDomain: ", emailDomain, " rootDomain: ", rootDomain);
-                    if(emailDomain !== rootDomain){
+                    var valid = false;
+                    flog(availableDomains.length);
+                    for(var prop in availableDomains){
+                        var rootDomain = availableDomains[prop];
+                        flog("Email Domain: ", emailDomain , " Root Domain: ", rootDomain );
+                        if(emailDomain === rootDomain){
+                            valid = true;
+                            break;
+                        }                        
+                    }
+                    if(!valid){
                         error++;
                         showErrorField(errorField);
                         showMessage('The email address must have a domain name the same as the domain on the website selected.', form);   
-                    }
+                    }                  
+
                 }
             }
            

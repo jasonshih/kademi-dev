@@ -5,7 +5,7 @@
         <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script type="text/javascript" src="manageGroupEmail.js">//</script>
-        <script type="text/javascript" src="manageEmail.js?v100">//</script>
+        <script type="text/javascript" src="manageEmail.js?v101">//</script>
     </head>
     <body>
         <form name="frmDetails" action="." method="post" class="form-horizontal">
@@ -548,31 +548,18 @@
             </div>
         </div>
 
-        <input type="hidden" id="domainCurrentSite" />
+        <input type="hidden" id="availableDomains" />
         <script type="text/javascript">
             $(function () {
                 initManageGroupEmail();
                 //initEditEmailPage();
-
-            var domains = {};
-            #foreach($website in $rootFolder.child("websites").children)
-                #if ($website.domainName && $website.name)
-                    domains['$website.name'] = '$website.domainName';
+                var domains = {};
+                #foreach($website in $rootFolder.child("websites").children)
+                    #if ($website.domainName && $website.name)
+                        domains['$website.name'] = '$website.domainName';
+                    #end
                 #end
-            #end
-                
-                function selectDomain(sel) {
-                    var selectedValue = $(sel).find(":selected").text();
-                    var domainSelected = domains[selectedValue];
-                    flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
-                    $("#domainCurrentSite").val(domainSelected);
-                }
-
-                var themeSiteId = $("#themeSiteId");
-                themeSiteId.change(function () {
-                    selectDomain(this);
-                });
-                selectDomain(themeSiteId);
+                $("#availableDomains").val(JSON.stringify( domains ));
             });
         </script>
     </body>
