@@ -500,8 +500,7 @@ function initEntityFinder(targets) {
         var input = $(this);
         
         input.entityFinder({
-            useActualId: input.attr('data-use-actual-id') === 'true',
-            type: 'organisation'
+            useActualId: input.attr('data-use-actual-id') === 'true'
         });
     });
 }
