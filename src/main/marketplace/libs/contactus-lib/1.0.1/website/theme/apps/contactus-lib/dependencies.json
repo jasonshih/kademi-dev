@@ -1,0 +1,21 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/contactus/contactus.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/contactus/contactus.js"
+            }
+        },
+
+
+    ]
+}
