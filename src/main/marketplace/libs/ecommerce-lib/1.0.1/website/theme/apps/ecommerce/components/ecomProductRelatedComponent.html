@@ -1,0 +1,20 @@
+#parse("/theme/apps/ecommerce/ecommerceMacros.html")
+<div class="clearfix" id="related-products">
+    <hr style="margin: 30px 0;" class="hidden-xs" />
+    <h3 style="margin: 0 0 15px;"><b>Related products</b></h3>
+    #set( $products = $cate.searchProducts( '', 0, 5, 'product', false))
+
+    #if( $products.hits.hits.size() == 0 )
+    <p class="lead">- No related products -</p>
+    #else
+    <div class="row" id="products-list">
+        #set ($countRelated = 0)
+        #foreach($p in $products.hits.hits)
+        #if ($page.productInStore.product.id != $p.fields.product.value && $countRelated < 4)
+        #renderProductItem($p $store true)
+        #set ($countRelated = $countRelated + 1)
+        #end
+        #end
+    </div>
+    #end
+</div>

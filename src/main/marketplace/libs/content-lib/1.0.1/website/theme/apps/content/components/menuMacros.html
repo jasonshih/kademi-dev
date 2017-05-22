@@ -1,0 +1,140 @@
+#macro( defaultMenuControls )
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Logo</label>
+
+        <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail logo-previewer"/></p>
+        <button type="button" class="btn btn-block btn-primary logo-edit">Change Logo</button>
+        <button type="button" class="btn btn-block btn-xs btn-danger logo-delete">Remove Logo</button>
+        <input type="hidden" name="logo" class="form-control"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show user menu or not</label><br/>
+        <input type="checkbox" class="cbb-show-user-menu"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show search form or not</label><br/>
+        <input type="checkbox" class="cbb-show-search"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show organisation selector or not</label><br/>
+        <input type="checkbox" class="cbb-show-org-selector"/>
+        <small class="help-block text-mute">Requires <code>reporting-lib</code></small>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show language selector or not</label><br/>
+        <input type="checkbox" class="cbb-show-lang-selector"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Inverse menu</label><br/>
+        <input type="checkbox" class="cbb-inverse-menu"/>
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>Show sub menu on hover</label><br/>
+        <input type="checkbox" class="cbb-show-sub-menu-on-hover"/>
+    </div>
+</div>
+<hr/>
+
+<label>Menu Items</label>
+<div class="menuTree clearfix">
+	#set( $myMenu = $menuManager.rootMenuItem )
+    <ol class="menuList rootMenuList">
+		#showMenu( $myMenu true )
+    </ol>
+
+    <button class="btn btn-primary saveMenu btn-block">
+        <span class="fa fa-check"></span>
+        Save menu
+    </button>
+</div>
+#end
+
+#macro( editMenuItemForm )
+<div class="editMenuItem" style="display: none">
+    <h4 style="margin-top: 0;">Edit menu item</h4>
+
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Path</strong></label>
+
+        <div class="col-sm-12">
+            <input type="text" name="href" class="form-control input-sm"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Text</strong></label>
+
+        <div class="col-sm-12">
+            <input type="text" name="text" class="form-control input-sm"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Hidden</strong></label>
+
+        <div class="col-sm-12">
+            <input type="checkbox" name="hidden"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button class="editMenuItemOk btn btn-sm btn-success">
+                <span class="fa fa-check"></span>
+            </button>
+
+            <button class="editMenuItemDelete btn btn-sm btn-danger" title="Delete">
+                <span class="fa fa-times"></span>
+            </button>
+
+            <button class="editMenuItemCancel btn btn-xs btn-default" title="Cancel">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
+#end
+
+#macro( showMenu $menuItem $isRootMenuItem )
+<li #if ($isRootMenuItem) class="rootMenuItem" #end>
+    <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
+        <span class="btn-group btn-group-xs small">
+            <a class="btn btn-success btnAddMenuItem" href="#">
+                <span class="fa fa-plus small"></span>
+            </a>
+	        #if (!$isRootMenuItem)
+                <a class="btn btn-info btnSortMenuItem" href="#">
+                    <span class="fa fa-sort small"></span>
+                </a>
+	        #end
+	        #if (!$isRootMenuItem)
+                <a class="btn btn-primary btnEditMenuItem" href="#">
+                    <span class="fa fa-pencil small"></span>
+                </a>
+	        #end
+        </span>
+
+        <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
+    </div>
+
+	#showMenuList($menuItem)
+</li>
+#end
+
+#macro( showMenuList $menuItem )
+<ol class="menuList" data-id="$menuItem.id">
+	#foreach($item in $menuItem.items)
+    #showMenu( $item false )
+    #end
+</ol>
+#end

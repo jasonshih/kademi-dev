@@ -1,0 +1,22 @@
+{
+    "appDependencies": [
+        {
+            "appId": "content-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/toggleMenu.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/selectLang.js"
+            }
+        }
+    ]
+}

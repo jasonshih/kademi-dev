@@ -1,0 +1,19 @@
+#if ($page)
+<ol class="breadcrumb #if ($inverse == 'true') breadcrumb-inverse #end" style="$!style">
+	#if( $page.parent.title )
+        <li>
+            <a href="$page.parent.href">
+				$page.parent.title
+            </a>
+        </li>
+	#end
+    <li class="active">
+        <a href="$page.href">$formatter.htmlEncode($page.title)</a>
+    </li>
+</ol>
+#else
+<ol class="breadcrumb #if ($inverse == 'true') breadcrumb-inverse #end" style="$!style">
+    <li><a href="#">Home</a></li>
+    <li class="active"><a href="#">Breadcrumb</a></li>
+</ol>
+#end

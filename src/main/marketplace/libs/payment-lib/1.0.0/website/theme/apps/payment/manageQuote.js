@@ -17,7 +17,9 @@ Number.prototype.formatMoney = function (c, d, t) {
         if (editable) {
             initEditableQuote();
         } else {
-            $("#manageQuote :input").prop("disabled", true);
+            $("#manageQuote :input").prop("disabled", true).filter('[data-text]').each(function () {
+                this.value = $(this).attr('data-text');
+            });
             $(".remove-uneditable").remove();
             refreshTotals();
         }

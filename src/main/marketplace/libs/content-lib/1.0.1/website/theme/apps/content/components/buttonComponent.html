@@ -1,0 +1,8 @@
+<div class="$buttonAlign">
+	#if ($buttonType == "link")
+        <a href="$!buttonLink" target="$!buttonTarget"
+           class="btn $!buttonSize $!buttonColor $!buttonClass">$!buttonText</a>
+	#else
+        <button type="$buttonType" class="btn $!buttonSize $!buttonColor $!buttonClass">$!buttonText</button>
+	#end
+</div>

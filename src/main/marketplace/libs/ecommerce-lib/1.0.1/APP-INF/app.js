@@ -1,0 +1,14 @@
+controllerMappings.addComponent("ecommerce/components", "storeProductList", "html", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "storeProductListEDM", "edm", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomStoreCategories", "html", "Display ecom store dashboard of categories", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomStoreBreadcrumb", "html", "Display ecom store breadcrumb", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomStoreSidebar", "html", "Display ecom store sidebar", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomProductTool", "html", "Display product tools in category products page", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomCategoryProducts", "html", "Display ecom category products", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomProductImages", "html", "Display ecom product images", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomProductDetails", "html", "Display ecom product details", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomProductCartButton", "html", "Display ecom product price and Add to cart button", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomProductRelated", "html", "Display ecom product details", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomCheckoutInfo", "html", "Display ecom checkout info", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomCheckoutCart", "html", "Display ecom checkout cart items", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "ecomCheckoutForm", "html", "Display ecom checkout form", "E-commerce App component");

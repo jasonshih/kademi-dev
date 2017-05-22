@@ -1,0 +1,112 @@
+#set($contactPage = $folder.find("/contactus"))
+<style>
+    .thankyou {
+        display: none;
+    }
+</style>
+<div class="row">
+    <div class="col-sm-12">
+        <form action="/contactus" method="POST" class="contactus form-horizontal" role="form">
+            <input type="hidden" name="contactForm" value="$!path">
+            #if ($firstName == "true")
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="firstName">First name</label>
+                <div class="col-sm-9">
+                    <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
+                </div>
+            </div>
+            #end
+            #if ($surName == "true")
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="surName">Surname</label>
+                <div class="col-sm-9">
+                    <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
+                </div>
+            </div>
+            #end
+            #if ($email == "true")
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="email">Email</label>
+                <div class="col-sm-9">
+                    <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
+                </div>
+            </div>
+            #end
+            #if ($company == "true")
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="company">Company</label>
+                <div class="col-sm-9">
+                    <input type="text" name="company" id="company" class="form-control" placeholder="Enter your company name" />
+                </div>
+            </div>
+            #end
+            #if ($phone == "true")
+            <div class="form-group">
+                <label class="col-sm-3 control-label" for="phone">Phone</label>
+                <div class="col-sm-9">
+                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
+                </div>
+            </div>
+            #end
+            #if ($message == "true")
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <textarea placeholder="Tell us how we can help" rows="10" class="form-control" name="message"></textarea>
+                </div>
+            </div>
+            #end
+
+
+
+            #if( $contactPage.hasOptins() )
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-12">
+                    <div class="checkbox">
+                        #foreach($optin in $contactPage.optins)
+                        <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
+                            <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                            $optin.message
+                        </label>
+                        #end
+                    </div>
+                </div>
+            </div>
+            #end
+
+            #if( $contactPage.captchaApp )
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    #portlets("captcha")
+                </div>
+            </div>
+            #end
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-9">
+                    <button type="submit" class="btn $submitSize $submitColor $!submitClass">$!submitText</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-sm-12">
+        $!content.body
+    </div>
+</div>
+
+
+<div class="thankyou row">
+    <div class="col-sm-12">
+        #set($thankYouMessage = $thankYou)
+        #if ($formatter.isNull($thankYouMessage))
+        #set($thankYouMessage = "Thank you for your message, we will reply shortly.")
+        #end
+        <div class="alert alert-success">$thankYouMessage</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        initContactUs();
+    });
+</script>
