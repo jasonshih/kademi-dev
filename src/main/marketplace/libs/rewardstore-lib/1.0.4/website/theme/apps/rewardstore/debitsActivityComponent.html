@@ -4,12 +4,11 @@
 		#set ( $height = 100 )
 	#end
 	#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
-
 	#if( $pointsBucket )
 		#set($bucketId = $pointsBucket.id)
 		#set($daysInt = $formatter.toInteger($days, false))
 
-    <div class="panel panel-default debits-activity" data-jsonResp="$applications.rewardStore.getDebitsHistogram($bucketId, $daysInt)">
+    <div class="panel panel-default debits-activity">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
             Debits activity in
@@ -21,6 +20,12 @@
             </div>
         </div>
     </div>
+
+	<script>
+		var jsonResp = $!applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
+		$('.debits-activity').data("jsonresp", jsonResp);
+		$('.debits-activity').data("bucketId", ${bucketId});
+	</script>
 
 
 	#else
