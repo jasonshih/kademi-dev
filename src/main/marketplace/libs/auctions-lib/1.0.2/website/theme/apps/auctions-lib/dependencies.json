@@ -30,18 +30,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/auctions/manageAuctions.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/auctions/manageAuction.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/theme/apps/auctions/comingUpAuction.js"
             }
         },
