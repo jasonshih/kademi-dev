@@ -1,0 +1,20 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/alerts/manageAlerts.css"
+            }
+        },
+
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/alerts/manageAlerts.js"
+            }
+        }
+    ]
+}
