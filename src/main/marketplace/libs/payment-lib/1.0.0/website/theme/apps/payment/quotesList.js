@@ -1,6 +1,15 @@
 (function (w) {
     var dataTable = null;
 
+    var proposalDetailsForms = $(".proposal-details-form");
+    if( proposalDetailsForms.length > 0 ) {
+        proposalDetailsForms.forms({
+            callback : function() {
+                alert("yo");
+            }
+        });
+    }
+
     function initDataTable(hits) {
         if (dataTable !== null) {
             dataTable.clear(false);
