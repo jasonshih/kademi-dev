@@ -1,0 +1,13 @@
+{
+    "appDependencies": [
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadforms-lib/leadform.js"
+            }
+        }
+    ]
+}
