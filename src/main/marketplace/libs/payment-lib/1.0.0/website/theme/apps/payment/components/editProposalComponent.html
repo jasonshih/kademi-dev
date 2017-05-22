@@ -1,0 +1,31 @@
+<form method="post" action="$page.href" class="proposal-details-form">
+    <h1>TODO</h1>
+    
+    #if( $request.params.leadId )
+    <input type="hidden" name="leadId" value="$request.params.leadId"/>
+    #end
+    
+    <button type="submit">SAVE</button>
+        
+        
+    #if( $page.newProposal )
+    
+    <hr/>
+    
+    #foreach($quote in $page.quotes)
+    <div class="col-md-4">
+    <div class="well">
+        <h1>$quote.title</h1>
+        
+        <a href="/quotes/$quote.id" class="btn btn-lg btn-info">Edit</a>
+    </div>        
+    </div>
+    #end
+    <div class="col-md-4">
+    <div class="well">
+        <button class="btn btn-lg btn-success">Add a new quote</button>
+    </div>
+    </div>
+    #end
+    
+</form>
