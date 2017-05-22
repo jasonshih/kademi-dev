@@ -1,0 +1,101 @@
+<form id="cart-items" method="POST" action="/storeCheckout">
+    <!-- TODO: Currency should be configurable -->
+    <div id="ecomItemsTable" class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title"><small>Order Summary</small></div>
+        </div>
+
+        <div class="items-list">
+            #set($subTotal = 0)
+            #set($totalTax = 0)
+            #set($totalShipping = 0)
+            #set($totalCost = 0)
+            #set( $items = $formatter.sortByProperty( $page.shoppingCartItemBeans, "itemPage.title" ) )
+            #foreach($item in $items )
+            <div class="row item-row">
+                <div class="col-sm-3 item-photo">
+                    #set ($photo = "/theme/apps/ecommerce/img/no_photo.png")
+                    #if( $item.itemPage.productImageHref )
+                    #set ($photo = $item.itemPage.productImageHref)
+                    #end
+                    <div style="background-image: url($photo)"></div>
+                </div>
+                <div class="col-sm-3 item-title center-content">
+                    <div>
+                        $item.ItemPage.title
+                    </div>
+                </div>
+                <div class="col-sm-3 ecom-item-quantity center-content">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-decrease-quantity" type="button">-</button>
+                        </span>
+                        <input type="text" value="$item.quantity" name="quantity.${foreach.count}" class="form-control ecom-txt-quantity text-center" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default btn-increase-quantity" type="button">+</button>
+                        </span>
+                    </div>
+                    <input type="hidden" class="itemHref" name="item.${foreach.count}" value="$item.href" />
+                </div>
+                <div class="col-sm-2 item-price center-content">
+                    <div>
+                        <span class="lead">$$formatter.formatCurrency($page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))</span>
+                    </div>
+                </div>
+                <div class="col-sm-1 item-action text-right center-content">
+                    <div>
+                        <a href="#" class="btn-ecom-remove-item"><i class="fa fa-times-circle fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            #set($subTotal = $subTotal + $page.calcSubTotal($item.ItemPage.productSubTotalCost, $item.quantity))
+            #set($totalTax = $totalTax + $page.calcSubTotal($item.ItemPage.taxCost, $item.quantity))
+            #set($totalCost = $totalCost + $page.calcSubTotal($item.ItemPage.productPurchaseCost, $item.quantity))
+            #end
+        </div>
+
+        <div class="panel-footer cart-subtotal">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <span>Sub total</span>
+                    <strong class="pull-right">$$formatter.formatCurrency($subTotal)</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer cart-tax">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <span>Tax</span>
+                    <strong class="pull-right">$$formatter.formatCurrency($totalTax)</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer cart-total">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <span><strong>Total</strong></span>
+                    <strong class="pull-right">$$formatter.formatCurrency($totalCost)</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="payment-select">
+        #set($firstApp = false)
+        #set($firstPo = false)
+        #set($paymentAps = $page.paymentProviders)
+        #foreach($pApp in $paymentAps)
+        #set($f1 = $foreach)
+        #foreach($po in $pApp.paymentOptions)
+        #if($f1.first && $foreach.first)
+        #set($firstApp = $pApp)
+        #set($firstPo = $po)
+        #end
+        <a href="#" data-pid="$pApp.instanceId" data-option="$po.id" class="payment-option">
+            <i class="fa fa-check fa-3x #if($f1.first && $foreach.first)active#end"></i>
+            <img src="$po.logo" alt="$po.title"/>
+        </a>
+        #end
+        #end
+    </div>
+</form>
