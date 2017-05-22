@@ -99,6 +99,8 @@
         
         initSelect: function (aggsSelect, selectedQuery, selectedAgg) {
             flog("initSelect", selectedQuery, selectedAgg);
+    
+            selectedQuery = selectedQuery.replace('.query.json', '');
             
             $.ajax({
                 url: "/queries/" + selectedQuery + "?run",
@@ -108,7 +110,7 @@
                     flog('resp', resp);
                     
                     var aggsHtml = '<option value""> - None - </option>';
-                    var aggs = resp.aggregations;
+                    var aggs = resp.aggregations || resp.aggs;
                     for (var key in aggs) {
                         aggsHtml += '<option value="' + key + '">' + key + '</option>';
                     }
