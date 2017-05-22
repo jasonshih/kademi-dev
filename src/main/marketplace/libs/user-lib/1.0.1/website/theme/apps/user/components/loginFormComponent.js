@@ -76,7 +76,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
     
-                        component.attr('data-redirect-url', this.value || txtRedirectCustom.val());
+                        component.attr('data-redirect-url', this.value || (txtRedirectCustom.val() || ''));
                         keditor.initDynamicContent(dynamicElement);
                     });
     
