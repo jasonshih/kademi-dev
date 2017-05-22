@@ -1,6 +1,6 @@
 $(function () {
     // Parse JSON
-    var jsonResp = $('.debits-activity').data("jsonResp");
+    var jsonResp = $('.debits-activity').data("jsonresp");
     console.info("jsonResp", jsonResp);
 
     function initActivityChart(resp) {
@@ -37,19 +37,21 @@ $(function () {
                     var d = resp.aggregations;
                     var sBuckets = d.debits.dates.buckets;
 
-                    /* generate valid stats */
-                    for (var i in sBuckets) {
+
+                    for (var i = 0; i < sBuckets.length; i++) {
                         var b = sBuckets[i];
                         debits.push({
                             x: b.key,
                             y: b.sum.value || 0
                         });
                     }
+
+
                 }
 
                 debits.sort(dynamicSort('x'));
 
-                d3.select('#rewardDebitsActivityChart-${bucketId} svg')    //Select the <svg> element you want to render the chart in.
+                d3.select('#rewardDebitsActivityChart-' + $('.debits-activity').data("bucketId") + ' svg')    //Select the <svg> element you want to render the chart in.
                     .datum(myData)         //Populate the <svg> element with chart data...
                     .call(chart);          //Finally, render the chart!
 
