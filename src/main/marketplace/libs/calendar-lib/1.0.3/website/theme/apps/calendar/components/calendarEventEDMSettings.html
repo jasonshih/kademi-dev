@@ -1,0 +1,30 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Calendar</label>
+        <div class="col-sm-12">
+            <select class="form-control select-calendar">
+                <option value="" selected="selected">- None -</option>
+                #foreach($calendar in $rootFolder.find("/Calendars").children)
+                    <option value="$calendar.name">$calendar.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Event</label>
+        <div class="col-sm-12">
+            <select class="form-control select-event">
+                <option value="" selected="selected">- None -</option>
+                #foreach($calendar in $rootFolder.find("/Calendars").children)
+                    #if ($foreach.count > 1)
+                        #set($hide = "hide")
+                    #end
+                    #foreach($event in $calendar.upcomingEvents)
+                        <option class="$!hide" data-calendar="$calendar.name" value="$event.name">$event.summary</option>
+                    #end
+                #end
+            </select>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,86 @@
+<div class="dashboard-upcoming-events" id="dashboard-upcoming-events">
+    #if( $userResource.find("Calendars").calendarInvites.size() > 0 )
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Calendar invitations</h3>
+        </div>
+        <div class="panel-body">
+            #foreach($invite in $userResource.find("Calendars").calendarInvites)
+            <div class="alert alert-info" role="alert">
+                <div class='pull-right' style="padding-left: 15px">
+                    <a class='btn btn-success invite-accept' href='$invite.organisorEvent.href'>
+                        <span class='glyphicon glyphicon-ok'></span>
+                    </a>
+                    <a class='btn btn-danger invite-decline' href='$invite.organisorEvent.href'>
+                        <span class='glyphicon glyphicon-remove'></span>
+                    </a>
+                </div>
+
+                You have been invited to
+                <a href="$invite.organisorEvent.href">$invite.title</a>; <abbr title="$formatter.formatDateISO8601($invite.startDate)" class="timeago">$invite.startDate</abbr>
+                by $invite.organisor.name
+
+                <div class='clearfix'></div>
+            </div>
+            #end
+        </div>
+    </div>
+    #end
+
+    #set($calsHome = $page.find("/Calendars") )
+    #if( $calsHome.upcoming.size() > 0 )
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Upcoming events</h3>
+        </div>
+        <div class="panel-body">
+            #foreach($event in $calsHome.upcoming)
+            <div class="alert alert-info" role="alert">
+                <a href="$event.href">$event.title</a>; <abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$event.startDate</abbr>
+            </div>
+            #end
+        </div>
+    </div>
+    #end
+</div>
+<script type="text/javascript">
+    $(function () {
+        jQuery.timeago.settings.strings.inPast = "time has elapsed";
+        jQuery.timeago.settings.allowFuture = true;
+        $("abbr.timeago").timeago();
+        $(".dashboard-upcoming-events").on("click", ".invite-accept", function (e) {
+            e.preventDefault();
+            if( confirm("Are you sure you would like to accept this invitation?") ) {
+                rsvp("ACCEPTED", $(e.target).closest("a").attr("href"));
+            }
+        });
+        $(".dashboard-upcoming-events").on("click", ".invite-decline", function (e) {
+            e.preventDefault();
+            if( confirm("Are you sure you would like to decline this invitation?") ) {
+                rsvp("DECLINED", $(e.target).closest("a").attr("href"));
+            }
+        });
+        function rsvp(partStat, href) {
+            flog("rsvp", partStat, href);
+            $.ajax({
+                type: 'POST',
+                url: href,
+                dataType: "json",
+                data: {
+                    rsvp: partStat
+                },
+                success: function (data) {
+                    Msg.info("Invitation RSVP processed ok");
+                    $("#dashboard-upcoming-events").reloadFragment({
+                        whenComplete: function() {
+                            $("abbr.timeago").timeago();
+                        }
+                    });
+                },
+                error: function (resp) {
+                    Msg.error("An error occured processing the event");
+                }
+            });
+        }
+    });
+</script>
