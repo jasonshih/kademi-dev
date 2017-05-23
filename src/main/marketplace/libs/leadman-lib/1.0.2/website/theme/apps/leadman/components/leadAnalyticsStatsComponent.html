@@ -1,0 +1,33 @@
+<div class="panel panel-default" style="padding: 40px 30px 0">
+
+    #if( $page.teamViewer )
+    #else
+    <div class="alert alert-warning">You do not have the team viewer role, so will only see lead information assigned to yourself</div>
+    #end
+
+    <div data-closedSales="#ee145b" data-cancelledSales="#3e3e3e" id="histo" style="margin-bottom: 30px">
+        <svg style="width: 100%; height: 220px"></svg>
+    </div>
+    <hr/>
+
+    <div id="pies" class="row">
+        <div class="col-lg-4 pie-box">
+            <p class=" text-center histo-title">Lost reasons</p>
+            <div id="lostReasonsPie">
+                <svg style="height: 250px"></svg>
+            </div>
+        </div>
+        <div class="col-lg-4 pie-box">
+            <p class=" text-center histo-title">Closed by team</p>
+            <div id="closedByOrgPie">
+                <svg style="height: 250px"></svg>
+            </div>
+        </div>
+        <div class="col-lg-4 pie-box">
+            <p class=" text-center histo-title">Lost by team</p>
+            <div id="conversionRatePie">
+                <svg style="height: 250px"></svg>
+            </div>
+        </div>
+    </div>
+</div>

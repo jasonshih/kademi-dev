@@ -1,0 +1,34 @@
+#set( $leadsPage = $page.find("/leads") )
+<li>
+    <a href="/profile" title="Create a contact" class="createContact" title="Create a new customer profile">
+        <i class="fa fa-2x fa-user-plus"></i>
+        <span class="visible-sm-inline visible-xs-inline ml">Create a contact </span>
+    </a>
+</li>
+
+<li class="dropdown create-lead-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
+        <i class="fa fa-plus fa-2x"></i>
+        <span class="visible-sm-inline visible-xs-inline ml">Create a lead</span>
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li class="presentation" role="menuitem"><a href="#" data-target="#modalLeadFromEmail" data-toggle="modal">Lead from email</a></li>
+        #foreach($entry in $leadsPage.funnels.entrySet())
+        <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
+        #end
+    </ul>
+</li>
+
+<li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" title="Enter a new lead">
+        <i class="fa fa-bolt fa-2x"></i>
+        <span class="visible-sm-inline visible-xs-inline ml">Quick Lead</span>
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        #foreach($entry in $leadsPage.funnels.entrySet())
+        <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
+        #end
+    </ul>
+</li>
