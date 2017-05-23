@@ -16,6 +16,12 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/manageProposal.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/payment/invoices-table.css"

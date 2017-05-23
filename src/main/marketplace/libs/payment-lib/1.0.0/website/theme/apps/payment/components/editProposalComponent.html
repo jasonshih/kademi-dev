@@ -1,31 +1,57 @@
-<form method="post" action="$page.href" class="proposal-details-form">
-    <h1>TODO</h1>
-    
-    #if( $request.params.leadId )
-    <input type="hidden" name="leadId" value="$request.params.leadId"/>
-    #end
-    
-    <button type="submit">SAVE</button>
-        
-        
-    #if( $page.newProposal )
-    
-    <hr/>
-    
-    #foreach($quote in $page.quotes)
-    <div class="col-md-4">
-    <div class="well">
-        <h1>$quote.title</h1>
-        
-        <a href="/quotes/$quote.id" class="btn btn-lg btn-info">Edit</a>
-    </div>        
+<form method="post" action="$page.href" class="form-horizontal proposal-details-form">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                #if( $page.newProposal )
+                    Create new proposal
+                #else
+                    Edit proposal
+                #end
+            </div>
+        </div>
+        <div class="panel-body">
+            #if( $request.params.leadId )
+                <input type="hidden" name="leadId" value="$request.params.leadId" />
+            #end
+
+            <div class="form-group">
+                <label class="control-label col-sm-3">Customer</label>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control proposal-customer" name="customer" value="" data-text="" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-5 col-sm-offset-3">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+
+            #if( !$page.newProposal )
+                <table class="table table-bordered table-hover table-striped table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($quote in $page.quotes)
+                            <tr>
+                                <td>$quote.title</td>
+                                <td><a href="/quotes/$quote.id" class="btn btn-link btn-info">Edit</a></td>
+                            </tr>
+                        #end
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="99">
+                                <a class="btn-add-quote">Add a new quote</a>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            #end
+        </div>
     </div>
-    #end
-    <div class="col-md-4">
-    <div class="well">
-        <button class="btn btn-lg btn-success">Add a new quote</button>
-    </div>
-    </div>
-    #end
-    
+
 </form>
