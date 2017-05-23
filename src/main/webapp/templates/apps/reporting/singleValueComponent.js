@@ -113,6 +113,14 @@
                     var aggs = resp.aggregations || resp.aggs;
                     for (var key in aggs) {
                         aggsHtml += '<option value="' + key + '">' + key + '</option>';
+                        
+                        var agg = aggs[key];
+                        
+                        for (var subKey in agg) {
+                            if ($.isPlainObject(agg[subKey])) {
+                                aggsHtml += '<option value="' + key + ';' + subKey + '">' + key + ' > ' + subKey + '</option>';
+                            }
+                        }
                     }
                     aggsSelect.html(aggsHtml);
                     

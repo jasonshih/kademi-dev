@@ -24,12 +24,21 @@
                 <div class="col-xs-9 text-right">
                     <h2>
                         #if( $results )
-                            #set( $aggr = $results.aggregations.get($agg) )
+                            #if ($agg.indexOf(";") != -1)
+                                #set ($aggArr = $agg.split(";"))
+                                #set( $aggr = $results.aggregations.get($aggArr[0]).aggregations.get($aggArr[1]) )
+                            #else
+                                #set( $aggr = $results.aggregations.get($agg) )
+                            #end
                             #if( $aggr )
                                 $aggr.value
                             #else
                                 #if( $agg )
-                                    Couldnt find aggregation $agg
+                                    #if ($aggArr)
+                                        Couldnt find aggregation $aggArr[1] of $aggArr[0]
+                                    #else
+                                        Couldnt find aggregation $agg
+                                    #end
                                 #else
                                     Please enter an aggretation
                                 #end
