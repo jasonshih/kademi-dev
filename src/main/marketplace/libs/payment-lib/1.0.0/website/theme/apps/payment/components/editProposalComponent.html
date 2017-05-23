@@ -1,15 +1,15 @@
-<form method="post" action="$page.href" class="form-horizontal proposal-details-form">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                #if( $page.newProposal )
-                    Create new proposal
-                #else
-                    Edit proposal
-                #end
-            </div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            #if( $page.newProposal )
+                Create new proposal
+            #else
+                Edit proposal
+            #end
         </div>
-        <div class="panel-body">
+    </div>
+    <div class="panel-body">
+        <form method="post" action="$page.href" class="form-horizontal proposal-details-form">
             #if( $request.params.leadId )
                 <input type="hidden" name="leadId" value="$request.params.leadId" />
             #end
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-3">Customer</label>
                 <div class="col-sm-5">
-                    <input type="text" class="form-control proposal-customer" name="customer" value="" data-text="" />
+                    <input type="text" class="form-control proposal-customer" name="customer" value="$!page.customer.id" data-text="$!page.customer.formattedName" />
                 </div>
             </div>
             <div class="form-group">
@@ -25,33 +25,79 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </div>
+        </form>
 
-            #if( !$page.newProposal )
-                <table class="table table-bordered table-hover table-striped table-condensed">
-                    <thead>
+        #if( !$page.newProposal )
+            <h3>Quotes</h3>
+            <table class="table table-bordered table-hover table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($quote in $page.quotes)
                         <tr>
-                            <th>Title</th>
-                            <th></th>
+                            <td>$quote.title</td>
+                            <td><a href="/quotes/$quote.id" class="btn btn-link btn-info">Edit</a></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        #foreach($quote in $page.quotes)
-                            <tr>
-                                <td>$quote.title</td>
-                                <td><a href="/quotes/$quote.id" class="btn btn-link btn-info">Edit</a></td>
-                            </tr>
-                        #end
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="99">
-                                <a class="btn-add-quote">Add a new quote</a>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-            #end
+                    #end
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="99">
+                            <a class="btn-add-quote" href="#modal-create-quote" data-toggle="modal">Add a new quote</a>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        #end
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="modal-create-quote">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" action="$page.href" class="form-horizontal proposal-quote-form">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Save quote</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="customer" value="$!page.customer.id" />
+                    <input type="hidden" name="leadId" value="$!page.leadId" />
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Title</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="title" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Vendor</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="vendor" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Attachment</label>
+                        <div class="col-sm-8">
+                            <input type="file" name="attachment" class="form-control" value="" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4">Total Amount</label>
+                        <div class="col-sm-8">
+                            <input type="number" name="totalAmount" class="form-control" value="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-</form>
