@@ -1,2 +1,2 @@
 $page.formContent
-<script id="form-data" type="text/json">$page.lead.getFieldValue('form-goal-data')</script>
+<script id="form-data" type="text/json">#set($fieldName = $page.name + '-data')$!page.lead.getFieldValue($fieldName)</script>
