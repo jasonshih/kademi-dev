@@ -1,0 +1,100 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="files">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="panel-title">Files</div>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <button type="button" class="btn btn-xs btn-success upload-files"><span class="fa fa-upload"></span> Upload</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive ie-overflow">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Type</th>
+                            <th>Name</th>
+                            <th>Notes</th>
+                            <th>Date</th>
+                            <th></th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="files-body">
+                        #foreach($file in $page.children.ofType.leadFile)
+                            <tr>
+                                <td class="text-center">
+                                    #genFileIcon($file)
+                                </td>
+                                <td>
+                                    <span #if($file.name.length() > 25)title="$file.name"#end>
+                                        #if($file.name.length() > 25)
+                                            $formatter.truncate($file.name, 20)
+                                        #else
+                                            $file.name
+                                        #end
+                                    </span>
+                                </td>
+                                <td>
+                                    <span>$!file.notes</span>
+                                    <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                </td>
+                                <td>
+                                    <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
+                                </td>
+                                <td>
+                                    #if($file.is('audio/'))
+                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                            <i class="fa fa-play"></i>
+                                        </button>
+                                        <span class="lead-audio-duration"></span>
+                                    #elseif($file.is('image/'))
+                                        <a target="_blank" href="$file.name" class="btn btn-success">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        #if($file.geoLocation)
+                                            <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
+                                                ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                <i class="fa fa-map-marker"></i>
+                                            </a>
+                                        #end
+                                    #end
+                                </td>
+                                <td>
+                                    <div style="min-width: 125px;" class="btn-group" role="group">
+                                        <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                        <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+#macro(genFileIcon $file)
+    #set($fIcon = "fa-file")
+
+    #if($file.is('audio/'))
+        #set($fIcon = "fa-file-audio-o")
+    #elseif($file.is('image/'))
+        #set($fIcon = "fa-file-image-o")
+    #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+        #set($fIcon = "fa-file-excel-o")
+    #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+        #set($fIcon = "fa-file-word-o")
+    #elseif($file.name.endsWith('.pdf'))
+        #set($fIcon = "fa-file-pdf-o")
+    #else
+        #set($fIcon = "fa-file-o")
+    #end
+<span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+#end

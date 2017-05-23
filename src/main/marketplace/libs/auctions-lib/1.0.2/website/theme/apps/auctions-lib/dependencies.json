@@ -4,18 +4,6 @@
     ],
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/auctions/comingUpAuction.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/auctions/viewAuction.css"
-            }
-        },
-        {
             "js": {
                 "group": "main",
                 "path": "/static/js/jquery.timeago.js"
@@ -25,12 +13,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/auctions/comingUpAuction.js"
             }
         },
         {
