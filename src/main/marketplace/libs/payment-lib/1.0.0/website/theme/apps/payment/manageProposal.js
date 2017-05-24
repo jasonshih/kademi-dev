@@ -1,7 +1,5 @@
 $(function () {
     initProposalDetailsForm();
-    initProposalQuotes();
-    initQuoteModal();
 });
 
 function initProposalDetailsForm() {
@@ -21,25 +19,6 @@ function initProposalDetailsForm() {
                 } else {
                     Msg.success('Details is saved');
                 }
-            }
-        });
-    }
-}
-
-function initProposalQuotes() {
-
-}
-
-function initQuoteModal() {
-    var modal = $('#modal-create-quote');
-    if (modal.length > 0) {
-        modal.on('hidden.bs.modal', function () {
-            modal.find('input').not(':hidden').val('');
-        });
-        
-        modal.find('form').forms({
-            onSuccess: function (resp) {
-                flog('=================', resp);
             }
         });
     }
