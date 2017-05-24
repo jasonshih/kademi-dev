@@ -6,12 +6,12 @@
             #else
                 <div class="dropdown proposal-status pull-right">
                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-                        Status
+                        Status: <span id="proposal-status">$page.proposal.status</span>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a href="#CREATED">Created</a></li>
-                        <li><a href="#ACCEPTED">Accepted</a></li>
+                        <li><a href="#CREATED"><i class="fa fa-fw text-success #if($page.proposal.status == 'CREATED') fa-check #end"></i> Created</a></li>
+                        <li><a href="#ACCEPTED"><i class="fa fa-fw text-success #if($page.proposal.status == 'ACCEPTED') fa-check #end"></i> Accepted</a></li>
                     </ul>
                 </div>
                 Edit proposal

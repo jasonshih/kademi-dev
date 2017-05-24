@@ -27,16 +27,21 @@ function initProposalDetailsForm() {
             ddlStatus.find('a').on('click', function (e) {
                 e.preventDefault();
                 
+                var a = $(this);
+                var status = a.attr('href').replace('#', '');
+                
                 $.ajax({
                     url: window.location.pathname,
                     type: 'post',
                     data: {
-                        status: $(this).attr('href').replace('#', '')
+                        status: status
                     },
                     dataType: 'json',
                     success: function (resp) {
                         if (resp && resp.status) {
-                            Msg.success('Status is updated')
+                            $('#proposal-status').html(status);
+                            ddlStatus.find('.fa-check').removeClass('fa-check');
+                            a.find('.fa').addClass('fa-check');
                         } else {
                             Msg.error('Can\'t update status. Please contact your administrator to resolve this issue');
                             flog('Error when updating status', resp);
