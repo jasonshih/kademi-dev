@@ -118,7 +118,14 @@
             <i class="fa fa-plus-circle"></i> Tags
         </a>
         <ul class="dropdown-menu">
-            <li style="padding: 3px 15px"><strong>Quick add</strong></li>
+            <a href="#" class="createTagModal" >
+                <li style="padding: 3px 15px">
+                    <strong>Create and add tag</strong>
+                </li>
+            </a>
+            <li style="padding: 3px 15px">
+                <strong>Quick add</strong>
+            </li>
             #foreach($group in $page.tags)
                 <li class="addTag">
                     <a href="$group.name">
