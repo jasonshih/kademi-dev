@@ -12,6 +12,18 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.fa-2x {
+    font-size: 2em;
+}
+
+.fa-3x {
+    font-size: 3em;
+}
+
+.fa-4x {
+    font-size: 4em;
+}
+
 .fa-plus:before {
     content: "";
 }

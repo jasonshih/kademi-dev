@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <style>
+            .photoEntries {
+                margin-top: 10px;
+            }
+            .photoEntries li {
+                float: left;
+                display: block;
+                width: 170px;
+                min-height: 185px;
+            }
+        </style>
+        
+    </head>
+    <body>
+        <ul class="photoEntries">
+            #foreach($e in $page.entries)
+            <li>
+                #if($e.attachmentHash)
+                <a target="_blank" href="uploads/${e.attachmentHash}"><img src="uploads/${e.attachmentHash}/alt-150-150.png" /></a>
+                #else
+                <span class="no image">No image</span>
+                #end
+                <br/>
+                <a href="/manageUsers/${e.awardedTo.id}/">$e.awardedTo.formattedName</a>
+                <br/>
+                <a>$e.awardedTo.email</a>
+                
+            </li>
+            #end
+            
+        </ul>
+    </body>
+</html>

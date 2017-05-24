@@ -45,6 +45,31 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="form-group org-field">
+                        <label class="control-label col-md-2" for="newOrgTitle">Tags</label>
+                        <input type="hidden" id="tags" name="tags" value="" />
+                        <div class="col-md-10">
+                            <div class="dropdown" style="display:inline;">
+                                <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
+                                    <i class="fa fa-plus-circle"></i> Tags
+                                </a>
+                                <ul class="dropdown-menu">
+                                    #foreach($group in $page.find("/leads/").tags)
+                                        <li class="addTagToCreation">
+                                            <a href="$group.name">
+                                                <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                                            </a>
+                                        </li>
+                                    #end
+                                </ul>
+                            </div>    
+                            <div id="user-membership" style="display:inline;" class="blocks-wrapper memberships-list membershipsDiv">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div class="form-group org-field">
                         <label class="control-label col-md-2" for="newOrgTitle">Company</label>
                         <div class="col-md-5">

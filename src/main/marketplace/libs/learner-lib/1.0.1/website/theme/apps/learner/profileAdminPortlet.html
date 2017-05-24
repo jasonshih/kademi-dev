@@ -1,0 +1,223 @@
+
+<div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#learningStatsCollapse">
+        <i class="clip-stats"></i>
+        Learning statistics
+        <span class="pull-right clickable">(click to view)</span>
+    </div>
+
+    <div id="learningStatsCollapse" class="panel-collapse collapse">
+        <div class="panel-body">
+            <p class="clearfix">
+                <button type="button" class="pull-right btn btn-sm btn-primary btn-complete-module">Force complete module</button>
+            </p>
+            <h4>Overall Progress</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Website</th>
+                            <th>Program</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($lp in $learningProcesses)
+                        <tr>
+                            <td>$lp.website.name</td>
+                            <td>$lp.programCode</td>
+                            <td>$lp.stateName</td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <h4>Module Progress</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Website</th>
+                            <th>Module</th>
+                            <th>Progress</th>
+                            <th>Started</th>
+                            <th>Last access</th>
+                            <th>Quiz attempts</th>
+                            <th>Certificates</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if( $moduleStatuses.isEmpty() )
+                        <tr>
+                            <td colspan="7">No modules have been started</td>
+                        </tr>
+                        #else
+                        #set($certs = $page.userResource.find("certificates") )
+                        #foreach($ms in $moduleStatuses)
+                        <tr>
+                            <td>$ms.website.name</td>
+                            <td>$ms.programCode / $ms.courseCode / $ms.moduleCode</td>
+                            <td>
+                                <abbr title="State: $ms.process.stateName">
+                                    #if( $ms.complete )
+                                    Complete
+                                    #else
+                                    $!{ms.percentComplete}%
+                                    #end
+                                </abbr>
+                            </td>
+                            <td>
+                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($ms.createdDate)">$!ms.createdDate</abbr>
+                            </td>
+                            <td>
+                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($ms.modifiedDate)">$!ms.modifiedDate</abbr>
+                            </td>
+                            <td>$!ms.quizAttempts.size()</td>
+                            <td>
+                                #foreach($file in $certs.files)
+                                #if( $file.name.startsWith($ms.moduleCode)  )
+                                <div class="delete-download-container">
+                                    <a class="btn btn-sx btn-default" href="$file.href" target="_blank" title="Download '$file.name'"><i class="fa fa-cloud-download"></i></a>
+                                    <a class="btn btn-sx btn-default btn-delete-download" href="$file.href"><i class="clip-close-2"></i></a>
+                                </div>
+                                #end
+                                #end
+                            </td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <br />
+            <h4>CPD Points</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Website</th>
+                            <th>Module</th>
+                            <th>CPD Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if( $cpdAwards.isEmpty() )
+                        <tr>
+                            <td colspan="7">No CPD points have been awarded</td>
+                        </tr>
+                        #else
+                        #foreach($cpd in $cpdAwards)
+                        <tr>
+                            <td>$cpd.website.name</td>
+                            <td>$cpd.moduleStatus.moduleCode</td>
+                            <td>$cpd.numPoints</td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <h4>Rewards</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Reward</th>
+                            <th>For</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if( $rewardEntries.isEmpty() )
+                        <tr>
+                            <td colspan="6">No rewards have been given to this user</td>
+                        </tr>
+                        #else
+                        #foreach($re in $rewardEntries)
+                        <tr>
+                            <td>$re.reward.name</td>
+                            <td>$re.reason</td>
+                            <td>
+                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($re.awardedDate)">$re.awardedDate</abbr>
+                            </td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <h4>Points</h4>
+            <p>Points and rewards are very similar, but not all rewards use points systems</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Reward</th>
+                            <th>For</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #if( $points.isEmpty() )
+                        <tr>
+                            <td colspan="6">This user has not earned any points</td>
+                        </tr>
+                        #else
+                        #foreach($p in $points)
+                        <tr>
+                            <td>$p.numPoints</td>
+                            <td>$p.reason</td>
+                            <td>
+                                <abbr class="pull-right timeago" title="$formatter.formatDateISO8601($p.issuedDate)">$p.issuedDate</abbr>
+                            </td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="modal-complete-module" aria-hidden="true" tabindex="-1" class="modal modal-sm fade">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Set Module as Complete</h4>
+    </div>
+    <form method="POST" action="." class="form-horizontal">
+        <div class="modal-body">
+            <div class="form-message alert alert-danger" style="display: none;"></div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <select class="form-control cbb-program">
+                        <option>[Please select a program]</option>
+                        #foreach($website in $page.find("/websites").children.ofType.website)
+                        #foreach($prog in $website.live.find("programs").availPrograms($user) )
+                        <option value="$prog.href">$website.name : $prog.title</option>
+                        #end
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="modules-wrapper hide">
+                <ul class="row modules-list">
+                </ul>
+            </div>
+            <input type="hidden" name="userName" value="$page.profile.name" />
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-sm btn-primary">Set complete</button>
+    </div>
+    </form>
+</div>
+<script src="/templates/apps/learner/profileAdminPortlet.js">//</script>
+<script type="text/javascript">
+    $(function () {
+        initAdminProfile();
+    });
+</script>

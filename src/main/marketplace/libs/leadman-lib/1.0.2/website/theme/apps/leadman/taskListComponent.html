@@ -1,0 +1,109 @@
+
+<style type="text/css">
+    .panel-tasks-list .list-group .list-group-item:first-child {
+        border-top: 1px solid #f1f2f3;
+    }
+
+    .panel-tasks-list .no-mgt {
+        margin-top: 0;
+    }
+</style>
+<!-- test tan $tasks -->
+
+#if($page)
+
+	#set($leadsPage = $page.find('/leads'))
+	#set( $tasks = $leadsPage.myDueTasks )
+
+	#if($tasks && $tasks.size() > 0)
+    <div class="panel panel-default panel-tasks-list">
+        <div class="panel-body" #if ($height) style="height: ${height}px; overflow-y: auto;" #end>
+			#if( !$leadsPage )
+				#set( $leadsPage = $rootFolder.find("/leads") )
+			#end
+            #parse( "/theme/apps/leadman/tasksDash.html" )
+        </div>
+    </div>
+	#else
+		#fakeUI()
+	#end
+
+
+#else
+	#fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="" id="tasksList">
+    <h3 class="no-mgt">
+        <small class="pull-right"><i style="font-size: 10px">Unassigned tasks</i></small>
+        Incoming
+    </h3>
+    <div class="list-tasks">
+        <ul class="list-group ng-scope">
+            <li class="list-group-item" style="padding-bottom: 45px">
+                <p>
+                    <em>Example Task Title</em>
+                    - Example Task Description
+                </p>
+                <a href="" class="btn btn-success pull-right takeTask">Take task</a>
+                <a href="" title="Cancel this task" class="deleteTask btnCancelTask text-danger"><i
+                        class="fa fa-trash"></i></a>
+                <div style="margin: 15px">
+                    <h3 class="media-heading">
+                        <a href="">
+                            Contact information
+                        </a>
+                    </h3>
+
+                    <p>
+                        <i class="fa fa-envelope"></i> example@email.com
+                        <i class="fa fa-phone"></i> +84999333222
+
+                    </p>
+                    <p>
+
+                    </p>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <h3 class="no-mgt">
+        My Tasks
+    </h3>
+
+    <div class="list-tasks">
+        <ul class="list-group ng-scope">
+            <li class="list-group-item task">
+                <p>
+                    <a href="#" class="mr btn btn-danger btn-sm btn-circle"
+                       data-target="#modalEditTask" data-toggle="modal">T</a>
+                    <em>
+                        Example Task Title
+                    </em>
+                    <small class="pull-right">No due date</small>
+
+                </p>
+                <hr/>
+
+                <div style="margin: 15px">
+                    <h3 class="media-heading">
+                        <a class="text-success" href="#">
+                            Example Lead Name
+                        </a>
+                    </h3>
+                    <i class="fa fa-envelope"></i> example@email.com
+                    <i class="fa fa-phone"></i> +84999333222
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+#end
+
+
+
+
+
+

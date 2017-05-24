@@ -1,11 +1,16 @@
 function initAndPopulateLeadForm(editable) {
-    var formData = JSON.parse($("#form-data").html());
+    var formData = $.trim($("#form-data").html()) === '' ? {} : JSON.parse($("#form-data").html());
 
     $.each(formData, function (key, value) {
         var input = $("[name='" + key + "']");
 
         if (input.is("select")) {
             $("[name='" + key + "'] [value='" + value + '"]').prop("selected", true);
+        } else if (input.is(":checkbox")) {
+            input.prop("checked", true);
+        } else if (input.is(":radio")) {
+            input = $("[name='" + key + "'][value='" + value + "']");
+            input.prop("checked", true);
         } else {
             $("[name='" + key + "']").val(value);
         }
@@ -13,7 +18,7 @@ function initAndPopulateLeadForm(editable) {
 
     if (!editable) {
         $("input[type = 'submit']").remove();
-        $(":input").prop("readonly", true);
+        $(":input").prop("disabled", true);
     } else {
         $("form").forms({
             callback: function (resp) {

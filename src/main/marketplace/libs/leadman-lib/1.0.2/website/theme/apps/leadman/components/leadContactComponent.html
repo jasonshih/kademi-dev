@@ -1,0 +1,70 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+
+        <div id="profile">
+            <h4 class="page-header">Contact information
+            </h4>
+            <div class="row">
+                <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
+                    <input type="hidden" name="saveDetails" value="saveDetails"/>
+                    <div class="modal-body" id="profile-body">
+                        #set( $p = $page.leadProfile )
+                        #set( $profile = $page.profile )
+                        #if (!$page.href.contains("cust"))
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="jobTitle">Job Title</label>
+                            <div class="col-md-6">
+                                <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                            </div>
+                        </div>
+                        #end
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="nickName">Customer</label>
+                            <div class="col-md-3">
+                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick Name" value="$!profile.nickName" />
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!profile.firstName" />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!profile.surName" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                            <div class="col-md-5">
+                                <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                            </div>
+                            <div class="col-md-5">
+                                <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-2" for="notes">Notes</label>
+                            <div class="col-md-10">
+                                <textarea name="notes" class="form-control" style="height: 100px">$!p.notes</textarea>
+                            </div>
+                        </div>
+
+
+                        #if( $page.completed)
+                        #else
+                        <div class="form-group">
+                            <div class="col-md-10 col-md-offset-2">
+                                <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+
+                                <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                #if(!$page.href.contains("cust") && $page.leadProfile)
+                                <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                #end
+                            </div>
+                        </div>
+                        #end
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

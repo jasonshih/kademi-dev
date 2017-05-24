@@ -8,142 +8,83 @@
     }
 </style>
 
-
 #if($page)
 
-    <div class="panel panel-default panel-tasks-list">
-        <div class="panel-body" #if ($height) style="height: ${height}px; overflow-y: auto;" #end>
-            #if( !$leadsPage )
-            #set( $leadsPage = $rootFolder.find("/leads") )
-            #end
-            #parse( "/theme/apps/leadman/tasksDash.html" )
-        </div>
+<div class="panel panel-default panel-tasks-list">
+    <div class="panel-body" #if ($height) style="height: ${height}px; overflow-y: auto;" #end>
+		#if( !$leadsPage )
+		#set( $leadsPage = $rootFolder.find("/leads") )
+		#end
+        #parse( "/theme/apps/leadman/tasksDash.html" )
     </div>
+</div>
 #else
-<style>
-    .no-mgt{
-        margin-top: 0;
-    }
-</style>
-    <div class="" id="tasksList">
-        <h3 class="no-mgt">
-            <small class="pull-right"><i style="font-size: 10px">Unassigned tasks</i></small>
-            Incoming
-        </h3>
-        <div class="list-tasks">
-            #foreach($task in $incoming)
-            <ul class="list-group ng-scope">
-                <li class="list-group-item" style="padding-bottom: 45px">
+<div class="" id="tasksList">
+    <h3 class="no-mgt">
+        <small class="pull-right"><i style="font-size: 10px">Unassigned tasks</i></small>
+        Incoming
+    </h3>
+    <div class="list-tasks">
+        <ul class="list-group ng-scope">
+            <li class="list-group-item" style="padding-bottom: 45px">
+                <p>
+                    <em>Example Task Title</em>
+                    - Example Task Description
+                </p>
+                <a href="" class="btn btn-success pull-right takeTask">Take task</a>
+                <a href="" title="Cancel this task" class="deleteTask btnCancelTask text-danger"><i
+                        class="fa fa-trash"></i></a>
+                <div style="margin: 15px">
+                    <h3 class="media-heading">
+                        <a href="">
+                            Contact information
+                        </a>
+                    </h3>
+
                     <p>
-                        <em>$!task.title</em>
-                        #if($task.taskDescription)
-                        - $!task.taskDescription
-                        #end
-                    </p>
-                    <a href="/tasks/$task.id" class="btn btn-success pull-right takeTask">Take task</a>
-                    <a href="/tasks/$task.id" title="Cancel this task" class="deleteTask btnCancelTask text-danger"><i class="fa fa-trash"></i></a>
-                    #set( $lead = false )
-                    #set( $lead = $task.relatedLead )
-                    #if( $lead )
-                    <div style="margin: 15px">
-                        <h3 class="media-heading">
-                            <a href="/leads/$lead.id/">
-                                #if( $lead.profile )
-                                $lead.profile.formattedName
-                                #else
-                                No contact information
-                                #end
-                            </a>
-                        </h3>
-
-                        #if( $lead.profile )
-                        <p>
-                            #if( $lead.profile.email )
-                            <i class="fa fa-envelope"></i> $lead.profile.email
-                            #end
-
-                            #if( $lead.profile.phone )
-                            <i class="fa fa-phone"></i> $lead.profile.phone
-                            #end
-                        </p>
-                        <p>
-                            #set ($lastContactRequest = $lead.lastContactRequest)
-                            #if($lastContactRequest)
-                            $!formatter.truncate($lastContactRequest.message, 117)
-                            #end
-                        </p>
-                        #end
-                    </div>
-                    #end
-                </li>
-            </ul>
-            #end
-        </div>
-
-        <h3 class="no-mgt">
-            My Tasks
-        </h3>
-
-        <div class="list-tasks">
-            #foreach($task in $tasks)
-            <ul class="list-group ng-scope">
-                <li class="list-group-item task">
-                    <p>
-                        #set( $colour = $leadsPage.statusColour($task, 3) )
-                        <a href="/tasks/$task.id/ .taskEditModal" class="mr btn btn-${colour} btn-sm btn-circle" data-target="#modalEditTask" data-toggle="modal">T</a>
-                        <em>
-                            #if( $task.title )
-                            $task.title
-                            #else
-                            #if( $task.taskDescription )
-                            $task.taskDescription
-                            #else
-                            No task title
-                            #end
-                            #end
-                        </em>
-                        #if( $task.dueDate )
-                        <small class="pull-right">
-                            Due <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                        </small>
-                        #else
-                        <small class="pull-right">No due date</small>
-                        #end
+	                    <i class="fa fa-envelope"></i> example@email.com
+                        <i class="fa fa-phone"></i> +84999333222
 
                     </p>
-                    <hr/>
+                    <p>
 
-                    #set( $lead = false )
-                    #set( $lead = $task.relatedLead )
-                    #if( $lead )
-                    <div style="margin: 15px">
-                        <h3 class="media-heading">
-                            <a class="text-success" href="/leads/$lead.id/">
-                                #if( $lead.profile )
-                                $lead.profile.formattedName
-                                #else
-                                No contact information
-                                #end
-                            </a>
-                        </h3>
-                        #if( $lead.profile )
-                        <p>
-                            #if( $lead.profile.email )
-                            <i class="fa fa-envelope"></i> $lead.profile.email
-                            #end
-
-                            #if( $lead.profile.phone )
-                            <i class="fa fa-phone"></i> $lead.profile.phone
-                            #end
-                        </p>
-                        #end
-                    </div>
-                    #end
-                </li>
-            </ul>
-            #end
-        </div>
+                    </p>
+                </div>
+            </li>
+        </ul>
     </div>
+
+    <h3 class="no-mgt">
+        My Tasks
+    </h3>
+
+    <div class="list-tasks">
+        <ul class="list-group ng-scope">
+            <li class="list-group-item task">
+                <p>
+                    <a href="#" class="mr btn btn-danger btn-sm btn-circle"
+                       data-target="#modalEditTask" data-toggle="modal">T</a>
+                    <em>
+	                    Example Task Title
+                    </em>
+                    <small class="pull-right">No due date</small>
+
+                </p>
+                <hr/>
+
+                <div style="margin: 15px">
+                    <h3 class="media-heading">
+                        <a class="text-success" href="#">
+				            Example Lead Name
+                        </a>
+                    </h3>
+                    <i class="fa fa-envelope"></i> example@email.com
+                    <i class="fa fa-phone"></i> +84999333222
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 
 #end
 

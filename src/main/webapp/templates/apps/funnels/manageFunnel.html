@@ -85,7 +85,11 @@
                         <div class="form-group">
                             <label class="control-label col-sm-3">Hidden to Sales</label>
                             <div class="col-sm-6">
-                                <input type="checkbox" class="form-control" name="hiddenToSales" #if ($page.funnel.hiddenToSales) checked #end />
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="hiddenToSales" #if ($page.funnel.hiddenToSales) checked #end />
+                                    </label>
+                                </div>
                             </div>
                         </div>
 

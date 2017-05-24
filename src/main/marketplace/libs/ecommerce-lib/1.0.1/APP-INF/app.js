@@ -1,5 +1,5 @@
-controllerMappings.addComponent("ecommerce/components", "storeProductList", "html", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
-controllerMappings.addComponent("ecommerce/components", "storeProductListEDM", "edm", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
+controllerMappings.addComponent("ecommerce", "storeProductList", "html", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
+controllerMappings.addComponent("ecommerce", "storeProductListEDM", "edm", "Display a list of e-commerce store products specific to the profile's interests", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomStoreCategories", "html", "Display ecom store dashboard of categories", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomStoreBreadcrumb", "html", "Display ecom store breadcrumb", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomStoreSidebar", "html", "Display ecom store sidebar", "E-commerce App component");

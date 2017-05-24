@@ -1,0 +1,166 @@
+#table-result table tbody tr:first-child td{
+    border-top: none;
+}
+#table-result .table-responsive{
+    max-height: 195px;
+}
+#dashLeadsList .lead-desc{
+    margin-bottom: 45px;
+}
+#tasksList abbr.timeago{
+    margin-left: 5px;
+}
+table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting:after{
+    content: '' !important;
+}
+.funnel-wrap{
+    padding: 40px 30px 0;
+}
+.histo-title{
+    font-size: 18px;
+    color: #000000;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+.pie-box{
+    padding: 3px;
+    border-top: 1px solid #f0f0f0;
+}
+.pie-box+div{
+    border-left: 1px solid #f0f0f0;
+}
+.deleteTask{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 16px;
+}
+@media (max-width: 767px) {
+    .form-group [class^="col-md"] + div{
+        margin-top: 10px;
+    }
+
+    .btn-fullwidth-mobile{
+        width: 100%;
+        margin-left: 0 !important;
+    }
+    .btn-fullwidth-mobile + button{
+        margin-top: 10px;
+    }
+
+    .leadActions{
+        position: relative !important;
+    }
+
+    .leadActions .btn{
+        margin-bottom: 5px;
+    }
+
+    #dashLeadsList .media-heading a, #searchResults .media-heading a{
+        display: block;
+    }
+    #dashLeadsList .media-heading small.pull-right, #searchResults .media-heading small.pull-right{
+        display: block;
+        float: none !important;
+    }
+
+    #tasksList .takeTask{
+        position: absolute;
+        bottom: 10px;
+        right: 15px;
+    }
+    #myWizard .actions{
+        position: relative;
+    }
+
+    #dashLeadsList .lead-desc{
+        margin-bottom: 35px;
+    }
+
+    #leadSearchFilter{
+        padding-left: 17px !important;
+        border-left: none !important;
+        width: 100% !important;
+        text-align: right;
+    }
+}
+
+@media (max-width: 991px) {
+    .form-group [class^="col-md"] + div{
+        margin-top: 15px;
+    }
+
+}
+
+@media (max-width: 1024px) {
+    .pie-box+div{
+        border-left: 0;
+        padding: 0;
+    }
+}
+
+#searchbox-wrap{
+    position: relative;
+}
+#searchbox-wrap i{
+    position: absolute;
+    right: 25px;
+    top: 10px;
+}
+#searchbox-wrap .tt-suggestion.tt-selectable + .tt-suggestion.tt-selectable{
+    border-top: 1px solid #eee;
+}
+#leadSearchFilter{
+    display: inline-block;
+    list-style: none;
+    width: 100px;
+    margin-left: 0;
+    padding-left: 10px;
+    border-left: 1px solid rgba(255,255,255,0.39);
+}
+#lead-search-input{
+    display: inline-block;
+
+}
+#leadSearchFilterButton{
+    color: #fff;
+    font-size: 15px;
+    display: block;
+    height: 37px;
+    line-height: 37px;
+
+}
+
+#lead-task-outcomes {
+    list-style: none;
+}
+
+#lead-task-outcomes li {
+    position: relative;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#lead-task-outcomes li input {
+    position: absolute;
+    opacity: 0;
+}
+
+#lead-task-outcomes li label {
+    display: block;
+    background-color: #efefef;
+    color: #6c6c6c;
+    padding: 15px;
+    text-align: center;
+    border-radius: 10px;
+    transition: all 300ms;
+}
+
+#lead-task-outcomes li i {
+    font-size: 250%;
+}
+
+#lead-task-outcomes li :checked ~ label {
+    color: white;
+    background-color: #ee145b;
+}
