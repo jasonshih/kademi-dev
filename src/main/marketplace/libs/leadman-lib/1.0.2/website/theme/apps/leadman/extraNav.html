@@ -15,7 +15,9 @@
     <ul class="dropdown-menu">
         <li class="presentation" role="menuitem"><a href="#" data-target="#modalLeadFromEmail" data-toggle="modal">Lead from email</a></li>
         #foreach($entry in $leadsPage.funnels.entrySet())
-        <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
+            #if ($entry.value.hiddenToSales != true)
+                <li class="presentation" role="menuitem"><a href="$entry.key" class="createLead">$entry.value.title</a></li>
+            #end
         #end
     </ul>
 </li>
@@ -28,7 +30,9 @@
     </a>
     <ul class="dropdown-menu">
         #foreach($entry in $leadsPage.funnels.entrySet())
-        <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
+            #if ($entry.value.hiddenToSales != true)
+                <li class="presentation" role="menuitem"><a href="$entry.key" class="createQuickLead">$entry.value.title</a></li>
+            #end
         #end
     </ul>
 </li>
