@@ -4,6 +4,16 @@
             #if( $page.newProposal )
                 Create new proposal
             #else
+                <div class="dropdown proposal-status pull-right">
+                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                        Status
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#CREATED">Created</a></li>
+                        <li><a href="#ACCEPTED">Accepted</a></li>
+                    </ul>
+                </div>
                 Edit proposal
             #end
         </div>

@@ -21,5 +21,29 @@ function initProposalDetailsForm() {
                 }
             }
         });
+        
+        var ddlStatus = $('.proposal-status');
+        if (ddlStatus.length > 0) {
+            ddlStatus.find('a').on('click', function (e) {
+                e.preventDefault();
+                
+                $.ajax({
+                    url: window.location.pathname,
+                    type: 'post',
+                    data: {
+                        status: $(this).attr('href').replace('#', '')
+                    },
+                    dataType: 'json',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.success('Status is updated')
+                        } else {
+                            Msg.error('Can\'t update status. Please contact your administrator to resolve this issue');
+                            flog('Error when updating status', resp);
+                        }
+                     }
+                });
+            });
+        }
     }
 }
