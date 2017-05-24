@@ -443,6 +443,40 @@
         });
     }
 
+    function initModalAddTag() {
+        $('body').on('click', '.addTagToCreation a', function (e) {
+            var tagText = '<span class="membership alert alert-info" style="margin: 5px;" id="g.name"> <i class="fa fa-tag"></i>' +
+            ' <span class="block-name" title="g.name"> g.name </span> &nbsp; ' + 
+            ' <a href="g.name" class="close btn-delete-tagModale" title="Delete tag">&times;</a> </span>'
+
+            e.preventDefault();
+            
+            var tags = $('#tags').attr( "value" );
+            
+            var btn = $(this);
+            var groupName = btn.attr('href');
+            
+            if (!tags.includes(groupName)) {
+                    
+                var html = tagText.replaceAll("g\.name", groupName);
+                
+                $('#tags').attr( "value", $('#tags').attr( "value" ) + groupName + "," )  
+                $('#user-membership').append(html); 
+                
+                $('#user-membership').on('click', '.btn-delete-tagModale', function (e) {
+                    e.preventDefault();
+    
+                    var btn = $(this);
+                    var groupName = btn.attr('href');
+                    
+                    $('#tags').attr( "value", $('#tags').attr( "value" ).replace(groupName + ",", "") )
+                    
+                    $('span#' + groupName).remove();
+                });
+            }
+        });
+    }
+    
     function initDeleteTag() {
         $('body').on('click', '.btn-delete-tag', function (e) {
             e.preventDefault();
@@ -601,6 +635,7 @@
         initReopenTask();
         initBodyForm();
         initAddTag();
+        initModalAddTag();
         initDeleteTag();
         initJobTitleSearch();
         initLeadTimerControls();
