@@ -21,15 +21,15 @@
 
                 <p><i class="fa fa-dollar fa-fw"></i>
                     #if($page.currentBidValue)
-                    Current Bid: $<span id="bidCurrentValue">$page.currentBidValue</span>
+                    Current Bid: $<span id="bidCurrentValue">$!page.currentBidValue</span>
                     #else
-                    Current Bid: $<span id="bidCurrentValue">$page.auctionStartValue</span>
+                    Current Bid: $<span id="bidCurrentValue">$!page.auctionStartValue</span>
                     #end
                 </p>
 
-                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">$page.auctionBidCount</span></p>
+                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">$!page.auctionBidCount</span></p>
 
-                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$page.auctionEndDate</abbr></p>
+                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$!page.auctionEndDate</abbr></p>
             </div>
             </div>
         #end
@@ -43,9 +43,9 @@
                     #if ($page.bidHistory.size() > 0)
                     #foreach($c in $page.bidHistory)
                     <tr>
-                        <td>$c.bidValue</td>
-                        <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$c.changeDate</abbr></td>
-                        <td>$c.changedBy.name</td>
+                        <td>$!c.bidValue</td>
+                        <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$!c.changeDate</abbr></td>
+                        <td>$!c.changedBy.name</td>
                     </tr>
                     #end
                     #else
