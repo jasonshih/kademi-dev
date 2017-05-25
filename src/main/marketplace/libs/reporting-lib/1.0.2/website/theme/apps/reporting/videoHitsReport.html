@@ -1,0 +1,107 @@
+<html>
+    <head>
+        <title>Video Hits</title>
+        <link href="/theme/apps/reporting/videoHitsReport.css" rel="stylesheet" type="text/css"/>
+        <link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body>
+        <ul class="mini-stats col-sm-12" id="searchStats">
+            <li class="col-xs-4 totalPlays">
+                <div class="sparkline_bar_good">
+                    <span class="fa fa-play-circle-o" style="font-size: 34px"></span>
+                </div>
+                <div class="values">
+                    <strong>Loading...</strong>
+                    Total Plays
+                </div>
+            </li>
+            <li class="col-xs-4 totalViewTime">
+                <div class="sparkline_bar_good">
+                    <span class="fa fa-eye" style="font-size: 34px"></span>
+                </div>
+                <div class="values">
+                    <strong>Loading...</strong>
+                    Total View Time
+                </div>
+            </li>
+            <li class="col-xs-4 avgViewTime">
+                <div class="sparkline_bar_good">
+                    <span class="fa fa-clock-o" style="font-size: 34px"></span>
+                </div>
+                <div class="values">
+                    <strong>Loading...</strong>
+                    Avg Viewing Time
+                </div>
+            </li>
+            <!--
+            <li class="col-sm-3 topViews">
+                <div class="topViewList">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <span>Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="values">
+                    Top Views
+                </div>
+
+            </li>
+            -->
+        </ul>
+        <br/>
+        <div class="row">
+            #set($videoExist = false)
+            #if($request.params.video)
+            #set($videoExist = true)
+            #end
+            <div class="$formatter.ifTrue($videoExist, 'col-md-6', 'col-md-12') col-sm-12">
+                <div>
+                    <svg id="visualisation" width="100%" height="300px"></svg>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12" id="videoSegmentsDiv" style="display:none;">
+                <div>
+                    <svg id="segmentHistogram" width="100%" height="300px"></svg>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <div class="row" id="videoTableDiv" style="display:none;">
+            <div class="col-md-12">
+                <table class="table table-hover" id="videoTable">
+                    <colgroup>
+                        <col/>
+                        <col style="width:90px"/>
+                        <col style="width:190px"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Total plays</th>
+                            <th>Total view time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td colspan="3">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" id="vidStats" style="display: none;">
+            <div class="col-md-6" id="videoDiv">
+            </div>
+            <div class="col-md-3">                
+                <svg id="agentDonut" style="height: 300px;"></svg>
+            </div>
+            <div class="col-md-3">
+                <svg id="deviceDonut" style="height: 320px;"></svg>
+            </div>
+        </div>
+        <script src="/static/nvd3/1.8.2/d3.min.js" type="text/javascript">//</script>
+        <script src="/static/nvd3/1.8.2/nv.d3.min.js" type="text/javascript">//</script>
+        <script src="/theme/apps/reporting/videoHitsReport.js" type="text/javascript">//</script>
+    </body>
+</html>

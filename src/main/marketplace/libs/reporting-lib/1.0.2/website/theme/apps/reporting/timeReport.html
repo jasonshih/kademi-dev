@@ -1,0 +1,251 @@
+<html>
+    <head>
+        <title>Report</title>
+        <link href="reports.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="reports.js">//</script>
+    </head>
+    <body class="report reportsPage">
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                #if( $page.is("customReport") )
+                    <div class="btn-group pull-right">
+                        <a class="glyphicon glyphicon-cog dropdown-toggle" data-toggle="dropdown"></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a data-toggle="modal" data-target="#reportSettingsModal"><span class="glyphicon glyphicon-list"></span> Edit fields</a></li>
+                            <li class="divider"></li>
+                            <li><a role="menuitem" tabindex="-1" href="$page.href" class="delete-report"><span class="glyphicon glyphicon-remove"></span>Delete</a></li>
+                        </ul>
+                    </div>
+                #end
+
+                <i class="fa fa-bar-chart-o"></i> Reporting
+            </div>
+            <div class="panel-body">
+                <div class="clearfix">
+
+                    <p class="btn-group pull-left">
+                        <a class="btn btn-orange dated" href="${page.name}.csv$formatter.queryString">Export as CSV</a>
+                        <!--
+                        <a class="btn btn-success dated" target="_blank" href="${page.name}.png">View as image</a>
+                        -->
+                    </p>
+                </div>
+
+
+                <div class="pageMessage alert alert-danger"></div>
+
+
+                <div id="reportResult" class="row">
+                    <div class="col-lg-9">
+                        <div id="annual"></div>
+
+                        <div class="details-items-wrapper" style="display: none">
+                            <h4>Detailed items</h4>
+                            <hr class="hr-sm" />
+                            <div id="items"></div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-3">
+                        #if( $page.aggregations )
+                            <table class="table">
+                                #foreach($agg in $page.aggregations )
+                            #showAggregation($agg)
+                            #end
+                            </table>
+                        #end
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        #if( $page.is("customReport") )
+            <div id="reportSettingsModal" class="modal modal-lg fade modal-fuse-editor" aria-hidden="true" tabindex="-1">
+                <div class="modal-header">
+                    <button aria-hidden="true" data-type="modal-dismiss" class="close" type="button">&times;</button>
+                    <h4 class="modal-title">Edit custom report fields</h4>
+                </div>
+                <form method="POST" action="$page.href" class="form-horizontal">
+                    <div class="modal-body">
+                        <p>The fields below are used for CSV generation. The first is the column label at the top of the CSV, and the second is the
+                            expression used to calculate the value</p>
+
+                        <p>
+                            <button class="btn btn-success columns-add">
+                                <span class="glyphicon glyphicon-plus"></span>
+                                Add column
+                            </button>
+
+                            <a class="btn btn-info" href="${page.name}-fields.csv">
+                                <span class="fa fa-list"></span>
+                                Fields as CSV
+                            </a>
+
+                            <span class="btn btn-success fileinput-button">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>Upload fields CSV</span>
+                                <input id="fields-csv-upload" type="file" />
+                            </span>
+                        </p>
+
+                        <div class="columns-rows" id="fields-container">
+                            #foreach( $field in $page.fields.entrySet() )
+                                <div class="form-group">
+                                    <div class="col-md-4">
+                                        <input type="text" name="columnTitle.${foreach.count}" class="form-control required column-title" value="$formatter.htmlAttEncode( $field.key )" placeholder="Column label" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="columnExpression.${foreach.count}" class="form-control required column-expr" value="$formatter.htmlAttEncode( $field.value )" placeholder="Column expression" />
+                                    </div>
+
+                                    <span class="btn btn-default">
+                                        <span class="glyphicon glyphicon-sort handle"></span>
+                                    </span>
+
+                                    <button class="btn btn-sm btn-danger columns-remove" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                </div>
+                            #end
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div>
+        #end
+
+        <div class="hide column-row-template">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <input type="text" class="form-control required column-title" value="" placeholder="Column label" />
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control required column-expr" value="" placeholder="Column expression" />
+                </div>
+                <span class="btn btn-default">
+                    <span class="glyphicon glyphicon-sort handle"></span>
+                </span>
+                <button class="btn btn-sm btn-danger columns-remove" type="button">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        </div>
+
+        #macro( showAggregation $agg )
+            <tbody id="agg-$agg.name">
+                <tr>
+                    <td colspan="2">$agg.title&nbsp;<span style="float: right">
+                        #if ( $agg.name != "action" && $agg.buckets.size() > 5 )
+                            <span class="input-group input-group-sm">
+                                <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                </span>
+                            </span>
+                        #end
+                    </span></td>
+                </tr>
+                #foreach($b in $agg.buckets )
+                    #showFacetBucket($b, 0)
+                #end
+            </tbody>
+        #end
+
+        #macro( showFacetBucket $b $indent )
+            #set($termParamName = "term-" + $b.aggName)
+            <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                <td>
+                    <div class="col-md-offset-$indent">
+                        <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                    </div>
+                </td>
+                <td align="right">$b.count</td>
+            </tr>
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
+        #end
+
+        <div id="proto" style="position: absolute; visibility: hidden">
+            <table>
+                <tr class="agg-row">
+                    <td>
+                        <div class="">
+                            <a href="" class="dated term-select"></a>
+                        </div>
+                    </td>
+                    <td align="right">0</td>
+                </tr>
+            </table>
+        </div>
+
+        <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/vendor/jquery.ui.widget.js"></script>
+        <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
+        <script src="/templates/themes/admin2/assets/plugins/jQuery-File-Upload/js/jquery.fileupload.js"></script>
+        <script>
+            $(function () {
+                $("#reportSettingsModal form").forms({
+                    validate: function (form) {
+                        // renumber inputs
+                        form.find(".columns-rows > div").each(function (i, n) {
+                            var div = $(n);
+                            flog("div", div);
+                            div.find(".column-title").attr("name", "columnTitle." + (i + 1));
+                            div.find(".column-expr").attr("name", "columnExpression." + (i + 1));
+                        });
+                        return true;
+                    },
+                    callback: function () {
+                        Msg.info("Saved fields");
+                    }
+                });
+                $("#reportSettingsModal").on("click", ".columns-remove", function () {
+                    flog("remove", this);
+                    $(this).closest(".form-group").remove();
+                });
+                $(".columns-add").click(function (e) {
+                    e.preventDefault();
+                    var newRow = $(".column-row-template > div").clone();
+                    var id = Math.floor(Math.random() * 1000000);
+                    newRow.find("input").each(function (i, n) {
+                        var inp = $(n);
+                        var origName = inp.attr("name");
+                        inp.attr("name", origName + id);
+                    });
+                    $(".columns-rows").append(newRow);
+                });
+
+                $(".delete-report").click(function (e) {
+                    e.preventDefault();
+                    var link = $(e.target).closest("a");
+                    var href = link.attr("href");
+                    flog("href", href, link);
+                    var name = getFileName(href);
+                    confirmDelete(href, name, function () {
+                        window.location = "/reporting/";
+                    });
+                });
+
+                $("#fields-csv-upload").fileupload({
+                    dataType: 'json',
+                    url: "${page.name}-fields.csv",
+                    progressall: function (e, data) {
+                        flog("prog", data.loaded, data.total);
+                        if (data.loaded == data.total) {
+                            flog("finished");
+                            Msg.info("Uploaded CSV file ok");
+                            $("#fields-container").reloadFragment();
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
+

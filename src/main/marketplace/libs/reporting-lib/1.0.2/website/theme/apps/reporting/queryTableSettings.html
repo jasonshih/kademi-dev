@@ -1,0 +1,60 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Title</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control txt-title"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Query Type</label>
+        <div class="col-sm-12">
+            <label class="radio-inline">
+                <input type="radio" name="queryType" class="queryType" value="query" checked> Query
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="queryType" class="queryType" value="queryTable"> Query Table
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Query</label>
+        <div class="col-sm-12">
+            <select class="form-control select-query">
+                <option value="">- None/Default -</option>
+                #foreach ($query in $applications.Reporting.queries )
+                    <option class="query" value="$query.name">$query.name</option>
+                #end
+                #foreach ($query in $applications.Reporting.queryTables )
+                    <option class="queryTable hide" value="$query.tableId">$query.description</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control query-height"/>
+            <em class="help-block small text-muted">Minimum is 200</em>
+        </div>
+    </div>
+
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" class="show-headers" value="true"/> Headers
+        </label>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-12">Item per page</label>
+        <div class="col-sm-12">
+            <select class="form-control select-items-per-page">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100" selected="selected">100</option>
+            </select>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,11 @@
+#set($totalWebsiteVisits = 0)
+#foreach($website in $page.find("/websites").children.ofType.website)
+#set($totalWebsiteVisits = $totalWebsiteVisits + $page.userResource.dailyVisits(null, null, $website.website).size())
+#end
+<div class="col-xs-3">
+    <i class="fa fa-globe fa-4x"></i>
+</div>
+<div class="col-xs-9 text-right">
+    <div class="huge">$totalWebsiteVisits</div>
+    <div>visits in the last month</div>
+</div>

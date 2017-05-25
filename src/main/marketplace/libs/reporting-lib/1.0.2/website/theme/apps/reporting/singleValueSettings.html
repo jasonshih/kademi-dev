@@ -1,0 +1,46 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Query</label>
+        <div class="col-sm-12">
+            <select class="form-control select-query">
+                <option value="">- None/Default -</option>
+                #foreach ($query in $applications.Reporting.queries )
+                <option value="${query.name}.query.json">$query.name</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Aggregation</label>
+
+        <div class="col-sm-12">
+            <select class="form-control select-agg">
+                <option value="">- None -</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Label</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control value-label" value=""/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Icon</label>
+        <div class="col-sm-12">
+            <!-- TODO: use this - https://itsjaviaguilar.com/fontawesome-iconpicker/ -->
+            <button class="btn btn-default value-icon"><i class=""></i></button>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Link to details page</label>
+        <div class="col-sm-12">
+            <!-- TODO: allow the user to select a page, either a query or a html file -->
+            <input class="form-control value-link" value="" type="text" />
+        </div>
+    </div>
+</form>
