@@ -4,8 +4,56 @@ function initManageFiles() {
     initImport();
     initCRUDFiles();
     initCopyCutPaste();
-    initUpload();
-    initUploadZip();
+    if (typeof Dropzone === 'undefined') {
+        $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
+        $.getScriptOnce('/static/dropzone/4.3.0/downloads/dropzone.min.js', function () {
+            initUpload();
+            initUploadZip();
+            initFilesPjax();
+        });
+    } else {
+        initUpload();
+        initUploadZip();
+        initFilesPjax();
+    }
+}
+
+function initFilesPjax() {
+    var filesContainer = $("#filesContainer");
+    var files = $("#files");
+    flog("initFilesPjax", files);
+    filesContainer.on("click", "a.pjax", function (e) {
+        flog("click pjax");
+        e.preventDefault();
+        
+        var a = $(this);
+        var href = a.attr("href");
+        var name = a.text();
+        
+        files.reloadFragment({
+            url: href,
+            whenComplete: function (response, status, xhr) {
+                flog("done", response, status, xhr);
+                document.title = name;
+                window.history.pushState("", href, href);
+                var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
+                var zipFormAction = window.location.pathname;
+                $("#modal-upload form").attr("action", formAction);
+                var dz = Dropzone.forElement("#uploadFileDropzone");
+                dz.options.url = formAction;
+                $("#modal-upload-zip form").attr("action", zipFormAction);
+                var dz2 = Dropzone.forElement("#uploadZipDropzone");
+                dz2.options.url = zipFormAction;
+                setRecentItem(window.location.pathname, window.location.pathname);
+                var dom = $(response);
+                var pages = $("#pages");
+                flog("update pages", pages);
+                pages.html(dom.find("#pages > *"));
+                initFilesLayout();
+                initCopyCutPaste();
+            }
+        });
+    });
 }
 
 function initUpload() {
@@ -15,17 +63,18 @@ function initUpload() {
         maxFilesize: 2000.0, // MB
         addRemoveLinks: true,
         parallelUploads: 1,
-        uploadMultiple: false
+        uploadMultiple: false,
+        init: function () {
+            this.on('success', function (file) {
+                flog('added file', file);
+                reloadFileList();
+            });
+            this.on('error', function (file, errorMessage) {
+                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+            });
+        }
     });
-    var dz = Dropzone.forElement('#uploadFileDropzone');
-    flog('dropz', Dropzone, dz, dz.options.url);
-    dz.on('success', function (file) {
-        flog('added file', file);
-        reloadFileList();
-    });
-    dz.on('error', function (file, errorMessage) {
-        Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
-    });
+    
 }
 
 function initUploadZip() {
@@ -36,16 +85,16 @@ function initUploadZip() {
         addRemoveLinks: true,
         parallelUploads: 1,
         uploadMultiple: false,
-        acceptedFiles: 'application/zip,application/x-compressed,application/x-zip-compressed,multipart/x-zip'
-    });
-    var dz = Dropzone.forElement('#uploadZipDropzone');
-    flog('dropz', Dropzone, dz, dz.options.url);
-    dz.on('success', function (file) {
-        flog('added file', file);
-        reloadFileList();
-    });
-    dz.on('error', function (file, errorMessage) {
-        Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+        acceptedFiles: 'application/zip,application/x-compressed,application/x-zip-compressed,multipart/x-zip',
+        init: function () {
+            this.on('success', function (file) {
+                flog('added file', file);
+                reloadFileList();
+            });
+            this.on('error', function (file, errorMessage) {
+                Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+            });
+        }
     });
 }
 
@@ -55,23 +104,23 @@ function initCopyCutPaste() {
 
 function initImport() {
     var modal = $('#modal-import');
-
+    
     $('.btn-show-import').on('click', function (e) {
         e.preventDefault();
-
+        
         modal.modal('show');
     });
-
+    
     modal.find('form').forms({
         callback: function (resp) {
             flog('resp', resp);
             Msg.info('The importer is running')
         }
     });
-
+    
     $('.btn-import-status').on('click', function (e) {
         e.preventDefault();
-
+        
         $.getJSON(window.location.pathname + '?importStatus', function (data) {
             $('#import-status-result').val(data.messages).show(300);
         });
@@ -80,7 +129,7 @@ function initImport() {
 
 function initCRUDFiles() {
     var container = $('#filesContainer');
-
+    
     container.on('click', '.btn-create-folder', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -89,44 +138,44 @@ function initCRUDFiles() {
             reloadFileList();
         });
     });
-
+    
     container.on('click', '.btn-upload-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        
         $('#modal-upload').modal('show');
     });
-
+    
     container.on('click', '.btn-upload-zip', function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        
         $('#modal-upload-zip').modal('show');
     });
-
+    
     container.on('click', '.btn-new-text-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        
         var name = prompt('Please enter a name for the new file');
         if (name !== null) {
             putEmptyFile(name);
         }
     });
-
+    
     $('#importFromUrl').click(function (e) {
         e.stopPropagation();
         e.preventDefault();
-
+        
         flog('click');
-
+        
         showImportFromUrl();
     });
 }
 
 function reloadFileList() {
     flog('reloadFileList');
-
+    
     $('#table-files-body').reloadFragment({
         url: window.location.href,
         whenComplete: function () {
@@ -139,7 +188,7 @@ function reloadFileList() {
 function initFilesLayout() {
     flog('initFiles');
     var tableFiles = $('#table-files');
-
+    
     tableFiles.find('a.show-color-box').each(function (i, n) {
         var href = $(n).attr('href');
         $(n).attr('href', href + '/alt-640-360.png');
@@ -152,35 +201,35 @@ function initFiles() {
     var container = $('#filesContainer');
     container.on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
-
+        
         var target = $(this);
         var href = target.attr('href');
         flog('click delete href: ', href);
         var name = getFileName(href);
         var tr = target.closest('tr');
-
+        
         confirmDelete(href, name, function () {
             flog('deleted', tr);
             tr.remove();
             Msg.success('Deleted ' + name);
         });
     });
-
+    
     container.on('click', '.btn-rename-file', function (e) {
         e.preventDefault();
         e.stopPropagation();
-
+        
         var target = $(this);
         var href = target.attr('href');
-
-        promptRenameModal("renameFileFolder", "", "Rename file or folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href,  function(sourceHref, destHref) {
+        
+        promptRenameModal("renameFileFolder", "", "Rename file or folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href, function (sourceHref, destHref) {
             var sourceName = getFileName(sourceHref);
             var destName = getFileName(destHref);
             reloadFileList();
             Msg.success(sourceName + ' is renamed to ' + destName);
         });
     });
-
+    
     // Call history stuff directly, so we can reload
     var config = {
         'pageUrl': null,
@@ -203,7 +252,7 @@ function initFiles() {
             }
         }
     };
-
+    
     container.on('click', '.btn-history-file', function (e) {
         e.stopPropagation();
         e.preventDefault();
