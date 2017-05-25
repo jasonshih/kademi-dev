@@ -1,0 +1,131 @@
+#if($user)
+#set ($isMyfilesHomepage = $page.path=="/myfiles")
+
+<ol class="breadcrumb">
+    <li><a title="My Files home folder" href="/myfiles"><i class="fa fa-home"></i></a></li>
+    #set ($index = 0)
+    #foreach($p in $page.asList.parents.reverse)
+    #if($index>2)
+    <li><a href="$p.href">$p.name</a></li>
+    #end
+    #set($index = $index + 1)
+    #end
+</ol>
+<div id="filesContainer" class="tab-pane">
+    <div class="clearfix">
+        <div class="btn-group pull-right" role="group" aria-label="...">
+            #if(!$isMyfilesHomepage)
+            <button title="Upload files" type="button" class="btn btn-primary btn-upload-file"><i class="fa fa-cloud-upload"></i></button>
+            #end
+            <button title="Create a folder" type="button" class="btn btn-primary btn-create-folder"><i class="fa fa-folder-o"></i></button>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table id="table-files" class="table table-striped table-hover">
+            <colgroup>
+                <col />
+                <col />
+                <col />
+                <col />
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Modified</th>
+                    <th class="size">Size</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                #if($isMyfilesHomepage)
+                #set($url = '/users/'+$user.name+'/')
+                #set ($userFolder = $page.find($url))
+                #set ($folders = $userFolder.children.dirs)
+                #set ($pageHref = $url)
+                #else
+                #set ($folders = $page.subFolders)
+                #set ($files = $page.files)
+                #set ($pageHref = $page.href)
+                #end
+                #foreach($f in $folders)
+                <tr class="folder">
+                    <td class="left">
+                        <a href="${f.href}">
+                            <span class="glyphicon glyphicon-folder-close btn-lg"></span>
+                            $f.name
+                        </a>
+                    </td>
+                    <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                    <td></td>
+                    <td class="action text-center">
+                        #if(!$isMyfilesHomepage)
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+
+                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
+                                <li><a href="${f.path}" class="btn-share" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                <!--<li class="divider"></li>-->
+                                <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
+                                <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
+                                <li class="divider"></li>
+                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                        #end
+                    </td>
+                </tr>
+                #end
+
+                #foreach($f in $files)
+                <tr>
+                    <td class="left">
+                        <span class="glyphicon $f.glyphicon btn-lg"></span>
+                        <a href="$f.href" target="_blank" class="" title="$f.name">$f.name</a>
+                    </td>
+                    <td class="cell-lg"><abbr title="$formatter.formatDateISO8601($!f.modifiedDate)" class="timeago">$!f.modifiedDate</abbr></td>
+                    <td class="cell-lg">$formatter.formatBytes( $f )</td>
+                    <td class="action text-center">
+                        <div class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a href="${f.path}" class='btn-rename-file' title="Rename file"><i class="fa fa-edit"></i> Rename</a></li>
+                                <li><a href="${f.path}" download title="Download file"><i class="fa fa-cloud-download"></i> Download</a></li>
+                                <li><a href="${f.path}" title="Share with"><i class="fa fa-share"></i> Share with ...</a></li>
+                                <!--<li class="divider"></li>-->
+                                <!--<li><a href="$f.href" class="btn-copy"><span class="fa fa-copy"></span> Copy</a></li>-->
+                                <!--<li><a href="$f.href" class="btn-cut"><span class="fa fa-cut"></span> Cut</a></li>-->
+                                <li class="divider"></li>
+                                <li><a href="${f.path}" class="btn-delete-file" title="Delete file"><i class="fa fa-times"></i> Delete</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="modal-upload" class="modal modal-md fade" aria-hidden="true" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Upload files 1111</h4>
+            </div>
+            <div class="modal-body">
+                <form action="${pageHref}_DAV/PUT?overwrite=true" class="dropzone dropzone-fullwidth" id="uploadFileDropzone"></form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var pageHref = '$pageHref'.replace('#', '');
+</script>
+#end
