@@ -1,0 +1,25 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/products/topPurchased.js"
+            }
+        }
+    ]
+}
