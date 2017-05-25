@@ -1,0 +1,53 @@
+
+
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="notes">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="panel-title"> Notes</div>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <a class="btn btn-xs btn-success createNote" href="$page.href">
+                            <span class="fa fa-plus"></span> New note
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div id="leadNotesBody">
+                #set( $notes = $page.notes )
+                #if( $notes.size() > 0 )
+                    <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                        #foreach($note in $notes)
+                            <div class="note-item">
+                                <div>
+                                    <img src="/theme/images/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                    <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                    #if( $note.inbound )
+                                        <small class="text-muted fa fa-arrow-left"></small>
+                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                    #else
+                                        <small class="text-muted fa fa-${note.icon}"></small>
+                                        <small class="text-muted fa fa-arrow-right"></small>
+                                    #end
+                                    #set($type = $note.actionType +  "-" + $note.inbound)
+                                    <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                        <span class="fa fa-pencil"></span>
+                                    </a>
+                                    <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
+                                </div>
+                                <div style="white-space: pre-wrap">$!note.notes</div>
+                            </div>
+                        #end
+                    </div>
+                #else
+                    <p>
+                        <span class="label label-warning">No contact with the lead yet</span>
+                    </p>
+                #end
+            </div>
+        </div>
+    </div>
+</div>
