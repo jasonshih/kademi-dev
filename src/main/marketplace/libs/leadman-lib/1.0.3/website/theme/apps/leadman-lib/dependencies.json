@@ -158,7 +158,7 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "//cdnjs.cloudflare.com/ajax/libs/select2/4.0.1/css/select2.min.css"
+                "path": "/static/select2/4.0.3/dist/css/select2.min.css"
             }
         },
         {
