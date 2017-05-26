@@ -11,7 +11,7 @@ $(function () {
             var btn = $(this);
             var isEnabled = btn.hasClass('accept');
             
-            if (isEnabled || (!isEnabled && confirm('Are you sure you want to reject this application?'))) {
+            if (confirm('Are you sure you want to ' + (isEnabled ? 'accept' : 'reject') + ' this application?')) {
                 var tbody = btn.closest('tbody');
                 var appId = tbody.find('input[name=appId]').val();
                 var fields = tbody.find(':input');
@@ -38,8 +38,18 @@ $(function () {
                             Msg.error('An error occurred processing the request. Please refresh the page and try again: ' + data.messages);
                             return;
                         }
-                        tbody.remove();
-                        $('.det-' + appId).remove();
+                        
+                        if (isEnabled) {
+                            Msg.success('Accepted');
+                            tbody.find('button.accept, button.reject').remove();
+                            tbody.find('.btn-show-more').after(
+                                '<a href="/users/' + tbody.find('input[name=userId]').val() + '" class="btn btn-success" title="Go to profile page"><i class="fa fa-arrow-right"></i></a>'
+                            );
+                        } else {
+                            Msg.success('Rejected');
+                            tbody.remove();
+                            $('.det-' + appId).remove();
+                        }
                     },
                     error: function (resp) {
                         log('error', resp);
@@ -51,10 +61,14 @@ $(function () {
         
         panels.find('.collapse').on({
             'hidden.bs.collapse': function (e) {
-                $(e.currentTarget.parentNode).hide();
+                var target = $(this);
+                target.closest('tr').hide();
+                $('[data-target="#' + target.attr('id') + '"]').attr('title', 'Show more details').find('.fa').attr('class', 'fa fa-arrow-down');
             },
             'show.bs.collapse': function (e) {
-                $(e.currentTarget.parentNode).show();
+                var target = $(this);
+                target.closest('tr').show();
+                $('[data-target="#' + target.attr('id') + '"]').attr('title', 'Hide details').find('.fa').attr('class', 'fa fa-arrow-up');
             }
         });
     }
