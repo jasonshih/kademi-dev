@@ -758,6 +758,11 @@ function initNewQuoteForm() {
         });
     });
     
+    form.find('#supplier').entityFinder({
+        url: '/custs/',
+        useActualId: true
+    });
+    
     form.forms({
         onSuccess: function (resp) {
             if (resp.nextHref && !modal.hasClass('no-redirect')) {
@@ -768,7 +773,7 @@ function initNewQuoteForm() {
                 whenComplete: function () {
                     Msg.info('Created quote');
                     modal.modal("hide");
-                    form.find('input').not(':hidden').val('');
+                    form.find('input').not('[type=hidden]').val('');
                 }
             });
         }
