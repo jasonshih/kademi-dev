@@ -87,8 +87,8 @@ function initLeadManEvents() {
     $('abbr.timeago').timeago();
 }
 
-function initNewLeadFromEmail() {
-    $('.nav-menuLeadFromEmail').on('click', function () {
+function initNewLeadFromEmail() {    
+    $('.menu-item-menuLeadFromEmail a').on('click', function () {
         $('#modalLeadFromEmail').modal('show');
     });
 }
