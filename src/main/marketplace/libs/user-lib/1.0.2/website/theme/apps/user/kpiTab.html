@@ -1,0 +1,54 @@
+#foreach($entry in $dataSeries.kpiMap.entrySet())
+<h3>
+    <a href="/sales/$entry.key.dataSeries.name/kpis/$entry.key.name">
+        $entry.key.title
+    </a>
+</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Period start</th>
+            <th>Achievement Level</th>
+            <th>Achievement Amount</th>
+            <th>Points Awarded</th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($kpiResult in $entry.value)
+        <tr>
+            <td>$formatter.formatDateTime($kpiResult.period.startDate, $page.organisation.timezone)</td>
+            <td>$!kpiResult.level.title</td>
+            <td>$!kpiResult.amount</td>
+            <td>$!kpiResult.level.awardAmount</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#end
+<hr/>
+
+<h3>All Available KPIs</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Series</th>
+            <th>KPI</th>
+        </tr>
+    </thead>
+    #set($sales = $page.find("/sales"))
+    #foreach( $series in $sales.children.ofType.series )
+    #foreach( $kpi in $series.child("kpis").children )
+    #if( $kpi.isAvailable($page.userResource.profile) )
+    <tr>
+        <td>
+            <a href="$kpi.parent.parent.href">$kpi.parent.parent.title</a>
+        </td>
+        <td>
+            <a href="$kpi.href">$kpi.title</a>
+        </td>
+    </tr>
+    #end
+    #end
+    #end
+</table>
+
