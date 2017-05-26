@@ -1,0 +1,29 @@
+.pagination-wrapper {
+    text-align: center;
+}
+
+.totals {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.form-search {
+    margin-bottom: 20px;
+}
+
+.result {
+    margin-bottom: 30px;
+}
+
+.result h3 {
+    margin-top: 0;
+}
+
+.result > * {
+    margin-bottom: 5px;
+}
+
+.result em {
+    font-style: normal;
+    font-weight: bold;
+}
