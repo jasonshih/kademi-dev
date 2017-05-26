@@ -759,7 +759,7 @@ function initNewQuoteForm() {
     });
     
     form.find('#supplier').entityFinder({
-        url: '/cust',
+        url: '/custs/',
         useActualId: true
     });
     
