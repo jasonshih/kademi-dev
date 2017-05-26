@@ -760,7 +760,7 @@ function initNewQuoteForm() {
 
     form.forms({
         onSuccess: function (resp) {
-            if (resp.nextHref) {
+            if (resp.nextHref && !modal.hasClass('no-redirect')) {
                 window.location.href = "/quotes/" + resp.nextHref;
             }
 
