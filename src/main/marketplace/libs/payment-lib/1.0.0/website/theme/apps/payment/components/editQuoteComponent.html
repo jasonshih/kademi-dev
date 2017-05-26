@@ -17,6 +17,12 @@
                                             <button data-toggle="modal" data-target="#cloneQuoteModal" type="button" class="btn btn-sm btn-success">
                                                 <i class="fa fa-copy"></i> Clone Quote
                                             </button>
+                                            
+                                            #if( $page.proposal )
+                                            <a class="btn btn-info" href="/proposals/$page.proposal.id">
+                                                Proposal
+                                            </a>
+                                            #end
 
                                             <!--
                                             <a href="#" class="btn btn-sm btn-info">
