@@ -107,34 +107,8 @@
 </div>
 #end
 
-<script type="text/javascript">
-    $(function () {
-        $('#products-list-${prodsListId}').find('.btn-add-to-cart').off('click').on('click', function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
+<script type="text/javascript" src="/theme/apps/ecommerce/storeProductList.js">//</script>
 
-            var btn = $(this);
-            var href = btn.attr('href');
-
-            $.ajax({
-                type: 'POST',
-                url: '/storeCheckout',
-                data: {
-                    addItemHref: href,
-                    addItemQuantity: 1
-                },
-                datatype: 'json',
-                success: function () {
-                    Msg.info('Added item to shopping cart');
-                    $('#cart-link').reloadFragment();
-                },
-                error: function () {
-                    Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
-                }
-            });
-        });
-    })
-</script>
 #else
 <p>Sorry, we couldnt find any products for you</p>
 #end
