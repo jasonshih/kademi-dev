@@ -115,7 +115,7 @@
                 <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
             </div>
             <div class="modal-body">
-                <form id="add-quote-form" class="form-horizontal" method="POST" action="/quotes/">
+                <form id="add-quote-form" class="form-horizontal" method="POST" action="/quotes/" enctype="multipart/form-data">
                     <input type="hidden" name="proposalId" value="$page.proposal.id" />
                     <div class="form-group">
                         <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
