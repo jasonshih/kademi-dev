@@ -3,6 +3,9 @@
         <div class="panel-title">
             #if( $page.newProposal )
                 Create new proposal
+                #if( $page.lead )
+                for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName</b> as part of <b>$page.lead.formattedTitle</b></a>
+                #end
             #else
                 <div class="dropdown proposal-status pull-right">
                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
@@ -19,9 +22,24 @@
         </div>
     </div>
     <div class="panel-body">
+        #if( $page.newProposal )
+            <div class="alert alert-info">
+                <p>
+                <span class="fa fa-exclamation-circle"></span>
+                Press save to create the proposal and begin adding quotes.
+                </p>
+            </div>
+        #else
+            #if( $page.lead )
+            <div class="alert alert-info">
+                Proposal prepared for <a href="/leads/$page.lead.id"><b>$page.lead.profile.formattedName as part of $page.lead.title</b></a>
+            </div>
+            #end        
+        #end
+        
         <form method="post" action="$page.href" class="form-horizontal proposal-details-form">
-            #if( $request.params.leadId )
-                <input type="hidden" name="leadId" value="$request.params.leadId" />                
+            #if( $page.lead )
+            <input type="hidden" name="leadId" value="$request.params.leadId" />                
             #end
 
             <div class="form-group">
