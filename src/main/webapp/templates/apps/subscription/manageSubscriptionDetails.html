@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manage Subscriptions</title>
+    </head>
+    <body>
+    <form action="" method="POST" class="form-horizontal" role="form" id="subscriptionDetails">
+        <input type="hidden" name="update" value="true"/>
+        <input type="hidden" name="subscriptionId" value="$page.subscription.id"/>
+        <div class="form-group">
+            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="name">Organisation</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control required" id="orgId" data-text="$page.subscription.adminOrg.formattedName" name="name" value="$!page.subscription.adminOrg.id" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="planName">Plan Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="planName" name="planName" value="$!page.subscription.planName" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="expiryDate">Expiry Date</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($!page.subscription.expiryDate)" class="form-control DateTime" />
+                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="limitsText">Limits Text</label>
+            <div class="col-sm-9">
+                <input type="text" class="form-control required" name="limitsText" value="$!page.subscription.limitsText"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="licenseKey">License Key</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control required" name="licenseKey" value="$!page.subscription.licenseKey"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-9">
+                <button type="submit" class="btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="clearfix"></div>   
+    <script>
+      $(function(){
+            jQuery("form#subscriptionDetails").forms({
+               onSuccess: function (resp) {
+                    if (resp.status) {
+                        Msg.info(resp.messages);
+                    } else {
+                        Msg.error("An error occured updating the subscription. Please check your internet connection");
+                    }
+               },
+              onError: function( resp){
+                Msg.error("An error occured updating the subscriptions");
+              }
+           }); 
+           
+            function initOrgFinder() {
+                 $('input#orgId').entityFinder({
+                     useActualId: false,
+                     type: 'organisation'
+                 });
+             }
+             
+             initOrgFinder();  
+      });
+        
+    </script>
+    </body>
+</html>
