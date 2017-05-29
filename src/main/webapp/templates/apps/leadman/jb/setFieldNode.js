@@ -72,11 +72,10 @@ JBNodes['setField'] = {
     },
 
     showSettingForm: function (form, node) {
-        console.log(node);
-        form.find('.field-name').val(node.fieldName !== null ? node.fieldName : '');
-        form.find('.field-value').val(node.fieldValueMvel !== null ? node.fieldValueMvel : '');
-        form.find('.plain-text').prop("checked", node.plainText !== null ? node.plainText : false);
-        form.find('.set-in-source').prop("checked", node.setInSource !== null ? node.setInSource : false);
+        form.find('.field-name').val(node.fieldName != null ? node.fieldName : '');
+        form.find('.field-value').val(node.fieldValueMvel != null ? node.fieldValueMvel : '');
+        form.find('.plain-text').prop("checked", node.plainText != null ? node.plainText : false);
+        form.find('.set-in-source').prop("checked", node.setInSource != null ? node.setInSource : false);
         
         JBApp.showSettingPanel(node);
     }
