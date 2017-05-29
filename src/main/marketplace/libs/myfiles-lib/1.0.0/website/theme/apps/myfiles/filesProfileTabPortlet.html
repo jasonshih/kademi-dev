@@ -9,10 +9,10 @@
     <tbody>
         #foreach($folder in $page.userResource.children)
         ##if(${folder.class.simpleName} == "BranchFolder")
-        <tr>
-            <td><a href="$folder.href">$folder.title</a></td>
-            <td><abbr title="$formatter.formatDateISO8601($!folder.modifiedDate)" class="timeago">$!folder.modifiedDate</abbr></td>
-        </tr>
+            <tr>
+                <td><a href="$folder.href">$folder.title</a></td>
+                <td><abbr title="$formatter.formatDateISO8601($!folder.modifiedDate)" class="timeago">$!folder.modifiedDate</abbr></td>
+            </tr>
         ##end
         #end
     </tbody>

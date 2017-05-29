@@ -13,7 +13,7 @@ function initFiles() {
 function initUpload() {
     if (typeof Dropzone !== 'undefined') {
         Dropzone.autoDiscover = false;
-        $('#modal-upload .dropzone').dropzone({
+        $('#modal-upload-files .dropzone').dropzone({
             paramName: 'file', // The name that will be used to transfer the file
             maxFilesize: 2000.0, // MB
             addRemoveLinks: true,
@@ -51,7 +51,7 @@ function initCRUDFiles() {
         e.stopPropagation();
         e.preventDefault();
         
-        $('#modal-upload').modal('show');
+        $('#modal-upload-files').modal('show');
     });
 }
 
