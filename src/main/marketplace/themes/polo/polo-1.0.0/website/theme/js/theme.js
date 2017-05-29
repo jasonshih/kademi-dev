@@ -159,26 +159,27 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
     var body = $("body")
     var modal = body.find("div.myprompt");
     if (modal.length === 0) {
-        modal = $("" +
-            "<div class='modal fade' style='display: none'>\n" +
-            "    <div class='modal-dialog'>" +
-            "    <div class='modal-content'>\n" +
-            "    <div class='modal-header'>\n" +
-            "        <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>\n" +
-            "        <h3>Modal header</h3>\n" +
-            "    </div>\n" +
-            "    <form method='POST' class='form-horizontal'>\n" +
-            "        <div class='modal-body'>\n" +
-            "            <div class='pageMessage'>.</div>\n" +
-            "        </div>\n" +
-            "        <div class='modal-footer'>\n" +
-            "            <a href='#' class='btn'>Close</a>\n" +
-            "            <button type='submit' href='#' class='btn btn-primary'>Save changes</button>\n" +
-            "        </div>\n" +
-            "    </form>\n" +
-            "    </div>" +
-            "    </div>" +
-            "</div>");
+        modal = $(
+            '<div class="modal fade" style="display: none">' +
+            '    <div class="modal-dialog">' +
+            '        <div class="modal-content">' +
+            '            <div class="modal-header">' +
+            '                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+            '                <h3>Modal header</h3>' +
+            '            </div>' +
+            '            <form method="POST" class="form-horizontal">' +
+            '                <div class="modal-body">' +
+            '                    <div class="form-message alert alert-danger" style="display: none;"></div>' +
+            '                </div>' +
+            '                <div class="modal-footer">' +
+            '                    <a href="#" class="btn">Close</a>' +
+            '                    <button type="submit" href="#" class="btn btn-primary">Save changes</button>' +
+            '                </div>' +
+            '            </form>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+        );
         modal.attr("id", id);
         body.append(modal);
     }
