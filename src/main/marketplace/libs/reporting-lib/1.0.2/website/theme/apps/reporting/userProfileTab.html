@@ -1,0 +1,58 @@
+<h2>Daily visits - filtered by date range</h2>
+
+<p class="lead">Last visit -  <abbr title="$formatter.formatDateISO8601($page.thisProfile.lastVisit)" class="timeago">$!page.thisProfile.lastVisit</abbr></p>
+
+#set( $results = $applications.Reporting.getDailyHits($page.extProfileBean) )
+
+#foreach( $entry in $results.entrySet() )
+<h3>$entry.key</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($visit in $entry.value)
+        <tr>
+            <td>$formatter.formatDate($visit.date)</td>
+            <td>$visit.count</td>
+        </tr>
+        #end
+    </tbody>
+</table>
+#end
+
+
+<h2>All page views - filtered by date range</h2>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Website</th>
+            <th>Path</th>
+            <th>Method</th>
+            <th>Result</th>
+            <th>Duration (ms)</th>
+            <th>Size (bytes)</th>
+            <th>Referrer</th>
+            <th>Request date</th>
+        </tr>
+    </thead>
+    <tbody>
+        #set( $history = $page.userResource.searchWebHits(null,null) )
+
+        #foreach($hit in $history.hits.hits )
+        <tr>
+            <td>$hit.fields.reqHost.value</td>
+            <td>$hit.fields.url.value</td>
+            <td>$hit.fields.reqMethod.value</td>
+            <td>$!hit.fields.resultCode.value</td>
+            <td>$!hit.fields.durationMs.value</td>
+            <td>$!hit.fields.numBytes.value</td>
+            <td>$!hit.fields.referrer.value</td>
+            <td>$formatter.toDate($!hit.fields.reqDate.value)</td>
+        </tr>
+        #end
+    </tbody>
+</table>

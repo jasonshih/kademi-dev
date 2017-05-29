@@ -1,0 +1,195 @@
+{
+    "appDependencies": [
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
+        },
+        {
+            "appId": "dropzone-lib",
+            "branch": "4.3.0"
+        },
+        {
+            "appId": "d3-lib",
+            "branch": "3.4.1"
+        },
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.1"
+        },
+        {
+            "appId": "datetimepicker-lib",
+            "branch": "4.17.37"
+        }
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/DataTables/datatables.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/fuelux/3.13.0/js/fuelux.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/recorderjs/recorder.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/select2/4.0.3/dist/js/select2.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/easy-pie-chart/2.1.7/jquery.easypiechart.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/keymap.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/jquery.kfunnel.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadman.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadManPage.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/viewLead.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/analytics.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadProfiles.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/viewProfile.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadTasks.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/DataTables/datatables.min.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/fuelux/3.13.0/css/fuelux.min.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/leadman/jquery.kfunnel.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/select2/4.0.3/dist/css/select2.min.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/typeahead/0.11.1/typeahead.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/timeline/timeline.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/leadman/leadman.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/leadman/viewLead.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/leadman/analytics.css"
+            }
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+#if($page)
+<ul class="nav nav-pills nav-stacked">
+    #foreach($bucket in $page.searchResults.buckets)
+    <li class="$formatter.paramSelected('term-itemType', $bucket.key, 'active')">
+        <a href="$page.href?$formatter.toggleParamVal( 'term-itemType', $bucket.key )">
+            <span class="badge pull-right">$bucket.docCount</span>
+            $bucket.text
+        </a>
+        #if( $bucket.buckets )
+        #foreach($sub in $bucket.buckets)
+    <li class="$formatter.paramSelected('term-category', $sub.key, 'active')">
+        <a href="$page.href?$formatter.toggleParamVal( 'term-category', $sub.key )">
+            <span class="badge pull-right">$sub.docCount</span>
+            - $sub.text
+        </a>
+    </li>
+    #end
+    #end
+    </li>
+    #end
+</ul>
+
+#else
+
+<ul class="nav nav-pills nav-stacked">
+    <li class="active">
+        <a href="">
+            <span class="badge pull-right">1</span>
+            Example Bucket
+        </a>
+        <li class="active">
+            <a href="#">
+                <span class="badge pull-right">1</span>
+                - Example Bucket Sub
+            </a>
+        </li>
+        <li class="">
+            <a href="#">
+                <span class="badge pull-right">1</span>
+                - Example Bucket Sub
+            </a>
+        </li>
+    </li>
+</ul>
+
+#end

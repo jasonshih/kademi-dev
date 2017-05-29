@@ -1,0 +1,23 @@
+#table-reporting th,
+#table-reporting td {
+	vertical-align: middle;
+}
+
+#table-reporting .icon {
+	color: #46B8DA;
+	font-size: 60px;
+}
+
+#table-reporting .icon i {
+	vertical-align: text-top;
+}
+
+.date-range {
+	width: 230px;
+}
+.toggle-select-org span {
+    display: none;
+}
+.toggle-select-org.active span {
+    display: inline;
+}

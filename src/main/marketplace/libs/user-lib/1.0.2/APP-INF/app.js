@@ -1,0 +1,10 @@
+controllerMappings.addComponent("user/components", "profileDetails", "html", "Form for editing profile details", "User App component");
+controllerMappings.addComponent("user/components", "profileAvatar", "html", "Allows changing the user's avatar/profile pic", "User App component");
+controllerMappings.addComponent("user/components", "profilePassword", "html", "Form for changing password", "User App component");
+controllerMappings.addComponent("user/components", "profileMemberships", "html", "View and edit the list of memberships", "User App component");
+controllerMappings.addComponent("user/components", "profileUnsub", "html", "Allows the user to unsubscribe entirely", "User App component");
+controllerMappings.addComponent("user/components", "profileOptins", "html", "Form to choose which opt-in groups", "User App component");
+controllerMappings.addComponent("user/components", "loginForm", "html", "Allow user enters their credentials and login", "User App component");
+controllerMappings.addComponent("user/components", "userPanel", "html", "Panel display user information", "User App component");
+controllerMappings.addComponent("user/components", "passwordReset", "html", "Form for user to entering email for reset password", "User App component");
+controllerMappings.addComponent("user/components", "passwordDoReset", "html", "Form for user to reset password", "User App component");

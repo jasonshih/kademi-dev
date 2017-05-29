@@ -79,15 +79,17 @@
         flog('[EntityFinder] Initializing...');
         
         var self = this;
+        var currentValue = $(this.element).val();
         
         this.element.wrap('<div class="search-wrapper"></div>');
-        this.element.before(
-            '<input type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-text') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />'
-        )
+
+        self.fakeInput = $('<input data-current-value="' + currentValue + '" type="text" autocomplete="off" class="form-control search-input" value="' + (this.element.attr('data-text') || '') + '" placeholder="' + (this.element.attr('placeholder') || '') + '" />');
+
+        this.element.before(self.fakeInput);
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
         );
-        this.element.css('display', 'none').attr('tabindex', '-1');
+        this.element.css('opacity', '0').css('position', 'absolute').css('top', '0').attr('tabindex', '-1');
         
         this.input = this.element.siblings('.search-input');
         this.suggestionsList = this.element.siblings('.search-suggestions');
@@ -103,6 +105,8 @@
             keydown: function (e) {
                 switch (e.keyCode) {
                     case KEYMAP.ESC:
+                        var currentData = self.fakeInput.data("current-value");
+                        self.fakeInput.val(currentData);
                         self.suggestionsList.css('display', 'none');
                         break;
                     
@@ -146,6 +150,11 @@
                 }
             },
             blur: function () {
+                var result = self.element.val();
+                if(result === "") {
+                    self.fakeInput.val(result);
+                }
+
                 setTimeout(function () {
                     self.suggestionsList.css('display', 'none');
                 }, 250);
@@ -187,6 +196,12 @@
         flog('[EntityFinder] Search: ' + query);
         
         var self = this;
+
+        var showNoResult = function(){
+            // var currentValue = self.fakeInput.data('current-value');
+            self.element.val("");
+            self.suggestionsList.html(self.options.renderNoSuggestion());
+        };
         
         $.ajax({
             type: 'get',
@@ -219,14 +234,16 @@
                     if (data.length > 0) {
                         self.suggestionsList.html(self.options.renderSuggestions(data));
                     } else {
-                        self.suggestionsList.html(self.options.renderNoSuggestion());
+                        showNoResult();
                     }
                 } else {
-                    self.suggestionsList.html(self.options.renderNoSuggestion());
+                    showNoResult();
                 }
                 
                 self.suggestionsList.css('display', 'block');
             },
+
+
             error: function (jqXhr, status, error) {
                 flog('[EntityFinder] Get error response from server', jqXhr, status, error);
                 self.suggestionsList.html(self.options.renderNoSuggestion());

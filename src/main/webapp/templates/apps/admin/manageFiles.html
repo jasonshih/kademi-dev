@@ -4,7 +4,6 @@
         <link href="manageFiles.css" rel="stylesheet" type="text/css" />
         <link href="/static/history/jquery.history.css" rel="stylesheet" type="text/css" />
         <link href="/static/js/milton-image-select.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
         <script type="text/javascript" src="/static/history/jquery.history.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-image-select.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-tree.js">//</script>
@@ -213,8 +212,6 @@
         </div>
         <!-- Start content of Files and Folders tab -->
 
-
-        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js"></script>
         <div id="modal-upload" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -344,46 +341,7 @@
             $(function () {
                 setRecentItem(window.location.pathname, window.location.pathname);
                 initManageFiles();
-                initPjax();
             });
-
-            function initPjax() {
-                var filesContainer = $("#filesContainer");
-                var files = $("#files");
-                flog("initPjax", files);
-                filesContainer.on("click", "a.pjax", function (e) {
-                    flog("click pjax");
-                    e.preventDefault();
-
-                    var a = $(this);
-                    var href = a.attr("href");
-                    var name = a.text();
-
-                    files.reloadFragment({
-                        url: href,
-                        whenComplete: function (response, status, xhr) {
-                            flog("done", response, status, xhr);
-                            document.title = name;
-                            window.history.pushState("", href, href);
-                            var formAction = window.location.pathname + "_DAV/PUT?overwrite=true";
-                            var zipFormAction = window.location.pathname;
-                            $("#modal-upload form").attr("action", formAction);
-                            var dz = Dropzone.forElement("#uploadFileDropzone");
-                            dz.options.url = formAction;
-                            $("#modal-upload-zip form").attr("action", zipFormAction);
-                            var dz2 = Dropzone.forElement("#uploadZipDropzone");
-                            dz2.options.url = zipFormAction;
-                            setRecentItem(window.location.pathname, window.location.pathname);
-                            var dom = $(response);
-                            var pages = $("#pages");
-                            flog("update pages", pages);
-                            pages.html(dom.find("#pages > *"));
-                            initFilesLayout();
-                            initCopyCutPaste();
-                        }
-                    });
-                });
-            }
         </script>
     </body>
 </html>

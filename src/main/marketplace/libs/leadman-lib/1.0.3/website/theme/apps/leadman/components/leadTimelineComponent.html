@@ -1,0 +1,229 @@
+<div class="task-item-list">
+    <div id="tasksList" class="panel-group">
+        #set ($taskCount = 0)
+        #foreach($task in $page.children.ofType.open)
+                #set ($taskCount = $taskCount + 1)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="clearfix task-item">
+                        #if( $task.completedDate )
+                            <div class="pull-left">
+                                <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                    <s class="task-title">$task.title</s>
+                                </a>
+                            </div>
+                        #else
+                            <div class="pull-left">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace('/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                    <span class="task-title">$task.title</span>
+                                </a>
+                            </div>
+                            <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                <span class="task-edit text-success fa fa-pencil"></span>
+                            </a>
+                        #end
+                        </h4>
+                    </div>
+                    <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            #if( $task.is("open") )
+                                #if($task.assignedTo)
+                                    Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                #else
+                                    Not assigned
+                                #end
+                                <br />
+
+                                <div class="btn-task-panel-wrap pull-right">
+                                    <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
+                                        <span class="fa fa-remove"></span>
+                                    </a>
+                                    <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
+                                        <span class="fa fa-check"></span>
+                                    </a>
+                                </div>
+                                #if( $task.dueDate )
+                                    Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                #end
+                            #end
+                            <br />
+                            $!task.taskDescription
+                        </div>
+                    </div>
+                </div>
+        #end
+        #if($taskCount<1)
+            <div class="panel panel-default">
+                <div class="panel-body"><p>No tasks found</p></div>
+            </div>
+        #end
+    </div>
+</div>
+
+#if( $page.currentGoal  )
+<div class="panel">
+    <div class="panel-body">
+        
+        <div id="notes">
+            <div class="leadAutomationBody">
+                <ul class="timeline timeline-left">
+                    #if( $page.lastAttainedGoal )
+                        <li class="">
+                            <div class="timeline-panel">
+                                <div class="timeline-heading">
+
+                                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                        <abbr title="$formatter.formatDateISO8601($page.lastAttainedDate)" class="info timeago">$page.lastAttainedDate</abbr>
+                                    </small>
+
+                                    <h4 class="timeline-title">Previous step</h4>
+                                </div>
+                                <div class="timeline-body">
+                                    <b>$page.nodeTitle($page.lastAttainedGoal)</b>
+                                </div>
+                            </div>
+                        </li>
+                    #end
+                    
+                    <li class="">
+                        #if( $!page.currentTaskIsGoal )
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                #if( $page.timerDate )
+                                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                        <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
+                                    </small>
+                                #else
+                                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                        <span class="label label-warning">No current timer</span>
+                                    </small>
+
+
+                                #end
+
+                                <h4 class="timeline-title">Waiting for..</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>$page.nodeTitle( $page.currentGoal )</p>
+                                <hr />
+                                <div class="btn-group">
+                                    <button class="timer-btn-go btn btn-success btn-sm" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
+                                        <span class="fa fa-play"></span>
+                                    </button>
+                                    <button class="timer-btn-stop btn btn-danger btn-sm" title="Stop this timer, can be rescheduled later">
+                                        <span class="fa fa-pause"></span>
+                                    </button>
+                                    <button class="timer-btn-resched btn btn-info btn-sm" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
+                                        <span class="fa fa-clock-o"></span>
+                                    </button>
+
+                                    <button class="timer-btn-goal btn btn-info btn-sm" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        #else
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                <h4 class="timeline-title">Waiting to complete task..</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>$page.nodeTitle( $page.currentGoal )</p>
+                            </div>
+                        </div>
+                        
+                        #end
+                    </li>                    
+
+                    <li class="">
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+
+                                <h4 class="timeline-title">Next steps..</h4>
+                                <div class="timeline-body">
+                                    #foreach($nextNodeId in $page.nextNodeIds)
+                                        <br />$page.nodeTitle($nextNodeId)
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</div>
+#end
+
+<div class="modal fade" id="goNextNodeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Complete goal - $page.nodeTitle( $page.currentGoal )</h4>
+            </div>
+            <div class="modal-body">
+                <p class="lead">Please select the next node in the journey you would like to progress to</p>
+                #foreach($nextNodeId in $page.nextNodeIds)
+                    <a class="btn btn-success timer-btn-go-next" href="$nextNodeId">$page.nodeTitle($nextNodeId)</a>
+                #end
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade" id="switchGoalModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Switch to another goal - $page.nodeTitle( $page.currentGoal )</h4>
+            </div>
+            <div class="modal-body">
+                <p class="lead">Please select the next node in the journey you would like to progress to</p>
+                #foreach($nextNode in $page.goals)
+                    <a class="btn btn-success timer-btn-go-next" href="$nextNode.nodeId">$page.nodeTitle($nextNode.nodeId)</a>
+                #end
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade" id="rescheduleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Reschedule goal - $page.nodeTitle( $page.currentGoal )</h4>
+            </div>
+            <div class="modal-body">
+                <p class="lead">Please select a new date and time for this goal</p>
+                <div class="input-group">
+                    <input type="text" name="timerDate" id="timerDate" class="form-control date-time" value=" $formatter.formatDateTime( $!page.timerDate )" />
+                    <span class="input-group-addon">
+                        <span class="fa fa-calendar"></span>
+                    </span>
+                </div>
+                <button class="btn btn-success timer-btn-do-resched">
+                    <span></span>
+                    Reschedule
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h4 class="page-header">Timeline</h4>
+        <div id="activity" >
+            #parse("/theme/apps/leadman/leadManTimeline.html")
+        </div>
+    </div>
+</div>

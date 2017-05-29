@@ -1,0 +1,57 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+
+#set( $queryBean = $page.queryBean )
+#set( $queryBean = $applications.Reporting.getQuery($query))
+
+#set( $results = $applications.Reporting.runQuery($queryBean) )
+
+#if( !$label )
+    #set( $label = $queryBean.name )
+#end
+
+#set( $detailHref = "#" )
+#set( $detailHref = "$link" )
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <a class="c-white" href="$detailHref">
+                <div class="col-xs-3">
+                    <i class="fa $icon fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <h2>
+                        #if( $results )
+                            #if ($agg.indexOf(";") != -1)
+                                #set ($aggArr = $agg.split(";"))
+                                #set( $aggr = $results.aggregations.get($aggArr[0]).aggregations.get($aggArr[1]) )
+                            #else
+                                #set( $aggr = $results.aggregations.get($agg) )
+                            #end
+                            #if( $aggr )
+                                $aggr.value
+                            #else
+                                #if( $agg )
+                                    #if ($aggArr)
+                                        Couldnt find aggregation $aggArr[1] of $aggArr[0]
+                                    #else
+                                        Couldnt find aggregation $agg
+                                    #end
+                                #else
+                                    Please enter an aggretation
+                                #end
+                            #end
+                        #else
+                            No current results
+                        #end
+                    </h2>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="panel-footer text-center">
+        <span class="">$!label</span>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+controllerMappings.addComponent("referral/components", "referralForm", "html", "Display referral form", "Referrals App component");

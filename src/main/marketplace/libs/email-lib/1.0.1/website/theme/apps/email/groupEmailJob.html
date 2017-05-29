@@ -551,28 +551,14 @@
         <input type="hidden" id="domainCurrentSite" />
         <script type="text/javascript">
             $(function () {
-                initManageGroupEmail();
-                //initEditEmailPage();
-
-            var domains = {};
-            #foreach($website in $rootFolder.child("websites").children)
-                #if ($website.domainName && $website.name)
-                    domains['$website.name'] = '$website.domainName';
+                var domains = {};
+                #foreach($website in $rootFolder.child("websites").children)
+                    #if ($website.domainName && $website.name)
+                        domains['$website.name'] = '$website.domainName';
+                    #end
                 #end
-            #end
-                
-                function selectDomain(sel) {
-                    var selectedValue = $(sel).find(":selected").text();
-                    var domainSelected = domains[selectedValue];
-                    flog("Website selected: ", selectedValue, " Domain Selected: ", domainSelected);
-                    $("#domainCurrentSite").val(domainSelected);
-                }
-
-                var themeSiteId = $("#themeSiteId");
-                themeSiteId.change(function () {
-                    selectDomain(this);
-                });
-                selectDomain(themeSiteId);
+                // get value from velocity
+                $("#themeSiteId").data("domains", domains);
             });
         </script>
     </body>

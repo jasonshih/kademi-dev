@@ -286,7 +286,7 @@ function doHistorySearch() {
             var newBody = $(content).find("#productsTableContainer");
             
             target.replaceWith(newBody);
-            history.pushState(null, null, link);
+            history.pushState(null, null, uri.toString());
             
             $("abbr.timeago").timeago();
             initTable();

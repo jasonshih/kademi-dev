@@ -6,38 +6,38 @@
     </head>
     <body class="directory">
         #@themeBody()
-        <div class="btn-group pull-right">
-            <button class="newFolder Btn btn">
-                <i class="icon-folder-open"></i>
-                New Folder
-            </button>
-        </div>        
+            <div class="btn-group pull-right">
+                <button class="newFolder Btn btn">
+                    <i class="icon-folder-open"></i>
+                    New Folder
+                </button>
+            </div>
 
-        <div class="container container-fluid">
-            <h2>My Files</h2>
-            <div class="row">
-            #set($url = '/users/'+$user.name)
-            #set ($userFolder = $page.find($url))
-            #foreach($folder in $userFolder.children.dirs )
-            <div class="span3 col-md-3">
-                <div class="well">
-                    <h3><a href="$folder.href">$folder.name</a></h3>
+            <div class="container container-fluid">
+                <h2>My Files</h2>
+                <div class="row">
+                    #set($url = '/users/'+$user.name)
+                    #set ($userFolder = $page.find($url))
+                    #foreach($folder in $userFolder.children.dirs )
+                        <div class="span3 col-md-3">
+                            <div class="well">
+                                <h3><a href="$folder.href">$folder.name</a></h3>
+                            </div>
+                        </div>
+                    #end
                 </div>
             </div>
-            #end
-            </div>
-        </div>
-        <script>
-            jQuery(document).ready(function() {
-                $(".newFolder").click(function(e) {
-                    var parentHref = userUrl;
-                    showCreateFolder(parentHref, "New folder", "Please enter a name for the new folder", function() {
-                        window.location.reload();
+            <script>
+                jQuery(document).ready(function () {
+                    $(".newFolder").click(function (e) {
+                        var parentHref = userUrl;
+                        showCreateFolder(parentHref, "New folder", "Please enter a name for the new folder", function () {
+                            window.location.reload();
+                        });
                     });
-                });
 
-            });
-        </script>
+                });
+            </script>
         #end
     </body>
 </html>

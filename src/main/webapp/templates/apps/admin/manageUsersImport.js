@@ -45,7 +45,8 @@ function initUploads() {
         if (data.step === 4) {
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
-            var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
+            var usePhoneToMatch = form.find('[id=usePhoneToMatch]').prop('checked');;
+            var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow, usePhoneToMatch: usePhoneToMatch};
             form.find('select').each(function () {
                 if (this.value) {
                     formData[this.name] = this.value;

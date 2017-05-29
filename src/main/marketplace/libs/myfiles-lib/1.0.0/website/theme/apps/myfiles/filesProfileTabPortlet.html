@@ -1,0 +1,19 @@
+<h4>User Directory</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Folder</th>
+            <th>Modified date</th>
+        </tr>
+    </thead>
+    <tbody>
+        #foreach($folder in $page.userResource.children)
+        ##if(${folder.class.simpleName} == "BranchFolder")
+            <tr>
+                <td><a href="$folder.href">$folder.title</a></td>
+                <td><abbr title="$formatter.formatDateISO8601($!folder.modifiedDate)" class="timeago">$!folder.modifiedDate</abbr></td>
+            </tr>
+        ##end
+        #end
+    </tbody>
+</table>

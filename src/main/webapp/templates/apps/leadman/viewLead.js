@@ -441,6 +441,34 @@
 
             doAddToGroup(groupName);
         });
+        
+        var modal = $('#newTagModal');
+        var form = modal.find('form');
+
+        $('body').on('click', 'a.createTagModal', function (e) {
+            e.preventDefault();
+            modal.modal("show");
+        });
+
+        form.forms({
+            callback: function (resp) {
+                var btn = form.find('.clicked');
+
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                
+                reloadTags();
+
+                Msg.info('Created tag');
+                modal.modal("hide");
+            }
+        });
+
+        form.find("button").on('click', function (e) {
+            form.find(".clicked").removeClass("clicked");
+            $(this).addClass("clicked");
+        });
     }
 
     function initModalAddTag() {

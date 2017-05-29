@@ -1,23 +1,14 @@
 #if( $membershipApplications.size() > 0 )
 <div class="col-sm-12">
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-pending-applications">
         <div class="panel-heading">
             <i class="fa fa-users"></i>
             Pending membership applications
         </div>
-        <div class="panel-body pendingAccounts">
+        <div class="panel-body">
             <p class="alert alert-info">This portlet shows membership applications which have not been processed. Please review them and accept those which appear legitimate, this will allow those users access to your site
             </p>
             <table class="data table table-striped">
-                <colgroup>
-                    <col width="" />
-                    <col width="" />
-                    <col width="" />
-                    <col width="" />
-                    <col width="" />
-                    <col width="71px" />
-                    <col width="71px" />
-                </colgroup>
                 <thead>
                     <tr>
                         <th>Nickname</th>
@@ -25,84 +16,80 @@
                         <th>Email</th>
                         <th>Organisation</th>
                         <th>Date</th>
-                        <th></th>
-                        <th></th>
+                        <th width="130"></th>
                     </tr>
                 </thead>
                 #foreach($app in $membershipApplications)
                     <tbody>
-                        <tr data-toggle="collapse" data-target=".det-div-$app.id">
+                        <tr>
                             <td>$app.member.nickName</td>
                             <td>$app.groupEntity.name</td>
                             <td>$app.member.email</td>
-                            #if ($app.newOrgProvided) 
-                                <td>$app.newOrgProvided (Pending to be created)</td>
-                            #else 
-                                <td>$app.withinOrg.titleOrId</td>
-                            #end
+                            <td>$app.withinOrg.titleOrId</td>
                             <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
                             <td>
                                 <input type="hidden" name="appId" value="$app.id" />
-                                <button class="accept btn btn-success">Accept</button>
-                            </td>
-                            <td>
-                                <button class="reject btn btn-danger">Reject</button>
+                                <input type="hidden" name="userId" value="$app.member.id" />
+                                <div class="btn-group btn-group-sm">
+                                    #if($app.member.firstName || $app.member.surName || $app.fields.nvPairs.size() > 0)
+                                        <button type="button" class="btn btn-info btn-show-more" data-toggle="collapse" data-target="#det-div-$app.id" title="Show more details">
+                                            <i class="fa fa-arrow-down"></i></button>
+                                    #else
+                                        <button type="button" disabled="disabled" class="btn btn-info btn-show-more disabled" title="This application doesn't have any details">
+                                            <i class="fa fa-arrow-down"></i></button>
+                                    #end
+                                    <button type="button" class="accept btn btn-success" title="Accept"><i class="fa fa-check"></i></button>
+                                    <button type="button" class="reject btn btn-danger" title="Reject"><i class="fa fa-ban"></i></button
+                                </div>
                             </td>
                         </tr>
                         #if($app.member.firstName || $app.member.surName || $app.fields.nvPairs.size() > 0)
-                            <tr class="det-$app.id">
-                                <td colspan="7" style="color: #707070; display: none;">
-                                    <div class="det-div-$app.id row collapse">
-                                        <div class="col-md-2">Field Name</div>
-                                        <div class="col-md-2">Property Value</div>
+                            <tr style="display: none;">
+                                <td></td>
+                                <td colspan="5" class="text-muted">
+                                    <div id="det-div-$app.id" class="row collapse">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th width="30%">Field Name</th>
+                                                    <th>Property Value</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                #if($app.member.firstName)
+                                                    <tr>
+                                                        <td>firstName</td>
+                                                        <td>$app.member.firstName</td>
+                                                    </tr>
+                                                #end
+                                                #if($app.member.surName)
+                                                    <tr>
+                                                        <td>surName</td>
+                                                        <td>$app.member.surName</td>
+                                                    </tr>
+                                                #end
+                                                #if( $app.renderedAdminFields.nvPairs.size() > 0 )
+                                                    #foreach($field in $app.renderedAdminFields.nvPairs)
+                                                        <tr>
+                                                            <td>$field.name</td>
+                                                            <td>$field.propValue</td>
+                                                        </tr>
+                                                    #end
+                                                #end
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </td>
                             </tr>
-                        #end
-                        #if($app.member.firstName)
-                            <tr class="det-$app.id">
-                                <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
-                                    <div class="collapse det-div-$app.id">
-                                        <div class="row">
-                                            <div class="col-md-2">firstName</div>
-                                            <div class="col-md-5">$app.member.firstName</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        #end
-                        #if($app.member.surName)
-                            <tr class="det-$app.id">
-                                <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
-                                    <div class="collapse det-div-$app.id">
-                                        <div class="row">
-                                            <div class="col-md-2">surName</div>
-                                            <div class="col-md-5">$app.member.surName</div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        #end
-                        #if( $app.renderedAdminFields.nvPairs.size() > 0 )
-                            #foreach($field in $app.renderedAdminFields.nvPairs)
-                                <tr class="det-$app.id">
-                                    <td id="det-$app.id" colspan="7" class="hiddenRow" style="display: none;">
-                                        <div class="collapse det-div-$app.id">
-                                            <div class="row">
-                                                <div class="col-md-2">$field.name</div>
-                                                <div class="col-md-5">$field.propValue</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            #end
                         #end
                     </tbody>
                 #end
             </table>
-            <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
-            <script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+<script type="text/javascript" src="/templates/apps/signup/pending.js">//</script>
+
 #end
