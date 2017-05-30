@@ -27,6 +27,14 @@
     height: 100%;
 }
 
+.milton-file-select-container .milton-file-progress {
+    position: absolute;
+    top: 45px;
+    left: 0px;
+    right: 0px;
+    z-index: 1;
+}
+
 .milton-file-select-container .milton-file-preview {
     position: absolute;
     border: 1px solid #ddd !important;

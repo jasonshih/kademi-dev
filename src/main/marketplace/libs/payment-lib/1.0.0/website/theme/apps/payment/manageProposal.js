@@ -22,6 +22,12 @@ function initProposalDetailsForm() {
             }
         });
         
+        $('.btn-quick-add-line-item').on('click', function (e) {
+            e.preventDefault();
+            
+            $('.add-quote-line-item-wrapper').toggle();
+        });
+        
         var ddlStatus = $('.proposal-status');
         if (ddlStatus.length > 0) {
             ddlStatus.find('a').on('click', function (e) {

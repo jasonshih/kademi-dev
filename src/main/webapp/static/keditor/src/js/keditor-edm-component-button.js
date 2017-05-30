@@ -167,12 +167,12 @@
             
             var txtFontSize = form.find('#button-font-size');
             txtFontSize.on('change', function () {
-                edmEditor.setStyles('font-size', (this.value > 0 ? this.value : 0) + 'px', keditor.getSettingComponent().find('.button-wrapper a'));
+                edmEditor.setStyles('font-size', (this.value > 0 ? this.value : 0) + 'px', keditor.getSettingComponent().find('.button-wrapper .button-inner'));
             });
             
             var cbbFontFamily = form.find('#button-font-family');
             cbbFontFamily.on('change', function () {
-                edmEditor.setStyles('font-family', this.value, keditor.getSettingComponent().find('.button-wrapper a'));
+                edmEditor.setStyles('font-family', this.value, keditor.getSettingComponent().find('.button-wrapper .button-inner'));
             });
             
             form.find('.btn-style').each(function () {
@@ -252,11 +252,11 @@
             buttonTextColorPicker.val(button.css('color') || '').trigger('update');
             
             var txtFontSize = form.find('#button-font-size');
-            var fontSize = button.css('font-size');
+            var fontSize = buttonInner.css('font-size');
             txtFontSize.val(fontSize ? fontSize.replace('px', '') : '');
             
             var cbbFontFamily = form.find('#button-font-family');
-            cbbFontFamily.val(button.css('font-family').toLowerCase().replace(/,\s/g, ',').replace(/"/g, ''));
+            cbbFontFamily.val(buttonInner.css('font-family').toLowerCase().replace(/,\s/g, ',').replace(/"/g, ''));
             
             var btnBold = form.find('.btn-bold');
             var fontWeight = button.css('font-weight');

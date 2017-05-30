@@ -78,7 +78,11 @@
         </div>
 
     #else
-        <!-- No Event Attendees -->
+    <div class='attendees attendeesWrap clearfix' id="attendeesWrap-${calendarEvent.calendar.name}-$!calendarEvent.name">
+        <h3>No attendees</h3>
+        <ul class='attendees'>
+        </ul>
+    </div>
     #end
 
 #end

@@ -168,7 +168,7 @@
                     </div>
 
                 </div>            
-                
+
             </div>
         </div>       
     </div>
@@ -225,8 +225,14 @@
                     #end
                 </div>
                 #end
-
-                <button class="btn btn-success" type="submit">Complete task</button>
+                <hr/>
+                <div>
+                    <button class="btn btn-success btn-lg pull-right" type="submit">
+                        <span class="fa fa-check"></span>
+                        Complete Task
+                    </button>
+                </div>
+                <div class="clearfix"></div>
             </form>
 
             #else 
@@ -297,7 +303,7 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('body').on('loaded.bs.modal', '#modalEditTask', function (e) {
             flog('Modal Loaded');
             $(".completeTaskDiv").show(300);
