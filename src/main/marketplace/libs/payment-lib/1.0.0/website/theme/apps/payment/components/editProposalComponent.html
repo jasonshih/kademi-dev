@@ -41,7 +41,7 @@
             <div class="alert alert-info">
                 <p>
                 <span class="fa fa-exclamation-circle"></span>
-                Press save to create the proposal and begin adding quotes.
+                Press <b>create</b> to create the proposal and begin adding quotes.
                 </p>
             </div>
         #else
@@ -71,8 +71,8 @@
             
             #if( $page.newProposal )
             <div class="form-group">
-                <div class="col-sm-5 col-sm-offset-3">
-                    <button type="submit" class="btn btn-primary">
+                <div class="col-sm-5">
+                    <button type="submit" class="btn btn-primary btn-lg">
                         <span class="fa fa-check"></span>
                         #if( $page.newProposal )
                         Create
@@ -87,11 +87,15 @@
     </div>
 </div>
 
+
 #if( !$page.newProposal )
 <div class="panel panel-default">
     <div class="panel-heading">
         <div class="panel-title">
-            <a class="btn btn-info btn-add-quote pull-right" href="#addQuoteModal" data-toggle="modal">Add a new quote</a>
+            <a class="btn btn-info btn-add-quote pull-right" href="#addQuoteModal" data-toggle="modal">
+                <span class="fa fa-plus"></span>
+                Add a new quote
+            </a>
             Quotes
         </div>
     </div>
@@ -99,7 +103,6 @@
         <table id="quotesTable" class="table table-hover table-striped table-condensed">
             <thead>
                 <tr>
-                    <th></th>
                     <th>Status</th>
                     <th>Number</th>
                     <th>Title</th>
@@ -117,13 +120,12 @@
             <tbody id="quoteTableBody">
                 #foreach($v in $page.proposal.quotes)
                     <tr>
-                        <td style="text-align: center;"><input name="quote-for-proposal" value="$v.name" type="checkbox" /></td>
                         <td title="$v.quoteStatus" class="text-center lead">
-                            #if($v.quoteStatus == "New")
+                            #if($v.quoteStatus == "NEW")
                                 <i class="fa fa-pencil-square-o text-muted"></i>
-                            #elseif($v.quoteStatus == "Accepted")
+                            #elseif($v.quoteStatus == "ACCEPTED")
                                 <i class="fa fa-check-circle text-success"></i>
-                            #elseif($v.quoteStatus == "Invoiced")
+                            #elseif($v.quoteStatus == "INVOICED")
                                 <i class="fa fa-check-circle text-success"></i>
                             #else
                                 <i class="fa fa-exclamation-circle text-danger"></i>
@@ -197,7 +199,9 @@
                     </div>
                     <input type="hidden" name="createQuoteFolder" value="true" />
                     <hr />
+                    
                     <p class="lead">Quote Item</p>
+                    
                     <div class="form-group">
                         <label for="supplier" class="col-sm-3 control-label">Supplier</label>
                         <div class="col-sm-8">
