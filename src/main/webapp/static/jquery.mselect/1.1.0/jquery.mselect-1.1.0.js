@@ -357,7 +357,7 @@
         if (modal.length === 0) {
             $(document.body).append(
                 '<div id="modal-milton-file-select" class="modal fade" aria-hidden="true" tabindex="-1">' +
-                '   <div class="modal-dialog modal-md">' +
+                '   <div class="modal-dialog modal-lg">' +
                 '       <div class="modal-content">' +
                 '           <div class="modal-header">' +
                 '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
