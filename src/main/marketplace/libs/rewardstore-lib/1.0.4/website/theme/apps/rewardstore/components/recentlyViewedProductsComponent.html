@@ -1,4 +1,7 @@
 #set($Integer = 0)
+#if("$!numberOfProducts" == "")
+    #set($numberOfProducts = 1)
+#end
 #set ($number = $Integer.parseInt($numberOfProducts))
 
 <div class="row">
