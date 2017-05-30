@@ -304,12 +304,10 @@ function initManageArticleFiles() {
             $('.progress-bar')
             .html(round(percentComplete, 1) + '%')
             .css('width', percentComplete + '%');
-            $('.progress').show();
+            $('.progressContainer').show();
         },
         callback: function (resp, form) {
             filesContainer.reloadFragment();
-            //$(".modal").modal("hide");
-            //form[0].reset();
         }
     });
     filesContainer.on('click', '.file-delete', function (e) {
