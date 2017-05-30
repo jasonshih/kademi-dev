@@ -159,7 +159,16 @@ function initUploads() {
 
             var defaultGroup = $('#defaultGroup').val();
             var removalMode = $('#removalMode').val();
-
+            if (removalMode == 'remove'){
+                $('.btn-text').text('Import and Remove');
+                $('.alert-remove-users').removeClass('hide');
+            } else if (removalMode == 'unsub'){
+                $('.btn-text').text('Import and Unsubscribe');
+                $('.alert-remove-users').addClass('hide');
+            } else {
+                $('.btn-text').text('Import now');
+                $('.alert-remove-users').addClass('hide');
+            }
             if (!selectedCols.length){
                 Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
