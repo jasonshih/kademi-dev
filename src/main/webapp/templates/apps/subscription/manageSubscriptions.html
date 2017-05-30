@@ -1,0 +1,125 @@
+<html>
+    <head>
+        <title>Manage Subscriptions</title>
+        <script type="text/javascript" src="manageSubscriptions.js">//</script>
+    </head>
+    <body>
+    <div>
+        <div class="btn-group" role="group">
+            <button id="newSubscription" type="button" class="btn btn-sm btn-success newSubscription" data-toggle="modal" data-target="#addSubscriptionModal"><i class="fa fa-plus"></i> Add New Subscription</button>
+        </div>
+
+        <div class="btn-group pull-right" role="group">
+            <a href="#" class="btn btn-danger btn-delete-subscriptions" role="button"><i class="fa fa-times"></i> Delete</a>
+        </div>
+    </div>
+    <br/>
+        
+    <div class="panel panel-default">
+            <div id="subscriptionsTableContainer" class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
+                        <colgroup>
+                            <col width="15%" />
+                            <col width="100px" />
+                            <col width="20%" />
+                            <col width="20%" />
+                            <col width="10%" />
+                            <col width="100px" />
+                            <col width="100px" />
+                            <col width="50px" />
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Admin Org</th>
+                                <th>Expiry Date</th>
+                                <th>Plan Name</th>
+                                <th>Limits Text</th>
+                                <th>License Key</th>
+                                <th>Created Date</th>
+                                <th>Modified Date</th>
+                                <th><input type="checkbox" class="check-all"/></th>
+                            </tr>
+                        </thead>
+                        <tbody id="subscriptionsTableBody" class="pagination-results">
+                            #foreach($sub in $!page.subscriptions)
+                            <tr>
+                                <td>$sub.id</td>
+                                <td>$!formatter.formatDate($!sub.expiryDate)</td>
+                                <td>$sub.planName</td>
+                                <td>$sub.limitsText</td>
+                                <td>$sub.licenseKey</td>
+                                <td>$!formatter.formatDate($!sub.createdDate)</td>
+                                <td>$!formatter.formatDate($!sub.modifiedDate)</td>
+                                <td><input type="checkbox" data-id="$sub.id" class="subscription-check"/></td>
+                                <td>
+                                    <a href="$sub.id" class="btn btn-info">
+                                        <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="addSubscriptionModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Subscription Details</h4>
+                    </div>
+                    <form action="." method="POST" class="form-horizontal createSubscription">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="create" value="true"/>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="orgId">Organisation</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" type="text" id="orgId" name="orgId" maxlength="30"  />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="planName">Plan Name</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" id="planName" type="text" name="planName" maxlength="250"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="baseCost">Expiry Date</label>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input class="form-control date-picker required" type="text" name="expiryDate" id="endDate" placeholder="Expiry Date" data-date-format="dd/mm/yyyy" data-date-viewmode="years" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="limitsText">Limits Text</label>
+                                <div class="col-md-8">
+                                    <input class="form-control" id="limitsText" type="text" name="limitsText"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="licenseKey">License Key</label>
+                                <div class="col-md-8">
+                                    <input class="form-control required" id="licenseKey" type="text" name="licenseKey" maxlength="250"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Create Subscription</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
