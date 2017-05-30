@@ -216,7 +216,6 @@
                     });
                     progressBar.hide();
                 } else if (fileType === 'image') {
-                    flog('aaaaaaaaaaaaaaaaaaaa')
                     $('<img />').attr('src', hashUrl).load(function () {
                         var realWidth = this.width;
                         var realHeight = this.height;
