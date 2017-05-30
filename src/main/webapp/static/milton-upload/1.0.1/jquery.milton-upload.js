@@ -7,6 +7,9 @@
                 useJsonPut: true,
                 useDropzone: false,
                 buttonText: "Add files",
+                onBeforeUpload: function (file) {
+                
+                },
                 oncomplete: function (data) {
                     flog("finished upload", data);
                 },
@@ -99,6 +102,10 @@
                                 if (previewDiv !== null) {
                                     previewDiv.show();
                                 }
+                                
+                                if (typeof config.onBeforeUpload === 'function') {
+                                    config.onBeforeUpload(file);
+                                }
                             });
 
                             this.on("complete", function (file, errorMessage) {
@@ -189,6 +196,12 @@
                         var file = data.files[0];
 
                         config.oncomplete.call(this, data, file.name, file.href);
+                    },
+                    submit: function (e, data) {
+                        if (typeof config.onBeforeUpload === 'function') {
+                            var file = data.files[0];
+                            config.onBeforeUpload(file);
+                        }
                     },
                     progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);

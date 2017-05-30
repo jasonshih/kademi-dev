@@ -151,6 +151,8 @@
         config.pagePath = config.pagePath.replace(/\/\//g, '/');
         
         var tree = container.find('div.milton-tree-wrapper');
+        var progressBar = container.find('.milton-file-progress');
+        var progressBarInner = progressBar.find('.progress-bar');
         var previewContainer = container.find('.milton-file-preview');
         var mtreeOptions = {
             basePath: config.basePath,
@@ -185,6 +187,8 @@
                 }
                 
                 var hashUrl = '/_hashes/files/' + hash;
+                progressBar.show();
+                progressBarInner.html('Loading...');
                 if (fileType === 'video') {
                     previewContainer.html('<div class="jp-video" data-hash="' + hash + '"></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
@@ -197,6 +201,7 @@
                             }
                         });
                     });
+                    progressBar.hide();
                 } else if (fileType === 'audio') {
                     previewContainer.html('<div class="jp-audio" data-hash="' + hash + '" style="padding: 15px"><div id="kaudio-player-100" /></div>');
                     $.getScriptOnce('/static/jwplayer/6.10/jwplayer.js', function () {
@@ -209,6 +214,7 @@
                             }
                         });
                     });
+                    progressBar.hide();
                 } else if (fileType === 'image') {
                     $('<img />').attr('src', hashUrl).load(function () {
                         var realWidth = this.width;
@@ -220,6 +226,7 @@
                         if (typeof config.onPreviewFile === 'function') {
                             config.onPreviewFile.call(container, fileType, selectedUrl, hash);
                         }
+                        progressBar.hide();
                     });
                 } else {
                     previewContainer.html('<p class="alert alert-warning">Unsupported preview file</p>');
@@ -227,8 +234,9 @@
                     if (typeof config.onPreviewFile === 'function') {
                         config.onPreviewFile.call(container, fileType, selectedUrl, hash);
                     }
+                    progressBar.hide();
                 }
-                
+    
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
             },
@@ -252,9 +260,14 @@
             buttonText: '<i class="fa fa-upload"></i>',
             oncomplete: function (data, name, href) {
                 flog('[jquery.mselect] oncomplete', data);
+                progressBar.hide();
                 //tree.mtree('addFile', name, href, hash);
                 addFileToTree(name, href, tree);
                 url = href;
+            },
+            onBeforeUpload: function () {
+                progressBar.show();
+                progressBarInner.html('Uploading...');
             }
         };
         if (!config.mselectAll) {
@@ -326,6 +339,9 @@
             '        <div class="col-xs-8">' +
             '            <div class="milton-file-preview-wrapper">' +
             '                <div class="milton-btn-upload-file"></div>' + extraElement +
+            '                <div class="milton-file-progress progress" style="display: none;">' +
+            '                    <div class="progress-bar progress-bar-info progress-bar-striped active" style="width: 100%"></div>' +
+            '                </div>' +
             '                <div class="milton-file-preview"></div>' +
             '            </div>' +
             '        </div>' +

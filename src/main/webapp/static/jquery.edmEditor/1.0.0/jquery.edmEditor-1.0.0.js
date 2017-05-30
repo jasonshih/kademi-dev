@@ -896,7 +896,10 @@
             };
             
             // Set background color for edm and store base styles in #edm-wrapper
-            fragment.find('#edm-wrapper').attr(dataBaseStyles).attr('bgcolor', body.find('.edmBackground').val());
+            var edmBackground = body.find('.edmBackground').val();
+            var edmWrapperTd = fragment.find('#edm-wrapper-td');
+            fragment.find('#edm-wrapper').attr(dataBaseStyles).attr('bgcolor', edmBackground);
+            edmEditor.setStyles('background-color', edmBackground, edmWrapperTd);
             
             // Set base styles for dynamic components
             fragment.find('[data-dynamic-href]').each(function () {
@@ -904,7 +907,6 @@
             });
             
             // Set outer padding for edm
-            var edmWrapperTd = fragment.find('#edm-wrapper-td');
             edmEditor.setStyles('padding-top', body.find('.edmPaddingTop').val() + 'px', edmWrapperTd);
             edmEditor.setStyles('padding-bottom', body.find('.edmPaddingBottom').val() + 'px', edmWrapperTd);
             edmEditor.setStyles('padding-left', body.find('.edmPaddingLeft').val() + 'px', edmWrapperTd);
