@@ -198,32 +198,33 @@
                         </div>
                     </div>
                     <input type="hidden" name="createQuoteFolder" value="true" />
-                    <hr />
-                    
-                    <p class="lead">Quote Item</p>
-                    
-                    <div class="form-group">
-                        <label for="supplier" class="col-sm-3 control-label">Supplier</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control required" required="true" id="supplier" name="lineitem.supplier" />
+                    <button type="button" class="btn btn-info btn-quick-add-line-item btn-sm">Quick add a line item</button>
+                    <div class="add-quote-line-item-wrapper" style="display: none;">
+                        <hr />
+                        <p class="lead">Quote Item</p>
+                        <div class="form-group">
+                            <label for="supplier" class="col-sm-3 control-label">Supplier</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control required-if-shown" id="supplier" name="lineitem.supplier" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="col-sm-3 control-label">Description</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="description" name="lineitem.description" />
+                        <div class="form-group">
+                            <label for="description" class="col-sm-3 control-label">Description</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="description" name="lineitem.description" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="quantity" class="col-sm-3 control-label">Quantity</label>
-                        <div class="col-sm-8">
-                            <input type="number" class="form-control" required="true" id="quantity" name="lineitem.quantity" />
+                        <div class="form-group">
+                            <label for="quantity" class="col-sm-3 control-label">Quantity</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control required-if-shown" id="quantity" name="lineitem.quantity" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="unitPrice" class="col-sm-3 control-label">Unit price</label>
-                        <div class="col-sm-8">
-                            <input type="number" class="form-control" required="true" id="unitPrice" name="lineitem.unitPrice" />
+                        <div class="form-group">
+                            <label for="unitPrice" class="col-sm-3 control-label">Unit price</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control required-if-shown" id="unitPrice" name="lineitem.unitPrice" />
+                            </div>
                         </div>
                     </div>
                 </form>

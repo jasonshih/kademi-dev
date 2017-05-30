@@ -39,7 +39,7 @@
     flog('- "errorHandler" is DEPRECATED. Use "onError" instead');
     flog('- "valiationMessageSelector" is DEPRECATED. Use "validationMessageSelector" instead');
     flog('********************************************');
-
+    
     $.fn.forms = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -49,16 +49,16 @@
             $.error('[jquery.forms] Method ' + method + ' does not exist on jquery.forms');
         }
     };
-
+    
     // Version for jquery.forms
     $.fn.forms.version = '1.1.0';
-
+    
     // Default configuration
     $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
             flog('[jquery.forms] Default validate of v1.1.0', form, config);
-
+            
             return {
                 error: 0,
                 errorFields: [],
@@ -74,7 +74,7 @@
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
             flog('[jquery.forms] Default beforePostForm of v1.1.0', form, config, data);
-
+            
             return data;
         },
         onSuccess: function (resp, form, config) {
@@ -83,14 +83,14 @@
         onError: function (resp, form, config) {
             try {
                 flog('[jquery.forms] Status indicates failure', resp);
-
+                
                 if (resp) {
                     if (resp.messages && resp.messages.length > 0) {
                         showErrorMessage(form, config, resp.messages);
                     } else {
                         showErrorMessage(form, config, 'Sorry, we could not process your request');
                     }
-
+                    
                     showFieldMessages(resp.fieldMessages, form);
                 } else {
                     showErrorMessage(form, config, 'Sorry, we could not process your request');
@@ -120,45 +120,45 @@
             if (typeof message === 'string') {
                 message = [message];
             }
-
+            
             var htmlMessages = '';
             for (var i = 0; i < message.length; i++) {
                 htmlMessages += '<li>' + message[i] + '</li>';
             }
-
+            
             return '<ul class="error-message">' + htmlMessages + '</ul>';
         }
     };
-
+    
     var methods = {
         init: function (options) {
             return $(this).each(function () {
                 var form = $(this);
                 var config = $.extend({}, $.fn.forms.DEFAULT, options);
                 flog('[jquery.forms] Configuration:', config);
-
+                
                 // ==============================================================================
                 // Start of DEPRECATED migration
                 // ==============================================================================
                 if (typeof config.callback === 'function') {
                     config.onSuccess = config.callback;
                 }
-
+                
                 if (typeof config.error === 'function') {
                     config.onInvalid = config.error;
                 }
-
+                
                 if (typeof config.errorHandler === 'function') {
                     config.onError = config.errorHandler;
                 }
-
+                
                 if (typeof config.valiationMessageSelector === 'string') {
                     config.validationMessageSelector = config.valiationMessageSelector;
                 }
                 // ==============================================================================
                 // End of DEPRECATED migration
                 // ==============================================================================
-
+                
                 if (form.data('formOptions')) {
                     flog('[jquery.forms] Is ready initialized');
                     return;
@@ -166,31 +166,31 @@
                     // Add config to 'formOptions' data
                     form.data('formOptions', config);
                 }
-
+                
                 $.getScriptOnce('/static/js/moment-with-langs.min.js');
                 flog('[jquery.forms] Initializing forms plugin...', form);
-
+                
                 form.off('submit').on('submit', function (e) {
                     e.preventDefault();
-
+                    
                     flog('[jquery.forms] On form submit', form, e);
                     resetValidation(form, config);
-
+                    
                     form.find('input[type=text]').each(function () {
                         var input = $(this);
                         var val = input.val().trim();
-
+                        
                         input.val(val);
                     });
-
+                    
                     var isValid = validateFormFields(form, config);
                     flog('[jquery.forms] Form is valid: ' + isValid);
-
+                    
                     if (isValid) {
                         if (typeof config.onValid === 'function') {
                             config.onValid.call(this, form, config);
                         }
-
+                        
                         if (config.allowPostForm === true) {
                             doPostForm(form, config, e);
                         }
@@ -201,7 +201,7 @@
                                 scrollTop: alertMsg.offset().top - 140
                             }, config.animationDuration);
                         }
-
+                        
                         if (typeof config.onInvalid === 'function') {
                             config.onInvalid.call(this, form, config);
                         }
@@ -216,7 +216,7 @@
             return $(this).each(function () {
                 var form = $(this);
                 form.find('input, button, select, textarea').prop('readonly', true);
-
+                
                 if (typeof callback === 'function') {
                     callback.call(this, form);
                 }
@@ -226,7 +226,7 @@
             return $(this).each(function () {
                 var form = $(this);
                 form.find('input, button, select, textarea').prop('readonly', false);
-
+                
                 if (typeof callback === 'function') {
                     callback.call(this, form);
                 }
@@ -240,7 +240,7 @@
                     'opacity': 1,
                     'height': 'show'
                 }, options);
-
+                
                 element.stop().animate(options, config.animationDuration, callback);
             });
         },
@@ -252,12 +252,12 @@
                     'opacity': 0,
                     'height': 'hide'
                 }, options);
-
+                
                 element.stop().animate(options, config.animationDuration, callback);
             });
         }
     };
-
+    
 })(jQuery);
 
 /**
@@ -271,11 +271,11 @@ function getFormConfig(form, config) {
     if (form && form.jquery && form.length > 0) {
         currentConfig = form.data('formOptions') || {};
     }
-
+    
     if (!config) {
         config = {};
     }
-
+    
     return $.extend({}, $.fn.forms.DEFAULT, currentConfig, config);
 }
 
@@ -287,7 +287,7 @@ function getFormConfig(form, config) {
  */
 function getValidationMessage(form, config) {
     config = getFormConfig(form, config);
-
+    
     if (config && config.validationMessageSelector) {
         if (typeof config.validationMessageSelector === 'string') {
             return form.find(config.validationMessageSelector);
@@ -309,11 +309,11 @@ function getValidationMessage(form, config) {
  */
 function doPostForm(form, config, event) {
     config = getFormConfig(form, config);
-
+    
     // Trim all inputs
     var enc = form.attr('enctype');
     flog('[jquery.forms] Preparing doPostForm...', 'enctype: ' + enc, form);
-
+    
     var data;
     if (enc == 'multipart/form-data') {
         data = form.serializeWithFiles();
@@ -321,11 +321,11 @@ function doPostForm(form, config, event) {
         data = form.serialize();
     }
     flog('[jquery.forms] Data:', data);
-
+    
     if (typeof config.beforePostForm === 'function') {
         data = config.beforePostForm.call(this, form, config, data);
     }
-
+    
     var url = form.attr('action');
     if (config.postUrl) {
         flog('[jquery.forms] Use supplied postUrl instead of form action', config.postUrl);
@@ -336,11 +336,11 @@ function doPostForm(form, config, event) {
         url = window.location.pathname;
     }
     flog('[jquery.forms] doPostForm', form, data, url);
-
+    
     try {
         form.forms('disable');
         form.addClass('ajax-processing');
-
+        
         var ajaxOpts = {
             type: 'POST',
             url: url,
@@ -349,20 +349,20 @@ function doPostForm(form, config, event) {
             success: function (resp) {
                 form.forms('enable');
                 form.removeClass('ajax-processing');
-
+                
                 if (resp && resp.status) {
                     flog('[jquery.forms] Post form successfully', resp);
-
+                    
                     if (config.confirmMessage) {
                         showConfirmMessage(form, config);
                     }
-
+                    
                     if (typeof config.onSuccess === 'function') {
                         config.onSuccess.call(this, resp, form, config, event);
                     }
                 } else {
                     flog('[jquery.forms] Posting form failed', resp);
-
+                    
                     if (typeof config.onError === 'function') {
                         config.onError.call(this, resp, form, config);
                     }
@@ -371,13 +371,13 @@ function doPostForm(form, config, event) {
             error: function (jqXHR, textStatus, errorThrown) {
                 form.forms('enable');
                 form.removeClass('ajax-processing');
-
+                
                 flog('[jquery.forms] Error on posting form', form, jqXHR, textStatus, errorThrown);
-
+                
                 if (typeof config.onError === 'function') {
                     config.onError.call(this, jqXHR, form, config);
                 }
-
+                
                 if (config.networkErrorMessage) {
                     showErrorMessage(form, config, config.networkErrorMessage + ' - ' + textStatus);
                 }
@@ -389,7 +389,7 @@ function doPostForm(form, config, event) {
         }
         ajaxOpts.beforeSend = function (xhr, options) { // et toc !
             options.data = data;
-
+            
             /**
              * You can use https://github.com/francois2metz/html5-formdata for a fake FormData object
              * Only work with Firefox 3.6
@@ -402,7 +402,7 @@ function doPostForm(form, config, event) {
                 }
             }
         };
-
+        
         $.ajax(ajaxOpts);
     } catch (e) {
         if (typeof config.onError === 'function') {
@@ -425,7 +425,7 @@ function doPostForm(form, config, event) {
  */
 function showFormMessage(form, config, message, title, type, callback) {
     config = getFormConfig(form, config);
-
+    
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length === 0) {
         alertMsg = $(config.renderMessageWrapper(message, type));
@@ -434,7 +434,7 @@ function showFormMessage(form, config, message, title, type, callback) {
         alertMsg.append(message);
         alertMsg.attr('class', 'form-message alert alert-' + type);
     }
-
+    
     if (title && title.length > 0) {
         var messageTitle = alertMsg.find('.form-message-title');
         if (messageTitle.length === 0) {
@@ -449,11 +449,11 @@ function showFormMessage(form, config, message, title, type, callback) {
             messageTitle.html('<b>' + title + '</b');
         }
     }
-
+    
     if (alertMsg.is(':hidden')) {
         form.forms('showElement', alertMsg);
     }
-
+    
     if (typeof callback === 'function') {
         callback.call(this, form, config, message, type);
     }
@@ -466,9 +466,9 @@ function showFormMessage(form, config, message, title, type, callback) {
  */
 function showErrorMessage(form, config, message) {
     config = getFormConfig(form, config);
-
+    
     var messageHtml = config.renderErrorMessage(message);
-
+    
     showFormMessage(form, config, messageHtml, 'Errors', 'danger', null);
 }
 
@@ -479,7 +479,7 @@ function showErrorMessage(form, config, message) {
  */
 function showConfirmMessage(form, config) {
     config = getFormConfig(form, config);
-
+    
     showFormMessage(form, config, config.confirmMessage, null, 'success', function () {
         window.setTimeout(function () {
             var alertMsg = getValidationMessage(form, config);
@@ -497,14 +497,14 @@ function showFieldMessages(fieldMessages, form) {
     if (fieldMessages && fieldMessages.length > 0) {
         $.each(fieldMessages, function (i, message) {
             flog('[jquery.forms] Show field message', message);
-
+            
             var target = form.find('#' + message.field);
-            if (!target.length){
+            if (!target.length) {
                 flog('trying to find target by name', target, message.field);
-                target = form.find('[name='+ message.field+']');
+                target = form.find('[name=' + message.field + ']');
             }
             var parent = target.parent();
-
+            
             var errorMessage = parent.find('.help-block.error-message');
             if (errorMessage.length > 0) {
                 errorMessage.html(message.message);
@@ -513,7 +513,7 @@ function showFieldMessages(fieldMessages, form) {
                     '<p class="help-block error-message">' + message.message + '</p>'
                 );
             }
-
+            
             showErrorField(target);
         });
     }
@@ -526,14 +526,14 @@ function showFieldMessages(fieldMessages, form) {
  */
 function resetValidation(form, config) {
     flog('[jquery.forms] resetValidation', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     form.find('.form-group').removeClass('has-error');
     form.find('.error-field').removeClass('error-field').removeAttr('error-message');
     form.find('.error-message').remove();
     form.find('.form-message-title').remove();
-
+    
     var alertMsg = getValidationMessage(form, config);
     if (alertMsg.length > 0) {
         alertMsg.css('display', 'none').html('<a class="close" data-dismiss="alert">&times;</a>');
@@ -548,88 +548,88 @@ function resetValidation(form, config) {
  */
 function validateFormFields(form, config) {
     flog('[jquery.forms] validateFormFields', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var resultRequired = checkRequiredFields(form, config);
     if (resultRequired.error > 0) {
         for (var i = 0; i < resultRequired.errorFields.length; i++) {
             showErrorField(resultRequired.errorFields[i]);
         }
-
+        
         showErrorMessage(form, config, config.requiredErrorMessage);
-
+        
         return false;
     } else {
         var error = 0;
         var errorFields = [];
         var errorMessages = [];
-
+        
         var resultEmails = checkValidEmailAddress(form, config);
         if (resultEmails.error > 0) {
             error += resultEmails.error;
             errorFields = errorFields.concat(resultEmails.errorFields);
             errorMessages.push(config.emailErrorMessage);
         }
-
+        
         var resultDates = checkDates(form, config);
         if (resultDates.error > 0) {
             error += resultDates.error;
             errorFields = errorFields.concat(resultDates.errorFields);
             errorMessages.push(config.dateErrorMessage);
         }
-
+        
         var resultPasswords = checkValidPasswords(form, config);
         if (!resultPasswords.password || !resultPasswords.confirmPassword) {
             error++;
             errorFields = errorFields.concat(resultPasswords.errorFields);
-
+            
             if (!resultPasswords.password) {
                 errorMessages.push(config.passwordErrorMessage);
             } else if (!resultPasswords.confirmPassword) {
                 errorMessages.push(config.confirmPasswordErrorMessage);
             }
         }
-
+        
         var resultSimpleChars = checkSimpleChars(form, config);
         if (resultSimpleChars.error > 0) {
             error += resultSimpleChars.error;
             errorFields = errorFields.concat(resultSimpleChars.errorFields);
             errorMessages.push(config.simpleCharsErrorMessage);
         }
-
+        
         var resultReallySimpleChars = checkReallySimpleChars(form, config);
         if (resultReallySimpleChars.error > 0) {
             error += resultReallySimpleChars.error;
             errorFields = errorFields.concat(resultReallySimpleChars.errorFields);
             errorMessages.push(config.reallySimpleCharsErrorMessage);
         }
-
+        
         var resultHrefs = checkHrefs(form, config);
         if (resultHrefs.error > 0) {
             error += resultHrefs.error;
             errorFields = errorFields.concat(resultHrefs.errorFields);
             errorMessages.push(config.hrefErrorMessage);
         }
-
+        
         var resultNumbers = checkNumbers(form, config);
         if (resultNumbers.error > 0) {
             error += resultNumbers.error;
             errorFields = errorFields.concat(resultNumbers.errorFields);
             errorMessages.push(config.numberErrorMessage);
         }
-
+        
         var resultRegexes = checkRegexes(form, config);
         if (resultRegexes.error > 0) {
             error += resultRegexes.error;
             errorFields = errorFields.concat(resultRegexes.errorFields);
             errorMessages = errorMessages.concat(resultRegexes.errorMessages);
         }
-
+        
         if (typeof config.validate === 'function') {
             var resultCustomValidate = config.validate.call(this, form, config);
             flog('[jquery.forms] Validate method return', resultCustomValidate);
-
+            
             if (typeof resultCustomValidate === 'boolean') {
                 if (!resultCustomValidate) {
                     error++;
@@ -638,11 +638,11 @@ function validateFormFields(form, config) {
                 if (resultCustomValidate && resultCustomValidate.error) {
                     if (resultCustomValidate.error > 0) {
                         error += resultCustomValidate.error;
-
+                        
                         if ($.isArray(resultCustomValidate.errorFields)) {
                             errorFields = errorFields.concat(resultCustomValidate.errorFields);
                         }
-
+                        
                         if ($.isArray(resultCustomValidate.errorMessages)) {
                             errorMessages = errorMessages.concat(resultCustomValidate.errorMessages);
                         }
@@ -650,13 +650,13 @@ function validateFormFields(form, config) {
                 }
             }
         }
-
+        
         if (error > 0) {
             showErrorMessage(form, config, errorMessages);
             for (var i = 0; i < errorFields.length; i++) {
                 showErrorField(errorFields[i]);
             }
-
+            
             return false;
         } else {
             return true;
@@ -672,21 +672,21 @@ function validateFormFields(form, config) {
  */
 function checkRequiredCheckboxes(form, config) {
     flog('[jquery.forms] checkRequiredCheckboxes', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('input.required:checkbox').not(':checked').each(function () {
         var input = $(this);
         flog('[jquery.forms] Field is required', input);
-
+        
         errorFields.push(input);
         error++;
         input.attr('error-message', config.requiredErrorMessage);
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -701,29 +701,29 @@ function checkRequiredCheckboxes(form, config) {
  */
 function checkRequiredRadios(form, config) {
     flog('[jquery.forms] checkRequiredRadios', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
     var radioNames = {};
-
+    
     form.find('input.required:radio').each(function () {
         var input = $(this);
         var name = input.attr('name');
-
+        
         if (!radioNames[name]) {
             radioNames[name] = input;
         }
     });
-
+    
     for (var name in radioNames) {
         var radios = form.find('input[name=' + name + ']');
         flog('[jquery.forms] Radio name: ' + name, radios);
-
+        
         var checked = radios.filter(':checked');
         flog('[jquery.forms] Radio checked:', checked);
-
+        
         if (checked.length === 0) {
             flog('[jquery.forms] Fields are required', radios);
             errorFields.push(radios);
@@ -731,7 +731,7 @@ function checkRequiredRadios(form, config) {
             radios.attr('error-message', config.requiredErrorMessage);
         }
     }
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -746,26 +746,26 @@ function checkRequiredRadios(form, config) {
  */
 function checkRequiredFields(form, config) {
     flog('[jquery.forms] checkRequiredFields', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     var resultRadios = checkRequiredRadios(form, config);
     if (resultRadios.error > 0) {
         flog('[jquery.forms] checkRequiredRadios is false');
         errorFields = errorFields.concat(resultRadios.errorFields);
         error++;
     }
-
+    
     var resultCheckboxes = checkRequiredCheckboxes(form, config);
     if (resultCheckboxes.error > 0) {
         flog('[jquery.forms] checkRequiredCheckboxes is false');
         errorFields = errorFields.concat(resultCheckboxes.errorFields);
         error++;
     }
-
+    
     // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
     form.find('.required').not('.tt-hint').each(function () {
         var input = $(this);
@@ -775,18 +775,39 @@ function checkRequiredFields(form, config) {
         } else {
             val = '';
         }
-
+        
         var placeholder = input.attr('placeholder');
         // note that the watermark can make the value == title
         if (val.length === 0 || val === placeholder) {
             flog('[jquery.forms] Field is required', input);
-
+            
             errorFields.push(input);
             error++;
             input.attr('error-message', config.requiredErrorMessage);
         }
     });
-
+    
+    // Exclude tt-hint, that is a field created by the typeahead plugin which copies the required class
+    form.find('input.required, textarea.required, select.required').not('.tt-hint').each(function () {
+        var input = $(this);
+        var val = input.val();
+        if (val !== null) {
+            val = val.trim();
+        } else {
+            val = '';
+        }
+        
+        var placeholder = input.attr('placeholder');
+        // note that the watermark can make the value == title
+        if (val.length === 0 || val === placeholder) {
+            flog('[jquery.forms] Field is required', input);
+            
+            errorFields.push(input);
+            error++;
+            input.attr('error-message', config.requiredErrorMessage);
+        }
+    });
+    
     return {
         error: error,
         errorFields: errorFields
@@ -800,24 +821,24 @@ function checkRequiredFields(form, config) {
  */
 function checkRegexes(form) {
     flog('[jquery.forms] checkRegexes', form);
-
+    
     var error = 0;
     var errorFields = [];
     var errorMessages = [];
-
+    
     form.find('input.regex').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
             var regexStr = input.attr('data-regex');
             var regex = new RegExp(regexStr);
             var message = input.attr('data-message');
-
+            
             if (!regex.test(val)) {
                 flog('[jquery.forms] Regex field is invalid: ' + regexStr, input);
-
+                
                 errorFields.push(input);
                 if ($.inArray(message, errorMessages) === -1) {
                     errorMessages.push(message);
@@ -827,7 +848,7 @@ function checkRegexes(form) {
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields,
@@ -845,7 +866,7 @@ function shouldCheckValue(input) {
     var isRequired = input.hasClass('required');
     var isRequiredIf = input.hasClass('required-if');
     var isRequiredIfShown = input.hasClass('required-if-shown');
-
+    
     if (isRequiredIf) {
         var val = input.val().trim();
         if (val.length > 0) {
@@ -859,7 +880,7 @@ function shouldCheckValue(input) {
     } else if (isRequired) {
         shouldCheck = true;
     }
-
+    
     return shouldCheck;
 }
 
@@ -872,30 +893,30 @@ function shouldCheckValue(input) {
  */
 function checkDates(form, config) {
     flog('[jquery.forms] checkDates', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('input.date, input.datetime').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val().trim();
             var valid = moment(val, ['DD-MM-YYYY', 'DD-MM-YYYY HH:mm'], true);
-
+            
             if (val.length === 0 || !valid) {
                 flog('[jquery.forms] Date field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.dateErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -910,14 +931,14 @@ function checkDates(form, config) {
  */
 function checkValidPasswords(form, config) {
     flog('[jquery.forms] checkValidPasswords', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var input = form.find('input#password, input.password');
-
+    
     if (input.length > 0) {
         var value = input.val();
-
+        
         if (value.length > 0) {
             var passed = true;
             if (!input.hasClass('allow-dodgy-password')) {
@@ -929,11 +950,11 @@ function checkValidPasswords(form, config) {
                     badSequenceLength: 6
                 });
             }
-
+            
             if (!passed) {
                 flog('[jquery.forms] Password field is invalid');
                 input.attr('error-message', config.passwordErrorMessage);
-
+                
                 return {
                     password: false,
                     confirmPassword: false,
@@ -967,28 +988,28 @@ function checkValidPasswords(form, config) {
  */
 function checkPasswordsMatch(form, config, passwordInputs) {
     flog('[jquery.forms] checkPasswordsMatch', form, config, passwordInputs);
-
+    
     config = getFormConfig(form, config);
-
+    
     var confirmPasswordInputs = form.find('input#confirmPassword, input.confirm-password');
-
+    
     if (confirmPasswordInputs.length === 0) {
         flog('[jquery.forms] There is no confirmation password field');
-
+        
         return {
             password: true,
             confirmPassword: true,
             errorFields: []
         };
     }
-
+    
     var password = passwordInputs.val();
     var confirmPassword = confirmPasswordInputs.val();
-
+    
     if (password !== confirmPassword) {
         flog('[jquery.forms] Confirm password is not matched');
         confirmPasswordInputs.attr('error-message', config.confirmPasswordErrorMessage);
-
+        
         return {
             password: true,
             confirmPassword: false,
@@ -997,7 +1018,7 @@ function checkPasswordsMatch(form, config, passwordInputs) {
             ]
         };
     }
-
+    
     return {
         password: true,
         confirmPassword: true,
@@ -1014,30 +1035,30 @@ function checkPasswordsMatch(form, config, passwordInputs) {
  */
 function checkValidEmailAddress(form, config) {
     flog('[jquery.forms] checkValidEmailAddress', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
     var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
-
+    
     form.find('#email, input.email').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
-
+            
             if (val.length === 0 || !pattern.test(val)) {
                 flog('[jquery.forms] Email field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.emailErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -1052,29 +1073,29 @@ function checkValidEmailAddress(form, config) {
  */
 function checkSimpleChars(form, config) {
     flog('[jquery.forms] checkSimpleChars', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('.simpleChars, .simple-chars').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
-
+            
             if (val.length > 0 && !checkSimpleValue(val)) {
                 flog('[jquery.forms] Simple chars field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.simpleCharsErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -1089,29 +1110,29 @@ function checkSimpleChars(form, config) {
  */
 function checkReallySimpleChars(form, config) {
     flog('[jquery.forms] checkReallySimpleChars', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('.reallySimpleChars, .really-simple-chars').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
-
+            
             if (val.length > 0 && !checkReallySimpleValue(val)) {
                 flog('[jquery.forms] Really simple chars field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.reallySimpleCharsErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -1146,29 +1167,29 @@ function checkReallySimpleValue(val) {
  */
 function checkNumbers(form, config) {
     flog('[jquery.forms] checkNumbers', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
-
+    
     form.find('input.numeric').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
-
+            
             if (val.length > 0 && !isNumber(val)) {
                 flog('[jquery.forms] Numeric field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.numberErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -1183,30 +1204,30 @@ function checkNumbers(form, config) {
  */
 function checkHrefs(form, config) {
     flog('[jquery.forms] checkHrefs', form, config);
-
+    
     config = getFormConfig(form, config);
-
+    
     var error = 0;
     var errorFields = [];
     var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
-
+    
     form.find('input.href').each(function () {
         var input = $(this);
         var shouldCheck = shouldCheckValue(input);
-
+        
         if (shouldCheck) {
             var val = input.val();
-
+            
             if (val.length > 0 && !pattern.test(val)) {
                 flog('[jquery.forms] Href field is invalid', input);
-
+                
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.hrefErrorMessage);
             }
         }
     });
-
+    
     return {
         error: error,
         errorFields: errorFields
@@ -1219,23 +1240,23 @@ function checkHrefs(form, config) {
  */
 function showErrorField(target) {
     flog('[jquery.forms] showErrorField', target);
-
+    
     target.each(function () {
         var currentTarget = $(this);
         currentTarget.addClass('error-field');
         currentTarget.closest('.form-group').addClass('has-error');
     });
-
+    
     if (typeof CKEDITOR !== 'undefined') {
         if (CKEDITOR) {
             var name = target.attr('name');
             if (!name) {
                 name = target.attr('id');
             }
-
+            
             editor = CKEDITOR.instances[name];
             flog('[jquery.forms] Check for CKEditor', name, editor);
-
+            
             if (editor) {
                 flog('[jquery.forms] Add "error-field" class', editor.form);
                 editor.form.addClass('error-field');
@@ -1275,41 +1296,41 @@ function ensure$Object(target, context) {
  */
 function checkValueLength(target, minLength, maxLength, lbl, form, config) {
     flog('[jquery.forms] checkValueLength', target, minLength, maxLength, lbl, form, config);
-
+    
     target = ensure$Object(target);
     if (!form) {
         form = target.closest('form');
     }
-
+    
     if (target.length === 0) {
         return true;
     }
-
+    
     var value = target.val();
     flog('[jquery.forms] Value length: ' + value.length);
-
+    
     if (minLength && isNumber(minLength)) {
         flog('[jquery.forms] Check min length: ' + minLength);
-
+        
         if (value.length < minLength) {
             showErrorMessage(form, config, lbl + ' must be at least ' + minLength + ' characters');
             showErrorField(target);
-
+            
             return false;
         }
     }
-
+    
     if (maxLength && isNumber(maxLength)) {
         flog('[jquery.forms] Check max length: ' + maxLength);
-
+        
         if (value.length > maxLength) {
             showErrorMessage(form, config, lbl + ' must be no more then ' + minLength + ' characters');
             showErrorField(target);
-
+            
             return false;
         }
     }
-
+    
     return true;
 }
 
@@ -1324,24 +1345,24 @@ function checkValueLength(target, minLength, maxLength, lbl, form, config) {
  */
 function checkExactLength(target, length, lbl, form, config) {
     flog('[jquery.forms] checkExactLength', target, length, lbl, form, config);
-
+    
     target = ensure$Object(target);
     if (!form) {
         form = target.closest('form');
     }
-
+    
     var value = target.val();
     if (value.length != length) {
         if (!form) {
             form = target.closest('form');
         }
-
+        
         showErrorMessage(form, config, lbl ? lbl + 'must be at ' + length + ' characters' : 'Must be at ' + length + ' characters');
         showErrorField(target);
-
+        
         return false;
     }
-
+    
     return true;
 }
 
@@ -1356,19 +1377,19 @@ function checkExactLength(target, length, lbl, form, config) {
  */
 function checkOneOf(target1, target2, message, form, config) {
     flog('[jquery.forms] checkOneOf', target1, target2, message, form, config);
-
+    
     target1 = ensure$Object(target1);
     target2 = ensure$Object(target2);
     if (!form) {
         form = target.closest('form');
     }
-
+    
     if (target1.val() || target2.val()) {
         return true;
     } else {
         showErrorField(target1);
         showErrorMessage(form, config, message);
-
+        
         return false
     }
 }
@@ -1382,18 +1403,18 @@ function checkOneOf(target1, target2, message, form, config) {
  */
 function checkNumeric(target, form, config) {
     flog('[jquery.forms] checkNumeric', target, form, config)
-
+    
     target = ensure$Object(target);
     if (!form) {
         form = target.closest('form');
     }
-
+    
     var value = target.val();
     if (value) {
         if (!isNumber(value)) {
             showErrorField(target);
             showErrorMessage(form, config, 'Please enter only numeric digits');
-
+            
             return false;
         } else {
             return true;
@@ -1413,19 +1434,19 @@ function checkNumeric(target, form, config) {
  */
 function checkTrue(target, message, form, config) {
     flog('[jquery.forms] checkTrue', target, message, form, config)
-
+    
     target = ensure$Object(target);
     if (!form) {
         form = target.closest('form');
     }
-
+    
     var value = target.filter(':checked').val();
     if (value) {
         return true;
     } else {
         showErrorField(target);
         showErrorMessage(form, config, message);
-
+        
         return false;
     }
 }
@@ -1439,14 +1460,14 @@ function checkTrue(target, message, form, config) {
  */
 function checkRadio(radioName, form, config) {
     flog('[jquery.forms] checkRadio', radioName, form, config);
-
+    
     var radios = form.find('input:radio[name=' + radioName + ']');
     var checkedRadio = radios.filter(':checked');
-
+    
     if (checkedRadio.length === 0) {
         showErrorField(radios);
         showErrorMessage(form, config, 'Please select a value for ' + radioName);
-
+        
         return false;
     } else {
         return true;
@@ -1474,11 +1495,11 @@ function validatePassword(pw, options) {
         noQwertySequences: false,
         noSequential: false
     };
-
+    
     for (var property in options) {
         o[property] = options[property];
     }
-
+    
     var re = {
         lower: /[a-z]/g,
         upper: /[A-Z]/g,
@@ -1488,31 +1509,31 @@ function validatePassword(pw, options) {
     };
     var rule;
     var i;
-
+    
     // enforce min/max length
     if (pw.length < o.length[0] || pw.length > o.length[1]) {
         return false;
     }
-
+    
     // enforce lower/upper/alpha/numeric/special rules
     for (rule in re) {
         if ((pw.match(re[rule]) || []).length < o[rule]) {
             return false;
         }
     }
-
+    
     // enforce word ban (case insensitive)
     for (i = 0; i < o.badWords.length; i++) {
         if (pw.toLowerCase().indexOf(o.badWords[i].toLowerCase()) > -1) {
             return false;
         }
     }
-
+    
     // enforce the no sequential, identical characters rule
     if (o.noSequential && /([\S\s])\1/.test(pw)) {
         return false;
     }
-
+    
     // enforce alphanumeric/qwerty sequence ban rules
     if (o.badSequenceLength) {
         var lower = 'abcdefghijklmnopqrstuvwxyz';
@@ -1521,7 +1542,7 @@ function validatePassword(pw, options) {
         var qwerty = 'qwertyuiopasdfghjklzxcvbnm';
         var start = o.badSequenceLength - 1;
         var seq = '_' + pw.slice(0, start);
-
+        
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
@@ -1534,7 +1555,7 @@ function validatePassword(pw, options) {
             }
         }
     }
-
+    
     // enforce custom regex/function rules
     for (i = 0; i < o.custom.length; i++) {
         rule = o.custom[i];
@@ -1548,7 +1569,7 @@ function validatePassword(pw, options) {
             }
         }
     }
-
+    
     // great success!
     return true;
 }
@@ -1557,9 +1578,9 @@ function validatePassword(pw, options) {
 (function ($) {
     $.fn.serializeWithFiles = function () {
         var form = $(this);
-
+        
         flog('[jquery.forms] Initializing serializeWithFiles...', form);
-
+        
         // ADD FILE TO PARAM AJAX
         var formData = new FormData()
         form.find('input[type=file]').each(function (index, input) {
@@ -1567,15 +1588,15 @@ function validatePassword(pw, options) {
                 formData.append(input.name, file);
             });
         });
-
+        
         var params = form.serializeArray();
         $.each(params, function (i, val) {
             formData.append(val.name, val.value);
         });
-
+        
         return formData;
     };
-
+    
 })(jQuery);
 
 /**
@@ -1587,17 +1608,17 @@ function validatePassword(pw, options) {
     if (w.FormData) {
         return;
     }
-
+    
     function FormData() {
         this.fake = true;
         this.boundary = '--------FormData' + Math.random();
         this._fields = [];
     }
-
+    
     FormData.prototype.append = function (key, value) {
         this._fields.push([key, value]);
     };
-
+    
     FormData.prototype.toString = function () {
         var boundary = this.boundary;
         var body = '';
@@ -1617,9 +1638,9 @@ function validatePassword(pw, options) {
         body += '--' + boundary + '--';
         return body;
     };
-
+    
     w.FormData = FormData;
-
+    
 })(window);
 
 // =====================================================================================================================
@@ -1631,7 +1652,7 @@ function postForm(form, validationMessageSelector, networkErrorMessage, callback
     flog('=======================================================================');
     flog('postForm is DEPRECATED. Please use "doPostForm" instead of. "postForm" will be removed in version 1.2.0');
     flog('=======================================================================');
-
+    
     var config = form.data('formOptions');
     if (!config) {
         config = {};
@@ -1643,7 +1664,7 @@ function postForm(form, validationMessageSelector, networkErrorMessage, callback
     config.postUrl = postUrl;
     config.onError = errorCallback;
     config.onValid = errorHandler;
-
+    
     doPostForm(form, config, null);
 }
 
@@ -1665,13 +1686,13 @@ function showValidation(target, text, form) {
     flog('=======================================================================');
     flog('showValidation is DEPRECATED. Please use "showFieldMessages" instead of. "showValidation" will be removed in version 1.2.0');
     flog('=======================================================================');
-
+    
     var id = target.attr('id');
     if (id.length === 0) {
         id = 'input-' + Math.round(Math.random() * 9876543210) + '-' + (new Date()).getTime();
         target.attr('id', id);
     }
-
+    
     showFieldMessages([{
         field: id,
         message: text
