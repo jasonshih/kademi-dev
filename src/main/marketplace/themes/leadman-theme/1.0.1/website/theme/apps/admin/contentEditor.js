@@ -57,11 +57,82 @@ function initContentEditorPage(options) {
         hideLoadingIcon();
     }, 200);
     
+    initPropertiesModal();
+    
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         e.stopPropagation();
     });
+}
+
+function initPropertiesModal() {
+    var modal = $('#modal-page-properties');
+    
+    modal.find('form').forms({
+        onSuccess: function () {
+            $('#file-title').reloadFragment({
+                whenComplete: function () {
+                    modal.modal('hide');
+                    Msg.success('Properties are saved');
+                }
+            });
+        }
+    });
+    
+    modal.find('.btn-add-meta').on('click', function (e) {
+        e.preventDefault();
+        
+        addMetaTag('', '');
+    });
+    
+    modal.on('click', '.btn-remove-meta', function (e) {
+        e.preventDefault();
+        
+        $(this).closest('.meta').remove();
+    });
+    
+    modal.find('.btn-add-param').on('click', function (e) {
+        e.preventDefault();
+        
+        addParam('', '');
+    });
+    
+    modal.on('click', '.btn-remove-param', function (e) {
+        e.preventDefault();
+        
+        $(this).closest('.param').remove();
+    });
+}
+
+function addMetaTag(name, content) {
+    var metaWrapper = $('.meta-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group meta">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
+}
+
+function addParam(title, value) {
+    var metaWrapper = $('.param-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group param">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramValue.' + id + '" placeholder="Data/parameter value" value="' + value + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
 }
 
 function initKEditor(options) {
