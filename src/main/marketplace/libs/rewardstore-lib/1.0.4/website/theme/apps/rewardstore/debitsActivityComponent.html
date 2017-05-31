@@ -1,18 +1,16 @@
-
-#if($page)
-	#if ( !$height )
-		#set ( $height = 100 )
-	#end
-	#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
-	#if( $pointsBucket )
-		#set($bucketId = $pointsBucket.id)
-		#set($daysInt = $formatter.toInteger($days, false))
+#if ( !$height )
+    #set ( $height = 100 )
+#end
+#set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+#if( $pointsBucket )
+    #set($bucketId = $pointsBucket.id)
+    #set($daysInt = $formatter.toInteger($days, false))
 
     <div class="panel panel-default debits-activity">
         <div class="panel-heading">
             <i class="fa fa-table"></i>
             Debits activity in
-			$pointsBucket.title
+            $!pointsBucket.title
         </div>
         <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
             <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
@@ -21,32 +19,23 @@
         </div>
     </div>
 
-	<script>
-		var jsonResp = $!applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
-		$('.debits-activity').data("jsonresp", jsonResp);
-		$('.debits-activity').data("bucketId", ${bucketId});
-	</script>
+    <script>
+        var jsonResp = $!applications.rewardStore.getDebitsHistogram($bucketId, $daysInt);
+        $('.debits-activity').data("jsonresp", jsonResp);
+        $('.debits-activity').data("bucketId", ${bucketId});
+    </script>
 
 
-	#else
-		#fakeUI()
-	#end
 #else
-	#fakeUI()
-#end
-
-#macro(fakeUI)
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-table"></i>
-        Debits activity in example
-    </div>
-    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
-            Points bucket not found
+    <div class="panel panel-default debits-activity">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Debits activity
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <div id="rewardDebitsActivityChart-${bucketId}" style="height: 100%;">
+                <svg></svg>
+            </div>
         </div>
     </div>
-</div>
 #end
-
-

@@ -4,7 +4,7 @@
 
 
 
-#if($page)
+#if("$!page" != "" && "$!bucket" != "")
 
     #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
 
@@ -45,27 +45,18 @@
             #end
         </div>
     </div>
-    #else
-    #fakeUI()
     #end
 #else
-    #fakeUI()
-#end
-
-
-
-#macro(fakeUI)
-<!--<h2>Component: recentPoints</h2>-->
-<div class="clearfix panel panel-default">
-    <div class="panel-heading">
-        <i class="fa fa-table"></i>
-        Recent points in example
+    <div class="clearfix panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-table"></i>
+            Recent points
+        </div>
+        <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+            <p>
+                <i>You have not been awarded any points in the last 10 days</i>
+            </p>
+        </div>
     </div>
-    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
-        <p>
-            <i>You have not been awarded any points in the last 10 days</i>
-        </p>
-    </div>
-</div>
 #end
 

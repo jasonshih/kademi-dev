@@ -298,10 +298,16 @@ function initManageArticleFiles() {
     var filesContainer = $('#files-container');
     var addFileModal = $('#modal-add-file');
     addFileModal.find('form.form-horizontal').forms({
-        callback: function (resp, form) {
-            filesContainer.reloadFragment();
+        onProgress:function (percentComplete, form) {
             $(".modal").modal("hide");
             form[0].reset();
+            $('.progress-bar')
+            .html(round(percentComplete, 1) + '%')
+            .css('width', percentComplete + '%');
+            $('.progressContainer').show();
+        },
+        callback: function (resp, form) {
+            filesContainer.reloadFragment();
         }
     });
     filesContainer.on('click', '.file-delete', function (e) {
