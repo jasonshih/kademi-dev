@@ -25,6 +25,12 @@ JBNodes['formGoal'] = {
                 '        <label>Form Path</label>' +
                 '        <input type="text" class="form-control form-path" value="">' +
                 '    </div>' +
+                '</div>' + 
+                '<div class="form-group">' +
+                '    <div class="col-md-12">' +
+                '        <label>Form Data Field</label>' +
+                '        <input type="text" class="form-control form-data-field" value="">' +
+                '    </div>' +
                 '</div>' + JBApp.standardGoalSettingControls
                 );
 
@@ -34,8 +40,10 @@ JBNodes['formGoal'] = {
             allowPostForm: false,
             onValid: function () {
                 var formPath = form.find('.form-path').val();
+                var formDataField = form.find('.form-data-field').val();
 
                 JBApp.currentSettingNode.formPath = formPath || null;
+                JBApp.currentSettingNode.formDataFieldName = formDataField || null;
                 
                 JBApp.saveFunnel('Funnel is saved', function () {
                     JBApp.hideSettingPanel();
@@ -48,6 +56,7 @@ JBNodes['formGoal'] = {
         flog("showSettingForm", node);
         
         form.find('.form-path').val(node.formPath);
+        form.find('.form-data-field').val(node.formDataFieldName);
         
         JBApp.showStandardGoalSettingControls(form, node);
         JBApp.showSettingPanel(node);
