@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>Manage Subscriptions</title>
+        <script type="text/javascript" src="manageSubscriptions.js">//</script>
     </head>
     <body>
     <form action="" method="POST" class="form-horizontal" role="form" id="subscriptionDetails">
@@ -62,29 +63,8 @@
     <div class="clearfix"></div>   
     <script>
       $(function(){
-            jQuery("form#subscriptionDetails").forms({
-               onSuccess: function (resp) {
-                    if (resp.status) {
-                        Msg.info(resp.messages);
-                    } else {
-                        Msg.error("An error occured updating the subscription. Please check your internet connection");
-                    }
-               },
-              onError: function( resp){
-                Msg.error("An error occured updating the subscriptions");
-              }
-           }); 
-           
-            function initOrgFinder() {
-                 $('input#orgId').entityFinder({
-                     useActualId: false,
-                     type: 'organisation'
-                 });
-             }
-             
-             initOrgFinder();  
+          initUpdateSubscription();
       });
-        
     </script>
     </body>
 </html>
