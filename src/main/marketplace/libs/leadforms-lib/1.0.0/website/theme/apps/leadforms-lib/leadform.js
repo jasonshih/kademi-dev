@@ -2,9 +2,9 @@ function initAndPopulateLeadForm(editable, saveOnly) {
     var formData = $.trim($("#form-data").html()) === '' ? {} : JSON.parse($("#form-data").html());
     
     if (editable && saveOnly) {
-        $("#save-button").val("Save Details");
+        $("#save-button").html("Save Details");
     } else if (editable && !saveOnly) {
-        $("#save-button").val("Submit Form");
+        $("#save-button").html("Submit Form");
     } else {
         $("#save-button").remove();
     }
