@@ -5,7 +5,7 @@
 #set( $calendarEvent = $page )
 #end
 
-#if(!$page and (!$calendarEvent || !$calendarEvent.attendees || $calendarEvent.attendees.isEmpty()))
+#if(!$page || !$calendar)
     <div class="attendees attendeesWrap clearfix" >
         <h3>2 attending</h3>
         <ul class="attendees">
