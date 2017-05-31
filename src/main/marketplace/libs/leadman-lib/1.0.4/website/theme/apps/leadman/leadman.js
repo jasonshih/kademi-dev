@@ -33,7 +33,9 @@ function initLeadManEvents() {
     initLeadmanModal();
     initDotdotdot();
     initSearchFilter();
-    
+    initNotesDotDotDot();
+    initNoteMoreLess();
+
     // init the login form
     $(".login").user({});
     
@@ -780,6 +782,35 @@ function initNewQuoteForm() {
     });
 }
 
+function initNotesDotDotDot() {
+    function dotdotdotCallback(isTruncated, originalContent) {
+        if (!isTruncated) {
+            $("a.note-more", this).remove();
+        }
+    }
+    $('.note-content').dotdotdot({
+        height: 100,
+        callback: dotdotdotCallback,
+        after: 'a.note-more'
+    });
+}
+
+function initNoteMoreLess() {
+    $(document).on('click', 'a.note-more', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var div = btn.parents('.note-content');
+        if (btn.hasClass('note-less')){
+            div.find('a.note-more').text('more').removeClass('note-less');
+            initNotesDotDotDot();
+        } else {
+            $('.note-content').trigger('destroy').css('max-height', '');
+            div.find('a.note-more').text('less').addClass('note-less');
+        }
+
+    });
+}
+
 function initNewNoteForm() {
     var modal = $('#newNoteModal');
     var form = modal.find('form');
@@ -803,12 +834,18 @@ function initNewNoteForm() {
             var leadNotesBody = $('#leadNotesBody');
             var viewProfilePage = $('#view-profile-page');
             if (leadNotesBody.length) {
-                $('#leadNotesBody').reloadFragment();
+                $('#leadNotesBody').reloadFragment({
+                    whenComplete: function () {
+                        $(document).find('abbr.timeago').timeago();
+                        initNotesDotDotDot()
+                    }
+                });
             }
             if (viewProfilePage.length) {
                 viewProfilePage.reloadFragment({
                     whenComplete: function () {
-                        $('abbr.timeago').timeago();
+                        $(document).find('abbr.timeago').timeago();
+                        initNotesDotDotDot()
                     }
                 });
             }
@@ -855,7 +892,8 @@ function initNewNoteForm() {
             editModal.modal("hide");
             $('#notes').reloadFragment({
                 whenComplete: function () {
-                    $('abbr.timeago').timeago();
+                    $(document).find('abbr.timeago').timeago();
+                    initNotesDotDotDot();
                 }
             });
         }
