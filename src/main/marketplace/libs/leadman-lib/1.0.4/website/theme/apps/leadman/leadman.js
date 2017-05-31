@@ -893,6 +893,7 @@ function initNewNoteForm() {
             $('#notes').reloadFragment({
                 whenComplete: function () {
                     $(document).find('abbr.timeago').timeago();
+                    initNotesDotDotDot();
                 }
             });
         }
