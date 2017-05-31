@@ -331,6 +331,14 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="files">
+                        
+                        <div class="progressContainer" style="display: none">
+                            <p>Please note there can be a lengthy pause after reaching 100%.</p>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+
                         #if( $page.publishedDate or $page.submittedDate )
                             <p class="alert alert-info lead">
                                 <i class="fa fa-info-circle"></i> Your article is published. If you want to add files, please unpublish it at <a href="#activity-tab">here</a>.

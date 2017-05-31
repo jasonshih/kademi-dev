@@ -103,7 +103,7 @@
                                     <div class="col-sm-12">
                                         <div class="form-inline text-right">
                                             <div class="form-group" style="margin-right: 20px">
-                                                <label for="startRow" > <input type="checkbox"name="usePhoneToMatch" id="usePhoneToMatch" value="true"/> Use phone to match </label>
+                                                <label for="usePhoneToMatch" > <input type="checkbox"name="usePhoneToMatch" id="usePhoneToMatch" value="true"/> Use phone to match </label>
                                             </div>
                                             <div class="form-group" style="margin-right: 20px">
                                                 <label for="startRow" >Start row: </label>
@@ -136,6 +136,7 @@
                                     so may take some time depending on the size of the file</p>
 
                                 <hr/>
+                                <div class="alert-remove-users alert alert-danger hide">You about to remove the uploaded profiles. Once a profile has been removed it cannot be restored.</div>
 
                                 <div id="processing">
                                     <h4>Processing the file validations. Please wait...</h4>
@@ -144,7 +145,7 @@
                                 <div id="result">
                                     <button type="submit" class="btn btn-success btn-large">
                                         <span class="fa fa-arrow-circle-right"></span>
-                                        Import now
+                                        <span class="btn-text">Import now</span>
                                     </button>
     
     								<span id="noValidRow">There are no valid row in the file, please review it</span>
@@ -236,7 +237,7 @@
 
         <script type="text/javascript" src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/manageUsersImport.js?v=1.0.0">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/manageUsersImport.js?v=1.0.1">//</script>
         <script type="text/javascript">
             $(function(){
                 initManageUsersImport();

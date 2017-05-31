@@ -1,80 +1,75 @@
-<!-- test $rewardResource.children.ofType.category $rewardResource.children.ofType.category.size() -->
-<!-- test1 $page.children.ofType.category $page.children.ofType.category.size() -->
-
-
 
 #if($page)
-    #if ($reward && $reward != "")
-        #set ($rewardPath = "/" + $reward)
-        #set ($rewardResource = $rootFolder.find($rewardPath))
 
-    #if (!$numberOfProducts)
-    #set ($numberOfProducts = 99)
-    #else
-    #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
-    #end
-
-    #set ($count = 0)
-
-    #if($rewardResource.children.ofType.category)
-        <div class="row" id="cates-list">
-            #foreach($cat in $rewardResource.children.ofType.category)
-                #if ($cat.numProducts > 0)
-                #if ($count < $numberOfProducts)
-                    <div class="col-sm-6 col-md-4">
-                        #set($bg = "/theme/img/photo_holder.png")
-                        #if( $cat.imageHref )
-                            #set($bg = $cat.imageHref)
-                        #end
-                        <a href="$cat.href" class="cate-item">
-                            <div class="cate">
-                                <div class="embed-responsive embed-responsive-4by3">
-                                    <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
-                                </div>
-                                <div class="caption h3 text-center cate-title bg-primary" title="$cat.title">$cat.title</div>
-                            </div>
-                        </a>
-                    </div>
-                    #set ($count = $count + 1)
-                #end
-                #end
-            #end
-        </div>
-
-    #else
+    #if("$!reward" == "" && "$!page.children.ofType.category" == "")
         #fakeUI()
-    #end
     #else
+        #if ($reward && "$!reward" != "")
+            #set ($rewardPath = "/" + $reward)
+            #set ($rewardResource = $rootFolder.find($rewardPath))
 
-        #if($page.children.ofType.category)
+            #if (!$numberOfProducts)
+                #set ($numberOfProducts = 99)
+            #else
+                #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+            #end
+
+            #set ($count = 0)
+
+            #if($rewardResource.children.ofType.category)
+            <div class="row" id="cates-list">
+                #foreach($cat in $rewardResource.children.ofType.category)
+                    #if ($cat.numProducts > 0)
+                        #if ($count < $numberOfProducts)
+                            <div class="col-sm-6 col-md-4">
+                                #set($bg = "/theme/img/photo_holder.png")
+                                #if( $cat.imageHref )
+                                    #set($bg = $cat.imageHref)
+                                #end
+                                <a href="$cat.href" class="cate-item">
+                                    <div class="cate">
+                                        <div class="embed-responsive embed-responsive-4by3">
+                                            <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
+                                        </div>
+                                        <div class="caption h3 text-center cate-title bg-primary" title="$cat.title">$cat.title</div>
+                                    </div>
+                                </a>
+                            </div>
+                            #set ($count = $count + 1)
+                        #end
+                    #end
+                #end
+            </div>
+            #end
+        #else
+            #if($page.children.ofType.category)
             <div class="row" id="cates-list">
                 #set ($count = 0)
                 #foreach($cat in $page.children.ofType.category)
-                #if ($cat.numProducts > 0)
-                #if ($count < $numberOfProducts)
-                <div class="col-sm-6 col-md-4 product-item">
-                    #set($bg = "/theme/img/photo_holder.png")
-                    #if( $cat.imageHref )
-                    #set($bg = $cat.imageHref)
-                    #end
-                    <a href="$cat.href" class="cate-item">
-                        <div class="thumbnail cate">
-                            <div class="embed-responsive embed-responsive-4by3">
-                                <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
+                    #if ($cat.numProducts > 0)
+                        #if ($count < $numberOfProducts)
+                            <div class="col-sm-6 col-md-4 product-item">
+                                #set($bg = "/theme/img/photo_holder.png")
+                                #if( $cat.imageHref )
+                                    #set($bg = $cat.imageHref)
+                                #end
+                                <a href="$cat.href" class="cate-item">
+                                    <div class="thumbnail cate">
+                                        <div class="embed-responsive embed-responsive-4by3">
+                                            <span class="embed-responsive-item cate-image" style="background-image: url($bg);"></span>
+                                        </div>
+                                        <div class="caption h3 text-center cate-title" title="$cat.title">$cat.title</div>
+                                    </div>
+                                </a>
                             </div>
-                            <div class="caption h3 text-center cate-title" title="$cat.title">$cat.title</div>
-                        </div>
-                    </a>
-                </div>
-                #set ($count = $count + 1)
-                #end
-                #end
+                            #set ($count = $count + 1)
+                        #end
+                    #end
                 #end
             </div>
-        #else
-            #fakeUI()
-        #end
+            #end
 
+        #end
     #end
 
 #else

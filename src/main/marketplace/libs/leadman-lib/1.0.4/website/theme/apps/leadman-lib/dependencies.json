@@ -98,7 +98,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadman.js"
+                "path": "/theme/apps/leadman/leadman.js?v=1.0.0"
             }
         },
         {

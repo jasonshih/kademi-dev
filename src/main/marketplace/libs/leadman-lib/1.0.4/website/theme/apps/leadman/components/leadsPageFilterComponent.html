@@ -81,6 +81,7 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="sourcesDrop">
+                        <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains('NOSOURCE'), 'filterSelected', '')" href="NOSOURCE"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains('NOSOURCE'), '', 'hide')"></i></span> Leads with no source</a></li>
                         #foreach( $funnel in $page.find("/leads/").funnels)
                         #foreach( $source in $funnel.sources)
                         <li><a data-filter="sources" class="$formatter.ifTrue($params.sources.contains($source), 'filterSelected', '')" href="$source"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.sources.contains($source), '', 'hide')"></i></span> $source</a></li>
