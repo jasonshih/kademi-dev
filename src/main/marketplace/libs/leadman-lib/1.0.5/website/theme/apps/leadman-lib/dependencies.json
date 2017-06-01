@@ -1,27 +1,23 @@
 {
     "appDependencies": [
         {
-            "appId": "d3-lib",
-            "branch": "3.4.1"
-        },
-        {
-            "appId": "nvd3-lib",
-            "branch": "1.8.1"
+            "appId": "moment-lib",
+            "branch": "2.18.1"
         },
         {
             "appId": "dropzone-lib",
             "branch": "4.3.0"
         },
         {
-            "appId": "moment-lib",
-            "branch": "2.18.1"
+            "appId": "nvd3-lib",
+            "branch": "1.8.2"
         },
         {
             "appId": "datetimepicker-lib",
             "branch": "4.17.37"
-        }        
+        }
     ],
-    
+
     "dependencies": [
         {
             "js": {
@@ -98,7 +94,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadman.js"
+                "path": "/theme/apps/leadman/leadman.js?v=1.0.0"
             }
         },
         {
