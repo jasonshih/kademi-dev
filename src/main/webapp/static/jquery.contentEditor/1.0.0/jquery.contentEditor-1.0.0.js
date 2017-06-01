@@ -540,8 +540,6 @@
         form.find('.columns-setting').html(htmlStr);
     };
     
-    
-    
     contentEditor.toMenuData = function (ol, list) {
         flog('[jquery.contentEditor] toMenuData', ol, list);
         
@@ -816,6 +814,63 @@
             items: '> li',
             axis: 'y',
             tolerance: 'pointer'
+        });
+    };
+    
+    contentEditor.rgb2Hex = function (value) {
+        if (!value) {
+            return '';
+        }
+        
+        var hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
+        var hex = function (x) {
+            return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+        }
+        
+        value = value.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        
+        if ($.isArray(value)) {
+            return "#" + hex(value[1]) + hex(value[2]) + hex(value[3]);
+        } else {
+            return '';
+        }
+    };
+    
+    contentEditor.initSimpleColorPicker = function (target, onChange) {
+        flog('[jquery.contentEditor] initSimpleColorPicker', target);
+        
+        target.wrap('<div class="input-group"></div>');
+        
+        var previewer = $('<span class="input-group-addon" style="color: transparent;"><i class="fa fa-stop"></i></span>');
+        target.before(previewer);
+        previewer.css('color', target.val() || 'transparent');
+        
+        var getColor = function (color) {
+            if (color) {
+                previewer.css('color', color);
+                color = contentEditor.rgb2Hex(previewer.css('color'));
+            } else {
+                previewer.css('color', 'transparent');
+                color = '';
+            }
+            
+            return color;
+        };
+        
+        target.on({
+            change: function () {
+                var color = getColor(this.value);
+                
+                target.val(color);
+                
+                if (typeof onChange === 'function') {
+                    onChange.call(target, color);
+                }
+            },
+            update: function () {
+                previewer.css('color', '');
+                target.val(getColor(target.val()));
+            }
         });
     };
     

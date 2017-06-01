@@ -31,102 +31,77 @@
         settingTitle: 'Carousel settings',
 
         initSettingForm: function (form, keditor) {
-            form.append(
-                '<form class="form-horizontal">' +
-                '   <div class="form-group">' +
-                '       <div class="col-sm-12">' +
-                '           <div class="carouselImageWrap"></div>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <div class="col-sm-12">' +
-                '           <button type="button" class="btn btn-block btn-primary carouselAddImage"><i class="fa fa-plus"></i> Add Image</button>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-responsive" class="col-sm-12">Cycle continuously</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="checkbox" class="carouselWrap" />' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-align" class="col-sm-12">Pause</label>' +
-                '       <div class="col-sm-12">' +
-                '           <select class="form-control carouselPause">' +
-                '               <option selected value="">No</option>' +
-                '               <option value="hover">Hover</option>' +
-                '           </select>' +
-                '       </div>' +
-                '   </div>' +
-                '   <div class="form-group">' +
-                '       <label for="photo-height" class="col-sm-12">Interval</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" class="form-control carouselInterval" value="5000" />' +
-                '       </div>' +
-                '   </div>' +
-                '</form>'
-            );
-
-            var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
-            var carouselAddImage = form.find('.carouselAddImage');
-            var carouselImageWrap = form.find('.carouselImageWrap');
-            var self = this;
-
-            carouselAddImage.mselect({
-                contentTypes: ['image'],
-                bs3Modal: true,
-                pagePath: basePath,
-                basePath: basePath,
-                onSelectFile: function (url, relUrl, type, hash) {
-                    flog('keditor carousel selected a file', url, hash);
-                    self.addImageToList(form, url, hash);
-                    self.addImageToCarousel(keditor.getSettingComponent(), url, hash);
-                }
-            });
-
-            carouselImageWrap.sortable({
-                handle: '.btn-sort-image',
-                items: '> .carouselImageItem',
-                axis: 'y',
-                tolerance: 'pointer',
-                sort: function () {
-                    $(this).removeClass('ui-state-default');
-                },
-                update: function () {
-                    self.rearrangeItems(keditor.getSettingComponent(),form);
-                }
-            });
-
-            $(document.body).on('click', '.carouselImageItem a.btn-remove-image', function (e) {
-                e.preventDefault();
-
-                if (confirm('Are you sure that you want to delete this image?')) {
-                    var btn = $(this);
-                    var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
-
-                    self.refreshCarousel(keditor.getSettingComponent(), hash);
-                    btn.closest('.carouselImageItem').remove();
-                }
-            });
-
-            form.find('.carouselPause').on('change', function (e) {
-                e.preventDefault();
-                var comp = keditor.getSettingComponent().find('.carousel');
-                comp.attr('data-pause', this.value);
-            });
-
-            form.find('.carouselInterval').on('change', function (e) {
-                e.preventDefault();
-                var comp = keditor.getSettingComponent().find('.carousel');
-                comp.attr('data-interval', this.value);
-            });
-
-            form.find('.carouselWrap').on('click', function (e) {
-                var comp = keditor.getSettingComponent().find('.carousel');
-                if (this.checked) {
-                    comp.attr('data-wrap', 'true');
-                } else {
-                    comp.attr('data-wrap', 'false');
+            flog('init "carousel" settings', form);
+    
+            return $.ajax({
+                url: '/static/keditor/componentCarouselSettings.html',
+                type: 'get',
+                dataType: 'HTML',
+                success: function (resp) {
+                    form.html(resp);
+    
+                    var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
+                    var carouselAddImage = form.find('.carouselAddImage');
+                    var carouselImageWrap = form.find('.carouselImageWrap');
+                    var self = this;
+    
+                    carouselAddImage.mselect({
+                        contentTypes: ['image'],
+                        bs3Modal: true,
+                        pagePath: basePath,
+                        basePath: basePath,
+                        onSelectFile: function (url, relUrl, type, hash) {
+                            flog('keditor carousel selected a file', url, hash);
+                            self.addImageToList(form, url, hash);
+                            self.addImageToCarousel(keditor.getSettingComponent(), url, hash);
+                        }
+                    });
+    
+                    carouselImageWrap.sortable({
+                        handle: '.btn-sort-image',
+                        items: '> .carouselImageItem',
+                        axis: 'y',
+                        tolerance: 'pointer',
+                        sort: function () {
+                            $(this).removeClass('ui-state-default');
+                        },
+                        update: function () {
+                            self.rearrangeItems(keditor.getSettingComponent(),form);
+                        }
+                    });
+    
+                    $(document.body).on('click', '.carouselImageItem a.btn-remove-image', function (e) {
+                        e.preventDefault();
+        
+                        if (confirm('Are you sure that you want to delete this image?')) {
+                            var btn = $(this);
+                            var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
+            
+                            self.refreshCarousel(keditor.getSettingComponent(), hash);
+                            btn.closest('.carouselImageItem').remove();
+                        }
+                    });
+    
+                    form.find('.carouselPause').on('change', function (e) {
+                        e.preventDefault();
+                        var comp = keditor.getSettingComponent().find('.carousel');
+                        comp.attr('data-pause', this.value);
+                    });
+    
+                    form.find('.carouselInterval').on('change', function (e) {
+                        e.preventDefault();
+                        var comp = keditor.getSettingComponent().find('.carousel');
+                        comp.attr('data-interval', this.value);
+                    });
+    
+                    form.find('.carouselWrap').on('click', function (e) {
+                        var comp = keditor.getSettingComponent().find('.carousel');
+                        if (this.checked) {
+                            comp.attr('data-wrap', 'true');
+                        } else {
+                            comp.attr('data-wrap', 'false');
+                        }
+                    });
                 }
             });
         },
