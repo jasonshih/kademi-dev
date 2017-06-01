@@ -168,9 +168,11 @@
 
 #macro( showMenuItem $item )
 	#if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}"><a class="nav-${item.id}"
-                                                                                      href="$item.href"
-                                                                                      shape="rect">$item.text</a></li>
+    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}">
+        <a class="nav-${item.id} translatable" href="$item.href" shape="rect">
+            $formatter.translate($item.text)            
+        </a>
+    </li>
 	#else
     <li class="dropdown">
         <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
