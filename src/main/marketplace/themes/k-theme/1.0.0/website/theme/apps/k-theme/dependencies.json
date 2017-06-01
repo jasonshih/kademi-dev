@@ -1,0 +1,8 @@
+{
+    "appDependencies": [
+        {
+            "appId": "bootstrap-base",
+            "branch": "1.0.0"
+        }        
+    ]
+}

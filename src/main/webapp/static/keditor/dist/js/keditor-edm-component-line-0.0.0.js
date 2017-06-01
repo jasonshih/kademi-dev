@@ -23,49 +23,36 @@
         settingTitle: 'Line Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "line" component');
-            form.append(
-                '<form class="form-horizontal">' +
-                '    <div class="form-group">' +
-                '       <div class="col-md-12">' +
-                '           <label>Color</label>' +
-                '           <input type="text" value="" id="line-color" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <label for="line-height" class="col-sm-12">Width</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="line-width" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '    <div class="form-group">' +
-                '       <label for="line-height" class="col-sm-12">Height</label>' +
-                '       <div class="col-sm-12">' +
-                '           <input type="number" id="line-height" class="form-control" />' +
-                '       </div>' +
-                '    </div>' +
-                '</form>'
-            );
+            flog('init "line" settings', form);
     
-            form = form.find('form');
-            edmEditor.initDefaultComponentControls(form, keditor);
-
-            var lineHeight = form.find('#line-height');
-            lineHeight.on('change', function () {
-                keditor.getSettingComponent().find('.wrapper div').css('height', this.value);
-            });
-
-            var lineHeight = form.find('#line-width');
-            lineHeight.on('change', function () {
-                keditor.getSettingComponent().find('.wrapper table').attr('width', this.value);
-            });
+            return $.ajax({
+                url: '/static/keditor/edmComponentLineSettings.html',
+                type: 'get',
+                dataType: 'HTML',
+                success: function (resp) {
+                    form.html(resp);
     
-            var lineColorPicker = form.find('.line-color-picker');
-            edmEditor.initSimpleColorPicker(lineColorPicker, function (color) {
-                var wrapper = keditor.getSettingComponent().find('.wrapper');
-                var div = wrapper.children('div');
+                    form = form.find('.form-horizontal');
+                    edmEditor.initDefaultComponentControls(form, keditor);
     
-                edmEditor.setStyles('background-color', color, div);
+                    var lineHeight = form.find('#line-height');
+                    lineHeight.on('change', function () {
+                        keditor.getSettingComponent().find('.wrapper div').css('height', this.value);
+                    });
+    
+                    var lineHeight = form.find('#line-width');
+                    lineHeight.on('change', function () {
+                        keditor.getSettingComponent().find('.wrapper table').attr('width', this.value);
+                    });
+    
+                    var lineColorPicker = form.find('.line-color-picker');
+                    edmEditor.initSimpleColorPicker(lineColorPicker, function (color) {
+                        var wrapper = keditor.getSettingComponent().find('.wrapper');
+                        var div = wrapper.children('div');
+        
+                        edmEditor.setStyles('background-color', color, div);
+                    });
+                }
             });
         },
 
