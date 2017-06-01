@@ -7,7 +7,17 @@ controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "ht
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 
+controllerMappings
+    .websitePortletController()
+    .portletSection('shoppingCart')
+    .templatePath('/theme/apps/rewardstore/pointsBalancePortlet.html')
+    .method('getPointsBalance')
+    .enabled(true)
+    .build();
 
+function getPointsBalance() {
+    log.info('getPointsBalance');
+}
 function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {
     log.info('findProducts | query {} | category {} | rewardStoreId {} | from {} | max {} | priceStart {} | priceEnd {} | sort {} | asc {}', query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc);
     if (category == false){
