@@ -4,7 +4,7 @@
  */
 
 CKEDITOR.addTemplates('default',{
-    imagesPath: "/templates/themes/bootstrap335/editor-icons/",
+    imagesPath: "/themes/editor-icons/",
     templates:[
 
 
