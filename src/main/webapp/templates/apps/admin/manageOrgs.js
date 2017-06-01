@@ -225,9 +225,26 @@
         initSort();
         initMerge();
         initMove();
+        initCreateAccount();
     };
 
 })(jQuery, window, document);
+
+
+function initCreateAccount() {
+    var modal = $("#modal-create-account");
+    modal.find("form").forms( {
+        callback : function(resp) {
+            if( resp.status ) {
+                Msg.info("Created account");
+                var nextHref= "?gotoDomain=" + resp.nextHref;
+                window.location = nextHref;
+            } else {
+                Msg.error("Sorry, could not create the account because " + resp.messages);
+            }
+        }
+    });
+}
 
 function initMove() {
     var modal = $("#modal-move-orgs");

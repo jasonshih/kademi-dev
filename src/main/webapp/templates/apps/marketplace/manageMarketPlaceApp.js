@@ -65,7 +65,7 @@ function initInstallApp() {
                     if(data.status){
                         Msg.success('Successfully installed ' + title);
                     }else{
-                        Msg.warning('There was a problem installing ' + title + '. Please contact your system administrator.')
+                        Msg.warning('There was a problem installing ' + title + ". " + data.messages)
                     }
                 },
                 error: function (resp) {
