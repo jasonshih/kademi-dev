@@ -17,8 +17,9 @@
                     <div class="caption-full">
                         <h4 class="pull-right">
                             <button type="button" data-title="$page.title" class="btn btn-sm btn-green btn-install-app">
+                                <span class="fa fa-check"></span>
                                 #if(!$page.price || $page.price == 0)
-                                Free
+                                Install now
                                 #else
                                 $$page.price
                                 #end
@@ -67,7 +68,7 @@
                                     <div class="col-md-12">
                                         <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
                                             <input type="hidden" name="submitReview" value="submitReview"/>
-                                            <input id="ratings-hidden" name="rating" type="hidden"> 
+                                            <input id="ratings-hidden" name="rating" type="hidden">
                                             <textarea class="form-control animated limited" maxLength="200" rows="5" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
 
                                             <div class="text-right">

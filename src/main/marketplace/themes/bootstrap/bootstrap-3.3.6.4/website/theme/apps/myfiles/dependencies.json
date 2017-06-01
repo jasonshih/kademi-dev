@@ -1,40 +1,11 @@
 {
     "appDependencies": [
         {
-            "appId": "dropzone-lib",
-            "branch": "4.3.0"
+            "appId": "myfiles-lib",
+            "branch": "1.0.0"
         }
     ],
     "dependencies": [
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/css/jquery.lightbox-0.5.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/myfiles/directoryIndex.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.lightbox-0.5.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/myfiles/files.js"
-            }
-        }
+
     ]
 }
