@@ -1,0 +1,8 @@
+{
+    "appDependencies": [
+        {
+            "appId": "eway-lib",
+            "branch": "1.0.0"
+        }
+    ]
+}
