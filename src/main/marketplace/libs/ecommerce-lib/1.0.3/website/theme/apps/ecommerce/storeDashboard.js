@@ -4,7 +4,7 @@
 var startFrom = 12;
 var currentURI = new URI(window.location.href);
 
-$(function ($) {
+$(function () {
     function initProductSearch() {
         var timer;
         $('#searchBoxInput[data-type=RewardProducts]').on('keydown', function () {
@@ -55,9 +55,7 @@ $(function ($) {
         flog('initCategories');
         var categoryItems = $('.ecomStoreCategoriesList a.list-group-item');
         categoryItems.filter('[href='+window.location.pathName+']').addClass('selected');
-        debugger;
         categoryItems.on('click', function (e) {
-            debugger;
             e.preventDefault();
             var item = $(this);
             var newUrl = "";
@@ -189,4 +187,4 @@ $(function ($) {
 
     init();
 
-})(jQuery);
+});
