@@ -9,7 +9,11 @@
     <body class="manage-business-unit">
         <div id="manage-business-unit">
             <div class="btn-group">
-                <a class="btn btn-sm btn-success btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
+                <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new business units</a>
+                <a class="btn btn-sm btn-warning btn-add-account" data-toggle="modal" data-target="#modal-create-account" data- href="#" title="Create a new Kademi account">
+                    <i class="fa fa-plus"></i> Create account
+                </a>
+                
                 <a class="btn btn-sm btn-info" href="map"><i class="fa fa-map-marker"></i> Map</a>
                 <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-list"></i>
@@ -479,7 +483,51 @@
                         </form>
                     </div>
                 </div>
-            </div>            
+            </div>      
+            
+            <div id="modal-create-account" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New Kademi Account</h4>
+                        </div>
+                        <form method="post" action="" class="form-horizontal">
+                            <input type="hidden" name="newAccount" value="true"/>
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                
+                                <div class="form-group">
+                                    <label for="orgTitle" class="control-label col-md-3">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" id="orgTitle" placeholder="User friendly name for the organisation" />
+                                    </div>
+                                </div>                                
+                                
+                                <div class="form-group">
+                                    <label for="orgId2" class="control-label col-md-3">ID</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required simpleChars" name="orgId" id="orgId2" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                        <span class="help-block">
+                                            <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            
+                    
             
             <script type="text/javascript">
                 $(function () {

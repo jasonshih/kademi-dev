@@ -16,13 +16,21 @@
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
+                            #if( $page.installed )
+                            <span class="label label-info">
+                                <i class="fa fa-check"></i>
+                                Installed
+                            </span>
+                            #else
                             <button type="button" data-title="$page.title" class="btn btn-sm btn-green btn-install-app">
+                                <span class="fa fa-check"></span>
                                 #if(!$page.price || $page.price == 0)
-                                Free
+                                Install now
                                 #else
                                 $$page.price
                                 #end
                             </button>
+                            #end
                         </h4>
                         <h4 class="app"><a href="#">$page.title</a>
                         </h4>
@@ -67,7 +75,7 @@
                                     <div class="col-md-12">
                                         <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
                                             <input type="hidden" name="submitReview" value="submitReview"/>
-                                            <input id="ratings-hidden" name="rating" type="hidden"> 
+                                            <input id="ratings-hidden" name="rating" type="hidden">
                                             <textarea class="form-control animated limited" maxLength="200" rows="5" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
 
                                             <div class="text-right">
@@ -138,7 +146,9 @@
             <span class="fa fa-star-o"></span>
             #end
             #end
+            <!--
             <span>$reviewCount Reviews</span>
+            -->
         </p>
         #end
 

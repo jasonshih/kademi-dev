@@ -9,6 +9,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/js/jquery.timeago.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/contactus/contactus.js"
             }
         }

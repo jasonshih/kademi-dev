@@ -1,32 +1,35 @@
 {
     "appDependencies": [
-
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
+        }
     ],
     "dependencies": [
-//        {
-//            "css": {
-//                "cssMedia": "all",
-//                "path": "/theme/apps/calendar/calendars.css"
-//            }
-//        },
-//        {
-//            "js": {
-//                "group": "main",
-//                "path": "/theme/apps/calendar/cal-utils.js"
-//            }
-//        },
-//        {
-//            "js": {
-//                "group": "main",
-//                "path": "/theme/apps/calendar/calendars.js"
-//            }
-//        },
-//        {
-//            "js": {
-//                "group": "main",
-//                "path": "/theme/apps/calendar/calendar.js"
-//            }
-//        }
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/calendar/calendars.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/cal-utils.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/calendars.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/calendar.js"
+            }
+        }
 
     ]
 }

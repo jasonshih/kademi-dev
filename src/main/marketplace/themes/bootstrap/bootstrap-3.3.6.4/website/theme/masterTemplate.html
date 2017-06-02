@@ -96,7 +96,6 @@
     ## KToolbar for logged in user with admin or content author role
         #if($page.isWritable())
             <script src="/static/ktoolbar/ktoolbar.js">//</script>
-
             <div id="ktoolbar">
                 <div class="ktoolbarWrap">
                     <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
@@ -126,7 +125,6 @@
                 </div>
             </div>
         #end
-
 
         <div class="main-content" id="maincontentContainer">
             $themeTemplate.body

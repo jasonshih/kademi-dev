@@ -2,22 +2,7 @@
     "appDependencies": [
         {
             "appId": "email-lib",
-            "branch": "1.0.0"
+            "branch": "1.0.1"
         }
-    ],
-    "dependencies": [
-        {
-            "less": {
-                "lessMedia": "all",
-                "path": "/theme/apps/email/myInbox.less"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/email/myInbox.js"
-            }
-        }
-
-    ]           
+    ]
 }
