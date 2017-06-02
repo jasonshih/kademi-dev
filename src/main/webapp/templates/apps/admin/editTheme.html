@@ -17,18 +17,18 @@
             <div class="themes-wrapper">
                 <div class="row">
                     #foreach($theme in $page.allThemes)
-                    <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12 theme #if($page.currentTheme == $theme.name) current-theme #end">
-                        <a href="$theme.name" class="btn-select-theme">
-                            <div class="embed-responsive embed-responsive-16by9">
-                                <div class="embed-responsive-item" #if( $theme.previewImage ) style="background-image: url('/templates/themes/$theme.name/${theme.previewImage}')" #end>
-                                    #if( $theme.previewImage )
-                                    #else
-                                    <h2>$theme.title</h2>
-                                    #end
+                        <div class="col-xl-2 col-md-3 col-sm-4 col-xs-12 theme #if($page.currentTheme == $theme.name) current-theme #end">
+                            <a href="$theme.name" class="btn-select-theme">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <div class="embed-responsive-item" #if( $theme.previewImage ) style="background-image: url('/templates/themes/$theme.name/${theme.previewImage}')" #end>
+                                        #if( $theme.previewImage )
+                                        #else
+                                            <h2>$theme.title</h2>
+                                        #end
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
+                            </a>
+                        </div>
                     #end
                 </div>
             </div>
@@ -74,7 +74,6 @@
                     first = false;
 
                     themesWrapper.addClass('ajax-loading');
-                    themes.filter('.current-theme').removeClass('current-theme');
                     theme.addClass('ajax-loading');
 
                     $.ajax({
@@ -85,10 +84,24 @@
                         },
                         success: function (data) {
                             flog('success', data);
-                            theme.addClass('current-theme');
+                            if (data && data.status) {
+                                themes.filter('.current-theme').removeClass('current-theme');
+                                theme.addClass('current-theme');
+                                var msg = 'Theme is updated';
+                                if (data && data.messages && data.messages[0]) {
+                                    msg = data.messages[0];
+                                }
+                                Msg.success(msg);
+                                updatePreview();
+                            } else {
+                                var msg = 'Error when updating theme. Please content your administrator to resolve this issue';
+                                if (data && data.messages && data.messages[0]) {
+                                    msg = data.messages[0];
+                                }
+                                Msg.error(msg);
+                            }
                             theme.removeClass('ajax-loading');
                             themesWrapper.removeClass('ajax-loading');
-                            updatePreview();
                         },
                         error: function (resp) {
                             theme.removeClass('ajax-loading');
