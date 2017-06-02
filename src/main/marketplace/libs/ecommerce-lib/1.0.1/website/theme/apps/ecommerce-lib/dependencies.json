@@ -18,12 +18,6 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/ecommerce/storeCategory.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
                 "path": "/theme/apps/ecommerce/storeCheckout.css"
             }
         },
@@ -73,12 +67,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/ecommerce/productDetails.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/ecommerce/ecommerce-store.js"
             }
         },
         {
