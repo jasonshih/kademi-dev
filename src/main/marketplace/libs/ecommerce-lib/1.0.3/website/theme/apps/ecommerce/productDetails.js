@@ -1,4 +1,4 @@
-function initProductDetails() {
+function initEcomProductDetails() {
     initAddToCart();
     initViewedCookie();
     initImagesCarousel();
@@ -118,13 +118,14 @@ function initViewedCookie() {
 }
 
 function initAddToCart() {
-    $('.btn-add-to-cart').click(function (e) {
+    $('.btn-ecom-add-to-cart').click(function (e) {
         e.preventDefault();
 
         var target = $(e.target);
         var href = target.closest('a').attr('href');
-        var quantity = +$('.txt-quantity').val().trim();
-        
+        // var quantity = +$('.txt-quantity').val().trim();
+        var quantity = 1;
+
         flog('add item', href);
         doAddToCart(href, quantity);
     });

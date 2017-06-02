@@ -1,5 +1,5 @@
 (function ($) {
-    $('#products-list-${prodsListId}').find('.btn-add-to-cart').off('click').on('click', function (e) {
+    $('#products-list-${prodsListId}').find('.btn-ecom-add-to-cart').off('click').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
 

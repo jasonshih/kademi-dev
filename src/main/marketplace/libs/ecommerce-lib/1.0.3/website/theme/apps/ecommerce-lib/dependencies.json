@@ -4,15 +4,15 @@
     ],
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/ecommerce/ecommerce-store.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/ecommerce/store-dashboard.less"
             }
         },
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/ecommerce/storeCategory.css"
+                "path": "/theme/apps/ecommerce/ecommerce-store.css"
             }
         },
         {
@@ -31,6 +31,12 @@
             "js": {
                 "group": "main",
                 "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/storeDashboard.js"
             }
         },
         {
@@ -61,12 +67,6 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/ecommerce/productDetails.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/ecommerce/ecommerce-store.js"
             }
         },
         {
