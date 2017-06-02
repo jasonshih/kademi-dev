@@ -1,8 +1,8 @@
 {
   "appDependencies": [
         {
-            "appId": "rewardStore",
+            "appId": "learning",
             "branch" : ""
-        }
+        }        
   ]
 }

@@ -16,6 +16,12 @@
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
+                            #if( $page.installed )
+                            <span class="label label-info">
+                                <i class="fa fa-check"></i>
+                                Installed
+                            </span>
+                            #else
                             <button type="button" data-title="$page.title" class="btn btn-sm btn-green btn-install-app">
                                 <span class="fa fa-check"></span>
                                 #if(!$page.price || $page.price == 0)
@@ -24,6 +30,7 @@
                                 $$page.price
                                 #end
                             </button>
+                            #end
                         </h4>
                         <h4 class="app"><a href="#">$page.title</a>
                         </h4>

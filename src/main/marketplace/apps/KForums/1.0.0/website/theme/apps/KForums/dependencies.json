@@ -1,7 +1,7 @@
 {
   "appDependencies": [
         {
-            "appId": "rewardStore",
+            "appId": "forums",
             "branch" : ""
         }
   ]
