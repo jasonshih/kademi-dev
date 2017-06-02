@@ -91,61 +91,61 @@
 
 
 
-            <div id="recently-added">
-                <h4><b>Recently Added</b></h4>
-                #foreach($p in $recentlyAdded)
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.fields.primaryImageHref.value )
-                        #set($bg = $p.fields.primaryImageHref.value )
-                    #end
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="$p.fields.path.value">
-                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <p class="product-title">$!p.fields.title.value</p>
-                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
-                        </div>
-                    </div>
-                #end
-            </div>
-
-            <div id="last-viewed">
-                <h4><b>Last Viewed</b></h4>
-                #foreach($p in $lastViewed)
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.fields.primaryImageHref.value )
-                        #set($bg = $p.fields.primaryImageHref.value )
-                    #end
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="$p.fields.path.value">
-                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <p class="product-title">$!p.fields.title.value</p>
-                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
-                        </div>
-                    </div>
-                #end
-            </div>
-
-            <script type="text/javascript">
-                $(function () {
-                    onWindowStopResize(function () {
-                        $('#recently-added .product-title').dotdotdot({
-                            height: 20
-                        });
-
-                        $('#last-viewed .product-title').dotdotdot({
-                            height: 20
-                        });
-                    });
-                });
-            </script>
+##            <div id="recently-added">
+##                <h4><b>Recently Added</b></h4>
+##                #foreach($p in $recentlyAdded)
+##                    #set($bg = "/static/images/photo_holder.png")
+##                    #if( $p.fields.primaryImageHref.value )
+##                        #set($bg = $p.fields.primaryImageHref.value )
+##                    #end
+##                    <div class="media">
+##                        <div class="media-left">
+##                            <a href="$p.fields.path.value">
+##                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
+##                            </a>
+##                        </div>
+##                        <div class="media-body">
+##                            <p class="product-title">$!p.fields.title.value</p>
+##                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
+##                        </div>
+##                    </div>
+##                #end
+##            </div>
+##
+##            <div id="last-viewed">
+##                <h4><b>Last Viewed</b></h4>
+##                #foreach($p in $lastViewed)
+##                    #set($bg = "/static/images/photo_holder.png")
+##                    #if( $p.fields.primaryImageHref.value )
+##                        #set($bg = $p.fields.primaryImageHref.value )
+##                    #end
+##                    <div class="media">
+##                        <div class="media-left">
+##                            <a href="$p.fields.path.value">
+##                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
+##                            </a>
+##                        </div>
+##                        <div class="media-body">
+##                            <p class="product-title">$!p.fields.title.value</p>
+##                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
+##                        </div>
+##                    </div>
+##                #end
+##            </div>
+##
+##            <script type="text/javascript">
+##                $(function () {
+##                    onWindowStopResize(function () {
+##                        $('#recently-added .product-title').dotdotdot({
+##                            height: 20
+##                        });
+##
+##                        $('#last-viewed .product-title').dotdotdot({
+##                            height: 20
+##                        });
+##                    });
+##                });
+##            </script>
         #end
 
         #macro (renderProductItem $p $store $isRelated)
