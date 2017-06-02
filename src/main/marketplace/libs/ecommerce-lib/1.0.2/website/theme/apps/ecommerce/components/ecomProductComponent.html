@@ -27,11 +27,16 @@
 
                 </h3>
 
-                <a href="$page.href" class="btn btn-info btn-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
+                <a href="$page.href" class="btn btn-info btn-ecom-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    initEcomProductDetails();
+</script>
+
 #else
 <div class="ecomStoreCategoryProductsComponent ">
     #set ($productImage = "/theme/img/photo_holder.png")
@@ -50,7 +55,7 @@
                     <small>POINTS</small>
                 </h3>
 
-                <a href="#" class="btn btn-info btn-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
+                <a href="#" class="btn btn-info btn-ecom-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
             </div>
         </div>
     </div>
