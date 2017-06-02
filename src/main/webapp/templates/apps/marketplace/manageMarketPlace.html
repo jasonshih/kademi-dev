@@ -4,6 +4,16 @@
         <link href="manageMarketPlace.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+        
+        #if( $request.params.websiteName )
+        <p>
+        <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
+            <span class="fa fa-arrow-left"></span>
+            Back to website manager
+        </a>
+        </p>
+        #end
+                
         <div class="tabbable">
             <ul id="myTab" class="nav nav-tabs tab-bricky">
                 <li class="active">
@@ -23,7 +33,7 @@
                                 #if( $app.appProvider || $app.themeProvider )
                                 <div class="col-md-2">
                                     <div class="thumbnail app">
-                                        <a href="$app.href">
+                                        <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
                                             #set($logo = "/theme/apps/marketplace/no_logo.png")
                                             #if($app.logo)
                                                 #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
@@ -31,7 +41,12 @@
                                             <img src="$logo" alt="$app.title">
                                         </a>
                                         <div class="caption">
-                                            <h4 class="title"><a href="$app.href">$app.title<span class="parag-end"></span></a></h4>
+                                            <h4 class="title">
+                                                <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
+                                                    $app.title
+                                                    <span class="parag-end"></span>
+                                                </a>
+                                            </h4>
                                             <p>
                                                 #if( $app.brief )
                                                 $app.brief
