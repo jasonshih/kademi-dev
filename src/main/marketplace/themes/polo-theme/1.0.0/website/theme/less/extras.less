@@ -1,6 +1,6 @@
 @icon-font-path: "/theme/fonts/";
 
-@horizontalNarrowOffset: 40;
+@horizontalNarrowOffset : 40;
 
 @wellBackground: @well-bg;
 
@@ -142,20 +142,20 @@ table.list-view {
     border-bottom: solid @input-border 1px;
     margin-bottom: 10px;
     padding-bottom: 10px;
-    
+
     .comment-user {
         float: left;
         margin-right: 8px;
         width: 52px;
     }
-    
+
     .comment-user-pic {
         img {
             display: block;
             height: 52px;
         }
     }
-    
+
     .comment-user-name {
         text-align: center;
         display: block;
@@ -163,19 +163,19 @@ table.list-view {
         text-overflow: ellipsis;
         text-align: center;
     }
-    
+
     .comment-detail {
         margin: 0 0 0 60px;
     }
-    
+
     .comment-content {
         margin: 0 0 10px;
     }
-    
+
     .comment-reply {
         margin-right: 5px;
     }
-    
+
     .comment-replies-wrapper {
         margin-top: 10px;
     }
@@ -209,7 +209,7 @@ table.list-view {
             height: 100%;
             width: 100%;
         }
-        
+
     }
 }
 
@@ -241,16 +241,16 @@ ul.tools {
 
 .form-horizontal.form-horizontal-narrow {
     .control-label {
-    
+
     }
     .controls {
-    
+
     }
 }
 
 .form-horizontal.form-horizontal-narrower {
     .control-label {
-    
+
     }
     .controls {
     }
@@ -303,7 +303,7 @@ ul.tools {
     left: -50%;
     text-align: left;
     position: relative;
-    
+
     .centerInner {
         left: 50%;
         position: relative;
@@ -399,16 +399,16 @@ ul.tools {
 .tabs-below {
     > .nav-tabs {
         border-top: 1px solid #ddd;
-        
+
         > li {
             margin-top: -1px;
             margin-bottom: 0;
-            
+
             > a {
                 -webkit-border-radius: 0 0 4px 4px;
                 -moz-border-radius: 0 0 4px 4px;
                 border-radius: 0 0 4px 4px;
-                
+
                 &:hover, &:focus {
                     border-top-color: #ddd;
                     border-bottom-color: transparent;
@@ -426,7 +426,7 @@ ul.tools {
 .tabs-left, .tabs-right {
     > .nav-tabs > li {
         float: none;
-        
+
         > a {
             min-width: 74px;
             margin-right: 0;
@@ -439,18 +439,18 @@ ul.tools {
     float: left;
     margin-right: 19px;
     border-right: 1px solid #ddd;
-    
+
     > li > a {
         margin-right: -1px;
         -webkit-border-radius: 4px 0 0 4px;
         -moz-border-radius: 4px 0 0 4px;
         border-radius: 4px 0 0 4px;
-        
+
         &:hover, &:focus {
             border-color: #eee #ddd #eee #eee;
         }
     }
-    
+
     > .active a {
         &, &:hover, &:focus {
             border-color: #ddd transparent #ddd #ddd;
@@ -463,18 +463,18 @@ ul.tools {
     float: right;
     margin-left: 19px;
     border-left: 1px solid #ddd;
-    
+
     > li > a {
         margin-left: -1px;
         -webkit-border-radius: 0 4px 4px 0;
         -moz-border-radius: 0 4px 4px 0;
         border-radius: 0 4px 4px 0;
-        
+
         &:hover, &:focus {
             border-color: #eee #eee #eee #ddd;
         }
     }
-    
+
     > .active a {
         &, &:hover, &:focus {
             border-color: #ddd #ddd #ddd transparent;
@@ -542,7 +542,7 @@ ul.tools {
     border: 1px solid @panel-inner-border;
     .border-top-radius((@panel-border-radius - 1));
     .border-bottom-radius((@panel-border-radius - 1));
-    
+
     .tile-content {
         margin: 15px;
         p {
@@ -633,11 +633,11 @@ h2.course-selector {
         padding-bottom: 10px;
         min-height: 130px;
     }
-    
+
     .dropdown-menu li > div.loading {
         background: url("/static/images/loading.gif") 50% 50% no-repeat;
     }
-    
+
     .dropdown-menu li > p {
         border-bottom: 2px solid #ccc;
         margin-bottom: 0;
@@ -647,7 +647,7 @@ h2.course-selector {
         padding: 5px;
         text-decoration: none;
     }
-    
+
     .dropdown-menu li a.active {
         background: #428BCA;
         color: #fff;
@@ -684,7 +684,7 @@ h2.course-selector {
     .border-top-radius((@panel-border-radius - 1));
     .border-bottom-radius((@panel-border-radius - 1));
     position: relative;
-    
+
     .module-image-time {
         position: absolute;
         bottom: 5px;
@@ -776,7 +776,7 @@ h2.course-selector {
 .row-sm {
     margin-left: -5px;
     margin-right: -5px;
-    
+
     [class*="col-"] {
         padding-left: 5px;
         padding-right: 5px;
@@ -822,11 +822,11 @@ h2.course-selector {
 
 .video-wrapper {
     .clearfix;
-    
+
     .jw_container_outer {
         .clearfix;
     }
-    
+
     .jwplayer-wrapper {
         float: left;
     }
@@ -865,228 +865,36 @@ h2.course-selector {
     margin-right: 5px;
 }
 
-// =======================================================================================
-// Theme variables
-// =======================================================================================
-@import url('//fonts.googleapis.com/css?family=Roboto:300,400,700');
+// ==================================================
+// Polo theme
+// ==================================================
+@brand-primary: #272727;
+@border-radius-base: 0;
+@border-radius-small: 0;
+@border-radius-large: 0;
 
-@brand-primary: #252836;
-@brand-success: #39b7a1;
-@brand-info: #3988b7;
-@brand-warning: #8c559b;
-@brand-danger: #e31b5c;
-@white: #fff;
+@font-family-base: 'Lato', @font-family-sans-serif;
+@headings-font-family: 'Gruppo', @font-family-sans-serif;
 
-@gray-lighter: #f6f6f8; // used for background color
-@gray-light: #e2e2e5; // used for border
-@gray-darker: #bcbcbe;
+@navbar-inverse-bg: #282828;
 
-@input-color-placeholder: #bcbcbe;
-@text-color: @brand-primary;
+@navbar-inverse-border: #3c3c3c;
+@navbar-inverse-link-active-color: #32a5c8;
 
-@navbar-default-bg: @white;
-@navbar-margin-bottom: 0;
-@navbar-default-link-color: @brand-primary;
-@navbar-default-link-hover-color: @brand-primary;
-@navbar-default-link-active-color: @brand-primary;
+@link-color: #32a5c8;
 
-@navbar-inverse-bg: @brand-primary;
-
-@btn-default-bg: @white;
-@btn-default-border: @gray-light;
-
-@alert-info-text: @white;
-@alert-warning-text: @white;
-@alert-danger-text: @white;
-@alert-success-text: @white;
-@state-success-bg: @brand-success;
-@state-info-bg: @brand-info;
-@state-danger-bg: @brand-danger;
-@state-warning-bg: @brand-warning;
-@state-primary-bg: @brand-primary;
-
-@state-success-text: @brand-success;
-@state-info-text: @brand-info;
-@state-warning-text: @brand-warning;
-@state-danger-text: @brand-danger;
-
-@border-radius-base: 0px;
-@border-radius-large: 0px;
-@border-radius-small: 0px;
-
-@input-group-addon-bg: @gray-lighter;
-@input-group-addon-border-color: @gray-light;
-@input-color: @text-color;
-
-@navbar-height: 85px;
-
-@well-bg: @gray-lighter;
-@well-border: @gray-light;
-
-@input-height-base: 43px;
-@input-border: @gray-light;
-
-@panel-default-border: @gray-light;
-
-@hr-border: @gray-light;
-
-@table-border-color: @gray-light;
-@table-bg-accent: @gray-lighter;
-
-@legend-border-color: @gray-light;
-
-@panel-body-padding: 30px;
-
-@breadcrumb-bg: @gray-lighter;
-@breadcrumb-color: @brand-primary;
-@breadcrumb-active-color: @gray-darker;
-
-@blockquote-small-color: @gray-darker;
-
-@table-bg-accent: @gray-lighter;
-@panel-default-heading-bg: @gray-lighter;
-@panel-footer-bg: @gray-lighter;
-
-@panel-success-text: @white;
-@panel-info-text: @white;
-@panel-warning-text: @white;
-@panel-danger-text: @white;
+@text-color: #999;
 
 body {
-    color: @brand-primary;
-    font-family: 'Roboto', sans-serif;
-    font-size: 15px;
-    font-weight: 300;
+    background: #000 url('/theme/img/bg_body.png') repeat-x;
 }
 
-@font-size-base: 15px;
-@font-size-h1: 45px;
-@font-size-h2: 34px;
-@font-size-h3: 25px;
-@font-size-h4: 20px;
-@font-size-h5: @font-size-base;
-
-h1, .h1 {
-    font-weight: 300;
-}
-
-h2, .h2 {
-    font-weight: 300;
-}
-
-h3, .h3 {
-    font-weight: 300;
-}
-
-h4, .h4 {
-    font-weight: 700;
-}
-
-h5, .h5 {
-    font-weight: 700;
-}
-
-.panel-body {
-    h1, h2, h3, h4, h5, h6 {
-        margin-top: 0;
-    }
-}
-
-hr {
-    margin-top: 10px;
-}
-
-.container-inverse {
-    background: @brand-primary;
-    color: #fff;
-    h1 {
-        margin: 0;
-    }
-}
-
-@list-group-active-color: @brand-primary;
-@list-group-active-bg: @white;
-@list-group-active-border: @gray-light;
-@list-group-border: @white;
-@list-group-hover-bg: @white;
-@list-group-link-color: @brand-primary;
-
-.navbar-brand {
-    padding: 20px 20px 20px 15px;
-}
-
-.btn {
-    padding: 10px 20px 10px 15px;
-}
-
-.btn-primary {
-    border-left: 5px solid darken(@brand-primary, 5%);
-}
-
-.btn-success {
-    border-left: 5px solid darken(@brand-success, 5%);
-}
-
-.btn-info {
-    border-left: 5px solid darken(@brand-info, 5%);
-}
-
-.btn-warning {
-    border-left: 5px solid darken(@brand-warning, 5%);
-}
-
-.btn-danger {
-    border-left: 5px solid darken(@brand-danger, 5%);
-}
-
-.btn-default {
-    border-left: 5px solid darken(@gray-light, 5%);
-}
-
-.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-    @media (min-width: 768px) {
-        background: #fff;
-        border: 1px solid @gray-light;
-    }
-}
-
-.navbar-nav > li > a {
-    @media (min-width: 768px) {
-        margin-top: 15px;
-        padding: 15px 20px;
-    }
-}
-
-.rewardStoreCategoryProductsComponent {
-    .product-content {
-        display: none;
-    }
-}
-
-#cart-link a {
-    @media (min-width: 768px) {
-        display: block;
-        padding-top: 22px;
-    }
-}
-
-#checkout-info {
-    display: none;
-}
-
-.form-control {
-    -webkit-box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.05) inset;;
-    box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.05) inset;
-    font-size: 16px;
-    padding-left: 15px;
-}
-
-ul.memberships li {
-    border-bottom: 1px solid @gray-light !important;
-}
-
-.productSortDropdown {
-    @media (max-width: 767px) {
-        margin-bottom: 15px;
+.navbar-inverse {
+    .navbar-nav {
+        > li {
+            > a {
+                font-weight: bold;
+            }
+        }
     }
 }

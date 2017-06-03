@@ -1,20 +1,20 @@
 #if ($page)
 <div class="ecomStoreCategoryProductsComponent ">
+    <!-- tan $page $page.product $page.product.images $page.product.images.get(0)  $page.variantImageHref -->
     #set ($productImage = "/theme/img/photo_holder.png")
 
+    #set($bg = "/static/images/photo_holder.png")
     #if( $page.primaryImageHref )
-    #if ($page.selectedParameterOptions.size() > 0)
-    #set ($productImage = $page.variantImageHref)
+        #set($bg = $page.primaryImageHref)
     #else
-    #set ($productImage = '/_hashes/files/' + $page.productInReward.product.images.get(0).imageHash + '/alt-640-640.png')
-    #end
+        #set ($bg = '/_hashes/files/' + $page.product.images.get(0).hash + '/alt-640-640.png')
     #end
 
     <div class="product-item">
         <div class="thumbnail product">
             <div class="product-info">
                 <div class="embed-responsive embed-responsive-4by3">
-                    <a href="$page.href" class="embed-responsive-item" style="background-image: url('${productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center"></a>
+                    <a href="$page.href" class="embed-responsive-item" style="background-image: url('${bg}'); background-repeat: no-repeat; background-size: contain; background-position: center"></a>
                 </div>
             </div>
             <div class="caption">
