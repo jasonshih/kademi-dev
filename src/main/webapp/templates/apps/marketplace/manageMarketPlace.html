@@ -4,13 +4,23 @@
         <link href="manageMarketPlace.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
+
+        #if( $request.params.websiteName )
+        <p>
+            <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
+                <span class="fa fa-arrow-left"></span>
+                Back to website manager
+            </a>
+        </p>
+        #end
+
         <div class="tabbable">
             <ul id="myTab" class="nav nav-tabs tab-bricky">
                 <li class="active">
                     <a href="#browse" data-toggle="tab"><i class="fa fa-cart-plus"></i> Browse</a>
                 </li>
                 <li class="">
-                    <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Purchased</a>
+                    <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Installed</a>
                 </li>
             </ul>
 
@@ -21,12 +31,12 @@
                             <div class="col-md-12">
                                 #foreach($app in $page.children.ofType("app"))
                                 #if( $app.appProvider || $app.themeProvider )
-                                <div class="col-md-2">
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
                                     <div class="thumbnail app">
                                         <a href="$app.href">
                                             #set($logo = "/theme/apps/marketplace/no_logo.png")
                                             #if($app.logo)
-                                                #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
                                             #end
                                             <img src="$logo" alt="$app.title">
                                         </a>
@@ -59,6 +69,40 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="purchased">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12">
+                                #foreach($app in $page.installed)
+                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                                    <div class="thumbnail app">
+                                        <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
+                                            #set($logo = "/theme/apps/marketplace/no_logo.png")
+                                            #if($app.logo)
+                                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                                            #end
+                                            <img src="$logo" alt="$app.title">
+                                        </a>
+                                        <div class="caption">
+                                            <h4 class="title">
+                                                <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
+                                                    $app.title
+                                                    <span class="parag-end"></span>
+                                                </a>
+                                            </h4>
+                                            <p>
+                                                #if( $app.brief )
+                                                $app.brief
+                                                #else
+                                                No description.
+                                                #end
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                #end
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

@@ -7,6 +7,14 @@
         <!-- Page Content -->
         <div class="row">
             <div class="col-md-9">
+                #if( $request.params.websiteName.length() > 0 )
+                <p>
+                <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
+                    <span class="fa fa-arrow-left"></span>
+                    Back to website manager
+                </a>
+                </p>
+                #end
                 <div class="thumbnail">
                     #set($banner = "/theme/apps/marketplace/no_banner.png")
                     #set($bannerImg = $page.banner)
@@ -23,6 +31,14 @@
                                 $$page.price
                                 #end
                             </button>
+                            <br/>
+                            #if( $request.params.websiteName )
+                            <small>
+                            <i class="text-muted">Will be installed into $request.params.websiteName</i>
+                            </small>
+                            #end
+                            </p>
+                            #end
                         </h4>
                         <h4 class="app"><a href="#">$page.title</a>
                         </h4>
