@@ -318,6 +318,10 @@
                 $('#modalEditMessage').on('hide.bs.modal', function () {
                     iframe.src = iframe.src;
                 });
+
+                window.closeEdmEditor = function () {
+                    $('#modalEditMessage').modal('hide');
+                };
             });
         </script>
         #end
