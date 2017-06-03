@@ -38,6 +38,7 @@
     </head>
 
     <body class="manageWebsite">
+        #set($apps = $page.apps)
         #set($currentBranch = $page.closest("branch"))
         <div class="btn-group publishing pull-right">
             #if( $currentBranch.live )
@@ -136,6 +137,42 @@
 
             <div class="tab-content">
                 <div id="panel_details" class="tab-pane active">
+                    <div class="well">
+                        #set( $marketplaceApps = $page.marketPlaceApps )
+                        #if( $marketplaceApps.size() > 0 )
+                        <a style="margin-right: 20px; margin-bottom: 20px" class="btn btn-lg btn-success pull-left" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name">
+                            <span class="fa fa-cogs"></span>
+                            Find more apps
+                        </a>
+                        <p>
+                        Currently installed:
+                        #foreach( $app in $marketplaceApps )
+                        <span class="label label-info">$app.title</span>
+                        #end
+                        </p>
+                        <p>Manage
+                            <a href="#panel_apps-tab">app settings from the apps tab</a>, or find apps from the 
+                            <a href="/marketPlace/?websiteBranch=$page.name&websiteName=$page.parent.name">Kademi marketplace</a> to engage with your users.</p>
+
+                        #else
+                        <a style="margin-right: 20px; margin-bottom: 20px" class="btn btn-lg btn-success pull-left" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name">
+                            <span class="fa fa-cogs"></span>
+                            Install apps
+                        </a>
+                        <p>You havent installed any apps from the Kademi marketplace yet.</p>
+                        <p>Start by installing the
+                            <a href="/marketPlace/KCommerce/?websiteBranch=$page.name&websiteName=$page.parent.name">E-Commerce app</a> or
+                            <a href="/marketPlace/KRewardStore/?websiteBranch=$page.name&websiteName=$page.parent.name">Reward store app</a> or the
+                            <a href="/marketPlace/KLearning/?websiteBranch=$page.name&websiteName=$page.parent.name">E-Learning app</a></p>
+                        #end
+
+
+
+
+                        <div class="clearfix"></div>
+                    </div>
+
+
                     <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
                         <div class="alert alert-danger pageMessage">.</div>
                         <p class="clearfix text-center">
@@ -753,7 +790,7 @@
                         <input type="text" class="form-control" placeholder="Type to search" id="txt-search-app" />
                     </div>
                     <br />
-                    #set($apps = $page.apps)
+
                     #if( $apps.isEmpty() )
                     <div class="well">
                         <p>No applications are available. This means that the parent organisation has disabled them</p>
@@ -775,7 +812,7 @@
                                         <label for="chk_${app.appId}"></label>
                                         #end
                                     </td>
-                                    
+
                                     <td>
                                         <h4>$page.getTitle($app.appId)</h4>
                                         <p>$page.getSummary($app.appId)</p>
