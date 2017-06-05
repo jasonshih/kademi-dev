@@ -7,7 +7,7 @@
         <!-- Page Content -->
         <div class="row">
             <div class="col-md-9">
-                #if( $request.params.websiteName )
+                #if( $request.params.websiteName.length() > 0 )
                 <p>
                 <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
                     <span class="fa fa-arrow-left"></span>
@@ -44,7 +44,7 @@
                             <small>
                             <i class="text-muted">Will be installed into $request.params.websiteName</i>
                             </small>
-                            #end                  
+                            #end
                             </p>
                             #end
                         </h4>
