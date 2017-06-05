@@ -1,13 +1,12 @@
 #if ($page)
 <div class="ecomStoreCategoryProductsComponent ">
-    <!-- tan $page $page.product $page.product.images $page.product.images.get(0)  $page.variantImageHref -->
     #set ($productImage = "/theme/img/photo_holder.png")
 
     #set($bg = "/static/images/photo_holder.png")
     #if( $page.primaryImageHref )
         #set($bg = $page.primaryImageHref)
-    #else
-        #set ($bg = '/_hashes/files/' + $page.product.images.get(0).hash + '/alt-640-640.png')
+    #elseif("$!page.product" != "" && $page.product.size() > 0 )
+        #set ($bg = '/_hashes/files/' + $page.product.images[0].hash + '/alt-640-640.png')
     #end
 
     <div class="product-item">
