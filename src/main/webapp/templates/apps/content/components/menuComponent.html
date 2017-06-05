@@ -62,7 +62,7 @@
             </button>
             <a class="brand navbar-brand logo" href="/">
                 #if( $logo )
-                    <img src="$logo" class="img-responsive"/>
+                    <img src="$logo" class="img-responsive" />
                 #else
                     No Logo
                 #end
@@ -139,7 +139,7 @@
                                             <label class="control-label col-md-3" for="inputEmail">Email</label>
                                             <div class="col-md-9">
                                                 <input type="text" id="inputEmail" name="email" placeholder="Email"
-                                                        type="email" required="true" class="form-control"/>
+                                                        type="email" required="true" class="form-control" />
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
@@ -147,7 +147,7 @@
                                             <label class="control-label col-md-3" for="inputPassword">Password</label>
                                             <div class="col-md-9">
                                                 <input type="password" name="password" id="inputPassword"
-                                                        placeholder="Password" required="true" class="form-control"/>
+                                                        placeholder="Password" required="true" class="form-control" />
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
@@ -171,18 +171,22 @@
     </div>
 </div>
 
-#macro( showMenuItem $item )
+#macro( showMenuItem $item $isSubmenu)
     #if( $item.visible.isEmpty() )
     <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}">
         <a class="nav-${item.id} translatable" href="$item.href" shape="rect" title="$formatter.translate($item.text)">
-            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
-                <i class="$item.cssClass"></i>
-            #end
-            #if ($displayMenuItem == "icon")
-                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
-            #end
-            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+            #if ($isSubmenu)
                 $formatter.translate($item.text)
+            #else
+                #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
+                    <i class="$item.cssClass"></i>
+                #end
+                #if ($displayMenuItem == "icon")
+                    <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
+                #end
+                #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+                    $formatter.translate($item.text)
+                #end
             #end
         </a>
     </li>
@@ -203,7 +207,7 @@
         </a>
         <ul class="dropdown-menu">
             #foreach( $subitem in $item.visible )
-                #showMenuItem( $subitem )
+                #showMenuItem( $subitem, true )
             #end
         </ul>
     </li>
