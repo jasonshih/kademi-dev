@@ -41,13 +41,19 @@
         #macro( defaultDash )
             #portlets("adminDashboardPrimaryAnnounce")
 
+
+            #set( $adminDomains = $page.adminDomains )
+            #set( $websites = $page.organisation.websites() )
+            #set( $websites = $page.mainWebsites )
+            #if( $websites.size() > 0 || $adminDomains.size() == 0 )
             <div class="col-md-8">
                 <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
                     <div style="overflow: hidden; margin-top: -20px;">
                         <div class="row">
-                            #foreach( $website in $page.organisation.websites())
-                                #if( $website.redirectTo.length() > 0 )
-                                #else
+                            #if( $websites.size() < 3 )
+
+                            #end
+                            #foreach( $website in $websites)
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
                                         #if( $website.imageHash )
                                             #set( $bgimage = "/_hashes/files/$website.imageHash" )
@@ -82,11 +88,65 @@
                                             </div>
                                         </div>
                                     </div>
-                                #end
                             #end
                         </div>
                     </div>
                 </div>
+                #end
+
+                #set( $adminDomains = $page.adminDomains )
+                #if( $adminDomains.size() > 0 )
+                <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
+                    <div style="overflow: hidden; margin-top: -20px;">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
+                                #if( $suborg.imageHash )
+                                    #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                                #else
+                                    #set( $bgimage = "/static/images/website-icon-squared.png" )
+                                #end
+                                <div class="wrap-image">
+                                    <a href="#" style="background-image: url($bgimage)" class="dashWebsiteImage" data-toggle="modal" data-target="#modal-create-account">
+
+                                    </a>
+                                    <a href="#" class="group1 lead tileText cboxElement" data-toggle="modal" data-target="#modal-create-account">
+                                        New account
+                                    </a>
+                                </div>
+                            </div>
+
+                            #foreach( $suborg in $adminDomains )
+
+                                <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
+                                    #if( $suborg.imageHash )
+                                        #set( $bgimage = "/_hashes/files/$website.imageHash" )
+                                    #else
+                                        #set( $bgimage = "/static/images/website-icon-squared.png" )
+                                    #end
+                                    <div class="wrap-image">
+                                        <a href="/organisations/?gotoDomain=${suborg.adminDomain}" style="background-image: url($bgimage)" class="dashWebsiteImage">
+
+                                        </a>
+                                        <a title="$!suborg.formattedName" href="/organisations/?gotoDomain=${suborg.adminDomain}" class="group1 lead tileText cboxElement">
+                                            $!suborg.formattedName
+                                        </a>
+
+                                        <div class="tools tools-bottom">
+                                            <a href="/organisations/$suborg.id/edit" title="Edit">
+                                                <span class="fa fa-cog"></span>
+                                            </a>
+
+                                            <a href="/organisations/$suborg.id/viewDetails" title="View members">
+                                                <span class="fa fa-users"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                #end
 
                 <div class="ktile-container row">
                     <div class="ktile-sizer col-md-1 col-lg-1 col-sm-1"></div>

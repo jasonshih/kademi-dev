@@ -61,7 +61,7 @@
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
         <script type="text/javascript" src="/static/js/common.js">//</script>
         <script type="text/javascript" src="/static/jquery.forms/1.1.3/jquery.forms-1.1.3.js">//</script>
-        <script type="text/javascript" src="/static/jquery.user/1.0.4/jquery.user-1.0.4.js">//</script>  
+        <script type="text/javascript" src="/static/jquery.user/1.0.4/jquery.user-1.0.4.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" bottom="true">//</script>
@@ -379,7 +379,7 @@
             </script>
             <!--End of Zopim Live Chat Script-->
         #end
-        
+
         <!-- start: NEW USER MODAL -->
         <div id="modal-new-user" class="modal fade" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -480,7 +480,7 @@
                                                     #foreach($orgType in $rootFolder.orgTypes)
                                                     <option value="$orgType.name">$orgType.displayName</option>
                                                     #end
-                                                </select>                                                                                        
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -533,6 +533,46 @@
         </div>
         <!-- end: NEW USER MODAL -->
 
+        <div id="modal-create-account" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">New Kademi Account</h4>
+                        </div>
+                        <form method="post" action="/organisations/" class="form-horizontal">
+                            <input type="hidden" name="newAccount" value="true"/>
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                                <div class="form-group">
+                                    <label for="orgTitle" class="control-label col-md-3">Name</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="title" id="orgTitle" placeholder="User friendly name for the organisation" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="orgId2" class="control-label col-md-3">ID</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required simpleChars" name="orgId" id="orgId2" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                        <span class="help-block">
+                                            <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
     </body>
     <!-- end: BODY -->
 </html>
