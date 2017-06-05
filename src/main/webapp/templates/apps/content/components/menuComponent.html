@@ -44,8 +44,16 @@
 
 #set( $currentLang = $request.getCookie("selectedLangCode").value )
 
+#if (!$navbarLayout)
+    #set ($navbarLayout = "container-fluid")
+#end
+
+#if (!$displayMenuItem)
+    #set ($displayMenuItem = "text")
+#end
+
 <div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
-    <div class="container-fluid">
+    <div class="$navbarLayout">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
                 <span class="icon-bar"></span>
@@ -54,7 +62,7 @@
             </button>
             <a class="brand navbar-brand logo" href="/">
                 #if( $logo )
-                    <img src="$logo" class="img-responsive" />
+                    <img src="$logo" class="img-responsive"/>
                 #else
                     No Logo
                 #end
@@ -130,21 +138,25 @@
                                         <div class="form-group email">
                                             <label class="control-label col-md-3" for="inputEmail">Email</label>
                                             <div class="col-md-9">
-                                                <input type="text" id="inputEmail" name="email" placeholder="Email" type="email" required="true" class="form-control" />
+                                                <input type="text" id="inputEmail" name="email" placeholder="Email"
+                                                        type="email" required="true" class="form-control"/>
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label col-md-3" for="inputPassword">Password</label>
                                             <div class="col-md-9">
-                                                <input type="password" name="password" id="inputPassword" placeholder="Password" required="true" class="form-control" />
+                                                <input type="password" name="password" id="inputPassword"
+                                                        placeholder="Password" required="true" class="form-control"/>
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-offset-3 col-md-9">
                                                 <button type="submit" class="btn">Sign in</button>
-                                                <small class="pull-right"><a href="/password-reset" title="Forgotten password" class="Forgot">Forgotten password</a></small>
+                                                <small class="pull-right"><a href="/password-reset"
+                                                        title="Forgotten password" class="Forgot">Forgotten
+                                                    password</a></small>
                                             </div>
                                         </div>
                                         #portlets("socialLoginForm")
@@ -161,12 +173,33 @@
 
 #macro( showMenuItem $item )
     #if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}"><a class="nav-${item.id}" href="$item.href" shape="rect">$item.text</a></li>
+    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}">
+        <a class="nav-${item.id} translatable" href="$item.href" shape="rect" title="$formatter.translate($item.text)">
+            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
+                <i class="$item.cssClass"></i>
+            #end
+            #if ($displayMenuItem == "icon")
+                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
+            #end
+            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+                $formatter.translate($item.text)
+            #end
+        </a>
+    </li>
     #else
     <li class="dropdown">
-        <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover, 'data-hover="dropdown"', '') title="${item.text}">
-        $item.text
-        <span class="caret"></span>
+        <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
+            'data-hover="dropdown"', '') title="$formatter.translate($item.text)">
+            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
+                <i class="$item.cssClass"></i>
+            #end
+            #if ($displayMenuItem == "icon")
+                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
+            #end
+            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
+                $formatter.translate($item.text)
+            #end
+            <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
             #foreach( $subitem in $item.visible )
