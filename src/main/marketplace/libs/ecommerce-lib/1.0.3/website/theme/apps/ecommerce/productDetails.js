@@ -118,9 +118,8 @@ function initViewedCookie() {
 }
 
 function initAddToCart() {
-    $('.btn-ecom-add-to-cart').click(function (e) {
+    $('.product-item .btn-ecom-add-to-cart').click(function (e) {
         e.preventDefault();
-
         var target = $(e.target);
         var href = target.closest('a').attr('href');
         // var quantity = +$('.txt-quantity').val().trim();

@@ -602,7 +602,15 @@
             form.find('.logo-previewer').attr('src', '/static/images/photo_holder.png');
         });
         
-        form.on('click', '.cbb-show-user-menu', function () {
+        form.on('change', '.cbb-display-menu-item', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-display-menu-item', this.value);
+            keditor.initDynamicContent(dynamicElement);
+        });
+        
+        form.on('click', '.chk-show-user-menu', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -610,7 +618,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.on('click', '.cbb-show-org-selector', function () {
+        form.on('click', '.chk-show-org-selector', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -618,7 +626,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.on('click', '.cbb-show-lang-selector', function () {
+        form.on('click', '.chk-show-lang-selector', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -626,7 +634,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.on('click', '.cbb-show-search', function () {
+        form.on('click', '.chk-show-search', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -634,7 +642,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.on('click', '.cbb-inverse-menu', function () {
+        form.on('click', '.chk-inverse-menu', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -642,7 +650,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        form.on('click', '.cbb-show-sub-menu-on-hover', function () {
+        form.on('click', '.chk-show-sub-menu-on-hover', function () {
             var component = keditor.getSettingComponent();
             var dynamicElement = component.find('[data-dynamic-href]');
             
@@ -796,12 +804,14 @@
         form.find('.logo-previewer').attr('src', imageUrl ? imageUrl : '/static/images/photo_holder.png');
         form.find('[name=logo]').val(dataAttributes['data-logo']);
         
-        form.find('.cbb-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
-        form.find('.cbb-show-org-selector').prop('checked', dataAttributes['data-show-org-selector'] === 'true');
-        form.find('.cbb-show-lang-selector').prop('checked', dataAttributes['data-show-lang-selector'] === 'true');
-        form.find('.cbb-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
-        form.find('.cbb-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
-        form.find('.cbb-show-sub-menu-on-hover').prop('checked', dataAttributes['data-show-sub-menu-on-hover'] === 'true');
+        form.find('.cbb-display-menu-item').val(dataAttributes['data-display-menu-item'] || 'text');
+        
+        form.find('.chk-show-user-menu').prop('checked', dataAttributes['data-show-user-menu'] === 'true');
+        form.find('.chk-show-org-selector').prop('checked', dataAttributes['data-show-org-selector'] === 'true');
+        form.find('.chk-show-lang-selector').prop('checked', dataAttributes['data-show-lang-selector'] === 'true');
+        form.find('.chk-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
+        form.find('.chk-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
+        form.find('.chk-show-sub-menu-on-hover').prop('checked', dataAttributes['data-show-sub-menu-on-hover'] === 'true');
         
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
         
