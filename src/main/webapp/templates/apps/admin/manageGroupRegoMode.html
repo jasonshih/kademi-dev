@@ -314,7 +314,16 @@
                                                     #set($optin = "")
                                                     #set($optin = $page.optin($group))
                                                     $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                                    <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
+                                                                                                        
+                                                    <strong>                                                        
+                                                    #if( $group.groupType == "S" )
+                                                        <i class="fa fa-envelope-o"></i>
+                                                    #else
+                                                        <i class="fa fa-tag"></i>
+                                                    #end
+                                                        
+                                                        $group.name
+                                                    </strong>
 
                                                 </label>
                                             </div>
