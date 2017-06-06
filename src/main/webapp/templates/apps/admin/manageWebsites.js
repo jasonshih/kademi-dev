@@ -1,30 +1,10 @@
 function initManageWebsites() {
     flog('initManageWebsites');
 
-    initAddWebsite();
     initRename();
     initSwitchPublic();
 }
 
-function initAddWebsite() {
-    flog('initAddWebsite');
-
-    var modal = $("#addWebsiteModal");
-    var form = modal.find("form");
-
-    form.forms({
-        callback: function (resp) {
-            flog("done", resp);
-            modal.modal('hide');
-            Msg.success(form.find('[name=newName]').val() + ' is created!');
-            $('#website-wrapper').reloadFragment({
-                whenComplete: function () {
-                    initSwitch();
-                }
-            });
-        }
-    });
-}
 
 function initRename() {
     flog('initRename');

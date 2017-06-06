@@ -2,11 +2,17 @@
 <html>
     <head>
         <title>
+            #set( $title = false )
             #set( $title = $templater.mergeTitles( $template.title, $page.title) )
+            #if( $title )
             $title
+            #else
+            Untitled page
+            #end
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="templateName" content="$templateName" />
+        <meta name="theme" content="k-theme" />
         <meta name='pageType' value='$templater.getClassName($page)' />
         <meta name="description" content="" />
         <meta name="author" content="" />

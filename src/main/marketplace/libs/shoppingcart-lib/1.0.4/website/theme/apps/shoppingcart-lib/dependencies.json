@@ -21,7 +21,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/shoppingcart/checkout.js"
+                "path": "/theme/apps/shoppingcart/checkout.js?v=1.0.4"
             }
         },
         {
