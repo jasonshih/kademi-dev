@@ -1,150 +1,148 @@
-#if($page)
 
-    #if("$!store" != "")
-        #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
-        #set( $prods = $applications.rewardStore.searchProducts($store, null, $category, 'title', false) )
-        #set ($prodsListId = $formatter.randomGuid)
+<!-- tan $!store -->
+#if("$!store" != "")
+    #set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+    #set( $prods = $applications.rewardStore.searchProducts($store, null, $category, 'title', false) )
+    #set ($prodsListId = $formatter.randomGuid)
 
-        #if( $prods.size() > 0 )
-            #if ($prods.size() > $numberOfProducts)
-                #set( $prods =  $prods.subList(0, $numberOfProducts))
-            #end
-
-            #if ($layout == "grid")
-                #set ($clsName = "col-sm-4")
-                #if ($itemsPerRow == 1)
-                    #set ($clsName = "col-sm-12")
-                #elseif ($itemsPerRow == 2)
-                    #set ($clsName = "col-sm-6")
-                #elseif ($itemsPerRow == 3)
-                    #set ($clsName = "col-sm-4")
-                #elseif ($itemsPerRow == 4)
-                    #set ($clsName = "col-sm-3")
-                #end
-
-            <div class="row products-list" id="products-list-${prodsListId}">
-                #foreach($p in $prods)
-
-                    #set ($prodUrl = "/$store/$category/$p.name")
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.primaryImageHref )
-                        #set($bg = $p.primaryImageHref)
-                    #end
-                    <div class="$clsName product-item">
-                        <div class="thumbnail product">
-                            <a href="$prodUrl">
-                                <div class="embed-responsive embed-responsive-4by3">
-                                    <span class="embed-responsive-item" style="background-image: url($bg);"></span>
-                                </div>
-                            </a>
-                            <div class="caption">
-                                <h3 class="product-title" title="$p.title"><a href="$prodUrl">$p.title</a></h3>
-
-                                <p><span class="label label-default">$p.finalPoints Pts</span></p>
-
-                                <div class="product-content">$!p.notes</div>
-                                <div class="product-actions text-right">
-                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                #end
-
-                <script type="text/javascript">
-                    $(function () {
-                        var win = $(window);
-                        var timer = null;
-
-                        win.on('resize', function () {
-                            clearTimeout(timer);
-                            timer = setTimeout(function () {
-                                var brieves = $('#products-list-${prodsListId}').find('.product-brief');
-                                brieves.css('height', '');
-
-                                if (win.width() > 767) {
-                                    var heights = [];
-                                    brieves.each(function () {
-                                        heights.push($(this).innerHeight());
-                                    });
-
-                                    brieves.css('height', Math.max.apply(Math, heights));
-                                }
-                            }, 150);
-                        }).trigger('resize');
-                    });
-                </script>
-            </div>
-            #else
-            <div class="products-list" id="products-list-${prodsListId}">
-                #foreach($p in $prods)
-                    #set ($prodUrl = "/$store/$category/$p.name")
-                    <div class="media prod">
-                        <div class="media-left hidden-sm hidden-xs">
-                            #set($bg = "/static/images/photo_holder.png")
-                            #if( $p.primaryImageHref )
-                                #set($bg = $p.primaryImageHref)
-                            #end
-                            <a href="$prodUrl">
-                                <img class="media-object" alt="$p.title" src="$bg" width="200" height="" />
-                            </a>
-                        </div>
-                        <div class="media-body">
-                            <h4 class="media-heading" style="margin-bottom: 10px;">
-                                <a href="$prodUrl">$p.title</a>
-                            </h4>
-                            <p><label class="label label-success" style="font-size: 14px;">$p.finalPoints Pts</label></p>
-                            <div class="media-content clearfix">
-                                <p>$formatter.truncate( $formatter.toPlain( $!p.notes ), 200 )</p>
-                                <div>
-                                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
-                                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
-                #end
-            </div>
-            #end
-
-        <script type="text/javascript">
-            $(function () {
-                $('#products-list-${prodsListId}').find('.btn-add-to-cart').off('click').on('click', function (e) {
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-
-                    var btn = $(this);
-                    var href = btn.attr('href');
-
-                    $.ajax({
-                        type: 'POST',
-                        url: '/checkout',
-                        data: {
-                            addItemHref: href,
-                            addItemQuantity: 1
-                        },
-                        datatype: 'json',
-                        success: function () {
-                            Msg.info('Added item to shopping cart');
-                            $('#cart-link').reloadFragment();
-                        },
-                        error: function () {
-                            Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
-                        }
-                    });
-                });
-            })
-        </script>
+    #if( $prods.size() > 0 )
+        #if ($prods.size() > $numberOfProducts)
+            #set( $prods =  $prods.subList(0, $numberOfProducts))
         #end
-    #else
-        #fakeUI()
-    #end
 
+        #if ($layout == "grid")
+            #set ($clsName = "col-sm-4")
+            #if ($itemsPerRow == 1)
+                #set ($clsName = "col-sm-12")
+            #elseif ($itemsPerRow == 2)
+                #set ($clsName = "col-sm-6")
+            #elseif ($itemsPerRow == 3)
+                #set ($clsName = "col-sm-4")
+            #elseif ($itemsPerRow == 4)
+                #set ($clsName = "col-sm-3")
+            #end
+
+        <div class="row products-list" id="products-list-${prodsListId}">
+            #foreach($p in $prods)
+
+                #set ($prodUrl = "/$store/$category/$p.name")
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $p.primaryImageHref )
+                    #set($bg = $p.primaryImageHref)
+                #end
+                <div class="$clsName product-item">
+                    <div class="thumbnail product">
+                        <a href="$prodUrl">
+                            <div class="embed-responsive embed-responsive-4by3">
+                                <span class="embed-responsive-item" style="background-image: url($bg);"></span>
+                            </div>
+                        </a>
+                        <div class="caption">
+                            <h3 class="product-title" title="$p.title"><a href="$prodUrl">$p.title</a></h3>
+
+                            <p><span class="label label-default">$p.finalPoints Pts</span></p>
+
+                            <div class="product-content">$!p.notes</div>
+                            <div class="product-actions text-right">
+                                <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                                <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            #end
+
+            <script type="text/javascript">
+                $(function () {
+                    var win = $(window);
+                    var timer = null;
+
+                    win.on('resize', function () {
+                        clearTimeout(timer);
+                        timer = setTimeout(function () {
+                            var brieves = $('#products-list-${prodsListId}').find('.product-brief');
+                            brieves.css('height', '');
+
+                            if (win.width() > 767) {
+                                var heights = [];
+                                brieves.each(function () {
+                                    heights.push($(this).innerHeight());
+                                });
+
+                                brieves.css('height', Math.max.apply(Math, heights));
+                            }
+                        }, 150);
+                    }).trigger('resize');
+                });
+            </script>
+        </div>
+        #else
+        <div class="products-list" id="products-list-${prodsListId}">
+            #foreach($p in $prods)
+                #set ($prodUrl = "/$store/$category/$p.name")
+                <div class="media prod">
+                    <div class="media-left hidden-sm hidden-xs">
+                        #set($bg = "/static/images/photo_holder.png")
+                        #if( $p.primaryImageHref )
+                            #set($bg = $p.primaryImageHref)
+                        #end
+                        <a href="$prodUrl">
+                            <img class="media-object" alt="$p.title" src="$bg" width="200" height="" />
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" style="margin-bottom: 10px;">
+                            <a href="$prodUrl">$p.title</a>
+                        </h4>
+                        <p><label class="label label-success" style="font-size: 14px;">$p.finalPoints Pts</label></p>
+                        <div class="media-content clearfix">
+                            <p>$formatter.truncate( $formatter.toPlain( $!p.notes ), 200 )</p>
+                            <div>
+                                <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                                <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            #end
+        </div>
+        #end
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#products-list-${prodsListId}').find('.btn-add-to-cart').off('click').on('click', function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                var btn = $(this);
+                var href = btn.attr('href');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/checkout',
+                    data: {
+                        addItemHref: href,
+                        addItemQuantity: 1
+                    },
+                    datatype: 'json',
+                    success: function () {
+                        Msg.info('Added item to shopping cart');
+                        $('#cart-link').reloadFragment();
+                    },
+                    error: function () {
+                        Msg.error('An error occured adding the product to your shopping cart. Please check your internet connection and try again');
+                    }
+                });
+            });
+        })
+    </script>
+    #end
 #else
     #fakeUI()
 #end
+
 
 
 #macro(fakeUI)
