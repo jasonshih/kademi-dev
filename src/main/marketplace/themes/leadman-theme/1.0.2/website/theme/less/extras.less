@@ -751,7 +751,7 @@ h2.course-selector {
     position: fixed;
     top: 50%;
     left: 0;
-    transform: translate(0, -50%);
+    .translate(0, -50%);
     width: 100%;
     z-index: 4;
 }
@@ -783,6 +783,7 @@ h2.course-selector {
     }
 }
 
+
 // ==================================================
 // Inverse styles
 // ==================================================
@@ -812,10 +813,10 @@ h2.course-selector {
 .breadcrumb-inverse {
     background: @breadcrumb-inverse-bg;
     color: @breadcrumb-inverse-color;
-    li a {
+    li a{
         color: @breadcrumb-inverse-color;
     }
-    li.active a {
+    li.active a{
         color: lighten(@gray-light, 55%);
     }
 }
@@ -864,3 +865,28 @@ h2.course-selector {
 .list-group-item .glyphicon {
     margin-right: 5px;
 }
+
+// =======================================================================================
+// Leadman theme
+// =======================================================================================
+@import "app/reset/bootstrap-variables.less";
+
+[data-type="component-menu"] {
+    position: relative;
+    z-index: 9;
+    
+    .navbar {
+        background-color: @brand-primary;
+        
+        .navbar-nav {
+            > li {
+                > a {
+                    i {
+                        font-size: 2em;
+                    }
+                }
+            }
+        }
+    }
+}
+
