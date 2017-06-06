@@ -1,7 +1,7 @@
 /**
    Component: top-navbar.less
 */
- 
+
 @nav-header-wd:                 @aside-wd;
 
 
@@ -17,7 +17,7 @@
   -webkit-backface-visibility: hidden; /* chrome jump */
 
   // Navbar Header (logo)
-  // ----------------------------------- 
+  // -----------------------------------
   > .navbar-header {
     position: relative;
     .transition(width .2s ease);
@@ -30,7 +30,7 @@
     > .navbar-brand {
       position: relative;
       display: block;
-      padding: 0 5px; 
+      padding: 0 5px;
       line-height: @header-hg;
       float: none;
       margin: 0 50px;
@@ -45,7 +45,7 @@
     }
     
     // Different Logo size depends on the navbar state
-    .brand-logo { 
+    .brand-logo {
       display: inline-block;
     }
 
@@ -64,7 +64,7 @@
   }
 
   // Mobile button toggles
-  // ----------------------------------- 
+  // -----------------------------------
   .mobile-toggles {
     .clearfix();
     position: absolute !important;
@@ -97,10 +97,28 @@
 
   // Navbar items shadow style
   @media @tablet {
-    .nav > li > a {
-      &:hover, &:focus {
-        background-color: fade(@brand-inverse, 5);
-      }
+    .nav > li {
+        & {
+            > a {
+                &:hover {
+                    background-color: fade(@brand-inverse, 15);
+                    color: #fff;
+                }
+            }
+        }
+        
+        &.open,
+        &.active {
+            > a {
+                &,
+                &:hover,
+                &:focus,
+                &:active {
+                    color: #fff;
+                    background-color: fade(@brand-inverse, 25);
+                }
+            }
+        }
     }
   }
 
@@ -148,7 +166,7 @@
     .clearfix();
     position: relative;
 
-    // restore opened dropdown 
+    // restore opened dropdown
     .navbar-nav .open .dropdown-menu {
       left: auto;
       right: auto;
