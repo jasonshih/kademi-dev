@@ -150,7 +150,12 @@
                 }
             },
             blur: function () {
-                var result = self.element.val();
+                var result = self.fakeInput.val();
+                if(result === "") {
+                    self.element.val(result);
+                }
+
+                result = self.element.val();
                 if(result === "") {
                     self.fakeInput.val(result);
                 }
@@ -246,7 +251,7 @@
 
             error: function (jqXhr, status, error) {
                 flog('[EntityFinder] Get error response from server', jqXhr, status, error);
-                self.suggestionsList.html(self.options.renderNoSuggestion());
+                showNoResult();
                 self.suggestionsList.css('display', 'block');
             }
         });
