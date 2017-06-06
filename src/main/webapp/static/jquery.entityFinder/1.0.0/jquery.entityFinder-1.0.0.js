@@ -246,7 +246,7 @@
 
             error: function (jqXhr, status, error) {
                 flog('[EntityFinder] Get error response from server', jqXhr, status, error);
-                self.suggestionsList.html(self.options.renderNoSuggestion());
+                showNoResult();
                 self.suggestionsList.css('display', 'block');
             }
         });
