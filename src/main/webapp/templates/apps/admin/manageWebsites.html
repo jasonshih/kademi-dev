@@ -10,34 +10,7 @@
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteModal"><i class="fa fa-plus"></i> Create new website</a>
             </p>
 
-            <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title" id="myModalLabel">Add new website</h4>
-                        </div>
-                        <form class="form-horizontal" method="POST" action=".">
-                            <div class="modal-body">
-                                <div class="form-message alert alert-danger" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label for="newName" class="col-sm-3 control-label">Simple name</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" class="form-control regex required" required="true" id="newName" name="newName" data-regex="^[a-zA-Z0-9-]+$" />
-                                        <span class="help-block">
-                                            <small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                <button class="btn btn-sm btn-primary" type="submit">Create website</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div><!-- /.modal -->
+            
         </div>
 
         <div class="panel panel-default">

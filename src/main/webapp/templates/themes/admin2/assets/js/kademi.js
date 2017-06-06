@@ -722,6 +722,7 @@ $(function () {
     initEmailEventSimulator();
     initEntityFinder();
     initCreateAccount();
+    initAddWebsite();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
@@ -1022,17 +1023,39 @@ function getRecentItems() {
 
 function initCreateAccount() {
     var modal = $("#modal-create-account");
-    modal.find("form").forms( {
-        callback : function(resp) {
-            if( resp.status ) {
-                Msg.info("Created account");
-                var nextHref= "/organisations/?gotoDomain=" + resp.nextHref;
-                window.location = nextHref;
-            } else {
-                Msg.error("Sorry, could not create the account because " + resp.messages);
+    if( modal.length > 0 ) {
+        modal.find("form").forms( {
+            callback : function(resp) {
+                if( resp.status ) {
+                    Msg.info("Created account");
+                    var nextHref= "/organisations/?gotoDomain=" + resp.nextHref;
+                    window.location = nextHref;
+                } else {
+                    Msg.error("Sorry, could not create the account because " + resp.messages);
+                }
             }
-        }
-    });
+        });
+    }
+}
+
+function initAddWebsite() {
+    flog('initAddWebsite');
+
+    var modal = $("#addWebsiteModal");
+    if( modal.length > 0 ) {
+        var form = modal.find("form");
+
+        form.forms({
+            callback: function (resp) {
+                flog("done", resp);
+                modal.modal('hide');
+                Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');
+                var nextHref = "/websites/" + resp.nextHref  + "/";
+                window.location = nextHref;
+                
+            }
+        });
+    }
 }
 
 function initBackgroundJobStatus(options) {

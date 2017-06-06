@@ -51,7 +51,16 @@
                     <div style="overflow: hidden; margin-top: -20px;">
                         <div class="row">
                             #if( $websites.size() < 3 )
-
+                                    <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
+                                        <div class="wrap-image text-center" style="padding: 50px 0">
+                                            <a href="#" class="" data-toggle="modal" data-target="#addWebsiteModal">
+                                                <i class="fa fa-plus-circle fa-4x"></i>
+                                            </a>
+                                            <a href="#" class="group1 lead tileText cboxElement" data-toggle="modal" data-target="#addWebsiteModal">
+                                                Create website
+                                            </a>
+                                        </div>
+                                    </div>
                             #end
                             #foreach( $website in $websites)
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
