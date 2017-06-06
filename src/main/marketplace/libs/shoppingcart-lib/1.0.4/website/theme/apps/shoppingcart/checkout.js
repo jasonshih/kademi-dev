@@ -33,7 +33,9 @@ function initPromoCodes() {
 function initCartForm() {
     $('#cart-form').forms({
         validate: function (form) {
-            var icon = form.find('button[type=submit] i');
+            var submitBtn = form.find('button[type=submit]');
+            var icon = submitBtn.find('i');
+            submitBtn.prop('disabled', true);
             icon.show();
 
             var phone = form.find('[name=phone]');
@@ -79,19 +81,24 @@ function initCartForm() {
         },
         onSuccess: function (resp) {
             if (resp.status) {
+                var pointsLink = $('.points-link');
                 $('#cart-form, #cart-link').reloadFragment({
-                    whenComplete: function () {
+                    whenComplete: function (resp) {
                         $('#cart-form').hide('fast');
                         $('#cart-items').hide('fast');
                         $('#checkout-info').hide('fast');
                         $('#successfull-div').show('slow');
+
+                        $('#cart-form').find('button[type=submit]').prop('disabled', false).find('i').hide();
+                        var pointsLinkUpdate = $(resp).find('.points-link');
+                        pointsLink.each(function (index) {
+                            $(this).html(pointsLinkUpdate[index].innerHTML);
+                        })
                     }
                 });
             } else {
                 Msg.warning(resp.messages[0])
             }
-
-            $('#cart-form').find('button[type=submit] i').hide();
         },
         onError: function (resp, form, config) {
             try {
