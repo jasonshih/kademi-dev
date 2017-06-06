@@ -304,7 +304,7 @@
                                 #foreach($group in $page.groups)
                                     #if( $group == $page.group )
 
-                                    #elseif ($group.mailingList)
+                                    #elseif ($group.mailingList || $group.subscription)
 
                                         <div class="optins col-sm-12 col-md-6 col-lg-4">
                                             #set($groupId = "optin" + $group.name)
