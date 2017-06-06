@@ -2,8 +2,13 @@
 <html>
     <head>
         <title>
+            #set( $title = false )
             #set( $title = $templater.mergeTitles( $template.title, $page.title) )
+            #if( $title )
             $title
+            #else
+            Untitled page
+            #end
         </title>
         <meta name="themeName" content="bootstrap-theme" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
