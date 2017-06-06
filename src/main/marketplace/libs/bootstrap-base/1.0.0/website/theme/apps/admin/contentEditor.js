@@ -47,7 +47,7 @@ function initContentEditorPage(options) {
                     $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
                 }
             }, 100);
-        }).trigger('resize');
+        });
         
         initKEditor(options);
     });
@@ -72,6 +72,7 @@ function initPropertiesModal() {
     modal.find('form').forms({
         onSuccess: function () {
             $('#file-title').reloadFragment({
+                url: window.location.href,
                 whenComplete: function () {
                     modal.modal('hide');
                     Msg.success('Properties are saved');
@@ -153,6 +154,9 @@ function initKEditor(options) {
         allGroups: options.allGroups,
         basePath: basePath,
         pagePath: basePath,
+        onReady: function () {
+            win.trigger('resize');
+        }
     });
 }
 

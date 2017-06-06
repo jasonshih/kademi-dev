@@ -180,9 +180,10 @@
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <div class="hideOnComplete">
             <p class="lead">$page.title</p>
-            <hr/>
-            <div>$!page.taskDescription</div>
-            <hr/>
+            #if("$!page.taskDescription" != "")
+                <hr/>
+                <div>$!page.taskDescription</div>
+            #end
         </div>
 
         <hr/>
