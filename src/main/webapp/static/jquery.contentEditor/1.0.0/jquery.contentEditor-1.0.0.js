@@ -71,7 +71,7 @@
                 $.getStyleOnce(style);
             });
         }
-    
+        
         if (options.snippetsHandlersUrl) {
             contentEditor.dependScripts.push(options.snippetsHandlersUrl);
         }
@@ -566,7 +566,7 @@
                 custom: isCustom,
                 hidden: isHidden
             });
-    
+            
             contentEditor.toMenuData(li.children('.menuList'), list);
         });
     }
@@ -890,9 +890,9 @@
             
             return $(this).each(function () {
                 var target = $(this);
-    
+                
                 flog('[jquery.contentEditor] Initializing...', target, options);
-    
+                
                 if (target.data('contentEditorOptions')) {
                     flog('[jquery.contentEditor] Content Editor is already initialized', target);
                     return target;
@@ -933,8 +933,7 @@
                         snippetsUrl: options.snippetsUrl,
                         tabTooltipEnabled: false,
                         snippetsTooltipEnabled: false,
-                        onContentChanged: function () {
-                            var contentArea = $(this);
+                        onContentChanged: function (e, contentArea) {
                             if (target.keditor('getContent').trim() === '') {
                                 contentArea.addClass('empty');
                             } else {
@@ -967,10 +966,15 @@
                         iframeMode: options.iframeMode,
                         contentStyles: options.contentStyles,
                         basePath: options.basePath,
-                        pagePath: options.pagePath
+                        pagePath: options.pagePath,
+                        onReady: function () {
+                            if (typeof options.onReady === 'function') {
+                                options.onReady.call(null);
+                            }
+                        }
                     });
                 });
-    
+                
                 target.data('contentEditorOptions', options);
             });
         },
