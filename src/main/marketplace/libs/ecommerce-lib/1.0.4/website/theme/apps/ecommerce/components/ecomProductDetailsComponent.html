@@ -1,13 +1,11 @@
 #parse("/theme/apps/ecommerce/ecommerceMacros.html")
 
-#if( $page.is("product") )
+#if( $page.class.simpleName == "ProductInECommerceStoreResource" )
 #set($title = $page.title)
 #else
-#set($title = "Page title")
+#set($title = "Product title")
 #end
 
-
-<!-- tan $page -->
 <h2 class="product-title">
     #if( $title )
     $title
