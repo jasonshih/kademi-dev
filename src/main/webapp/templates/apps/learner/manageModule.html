@@ -420,6 +420,15 @@
                                                 #end
                                             </select>
                                         </div>
+                                        <div class="input-group input-group-sm">
+                                            #set( $groups = $page.find("/groups").groups )
+                                            <select name="group$foreach.index" class="form-control" data-basename="group">
+                                                <option value="0" #if ($action.groupId == 0) selected #end>[No group]</option>
+                                                #foreach($group in $groups)
+                                                $formatter.option($group.id, $group.name, $action.groupId)
+                                                #end
+                                            </select>
+                                        </div>
                                         <div class="btn-group btn-group-sm">
                                             <a href="#" class="btn btn-sm btn-success btn-preview-certificate">Preview</a>
                                             <a href="#" class="btn btn-sm btn-danger btn-delete-certificate"><i class="fa fa-times"></i></a>

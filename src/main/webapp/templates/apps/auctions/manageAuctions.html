@@ -109,7 +109,6 @@
                         </tr>
                     </thead>
                     <tbody id="auctionTableBody">
-                        #set($auctions = $page.children.ofType("auction"))
                         #set($state = $request.params.state)
                         #if(!$state || $state == '' || $state == 'open')
                             #set($auctions = $openAuctions)  
@@ -117,6 +116,7 @@
                             #set($auctions = $closedAuctions)
                         #end
                         #foreach($v in $auctions)
+                        #if ($v.createdDate.after($queryManager.commonStartDate) && $v.createdDate.before($queryManager.commonFinishDate))
                         <tr>
                             <td title="$v.auctionState" class="text-center lead">
                                 #if($v.auctionState == "draft")
@@ -170,6 +170,7 @@
                             </td>
                         </tr>
                         #end
+                        #end
                     </tbody>
                 </table>
             </div>
@@ -203,7 +204,7 @@
             <span class="block-name" title="$group.name">$group.name</span>
         </div>
         #end
-        <script src="/theme/apps/auctions/manageAuctions.js" type="text/javascript">//</script>
+        <script src="/theme/apps/auctions/manageAuctions.js?v=1.0.0" type="text/javascript">//</script>
         <script type="text/javascript">
             $(function () {
                 initManageAuctions();

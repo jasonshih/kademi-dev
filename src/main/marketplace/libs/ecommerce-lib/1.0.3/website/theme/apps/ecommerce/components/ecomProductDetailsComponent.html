@@ -1,14 +1,27 @@
 #parse("/theme/apps/ecommerce/ecommerceMacros.html")
-#set($title = $page.title)
 
-#if($!title == "")
-	#set($title = "Page title")
+#if( $page.is("product") )
+#set($title = $page.title)
+#else
+#set($title = "Page title")
 #end
 
+
 <!-- tan $page -->
-<h2 class="product-title">$title</h2>
+<h2 class="product-title">
+    #if( $title )
+    $title
+    #else
+    Product title
+    #end
+</h2>
 <div class="product-description">
+    #set( $desc = $page.productDescription )
+    #if( $desc )
 	$!page.productDescription
+    #else
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.    
+    #end
 </div>
 ##<div class="product-share">
 ##    <span>Share:</span>
