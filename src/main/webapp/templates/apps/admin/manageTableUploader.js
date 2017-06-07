@@ -36,78 +36,6 @@ function initUploads() {
                 ul.css('margin-left', '0');
             }
         }
-
-        if (data.step === 3) {
-            var fileHash = form.find('[name=fileHash]').val();
-            var startRow = form.find('[name=startRow]').val();
-            var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
-            form.find('select').each(function () {
-                if (this.value) {
-                    formData[this.name] = this.value;
-                }
-            });
-            form.find('#noValidRow').addClass('hide');
-            form.find('[type=submit]').addClass('hide');
-
-            $('#processing').show();
-            $('#result').hide();
-
-            $.ajax({
-                url: importUrl,
-                data: formData,
-                type: 'post',
-                dataType: 'json',
-                success: function (resp) {
-                    if (resp.status && resp.data) {
-                        form.find('[type=submit]').removeClass('hide');
-                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
-                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
-                        var invalidRows = resp.data.invalidRows.length;
-                        if (resp.data.invalidRows.length != 0) {
-                            invalidRows--;
-                        }
-                        form.find(".beforeImportNumInvalid").text(invalidRows);
-
-                        var invalidRowsBody = form.find(".beforeImportInvalidRows");
-                        invalidRowsBody.html("");
-                        if (resp.data.invalidRows) {
-                            for (var i = 0; i < resp.data.invalidRows.length; i++) {
-                                var row = resp.data.invalidRows[i];
-                                flog("row", row);
-                                var tr = $("<tr>");
-                                for (var col = 0; col < row.length; col++) {
-                                    var colText = row[col];
-                                    tr.append("<td>" + colText + "</td>");
-                                }
-                                invalidRowsBody.append(tr);
-                            }
-                        }
-
-                        importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
-
-                        $('#result').show();
-                        $('#processing').hide();
-                        if (importTotalCount == 0 || resp.data.toManyErrors) {
-                            form.find('[type=submit]').attr('disabled', true);
-
-                            if (resp.data.toManyErrors) {
-                                $('#toManyErrors').show();
-                            } else {
-                                form.find('#noValidRow').removeClass('hide');
-                            }
-                        } else {
-                            form.find('#noValidRow').addClass('hide');
-                            form.find('[type=submit]').attr('disabled', false);
-                        }
-                    } else {
-                        form.find(".beforeImportInfo").text('Cannot verify data to import');
-                    }
-                },
-                error: function (err) {
-                    form.find(".beforeImportInfo").text('Cannot verify data to import');
-                }
-            });
-        }
     });
 
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
@@ -146,6 +74,89 @@ function initUploads() {
                 evt.preventDefault();
                 return false;
             }
+
+            var fileHash = form.find('[name=fileHash]').val();
+            var startRow = form.find('[name=startRow]').val();
+            var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
+            form.find('select').each(function () {
+                if (this.value) {
+                    formData[this.name] = this.value;
+                }
+            });
+            form.find('#noValidRow').addClass('hide');
+            form.find('[type=submit]').addClass('hide');
+
+            $('#processing').show();
+            $('#result').hide();
+
+            $.ajax({
+                url: importUrl,
+                data: formData,
+                type: 'post',
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp.status && resp.data) {
+                        $('#myWizard').wizard('selectedItem', {step: 3});
+                        form.find('[type=submit]').removeClass('hide');
+                        form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
+                        form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
+                        var invalidRows = resp.data.invalidRows.length;
+                        if (resp.data.invalidRows.length != 0) {
+                            invalidRows--;
+                        }
+                        form.find(".beforeImportNumInvalid").text(invalidRows);
+
+                        var invalidRowsBody = form.find(".beforeImportInvalidRows");
+                        invalidRowsBody.html("");
+                        if (resp.data.invalidRows) {
+                            for (var i = 0; i < resp.data.invalidRows.length; i++) {
+                                var row = resp.data.invalidRows[i];
+                                flog("row", row);
+                                var tr = $("<tr>");
+                                for (var col = 0; col < row.length; col++) {
+                                    var colText = row[col];
+                                    tr.append("<td>" + colText + "</td>");
+                                }
+                                invalidRowsBody.append(tr);
+                            }
+                        }
+
+                        importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
+
+                        $('#result').show();
+                        $('#processing').hide();
+                        if (importTotalCount == 0 || resp.data.toManyErrors) {
+                            form.find('[type=submit]').attr('disabled', true);
+
+                            if (resp.data.toManyErrors) {
+                                $('#toManyErrors').show();
+                            } else {
+                                form.find('#noValidRow').removeClass('hide');
+                            }
+                        } else {
+                            $('#toManyErrors').hide();
+                            form.find('#noValidRow').addClass('hide');
+                            form.find('[type=submit]').attr('disabled', false);
+                        }
+                    } else if (!resp.status && resp.messages) {
+                        var msg = 'Please check the selected fields:' + '</br><ul>';
+                        for (var i = 0; i < resp.messages.length; i++) {
+                            msg += '<li>' + resp.messages[i] + '</li>';
+                        }
+                        msg += '</ul>';
+                        Msg.error(msg);
+                    } else {
+                        $('#myWizard').wizard('selectedItem', {step: 3});
+                        form.find(".beforeImportInfo").text('Cannot verify data to import');
+                    }
+                },
+                error: function (err) {
+                    form.find(".beforeImportInfo").text('Cannot verify data to import');
+                }
+            });
+
+            evt.preventDefault();
+            return false;
         }
 
         if (data.step === 3) {

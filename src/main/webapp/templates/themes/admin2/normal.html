@@ -169,13 +169,21 @@
                                     <li>
                                         <a href="/edit"><i class="clip-pencil"></i> &nbsp; Organisation details</a>
                                     </li>
-                                    <li>
-                                        $user.thisProfile.homeAdminOrg
+                                    #if( $user.thisProfile.homeAdminOrg.id == $page.organisation.id )
+                                    #else
+                                    <li>                                        
+                                        <a href="/organisations/?gotoDomain=$user.thisProfile.homeAdminOrg.adminDomain">
+                                            <i class="clip-home-2"></i> &nbsp; $user.thisProfile.homeAdminOrg.title
+                                        </a>
                                     </li>
-                                    #foreach($org in $page.organisations)
-                                        <li>
-                                            <a href="$org.href"><i class="clip-home-2"></i> &nbsp; $org.title</a>
-                                        </li>
+                                    #end
+                                    #set( $adminDomains = $rootFolder.adminDomains )
+                                    #foreach( $suborg in $adminDomains )
+                                    <li>                                        
+                                        <a href="/organisations/?gotoDomain=$suborg.adminDomain">
+                                            <i class="clip-home-2"></i> &nbsp; $suborg.title
+                                        </a>
+                                    </li>                                    
                                     #end
                                 </ul>
                             </li>

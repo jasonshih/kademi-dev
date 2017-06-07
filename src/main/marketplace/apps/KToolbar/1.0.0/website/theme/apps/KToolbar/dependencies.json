@@ -1,0 +1,16 @@
+{
+    "dependencies": [
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KToolbar/ktoolbar.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KToolbar/ktoolbar.js"
+            }
+        }
+    ]
+}
