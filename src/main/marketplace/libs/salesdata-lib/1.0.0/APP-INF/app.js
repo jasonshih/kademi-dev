@@ -58,11 +58,11 @@ function getTopSkusData(page, params) {
                             "value": "dataSeriesRecord"
                         }
                     },
-                    // {
-                    //     "terms": {
-                    //         "assignedToOrgs": selectedOrgs
-                    //     }
-                    // },
+                    {
+                        "terms": {
+                            "assignedToOrgs": selectedOrgs
+                        }
+                    },
                     {
                         "terms": {
                             "dataSeriesName": [
