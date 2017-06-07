@@ -761,6 +761,10 @@
             
             var settingForms = body.find('#keditor-setting-forms');
             self.initNiceScroll(settingForms);
+            settingForms.on('submit', 'form', function (e) {
+                e.preventDefault();
+                return false;
+            });
             
             if (options.containerSettingEnabled === true) {
                 if (typeof options.containerSettingInitFunction === 'function') {

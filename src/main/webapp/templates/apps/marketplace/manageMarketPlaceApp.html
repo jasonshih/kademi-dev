@@ -24,30 +24,33 @@
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
-                            #if( $page.installed )
-                            <span class="label label-info">
-                                <i class="fa fa-check"></i>
-                                Installed
-                            </span>
-                            #else
                             <p class="pull-right">
                             <button type="button" data-title="$page.title" data-websitename="$!request.params.websiteName" data-websitebranch="$!request.params.websiteBranch" class="btn btn-lg btn-green btn-install-app pull-right">
                                 <span class="fa fa-check"></span>
                                 #if(!$page.price || $page.price == 0)
+                                #if( $request.params.websiteName )
+                                    #if( $page.installed )
+                                    Enable
+                                    #else
+                                    Install
+                                    #end
+                                    in $request.params.websiteName
+                                #else
                                 Install now
+                                #end
                                 #else
                                 $$page.price
                                 #end
-                            </button>
-                            <br/>
-                            #if( $request.params.websiteName )
-                            <small>
-                            <i class="text-muted">Will be installed into $request.params.websiteName</i>
-                            </small>
-                            #end
+                            </button>                            
                             </p>
-                            #end
                         </h4>
+                            <br />
+                            #if( $page.installed )
+                            <span class="text-muted">
+                                You have purchased this app
+                            </span>
+                            #end
+                        
                         <h4 class="app"><a href="#">$page.title</a>
                         </h4>
                         <div class="ratings">
