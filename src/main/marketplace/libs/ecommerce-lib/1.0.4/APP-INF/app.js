@@ -13,3 +13,4 @@ controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutInfo", "html", "Display ecom checkout info", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutCart", "html", "Display ecom checkout cart items", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutForm", "html", "Display ecom checkout form", "E-commerce App component");
+controllerMappings.addComponent("ecommerce/components", "orderHistoryECom", "html", "Shows the current user's orders and status", "E-commerce App component");
