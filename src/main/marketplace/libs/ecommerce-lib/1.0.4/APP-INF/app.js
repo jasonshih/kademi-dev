@@ -10,7 +10,6 @@ controllerMappings.addComponent("ecommerce/components", "ecomProductDetails", "h
 controllerMappings.addComponent("ecommerce/components", "ecomProductCartButton", "html", "Display ecom product price and Add to cart button", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomProductRelated", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomProduct", "html", "Display ecom product details", "E-commerce App component");
-controllerMappings.addComponent("ecommerce/components", "ecomStorePastOrders", "html", "Display ecom product details", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutInfo", "html", "Display ecom checkout info", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutCart", "html", "Display ecom checkout cart items", "E-commerce App component");
 controllerMappings.addComponent("ecommerce/components", "ecomCheckoutForm", "html", "Display ecom checkout form", "E-commerce App component");
