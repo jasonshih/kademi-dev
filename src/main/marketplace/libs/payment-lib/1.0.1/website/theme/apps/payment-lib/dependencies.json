@@ -1,0 +1,35 @@
+{
+    "appDependencies": [
+        {
+            "appId": "entityFinder-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/quotesList.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/manageQuote.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/payment/manageProposal.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/payment/invoices-table.css"
+            }
+        }
+    ]
+}

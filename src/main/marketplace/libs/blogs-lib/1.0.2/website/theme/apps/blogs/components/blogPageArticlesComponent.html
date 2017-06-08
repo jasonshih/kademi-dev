@@ -1,0 +1,75 @@
+#if($page)
+    #set ($articles = $page.articles.sortByDate)
+    #if ($filter == "featured")
+    #set ($articles = $page.articles.featured.sortByDate)
+    #elseif ($filter == "nonFeatured")
+    #set ($articles = $page.articles.notFeatured.sortByDate)
+    #end
+    #if ($formatter.isNotNull($categories))
+    #set ($articles = $articles.ofTypeOr($categories))
+    #end
+    #if ($formatter.isNotNull($tags))
+    #set ($articles = $articles.ofTypeOr($tags))
+    #end
+    #foreach($article in $articles)
+    <div class="hero thumbnail col-md-12">
+        #set($image = false)
+        #set($image = $article.bestSquareImageHref)
+        #if( $image )
+        #set($bg = "background-image: url('${image}/alt-300-300.png')")
+        <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
+        #end
+
+        <div class="hero-body">
+            <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
+
+            $!article.brief
+
+            <div class="clearfix">
+                <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                <div class="pull-right">
+                    #if( $article.category )
+                    <span class="label label-primary">$article.category</span>
+                    #end
+                    #foreach($tag in $article.tags)
+                    #if( $article.isSelectedTag( $tag ) )
+                    <span class="label label-primary">$tag</span>
+                    #end
+                    #end
+                    #if($article.featured)
+                    <span class="label label-success">Featured</span>
+                    #end
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+    <script type="text/javascript">
+        $(function() {
+            $(".timeago").timeago();
+        });
+    </script>
+#else
+    <div class="hero thumbnail col-md-12">
+        #set($bg = "background-image: url('/static/images/photo_holder.png')")
+        <div class="hero-image " style="$bg"></div>
+        <div class="hero-body">
+            <h2 class="hero-heading"><a href="#">Example Blog Title</a></h2>
+
+            Example Blog Title Brief
+
+            <div class="clearfix">
+                <abbr class="pull-left timeago" title="$formatter.formatDate($formatter.getCurrentDateService().getNow())">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr>
+                <div class="pull-right">
+                    <span class="label label-primary">Example Blog Category</span>
+                    <span class="label label-primary">Example Tag</span>
+                    <span class="label label-success">Featured</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+#end
+
+
+

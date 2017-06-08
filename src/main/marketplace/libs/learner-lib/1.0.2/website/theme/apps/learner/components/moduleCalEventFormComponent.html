@@ -1,0 +1,42 @@
+#if( $page.isIlt() )
+<div class="panel panel-info">
+    <div class="panel-heading">
+        Register for this module
+    </div>
+    <div class="panel-body">
+        <h2>Upcoming sessions</h2>
+        #set( $events = $page.upcomingModuleCalEvents )
+        <table class="table table-striped">
+            #foreach($mce in $events)
+            <tr>
+                #set( $event = $mce.calEvent )
+                <td>$event.startDate</td>
+                <td>$!event.location</td>
+                <td>
+                    $event.numAttendees() 
+                    #if( $event.maxAttendees )
+                    / $event.maxAttendees
+                    #end
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="text-right">
+                    <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-success">
+                        <i class="fa fa-play"></i>
+                        Register
+                    </a>
+                </td>
+            </tr>
+            #end
+        </table>
+    </div>
+</div>
+
+#elseif( $page.assignment )
+<div class="alert alert-warning">
+    You havent been given this assignment yet.
+</div>
+
+#else
+
+#end

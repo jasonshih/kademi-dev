@@ -1,0 +1,148 @@
+#macro( showLead $lead $hideButtons )
+<div class="media" id="$lead.id">
+    <div class="media-left hidden-xs">
+        <div class="avatar avatar-away">
+            <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
+            <i class="avatar avatar-busy"></i>
+        </div>
+    </div>
+    <div class="media-body" style="padding-left: 20px; position: relative">
+        <h3 class="media-heading">
+            <a class="text-success" href="/leads/$lead.id/">
+
+                #if( $lead.profile )
+                $lead.profile.formattedName
+                #if($lead.organisation)
+                ($lead.organisation.formattedName)
+                #end
+                #elseif($lead.organisation)
+                $lead.organisation.formattedName
+                #else
+                No contact information
+                #end
+            </a>
+            #if( $lead.createDate )
+            <small class="pull-right">
+                Lead created: <abbr title="$formatter.formatDateISO8601($lead.createDate)" data-iso="$formatter.formatDateISO8601($lead.createDate)" class="timeago">$lead.createDate</abbr> for Funnel $lead.funnel.title
+            </small>
+            #end
+        </h3>
+        #if($lead.organisation)
+        #set($addressStr = "")
+        #if($lead.organisation.address)
+            #set($addressStr = $lead.organisation.address)
+        #end
+
+        #if($lead.organisation.addressLine2)
+            #set($addressStr = $addressStr + ", " + $lead.organisation.addressLine2)
+        #end
+
+        #if($lead.organisation.AddressState)
+        #set($addressStr = $addressStr + ", " + $lead.organisation.AddressState)
+        #end
+
+        #if($lead.organisation.postcode)
+        #set($addressStr = $addressStr + ", " + $lead.organisation.postcode)
+        #end
+
+        #if ("$addressStr" != "")
+        <p>
+            <i aria-hidden="true" class="fa fa-map-marker"></i>
+            $addressStr
+        </p>
+        #end
+        #end
+        #if( $lead.profile )
+        #if( $lead.profile.email )
+        <p>
+            <i aria-hidden="true" class="fa fa-envelope"></i>
+            $lead.profile.email
+        </p>
+        #end
+        #if( $lead.profile.phone )
+        <p>
+            <i aria-hidden="true" class="fa fa-mobile"></i>
+            $lead.profile.phone
+        </p>
+        #end
+        #end
+
+        <div class="lead-desc">
+            <div class="leadInner">
+                #set ($leadUri = '/leads/'+ $lead.id)
+                #set ($leadPage = $page.find($leadUri))
+                #set ($notes = $leadPage.notes)
+                #if ($notes.size() > 0)
+                <strong>Summary: </strong>$formatter.textToHtml($notes[0].summary)
+                <strong>Notes: </strong>$formatter.textToHtml($notes[0].notes)
+                #else
+                $formatter.textToHtml($lead.description)
+                #end
+            </div>
+        </div>
+
+        #if( $lead.profile )
+        <div class="text-muted leadContactMethods">
+            #if($lead.profile.email)
+            <!--<a href="mailto:$lead.profile.email" class="text-muted">-->
+            <!--<em aria-hidden="true" class="fa fa-envelope"></em>-->
+            <!--</a>-->
+            #end
+            #if($lead.profile.phone)
+            <!--<a href="tel:$lead.profile.phone" class="text-muted">-->
+            <!--<em aria-hidden="true" class="fa fa-mobile"></em>-->
+            <!--</a>-->
+            #end
+            <!--
+            <a href="javascript:void(0)" class="text-muted">
+                <i aria-hidden="true" class="fa fa-twitter"></i>
+            </a>
+            <a href="javascript:void(0)" class="text-muted">
+                <i aria-hidden="true" class="fa fa-facebook"></i>
+            </a>
+            -->
+        </div>
+        #end
+
+        #if( $hideButtons )
+        #else
+        <div class="leadActions">
+            <ul class="list-inline" style="right: 0">
+                <li>
+                    <a href="/leads/$lead.id" class="btn btn-success closeLead" title="Sold, close the deal">
+                        <span class="fa fa-check"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/leads/$lead.id?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                        <span class="fa fa-remove"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/leads/$lead.id/" class="btn btn-info createNote" title="Add note">
+                        <span class="fa fa-pencil"></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="mailto:$!lead.profile.email?bcc=to-lead-$lead.id@${page.find('/').domainName}" class="btn btn-warning" title="Send email">
+                        <span class="fa fa-envelope-o"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        #end
+        <!--
+        <ul class="list-inline" style="bottom: 0; position: absolute">
+            <li><a class="link-black text-sm" href="#"><i class="fa fa-share margin-r-5"></i> Share</a></li>
+            <li><a class="link-black text-sm" href="#"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
+            </li>
+            <li class="pull-right">
+                <a class="link-black text-sm" href="#"><i class="fa fa-comments-o margin-r-5"></i> Comments
+                    (5)
+                </a>
+            </li>
+        </ul>
+        -->
+    </div>
+</div>
+#end

@@ -1,0 +1,85 @@
+<div class="lead-contacts-wrap" id="searchResults">
+    #set($searchResults = $page.searchResults)
+    #if( $searchResults.isEmpty() )
+    <p class="lead">No results matched the search</p>
+    #else
+    <ul class="list-group">
+        #foreach($p in $searchResults)
+        <li class="list-group-item">
+            <div class="media">
+                <div class="media-left hidden-xs">
+                    <div class="avatar avatar-away">
+                        <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
+                        <i class="avatar avatar-busy"></i>
+                    </div>
+                </div>
+                <div class="media-body" style="padding-left: 20px; position: relative">
+                    <h3 class="media-heading">
+                        #if($p.fields.firstName.value && $p.fields.surName.value)
+                        <a href="$p.fields.userName.value">
+                            $formatter.htmlEncode($p.fields.firstName.value)
+                            $formatter.htmlEncode($p.fields.surName.value)
+                        </a>
+                        #else
+                        <a href="$p.fields.userName.value">No Name</a>
+                        #end
+                    </h3>
+                    <p>
+                        <i aria-hidden="true" class="fa fa-map-marker"></i>
+                        #if( $p.fields.email.value )
+                        $p.fields.email.value
+                        #end
+
+                        #if( $p.fields.phone.value )
+                        , $p.fields.phone.value
+                        #end
+                    </p>
+
+                    #set( $leads = $page.leads($p.fields.userName.value) )
+                    #if( $leads.size() > 0 )
+                    <p>$leads.size() leads in progress</p>
+                    #else
+                    <p>
+                        <i>No leads in progress</i>
+                    </p>
+                    #end
+
+                    #if( $page.getLastContactDate($p.fields.userName.value) )
+                    #set($cd = $page.getLastContactDate($p.fields.userName.value))
+                    <small class="pull-right">Last contact: <abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr></small>
+                    #end
+
+                    <div class="text-muted leadContactMethods">
+                        <a href="mailto:$lead.profile.email" class="text-muted">
+                            <em aria-hidden="true" class="fa fa-envelope"></em>
+                        </a>
+                        #if( $p.fields.phone.value )
+                        <a href="tel:$p.fields.phone.value" class="text-muted">
+                            <em aria-hidden="true" class="fa fa-mobile"></em>
+                        </a>
+                        #end
+                        <a href="javascript:void(0)" class="text-muted">
+                            <i aria-hidden="true" class="fa fa-twitter"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-muted">
+                            <i aria-hidden="true" class="fa fa-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </li>
+        #end
+    </ul>
+    #end
+</div> <!-- End results table -->
+<script type="text/javascript">
+    $(function () {
+        initSearchLead();
+        initUploads();
+        doCheckProcessStatus();
+    });
+    function doCheckProcessStatus() {
+        checkProcessStatus("$page.taskName");
+    }
+
+</script>

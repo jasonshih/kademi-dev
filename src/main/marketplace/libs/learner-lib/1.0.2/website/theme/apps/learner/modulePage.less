@@ -1,0 +1,55 @@
+.modulePage {
+    .commentContainer {
+        textarea {
+            width: 100%;
+        }
+    }    
+    iframe {
+        width: 100% !important;
+    }
+    .module-container {
+        position: relative;
+        min-height: 300px;
+        // border: solid lightgray 1px;
+        .navbar {
+            margin-bottom: 0;
+        }
+    }
+
+}
+
+.modulePage .panelBox ol ol {
+    list-style-type: none;
+    margin-left: -6px;    
+}
+
+body.edifyIsEditMode div.pages {
+    display: none;
+}
+
+a.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+ol.quiz {
+    ol {
+        li {
+            margin-top: 10px;
+            input {
+                margin: 0px 10px 0 5px;
+            }
+            label {
+                display: inline;
+            }
+        }
+    }
+    li.error {
+        .alert();
+        .alert-danger();        
+    }
+}
+
+.when-complete, .when-not-complete {
+    display: none;
+}

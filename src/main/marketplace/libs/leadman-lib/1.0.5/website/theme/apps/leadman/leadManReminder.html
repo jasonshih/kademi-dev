@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>Tasks due today</title>
+    </head>
+    <body>
+        <p>Hi $profile.formattedName(),</p>
+
+        #set($daysOld = false)
+        #set($dt = $formatter.endofDay($formatter.addDays($formatter.now, -3)))
+        #foreach($t in $overDue)
+        #if($t.dueDate.compareTo($dt) <= 0)
+        #set($daysOld = true)
+        #break
+        #end
+        #end
+
+        #if($overDue.size() == 0)
+        <p><strong>You&#39;re amazing! You have no overdue tasks.</strong></p>
+        #elseif(!$daysOld)
+        <p><strong>Well done! You&#39;re keeping on top of your tasks.</strong></p>
+        #elseif($daysOld)
+        <p><strong>Whoops! It seems you&#39;re not keeping your tasks under control.</strong></p>
+        #end
+
+        <p>Tasks due today: $dueToday.size()<br />
+            Total tasks overdue: $overDue.size()
+        </p>
+        #if($allDue.size() > 0)
+        <p>Here are your tasks:</p>
+        <table cellpadding="5">
+            <thead>
+                <tr>
+                    <th style="text-align: left;">Name</th>
+                    <th style="text-align: left;">Description</th>
+                    <th style="text-align: left;">Due Date</th>
+                    <th style="text-align: left;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                #foreach($t in $allDue)
+                <tr>
+                    <td style="text-align: left;">
+                        #if($t.relatedLead)
+                        #if($t.relatedLead.profile)
+                        $t.relatedLead.profile.formattedName
+                        #elseif($t.relatedLead.organisation)
+                        $t.relatedLead.organisation.formattedName
+                        #else
+                        $!t.relatedLead.firstName $!t.relatedLead.surName
+                        #end
+                        #end
+                    </td>
+                    <td style="text-align: left;">
+                        $!formatter.ifNull($t.title, $t.taskName)
+                        <br/>
+                        $!t.taskDescription
+                    </td>
+                    <td style="text-align: left;">$formatter.formatDate($t.dueDate)</td>
+                    <td style="text-align: left;">
+                        #if($t.relatedLead)
+                        #set($leadHref = "http://" + ${formatter.getDomainName($website)} + "/leads/" + $t.relatedLead.id)
+                        <a href="$leadHref">View Lead</a>
+                        #end
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        #end
+    </body>
+</html>

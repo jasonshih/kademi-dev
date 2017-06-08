@@ -1,0 +1,21 @@
+#set( $jsonDatabases = $rootFolder.find("/jsondb/") )
+#set( $kfeedbackDb = $jsonDatabases.child("kfeedback") )
+#set( $survey = $kfeedbackDb.child($surveyname) )
+#set( $website = $rootFolder )
+
+#if( $survey )
+<table width="160" border="0" cellspacing="20" cellpadding="0" bgcolor="#fff">
+    <tr>
+    #foreach( $option in $survey.jsonObject.options )
+        <td align="center" >
+            <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug">
+                <img src="${website.externalUrl}$option.emoji" width="40" height="40" alt="$option.title" />
+            </a>
+        </td>
+    #end
+    </tr>
+</table>
+    
+#else
+<p>No survey selected, or it has been removed</p>
+#end

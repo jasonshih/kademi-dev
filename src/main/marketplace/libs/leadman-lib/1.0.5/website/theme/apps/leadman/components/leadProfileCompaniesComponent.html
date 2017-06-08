@@ -1,0 +1,48 @@
+<div class="panel">
+    <div class="panel-heading no-shadow">
+        <button data-toggle="modal" data-target="#assignOrgModal" class="btn btn-success pull-right">
+            <span class="fa fa-plus"></span>
+        </button>
+        Companies
+    </div>
+    <div class="panel-body" id="company-body">
+        #if($page.companyMemberships.size() > 0)
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <th>Title</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Address 2</th>
+                <th>State</th>
+                <th>Country</th>
+                <th></th>
+                </thead>
+                <tbody>
+                #foreach($company in $page.companyMemberships)
+                <tr>
+                    <td>
+                        <a href="/companies/$company.org.id">$!company.org.formattedName</a>
+                    </td>
+                    <td>$!company.org.email</td>
+                    <td>$!company.org.phone</td>
+                    <td>$!company.org.address</td>
+                    <td>$!company.org.addressLine2</td>
+                    <td>$!company.org.addressState</td>
+                    <td>$!company.org.country</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger removeMembership" data-mid="$company.id"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+                #end
+                </tbody>
+            </table>
+        </div>
+        #else
+        <p>
+            <span class="label label-warning">No companies</span>
+        </p>
+        #end
+    </div>
+</div>

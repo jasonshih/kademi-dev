@@ -1,0 +1,90 @@
+#if ($calendar && $event)
+#set ($eventPath = "/Calendars/$calendar/$event")
+#set( $calendarEvent = $rootFolder.find($eventPath) )
+#elseif ($page.attendees)
+#set( $calendarEvent = $page )
+#end
+
+#if(!$page || !$calendar)
+    <div class="attendees attendeesWrap clearfix" >
+        <h3>2 attending</h3>
+        <ul class="attendees">
+            <li>
+                <a href="#" class="profilePic guest-view">
+                    <img alt="" src="/templates/apps/user/profile.png">
+                </a>
+                <a href="#" class="user guest-view" title="admin">Example User 1</a>
+                <input type="hidden" name="guestName" value="">
+                <input type="hidden" name="guestEmail" value="">
+                <input type="hidden" name="guestOrgName" value="">
+            </li>
+            <li>
+                <a href="/users/tan/public" class="profilePic guest-view">
+                    <img alt="" src="/templates/apps/user/profile.png">
+                </a>
+                <a href="/users/tan/public" class="user guest-view" title="tan">Example User 1</a>
+                <input type="hidden" name="guestName" value="">
+                <input type="hidden" name="guestEmail" value="">
+                <input type="hidden" name="guestOrgName" value="">
+            </li>
+        </ul>
+    </div>
+#else
+
+    #if($calendarEvent && $calendarEvent.attendees && !$calendarEvent.attendees.isEmpty() )
+        <div class='attendees attendeesWrap clearfix' id="attendeesWrap-${calendarEvent.calendar.name}-$!calendarEvent.name">
+            <h3>$calendarEvent.attendees.size() attending</h3>
+            <ul class='attendees'>
+                #foreach($profile in $calendarEvent.attendees)
+                <li>
+                    <a href="$profile.href" class="profilePic guest-view">
+                        #if( $profile.photoHash )
+                        <img alt="" src="/_hashes/files/$profile.photoHash">
+                        #else
+                        <img alt="" src="/templates/apps/user/profile.png">
+                        #end
+                    </a>
+                    <a href="$profile.href" class="user guest-view" title="$profile.name">$profile.name</a>
+                    <input type="hidden" name="guestName" value="$!profile.name"/>
+                    <input type="hidden" name="guestEmail" value="$!profile.email"/>
+                    <input type="hidden" name="guestOrgName" value="$!profile.orgName"/>
+                </li>
+                #end
+            </ul>
+        </div>
+
+        <div class="modal fade attendees-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Attendee detail</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="">Name: <span class="guestName"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Email address: <span class="guestEmail"></span></label>
+                            </div>
+                            <div class="form-group">
+                                <label for="">Organisation: <span class="guestOrgName"></span></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    #else
+    <div class='attendees attendeesWrap clearfix' id="attendeesWrap-${calendarEvent.calendar.name}-$!calendarEvent.name">
+        <h3>No attendees</h3>
+        <ul class='attendees'>
+        </ul>
+    </div>
+    #end
+
+#end
+
+

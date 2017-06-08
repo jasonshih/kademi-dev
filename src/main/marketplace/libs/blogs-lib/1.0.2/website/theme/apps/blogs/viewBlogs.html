@@ -1,0 +1,35 @@
+#parse("/theme/masterTemplate.html")
+#@render()
+<html>
+    <head>
+        <title>Blog Articles</title>
+    </head>
+
+    <body class="blogs-home">
+        <section>
+            <div class="container-bg">
+                <div class="container-layout container">
+                    <div class="container-content-wrapper">
+                        <div class="row">
+                            <div class="col-sm-9" data-type="container-content">
+                                <section data-filter="" data-categories="" data-tags="" data-type="component-blogPageArticles">
+                                    <div data-dynamic-href="_components/blogPageArticles"></div>
+                                </section>
+                            </div>
+
+                            <div class="col-sm-3" data-type="container-content">
+                                <section data-type="component-blogPageCategories">
+                                    <div data-dynamic-href="_components/blogPageCategories"></div>
+                                </section>
+                                <section data-type="component-blogPageTags">
+                                    <div data-dynamic-href="_components/blogPageTags"></div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
+#end

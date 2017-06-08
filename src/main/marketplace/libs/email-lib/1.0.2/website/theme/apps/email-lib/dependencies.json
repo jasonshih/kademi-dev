@@ -1,0 +1,19 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/email/myInbox.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/email/myInbox.js"
+            }
+        }
+    ]
+}

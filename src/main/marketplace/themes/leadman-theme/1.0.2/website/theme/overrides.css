@@ -1,0 +1,359 @@
+.select2-dropdown {
+    z-index: 1070 !important;
+}
+
+html {
+    -ms-overflow-style: scrollbar; /* IE11 scrollbar issue */
+}
+
+html body .fa {
+    line-height: inherit;
+}
+
+.app {
+    padding: 23px 23px;
+}
+
+.app-container > header {
+    box-shadow: none;
+}
+
+.topnavbar .nav > li > a {
+    line-height: 30px;
+    height: 81px;
+}
+
+.topnavbar > .navbar-header {
+    height: 81px;
+}
+
+.topnavbar > .navbar-header > .navbar-brand {
+    height: 81px;
+    line-height: 81px;
+}
+
+.navbar-form {
+    padding-top: 6px;
+}
+
+.panel {
+    box-shadow: none;
+}
+
+/* ============================================================================
+   Fix Glyphicon
+   ============================================================================ */
+.glyphicon {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================================
+   TopNav search
+   ============================================================================ */
+.navbar-search {
+    border-left: 1px solid rgba(255, 255, 255, 0.39);
+    border-right: 1px solid rgba(255, 255, 255, 0.39);
+    height: 80px;
+}
+
+.lead-search-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+#lead-search-suggestions {
+    position: absolute;
+    top: 33px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #d5d5d5;
+    padding: 0;
+    min-width: 100%;
+    list-style: none;
+    white-space: nowrap;
+}
+
+#lead-search-input {
+    width: 220px;
+    color: #fff;
+    border: none;
+    box-shadow: none !important;
+    font-size: 20px;
+    background: transparent;
+}
+
+#lead-search-input:focus {
+    border: none;
+}
+
+#lead-search-input::-webkit-input-placeholder {
+    color: #fff;
+}
+
+#lead-search-input:-moz-placeholder {
+    /* Firefox 18- */
+    color: #fff;
+}
+
+#lead-search-input::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #fff;
+}
+
+#lead-search-input:-ms-input-placeholder {
+    color: #fff;
+}
+
+#lead-search-suggestions li + li {
+    border-top: 1px solid #d5d5d5;
+}
+
+#lead-search-suggestions li a {
+    display: block;
+    padding: 5px;
+    color: #000;
+    text-decoration: none !important;
+}
+
+#lead-search-suggestions li a .email {
+    color: #337ab7;
+}
+
+#lead-search-suggestions li.active a,
+#lead-search-suggestions li.active a:hover {
+    background: #d9d9d9;
+}
+
+#lead-search-backdrop {
+    position: fixed;
+    z-index: 1020;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+}
+
+.typeahead-wrapper {
+    display: block;
+    margin: 50px 0;
+}
+
+.tt-dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #000;
+}
+
+.tt-suggestion.tt-cursor {
+    background-color: #ccc;
+}
+
+.navbar .navbar-toggle {
+    border-color: #fff;
+    margin-top: 23px;
+}
+
+.navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+
+li.current-user a .dropdown-toggle {
+    padding: 10px 4px 7px 9px;
+}
+
+li.current-user a > img {
+    max-width: 30px !important;
+    vertical-align: top;
+}
+
+.profilePic .sidebar {
+    height: auto;
+    overflow: auto;
+    padding-bottom: 0;
+}
+
+.username {
+    width: 70px;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
+
+#modalEditCompany .btn-save-company {
+    display: none;
+}
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+    bottom: 17px !important;
+    right: 15px !important;
+}
+
+.text-strong {
+    font-family: "Roboto";
+    font-weight: 900;
+}
+
+.text-thin {
+    font-family: "Roboto";
+    font-weight: 300;
+}
+
+/* Supports collapse menu even on ipad portrait screen */
+@media (max-width: 991px) {
+    .navbar-header {
+        float: none;
+    }
+
+    .navbar-toggle {
+        display: block;
+    }
+
+    .navbar-collapse {
+        border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-collapse.collapse {
+        display: none !important;
+    }
+
+    .navbar-nav {
+        float: none !important;
+        margin: 7.5px -15px;
+    }
+
+    .navbar-nav > li {
+        float: none;
+    }
+
+    .navbar-nav > li > a {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .navbar-text {
+        float: none;
+        margin: 15px 0;
+    }
+
+    .navbar-collapse.collapse.in {
+        display: block !important;
+    }
+
+    .collapsing {
+        overflow: hidden !important;
+    }
+
+    .navbar-brand {
+        display: inline-block !important;
+    }
+
+    .topnavbar .nav > li > a {
+        height: auto;
+    }
+
+    .navbar-search {
+        height: auto;
+    }
+}
+
+/* End ipad support */
+
+@media (max-width: 767px) {
+    .btn-fullwidth-mobile {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+
+    .btn-fullwidth-mobile + button {
+        margin-top: 10px;
+    }
+
+    #lead-search-input {
+        width: 100%;
+    }
+
+    #nav-collapse .navbar-form {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .username {
+        width: 200px;
+    }
+
+    .topnavbar > .navbar-header > .navbar-brand {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .form-group [class^="col-md"] + div {
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1024px) {
+    #lead-search-input {
+        width: 200px;
+    }
+
+    .logged-in-title {
+        display: none;
+    }
+
+    .username {
+        width: 50px;
+    }
+}
+
+@media (min-width: 768px) {
+    .no-scroll-medium {
+        overflow: hidden;
+    }
+}
+
+@media (min-width: 1300px) {
+    #nav-collapse > ul {
+        padding-left: 40px;
+    }
+
+    .create-lead-menu {
+        margin-left: 20px;
+    }
+
+    .topnavbar > .navbar-header > .navbar-brand {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .navbar-search {
+        margin-left: 40px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .topnavbar .fa-2x {
+        font-size: 22px !important;
+    }
+
+    .topnavbar > .navbar-header > .navbar-brand {
+        margin: 0 5px;
+    }
+
+    #lead-search-input {
+        padding-left: 0;
+        padding-right: 0;
+        width: 170px;
+        font-size: 16px;
+    }
+}

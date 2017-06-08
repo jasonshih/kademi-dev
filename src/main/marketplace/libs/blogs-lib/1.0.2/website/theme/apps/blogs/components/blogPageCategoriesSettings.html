@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Blog</label>
+        <div class="col-sm-12">
+            <select class="form-control select-blog">
+                <option value="" selected="selected">- None -</option>
+                #foreach($blog in $rootFolder.find("/blogs").children)
+                <option value="$blog.name">$blog.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>
