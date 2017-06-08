@@ -8,14 +8,14 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-    
+
     KEditor.components['ksvgmap'] = {
         init: function (contentArea, container, component, keditor) {
             var script = component.find('script');
             if (script.length) {
                 script.remove();
             }
-            if (component.attr('data-height')) {
+            if (component.attr('data-height')){
                 component.find('.ksvgmap').css('height', +component.attr('data-height'));
             }
             $.getScriptOnce('/static/jquery-jvectormap/jquery-jvectormap-2.0.3.min.js', function () {
@@ -42,15 +42,15 @@
                                 el.html(el.html() + ' - ' + component.attr('data-' + code));
                         }
                     });
-                    var i = setInterval(function () {
+                    var i = setInterval(function(){
                         try {
                             var map = component.find('.ksvgmap').vectorMap('get', 'mapObject');
                             map.updateSize();
                             clearInterval(i);
-                        } catch (e) {
+                        } catch (e){
                             flog('trying to get jvectormap object');
                         }
-                    }, 50);
+                    },50);
                 });
             });
         },
@@ -61,46 +61,67 @@
             var css = '<link rel="stylesheet" href="/static/jquery-jvectormap/jquery-jvectormap-2.0.3.css">';
             component.find('.jvectormap-container').remove();
             var arr = $(document.body).find('[data-type="component-ksvgmap"]:not(.keditor-snippet)');
-            if (arr.length > 0) {
-                if ($(arr[arr.length - 1]).attr('id') === component.attr('id')) {
+            if (arr.length > 0){
+                if ($(arr[arr.length-1]).attr('id') === component.attr('id')){
                     $(css).insertBefore(component.find('.ksvgmap'));
                     $(script).insertAfter(component.find('.ksvgmap'));
                 }
             }
-            
+
             return componentContent.html();
         },
-        
+
         settingEnabled: true,
-        
+
         settingTitle: 'SVGMap Settings',
-        
+
         initSettingForm: function (form, keditor) {
-            flog('init "svgmap" settings', form);
-            
-            return $.ajax({
-                url: '/static/keditor/componentKsvgMapSettings.html',
-                type: 'get',
-                dataType: 'HTML',
-                success: function (resp) {
-                    form.html(resp);
-                    
-                    var component = keditor.getSettingComponent();
-                    form.find('.state').on('change', function (e) {
-                        var val = component.attr('data-' + this.value);
-                        form.find('.stateMessage').val(val);
-                    });
-                    form.find('.stateMessage').on('change', function (e) {
-                        var currentState = form.find('.state').val();
-                        component.attr('data-' + currentState, this.value);
-                    });
-                    form.find('.height').on('change', function (e) {
-                        component.attr('data-height', this.value);
-                        component.find('.ksvgmap').css('height', this.value);
-                        var map = component.find('.ksvgmap').vectorMap('get', 'mapObject');
-                        map.updateSize();
-                    });
-                }
+            flog('initSettingForm "svgmap" component');
+            form.append(
+                '<form class="form-horizontal" onsubmit="return false;">' +
+                '   <div class="form-group">' +
+                '       <label class="col-sm-12">Section</label>' +
+                '       <div class="col-sm-12">' +
+                '           <select class="form-control state">' +
+                '               <option value="AU-QLD">Queensland</option>' +
+                '               <option value="AU-NSW">New South Wales</option>' +
+                '               <option value="AU-ACT">Australian Capital Territory</option>' +
+                '               <option value="AU-VIC">Victoria</option>' +
+                '               <option value="AU-TAS">Tasmania</option>' +
+                '               <option value="AU-SA">South Australia</option>' +
+                '               <option value="AU-NT">Northern Territory</option>' +
+                '               <option value="AU-WA">Western Australia</option>' +
+                '           </select>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group embed">' +
+                '       <label class="col-sm-12">Section Message</label>' +
+                '       <div class="col-sm-12">' +
+                '           <textarea rows="2" class="form-control stateMessage" placeholder="State Message"></textarea>' +
+                '       </div>' +
+                '   </div>' +
+                '   <div class="form-group">' +
+                '       <label class="col-sm-12">Height(px)</label>' +
+                '       <div class="col-sm-12">' +
+                '           <input type="number" class="form-control height" value="300" placeholder="Height" />' +
+                '       </div>' +
+                '   </div>' +
+                '</form>'
+            );
+            var component = keditor.getSettingComponent();
+            form.find('.state').on('change', function (e) {
+                var val = component.attr('data-' + this.value);
+                form.find('.stateMessage').val(val);
+            });
+            form.find('.stateMessage').on('change', function (e) {
+                var currentState = form.find('.state').val();
+                component.attr('data-' + currentState, this.value);
+            });
+            form.find('.height').on('change', function (e) {
+                component.attr('data-height', this.value);
+                component.find('.ksvgmap').css('height', this.value);
+                var map = component.find('.ksvgmap').vectorMap('get', 'mapObject');
+                map.updateSize();
             });
         },
         showSettingForm: function (form, component, keditor) {

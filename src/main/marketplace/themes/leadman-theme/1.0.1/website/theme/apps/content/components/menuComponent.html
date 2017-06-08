@@ -1,0 +1,100 @@
+#if( $menu )
+#else
+    #set( $menu = $menuManager.rootMenuItem )
+#end
+
+#set( $memberships = $userResource.primaryMemberships )
+#set( $currentOrgId = $request.getCookie("org").value )
+#if( $currentOrgId )
+    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#else
+    #set( $curMembership = $memberships.first )
+#end
+#set( $currentOrg = $curMembership.org  )
+
+<header class="bg-primary">
+    <nav role="navigation" class="navbar topnavbar">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="/dashboard" class="navbar-brand">
+                <i class="fa fa-home fa-2x text-white"></i>
+            </a>
+        </div>
+        <div id="nav-collapse" class="nav-wrapper collapse navbar-collapse">
+            <ul class="nav navbar-nav hidden-material">
+                #foreach($item in $menu.visible)
+                    #showMenuItem( $item )
+                #end
+
+                <li class="searchbox-wrap">
+                    #portlets("searchInput")
+                </li>
+
+            </ul>
+            #if($user)
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle org-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            #if( $currentOrg )
+                                <span class="logged-in-title">$formatter.ifNull($currentOrg.title, $currentOrg.orgId)</span>
+                                <i class="fa fa-chevron-down"></i>
+                            #end
+                        </a>
+                        <ul class="dropdown-menu selectOrg">
+                            #set($teamOrg = $page.find('/leads/').teamsForUser)
+                            #foreach( $m in $teamOrg)
+                                <li>
+                                    <a href="$m.orgId">$formatter.ifNull($m.title, $m.orgId)
+                                        #if($m.orgId == $currentOrg.orgId) <i class="fa fa-check text-success"></i> #end
+                                    </a>
+                                </li>
+                            #end
+                        </ul>
+                    </li>
+                    <li class="dropdown current-user user">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            #if( $profile.photoHash )
+                                <img src="/_hashes/files/$profile.photoHash" class="img-circle" alt="">
+                            #end
+                            <span class="username">$formatter.truncate($userResource.title, 10)</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="/profile">
+                                    &nbsp;My Profile
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#" class="logout">
+                                    &nbsp;Log Out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            #end
+        </div>
+    </nav>
+</header>
+
+#macro( showMenuItem $item )
+<li class="$formatter.ifTrue($item.active, 'active', '') $formatter.ifTrue($item.items.empty, '', 'dropdown') $item.id">
+    <a href="$formatter.ifNull($item.href, '#')" class="nav-${item.id} #if(!$item.items.empty) dropdown-toggle #end" #if(!$item.items.empty) data-toggle="dropdown"#end title="$!item.text" data-ripple="">
+        <i class="$item.cssClass fa-2x text-default"></i>
+        <span class="visible-xs-inline visible-sm-inline ml">$!item.text</span>
+    </a>
+    #if(!$item.items.empty)
+        <ul class="dropdown-menu">
+            #foreach($entry in $item.visible)
+                <li class="presentation menu-item-$entry.id $formatter.ifTrue($entry.active, 'active', '')" role="menuitem"><a href="$entry.href" class="nav-${item.id}">$entry.text</a></li>
+            #end
+        </ul>
+    #end
+</li>
+#end

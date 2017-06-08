@@ -2,7 +2,7 @@ var win = $(window);
 
 function initEdmEditorPage(options) {
     flog('initEdmEditorPage', options.fileName);
-    
+
     Msg.iconMode = 'fa';
     
     var basePath = window.location.pathname.replace('edmeditor', '');
@@ -18,18 +18,6 @@ function initEdmEditorPage(options) {
         }
     });
     
-    var btnClose = $('.btn-close-edm');
-    if (btnClose.length > 0) {
-        if (typeof window.parent.closeEdmEditor === 'function') {
-            btnClose.on('click', function (e) {
-                e.preventDefault();
-                window.parent.closeEdmEditor();
-            });
-        } else {
-            btnClose.remove();
-        }
-    }
-    
     initSaveFile(options.fileName);
 }
 
@@ -37,13 +25,13 @@ function initSaveFile(fileName) {
     flog('initSaveFile', fileName);
     
     var body = $(document.body);
-    
+
     var btnSave = $('.btn-save-file');
     btnSave.on('click', function (e) {
         e.preventDefault();
-        
+
         showLoadingIcon();
-        
+
         $.ajax({
             url: fileName,
             type: 'POST',
@@ -61,7 +49,7 @@ function initSaveFile(fileName) {
             }
         })
     });
-    
+
     win.on({
         keydown: function (e) {
             if (e.ctrlKey && e.keyCode === keymap.S) {

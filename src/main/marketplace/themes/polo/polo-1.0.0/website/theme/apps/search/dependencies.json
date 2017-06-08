@@ -1,0 +1,22 @@
+{
+  "appDependencies": [
+    {
+      "appId": "search-lib",
+      "branch": "1.0.0"
+    }
+  ],
+  "dependencies": [
+    {
+      "css": {
+        "cssMedia": "all",
+        "path": "/theme/apps/search/search.css"
+      }
+    },
+    {
+      "js": {
+        "group": "main",
+        "path": "/theme/apps/search/search.js"
+      }
+    }
+  ]
+}

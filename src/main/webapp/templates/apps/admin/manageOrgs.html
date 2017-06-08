@@ -9,11 +9,7 @@
     <body class="manage-business-unit">
         <div id="manage-business-unit">
             <div class="btn-group">
-                <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new business units</a>
-                <a class="btn btn-sm btn-warning btn-add-account" data-toggle="modal" data-target="#modal-create-account" data- href="#" title="Create a new Kademi account">
-                    <i class="fa fa-plus"></i> Create account
-                </a>
-
+                <a class="btn btn-sm btn-success btn-add-org" href="#"><i class="fa fa-plus"></i> Add new business units</a>
                 <a class="btn btn-sm btn-info" href="map"><i class="fa fa-map-marker"></i> Map</a>
                 <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-list"></i>
@@ -44,10 +40,10 @@
                                         <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query">
                                             <i class="fa fa-times"></i>
                                         </button>
-                                    </span>
+                                    </span>                                    
                                 </div>
                             </div>
-
+                           
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input type="text" id="org-query-parent" class="form-control" placeholder="Parent" value="" />
@@ -55,8 +51,8 @@
                                         <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query-parent">
                                             <i class="fa fa-times"></i>
                                         </button>
-                                    </span>
-                                </div>
+                                    </span>                                                                        
+                                </div>                                
                             </div>
 
                             <div class="col-md-3">
@@ -66,7 +62,7 @@
                                     #foreach($orgType in $rootFolder.orgTypes)
                                     <option value="$orgType.name">$orgType.displayName</option>
                                     #end
-                                </select>
+                                </select>                                                                                        
                             </div>
                             <div class="col-md-3">
                                 <div class="btn-group pull-right">
@@ -117,13 +113,7 @@
                                 #foreach($org in $page.searchResults)
                                 <tr data-id="$org.actualId">
                                     <td class="org-orgid">$org.id</td>
-                                    <td class="org-title">
-                                        $formatter.htmlEncode($org.title)
-
-                                        #if( $org.org.adminDomain )
-                                        <span class="fa fa-star"></span>
-                                        #end
-                                    </td>
+                                    <td class="org-title">$formatter.htmlEncode($org.title)</td>
                                     <td>$org.orgTypeDisplayNames</td>
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
@@ -444,7 +434,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div id="modal-move-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
                 <div class="modal-dialog modal-sm">
                     <div class="modal-content">
@@ -489,13 +479,8 @@
                         </form>
                     </div>
                 </div>
-            </div>
-
+            </div>            
             
-
-
-
-
             <script type="text/javascript">
                 $(function () {
                     initManageOrgs();

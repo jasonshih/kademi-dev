@@ -46,7 +46,7 @@
             self.$form = self.$modal.find('form');
             self.$inputs = self.$form.find('input');
             self.$selects = self.$form.find('select');
-
+            
             self.$inputs.filter('[name=parentOrgId]').entityFinder({
                 type: 'organisation'
             });
@@ -229,9 +229,6 @@
 
 })(jQuery, window, document);
 
-
-
-
 function initMove() {
     var modal = $("#modal-move-orgs");
     modal.find("form").forms({
@@ -245,7 +242,7 @@ function initMove() {
             }
         }
     });
-
+    
     $("body").on("click", ".btn-orgs-move", function(e) {
         flog("move..");
         e.preventDefault();
@@ -291,7 +288,7 @@ function initMove() {
         modal.find("textarea").val(moveIds);
 
         modal.modal("show");
-    });
+    });    
 }
 
 function initMerge() {
@@ -517,27 +514,27 @@ function initEditParent() {
     var modal = $('#modal-edit-parent');
     var txtParent = modal.find('[name=destOrgId]');
     var txtOrgId = modal.find('[name=mergeIds]');
-
+    
     txtParent.entityFinder({
         type: 'organisation'
     });
     var txtParentTitle = modal.find('.search-input');
-
+    
     $(document.body).on('click', '.btn-edit-parent', function (e) {
         e.preventDefault();
-
+        
         var btn = $(this);
         var parent = btn.attr("data-parent");
         var parentTitle = btn.attr("data-parent-title");
         var orgId = btn.attr("data-orgid");
-
+    
         txtParent.val(parent);
         txtParentTitle.val(parentTitle);
         txtOrgId.val(orgId);
-
+        
         modal.modal('show');
     });
-
+    
     modal.find('form').forms({
         onSuccess: function () {
             doSearch();
@@ -545,7 +542,7 @@ function initEditParent() {
             modal.modal('hide');
         }
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         txtParent.val('');
         txtOrgId.val('');

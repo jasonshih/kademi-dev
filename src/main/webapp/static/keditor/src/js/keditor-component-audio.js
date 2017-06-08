@@ -8,11 +8,11 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-    
+
     KEditor.components['audio'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "audio" component', component);
-            
+
             this.component = component;
             var img = component.find('img[data-src]');
             var componentId = '';
@@ -33,39 +33,56 @@
                 jwplayer.key = 'cXefLoB9RQlBo/XvVncatU90OaeJMXMOY/lamKrzOi0=';
                 instance.buildJWAudioPlayerPreview(componentId);
             });
-            
+
         },
-        
+
         getContent: function (component, keditor) {
             flog('getContent "audio" component', component);
-            
+
             var img = component.find('img[data-src]');
             var componentId = img.attr('id');
-            
+
             var html = '<img data-componentId="' + componentId + '" src="/theme/apps/content/preview/audio.png" data-autostart="' + this.autostart + '" data-width="' + this.width + '" data-src="' + this.src + '" data-kaudio="' + this.src + '" />';
             return html;
         },
-        
+
         settingEnabled: true,
-        
+
         settingTitle: 'Audio settings',
-        
+
         initSettingForm: function (form, keditor) {
             flog('init "audio" settings', form);
-            
-            return $.ajax({
-                url: '/static/keditor/componentAudioSettings.html',
-                type: 'get',
-                dataType: 'HTML',
-                success: function (resp) {
-                    form.html(resp);
-                }
-            });
+
+            form.append(
+                '<form class="form-horizontal">' +
+                '<div class="form-group">' +
+                '<label for="audioFileInput" class="col-sm-12">Audio file</label>' +
+                '<div class="col-sm-12">' +
+                '<div class="audio-toolbar">' +
+                '<a href="#" class="btn-audioFileInput btn btn-sm btn-primary"><i class="fa fa-upload"></i></a>' +
+                '<input id="audioFileInput" type="file" style="display: none">' +
+                '</div>' +
+                '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-autoplay" class="col-sm-12">Autoplay</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="checkbox" id="audio-autoplay" />' +
+                '</div>' +
+                '</div>' +
+                '<div class="form-group">' +
+                '<label for="audio-width" class="col-sm-12">Width (px)</label>' +
+                '<div class="col-sm-12">' +
+                '<input type="number" id="audio-width" min="200" max="500" class="form-control" value="300" />' +
+                '</div>' +
+                '</div>' +
+                '</form>'
+            );
         },
-        
+
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "audio" component', form, component);
-            
+
             var instance = this;
             var btnAudioFileInput = form.find('.btn-audioFileInput');
             btnAudioFileInput.mselect({
@@ -77,10 +94,10 @@
                     instance.refreshAudioPlayerPreview();
                 }
             });
-            
+
             var img = component.find('img[data-src]');
             var componentId = img.attr('id');
-            
+
             var autoplayToggle = form.find('#audio-autoplay');
             if (this.autostart) {
                 autoplayToggle.prop('checked', true);
@@ -89,7 +106,7 @@
                 instance.autostart = this.checked;
                 instance.buildJWAudioPlayerPreview(componentId);
             });
-            
+
             var audioWidth = form.find('#audio-width');
             audioWidth.val(this.width);
             audioWidth.on('change', function () {
@@ -97,7 +114,7 @@
                 instance.resizeAudioPlayerPreview();
             });
         },
-        
+
         buildJWAudioPlayerPreview: function (componentId) {
             var width = this.width;
             var src = this.src;
@@ -116,7 +133,7 @@
                 log('jwplayer preview init done');
             });
         },
-        
+
         refreshAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
@@ -126,14 +143,14 @@
             }]);
             playerInstance.play();
         },
-        
+
         resizeAudioPlayerPreview: function () {
             var instance = this;
             var playerInstance = jwplayer(instance.componentId);
             var width = instance.width;
-            
+
             playerInstance.resize(width, 30);
         }
     };
-    
+
 })(jQuery);

@@ -304,7 +304,7 @@
                                 #foreach($group in $page.groups)
                                     #if( $group == $page.group )
 
-                                    #elseif ($group.mailingList || $group.subscription)
+                                    #elseif ($group.mailingList)
 
                                         <div class="optins col-sm-12 col-md-6 col-lg-4">
                                             #set($groupId = "optin" + $group.name)
@@ -314,16 +314,7 @@
                                                     #set($optin = "")
                                                     #set($optin = $page.optin($group))
                                                     $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                                                                                        
-                                                    <strong>                                                        
-                                                    #if( $group.groupType == "S" )
-                                                        <i class="fa fa-envelope-o"></i>
-                                                    #else
-                                                        <i class="fa fa-tag"></i>
-                                                    #end
-                                                        
-                                                        $group.name
-                                                    </strong>
+                                                    <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
 
                                                 </label>
                                             </div>

@@ -1,0 +1,67 @@
+
+#if($page)
+
+    #if($rewardResource.children.ofType.category)
+        #if ($reward && $reward != "")
+            #set ($rewardPath = "/" + $reward)
+            #set ($rewardResource = $rootFolder.find($rewardPath))
+            #renderCateList($rewardResource)
+        #else
+            #set ($rewardResource = $page.closest("store") )
+            #renderCateList($rewardResource)
+        #end
+    #else
+        #fakeUI()
+    #end
+
+
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="list-group list-group-root rewardStoreCategoriesList">
+    <span href="#" class="list-group-item heading-item">Browse by category</span>
+
+    <!--<a href="#" class=" list-group-item" data-num-products="1">-->
+        <!--Example Category <i class="fa fa-angle-right  pull-right"></i>-->
+    <!--</a>-->
+</div>
+#end
+
+#macro(renderCateList $rewardResource)
+<div class="list-group list-group-root rewardStoreCategoriesList">
+    <span href="#" class="list-group-item heading-item">Browse by category</span>
+    #foreach($cate in $rewardResource.children.ofType.category)
+        #if ($cate.numProducts > 0)
+
+            #if($cate.children.ofType.category.size() > 0)
+                <a href="#item-$cate.name" class="#if($page.href == $cate.href) selected #end list-group-item" data-toggle="collapse" data-num-products="$cate.numProducts">
+                    <i class="glyphicon #if($page.href != $cate.href && $page.href.contains($cate.href)) glyphicon-chevron-down #else glyphicon-chevron-right #end"></i>$cate.title <i class="fa fa-angle-right  pull-right"></i>
+                </a>
+            #else
+                <a href="$cate.href" class="#if($page.href == $cate.href) selected #end list-group-item" data-num-products="$cate.numProducts">
+                    $cate.title <i class="fa fa-angle-right  pull-right"></i>
+                </a>
+            #end
+            #if($cate.children.ofType.category.size() > 0)
+                <div class="list-group collapse #if($page.href != $cate.href && $page.href.contains($cate.href)) in #end" id="item-$cate.name">
+                    #set ( $subCates = $formatter.sortByProperty( $cate.children.ofType.category, "title" ) )
+                    <a href="$cate.href" class="list-group-item">All</a>
+                    #foreach($subcat in $subCates)
+                        #if ($page.href == $subcat.href)
+                            <a href="$subcat.href" class="list-group-item selected">
+                                $subcat.title <i class="fa fa-angle-right  pull-right"></i>
+                            </a>
+                        #else
+                            <a href="$subcat.href" class="list-group-item">
+                                $subcat.title <i class="fa fa-angle-right  pull-right"></i>
+                            </a>
+                        #end
+                    #end
+                </div>
+            #end
+        #end
+    #end
+</div>
+#end
