@@ -3,7 +3,7 @@
         startDate: null,
         endDate: null,
         query: null,
-        displayedItems: 0
+        displayedItems: 10
     };
     
     $(function () {
@@ -11,9 +11,9 @@
             initTopSkus($(this));
         });
 
-        $('#prodCategories').on('change', function () {
-            $(document.body).trigger('topSkusCatQueryChanged', (this.value || '').trim());
-        })
+        // $('#prodCategories').on('change', function () {
+        //     $(document.body).trigger('topSkusCatQueryChanged', (this.value || '').trim());
+        // })
     });
     
     function initTopSkus(container) {
