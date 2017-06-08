@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
     <head>
-        <title>Edit: $!params.fileName</title>
+        <meta charset="utf-8" />
+        <link rel="template" href="editorBase" />
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
 
         <script type="text/javascript">
@@ -17,194 +18,35 @@
         <script src="/theme/js/theme.js">//</script>
         <script src="/theme/js/bootstrap.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
-        <script type="text/javascript" src="/theme/js/jquery.user.js">//</script>
-        <script type="text/javascript" src="/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js">//</script>
 
         <script type="text/javascript" src="/theme/js/init-theme.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
         <script type="text/javascript" src="/theme/toolbars.js">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js">//</script>
-        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js">//</script>
-        <script type="text/javascript" src="/static/jquery-ui/1.12.1-noui/jquery-ui.min.js">//</script>
         <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
-
-
-        $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
-        $templater.pushLess("/theme/theme-params.less", "all")
-        $templater.pushLess("/theme/ktoolbar.less", "all")
-
-        #foreach( $lessSource in $templater.lessSources.entrySet())
-            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
-        #end
-
-        <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-
-        <!-- Injected CSS sources -->
-        #foreach($groupEntry in $templater.cssSources.entrySet())
-            #foreach($cssFile in $groupEntry.value)
-                <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
-            #end
-        #end
-        <!-- End injected CSS sources -->
-
-        <!-- Injected JS sources -->
-        #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script charset="utf-8" src="$jsFile">//</script>
-            #end
-        #end
-        <!-- End injected CSS sources -->
-
-
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-        <script src="/js/html5shiv.js"></script>
-        <![endif]-->
-        <!--[if lt IE 8]>
-        <link href="/css/bootstrap-ie7.css" rel="stylesheet">
-        <![endif]-->
     </head>
     <body class="content-editor-page">
         #set($fname = $params.fileName)
-        #if( $fname )
-            #set($file = $folder.child($fname))
-        #else
-            #set($file = $page)
-        #end
+        #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
+
 
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" id="file-title">
-                        #if( $file.title )
-                            $file.title
-                            <small class="text-muted">
-                                - $file.name
-                            </small>
-                        #else
-                            $file.fileName
-                        #end
-                    </a>
+                    <a class="navbar-brand">$params.fileName</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
                     <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
-                    <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
-                    <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
+                    <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
                 </ul>
             </div>
         </nav>
 
         <div id="content-area">$!file.body</div>
-
-        <div id="modal-page-properties" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <form method="POST" action="./${fname}" class="form-horizontal">
-                        <div class="modal-header">
-                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <div class="col-xs-11">
-                                    <input type="text" name="title" id="title" class="form-control required" required="required" value="$!file.title" placeholder="Page title" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-message"></div>
-
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#properties" data-toggle="tab">Properties</a></li>
-                                <li><a href="#for-search" data-toggle="tab">For search</a></li>
-                            </ul>
-
-                            <!-- Tab panes -->
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="properties">
-                                    <div class="form-group">
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Meta tags</label>
-
-                                        <div class="col-md-9">
-                                            <p>
-                                                <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
-                                            </p>
-                                            <div class="meta-wrapper">
-                                                #foreach($metaName in $file.metaNames)
-                                                    <div class="input-group meta">
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </div>
-                                                #end
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Data/parameter tags</label>
-
-                                        <div class="col-md-9">
-                                            <p>
-                                                <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
-                                            </p>
-                                            <div class="param-wrapper">
-                                                #foreach($paramName in $file.paramNames)
-                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName != 'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
-                                                        <div class="input-group param">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </div>
-                                                    #end
-                                                #end
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane" id="for-search">
-                                    <div class="form-group">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="itemType" class="control-label col-md-3">Item type</label>
-
-                                        <div class="col-md-9">
-                                            <input type="text" name="itemType" id="itemType" class="form-control" value="$!file.getParam("itemType")" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="category" class="control-label col-md-3">Category</label>
-
-                                        <div class="col-md-9">
-                                            <input type="text" name="category" id="category" class="form-control" value="$!file.getParam("category")" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tags" class="control-label col-md-3">Tags</label>
-
-                                        <div class="col-md-9">
-                                            <input type="text" name="tags" id="tags" class="form-control" value="$!file.getParam("tags")" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-success" type="submit">Save & Close</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <script type="text/javascript">
             var useHash = "$!useHash";
@@ -216,8 +58,8 @@
             $(function () {
                 initContentEditorPage({
                     fileName: '$!fname',
-                    snippetsUrl: '_components?fileName=$!{fname}',
-                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!{fname}"',
+                    snippetsUrl: '_components?fileName=$!{params.fileName}',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!{params.fileName}"',
                     allGroups: allGroups,
                     pagePath: '$!pagePath'
                 });
@@ -226,6 +68,3 @@
 
     </body>
 </html>
-#macro( groupTitle $group )
-    #if($group.title) '$group.title' #else '$group.name' #end
-#end

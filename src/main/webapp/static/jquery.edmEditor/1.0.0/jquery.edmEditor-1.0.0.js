@@ -660,6 +660,13 @@
         });
     };
     
+    edmEditor.fixContainerContent = function (html) {
+        var newDom = $('<div />').html(html);
+        newDom.find('[data-type="container-content"]').attr('height', 10);
+        
+        return newDom.html();
+    };
+    
     var methods = {
         init: function (options) {
             options = $.extend({}, edmEditor.DEFAULTS, options);
@@ -800,9 +807,9 @@
             var keditor = target.data('keditor');
             var body = keditor.body;
             var edmHtml = target.keditor('getContent', true);
-            var edmHeader = edmHtml[0];
-            var edmBody = edmHtml[1];
-            var edmFooter = edmHtml[2];
+            var edmHeader = edmEditor.fixContainerContent(edmHtml[0]);
+            var edmBody = edmEditor.fixContainerContent(edmHtml[1]);
+            var edmFooter = edmEditor.fixContainerContent(edmHtml[2]);
             
             var fragment = $('<div />').html(
                 '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="edm-wrapper">' +

@@ -92,11 +92,11 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "text" component');
             form.append(
-                '<div class="form-horizontal">' +
-                '</div>'
+                '<form class="form-horizontal">' +
+                '</form>'
             );
 
-            form = form.find('.form-horizontal');
+            form = form.find('form');
             edmEditor.initDefaultComponentControls(form, keditor);
         },
 

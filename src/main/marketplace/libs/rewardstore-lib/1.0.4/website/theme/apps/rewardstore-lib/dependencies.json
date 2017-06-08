@@ -1,0 +1,104 @@
+{
+    "appDependencies": [
+        {
+            "appId": "search-lib",
+            "branch": "1.0.0"
+        },
+        {
+            "appId": "rewardstore-lib",
+            "branch": "1.0.2"
+        },
+        {
+            "appId": "d3-lib",
+            "branch": "3.4.1"
+        },
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.1"
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.1"
+        }
+    ],
+    "dependencies": [
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/rewardstore/reward-store.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/slick/1.5.7/slick/slick-theme.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/slick/1.5.7/slick/slick.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/slick/1.5.7/slick/slick.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/storeCategory.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/productDetails.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/reward-store.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/jquery.pointsActivityChart.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/recentlyViewedProducts.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewardstore/debitsActivityComponent.js"
+            }
+        }
+    ]
+}

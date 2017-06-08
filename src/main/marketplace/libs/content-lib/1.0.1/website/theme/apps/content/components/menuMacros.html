@@ -3,66 +3,56 @@
     <div class="col-sm-12">
         <label>Logo</label>
 
-        <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail logo-previewer" /></p>
+        <p><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail logo-previewer"/></p>
         <button type="button" class="btn btn-block btn-primary logo-edit">Change Logo</button>
         <button type="button" class="btn btn-block btn-xs btn-danger logo-delete">Remove Logo</button>
-        <input type="hidden" name="logo" class="form-control" />
+        <input type="hidden" name="logo" class="form-control"/>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Display menu item as</label><br />
-        <select class="cbb-display-menu-item form-control">
-            <option value="text">Text</option>
-            <option value="text-icon">Text &amp; icon</option>
-            <option value="icon">Icon</option>
-        </select>
+        <label>Show user menu or not</label><br/>
+        <input type="checkbox" class="cbb-show-user-menu"/>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show profile drop-down in menu</label><br />
-        <input type="checkbox" class="chk-show-user-menu" />
+        <label>Show search form or not</label><br/>
+        <input type="checkbox" class="cbb-show-search"/>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show search form in menu</label><br />
-        <input type="checkbox" class="chk-show-search" />
-    </div>
-</div>
-<div class="form-group">
-    <div class="col-sm-12">
-        <label>Show organisation selector in menu</label><br />
-        <input type="checkbox" class="chk-show-org-selector" />
+        <label>Show organisation selector or not</label><br/>
+        <input type="checkbox" class="cbb-show-org-selector"/>
         <small class="help-block text-mute">Requires <code>reporting-lib</code></small>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show language selector in menu</label><br />
-        <input type="checkbox" class="chk-show-lang-selector" />
+        <label>Show language selector or not</label><br/>
+        <input type="checkbox" class="cbb-show-lang-selector"/>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Inverse menu</label><br />
-        <input type="checkbox" class="chk-inverse-menu" />
+        <label>Inverse menu</label><br/>
+        <input type="checkbox" class="cbb-inverse-menu"/>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show sub menu on hover</label><br />
-        <input type="checkbox" class="chk-show-sub-menu-on-hover" />
+        <label>Show sub menu on hover</label><br/>
+        <input type="checkbox" class="cbb-show-sub-menu-on-hover"/>
     </div>
 </div>
-<hr />
+<hr/>
 
 <label>Menu Items</label>
 <div class="menuTree clearfix">
-    #set( $myMenu = $menuManager.rootMenuItem )
+	#set( $myMenu = $menuManager.rootMenuItem )
     <ol class="menuList rootMenuList">
-        #showMenu( $myMenu true )
+		#showMenu( $myMenu true )
     </ol>
 
     <button class="btn btn-primary saveMenu btn-block">
@@ -80,21 +70,21 @@
         <label class="col-sm-12"><strong>Path</strong></label>
 
         <div class="col-sm-12">
-            <input type="text" name="href" class="form-control input-sm" />
+            <input type="text" name="href" class="form-control input-sm"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-12"><strong>Text</strong></label>
 
         <div class="col-sm-12">
-            <input type="text" name="text" class="form-control input-sm" />
+            <input type="text" name="text" class="form-control input-sm"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-12"><strong>Hidden</strong></label>
 
         <div class="col-sm-12">
-            <input type="checkbox" name="hidden" />
+            <input type="checkbox" name="hidden"/>
         </div>
     </div>
     <div class="form-group">
@@ -122,28 +112,28 @@
             <a class="btn btn-success btnAddMenuItem" href="#">
                 <span class="fa fa-plus small"></span>
             </a>
-            #if (!$isRootMenuItem)
+	        #if (!$isRootMenuItem)
                 <a class="btn btn-info btnSortMenuItem" href="#">
                     <span class="fa fa-sort small"></span>
                 </a>
-            #end
-            #if (!$isRootMenuItem)
+	        #end
+	        #if (!$isRootMenuItem)
                 <a class="btn btn-primary btnEditMenuItem" href="#">
                     <span class="fa fa-pencil small"></span>
                 </a>
-            #end
+	        #end
         </span>
 
         <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
     </div>
 
-    #showMenuList($menuItem)
+	#showMenuList($menuItem)
 </li>
 #end
 
 #macro( showMenuList $menuItem )
 <ol class="menuList" data-id="$menuItem.id">
-    #foreach($item in $menuItem.items)
+	#foreach($item in $menuItem.items)
     #showMenu( $item false )
     #end
 </ol>

@@ -5,42 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
-
-        <div class="well">
-            <form method="post" action="$page.href" id="createTranslation">
-                <h2>Add a translation</h2>
-                    
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="sourceType">Source type</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="sourceType" value="" />
-                    </div>
-                    <label class="col-sm-2 control-label" for="sourceId">sourceId</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="sourceId" value="" />
-                    </div>
-                </div>                
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="sourceField">sourceField</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="sourceField" value="" />
-                    </div>
-                    
-                    <label class="col-sm-2 control-label" for="langCode">langCode</label>
-                    <div class="col-sm-4">
-                        <input type="text" class="form-control" name="langCode" value="" />
-                    </div>
-                </div> 
-                <div class="form-group">
-                    <label class="col-sm-2 control-label" for="translated">translated</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" name="translated" value="" />
-                    </div>
-                </div>                   
-                <button class="btn btn-success" type="submit">Save</button>
-            </form>
-        </div>
-
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -65,15 +29,7 @@
         </table>
         <script>
             $(function () {
-                $("#createTranslation").forms({
-                    callback : function(){
-                        if( resp.status ) {
-                        Msg.info("Saved");
-                        } else {
-                            Msg.error("eek, something bad happened, sorry");
-                        }
-                    }
-                });
+
             });
         </script>
     </body>
