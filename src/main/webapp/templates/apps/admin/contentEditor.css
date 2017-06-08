@@ -6,14 +6,6 @@
     top: 50px !important;
 }
 
-#keditor-sidebar .form-control,
-#keditor-sidebar .btn {
-    font-size: 13px !important;
-    line-height: 1.42857143 !important;
-    padding: 5px 8px !important;
-    height: 32px !important;
-}
-
 /* Embedded iframe */
 .embedded-iframe {
     padding: 0 !important;
@@ -77,13 +69,4 @@
 .content-editor-page > .navbar-fixed-top .fa {
     font-size: 20px !important;
     line-height: 50px !important;
-}
-
-#modal-page-properties .input-group .form-control {
-    width: 50%;
-}
-
-#modal-page-properties .input-group.meta,
-#modal-page-properties .input-group.param {
-    margin-bottom: 5px;
 }

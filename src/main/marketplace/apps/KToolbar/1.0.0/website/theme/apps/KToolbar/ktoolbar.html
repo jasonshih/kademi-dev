@@ -1,0 +1,183 @@
+## KToolbar for logged in user with admin or content author role
+#if($page.isWritable())
+    #set($website = $page.closest("website"))
+
+<div id="ktoolbar" class="show">
+    <div class="ktoolbarWrap">
+        <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
+        <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
+        <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
+        <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
+        <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
+        <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
+
+        #set( $templatePageName = $formatter.getFileName($templateName) )
+        #set( $themeTemplatePageName = $formatter.getFileName($themeTemplate) )
+
+        <span class="pull-right">
+            <a href="#modal-edit-variables" class="btn btn-sm btn-link btn-edit-variables" data-toggle="modal"><i class="fa fa-paint-brush"></i> Edit theme variables</a>
+            <a target="_blank" href="/?editTemplate=$themeTemplatePath" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Theme</a>
+            <a target="_blank" href="/?editTemplate=$templatePath" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Template</a>
+            #if( $page.is("folder") )
+                <a target="_blank" href="../contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
+            #else
+                <a target="_blank" href="contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
+            #end
+        </span>
+        <!--
+        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-done hide"><i class="fa fa-check-circle"></i> Done</a>
+        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-save hide"><i class="fa fa-save"></i> Save</a>
+        -->
+    </div>
+    <div class="text-center ktoolbarToggleWrap">
+        <a class="btn btn-default btn-sm ktoolbarToggle" href="#"><i class="fa fa-cog"></i></a>
+    </div>
+</div>
+
+    $folder.themeParams
+
+<div id="modal-edit-variables" class="modal modal-fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Edit theme variables</h4>
+            </div>
+            <form class="form-horizontal" method="post" action="/">
+                <div class="modal-body">
+                    <input type="hidden" name="updateThemeParams" value="true" />
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Primary brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="brand-primary" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Info brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="brand-info" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Success brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="brand-success" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Danger brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="brand-danger" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Warning brand</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="brand-warning" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Font base</label>
+                        <div class="col-sm-8">
+                            <select name="font-family-base" class="form-control">
+                                <option value="">None</option>
+                                <option value="arial,helvetica,sans-serif">Arial</option>
+                                <option value="comic sans ms,cursive">Comic Sans MS</option>
+                                <option value="courier new,courier,monospace">Courier New</option>
+                                <option value="lucida sans unicode,lucida grande,sans-serif">Lucida Sans Unicode</option>
+                                <option value="tahoma,geneva,sans-serif">Tahoma</option>
+                                <option value="times new roman,times,serif">Times New Roman</option>
+                                <option value="trebuchet ms,helvetica,sans-serif">Trebuchet MS</option>
+                                <option value="verdana,geneva,sans-serif">Verdana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Font size</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="font-size-base" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Line height</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="line-height-base" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Text color</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="text-color" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Link color</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="link-color" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Heading font family</label>
+                        <div class="col-sm-8">
+                            <select name="headings-font-family" class="form-control">
+                                <option value="inherit">Inherit</option>
+                                <option value="arial,helvetica,sans-serif">Arial</option>
+                                <option value="comic sans ms,cursive">Comic Sans MS</option>
+                                <option value="courier new,courier,monospace">Courier New</option>
+                                <option value="lucida sans unicode,lucida grande,sans-serif">Lucida Sans Unicode</option>
+                                <option value="tahoma,geneva,sans-serif">Tahoma</option>
+                                <option value="times new roman,times,serif">Times New Roman</option>
+                                <option value="trebuchet ms,helvetica,sans-serif">Trebuchet MS</option>
+                                <option value="verdana,geneva,sans-serif">Verdana</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Heading font weight</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="headings-font-weight" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Heading line height</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="headings-line-height" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Heading color</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" value="" placeholder="" name="headings-color" />
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Border radius</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" value="" placeholder="" name="border-radius-base" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Vertical padding <br /><small class="text-muted">(top &amp; bottom)</small></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" value="" placeholder="" name="padding-base-vertical" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">Horizontal padding <br /><small class="text-muted">(left &amp; right)</small></label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" value="" placeholder="" name="padding-base-horizontal" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+#end

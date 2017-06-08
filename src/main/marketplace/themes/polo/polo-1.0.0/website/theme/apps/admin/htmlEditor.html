@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    #parse("/theme/editorBase.html")
+    <head>
+        #@themeHeader("HTML editor")
+        <script type="text/javascript" src="/theme/toolbars.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/ckeditor456/adapters/jquery.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/init-theme.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/htmlEditor.js">//</script>
+        <link rel="stylesheet" type="text/css" href="/theme/apps/admin/textEditor.css" />
+        #end
+    </head>
+    <body class="">
+        #@themeBody()
+        #set($fname = $params.fileName)
+        #set($file = $folder.child($fname))
+        #set($useHash = $params.useHash)
+
+        <div id="editor-wrapper">
+            <div class="clearfix editor-toolbar">
+                <div class="btn-toolbar pull-right" role="toolbar">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw" id="editor-loading"></i>
+
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-success btn-save-file"><i class="fa fa-save"></i> Save file</button>
+                        #if( $file.template )
+                        <a href="$page.getEditTemplateLink( $file.template )" target="_blank" class="btn btn-info"><i class="fa fa-pencil"></i> Template: <b>$file.template</b></a>
+                        #end
+                    </div>
+                </div>
+                <h3 class="editor-title" title="$file.name">$file.name</h3>
+            </div>
+            <textarea id="editor" class="toolbar-Full" style="opacity: 0">$formatter.htmlEncode($file.body)</textarea>
+        </div>
+
+        #foreach($cssPath in $file.cssPaths)
+        <link rel="editor-stylesheet" href="${cssPath}" />
+        #end
+
+        <script type="text/javascript">
+            var useHash = "$!useHash";
+            $(function () {
+                initHtmlEditorPage('$fname');
+            });
+        </script>
+        #end
+    </body>
+</html>

@@ -7,14 +7,6 @@
         <!-- Page Content -->
         <div class="row">
             <div class="col-md-9">
-                #if( $request.params.websiteName.length() > 0 )
-                <p>
-                <a class="btn btn-info" href="/websites/$request.params.websiteName/$request.params.websiteBranch/#panel_apps-tab">
-                    <span class="fa fa-arrow-left"></span>
-                    Back to website manager
-                </a>
-                </p>
-                #end
                 <div class="thumbnail">
                     #set($banner = "/theme/apps/marketplace/no_banner.png")
                     #set($bannerImg = $page.banner)
@@ -24,33 +16,14 @@
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
-                            <p class="pull-right">
-                            <button type="button" data-title="$page.title" data-websitename="$!request.params.websiteName" data-websitebranch="$!request.params.websiteBranch" class="btn btn-lg btn-green btn-install-app pull-right">
-                                <span class="fa fa-check"></span>
+                            <button type="button" data-title="$page.title" class="btn btn-sm btn-green btn-install-app">
                                 #if(!$page.price || $page.price == 0)
-                                #if( $request.params.websiteName )
-                                    #if( $page.installed )
-                                    Enable
-                                    #else
-                                    Install
-                                    #end
-                                    in $request.params.websiteName
-                                #else
-                                Install now
-                                #end
+                                Free
                                 #else
                                 $$page.price
                                 #end
-                            </button>                            
-                            </p>
+                            </button>
                         </h4>
-                            <br />
-                            #if( $page.installed )
-                            <span class="text-muted">
-                                You have purchased this app
-                            </span>
-                            #end
-                        
                         <h4 class="app"><a href="#">$page.title</a>
                         </h4>
                         <div class="ratings">
@@ -94,7 +67,7 @@
                                     <div class="col-md-12">
                                         <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
                                             <input type="hidden" name="submitReview" value="submitReview"/>
-                                            <input id="ratings-hidden" name="rating" type="hidden">
+                                            <input id="ratings-hidden" name="rating" type="hidden"> 
                                             <textarea class="form-control animated limited" maxLength="200" rows="5" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
 
                                             <div class="text-right">
@@ -165,9 +138,7 @@
             <span class="fa fa-star-o"></span>
             #end
             #end
-            <!--
             <span>$reviewCount Reviews</span>
-            -->
         </p>
         #end
 

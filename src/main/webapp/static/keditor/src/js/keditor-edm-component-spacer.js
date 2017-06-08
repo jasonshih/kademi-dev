@@ -18,24 +18,24 @@
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "spacer" component');
             form.append(
-                '<div class="form-horizontal">' +
+                '<form class="form-horizontal">' +
                 '    <div class="form-group">' +
                 '       <label for="spacer-height" class="col-sm-12">Height</label>' +
                 '       <div class="col-sm-12">' +
                 '           <input type="number" id="spacer-height" class="form-control" />' +
                 '       </div>' +
                 '    </div>' +
-                '</div>'
+                '</form>'
             );
-    
-            form = form.find('.form-horizontal');
-            edmEditor.initDefaultComponentControls(form, keditor, {
-                hidePadding: true
-            });
 
             var spacerHeight = form.find('#spacer-height');
             spacerHeight.on('change', function () {
                 keditor.getSettingComponent().find('.spacer').attr('height', this.value);
+            });
+
+            form = form.find('form');
+            edmEditor.initDefaultComponentControls(form, keditor, {
+                hidePadding: true
             });
         },
 

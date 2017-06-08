@@ -27,7 +27,9 @@
         <nav class="edm-editor-nav">
             <span class="edm-editor-file">$params.fileName</span>
             <ul class="edm-editor-navbar">
-                <li><a #if ($params.iframe)href="#" class="btn-close-edm" #else href="./" #end" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                #if (!$params.iframe)
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                #end
                 <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
                 #if (!$params.iframe)
                     <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
