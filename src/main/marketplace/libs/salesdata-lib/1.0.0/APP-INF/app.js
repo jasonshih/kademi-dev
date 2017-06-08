@@ -27,6 +27,8 @@ function getTopSkusData(page, params) {
         selectedOrgs.push(queryService.selectedOrgIds[key]);
     }
 
+    var dataSerialName = params.dataSerialName;
+
     var queryJson = {
         "fields": ["productSku", "amount", "qty"],
         "size": 10,
@@ -66,7 +68,7 @@ function getTopSkusData(page, params) {
                     {
                         "terms": {
                             "dataSeriesName": [
-                                "new-series-1"
+                                dataSerialName
                             ]
                         }
                     },

@@ -3,6 +3,7 @@
         <label class="col-sm-12"><strong>Data Serial</strong></label>
         <div class="col-sm-12">
             <select class="form-control" name="dataSeriesName">
+                <option value="">- None -</option>
                 #foreach ($dataSerialFolder in $rootFolder.find('/sales/').children)
                    <option value="$dataSerialFolder.name">$dataSerialFolder.title</option>
                 #end

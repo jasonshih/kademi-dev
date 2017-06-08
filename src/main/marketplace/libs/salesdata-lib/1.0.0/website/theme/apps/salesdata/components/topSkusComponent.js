@@ -14,7 +14,6 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-
                     form.find('[name=dataSeriesName]').on('change', function(e){
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -33,9 +32,13 @@
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "pointsRangeList" component');
-            var dataAttributes = keditor.getDataAttributes(component, ['data-data-series-name'], false);
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('[name=dataSeriesName]').val(dataAttributes['data-data-series-name']);
-            form.find('[name=displayedItems]').val(dataAttributes['data-displayed-items']);
+            var dataAttribute = dataAttributes['data-displayed-items'];
+            if (!dataAttribute) {
+                dataAttribute = 10;
+            }
+            form.find('[name=displayedItems]').val(dataAttribute);
         }
     };
 

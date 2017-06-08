@@ -14,12 +14,12 @@
                 "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
             }
         },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/salesdata/topSkus.js?v=1.0.4"
-            }
-        },
+//        {
+//            "js": {
+//                "group": "main",
+//                "path": "/theme/apps/salesdata/topSkus.js"
+//            }
+//        },
         {
             "js": {
                 "group": "main",
