@@ -1,0 +1,189 @@
+#if($page)
+#set ($numberOfProducts = $formatter.toInteger($numberOfProducts))
+#set( $prods = $applications.ecommerce.searchProducts($store, null, $category, 'title', false) )
+
+#set ($prodsListId = $formatter.randomGuid)
+#if( $prods.size() > 0 )
+#if ($prods.size() > $numberOfProducts)
+#set( $prods =  $prods.subList(0, $numberOfProducts))
+#end
+#if ($layout == "grid")
+#set ($clsName = "col-sm-4")
+#if ($itemsPerRow == 1)
+#set ($clsName = "col-sm-12")
+#elseif ($itemsPerRow == 2)
+#set ($clsName = "col-sm-6")
+#elseif ($itemsPerRow == 3)
+#set ($clsName = "col-sm-4")
+#elseif ($itemsPerRow == 4)
+#set ($clsName = "col-sm-3")
+#end
+
+<div class="row products-list" id="products-list-${prodsListId}">
+    #foreach($p in $prods)
+    #set ($prodUrl = "/$store/$category/$p.name")
+    <div class="product $clsName">
+        <div class="thumbnail">
+            <div class="embed-responsive embed-responsive-16by9">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $p.primaryImageHref )
+                #set($bg = $p.primaryImageHref)
+                #end
+                <a title="$p.title" href="$prodUrl" class="embed-responsive-item"
+                   style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
+                    <span class="sr-only">$p.title</span>
+                </a>
+                <label class="label label-success" style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i
+                        class="fa fa-usd"></i> $p.finalCost</label>
+            </div>
+            <div class="caption">
+                <h4><a title="$p.title" href="$prodUrl">$p.title</a></h4>
+                <p style="word-wrap: break-word;" class="product-brief">$formatter.truncate( $formatter.toPlain(
+                    $!p.notes ), 100 )</p>
+                <div class="text-right">
+                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+
+    <script type="text/javascript">
+        $(function () {
+            var win = $(window);
+            var timer = null;
+
+            win.on('resize', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    var brieves = $('#products-list-${prodsListId}').find('.product-brief');
+                    brieves.css('height', '');
+
+                    if (win.width() > 767) {
+                        var heights = [];
+                        brieves.each(function () {
+                            heights.push($(this).innerHeight());
+                        });
+
+                        brieves.css('height', Math.max.apply(Math, heights));
+                    }
+                }, 150);
+            }).trigger('resize');
+        });
+    </script>
+</div>
+#else
+<div class="products-list" id="products-list-${prodsListId}">
+    #foreach($p in $prods)
+    #set ($prodUrl = "/$store/$category/$p.name")
+    <div class="media prod">
+        <div class="media-left hidden-sm hidden-xs">
+            #set($bg = "/static/images/photo_holder.png")
+            #if( $p.primaryImageHref )
+            #set($bg = $p.primaryImageHref)
+            #end
+            <a href="$prodUrl">
+                <img class="media-object" alt="$p.title" src="$bg" width="200" height=""/>
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" style="margin-bottom: 10px;">
+                <a href="$prodUrl">$p.title</a>
+            </h4>
+            <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i>
+                $p.finalCost</label></p>
+            <div class="media-content clearfix">
+                <p>$formatter.truncate( $formatter.toPlain( $!p.notes ), 200 )</p>
+                <div>
+                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    #end
+</div>
+#end
+
+<script type="text/javascript" src="/theme/apps/ecommerce/storeProductList.js">//</script>
+
+#else
+<p>Sorry, we couldnt find any products for you</p>
+#end
+#else
+
+
+#if ($layout == "grid")
+#set ($clsName = "col-sm-4")
+#if ($itemsPerRow == 1)
+#set ($clsName = "col-sm-12")
+#elseif ($itemsPerRow == 2)
+#set ($clsName = "col-sm-6")
+#elseif ($itemsPerRow == 3)
+#set ($clsName = "col-sm-4")
+#elseif ($itemsPerRow == 4)
+#set ($clsName = "col-sm-3")
+#end
+
+<div class="row products-list" id="products-list-${prodsListId}">
+    #set ($prodUrl = "")
+    #foreach($p in [1..3])
+    <div class="product $clsName">
+        <div class="thumbnail">
+            <div class="embed-responsive embed-responsive-16by9">
+                #set($bg = "/static/images/photo_holder.png")
+                <a title="$p.title" href="$prodUrl" class="embed-responsive-item"
+                   style="background: url($bg) no-repeat 50% 50%; background-size: cover;">
+                    <span class="sr-only">Example Title</span>
+                </a>
+                <label class="label label-success" style="position: absolute; top: 5px; right: 5px; font-size: 14px;"><i
+                        class="fa fa-usd"></i> 100</label>
+            </div>
+            <div class="caption">
+                <h4><a title="$p.title" href="$prodUrl">Example Title</a></h4>
+                <p style="word-wrap: break-word;" class="product-brief">notes</p>
+                <div class="text-right">
+                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+
+
+</div>
+#else
+<div class="products-list" id="products-list-${prodsListId}">
+    #set ($prodUrl = "")
+    #foreach($p in [1..3])
+    <div class="media prod">
+        <div class="media-left hidden-sm hidden-xs">
+            #set($bg = "/static/images/photo_holder.png")
+            <a href="$prodUrl">
+                <img class="media-object" alt="$p.title" src="$bg" width="200" height=""/>
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading" style="margin-bottom: 10px;">
+                <a href="$prodUrl">Example Title</a>
+            </h4>
+            <p><label class="label label-success" style="font-size: 14px;"><i class="fa fa-usd"></i> 100</label></p>
+            <div class="media-content clearfix">
+                <p>$formatter.truncate( $formatter.toPlain( $!p.notes ), 200 )</p>
+                <div>
+                    <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
+                    <a href="$prodUrl" class="btn btn-primary btn-sm btn-add-to-cart" role="button">Add to Cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    #end
+</div>
+#end
+
+#end
+

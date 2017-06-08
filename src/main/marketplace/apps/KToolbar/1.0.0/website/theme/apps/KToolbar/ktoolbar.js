@@ -72,6 +72,13 @@ $(function () {
             window.location.href = window.location.href;
         }, 500);
     });
+    
+    $('#modal-edit-variables').find('form').forms({
+        onSuccess: function () {
+            Msg.success('Theme variables are saved! Reloading page...');
+            window.location.reload();
+        }
+    });
 
     window.onbeforeunload = function () {
         if (body.hasClass('content-changed')) {

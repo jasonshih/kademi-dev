@@ -1,57 +1,52 @@
 #if( $menu )
 #else
-    #set( $menu = $menuManager.rootMenuItem )
+	#set( $menu = $menuManager.rootMenuItem )
 #end
 
 #if( $showUserMenu )
 #else
-    #set( $showUserMenu = false )
+	#set( $showUserMenu = false )
 #end
 
 #if( $showOrgSelector )
 #else
-    #set( $showOrgSelector = false )
+	#set( $showOrgSelector = false )
 #end
 
 #if( $showLangSelector )
 #else
-    #set( $showLangSelector = false )
+	#set( $showLangSelector = false )
 #end
 
 #if( $showSearch )
 #else
-    #set( $showSearch = false )
+	#set( $showSearch = false )
 #end
 
 #if( $inverseMenu )
 #else
-    #set( $inverseMenu = false )
+	#set( $inverseMenu = false )
 #end
 
 #if( $showSubMenuOnHover )
 #else
-    #set( $showSubMenuOnHover = false )
+	#set( $showSubMenuOnHover = false )
 #end
 
 #set( $memberships = $userResource.primaryMemberships )
 #set( $currentOrgId = $request.getCookie("org").value )
 #if( $currentOrgId )
-    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+	#set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
 #else
-    #set( $curMembership = $memberships.first )
+	#set( $curMembership = $memberships.first )
 #end
 #set( $currentOrg = $curMembership.org  )
 
 #set( $currentLang = $request.getCookie("selectedLangCode").value )
 
 #if (!$navbarLayout)
-    #set ($navbarLayout = "container-fluid")
+	#set ($navbarLayout = "container-fluid")
 #end
-
-#if (!$displayMenuItem)
-    #set ($displayMenuItem = "text")
-#end
-
 <div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
     <div class="$navbarLayout">
         <div class="navbar-header">
@@ -61,43 +56,43 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="brand navbar-brand logo" href="/">
-                #if( $logo )
-                    <img src="$logo" class="img-responsive" />
-                #else
+				#if( $logo )
+                    <img src="$logo" class="img-responsive"/>
+				#else
                     No Logo
-                #end
+				#end
             </a>
         </div>
 
         <div class="navbar-collapse collapse navbar-main-collapse">
             <ul class="nav navbar-nav navbar-right">
-                #foreach($item in $menu.visible)
-                    #showMenuItem( $item )
-                #end
+				#foreach($item in $menu.visible)
+					#showMenuItem( $item )
+				#end
 
-                #if ($showSearch == true)
+				#if ($showSearch == true)
                     <li class="navbar-search">
-                        #portlets("searchInput")
+						#portlets("searchInput")
                     </li>
-                #end
+				#end
 
-                #if ($showOrgSelector == true)
+				#if ($showOrgSelector == true)
                     <li class="navbar-org-selector">
-                        #parse("/theme/apps/reporting/orgSelectorComponent.html")
+						#parse("/theme/apps/reporting/orgSelectorComponent.html")
                     </li>
-                #end
+				#end
 
-                #if ($showLangSelector == true)
+				#if ($showLangSelector == true)
                     <li class="dropdown navbar-lang-selector">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             <i class="fa fa-language"></i>
-                            #set($currentLangText = "Default")
-                            #if ($currentLang == "en")
-                                #set($currentLangText = "English")
-                            #elseif ($currentLang == "ar")
-                                #set($currentLangText = "Arabic")
-                            #end
-                            $currentLangText
+							#set($currentLangText = "Default")
+							#if ($currentLang == "en")
+								#set($currentLangText = "English")
+							#elseif ($currentLang == "ar")
+								#set($currentLangText = "Arabic")
+							#end
+							$currentLangText
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-right">
@@ -106,15 +101,15 @@
                             <li><a class="select-lang" href="ar">Arabic</a></li>
                         </ul>
                     </li>
-                #end
+				#end
 
-                #portlets("shoppingCart")
+				#portlets("shoppingCart")
 
-                #if ($showUserMenu == true)
-                    #if($user)
+				#if ($showUserMenu == true)
+					#if($user)
                         <li class="dropdown user">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                $formatter.truncate($userResource.title, 10)
+								$formatter.truncate($userResource.title, 10)
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right">
@@ -126,7 +121,7 @@
                                 </li>
                             </ul>
                         </li>
-                    #else
+					#else
                         <li class="dropdown login">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 Login
@@ -139,7 +134,7 @@
                                             <label class="control-label col-md-3" for="inputEmail">Email</label>
                                             <div class="col-md-9">
                                                 <input type="text" id="inputEmail" name="email" placeholder="Email"
-                                                        type="email" required="true" class="form-control" />
+                                                       type="email" required="true" class="form-control"/>
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
@@ -147,7 +142,7 @@
                                             <label class="control-label col-md-3" for="inputPassword">Password</label>
                                             <div class="col-md-9">
                                                 <input type="password" name="password" id="inputPassword"
-                                                        placeholder="Password" required="true" class="form-control" />
+                                                       placeholder="Password" required="true" class="form-control"/>
                                                 <span class="help-block"></span>
                                             </div>
                                         </div>
@@ -155,61 +150,39 @@
                                             <div class="col-md-offset-3 col-md-9">
                                                 <button type="submit" class="btn">Sign in</button>
                                                 <small class="pull-right"><a href="/password-reset"
-                                                        title="Forgotten password" class="Forgot">Forgotten
+                                                                             title="Forgotten password" class="Forgot">Forgotten
                                                     password</a></small>
                                             </div>
                                         </div>
-                                        #portlets("socialLoginForm")
+										#portlets("socialLoginForm")
                                     </form>
                                 </li>
                             </ul>
                         </li>
-                    #end
-                #end
+					#end
+				#end
             </ul>
         </div><!--/.nav-collapse -->
     </div>
 </div>
 
-#macro( showMenuItem $item $isSubmenu)
-    #if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}">
-        <a class="nav-${item.id} translatable" href="$item.href" shape="rect" title="$formatter.translate($item.text)">
-            #if ($isSubmenu)
-                $formatter.translate($item.text)
-            #else
-                #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
-                    <i class="$item.cssClass"></i>
-                #end
-                #if ($displayMenuItem == "icon")
-                    <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
-                #end
-                #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
-                    $formatter.translate($item.text)
-                #end
-            #end
-        </a>
-    </li>
-    #else
+#macro( showMenuItem $item )
+	#if( $item.visible.isEmpty() )
+    <li class="$formatter.ifTrue($item.active, 'active', '')" title="${item.text}"><a class="nav-${item.id}"
+                                                                                      href="$item.href"
+                                                                                      shape="rect">$item.text</a></li>
+	#else
     <li class="dropdown">
         <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
-            'data-hover="dropdown"', '') title="$formatter.translate($item.text)">
-            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
-                <i class="$item.cssClass"></i>
-            #end
-            #if ($displayMenuItem == "icon")
-                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
-            #end
-            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
-                $formatter.translate($item.text)
-            #end
+			'data-hover="dropdown"', '') title="${item.text}">
+			$item.text
             <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-            #foreach( $subitem in $item.visible )
-                #showMenuItem( $subitem, true )
+			#foreach( $subitem in $item.visible )
+                #showMenuItem( $subitem )
             #end
         </ul>
     </li>
-    #end
+	#end
 #end

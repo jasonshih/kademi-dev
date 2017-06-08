@@ -89,7 +89,11 @@
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
         );
-        this.element.attr('tabindex', '-1').addClass('search-hidden-input');
+        this.element.css({
+            opacity: 0,
+            position: 'absolute',
+            top: 0
+        }).attr('tabindex', '-1').addClass('search-hidden-input');
         
         this.input = this.element.siblings('.search-input');
         this.suggestionsList = this.element.siblings('.search-suggestions');
@@ -150,12 +154,7 @@
                 }
             },
             blur: function () {
-                var result = self.fakeInput.val();
-                if(result === "") {
-                    self.element.val(result);
-                }
-
-                result = self.element.val();
+                var result = self.element.val();
                 if(result === "") {
                     self.fakeInput.val(result);
                 }
@@ -251,7 +250,7 @@
 
             error: function (jqXhr, status, error) {
                 flog('[EntityFinder] Get error response from server', jqXhr, status, error);
-                showNoResult();
+                self.suggestionsList.html(self.options.renderNoSuggestion());
                 self.suggestionsList.css('display', 'block');
             }
         });
