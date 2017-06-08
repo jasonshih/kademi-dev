@@ -8,8 +8,18 @@
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
             <div class="form-group">
                 <div class="col-sm-12">
+                    <label for="message">Status</label>
+                    <select name="status">
+                        <option value="">[Please Select Ending Status]</option>
+                        <option value="Succeeded" #if ($page.node.status == 'Succeeded') selected #end >Succeeded</option>
+                        <option value="Failed" #if ($page.node.status == 'Failed') selected #end >Failed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
                     <label for="message">Reason</label>
-                    <textarea style="height: 70px" id="reason" name="reason" placeholder="Enter reason for cancelling lead" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.reason )</textarea>
+                    <textarea style="height: 70px" id="reason" name="reason" placeholder="Enter reason for ending lead" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.reason )</textarea>
                 </div>
             </div>
         </form>
