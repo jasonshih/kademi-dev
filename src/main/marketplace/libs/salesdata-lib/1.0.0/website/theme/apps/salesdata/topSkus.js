@@ -3,7 +3,8 @@
         startDate: null,
         endDate: null,
         query: null,
-        displayedItems: 0
+        dataSerialName: null,
+        displayedItems: 10
     };
     
     $(function () {
@@ -11,15 +12,17 @@
             initTopSkus($(this));
         });
 
-        $('#prodCategories').on('change', function () {
-            $(document.body).trigger('topSkusCatQueryChanged', (this.value || '').trim());
-        })
+        // $('#prodCategories').on('change', function () {
+        //     $(document.body).trigger('topSkusCatQueryChanged', (this.value || '').trim());
+        // })
     });
     
     function initTopSkus(container) {
         var displayedItems = +container.attr('data-display');
+        var dataSerialName = container.attr('data-data-series-name');
         searchOptions.displayedItems = displayedItems;
-        
+        searchOptions.dataSerialName = dataSerialName;
+
         $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
             searchOptions.startDate = startDate;
             searchOptions.endDate = endDate;

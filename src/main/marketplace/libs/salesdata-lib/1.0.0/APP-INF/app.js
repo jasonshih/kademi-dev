@@ -20,12 +20,14 @@ controllerMappings
     .build();
 
 function getTopSkusData(page, params) {
-    log.info('getTopSkusData > page={}, params={}', page, params);
+    log.info('getTopSkusData > page={}, params={}, queryService={}', page, params, queryService);
     var selectedOrgs = [];
 
     for (var key in queryService.selectedOrgIds) {
         selectedOrgs.push(queryService.selectedOrgIds[key]);
     }
+
+    var dataSerialName = params.dataSerialName;
 
     var queryJson = {
         "fields": ["productSku", "amount", "qty"],
@@ -66,7 +68,7 @@ function getTopSkusData(page, params) {
                     {
                         "terms": {
                             "dataSeriesName": [
-                                "new-series-1"
+                                dataSerialName
                             ]
                         }
                     },
@@ -83,8 +85,7 @@ function getTopSkusData(page, params) {
     };
 
     var displayedItems = params.displayedItems;
-    // if (isNotBlank(displayedItems)) {
-    if (true) {
+    if (displayedItems && $.trim(displayedItems).length > 0) {
         queryJson.aggregations.skuCode = {
             "terms": {
                 "field": "productSku",
