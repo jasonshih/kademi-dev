@@ -1,0 +1,22 @@
+div.pages, div.commentArea, div.footerOuter {
+    display: none;
+}
+.modulePage a.backToMyLearning, .modulePage a.print {
+    display: none;
+}
+.adminToolbar {
+    display: none;
+}
+.commentArea, div.pages, .panelBox {
+    border-left: none;
+    border-right: none;
+}
+.btnHideFollowing {
+    display: none;
+}
+.jp-gui {
+    display: none;
+}
+.dropdown div {
+    display: block !important;
+}

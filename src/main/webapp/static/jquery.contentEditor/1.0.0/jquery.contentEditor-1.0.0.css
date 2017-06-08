@@ -52,6 +52,29 @@
 }
 
 /* ===========================================================================
+   Color picker
+   =========================================================================== */
+.colorpicker-wrapper {
+    position: relative;
+}
+
+.colorpicker-wrapper .colorpicker {
+    top: 31px !important;
+    right: auto;
+    left: 0px !important;
+}
+
+.colorpicker {
+    right: auto;
+    left: 15px !important;
+    padding: 5px !important;
+}
+
+label + .input-group + .colorpicker {
+    top: 60px !important;
+}
+
+/* ===========================================================================
    Carousel components
    =========================================================================== */
 .carouselImageWrap {

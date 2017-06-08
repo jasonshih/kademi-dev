@@ -1,0 +1,47 @@
+<div class="dashboard-upcoming-events" id="dashboard-upcoming-events">
+    #if( $userResource.find("Calendars").calendarInvites.size() > 0 )
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Calendar invitations</h3>
+        </div>
+        <div class="panel-body">
+            #foreach($invite in $userResource.find("Calendars").calendarInvites)
+            <div class="alert alert-info" role="alert">
+                <div class='pull-right' style="padding-left: 15px">
+                    <a class='btn btn-success invite-accept' href='$invite.organisorEvent.href'>
+                        <span class='glyphicon glyphicon-ok'></span>
+                    </a>
+                    <a class='btn btn-danger invite-decline' href='$invite.organisorEvent.href'>
+                        <span class='glyphicon glyphicon-remove'></span>
+                    </a>
+                </div>
+
+                You have been invited to
+                <a href="$invite.organisorEvent.href">$invite.title</a>; <abbr title="$formatter.formatDateISO8601($invite.startDate)" class="timeago">$invite.startDate</abbr>
+                by $invite.organisor.name
+
+                <div class='clearfix'></div>
+            </div>
+            #end
+        </div>
+    </div>
+    #end
+
+    #set($calsHome = $page.find("/Calendars") )
+    #if( $calsHome.upcoming.size() > 0 )
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Upcoming events</h3>
+        </div>
+        <div class="panel-body">
+            #foreach($event in $calsHome.upcoming)
+            <div class="alert alert-info" role="alert">
+                <a href="$event.href">$event.title</a>; <abbr title="$formatter.formatDateISO8601($event.startDate)" class="timeago">$event.startDate</abbr>
+            </div>
+            #end
+        </div>
+    </div>
+    #end
+</div>
+
+<script type="text/javascript" src="/theme/apps/calendar/dashboardUpcomingEvents.js">//</script>

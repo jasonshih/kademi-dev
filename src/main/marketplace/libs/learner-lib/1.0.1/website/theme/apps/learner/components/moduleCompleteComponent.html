@@ -1,0 +1,36 @@
+#if ($page)
+<div id="finishedModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Module complete</h3>
+            </div>
+            <div class="modal-body">
+              #if( $page.completionMessage.length() gt 0 )
+                $page.completionMessage
+              #else
+                  <h4>You've now completed this module</h4>
+                #if( $page.parent.nextModule )
+                    <a href="$page.parent.nextModule.href" class="btn btn-success pull-right">
+                        Next module
+                        <span class="glyphicon glyphicon-play"></span>
+                    </a>
+                #end
+
+                  <div><a href="/dashboard">Return to your dashboard</a> to check out some other modules</div>
+              #end
+            </div>
+            <div class="modal-footer">
+              #foreach($cert in $page.certificateFiles)
+                  <a href="$cert.href" target="_blank" class="btn btn-success pull-left">View Certificate</a>
+              #end
+                <a href="../" class="btn">My Learning</a>
+                <a href="/dashboard" class="btn btn-primary">Continue training</a>
+            </div>
+        </div>
+    </div>
+</div>
+#else
+  <div class="alert alert-warning">Module Complete component will go here</div>
+#end

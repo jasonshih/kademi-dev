@@ -1,0 +1,17 @@
+{
+    "appDependencies": [
+        {
+            "appId": "forums-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/autogrow/1.0.3/autogrow.min.js"
+            }
+        }
+    ]
+}

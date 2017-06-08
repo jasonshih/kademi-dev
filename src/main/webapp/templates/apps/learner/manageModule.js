@@ -537,9 +537,7 @@ function checkFormControlState(type, afterRemoveLastOne) {
                     id: points
                 });
                 content.find('label').attr('for', points);
-                content.find('select').each(function() {
-                    $(this).attr('name', $(this).data("basename") + i)
-                });
+                content.find('select').attr('name', 'certificate' + i);
             }
         });
     });

@@ -1,0 +1,267 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Poll</title>
+    <!--<link rel="stylesheet" type="text/css" href="/theme/assets/plugins/bootstrap-timepicker/css/bootstrap-timepicker.min.css" />-->
+    <link rel="stylesheet" type="text/css" href="/theme/apps/kpollapp/managePolls.css" />
+</head>
+<body>
+    #parse("/theme/apps/kpollapp/pollMacro.html")
+
+    #set ($poll = $page.attributes.poll)
+
+    #set ($users = $page.find('/users/'))
+    #set ($searchResult = $page.attributes.searchResult)
+    <div class="tabbable">
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button" class="btn btn-primary btn-save-poll btn-sm"><i class="fa fa-save"></i> Save changes</button>
+            </div>
+            <ul class="nav nav-tabs tab-bricky pull-left" role="tablist">
+                <li role="presentation" class="active"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab"><i class="fa fa-edit"></i> Detail</a></li>
+                <li role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Group Access</a></li>
+                <li role="presentation"><a href="#statistic" aria-controls="statistic" role="tab" data-toggle="tab"><i class="fa fa-area-chart"></i> Statistic</a></li>
+                <li role="presentation"><a href="#answerers" aria-controls="answerers" role="tab" data-toggle="tab"><i class="fa fa-list"></i> Answerers</a></li>
+                <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab"><i class="fa fa-clock-o"></i> History</a></li>
+            </ul>
+        </div>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="detail">
+                <form class="form-horizontal" method="POST" action="/kpoll/managePolls/" id="form-poll">
+                    <input type="hidden" name="isEdit" value="true" />
+                    <input type="hidden" name="id" value="$!poll.name" />
+                    <input type="hidden" name="user" value="$user.name" />
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="name">Name</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control required" id="name" name="name" required="required" value="$!poll.jsonObject.name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="enable">Enable</label>
+                        <div class="col-md-6">
+                            <div class="checkbox">
+                                <label>
+                                    #if ($poll.jsonObject.enable == 'true')
+                                        <input type="checkbox" name="enable" id="enable" value="true" checked="" />
+                                    #else
+                                        <input type="checkbox" name="enable" id="enable" value="true" />
+                                    #end
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="availableFromTo">Available from - to</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control required" id="availableFromTo" required="required" value="" placeholder="Choose a date range" />
+                            <input type="hidden" class="form-control" name="startTime" value="$!poll.jsonObject.startTime" />
+                            <input type="hidden" class="form-control" name="endTime" value="$!poll.jsonObject.endTime" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="pointSystem">Points Bucket</label>
+                        <div class="col-md-6">
+                            #set ($pointSystem = '')
+                            #if ($poll.jsonObject.pointSystem)
+                                #set ($pointSystem = $poll.jsonObject.pointSystem)
+                            #end
+
+                            #set ($pointSystems = $page.find('/points-buckets').children.ofType.manageReward)
+                            <select id="pointSystem" name="pointSystem" class="form-control">
+                                <option value="">- Points Bucket -</option>
+                                #foreach($p in $pointSystems)
+                                    #if($p)
+                                        $formatter.option($p.name, $p.rewardTitle, $pointSystem)
+                                    #end
+                                #end
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="point">Reward Points</label>
+                        <div class="col-md-6">
+                            <input type="number" class="form-control" id="point" name="point" value="$!poll.jsonObject.point" />
+                            <span class="help-block small"><em>Reward Points must be greater than "0". If lesser than "0", will set to "1" automatically</em></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="question">Question</label>
+                        <div class="col-md-9">
+                            <textarea rows="5" class="form-control htmleditor required" id="question" name="question" required="required">$!poll.jsonObject.question</textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Answer</label>
+                        <div class="col-md-6">
+                            <div id="answer-container">
+                                #foreach ($ans in $poll.jsonObject.answers)
+                                    #renderAwnser($ans)
+                                #end
+                            </div>
+                            <p>
+                                <button type="button" class="btn btn-add-answer btn-sm btn-warning">Add answer</button>
+                            </p>
+                            <hr />
+                            <button type="submit" class="btn btn-primary btn-sm">Save changes</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="groups">
+                <p>
+                    <a href="#modal-groups" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Add/remove groups</a>
+                </p>
+                <hr />
+                <div id="group-list" class="clearfix">
+                    #set ($groups = $page.find('/groups'))
+                    #foreach($groupName in $poll.jsonObject.groups)
+                        #set ($g = $groups.child($groupName))
+                        <div class="alert alert-info">
+                            <span class="fa fa-users"></span>
+                            <a href="/groups/$g.name/members">$g.name</a>
+                            #if( $g.groupType == "P" )
+                                - Primary group
+                            #elseif( $g.groupType == "M" )
+                                - Mailing list
+                            #elseif( $g.groupType == "S" )
+                                - Subscription
+                            #end
+                            -
+                            #if( $g.registrationMode == "o" )
+                                Open group
+                            #elseif( $g.registrationMode == "c" )
+                                Closed group
+                            #elseif( $g.registrationMode == "a" )
+                                Administrator approval group
+                            #else
+                                No registration mode has been set
+                            #end
+                        </div>
+                    #end
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="statistic">
+                #set ($answers = $page.attributes.answers)
+                <h4>Total answers: <span class="label label-info">$answers.total</span></h4>
+                <hr />
+                #foreach($ans in $answers.list)
+                    <div class="answer">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                $ans.answer
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: ${ans.percent}%"></div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                $ans.hit ($ans.percent%)
+                            </div>
+                        </div>
+                    </div>
+                #end
+            </div>
+            <div role="tabpanel" class="tab-pane" id="answerers">
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Answer</th>
+                            <th>Date
+                                <button type="button" class="btn btn-xs pull-right btn-danger btn-clear-answerers" style="margin-right: -8px;"><i class="fa fa-remove"></i> Clear Answerers</button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-answerers">
+                        #if ($searchResult.hits.totalHits > 0)
+                            #foreach($ans in $searchResult.hits.hits)
+                                <tr>
+                                    <td>
+                                        #set ($answeror = $users.find($ans.fields.user.value))
+                                        <a href="/manageUsers/$answeror.userId" target="_blank">$answeror.name</a>
+                                    </td>
+                                    <td>$ans.fields.answer.value</td>
+                                    <td><abbr class="timeago" title="$ans.fields.date.value">$ans.fields.date.value</abbr></td>
+                                </tr>
+                            #end
+                        #else
+                            <tr>
+                                <td colspan="99">No answer record</td>
+                            </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="history">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Created</label>
+                        <div class="col-sm-6">
+                            <p class="form-control-static"><abbr class="timeago" title="$!poll.jsonObject.created">$!poll.jsonObject.created</abbr></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Created By</label>
+                        <div class="col-sm-6">
+                            #set ($createdBy = $users.find($!poll.jsonObject.createdBy))
+                            <p class="form-control-static"><a href="/manageUsers/$createdBy.userId" target="_blank">$createdBy.name</a></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Modified</label>
+                        <div class="col-sm-6">
+                            #if ($poll.jsonObject.modified)
+                                <p class="form-control-static"><abbr class="timeago" title="$!poll.jsonObject.modified">$!poll.jsonObject.modified</abbr></p>
+                            #else
+                                <p class="form-control-static">N/A</p>
+                            #end
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Modified By</label>
+                        <div class="col-sm-6">
+                            #if ($poll.jsonObject.modifiedBy)
+                                #set ($modifiedBy = $users.find($!poll.jsonObject.modifiedBy))
+                                <p class="form-control-static"><a href="/manageUsers/$createdBy.userId" target="_blank">$modifiedBy.name</a></p>
+                            #else
+                                <p class="form-control-static">N/A</p>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-groups" class="modal fade">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Choose groups</h4>
+        </div>
+        <div class="modal-body">
+            #foreach($g in $page.find('/groups').children)
+                <div class="checkbox">
+                    <label>
+                        #set ($isChecked = $poll.jsonObject.groups && $poll.jsonObject.groups.indexOf($g.name) != -1)
+                        $formatter.checkbox($g.name, $isChecked) $g.name
+                    </label>
+                </div>
+            #end
+        </div>
+    </div>
+
+    #renderAnswerTemplate()    
+
+    <!--<script src="/theme/assets/plugins/bootstrap-timepicker/js/bootstrap-timepicker.min.js">//</script>-->
+    <script type="text/javascript" src="/theme/apps/kpollapp/managePoll.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            initManagePoll();
+        });
+    </script>
+</body>
+</html>
