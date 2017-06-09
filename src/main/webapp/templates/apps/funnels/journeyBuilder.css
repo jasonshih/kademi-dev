@@ -44,6 +44,17 @@
     right: 5px;
 }
 
+#builder.fullscreen-mode #builder-status {
+    top: 0;
+    right: auto;
+    left: 50%;
+    margin-left: -125px;
+    transform: translate(-50%, 0);
+    z-index: 11;
+    background: #fff;
+    padding: 3px;
+}
+
 /* ====================================================================
    Canvas place to edit node
    ==================================================================== */
