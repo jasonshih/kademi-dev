@@ -4,29 +4,56 @@
 #end
 #set ($number = $Integer.parseInt($numberOfProducts))
 
+#if($page)
+    <div class="row">
+        <ul class="recentlyViewedRewardProducts">
+            #set ($app = $applications.get("rewardstore-lib"))
+            #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $numberOfProducts))
+
+            #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
+                <li>You have no recently viewed items</li>
+            #else
+                #foreach($p in $recentlyViewedRewardProducts)
+                    #if($foreach.count <= $number)
+                        #set ($prodUrl = "/$reward/$p.parent.name/$p.name")
+
+                        #set($bg = "/static/images/photo_holder.png")
+                        #if( $p.primaryImageHref )
+                            #set($bg = $p.primaryImageHref)
+                        #end
+                        <li class="slickItem">
+                            <a class="embed-responsive embed-responsive-4by3" href="$!prodUrl" title="$!p.title">
+                                <div style="background-image: url($bg);" class="embed-responsive-item"></div>
+                            </a>
+                            <a href="$!prodUrl">$!p.title</a>
+                        </li>
+                    #end
+                #end
+            #end
+
+        </ul>
+    </div>
+#else
+    #fakeUI()
+#end
+
+
+#macro(fakeUI)
 <div class="row">
     <ul class="recentlyViewedRewardProducts">
 
-        #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
-            <li>You have no recently viewed items</li>
-        #else
-            #foreach($p in $recentlyViewedRewardProducts)
-                #if($foreach.count <= $number)
-                    #set ($prodUrl = "/$reward/$p.parent.name/$p.name")
+        #set($start = 1)
+        #set ($fakeArr=[$start..$number])
+        #foreach($p in $fakeArr)
 
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.primaryImageHref )
-                        #set($bg = $p.primaryImageHref)
-                    #end
-                    <li class="slickItem">
-                        <a class="embed-responsive embed-responsive-4by3" href="$!prodUrl" title="$!p.title">
-                            <div style="background-image: url($bg);" class="embed-responsive-item"></div>
-                        </a>
-                        <a href="$!prodUrl">$!p.title</a>
-                    </li>
-                #end
-            #end
+            #set($bg = "/static/images/photo_holder.png")
+            <li class="slickItem">
+                <a class="embed-responsive embed-responsive-4by3" href="$!prodUrl" title="$!p.title">
+                    <div style="background-image: url($bg);" class="embed-responsive-item"></div>
+                </a>
+                <a href="$!prodUrl">Sample product $p</a>
+            </li>
         #end
-
     </ul>
 </div>
+#end
