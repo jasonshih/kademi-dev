@@ -14,6 +14,7 @@
  */
 (function ($) {
     var KEditor = $.keditor;
+    var contentEditor = $.contentEditor;
     var flog = KEditor.log;
     
     CKEDITOR.disableAutoInline = true;
@@ -57,7 +58,7 @@
                 }
             });
             
-            var editor = ckeditorPlace.ckeditor(keditor.options.ckeditorOptions).editor;
+            var editor = ckeditorPlace.ckeditor(options.ckeditorOptions).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
                 
@@ -127,21 +128,15 @@
                     });
                     form.find('.background-image-delete').on('click', function (e) {
                         e.preventDefault();
-        
+                        
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('background-image', '');
                         form.find('.background-image-previewer').attr('src', '/static/images/photo_holder.png');
                     });
                     
-                    var colorPicker = form.find('.color-picker');
-                    initColorPicker(colorPicker, function (color) {
-                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
-                        
-                        if (color && color !== 'transparent') {
-                            target.css('background-color', color);
-                        } else {
-                            target.css('background-color', '');
-                        }
+                    var colorPicker = form.find('.txt-bg-color');
+                    contentEditor.initSimpleColorPicker(colorPicker, function (color) {
+                        target.css('background-color', color);
                     });
                     
                     form.find('.select-bg-repeat').on('change', function () {
@@ -256,33 +251,32 @@
         
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
-    
+            
             var target = component.find('.keditor-component-text-content').get(0);
-    
+            
             var imageUrl = target.style.backgroundImage;
             imageUrl = (imageUrl || '').replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
             form.find('.background-image-previewer').attr('src', imageUrl !== 'none' && imageUrl !== '' ? imageUrl : '/static/images/photo_holder.png');
-    
+            
             form.find('.select-bg-repeat').val(target.style.backgroundRepeat || 'repeat');
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
-    
-            var colorPicker = form.find('.color-picker');
-            colorPicker.colorpicker('setValue', target.style.backgroundColor || 'transparent');
+            
+            form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
             
             form.find('.txt-padding').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-        
+                
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
             form.find('.txt-margin').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-        
+                
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
-    
+            
             form.find('.txt-height').val((target.style.height || '').replace('px', ''));
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
