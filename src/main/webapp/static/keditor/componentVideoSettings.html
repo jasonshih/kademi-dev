@@ -1,0 +1,69 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="video-toolbar">
+                <a href="#" class="btn-videoFileInput btn btn-sm btn-primary btn-block"><i class="fa fa-upload"></i> Change your video</a>
+                <input id="videoFileInput" type="file" style="display: none">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="video-autoplay" class="col-sm-12">Autoplay</label>
+        <div class="col-sm-12">
+            <input type="checkbox" id="video-autoplay" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="video-loop" class="col-sm-12">Repeat</label>
+        <div class="col-sm-12">
+            <input type="checkbox" id="video-loop" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="video-showcontrols" class="col-sm-12">Show Controls</label>
+        <div class="col-sm-12">
+            <input type="checkbox" id="video-showcontrols" checked />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Ratio</label>
+        <div class="col-sm-12">
+            <input type="radio" name="video-radio" class="video-ratio" value="4:3" checked /> 4:3
+        </div>
+        <div class="col-sm-12">
+            <input type="radio" name="video-radio" class="video-ratio" value="16:9" /> 16:9
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Enable border</label>
+        <div class="col-sm-12">
+            <input type="checkbox" class="chk-border" value="" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Border color</label>
+        <div class="col-sm-12">
+            <div class="input-group color-picker">
+                <span class="input-group-addon"><i></i></span>
+                <input type="text" value="" class="txt-border-color form-control" disabled />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Border width</label>
+        <div class="col-sm-12">
+            <input type="number" class="border-width form-control" disabled />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="" class="col-sm-12">Border style</label>
+        <div class="col-sm-12">
+            <select class="form-control select-border-style selectpicker" disabled title=" - Select Border Style - ">
+                <option data-content="<div class=border-style-solid></div>" value="solid">Solid</option>
+                <option data-content="<div class=border-style-dotted></div>" value="dotted">Dotted</option>
+                <option data-content="<div class=border-style-dashed></div>" value="dashed">Dased</option>
+                <option data-content="<div class=border-style-double></div>" value="double">Double</option>
+            </select>
+        </div>
+    </div>
+</div>
