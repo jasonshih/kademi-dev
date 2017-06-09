@@ -33,7 +33,7 @@ $(function () {
                     }
                 ];
 
-                if (resp.aggregations) {
+                if (resp && resp.aggregations) {
                     var d = resp.aggregations;
                     var sBuckets = d.debits.dates.buckets;
 
