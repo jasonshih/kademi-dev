@@ -1,0 +1,16 @@
+#set( $cart = $page.find("/checkout") )
+#if( $cart.numItems > 0 )
+    #set( $cartDisplay = "" )
+#else
+    #set( $cartDisplay = "none" )
+#end
+
+<li id="cart-link">
+    <div style="display: $cartDisplay">
+        <a href="/checkout/" class="">
+            <span class="glyphicon glyphicon-shopping-cart"></span>
+            <span class="visible-xs-inline">Shopping cart </span>
+            $cart.numItems
+        </a>
+    </div>
+</li>

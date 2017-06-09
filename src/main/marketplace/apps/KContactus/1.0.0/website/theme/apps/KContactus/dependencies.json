@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "contactUs",
+            "branch" : ""
+        },
+        {
+            "appId": "contactus-lib",
+            "branch": "1.0.2"
+        }        
+  ]
+}

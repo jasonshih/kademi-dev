@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "ecommerce",
+            "branch" : ""
+        },
+        {
+            "appId": "ecommerce-lib",
+            "branch": "1.0.1"
+        }        
+  ]
+}

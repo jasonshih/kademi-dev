@@ -1,0 +1,53 @@
+#parse("/theme/apps/ecommerce/ecommerceMacros.html")
+
+#if ($page)
+    #if ($store && $store != "")
+        <div class="row" id="products-list">
+            #foreach($cat in $page.find("/").child($store).children.ofType.category)
+            #renderCategory($cat)
+            #end
+        </div>
+    #else
+        <div class="row" id="products-list">
+            #foreach($cat in $page.children.ofType.category)
+                #renderCategory($cat)
+            #end
+        </div>
+    #end
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+<div class="row" id="fake-products-list">
+    <div class="col-sm-6 col-md-4 product-item">
+        <a href="$cat.href" class="cate-link">
+            <div class="thumbnail product">
+                #set($bg = "/static/images/photo_holder.png")
+                <span class="product-image-wrapper"><span style="background-image: url($bg)" class="product-image">
+                    </span></span>
+                <div class="caption">
+                    <h3 class="cate-title" title="$cat.title">Example Category Title</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+#end
+
+#macro(renderCategory $cat)
+    <div class="col-sm-6 col-md-4 product-item">
+        <a href="$cat.href" class="cate-link">
+            <div class="thumbnail product">
+                #set($bg = "/static/images/photo_holder.png")
+                #if( $cat.imageHref )
+                    #set($bg = "$cat.imageHref")
+                #end
+                <span class="product-image-wrapper"><span style="background-image: url($bg)" class="product-image"></span></span>
+                <div class="caption">
+                    <h3 class="cate-title" title="$cat.title">$cat.title</h3>
+                </div>
+            </div>
+        </a>
+    </div>
+#end

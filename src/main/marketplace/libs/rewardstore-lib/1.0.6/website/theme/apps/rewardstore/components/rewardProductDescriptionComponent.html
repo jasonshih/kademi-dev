@@ -1,0 +1,7 @@
+<!-- test [$!page.description] -->
+#set($title = $!page.description)
+#if ($title == "")
+    #set($title = "Example Product Description")
+#end
+
+<div class="productNotes">$title</div>

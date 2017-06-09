@@ -1,0 +1,24 @@
+#set($blogs = $page.find("/blogs"))
+#set($tags = $blogs.tags)
+#set($currentTags = $page.preferredTags)
+
+#if( $tags.size() > 0 )
+<div class="well">
+    <h2>Interests</h2>
+    <p>Please select your areas of interest so we can give you the most relevant information.</p>
+    
+    <form role="form" class="tags-form" method="post" action="$request.absolutePath">
+        #foreach($tag in $blogs.tags)        
+        <div class="checkbox">
+            #set($id = "tag-" + $foreach.count)
+            <label for="$id">
+                $formatter.checkbox( $id, "tags", $currentTags.contains($tag), $tag )
+                $formatter.htmlEncode( $tag )
+            </label>
+        </div>
+        #end
+    </form>    
+</div>
+#end
+
+<script type="text/javascript" src="/theme/apps/blogs/profilePortletTags.js">//</script>

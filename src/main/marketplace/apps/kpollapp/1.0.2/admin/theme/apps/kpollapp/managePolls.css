@@ -1,0 +1,11 @@
+.answer {
+    margin-bottom: 10px;
+}
+
+#poll-list td {
+    vertical-align: top;
+}
+
+#poll-list ol {
+    padding-left: 0;
+}

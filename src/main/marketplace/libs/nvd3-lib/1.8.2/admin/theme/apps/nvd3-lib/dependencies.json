@@ -1,0 +1,23 @@
+{
+    "appDependencies": [
+        {
+            "appId": "d3-lib",
+            "branch": "3.4.1.1"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/nvd3-lib/nv.d3.js"
+            }
+        },
+        {
+            "css": {
+                "path": "/theme/apps/nvd3-lib/nv.d3.css",
+                "cssMedia": "all"
+            }
+        }
+    ]
+}
+

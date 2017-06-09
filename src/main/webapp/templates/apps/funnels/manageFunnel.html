@@ -6,11 +6,11 @@
         <script src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
         <script src="/static/jQuery-Smart-Wizard/3.3.1/js/jquery.smartWizard.js">//</script>
         <script src="/static/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js">//</script>
+        <script src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.js"></script>
     </head>
     <body>
         <div class="tabbable clearfix">
             <div class="clearfix">
-                <p class="pull-right small" style="padding-top: 7px;"><span class="text-muted" id="builder-status"></span></p>
                 <ul class="nav nav-tabs tab-bricky">
                     <li class="active"><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
                     <li><a data-toggle="tab" href="#properties">Properties</a></li>
@@ -23,6 +23,11 @@
                         <textarea id="funnelJson">$page.funnelJson</textarea>
                     </div>
                     <div id="builder">
+                        <a href="#" id="builder-fullscreen" title="Enter fullscreen mode">
+                            <i class="fa fa-window-maximize"></i>
+                            <i class="fa fa-window-restore"></i>
+                        </a>
+                        <span class="text-muted small" id="builder-status"></span>
                         <div id="paper"></div>
                         <div class="right-panel panel panel-default">
                             <div class="panel-nodes-preview-list panel panel-info">

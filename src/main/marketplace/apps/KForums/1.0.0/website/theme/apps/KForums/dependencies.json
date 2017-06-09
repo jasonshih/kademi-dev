@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "forums",
+            "branch" : ""
+        },
+        {
+            "appId": "forums-lib",
+            "branch": "1.0.1"
+        }        
+  ]
+}

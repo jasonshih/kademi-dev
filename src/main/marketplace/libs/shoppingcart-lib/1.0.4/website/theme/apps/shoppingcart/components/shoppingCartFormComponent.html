@@ -1,0 +1,66 @@
+<form id="cart-form" action="$page.href" method="post">
+    <div class="">
+        <h3>Shipping Details</h3>
+        <hr>
+        <div class="">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <input type="text" name="firstName" class="form-control required" value="$!user.firstName" placeholder="First Name" required="required" />
+                        <div class="visible-xs" style="height: 15px"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="surName" class="form-control required" value="$!user.surName" placeholder="Last Name" required="required" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" name="phone" class="form-control" value="$!user.phone" placeholder="Phone number" required="required" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" name="addressLine1" class="form-control required" required="required" value="" placeholder="Address 1" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" name="addressLine2" class="form-control" value="" placeholder="Address 2 (Optional)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6">
+                        <input type="text" name="postcode" class="form-control required" required="required" value="" placeholder="Zip/Postcode" />
+                        <div class="visible-xs" style="height: 15px"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="addressState" class="form-control required" required="required" value="" placeholder="State/Province" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <textarea class="form-control" name="orderNotes" placeholder="Order notes, courier instructions etc  "></textarea>
+                    </div>
+                </div>
+                                
+                #if( $applications.shoppingCart.cashTopupsEnabled )
+                    #set( $checkoutPage = $page.find("/checkout" ) )
+                    #if( $checkoutPage.balance < $checkoutPage.totalCost )
+                        #set( $amount = $checkoutPage.calcCashTopUpAmount() )
+                        #set( $pApp = $applications.shoppingCart.paymentApp )
+
+                        <input type="hidden" name="cashTopUpAmount" value="$amount" />
+                        <h2>Cash top up: $ $formatter.formatCurrency($amount)</h2>
+                <div id="pf-${pApp.instanceId}" class="payment-form">
+                    $pApp.memberPaymentForm
+                </div>
+
+                    #end
+                #end
+
+                <button type="submit" class="btn btn-block btn-success"><i class="fa fa-spinner fa-spin" style="display:none;"></i> SUBMIT MY ORDER</button>
+            </div>
+        </div>
+    </div>
+</form>

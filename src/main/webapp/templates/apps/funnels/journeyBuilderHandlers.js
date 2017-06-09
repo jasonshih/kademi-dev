@@ -4,7 +4,8 @@
  * and open the template in the editor.
  */
 var JBNodes = {
-    begin: {}
+    begin: {},
+    end: {}
 };
 var JB_NODE_TYPE = {
     ACTION: 1,

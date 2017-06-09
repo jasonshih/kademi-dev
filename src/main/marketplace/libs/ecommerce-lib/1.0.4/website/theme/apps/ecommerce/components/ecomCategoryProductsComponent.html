@@ -1,0 +1,109 @@
+#if($page)
+#parse("/theme/apps/ecommerce/ecommerceMacros.html")
+
+#set($fromRange = 0)
+#if($params.fromRange)
+#set($fromRange = $formatter.toInteger($params.fromRange))
+#end
+
+#set($toRange = 12)
+#if($params.toRange)
+#set($toRange = $formatter.toInteger($params.toRange))
+#end
+
+#set($sort = 'product')
+#if($params.sort)
+#set($sort = $params.sort)
+#end
+
+#set($asc = false)
+#if($params.asc)
+#set($asc = $formatter.toBool($params.asc))
+#end
+
+#set($showBy = "grid")
+#if($request.getCookie("show-by").value)
+#set($showBy = $request.getCookie("show-by").value)
+#end
+
+#set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, $sort, $asc))
+
+<style type="text/css">
+    #infinitive-loader {
+        text-align: center;
+        padding: 30px;
+        display: none;
+    }
+</style>
+
+<div class="show-by-$showBy" id="products-list">
+    #if( $products.hits.hits.size() == 0 )
+    <div class="col-sm-12 text-center lead"><b>No products were found matching the critieria</b></div>
+    #else
+    #foreach($p in $products.hits.hits)
+    #renderProductItem($p $page.parent)
+    #end
+    #end
+</div>
+
+<div id="infinitive-loader" class="text-center">
+    <i class="fa fa-spin fa-circle-o-notch fa-2x"></i>
+</div>
+
+<script type="text/javascript">
+    var win = $(window);
+    var DEFAULT_START_FROM = $toRange;
+    var startFrom = DEFAULT_START_FROM;
+</script>
+<script type="text/javascript" src="/theme/apps/ecommerce/ecomCategoryProducts.js">//</script>
+
+
+#else
+<div>
+
+    <style type="text/css">
+        #infinitive-loader {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        #products-list {
+            overflow: hidden;
+        }
+    </style>
+
+    <div class="show-by-grid" id="products-list">
+
+        <div class="col-sm-6 col-md-4 product-item">
+            <div class="thumbnail product">
+                    <span class="product-image-wrapper">
+                        <a href="">
+                            <span style="background-image: url(/static/images/photo_holder.png)"
+                                  class="product-image"></span>
+                        </a>
+                    </span>
+                <div class="caption">
+                    <h3 class="product-title" title="product1" style="word-wrap: break-word;"><a
+                            href="/ecom-store-1/category1/product1">Example Product</a></h3>
+                    <span class="product-price label">$2</span>
+                    <p class="product-content" style="word-wrap: break-word;"></p>
+                    <div class="product-actions">
+                        <a href="/ecom-store-1/category1/product1" class="btn btn-default btn-sm" role="button">View</a>
+                        <a href="/ecom-store-1/category1/product1" class="btn btn-primary btn-sm btn-ecom-add-to-cart"
+                           role="button">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="infinitive-loader" class="text-center">
+        <i class="fa fa-spin fa-circle-o-notch fa-2x"></i>
+    </div>
+
+</div>
+#end
+
+
+

@@ -127,6 +127,7 @@
             edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                 var buttonWrapper = keditor.getSettingComponent().find('.button-wrapper');
                 buttonWrapper.attr('bgcolor', color);
+                edmEditor.setStyles('background-color', color, buttonWrapper);
             });
             
             var txtBorderRadius = form.find('#button-border-radius');

@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "blogs",
+            "branch" : ""
+        },
+        {
+            "appId": "blogs-lib",
+            "branch": "1.0.1"
+        }    
+  ]
+}

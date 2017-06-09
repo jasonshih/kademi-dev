@@ -1,0 +1,29 @@
+#set( $memberships = $userResource.primaryMemberships )
+#set( $currentOrgId = $request.getCookie("org").value )
+#if( $currentOrgId )
+    #set( $curMembership = $memberships.filterByOrg($currentOrgId).first )
+#else
+    #set( $curMembership = $memberships.first )
+#end
+#set( $currentOrg = $curMembership.org  )
+
+<li class="dropdown leadman-org-selector">
+    <a href="#" class="dropdown-toggle org-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+        #if( $currentOrg )
+            <span class="logged-in-title">$formatter.ifNull($currentOrg.title, $currentOrg.orgId)</span>
+            <i class="fa fa-chevron-down"></i>
+        #end
+    </a>
+    <ul class="dropdown-menu selectOrg">
+        #set($teamOrg = $page.find('/leads/').teamsForUser)
+        #foreach( $m in $teamOrg)
+            <li>
+                <a href="$m.orgId">$formatter.ifNull($m.title, $m.orgId)
+                    #if($m.orgId == $currentOrg.orgId) <i class="fa fa-check text-success"></i> #end
+                </a>
+            </li>
+        #end
+    </ul>
+</li>
+
+

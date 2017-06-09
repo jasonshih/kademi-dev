@@ -5,22 +5,22 @@ $(function () {
     var btnSave = ktoolbar.find('.btn-inline-edit-save');
     var btnDone = ktoolbar.find('.btn-inline-edit-done');
     var body = $(document.body);
-
+    
     if (htmleditor.length) {
         btnEditInline.removeClass('hide');
     }
-
+    
     var ktoolbarToggle = ktoolbar.find('.ktoolbarToggle');
-
+    
     ktoolbarToggle.on('click', function (e) {
         e.preventDefault();
-
+        
         ktoolbar.toggleClass('show');
     });
-
+    
     btnSave.on('click', function (e) {
         e.preventDefault();
-
+        
         $.ajax({
             url: window.location.pathname,
             type: 'post',
@@ -48,10 +48,10 @@ $(function () {
             }
         })
     });
-
+    
     btnDone.on('click', function (e) {
         e.preventDefault();
-
+        
         if (body.hasClass('content-changed')) {
             var c = confirm('Would you like to save changes before leaving the editor?');
             if (c) {
@@ -62,9 +62,9 @@ $(function () {
         } else {
             btnDone.trigger('ktoolbar.done');
         }
-
+        
     });
-
+    
     btnDone.on('ktoolbar.done', function () {
         // Todo: call Keditor destroy or disable method here
         // Just a workaround
@@ -79,7 +79,7 @@ $(function () {
             window.location.reload();
         }
     });
-
+    
     window.onbeforeunload = function () {
         if (body.hasClass('content-changed')) {
             return 'Are you sure to leave the editor? You will lose any unsaved changes';
