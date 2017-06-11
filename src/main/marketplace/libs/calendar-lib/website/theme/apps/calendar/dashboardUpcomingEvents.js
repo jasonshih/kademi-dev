@@ -1,4 +1,20 @@
 (function ($) {
+    $("#event-range-form").on("change", "#upcomingEventDays", function() {
+        $(this).parents("form").submit();
+    });
+    
+    $("#event-range-form").forms({
+        callback: function () {
+            Msg.info("Range set successfully");
+            
+            $("#dashboard-upcoming-events").reloadFragment({
+                whenComplete: function () {
+                    $("abbr.timeago").timeago();
+                }
+            });
+        }
+    })
+
     jQuery.timeago.settings.strings.inPast = "time has elapsed";
     jQuery.timeago.settings.allowFuture = true;
     $("abbr.timeago").timeago();
