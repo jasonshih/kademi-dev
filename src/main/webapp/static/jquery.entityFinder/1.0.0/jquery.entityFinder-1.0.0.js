@@ -89,11 +89,7 @@
         this.element.after(
             '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
         );
-        this.element.css({
-            opacity: 0,
-            position: 'absolute',
-            top: 0
-        }).attr('tabindex', '-1').addClass('search-hidden-input');
+        this.element.attr('tabindex', '-1').addClass('search-hidden-input');
         
         this.input = this.element.siblings('.search-input');
         this.suggestionsList = this.element.siblings('.search-suggestions');
