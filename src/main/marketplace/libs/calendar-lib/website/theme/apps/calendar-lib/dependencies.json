@@ -15,7 +15,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/calendar/calendar.js"
+                "path": "/theme/apps/calendar/calendars.js"
             }
         },
         {
