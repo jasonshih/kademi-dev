@@ -54,18 +54,25 @@ function initInstallApp() {
         e.preventDefault();
         var btn = $(this);
         var title = btn.data('title');
+        var websiteName = btn.data('websitename');
+        var websiteBranch = btn.data('websitebranch');
         if (confirm('Are you sure you want to install ' + title + '?')) {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname,
-                data: {installItem: true},
+                data: {
+                    installItem: true,
+                    websiteName : websiteName,
+                    websiteBranch : websiteBranch
+                },
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
                     if(data.status){
                         Msg.success('Successfully installed ' + title);
+                        window.location.reload();
                     }else{
-                        Msg.warning('There was a problem installing ' + title + '. Please contact your system administrator.')
+                        Msg.warning('There was a problem installing ' + title + ". " + data.messages)
                     }
                 },
                 error: function (resp) {
