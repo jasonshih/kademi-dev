@@ -1,16 +1,3 @@
-@icon-font-path: "/theme/fonts/";
-
-@horizontalNarrowOffset : 40;
-
-@wellBackground: @well-bg;
-
-@errorText: @state-danger-text;
-@errorBackground: @state-danger-bg;
-
-@textColor: @text-color;
-
-@content-padding-top: 0px;
-
 body {
     overflow-y: auto;
     overflow-x: hidden;
@@ -783,39 +770,32 @@ h2.course-selector {
     }
 }
 
+
 // ==================================================
 // Inverse styles
 // ==================================================
-@container-inverse-color: lighten(@gray-light, 15%);
-@container-inverse-bg: #222;
 .container-inverse {
     background: @container-inverse-bg;
     color: @container-inverse-color;
 }
 
-@col-inverse-color: lighten(@gray-light, 15%);
-@col-inverse-bg: #222;
 .col-inverse {
     background: @col-inverse-bg;
     color: @col-inverse-color;
 }
 
-@jumbotron-inverse-color: lighten(@gray-light, 15%);
-@jumbotron-inverse-bg: #222;
 .jumbotron-inverse {
     background: @jumbotron-inverse-bg;
     color: @jumbotron-inverse-color;
 }
 
-@breadcrumb-inverse-color: lighten(@gray-light, 15%);
-@breadcrumb-inverse-bg: #222;
 .breadcrumb-inverse {
     background: @breadcrumb-inverse-bg;
     color: @breadcrumb-inverse-color;
-    li a {
+    li a{
         color: @breadcrumb-inverse-color;
     }
-    li.active a {
+    li.active a{
         color: lighten(@gray-light, 55%);
     }
 }
@@ -863,38 +843,4 @@ h2.course-selector {
 
 .list-group-item .glyphicon {
     margin-right: 5px;
-}
-
-// ==================================================
-// Polo theme
-// ==================================================
-@brand-primary: #272727;
-@border-radius-base: 0;
-@border-radius-small: 0;
-@border-radius-large: 0;
-
-@font-family-base: 'Lato', @font-family-sans-serif;
-@headings-font-family: 'Gruppo', @font-family-sans-serif;
-
-@navbar-inverse-bg: #282828;
-
-@navbar-inverse-border: #3c3c3c;
-@navbar-inverse-link-active-color: #32a5c8;
-
-@link-color: #32a5c8;
-
-@text-color: #999;
-
-body {
-    background: #000 url('/theme/img/bg_body.png') repeat-x;
-}
-
-.navbar-inverse {
-    .navbar-nav {
-        > li {
-            > a {
-                font-weight: bold;
-            }
-        }
-    }
 }
