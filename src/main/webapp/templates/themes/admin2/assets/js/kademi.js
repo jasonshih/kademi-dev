@@ -1231,22 +1231,18 @@ Konfirm.confirm = function (options, callback) {
     }, callback);
 };
 Konfirm.info = function (options, callback) {
-    options.type = 'info';
     options.confirmClass = 'btn-info';
     Konfirm.confirm(options, callback);
 };
 Konfirm.success = function (options, callback) {
-    options.type = 'success';
     options.confirmClass = 'btn-success';
     Konfirm.confirm(options, callback);
 };
 Konfirm.warning = function (options, callback) {
-    options.type = 'warning';
     options.confirmClass = 'btn-warning';
     Konfirm.confirm(options, callback);
 };
 Konfirm.error = function (options, callback) {
-    options.type = 'error';
     options.confirmClass = 'btn-danger';
     Konfirm.confirm(options, callback);
 };
