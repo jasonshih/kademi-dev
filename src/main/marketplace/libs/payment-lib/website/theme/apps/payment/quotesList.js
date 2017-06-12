@@ -76,7 +76,7 @@
 
     function initModalForm() {
         var modal = $("#addQuoteModal");
-        var form = modal.find(" form");
+        var form = modal.find("form");
 
         form.forms({
             callback: function (resp) {
@@ -87,7 +87,7 @@
             }
         });
         
-        $("#add-quote-button").on("click", function() {
+        modal.find("#add-quote-button").on("click", function() {
             $("#add-quote-form").submit();
         });
     }

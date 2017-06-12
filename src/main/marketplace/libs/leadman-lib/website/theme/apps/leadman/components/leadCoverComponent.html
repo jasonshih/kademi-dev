@@ -49,14 +49,14 @@
                 <div class="alert alert-warning">
                     <p class="lead">
                         <span class="fa fa-remove"></span>
-                        Lead $formatter.ifNull($page.cancelledStatus, 'cancelled') <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
                     </p>
                 </div>
                 #else
                 <div class="alert alert-success">
                     <p class="lead">
                         <span class="fa fa-check"></span>
-                        Lead closed <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
                     </p>
                 </div>
                 #end
