@@ -1,8 +1,8 @@
-.jstree-clicked {
+#editor .jstree-clicked {
     border: 1px solid #2274C9;
 }
 
-.fa {
+#editor .fa {
     display: inline-block;
     font-family: FontAwesome;
     font-style: normal;
@@ -12,27 +12,27 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.fa-2x {
+#editor .fa-2x {
     font-size: 2em;
 }
 
-.fa-3x {
+#editor .fa-3x {
     font-size: 3em;
 }
 
-.fa-4x {
+#editor .fa-4x {
     font-size: 4em;
 }
 
-.fa-plus:before {
+#editor .fa-plus:before {
     content: "";
 }
 
-.fa-times:before {
+#editor .fa-times:before {
     content: "";
 }
 
-.fa-sign-in:before {
+#editor .fa-sign-in:before {
     content: "";
 }
 
