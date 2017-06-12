@@ -722,6 +722,7 @@ $(function () {
     initEmailEventSimulator();
     initEntityFinder();
     initCreateAccount();
+    initAddWebsite();
 
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
@@ -1033,6 +1034,26 @@ function initCreateAccount() {
             }
         }
     });
+}
+
+function initAddWebsite() {
+    flog('initAddWebsite');
+
+    var modal = $("#addWebsiteModal");
+    if( modal.length > 0 ) {
+        var form = modal.find("form");
+
+        form.forms({
+            callback: function (resp) {
+                flog("done", resp);
+                modal.modal('hide');
+                Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');
+                var nextHref = "/websites/" + resp.nextHref  + "/";
+                window.location = nextHref;
+
+            }
+        });
+    }
 }
 
 function initBackgroundJobStatus(options) {
