@@ -76,7 +76,7 @@
 
 #editor-loading > span {
     position: absolute;
-    top: 40%;
+    top: 35%;
     width: 100%;
     left: 0;
     text-align: center;
@@ -90,7 +90,7 @@
 #editor-loading .loading-icon {
     display: block;
     height: 62px;
-    padding: 30px 0 0;
+    padding: 0;
 }
 
 #editor-loading i.fa {

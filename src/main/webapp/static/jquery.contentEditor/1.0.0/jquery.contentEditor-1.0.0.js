@@ -256,18 +256,39 @@
                     var styleName = txt.attr('data-style-name');
                     
                     txt.on('change', function () {
-                        var paddingValue = this.value || '';
+                        var value = this.value || '';
                         var container = keditor.getSettingContainer();
                         var containerContent = container.find('.container-content-wrapper').get(0);
                         
-                        if (paddingValue.trim() === '') {
+                        if (value.trim() === '') {
                             containerContent.style[styleName] = '';
                         } else {
-                            if (isNaN(paddingValue)) {
-                                paddingValue = 0;
-                                this.value = paddingValue;
+                            if (isNaN(value)) {
+                                value = 0;
+                                this.value = value;
                             }
-                            containerContent.style[styleName] = paddingValue + 'px';
+                            containerContent.style[styleName] = value + 'px';
+                        }
+                    });
+                });
+                
+                form.find('.txt-margin').each(function () {
+                    var txt = $(this);
+                    var styleName = txt.attr('data-style-name');
+                    
+                    txt.on('change', function () {
+                        var value = this.value || '';
+                        var container = keditor.getSettingContainer();
+                        var containerContent = container.find('.container-bg').get(0);
+                        
+                        if (value.trim() === '') {
+                            containerContent.style[styleName] = '';
+                        } else {
+                            if (isNaN(value)) {
+                                value = 0;
+                                this.value = value;
+                            }
+                            containerContent.style[styleName] = value + 'px';
                         }
                     });
                 });
@@ -448,6 +469,13 @@
             var styleName = txt.attr('data-style-name');
             
             txt.val((containerContent.get(0).style[styleName] || '').replace('px', ''));
+        });
+        
+        form.find('.txt-margin').each(function () {
+            var txt = $(this);
+            var styleName = txt.attr('data-style-name');
+            
+            txt.val((containerBg.get(0).style[styleName] || '').replace('px', ''));
         });
         
         form.find('.txt-height').val(containerBg.get(0).style.height || '');
