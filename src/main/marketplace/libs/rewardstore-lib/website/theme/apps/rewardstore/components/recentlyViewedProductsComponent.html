@@ -8,7 +8,7 @@
     <div class="row">
         <ul class="recentlyViewedRewardProducts">
             #set ($app = $applications.get("rewardstore-lib"))
-            #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $numberOfProducts))
+            #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $number))
 
             #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
                 <li>You have no recently viewed items</li>
