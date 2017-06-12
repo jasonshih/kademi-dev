@@ -18,7 +18,7 @@
                             <select id="source-frm" data-placeholder="Select a source" name="source" class="form-control select2" style="width: 100%">
                                 <option value="">[None]</option>
                                 #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
-                                    $formatter.option($source, $source, $page.source)
+                                $formatter.option($source, $source, $page.source)
                                 #end
                             </select>
                         </div>
@@ -27,7 +27,7 @@
 
                             <select name="funnel" class="form-control">
                                 #foreach($entry in $leadsPage.funnels.entrySet())
-                                    <option value="$entry.key">$entry.value.title</option>
+                                <option value="$entry.key">$entry.value.title</option>
                                 #end
                             </select>
                         </div>
@@ -39,8 +39,8 @@
                                 <option value="">[None]</option>
                                 #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
                                 #foreach( $stage in $stages )
-                                    #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                    $formatter.option($stage.name, $a, $stages[0].name)
+                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                $formatter.option($stage.name, $a, $stages[0].name)
                                 #end
                             </select>
                         </div>
@@ -193,6 +193,83 @@
                     <button class="btn btn-sm btn-default btn-fullwidth-mobile" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-primary btn-fullwidth-mobile btnCreateClose" type="submit">Create &amp; close</button>
                     <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Create &amp; view</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="quickTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Enter a new task</h4>
+            </div>
+            <form method="post" action="/tasks/" class="form-horizontal">        
+                <input type="hidden" name="createTask" value="true" />
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="newTaskTitle">Title</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="fa fa-pencil"></span>
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                        <li><a href="#">Call customer</a></li>
+                                        <li><a href="#">Email customer</a></li>
+                                        <li><a href="#">Send documents</a></li>
+                                        <li><a href="#">Arrange a meeting</a></li>
+                                    </ul>
+                                </div><!-- /btn-group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="taskDescription">Description</label>
+                        <div class="col-md-9">
+                            <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="assignedTo">Assigned to</label>
+                        <div class="col-md-9">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <select class="form-control" id="assignedTo" name="assignedTo">
+                                        <option value="$user.name">Assign to me</option>
+                                        <option value="">Assign to nobody</option>
+                                        #set($teamMembers = $page.find("/leads").teamMembers)
+                                        #if($teamMembers && $teamMembers.size() > 0)
+                                        #foreach($user in $teamMembers)
+                                        <option value="$user.name">$!user.firstName $!user.surName</option>
+                                        #end
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default btn-fullwidth-mobile" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Create</button>
                 </div>
             </form>
         </div><!-- /.modal-content -->
@@ -519,7 +596,7 @@
             </div>
             <div class="modal-body">
                 <p>To create a new lead from an email simply add a BCC to <a href="mailto:customer@goeshere.com?bcc=lead@${page.find('/').domainName}">lead@${page.find(
-                    '/').domainName}</a></p>
+                        '/').domainName}</a></p>
                 <p>If a lead exists with that email address, your email will be captured and attached to the lead</p>
             </div>
         </div><!-- /.modal-content -->

@@ -12,6 +12,7 @@ function initLeadManEvents() {
     initNewLeadFromEmail();
     initNewQuickLeadForm();
     initNewContactForm();
+    initNewTaskForm();
     initNewQuoteForm();
     initNewNoteForm();
     initTakeTasks();
@@ -659,6 +660,36 @@ function initNewContactForm() {
             }
             
             Msg.info('Created contact');
+            modal.modal("hide");
+        }
+    });
+    
+    form.find("button").on('click', function (e) {
+        form.find(".clicked").removeClass("clicked");
+        $(this).addClass("clicked");
+    });
+}
+
+function initNewTaskForm() {
+    var modal = $('#quickTaskModal');
+    var form = modal.find('form');
+    
+    $(".menu-item-menuAddTask, .nav-menuAddTask, .createTask").click(function (e) {
+        flog("click");
+        e.preventDefault();
+        modal.modal("show");
+    });
+    
+    form.forms({
+        callback: function (resp) {
+            var btn = form.find('.clicked');
+            if (!btn.hasClass('btnCreateClose')) {
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+            }
+            
+            Msg.info('Created task');
             modal.modal("hide");
         }
     });
