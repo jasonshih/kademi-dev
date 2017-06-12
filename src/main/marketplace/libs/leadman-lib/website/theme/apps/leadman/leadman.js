@@ -738,10 +738,6 @@ function initNewQuoteForm() {
         }
     });
     
-    $("#add-quote-button").on("click", function () {
-        form.submit();
-    });
-    
     $(document.body).on('click', '.createQuote', function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
