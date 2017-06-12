@@ -116,9 +116,11 @@ function initKEditor(options) {
             basePath: basePath,
             pagePath: basePath,
             onReady: function () {
-                $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
-                hideLoadingIcon();
                 win.trigger('resize');
+                setTimeout(function () {
+                    hideLoadingIcon();
+                    $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+                }, 150);
             }
         });
     });
