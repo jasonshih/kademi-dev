@@ -213,7 +213,6 @@
             } else if (selectedQueryType == 'queryTable'){
                 url += '?as=json';
             }
-            debugger;
             $.ajax({
                 url: url,
                 type: 'GET',
