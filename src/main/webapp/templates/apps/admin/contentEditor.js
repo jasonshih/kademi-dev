@@ -1,72 +1,92 @@
 var win = $(window);
 
-function doPostMessage(data, url) {
-    data.from = 'keditor';
-    var dataStr = JSON.stringify(data);
-    flog('doPostMessage', data, window.parent);
-    window.parent.postMessage(dataStr, url);
+function initContentEditorPage(options) {
+    flog('initContentEditorPage fileName=' + options.fileName);
+    
+    initKEditor(options);
+    initSaving(options.fileName);
+    initPropertiesModal();
+    
+    // Confirm before closed tab or window
+    window.onbeforeunload = function (e) {
+        if ($(document.body).hasClass('content-changed')) {
+            e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
+        }
+    };
 }
 
-function initContentEditorPage(options) {
-    var body = $(document.body);
-    var fileName = options.fileName;
-    var url = getParam('url') || '';
-    if (url && url !== 'undefined') {
-        flog('initContentEditorPage url=', url);
-        body.addClass('embedded-iframe');
-        doPostMessage({
-            url: window.location.href.split('#')[0]
-        }, url);
-    } else {
-        flog('initContentEditorPage fileName=', fileName);
-        win.on({
-            keydown: function (e) {
-                if (e.ctrlKey && e.keyCode === keymap.S) {
-                    e.preventDefault();
-                    $('.btn-save-file').trigger('click');
-                }
-            }
-        });
-        
-        window.onbeforeunload = function (e) {
-            if (body.hasClass('content-changed')) {
-                e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
-            }
-        };
-    }
+function initPropertiesModal() {
+    var modal = $('#modal-page-properties');
     
-    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
-        var timer;
-        win.on('resize', function () {
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                var bd = $(document.body);
-                var paddingTop = bd.css('padding-top');
-                if (paddingTop) {
-                    paddingTop = paddingTop.replace('px', '');
-                    $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
+    modal.find('form').forms({
+        onSuccess: function () {
+            $('#file-title').reloadFragment({
+                url: window.location.href,
+                whenComplete: function () {
+                    modal.modal('hide');
+                    Msg.success('Properties are saved');
                 }
-            }, 100);
-        }).trigger('resize');
-        
-        initKEditor(options);
+            });
+        }
     });
-    initSaving(body, fileName);
     
-    setTimeout(function () {
-        hideLoadingIcon();
-    }, 200);
-    
-    $(document.body).on('click', '.keditor-component-content a', function (e) {
+    modal.find('.btn-add-meta').on('click', function (e) {
         e.preventDefault();
-        e.stopImmediatePropagation();
-        e.stopPropagation();
+        
+        addMetaTag('', '');
     });
+    
+    modal.on('click', '.btn-remove-meta', function (e) {
+        e.preventDefault();
+        
+        $(this).closest('.meta').remove();
+    });
+    
+    modal.find('.btn-add-param').on('click', function (e) {
+        e.preventDefault();
+        
+        addParam('', '');
+    });
+    
+    modal.on('click', '.btn-remove-param', function (e) {
+        e.preventDefault();
+        
+        $(this).closest('.param').remove();
+    });
+}
+
+function addMetaTag(name, content) {
+    var metaWrapper = $('.meta-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group meta">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
+}
+
+function addParam(title, value) {
+    var metaWrapper = $('.param-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group param">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramValue.' + id + '" placeholder="Data/parameter value" value="' + value + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
 }
 
 function initKEditor(options) {
     var themeCss = $('head link[href^="/--theme--less--bootstrap.less"]');
-    
     if (typeof themeCssFiles !== 'undefined') {
         
         if (themeCss.length > 0) {
@@ -75,75 +95,79 @@ function initKEditor(options) {
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
     
-    var basePath = window.location.pathname.replace('contenteditor', '');
-    $('#content-area').contentEditor({
-        snippetsUrl: options.snippetsUrl,
-        snippetsHandlersUrl: options.snippetsHandlersUrl,
-        allGroups: options.allGroups,
-        basePath: basePath,
-        pagePath: basePath,
+    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+        var timer;
+        win.on('resize', function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var paddingTop = $(document.body).css('padding-top');
+                if (paddingTop) {
+                    paddingTop = paddingTop.replace('px', '');
+                    $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
+                }
+            }, 100);
+        });
+        
+        var basePath = window.location.pathname.replace('contenteditor', '');
+        $('#content-area').contentEditor({
+            snippetsUrl: options.snippetsUrl,
+            snippetsHandlersUrl: options.snippetsHandlersUrl,
+            allGroups: options.allGroups,
+            basePath: basePath,
+            pagePath: basePath,
+            onReady: function () {
+                $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+                hideLoadingIcon();
+                win.trigger('resize');
+            }
+        });
+    });
+    
+    // Stop prevent reloading page or redirecting to other pages
+    $(document.body).on('click', '.keditor-component-content a', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
     });
 }
 
-function getParam(name) {
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var value = regex.exec(window.location.href) || '';
-    value = decodeURIComponent(value[1]);
-    
-    return value;
-}
-
-function initSaving(body, fileName) {
+function initSaving(fileName) {
     flog('initSaving', fileName);
     
-    var isEmbeddedIframe = body.hasClass('embedded-iframe');
     var btnSaveFile = $('.btn-save-file');
-    var postMessageData;
-    if (isEmbeddedIframe) {
-        win.on('message', function (e) {
-            flog('On got message', e, e.originalEvent);
-            
-            postMessageData = $.parseJSON(e.originalEvent.data);
-            if (postMessageData.triggerSave) {
-                btnSaveFile.trigger('click');
-            }
-        });
-    }
-    
     btnSaveFile.on('click', function (e) {
         e.preventDefault();
         
-        showLoadingIcon();
         $('[contenteditable]').blur();
+        showLoadingIcon();
         var fileContent = $('#content-area').contentEditor('getContent');
-        var saveUrl = postMessageData && postMessageData.pageName ? postMessageData.pageName : fileName;
         
         $.ajax({
-            url: saveUrl,
+            url: fileName,
             type: 'POST',
             data: {
                 body: fileContent
             },
             dataType: 'json',
             success: function () {
-                if (isEmbeddedIframe) {
-                    doPostMessage({
-                        isSaved: true,
-                        resp: postMessageData.resp,
-                        willClose: postMessageData.willClose
-                    }, postMessageData.url);
-                } else {
-                    Msg.success('File is saved!');
-                }
-                
+                $(document.body).removeClass('content-changed');
+                Msg.success('File is saved!');
                 hideLoadingIcon();
-                body.removeClass('content-changed');
             },
             error: function (e) {
                 Msg.error(e.status + ': ' + e.statusText);
                 hideLoadingIcon();
             }
         })
+    });
+    
+    win.on({
+        keydown: function (e) {
+            if (e.ctrlKey && e.keyCode === keymap.S) {
+                e.preventDefault();
+                btnSaveFile.trigger('click');
+            }
+        }
     });
 }
 
