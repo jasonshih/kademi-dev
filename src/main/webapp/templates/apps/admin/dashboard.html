@@ -48,7 +48,7 @@
             #if( $websites.size() > 0 || $adminDomains.size() == 0 )
             <div class="col-md-8">
                 <div class="panel-body panel-scroll ps-container ps-active-y" id="websites-wrapper">
-                    <div style="overflow: hidden; margin-top: -20px;">
+                    <div class="gallery-img-wrapper">
                         <div class="row">
                             #if( $websites.size() < 3 )
                                     <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
@@ -106,8 +106,8 @@
                 #set( $adminDomains = $page.adminDomains )
                 #if( $adminDomains.size() > 0 )
 
-                <div class="" id="">
-                    <div style="margin-top: -20px;">
+                <div class="panel-body panel-scroll ps-container ps-active-y" id="accounts-wrapper">
+                    <div class="gallery-img-wrapper">
                         <div class="row">
                             <div class="col-xl-3 col-lg-4 col-md-4 col-sm-3 gallery-img">
 

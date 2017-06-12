@@ -1,7 +1,13 @@
 /* Website wrapper */
-#websites-wrapper {
+#websites-wrapper,
+#accounts-wrapper {
     height: 150px;
     margin: 0 0 15px;
+}
+
+.gallery-img-wrapper {
+    margin-top: -20px;
+    overflow: hidden;
 }
 
 /* Recent list */
