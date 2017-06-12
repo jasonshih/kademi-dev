@@ -22,7 +22,7 @@
                 to make an exact copy
                 <br />
                 <a href="./" class="btn btn-sm btn-danger btn-set-hash ">Set hash</a>
-                <br /><br />
+
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modal-upload-remotehash">Set Remote Hash</button>
             </p>
         </div>
@@ -115,8 +115,9 @@
                 <h4 class="modal-title">Set Remote Hash</h4>
             </div>
             <form action="./" method="POST" class="form-horizontal">
-                <div class="modal-body">
+                <div class="modal-body">                    
                     <div class="form-message alert alert-danger" style="display: none;"></div>
+                    <p>Use this to transfer repository content from a remote server instance.</p>
                     <div class="form-group">
                         <label class="col-md-3 control-label" for="newRemoteHash">Hash</label>
                         <div class="col-md-8">
