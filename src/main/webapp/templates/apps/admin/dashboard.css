@@ -1,8 +1,14 @@
 /* Website wrapper */
-#websites-wrapper,
-#accounts-wrapper {
+#websites-wrapper {
     height: 150px;
+}
+
+#websites-wrapper, #accounts-wrapper {
     margin: 0 0 15px;
+}
+
+#accounts-wrapper {
+    padding: 0;
 }
 
 .gallery-img-wrapper {
