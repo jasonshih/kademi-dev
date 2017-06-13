@@ -1,8 +1,22 @@
 var importUrl = window.location.pathname;
 var importWizardStarted = false;
 var importTotalCount = 0;
-function initManageTableUploader() {
+var hasCustomForm = false;
+
+var optionsRow = null;
+var mapColumnsRow = 2;
+var reviewRow = 3;
+
+function initManageTableUploader(hcf) {
     initUploads();
+
+    hasCustomForm = hcf;
+
+    if (hasCustomForm) {
+        optionsRow = 2;
+        mapColumnsRow++;
+        reviewRow++;
+    }
 }
 
 
@@ -48,7 +62,40 @@ function initUploads() {
             }
         }
 
-        if (data.step === 2) {
+        if (hasCustomForm && data.step === optionsRow) {
+            var fileHash = form.find('[name=fileHash]').val();
+            var formData = {fetchTableHeaders: 'fetchTableHeaders', fileHash: fileHash};
+
+            var fields = $("#importerWizard .customForm :input").serializeArray();
+
+            for (var i in fields) {
+                var f = fields[i];
+                formData[f.name] = f.value;
+            }
+
+            flog('Data', formData);
+
+            $.ajax({
+                url: importUrl,
+                data: formData,
+                type: 'post',
+                dataType: 'json',
+                success: function (resp, textStatus, jqXHR) {
+                    if (resp.status && resp.data) {
+                        populateImportTable($('#importerWizard'), resp.data);
+
+                        $('#myWizard').wizard('selectedItem', {step: mapColumnsRow});
+                    } else {
+                        Msg.error(resp.messages);
+                    }
+                }
+            });
+
+            evt.preventDefault();
+            return false;
+        }
+
+        if (data.step === mapColumnsRow) {
             var startRow = $('#startRow').val();
             if (!startRow) {
                 Msg.error('Please enter start row value');
@@ -96,7 +143,7 @@ function initUploads() {
                 dataType: 'json',
                 success: function (resp) {
                     if (resp.status && resp.data) {
-                        $('#myWizard').wizard('selectedItem', {step: 3});
+                        $('#myWizard').wizard('selectedItem', {step: reviewRow});
                         form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
                         form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
@@ -146,7 +193,7 @@ function initUploads() {
                         msg += '</ul>';
                         Msg.error(msg);
                     } else {
-                        $('#myWizard').wizard('selectedItem', {step: 3});
+                        $('#myWizard').wizard('selectedItem', {step: reviewRow});
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
                 },
@@ -159,7 +206,7 @@ function initUploads() {
             return false;
         }
 
-        if (data.step === 3) {
+        if (data.step === reviewRow) {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
                 evt.preventDefault();
@@ -206,48 +253,7 @@ function initUploads() {
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
 
-            var data = resp.result.data;
-            flog("got data", data);
-            var table = data.table;
-            form.find("input[name=fileHash]").val(table.hash);
-            var fields = data.destFields;
-            fields = sortObjectByValue(fields);
-            var thead = $("#importerHead");
-            thead.html("");
-            flog("headers:", data.numCols);
-            $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none', minWidth: '100%'});
-            thead.append("<th>#</th>");
-            for (var col = 0; col < data.numCols; col++) {
-                var td = $('<th style="min-width: 200px">');
-                thead.append(td);
-                var select = $("<select class='form-control' name='col" + col + "'>");
-                select.append("<option value=''>[Do not import]</option>");
-
-                for (var field in fields) {
-                    select.append("<option value='" + field + "'>" + fields[field] + "</option>");
-                }
-
-                td.append(select);
-            }
-            flog("done head", thead);
-
-            var tbody = $("#importerBody");
-            tbody.html("");
-            var numRows = 0;
-            $.each(table.rows, function (i, row) {
-                if (numRows < 50) {
-                    numRows++;
-                    var tr = $("<tr>");
-                    tbody.append(tr);
-                    var td = $("<td>" + i + "</td>");
-                    tr.append(td);
-                    $.each(row, function (i, cell) {
-                        var td = $("<td>");
-                        td.html(cell);
-                        tr.append(td);
-                    });
-                }
-            });
+            populateImportTable(form, resp.result.data);
 
             $('#myWizard').wizard("next");
         }
@@ -270,6 +276,50 @@ function initUploads() {
 
             }
         });
+    });
+}
+
+function populateImportTable(form, data) {
+    flog("got data", data);
+    var table = data.table;
+    form.find("input[name=fileHash]").val(table.hash);
+    var fields = data.destFields;
+    fields = sortObjectByValue(fields);
+    var thead = $("#importerHead");
+    thead.html("");
+    flog("headers:", data.numCols);
+    $('#importerTable').css({width: (data.numCols * 200) + 'px', maxWidth: 'none', minWidth: '100%'});
+    thead.append("<th>#</th>");
+    for (var col = 0; col < data.numCols; col++) {
+        var td = $('<th style="min-width: 200px">');
+        thead.append(td);
+        var select = $("<select class='form-control' name='col" + col + "'>");
+        select.append("<option value=''>[Do not import]</option>");
+
+        for (var field in fields) {
+            select.append("<option value='" + field + "'>" + fields[field] + "</option>");
+        }
+
+        td.append(select);
+    }
+    flog("done head", thead);
+
+    var tbody = $("#importerBody");
+    tbody.html("");
+    var numRows = 0;
+    $.each(table.rows, function (i, row) {
+        if (numRows < 50) {
+            numRows++;
+            var tr = $("<tr>");
+            tbody.append(tr);
+            var td = $("<td>" + i + "</td>");
+            tr.append(td);
+            $.each(row, function (i, cell) {
+                var td = $("<td>");
+                td.html(cell);
+                tr.append(td);
+            });
+        }
     });
 }
 
