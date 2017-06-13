@@ -70,3 +70,59 @@
     font-size: 20px !important;
     line-height: 50px !important;
 }
+
+/* ================================================================== */
+/* Properties modal */
+/* ================================================================== */
+#modal-page-properties .input-group .form-control {
+    width: 50%;
+}
+
+#modal-page-properties .input-group.meta,
+#modal-page-properties .input-group.param {
+    margin-bottom: 5px;
+}
+
+/* ================================================================== */
+/* Loading */
+/* ================================================================== */
+#editor-loading {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 999999;
+    font-size: 18px;
+    color: #333;
+    font-family: Arial, Helvetica, san-serif !important;
+    line-height: 26px !important;
+}
+
+#editor-loading > span {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    left: 0;
+    text-align: center;
+}
+
+#editor-loading .loading-text {
+    display: block;
+    padding-top: 20px;
+}
+
+#editor-loading .loading-icon {
+    display: block;
+    height: 62px;
+    padding: 0;
+}
+
+#editor-loading i.fa {
+    font-size: 80px;
+}
+
+#editor-loading.loading {
+    background: rgba(255, 255, 255, .7);
+}

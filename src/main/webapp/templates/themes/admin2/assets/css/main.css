@@ -2030,14 +2030,14 @@ ul.main-navigation-menu {
 /* ---------------------------------------------------------------------- */
 .modal-content {
   border-color: #eee;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4); }
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); }
 
 .modal-footer {
   background: #f0f5f8;
   border-radius: 0 0 6px 6px; }
 
 .modal-backdrop {
-  background: #fff; }
+  background: #000; }
 
 .modal-lg {
   width: 1050px; }

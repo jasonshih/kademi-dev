@@ -16,10 +16,10 @@
 
         <table id="restApiAppTable" class="table table-hover table-striped">
             <colgroup>
-                <col width="171px"/>
-                <col/>
-                <col/>
-                <col width="78px"/>
+                <col width="170" />
+                <col />
+                <col />
+                <col width="100" />
             </colgroup>
             <thead>
                 <tr>
@@ -31,34 +31,34 @@
             </thead>
             <tbody>
                 #foreach($c in $page.children)
-                <tr>
-                    <td>
-                        #if($c.restApiApp.logoHash)
-                        <img src="/_hashes/files/$c.restApiApp.logoHash/alt-150-150.png" class="img-responsive"/>
-                        #end
-                    </td>
-                    <td>$!c.restApiApp.title</td>
-                    <td>$!c.restApiApp.clientId</td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <a href="$c.href/" class="btn btn-sm btn-info">
-                                <i class="fa fa-cog"></i>
-                            </a>
+                    <tr>
+                        <td>
+                            #if($c.restApiApp.logoHash)
+                                <img src="/_hashes/files/$c.restApiApp.logoHash/alt-150-150.png" class="img-responsive" />
+                            #end
+                        </td>
+                        <td>$!c.restApiApp.title</td>
+                        <td>$!c.restApiApp.clientId</td>
+                        <td>
                             <div class="btn-group" role="group">
-                                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li>
-                                        <a href="$c.href/" class="btn-delete-app">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </a>
-                                    </li>
-                                </ul>
+                                <a href="$c.href/" class="btn btn-sm btn-info">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right">
+                                        <li>
+                                            <a href="$c.href/" class="btn-delete-app">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 #end
             </tbody>
         </table>
@@ -73,18 +73,18 @@
                     <form class="form-horizontal">
                         <div class="modal-body">
                             <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <input type="hidden" name="createRestApiApp" value="true"/>
+                            <input type="hidden" name="createRestApiApp" value="true" />
                             <div class="form-group">
                                 <label class="control-label col-md-4">Rest API App Display Name</label>
                                 <div class="col-md-6">
-                                    <input type="text" name="title" class="form-control required"/>
+                                    <input type="text" name="title" class="form-control required" />
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit">Create App</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary" type="submit">Create App</button>
+                        </div>
                     </form>
                 </div><!-- /.modal-content -->
             </div><!-- /.modal-dialog -->

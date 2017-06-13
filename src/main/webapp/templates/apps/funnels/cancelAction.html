@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Cancel Action</title>
+    </head>
+    <body>
+        #set( $website = $page.website )
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="" id="frmDetails" style="">
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label for="message">Reason</label>
+                    <textarea style="height: 70px" id="reason" name="reason" placeholder="Enter reason for ending lead" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.reason )</textarea>
+                </div>
+            </div>
+        </form>
+        #else
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <button class="btn btn-success" type="submit">Save</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="message">Message</label>
+                        <div class="col-md-8">
+                            <textarea style="height: 70px" name="message" id="message" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.message )</textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            $(function () {
+                $("#frmDetails").forms({
+                    onSuccess: function () {
+                        Msg.info("Saved");
+                    }
+                });
+            });
+        </script>
+        #end
+    </body>
+</html>

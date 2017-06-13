@@ -1,7 +1,19 @@
 /* Website wrapper */
 #websites-wrapper {
     height: 150px;
+}
+
+#websites-wrapper, #accounts-wrapper {
     margin: 0 0 15px;
+}
+
+#accounts-wrapper {
+    padding: 0;
+}
+
+.gallery-img-wrapper {
+    margin-top: -20px;
+    overflow: hidden;
 }
 
 /* Recent list */

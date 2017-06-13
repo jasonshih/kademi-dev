@@ -1,0 +1,20 @@
+{
+  "appDependencies": [
+        {
+            "appId": "rewardStore",
+            "branch" : ""
+        },        
+        {
+            "appId": "userDashboardApp",
+            "branch" : ""
+        },        
+        {
+            "appId": "shoppingCart",
+            "branch" : ""
+        },        
+        {
+            "appId": "search",
+            "branch" : ""
+        }                
+  ]
+}
