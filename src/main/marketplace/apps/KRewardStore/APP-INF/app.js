@@ -3,18 +3,23 @@ function initRewardStoreApp(orgRoot, webRoot, enabled){
     log.info("initRewardStoreApp: orgRoot={} app={}", orgRoot, rewardStoreApp);
     var alertsApp = applications.alerts;
     if( webRoot ){
-        
+        var website = webRoot.website;
         var webName = webRoot.websiteName;
         // check and create the participants group
         var groupName = "participants";
         var group = orgRoot.find("groups").child(groupName);
         if( group == null ) {
             group = orgRoot.createGroup("participants");
+            orgRoot.addRoles(group, "Redeemer");
+            orgRoot.addRoles(group, website, "Content Viewer");
             log.info("Created participants group '" + groupName + "'");
             if( alertsApp ) {
                 alertsApp.createAdminAlert("Reward Store", "We've created a group called " + group.name + " for your new reward store. You can <a href='/groups/" + groupName + "'>manage it here</a>");
             }
         }
+        
+        var curUser = securityManager.currentUser;
+        securityManager.addToGroup(curUser, group);
         
         // check and create the points bucket        
         var bucketName = webName + "-points";
@@ -32,7 +37,7 @@ function initRewardStoreApp(orgRoot, webRoot, enabled){
             if( alertsApp ) {
                 alertsApp.createAdminAlert("Reward Store", "We've created a reward store called " + rewardStoreName + ". You can <a href='/reward-store/" + rewardStoreName + "/'>manage it here</a>");
             }                                    
-        }        
+        }
     } else {
         log.info("I'm in an organisation");
     }
