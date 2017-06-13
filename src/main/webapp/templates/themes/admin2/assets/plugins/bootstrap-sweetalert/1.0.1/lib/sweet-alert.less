@@ -47,6 +47,7 @@ body.stop-scrolling {
         width: auto;
         margin-left: 0;
         margin-right: 0;
+        top: 10px;
         
         left: (@grid-gutter-width / 2);
         right: (@grid-gutter-width / 2);
@@ -102,6 +103,10 @@ body.stop-scrolling {
         margin: 20px auto;
         position: relative;
         box-sizing: content-box;
+    
+        @media all and (max-width: @screen-xs-max) {
+            margin: 0 auto;
+        }
         
         &.sa-error {
             border-color: @btn-danger-border;

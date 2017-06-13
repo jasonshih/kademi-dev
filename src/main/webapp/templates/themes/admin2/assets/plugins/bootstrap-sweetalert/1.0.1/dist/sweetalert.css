@@ -251,6 +251,7 @@ body.stop-scrolling {
     width: auto;
     margin-left: 0;
     margin-right: 0;
+    top: 10px;
     left: 15px;
     right: 15px;
   }
@@ -297,6 +298,11 @@ body.stop-scrolling {
   margin: 20px auto;
   position: relative;
   box-sizing: content-box;
+}
+@media all and (max-width: 767px) {
+  .sweet-alert .sa-icon {
+    margin: 0 auto;
+  }
 }
 .sweet-alert .sa-icon.sa-error {
   border-color: #cc1853;

@@ -1231,25 +1231,25 @@ Konfirm.confirm = function (options, callback) {
     }, callback);
 };
 Konfirm.info = function (options, callback) {
-    if (options.confirmClass) {
+    if (!options.confirmClass) {
         options.confirmClass = 'btn-info';
     }
     Konfirm.confirm(options, callback);
 };
 Konfirm.success = function (options, callback) {
-    if (options.confirmClass) {
+    if (!options.confirmClass) {
         options.confirmClass = 'btn-success';
     }
     Konfirm.confirm(options, callback);
 };
 Konfirm.warning = function (options, callback) {
-    if (options.confirmClass) {
+    if (!options.confirmClass) {
         options.confirmClass = 'btn-warning';
     }
     Konfirm.confirm(options, callback);
 };
 Konfirm.error = function (options, callback) {
-    if (options.confirmClass) {
+    if (!options.confirmClass) {
         options.confirmClass = 'btn-danger';
     }
     Konfirm.confirm(options, callback);
