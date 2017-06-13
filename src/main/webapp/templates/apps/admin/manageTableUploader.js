@@ -274,21 +274,6 @@ function initUploads() {
                 }
             });
         });
-        /*var c = confirm('Are you sure you want to cancel this process?');
-         if (!c) {
-         return;
-         }
-         $.ajax({
-         type: 'post',
-         url: importUrl,
-         data: {cancel: 'cancel'},
-         success: function (data) {
-         Msg.success('Import task cancelled');
-         },
-         error: function () {
-
-         }
-         });*/
     });
 }
 
