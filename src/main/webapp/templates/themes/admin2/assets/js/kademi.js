@@ -1201,19 +1201,19 @@ function initColorPicker(target, onChangeHandle) {
 }
 
 var Kalert = {};
-Kalert.alert =  function (title, message, type) {
+Kalert.alert = function (title, message, type) {
     swal(title, message, type);
 };
-Kalert.info =  function (title, message) {
+Kalert.info = function (title, message) {
     Kalert.alert(title, message, 'info');
 };
-Kalert.success =  function (title, message) {
+Kalert.success = function (title, message) {
     Kalert.alert(title, message, 'success');
 };
-Kalert.warning =  function (title, message) {
+Kalert.warning = function (title, message) {
     Kalert.alert(title, message, 'warning');
 };
-Kalert.error =  function (title, message) {
+Kalert.error = function (title, message) {
     Kalert.alert(title, message, 'error');
 };
 
@@ -1231,18 +1231,26 @@ Konfirm.confirm = function (options, callback) {
     }, callback);
 };
 Konfirm.info = function (options, callback) {
-    options.confirmClass = 'btn-info';
+    if (options.confirmClass) {
+        options.confirmClass = 'btn-info';
+    }
     Konfirm.confirm(options, callback);
 };
 Konfirm.success = function (options, callback) {
-    options.confirmClass = 'btn-success';
+    if (options.confirmClass) {
+        options.confirmClass = 'btn-success';
+    }
     Konfirm.confirm(options, callback);
 };
 Konfirm.warning = function (options, callback) {
-    options.confirmClass = 'btn-warning';
+    if (options.confirmClass) {
+        options.confirmClass = 'btn-warning';
+    }
     Konfirm.confirm(options, callback);
 };
 Konfirm.error = function (options, callback) {
-    options.confirmClass = 'btn-danger';
+    if (options.confirmClass) {
+        options.confirmClass = 'btn-danger';
+    }
     Konfirm.confirm(options, callback);
 };
