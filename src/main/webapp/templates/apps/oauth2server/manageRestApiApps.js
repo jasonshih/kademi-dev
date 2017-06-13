@@ -49,4 +49,5 @@
         initCreateApiApp();
         initDeleteApp();
     });
+    
 })(jQuery);
