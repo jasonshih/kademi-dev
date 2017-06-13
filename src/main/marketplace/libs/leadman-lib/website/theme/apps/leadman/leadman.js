@@ -36,6 +36,7 @@ function initLeadManEvents() {
     initSearchFilter();
     initNotesDotDotDot();
     initNoteMoreLess();
+    initChangeLeadAvatar();
 
     // init the login form
     $(".login").user({});
@@ -839,6 +840,40 @@ function initNoteMoreLess() {
             div.find('a.note-more').text('less').addClass('note-less');
         }
 
+    });
+}
+
+function initChangeLeadAvatar() {
+    $('#btn-change-lead-ava').upcropImage({
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+            $(".modal").modal("hide");
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+                        $(".modal").modal("hide");
+                    } else {
+                        alert("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    alert('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
     });
 }
 
