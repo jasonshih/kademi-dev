@@ -18,23 +18,34 @@
                                 <span class="badge">1</span>Upload
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="2">
-                                <span class="badge">2</span>Map columns
+                            #set($nextStep = 2)
+                            #if($page.customFormSupported)
+                            <li data-step="$nextStep">
+                                <span class="badge">$nextStep</span>Options
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="3" data-name="import">
-                                <span class="badge">3</span>Review
+                            #set($nextStep = $nextStep + 1)
+                            #end
+                            <li data-step="$nextStep">
+                                <span class="badge">$nextStep</span>Map columns
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="4" data-name="processing">
-                                <span class="badge">4</span>Processing
+                            #set($nextStep = $nextStep + 1)
+                            <li data-step="$nextStep" data-name="import">
+                                <span class="badge">$nextStep</span>Review
                                 <span class="chevron"></span>
                             </li>
-                            <li data-step="5" data-name="complete">
-                                <span class="badge">5</span>Complete
+                            #set($nextStep = $nextStep + 1)
+                            <li data-step="$nextStep" data-name="processing">
+                                <span class="badge">$nextStep</span>Processing
                                 <span class="chevron"></span>
                             </li>
-
+                            #set($nextStep = $nextStep + 1)
+                            <li data-step="$nextStep" data-name="complete">
+                                <span class="badge">$nextStep</span>Complete
+                                <span class="chevron"></span>
+                            </li>
+                            #set($nextStep = $nextStep + 1)
                         </ul>
                     </div>
                     <div class="actions">
@@ -52,27 +63,27 @@
                                 <div id='btn-upload' class="pull-left"></div>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="step-pane alert" data-step="2">
+                            #set($nextStep = 2)
+                            #if($page.customFormSupported)
+                            <div class="step-pane alert customForm" data-step="$nextStep">
+                                <div class="row">
+                                    <div class="col-sm-6">
+
+                                        <div class="form-horizontal text-left">
+                                            $!page.customForm
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            #set($nextStep = $nextStep + 1)
+                            #end
+                            <div class="step-pane alert" data-step="$nextStep">
                                 <input type="hidden" name="fileHash" value=""/>
 
                                 <div class="row">
                                     <div class="col-sm-12">
 
                                         <div class="form-inline text-right">
-                                            #foreach($cf in $page.customFields)
-                                            <div class="form-group" >
-                                                <label for="$cf.name">$cf.title: </label>
-                                                <select id="$cf.name" name="$cf.name" class="form-control">
-                                                    <option value="">[None]</option>
-                                                    #foreach($v in $cf.values.entrySet())
-                                                    <option value="$v.key">
-                                                        $!v.value
-                                                    </option>
-                                                    #end
-                                                </select>
-                                            </div>
-                                            #end
-                                            $!page.customForm
                                             <div class="form-group" style="margin-right: 20px">
                                                 <label for="startRow" >Start row: </label>
                                                 <input style="width: 100px" type="number" min="1" name="startRow" id="startRow" class="form-control" value="1"/>
@@ -99,7 +110,8 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="3">
+                            #set($nextStep = $nextStep + 1)
+                            <div class="step-pane sample-pane alert" data-step="$nextStep">
                                 <h4>Start importing</h4>
                                 <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
                                     so may take some time depending on the size of the file</p>
@@ -146,8 +158,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="step-pane sample-pane alert" data-step="4">
+                            #set($nextStep = $nextStep + 1)
+                            <div class="step-pane sample-pane alert" data-step="$nextStep">
                                 <h4>Import running</h4>
                                 <div class="progress" id="importProgressbar">
                                     <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
@@ -163,7 +175,8 @@
                                 </div>
 
                             </div>
-                            <div class="step-pane sample-pane alert" data-step="5">
+                            #set($nextStep = $nextStep + 1)
+                            <div class="step-pane sample-pane alert" data-step="$nextStep">
                                 <table class="table table-bordered">
                                     <tr>
                                         <th>Number created</th>
@@ -204,7 +217,7 @@
         <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js">//</script>
         <script type="text/javascript">
             $(function () {
-                initManageTableUploader();
+                initManageTableUploader($page.customFormSupported);
             });
         </script>
     </body>
