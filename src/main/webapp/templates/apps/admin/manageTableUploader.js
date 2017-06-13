@@ -261,21 +261,34 @@ function initUploads() {
 
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-        var c = confirm('Are you sure you want to cancel this process?');
-        if (!c) {
-            return;
-        }
-        $.ajax({
-            type: 'post',
-            url: importUrl,
-            data: {cancel: 'cancel'},
-            success: function (data) {
-                Msg.success('Import task cancelled');
-            },
-            error: function () {
-
-            }
+        Konfirm.warning({title: 'Are you sure you want to cancel this process?'}, function () {
+            $.ajax({
+                type: 'post',
+                url: importUrl,
+                data: {cancel: 'cancel'},
+                success: function (data) {
+                    Kalert.success('Import task cancelled');
+                },
+                error: function () {
+                    Kalert.error('Oh No! Something went wrong!');
+                }
+            });
         });
+        /*var c = confirm('Are you sure you want to cancel this process?');
+         if (!c) {
+         return;
+         }
+         $.ajax({
+         type: 'post',
+         url: importUrl,
+         data: {cancel: 'cancel'},
+         success: function (data) {
+         Msg.success('Import task cancelled');
+         },
+         error: function () {
+
+         }
+         });*/
     });
 }
 
