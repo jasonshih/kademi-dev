@@ -11,6 +11,10 @@
         {
             "appId": "shoppingCart",
             "branch" : ""
-        }        
+        },        
+        {
+            "appId": "search",
+            "branch" : ""
+        }                
   ]
 }
