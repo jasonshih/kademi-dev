@@ -3,7 +3,12 @@
         <div class="row">
             <div class="col-md-6 col-sm-6">
                 <div class="media mt-lg">
-                    <div class="media-left media-middle"><a href=""><img src="/theme/apps/leadman/user-placeholder.png" class="media-object thumb96 img-circle"></a></div>
+                    #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+                    #set ($bgsize = "background-size: 100%;")
+                    #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
+                    #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
+                    #end
+                    <div class="media-left media-middle"><a href=""><img src="$ava" class="profile-avatar-img media-object thumb96 img-circle"></a></div>
                     <div class="media-body">
                         <h2 class="mv-lg media-heading">
                             #if($page.leadOrg)

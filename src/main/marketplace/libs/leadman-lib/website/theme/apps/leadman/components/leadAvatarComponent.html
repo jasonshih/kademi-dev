@@ -3,13 +3,13 @@
         <p class="confirm">Your profile photo has been updated</p>
         #set ($ava = '/theme/apps/user/profile-icon.png')
         #set ($bgsize = "background-size: 100%;")
-        #if ($page.profile.photoHref && $page.profile.photoHref != "/templates/apps/user/profile.png")
-        #set ($ava = $page.profile.photoHref)
+        #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
+        #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
         #end
         <span class="avatar img-circle" style="background: url($ava) no-repeat center; $!bgsize"></span>
         <h4>Update profile image</h4>
         <p>Update lead profile image below. This must be less then 10Mb.</p>
 
-        <button id="btn-change-lead-ava" class="btn btn-success">Change image</button>
+        <button id="btn-change-lead-ava" data-href="/custs/$page.profile.name" class="btn btn-success">Change image</button>
     </div>
 </div>

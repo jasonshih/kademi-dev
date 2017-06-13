@@ -844,17 +844,20 @@ function initNoteMoreLess() {
 }
 
 function initChangeLeadAvatar() {
+    var url = $('#btn-change-lead-ava').data("href");
+
     $('#btn-change-lead-ava').upcropImage({
-        url: window.location.pathname, // this is actually the default value anyway
+        url: url,
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
-            $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+            $("span.avatar").css("background-image", "url(" + resp.nextHref + ")");
+            $(".profile-avatar-img").attr("src", resp.nextHref);
             $(".modal").modal("hide");
         },
         onContinue: function (resp) {
             flog("onContinue:", resp, resp.result.nextHref);
             $.ajax({
-                url: window.location.pathname,
+                url: url,
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -863,7 +866,8 @@ function initChangeLeadAvatar() {
                 },
                 success: function (resp) {
                     if (resp.status) {
-                        $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+                        $("span.avatar").css("background-image", "url(" + resp.nextHref + ")");
+                        $(".profile-avatar-img").attr("src", resp.nextHref);
                         $(".modal").modal("hide");
                     } else {
                         alert("Sorry, an error occured updating your profile image");
