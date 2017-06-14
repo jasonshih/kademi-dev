@@ -12,9 +12,10 @@ function initRewardStoreApp(orgRoot, webRoot, enabled) {
             group = orgRoot.createGroup("participants");
             orgRoot.addRoles(group, "Redeemer");
             orgRoot.addRoles(group, website, "Content Viewer");
+            orgRoot.addGroupToWebsite(group, website);
             log.info("Created participants group '" + groupName + "'");
             if (alertsApp) {
-                alertsApp.createAdminAlert("Reward Store", "We've created a group called " + group.name + " for your new reward store. You can <a href='/groups/" + groupName + "'>manage it here</a>");
+                alertsApp.createAdminAlert("Reward Store", "We've created a group called " + group.name + " for your new reward store. Please be sure to <a href='/groups/" + groupName + "'>check the settings here</a>. You might want to allow public registration to this group.");
             }
         }
 

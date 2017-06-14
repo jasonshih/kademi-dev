@@ -258,22 +258,24 @@
                 
                 $("#btn-cancel").click(function(e){
                     e.preventDefault();
-                    var c = confirm('Are you sure you want to cancel this process?');
-                    if (!c) {
-                        return;
-                    }
-                    $.ajax({
-                        type: 'post',
-                        url: '/manageSearch',
-                        data: {cancel: 'cancel'},
-                        success: function (data) {
-                            var jsonRes = JSON.parse(data);
-                            $("#btn-cancel").addClass("hide");
-                            Msg.success(jsonRes.messages[0]);
-                        },
-                        error: function () {
 
-                        }
+                    Konfirm.error({
+                        title: 'Are you sure you want to cancel this process?'
+                    }, function () {
+                        $.ajax({
+                            type: 'post',
+                            url: '/manageSearch',
+                            data: {cancel: 'cancel'},
+                            success: function (data) {
+                                var jsonRes = JSON.parse(data);
+                                $("#btn-cancel").addClass("hide");
+                                Msg.success(jsonRes.messages[0]);
+                                Konfirm.close();
+                            },
+                            error: function () {
+
+                            }
+                        });
                     });
                 });
                 

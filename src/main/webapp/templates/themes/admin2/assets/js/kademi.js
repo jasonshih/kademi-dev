@@ -1254,3 +1254,6 @@ Konfirm.error = function (options, callback) {
     }
     Konfirm.confirm(options, callback);
 };
+Konfirm.close = function () {
+    swal.close();
+};
