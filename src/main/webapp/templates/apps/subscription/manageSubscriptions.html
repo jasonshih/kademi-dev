@@ -44,7 +44,7 @@
                         <tbody id="subscriptionsTableBody" class="pagination-results">
                             #foreach($sub in $!page.subscriptions)
                             <tr>
-                                <td>$sub.adminOrg.title</td>
+                                <td>$sub.id</td>
                                 <td>$!formatter.formatDate($!sub.expiryDate)</td>
                                 <td>$sub.planName</td>
                                 <td>$sub.licenseText</td>
@@ -121,8 +121,6 @@
                 </div>
             </div>
         </div>
-        <script>
-            initManageSubscriptions();
-        </script>
+        
     </body>
 </html>

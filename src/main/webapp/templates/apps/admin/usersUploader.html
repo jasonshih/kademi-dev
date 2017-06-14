@@ -1,0 +1,27 @@
+<div class="form-group">
+    <label class="control-label col-md-2" for="removalMode">Mode: </label>
+    <div class="col-md-10">
+        <select id="removalMode" name="removalMode" class="form-control">
+            <option value="columnValueOnly">Auto</option>
+            <option value="removeAll">Remove all uploaded</option>
+            <option value="unsubAll">Un-subscribe all uploaded</option>
+        </select>
+    </div>
+</div>
+<div class="form-group" >
+    <label class="control-label col-md-2" for="defaultGroup">Default group: </label>
+    <div class="col-md-10">
+        <select id="defaultGroup" name="defaultGroup" class="form-control">
+            <option value="">[No default group]</option>
+            #foreach($group in $rootFolder.groups)
+            <option value="$group.name">
+                #if( $group.title)
+                $group.title
+                #else
+                $group.name
+                #end
+            </option>
+            #end
+        </select>
+    </div>
+</div>

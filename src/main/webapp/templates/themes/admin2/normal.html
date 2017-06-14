@@ -52,7 +52,7 @@
         <link rel="stylesheet" href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" />
         <link rel="stylesheet" href="/static/perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css" />
         <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=8.1.6" />
-        <link rel="stylesheet" href="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" />
         <!-- end: MAIN CSS -->
 
         <!-- start: MAIN JAVASCRIPTS -->
@@ -61,7 +61,7 @@
         <!-- Fuse specific scripts. We might be able to remove some of these after admin2 integration -->
         <script type="text/javascript" src="/static/js/common.js">//</script>
         <script type="text/javascript" src="/static/jquery.forms/1.1.3/jquery.forms-1.1.3.js">//</script>
-        <script type="text/javascript" src="/static/jquery.user/1.0.4/jquery.user-1.0.4.js">//</script>  
+        <script type="text/javascript" src="/static/jquery.user/1.0.4/jquery.user-1.0.4.js">//</script>
         <script type="text/javascript" src="/static/js/file.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/toolbars.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/ckeditor456/ckeditor.js" bottom="true">//</script>
@@ -116,17 +116,17 @@
 
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
-            #foreach($cssFile in $groupEntry.value)
-                <link rel="stylesheet" href="$cssFile" />
-            #end
+        #foreach($cssFile in $groupEntry.value)
+        <link rel="stylesheet" href="$cssFile" />
+        #end
         #end
         <!-- End injected CSS sources -->
 
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script type="text/javascript" src="$jsFile">//</script>
-            #end
+        #foreach($jsFile in $groupEntry.value)
+        <script type="text/javascript" src="$jsFile">//</script>
+        #end
         #end
         <!-- End injected CSS sources -->
 
@@ -155,7 +155,7 @@
                                 <form class="navbar-form" role="search">
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
-                                        <input type="text" class="form-control search-input" placeholder="Search for..." id="top-nav-search-input" value="" />
+                                        <input type="text" class="form-control" placeholder="Search for..." id="top-nav-search-input" value="" />
                                     </div>
                                 </form>
                             </li>
@@ -169,10 +169,21 @@
                                     <li>
                                         <a href="/edit"><i class="clip-pencil"></i> &nbsp; Organisation details</a>
                                     </li>
-                                    #foreach($org in $page.organisations)
-                                        <li>
-                                            <a href="$org.href"><i class="clip-home-2"></i> &nbsp; $org.title</a>
-                                        </li>
+                                    #if( $user.thisProfile.homeAdminOrg.id == $page.organisation.id )
+                                    #else
+                                    <li>
+                                        <a href="/organisations/?gotoDomain=$user.thisProfile.homeAdminOrg.adminDomain">
+                                            <i class="clip-home-2"></i> &nbsp; $user.thisProfile.homeAdminOrg.title
+                                        </a>
+                                    </li>
+                                    #end
+                                    #set( $adminDomains = $rootFolder.adminDomains )
+                                    #foreach( $suborg in $adminDomains )
+                                    <li>
+                                        <a href="/organisations/?gotoDomain=$suborg.adminDomain">
+                                            <i class="clip-home-2"></i> &nbsp; $suborg.title
+                                        </a>
+                                    </li>
                                     #end
                                 </ul>
                             </li>
@@ -187,7 +198,7 @@
                             <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                    <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
                                     #end
                                     <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
@@ -215,11 +226,11 @@
 
 
                                     #foreach( $lang in $rootFolder.languages.entrySet() )
-                                        <li>
-                                            <a href="$lang.key" class="select-lang">
-                                                <i class="fa fa-language"></i> &nbsp; $lang.value
-                                            </a>
-                                        </li>
+                                    <li>
+                                        <a href="$lang.key" class="select-lang">
+                                            <i class="fa fa-language"></i> &nbsp; $lang.value
+                                        </a>
+                                    </li>
                                     #end
                                 </ul>
                             </li>
@@ -249,43 +260,43 @@
                         <li class="search-menu"><input type="text" placeholder="Type to Search Menu"></li>
                         #foreach($rootItem in $menu.items)
 
-                            <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
-                                #set($href = "#")
-                                #set($href = $rootItem.href)
-                                <a href="$href" data-ordering="$rootItem.ordering">
-                                    #if($rootItem.cssClass)
-                                        <i class="menu-item-$rootItem.id $rootItem.cssClass fa-fw"></i>
-                                    #end
-                                    <span class="title">$rootItem.text</span>
-
-                                    #if( !$rootItem.items.isEmpty() )
-                                        <i class="icon-arrow"></i>
-                                    #end
-
-                                    #if( $rootItem.active )
-                                        <!--<span class="selected"></span>-->
-                                    #end
-                                </a>
-
-                                #set($subItems = $rootItem.items)
-                                #if ($subItems && $subItems.size() > 0)
-                                    <ul class="sub-menu">
-                                        #foreach($sectionItem in $subItems)
-                                            <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
-                                                <a href="$sectionItem.href">
-                                                    #if($sectionItem.cssClass)
-                                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
-                                                    #end
-                                                    <span class="title">$sectionItem.text</span>
-                                                    #if( $sectionItem.active )
-                                                        <span class="selected"></span>
-                                                    #end
-                                                </a>
-                                            </li>
-                                        #end
-                                    </ul>
+                        <li class="$formatter.ifTrue( $rootItem.active, "active open", "" )">
+                            #set($href = "#")
+                            #set($href = $rootItem.href)
+                            <a href="$href" data-ordering="$rootItem.ordering">
+                                #if($rootItem.cssClass)
+                                <i class="menu-item-$rootItem.id $rootItem.cssClass fa-fw"></i>
                                 #end
-                            </li>
+                                <span class="title">$rootItem.text</span>
+
+                                #if( !$rootItem.items.isEmpty() )
+                                <i class="icon-arrow"></i>
+                                #end
+
+                                #if( $rootItem.active )
+                                <!--<span class="selected"></span>-->
+                                #end
+                            </a>
+
+                            #set($subItems = $rootItem.items)
+                            #if ($subItems && $subItems.size() > 0)
+                            <ul class="sub-menu">
+                                #foreach($sectionItem in $subItems)
+                                <li class="$formatter.ifTrue( $sectionItem.active, "active open", "" )" data-ordering="$sectionItem.ordering">
+                                    <a href="$sectionItem.href">
+                                        #if($sectionItem.cssClass)
+                                        <i class="menu-item-$sectionItem.id $sectionItem.cssClass"></i>
+                                        #end
+                                        <span class="title">$sectionItem.text</span>
+                                        #if( $sectionItem.active )
+                                        <span class="selected"></span>
+                                        #end
+                                    </a>
+                                </li>
+                                #end
+                            </ul>
+                            #end
+                        </li>
                         #end
                     </ul>
                     <!-- end: MAIN NAVIGATION MENU -->
@@ -297,11 +308,11 @@
                         <!-- start: PAGE HEADER -->
                         <ol class="breadcrumb">
                             #if( $page.parent.title )
-                                <li>
-                                    <a href="$page.parent.href">
-                                        $page.parent.title
-                                    </a>
-                                </li>
+                            <li>
+                                <a href="$page.parent.href">
+                                    $page.parent.title
+                                </a>
+                            </li>
                             #end
                             <li class="active">
                                 <a href="$page.href">$formatter.htmlEncode($page.title)</a>
@@ -349,37 +360,37 @@
         </script>
 
         #if( !$request.hostHeader.contains(":") )
-            <!--Start of Zopim Live Chat Script-->
-            <script type="text/javascript">
-                var ua = navigator.userAgent.toLowerCase();
-                var platform = navigator.platform.toLowerCase();
-                var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
-                var isMobile = /ios|android|webos/.test(platformName);
-                if (!isMobile) {
-                    window.$zopim || (function (d, s) {
-                        var z = $zopim = function (c) {
-                                    z._.push(c)
-                                },
-                                $ = z.s =
-                                        d.createElement(s),
-                                e = d.getElementsByTagName(s)[0];
-                        z.set = function (o) {
-                            z.set._.push(o)
-                        };
-                        z._ = [];
-                        z.set._ = [];
-                        $.async = !0;
-                        $.setAttribute('charset', 'utf-8');
-                        $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
-                        z.t = +new Date;
-                        $.type = 'text/javascript';
-                        e.parentNode.insertBefore($, e)
-                    })(document, 'script');
-                }
-            </script>
-            <!--End of Zopim Live Chat Script-->
+        <!--Start of Zopim Live Chat Script-->
+        <script type="text/javascript">
+            var ua = navigator.userAgent.toLowerCase();
+            var platform = navigator.platform.toLowerCase();
+            var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
+            var isMobile = /ios|android|webos/.test(platformName);
+            if (!isMobile) {
+                window.$zopim || (function (d, s) {
+                    var z = $zopim = function (c) {
+                        z._.push(c)
+                    },
+                            $ = z.s =
+                            d.createElement(s),
+                            e = d.getElementsByTagName(s)[0];
+                    z.set = function (o) {
+                        z.set._.push(o)
+                    };
+                    z._ = [];
+                    z.set._ = [];
+                    $.async = !0;
+                    $.setAttribute('charset', 'utf-8');
+                    $.src = '//v2.zopim.com/?2nKbRpXKUmYJXwm07KHHlZLNXFdpF9PE';
+                    z.t = +new Date;
+                    $.type = 'text/javascript';
+                    e.parentNode.insertBefore($, e)
+                })(document, 'script');
+            }
+        </script>
+        <!--End of Zopim Live Chat Script-->
         #end
-        
+
         <!-- start: NEW USER MODAL -->
         <div id="modal-new-user" class="modal fade" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -393,138 +404,138 @@
                         <div class="modal-body">
                             #set($groups = $page.find("/manageUsers").groups)
                             #if($groups.isEmpty())
-                                <p class="alert alert-error">You must create at least one group
-                                    in this or a parent organisation before you can add users</p>
+                            <p class="alert alert-error">You must create at least one group
+                                in this or a parent organisation before you can add users</p>
                             #else
-                                <div class="form-message alert alert-danger" style="display: none;"></div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="newUserNickName">Display name</label>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserNickName">Display name</label>
 
-                                    <div class="col-md-9">
-                                        <input type="text" name="nickName" id="newUserNickName" class="form-control" />
+                                <div class="col-md-9">
+                                    <input type="text" name="nickName" id="newUserNickName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserFirstName">First name</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserSurName">Surname</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="surName" id="newUserSurName" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newUserEmail">Email</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="email" id="newUserEmail" class="form-control" />
+                                    <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use
+                                        <b>Joe Blogs</b> as First name and Surname if
+                                        <b>First name</b> and <b>Surname</b> are blank</em>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Group membership</h4>
+
+                            <p><i>Please select a group and an organisation to make this user a member of</i></p>
+
+                            <div class="groups">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newUserGroupSelect">Group</label>
+
+                                    <div class="col-md-10">
+                                        <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
+                                            <option></option>
+                                            #foreach($group in $groups )
+                                            $formatter.option($group.name, $group.name, false)
+                                            #end
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="newUserFirstName">First name</label>
-
-                                    <div class="col-md-9">
-                                        <input type="text" name="firstName" id="newUserFirstName" class="form-control" />
+                                <div class="form-group" id="existingOrganisation">
+                                    <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control required" name="orgId" id="orgId" autocomplete="off" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="small btn btn-info newOrganisation">+ New Organisation</button>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="newUserSurName">Surname</label>
-
-                                    <div class="col-md-9">
-                                        <input type="text" name="surName" id="newUserSurName" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-3" for="newUserEmail">Email</label>
-
-                                    <div class="col-md-9">
-                                        <input type="text" name="email" id="newUserEmail" class="form-control" />
-                                        <em class="help-block small text-muted">Eg. Joe Blogs &lt;joebloggs@somewhere.com&gt;. Will use
-                                            <b>Joe Blogs</b> as First name and Surname if
-                                            <b>First name</b> and <b>Surname</b> are blank</em>
-                                    </div>
-                                </div>
-                                <hr />
-                                <h4>Group membership</h4>
-
-                                <p><i>Please select a group and an organisation to make this user a member of</i></p>
-
-                                <div class="groups">
+                                <div id="createNewOrganisation" class="hide">
                                     <div class="form-group">
-                                        <label class="control-label col-md-2" for="newUserGroupSelect">Group</label>
-
-                                        <div class="col-md-10">
-                                            <select name="group" id="newUserGroupSelect" data-placeholder="Select a group" class="form-control" style="width: 100%">
-                                                <option></option>
-                                                #foreach($group in $groups )
-                                                    $formatter.option($group.name, $group.name, false)
+                                        <label class="control-label col-md-2" for="newOrgTitle">Name</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control orgTitle" name="newOrgTitle" id="newOrgTitle" placeholder="Enter a user friendly name for the organisation" />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="small btn btn-info existingOrganisation">Choose Organisation</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="newOrgId">ID</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control simpleChars" name="newOrgId" id="newOrgId" placeholder="A unique id." />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="newOrgSearchOrgType">Type</label>
+                                        <div class="col-md-8">
+                                            <select name="newOrgSearchOrgType" id="newOrgSearchOrgType" class="form-control">
+                                                <option value="">[Select a type]</option>
+                                                <option value="NONE">[No type]</option>
+                                                #foreach($orgType in $rootFolder.orgTypes)
+                                                <option value="$orgType.name">$orgType.displayName</option>
                                                 #end
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group" id="existingOrganisation">
-                                        <label class="control-label col-md-2" for="newUserEmail">Organisation</label>
-                                        <div class="col-md-8">
-                                            <input type="text" class="form-control required" name="orgId" id="orgId" autocomplete="off" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button type="button" class="small btn btn-info newOrganisation">+ New Organisation</button>
-                                        </div>
-                                    </div>
-                                    <div id="createNewOrganisation" class="hide">
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2" for="newOrgTitle">Name</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control orgTitle" name="newOrgTitle" id="newOrgTitle" placeholder="Enter a user friendly name for the organisation" />
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="small btn btn-info existingOrganisation">Choose Organisation</button>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2" for="newOrgId">ID</label>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control simpleChars" name="newOrgId" id="newOrgId" placeholder="A unique id." />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2" for="newOrgSearchOrgType">Type</label>
-                                            <div class="col-md-8">
-                                                <select name="newOrgSearchOrgType" id="newOrgSearchOrgType" class="form-control">
-                                                    <option value="">[Select a type]</option>
-                                                    <option value="NONE">[No type]</option>
-                                                    #foreach($orgType in $rootFolder.orgTypes)
-                                                    <option value="$orgType.name">$orgType.displayName</option>
+                                </div>
+                                <div class="form-group">
+                                    <div id="org-search">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-condensed">
+                                                #if( $page.find("/manageUsers").orgSearchResults.isEmpty() )
+                                                <tbody>
+                                                    <tr>
+                                                        <td>No matching organisations found</td>
+                                                    </tr>
+                                                </tbody>
+                                                #else
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Title</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    #foreach($org in $page.find("/manageUsers").orgSearchResults)
+                                                    <tr>
+                                                        <td><a href="$org.id">$org.orgId</a></td>
+                                                        <td><a href="$org.id">$!org.title</a></td>
+                                                    </tr>
                                                     #end
-                                                </select>                                                                                        
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div id="org-search">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-hover table-condensed">
-                                                    #if( $page.find("/manageUsers").orgSearchResults.isEmpty() )
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>No matching organisations found</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    #else
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Id</th>
-                                                                <th>Title</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            #foreach($org in $page.find("/manageUsers").orgSearchResults)
-                                                                <tr>
-                                                                    <td><a href="$org.id">$org.orgId</a></td>
-                                                                    <td><a href="$org.id">$!org.title</a></td>
-                                                                </tr>
-                                                            #end
-                                                        </tbody>
-                                                    #end
-                                                </table>
-                                            </div>
+                                                </tbody>
+                                                #end
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             #end
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
                             #if(!$groups.isEmpty())
-                                <div class="btn-group btn-group-sm dropup">
-                                    <button type="submit" class="small btn btn-info btn-add-and-add">Create and add another</button>
-                                    <button type="submit" class="small btn btn-info btn-add-and-close">Create and close</button>
-                                    <button class="btn btn-success btn-add-and-view" type="submit">Create and view</button>
-                                </div>
+                            <div class="btn-group btn-group-sm dropup">
+                                <button type="submit" class="small btn btn-info btn-add-and-add">Create and add another</button>
+                                <button type="submit" class="small btn btn-info btn-add-and-close">Create and close</button>
+                                <button class="btn btn-success btn-add-and-view" type="submit">Create and view</button>
+                            </div>
                             #end
                         </div>
                     </form>
@@ -533,6 +544,75 @@
         </div>
         <!-- end: NEW USER MODAL -->
 
+        <div id="modal-create-account" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">New Kademi Account</h4>
+                    </div>
+                    <form method="post" action="/organisations/" class="form-horizontal">
+                        <input type="hidden" name="newAccount" value="true"/>
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                            <div class="form-group">
+                                <label for="orgTitle" class="control-label col-md-3">Name</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control required" name="title" id="orgTitle" placeholder="User friendly name for the organisation" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="orgId2" class="control-label col-md-3">ID</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control required simpleChars" name="orgId" id="orgId2" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                    <span class="help-block">
+                                        <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel">Add new website</h4>
+                    </div>
+                    <form class="form-horizontal" method="POST" action="/websites/">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="newName" class="col-sm-3 control-label">Simple name</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control regex required" required="true" id="newName" name="newName" data-regex="^[a-zA-Z0-9-]+$" />
+                                    <span class="help-block">
+                                        <small>Simple characters only, no punctuation, dots, etc, all lower case, not a domain name</small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Create website</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div><!-- / create website modal -->
     </body>
     <!-- end: BODY -->
 </html>

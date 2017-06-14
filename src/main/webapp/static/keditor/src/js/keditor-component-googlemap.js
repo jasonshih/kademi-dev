@@ -42,6 +42,7 @@
         
         initSettingForm: function (form, keditor) {
             flog('init "googlemap" settings', form);
+            var self = this;
             
             return $.ajax({
                 url: '/static/keditor/componentGoogleMapSettings.html',
@@ -90,7 +91,6 @@
                         }
                     });
                     
-                    var self = this;
                     form.find('[name=mapEmbedCode]').on('change', function () {
                         var iframe = $(this.value);
                         var src = iframe.attr('src');

@@ -13,16 +13,11 @@
         <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
         <script src="/static/js/common.js">//</script>
 
-        <script src="/theme/js/jqBootstrapValidation.js">//</script>
-        <script src="/theme/js/jqExtras.js">//</script>
-        <script src="/theme/js/theme.js">//</script>
-        <script src="/theme/js/bootstrap.min.js">//</script>
+        <script src="/theme/assets/plugins/bootstrap/dist/js/bootstrap.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.cookie.js">//</script>
         <script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
 
-        <script type="text/javascript" src="/theme/js/init-theme.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
-        <script type="text/javascript" src="/theme/toolbars.js">//</script>
         <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
         <script type="text/javascript" src="/static/js/keymap.js">//</script>
         <script type="text/javascript" src="/theme/apps/admin/contentEditor.js">//</script>
@@ -36,33 +31,23 @@
         <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" id="file-title">
-                        #if( $file.title )
-                            $file.title
-                            <small class="text-muted">
-                                - $file.name
-                            </small>
-                        #else
-                            $file.fileName
-                        #end
-                    </a>
+                    <a class="navbar-brand">$params.fileName</a>
                 </div>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="./$file.name" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
                     <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
                     <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
-                    <li><a href="texteditor?fileName=$!params.fileName" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
+                    <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
                 </ul>
             </div>
         </nav>
 
         <div id="content-area">$!file.body</div>
 
-
         <div id="modal-page-properties" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <form method="POST" action="$page.href" class="form-horizontal">
+                    <form method="POST" action="./${fname}" class="form-horizontal">
                         <div class="modal-header">
                             <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
                             <div class="form-group" style="margin-bottom: 0;">
@@ -93,12 +78,12 @@
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
                                             </p>
                                             <div class="meta-wrapper">
-                                                #foreach($meta in $file.metas)
+                                                #foreach($metaName in $file.metaNames)
                                                     <div class="input-group meta">
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$meta.name" />
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$meta.content" />
+                                                        <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
+                                                        <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
                                                         <span class="input-group-btn">
-                                                            <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
+                                                            <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
                                                         </span>
                                                     </div>
                                                 #end
@@ -113,11 +98,11 @@
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
                                             </p>
                                             <div class="param-wrapper">
-                                                #foreach($param in $file.params)
-                                                    #if ($param.title != 'title' && $param.title != 'itemType' && $param.title != 'category' && $param.title != 'tags' && $param.title != 'metas' && $param.title != 'body' && $param.title != 'cssFiles' && $param.title != 'template') {
+                                                #foreach($paramName in $file.paramNames)
+                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName != 'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
                                                         <div class="input-group param">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$param.title" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$param.value" />
+                                                            <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
+                                                            <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
                                                             <span class="input-group-btn">
                                                                 <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
                                                             </span>
@@ -135,21 +120,21 @@
                                         <label for="itemType" class="control-label col-md-3">Item type</label>
 
                                         <div class="col-md-9">
-                                            <input type="text" name="itemType" id="itemType" class="form-control" />
+                                            <input type="text" name="itemType" id="itemType" class="form-control" value="$!file.getParam("itemType")" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="category" class="control-label col-md-3">Category</label>
 
                                         <div class="col-md-9">
-                                            <input type="text" name="category" id="category" class="form-control" />
+                                            <input type="text" name="category" id="category" class="form-control" value="$!file.getParam("category")" />
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="tags" class="control-label col-md-3">Tags</label>
 
                                         <div class="col-md-9">
-                                            <input type="text" name="tags" id="tags" class="form-control" />
+                                            <input type="text" name="tags" id="tags" class="form-control" value="$!file.getParam("tags")" />
                                         </div>
                                     </div>
                                 </div>
@@ -162,6 +147,13 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <div id="editor-loading">
+            <span>
+                <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
+                <span class="loading-text">Initializing Content Editor...</span>
+            </span>
         </div>
 
         <script type="text/javascript">

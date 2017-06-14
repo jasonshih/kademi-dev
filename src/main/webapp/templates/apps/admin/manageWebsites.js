@@ -16,12 +16,9 @@ function initAddWebsite() {
         callback: function (resp) {
             flog("done", resp);
             modal.modal('hide');
-            Msg.success(form.find('[name=newName]').val() + ' is created!');
-            $('#website-wrapper').reloadFragment({
-                whenComplete: function () {
-                    initSwitch();
-                }
-            });
+            Msg.success("Created website " + form.find('[name=newName]').val());
+            var nextHref = "/websites/" + resp.nextHref + "/";
+            window.location = nextHref;
         }
     });
 }

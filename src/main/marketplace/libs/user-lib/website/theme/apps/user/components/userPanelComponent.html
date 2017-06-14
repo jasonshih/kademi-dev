@@ -1,0 +1,29 @@
+#if ($userResource)
+<div class="panel-user-wrapper">
+    <div class="panel panel-default panel-user">
+        <div class="panel-body">
+            #set ($ava = '/theme/apps/user/profile-icon-v2.png')
+            #if ($userResource.profilePicHref && $userResource.profilePicHref != "/templates/apps/user/profile.png")
+                #set ($ava = $userResource.profilePicHref)
+            #end
+
+            #set ($name = "User")
+            #if ($user.firstName)
+                #set ($name = $user.firstName)
+            #end
+
+            <div class="profile-avatar-wrapper">
+                <span class="profile-avatar" style="background-image: url($ava)"></span>
+            </div>
+
+            <div class="profile-welcome text-center">
+                <span>Welcome back</span>
+
+                <h3 class="profile-welcome-name"><b>$name</b></h3>
+            </div>
+        </div>
+    </div>
+</div>
+#else
+<p class="alert alert-warning">Please login to view this panel</p>
+#end

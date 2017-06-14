@@ -1,0 +1,16 @@
+{
+  "appDependencies": [
+        {
+            "appId": "leadMan",
+            "branch" : ""
+        },
+        {
+            "appId": "userDashboardApp",
+            "branch" : ""
+        },        
+        {
+            "appId": "search",
+            "branch" : ""
+        }          
+  ]
+}

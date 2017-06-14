@@ -71,7 +71,7 @@
                 $.getStyleOnce(style);
             });
         }
-    
+        
         if (options.snippetsHandlersUrl) {
             contentEditor.dependScripts.push(options.snippetsHandlersUrl);
         }
@@ -256,18 +256,39 @@
                     var styleName = txt.attr('data-style-name');
                     
                     txt.on('change', function () {
-                        var paddingValue = this.value || '';
+                        var value = this.value || '';
                         var container = keditor.getSettingContainer();
                         var containerContent = container.find('.container-content-wrapper').get(0);
                         
-                        if (paddingValue.trim() === '') {
+                        if (value.trim() === '') {
                             containerContent.style[styleName] = '';
                         } else {
-                            if (isNaN(paddingValue)) {
-                                paddingValue = 0;
-                                this.value = paddingValue;
+                            if (isNaN(value)) {
+                                value = 0;
+                                this.value = value;
                             }
-                            containerContent.style[styleName] = paddingValue + 'px';
+                            containerContent.style[styleName] = value + 'px';
+                        }
+                    });
+                });
+                
+                form.find('.txt-margin').each(function () {
+                    var txt = $(this);
+                    var styleName = txt.attr('data-style-name');
+                    
+                    txt.on('change', function () {
+                        var value = this.value || '';
+                        var container = keditor.getSettingContainer();
+                        var containerContent = container.find('.container-bg').get(0);
+                        
+                        if (value.trim() === '') {
+                            containerContent.style[styleName] = '';
+                        } else {
+                            if (isNaN(value)) {
+                                value = 0;
+                                this.value = value;
+                            }
+                            containerContent.style[styleName] = value + 'px';
                         }
                     });
                 });
@@ -450,6 +471,13 @@
             txt.val((containerContent.get(0).style[styleName] || '').replace('px', ''));
         });
         
+        form.find('.txt-margin').each(function () {
+            var txt = $(this);
+            var styleName = txt.attr('data-style-name');
+            
+            txt.val((containerBg.get(0).style[styleName] || '').replace('px', ''));
+        });
+        
         form.find('.txt-height').val(containerBg.get(0).style.height || '');
         
         var selectGroups = form.find('.select-groups');
@@ -555,7 +583,7 @@
             var itemHref = menuItem.attr('data-href');
             var itemText = menuItem.children('.menuItemText').text().trim();
             var isCustom = itemId.startsWith('menu-custom-'); // different format to native menu items
-            var isHidden = menuItem.attr('data-hidden');
+            var hidden = menuItem.attr('data-hidden');
             
             list.push({
                 id: itemId,
@@ -564,9 +592,9 @@
                 ordering: i,
                 parentId: parentId,
                 custom: isCustom,
-                hidden: isHidden
+                hidden: hidden
             });
-    
+            
             contentEditor.toMenuData(li.children('.menuList'), list);
         });
     }
@@ -718,11 +746,11 @@
             var id = menuItem.attr('data-id');
             var text = menuItem.find('.menuItemText').text().trim();
             var href = menuItem.attr('data-href');
-            var isHidden = menuItem.attr('data-hidden') === 'true';
+            var hidden = menuItem.attr('data-hidden') || 'false';
             
             menuItemEditor.find('input[name=href]').val(href);
             menuItemEditor.find('input[name=text]').val(text);
-            menuItemEditor.find('input[name=hidden]').prop('checked', isHidden);
+            menuItemEditor.find('[name=hidden]').val(hidden)
             
             var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
             if (id.startsWith('menu-custom-')) {
@@ -741,10 +769,10 @@
             var href = menuItemEditor.find('input[name=href]').val();
             var text = menuItemEditor.find('input[name=text]').val();
             text = text.trim();
-            var isHidden = menuItemEditor.find('input[name=hidden]').is(':checked');
+            var hidden = menuItemEditor.find('[name=hidden]').val();
             
             editItem.attr('data-href', href);
-            editItem.attr('data-hidden', isHidden);
+            editItem.attr('data-hidden', hidden);
             editItem.find('.menuItemText').text(text);
             editItem = null;
             
@@ -794,6 +822,12 @@
                 }
             });
         });
+        
+        var groupsStr = '';
+        $.each(keditor.options.allGroups, function (name, title) {
+            groupsStr += '<option value="' + name + '">Visible only for "' + title + '"</option>';
+        });
+        menuItemEditor.find('[name=hidden]').append(groupsStr);
     };
     
     contentEditor.showDefaultMenuControls = function (form, component, keditor) {
@@ -890,9 +924,9 @@
             
             return $(this).each(function () {
                 var target = $(this);
-    
+                
                 flog('[jquery.contentEditor] Initializing...', target, options);
-    
+                
                 if (target.data('contentEditorOptions')) {
                     flog('[jquery.contentEditor] Content Editor is already initialized', target);
                     return target;
@@ -933,8 +967,7 @@
                         snippetsUrl: options.snippetsUrl,
                         tabTooltipEnabled: false,
                         snippetsTooltipEnabled: false,
-                        onContentChanged: function () {
-                            var contentArea = $(this);
+                        onContentChanged: function (e, contentArea) {
                             if (target.keditor('getContent').trim() === '') {
                                 contentArea.addClass('empty');
                             } else {
@@ -967,10 +1000,15 @@
                         iframeMode: options.iframeMode,
                         contentStyles: options.contentStyles,
                         basePath: options.basePath,
-                        pagePath: options.pagePath
+                        pagePath: options.pagePath,
+                        onReady: function () {
+                            if (typeof options.onReady === 'function') {
+                                options.onReady.call(null);
+                            }
+                        }
                     });
                 });
-    
+                
                 target.data('contentEditorOptions', options);
             });
         },

@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "rewardStore",
+            "branch" : ""
+        },
+        {
+            "appId": "productsApp",
+            "branch" : ""
+        }        
+  ]
+}

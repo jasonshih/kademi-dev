@@ -4,13 +4,55 @@
 
 #builder {
     position: relative;
-    overflow: hidden;
     min-height: 500px;
     margin: -17px -13px;
 }
 
+#builder-fullscreen {
+    position: absolute;
+    z-index: 11;
+    top: 0;
+    right: 249px;
+    background: #fff;
+    text-align: center;
+    height: 24px;
+    width: 24px;
+    line-height: 24px;
+    color: #9ed1f2;
+    border: 1px solid #dfeaf1;
+}
+
+#builder-fullscreen:hover {
+    color: #3988b7;
+}
+
+#builder-fullscreen .fa-window-restore {
+    display: none;
+}
+
+#builder.fullscreen-mode #builder-fullscreen .fa-window-maximize {
+    display: none;
+}
+
+#builder.fullscreen-mode #builder-fullscreen .fa-window-restore {
+    display: inline-block;
+}
+
 #builder-status {
-    margin-right: 10px;
+    position: absolute;
+    top: -25px;
+    right: 5px;
+}
+
+#builder.fullscreen-mode #builder-status {
+    top: 0;
+    right: auto;
+    left: 50%;
+    margin-left: -125px;
+    transform: translate(-50%, 0);
+    z-index: 11;
+    background: #fff;
+    padding: 3px;
 }
 
 /* ====================================================================
@@ -121,6 +163,11 @@
     background: #3988b7;
 }
 
+#builder .right-panel .node-action[data-type="begin"] .node-preview-inner,
+#builder .right-panel .node-action[data-type="end"] .node-preview-inner {
+    background: #8c559b;
+}
+
 #builder .right-panel .node-goal .node-preview-inner {
     background: #39b7a1;
 }
@@ -137,18 +184,17 @@
    Panel setting
    ==================================================================== */
 #builder .right-panel .panel-setting {
-    z-index: 0;
+    z-index: 2;
     position: absolute;
     top: 0;
-    right: -250px;
+    right: 0;
     width: 100%;
     height: 100%;
-    transition: 0.2s all;
+    display: none;
 }
 
 #builder .right-panel .panel-setting.showed {
-    z-index: 2;
-    right: 0;
+    display: block;
 }
 
 #builder .right-panel .panel-setting .panel-heading + .panel-footer {
@@ -193,6 +239,11 @@
 
 .node.node-action {
     background: #3988b7;
+}
+
+.node.node-action.begin,
+.node.node-action.end {
+    background: #8c559b;
 }
 
 .node.node-goal {

@@ -1,0 +1,72 @@
+#if ($userResource)
+<div class="panel-user-wrapper">
+    <div class="panel panel-default panel-user">
+        <div class="panel-body">
+            #set ($ava = '/theme/apps/user/profile-icon-v2.png')
+            #if ($userResource.profilePicHref && $userResource.profilePicHref != "/templates/apps/user/profile.png")
+                #set ($ava = $userResource.profilePicHref)
+            #end
+
+            #set ($name = "User")
+            #if ($user.firstName)
+                #set ($name = $user.firstName)
+            #end
+
+            <div class="profile-avatar-wrapper">
+                <span class="profile-avatar" style="background-image: url($ava)"></span>
+            </div>
+
+            <div class="profile-welcome text-center">
+                <span>Welcome back</span>
+
+                <h3 class="profile-welcome-name"><b>$name</b></h3>
+            </div>
+            #set( $rewardStoreApp = $applications.rewardStore )
+            #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
+
+            #if ($pointsBuckets)
+                #set ($availablePanel = 0)
+                #foreach($reward in $pointsBuckets)
+                    #set( $myPoint = false )
+                    #set( $myPoint = $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
+                    #if ($myPoint)
+                        #set ($availablePanel = $availablePanel + 1)
+                    #end
+                #end
+
+                #if ($availablePanel > 0)
+                    <div class="">
+                        #foreach($reward in $pointsBuckets)
+                            #set ($rewardPath = "/" + $reward.name)
+                            #set( $rewardFolder = $page.find($rewardPath))
+                            #set( $myPoint = false )
+                            #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
+
+                            #if ($myPoint)
+                                #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
+                                <div class="">
+                                    <div class="user-total-points bg-primary text-center">
+                                        <h2>
+                                            <span id="user-total-points" title="$myPointString">$myPointString</span>
+                                        </h2>
+                                        <small>
+                                            #if ($reward.title && $reward.title != " ")
+                                                $reward.title
+                                            #else
+                                                Points
+                                            #end
+                                        </small>
+                                    </div>
+                                </div>
+                            #end
+                        #end
+                    </div>
+                #end
+
+            #end
+        </div>
+    </div>
+</div>
+#else
+<p class="alert alert-warning">Please login to view this panel</p>
+#end

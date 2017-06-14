@@ -6,12 +6,6 @@
         #set( $website = $page.website )
         #if( $params.mode == "settings" )
         <form method="POST" action="$page.path" class="" id="frmDetails" style="">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="message">Reason</label>
-                    <textarea style="height: 70px" id="reason" name="reason" placeholder="Enter reason for cancelling lead" class="form-control required-if-shown">$formatter.htmlEncode( $page.node.reason )</textarea>
-                </div>
-            </div>
         </form>
         #else
         <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">

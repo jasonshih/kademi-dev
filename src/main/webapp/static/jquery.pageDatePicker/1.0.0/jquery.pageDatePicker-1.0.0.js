@@ -104,8 +104,10 @@
 
                 if (dropDown.hasClass('showed')) {
                     dropDown.removeClass('showed');
+                    dropDown.parents(".pageDatePicker-wrapper").removeClass("open");
                 } else {
                     dropDown.addClass('showed');
+                    dropDown.parents(".pageDatePicker-wrapper").addClass("open");
                 }
             });
 

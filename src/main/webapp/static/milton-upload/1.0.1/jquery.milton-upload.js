@@ -54,92 +54,15 @@
                 }
                 form.attr("id", config.id);
                 container.append(form);
-
-                var dropzoneCss = "/static/dropzone/v3.10.2/css/dropzone.css";
-                if (!$("link[href='" + dropzoneCss + "']").length) {
-                    flog("loading css");
-                    $('<link href="' + dropzoneCss + '" rel="stylesheet">').appendTo("head");
+                
+                if (typeof window.Dropzone !== 'undefined') {
+                    methods.initDropZone(container, form, config);
                 } else {
-                    flog("already have dropzone css");
+                    $.getStyleOnce('/static/dropzone/v3.10.2/css/dropzone.css');
+                    $.getScriptOnce(('/static/dropzone/v3.10.2/dropzone.js'), function () {
+                        methods.initDropZone(container, form, config);
+                    });
                 }
-
-                var previewDiv = null;
-
-                $.getScriptOnce(('/static/dropzone/v3.10.2/dropzone.js'), function () {
-                    flog("Loaded dropzone plugin, now init...");
-                    Dropzone.autoDiscover = false;
-                    var dzConfig = {
-                        paramName: "file", // The name that will be used to transfer the file
-                        maxFilesize: 500.0, // MB
-                        addRemoveLinks: true,
-                        parallelUploads: 1,
-                        uploadMultiple: false,
-                        init: function () {
-                            this.on("success", function (file, resp) {
-                                flog("success1", resp);
-                                var result = null;
-                                if (typeof resp === "string") {
-                                    result = $.parseJSON(resp);
-                                } else {
-                                    result = resp;
-                                }
-                                if ($.isArray(result)) {
-                                    result = result[0]; // might be a propfind response
-                                }
-                                var data = {
-                                    result: result,
-                                    name: file.name
-                                };
-                                flog("success2", file, result);
-                                config.oncomplete(data, file.name, result.href);
-                            });
-
-                            this.on("error", function (file, errorMessage) {
-                                alert("An error occured uploading: " + file.name + " because: " + errorMessage);
-                            });
-
-                            this.on("addedfile", function (file, errorMessage) {
-                                if (previewDiv !== null) {
-                                    previewDiv.show();
-                                }
-                                
-                                if (typeof config.onBeforeUpload === 'function') {
-                                    config.onBeforeUpload(file);
-                                }
-                            });
-
-                            this.on("complete", function (file, errorMessage) {
-                                if (previewDiv !== null) {
-                                    previewDiv.hide();
-                                }
-                            });
-
-                            this.on("processing", function (file) {
-                                this.options.url = form.attr('action');
-                            });
-                        }
-                    };
-
-                    if (config.acceptedFiles) {
-                        dzConfig.acceptedFiles = config.acceptedFiles;
-                    }
-
-                    if (!config.useDropzone) {
-                        flog("do not use dropzone, use button instead")
-                        previewDiv = $("<div class='dropzone-previews' style='display: none'></div>");
-                        form.append(previewDiv);
-                        previewDiv.css("position: absolute");
-                        previewDiv.css("top", "20px");
-
-                        dzConfig.previewsContainer = previewDiv[0];
-                        flog("done init dropzone config. previewsContainer=", dzConfig.previewsContainer);
-                    }
-
-                    flog("Now invoke dropzone plugin...", dzConfig);
-                    var dropzone = form.dropzone(dzConfig);
-                    container.data('dropzone', form.data('dropzone'));
-                    flog("Finished dropzone init", Dropzone);
-                });
             } else {
                 flog('init fallback for dropzone');
                 methods.initFallback(container, config, actionUrl);
@@ -147,6 +70,82 @@
 
             flog("done fileupload init");
             return container;
+        },
+        initDropZone: function (container, form, config) {
+            flog("Loaded dropzone plugin, now init...");
+            var previewDiv = null;
+            Dropzone.autoDiscover = false;
+            var dzConfig = {
+                paramName: "file", // The name that will be used to transfer the file
+                maxFilesize: 500.0, // MB
+                addRemoveLinks: true,
+                parallelUploads: 1,
+                uploadMultiple: false,
+                init: function () {
+                    this.on("success", function (file, resp) {
+                        flog("success1", resp);
+                        var result = null;
+                        if (typeof resp === "string") {
+                            result = $.parseJSON(resp);
+                        } else {
+                            result = resp;
+                        }
+                        if ($.isArray(result)) {
+                            result = result[0]; // might be a propfind response
+                        }
+                        var data = {
+                            result: result,
+                            name: file.name
+                        };
+                        flog("success2", file, result);
+                        config.oncomplete(data, file.name, result.href);
+                    });
+            
+                    this.on("error", function (file, errorMessage) {
+                        alert("An error occured uploading: " + file.name + " because: " + errorMessage);
+                    });
+            
+                    this.on("addedfile", function (file, errorMessage) {
+                        if (previewDiv !== null) {
+                            previewDiv.show();
+                        }
+                
+                        if (typeof config.onBeforeUpload === 'function') {
+                            config.onBeforeUpload(file);
+                        }
+                    });
+            
+                    this.on("complete", function (file, errorMessage) {
+                        if (previewDiv !== null) {
+                            previewDiv.hide();
+                        }
+                    });
+            
+                    this.on("processing", function (file) {
+                        this.options.url = form.attr('action');
+                    });
+                }
+            };
+    
+            if (config.acceptedFiles) {
+                dzConfig.acceptedFiles = config.acceptedFiles;
+            }
+    
+            if (!config.useDropzone) {
+                flog("do not use dropzone, use button instead")
+                previewDiv = $("<div class='dropzone-previews' style='display: none'></div>");
+                form.append(previewDiv);
+                previewDiv.css("position: absolute");
+                previewDiv.css("top", "20px");
+        
+                dzConfig.previewsContainer = previewDiv[0];
+                flog("done init dropzone config. previewsContainer=", dzConfig.previewsContainer);
+            }
+    
+            flog("Now invoke dropzone plugin...", dzConfig);
+            var dropzone = form.dropzone(dzConfig);
+            container.data('dropzone', form.data('dropzone'));
+            flog("Finished dropzone init", Dropzone);
         },
         initFallback: function (container, config, actionUrl) {
             container.addClass('fallback-upload');

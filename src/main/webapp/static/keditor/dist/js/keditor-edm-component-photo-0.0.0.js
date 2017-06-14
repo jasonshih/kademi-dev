@@ -40,7 +40,7 @@
             
             var self = this;
             return $.ajax({
-                url: '/static/keditor/componentAudioSettings.html',
+                url: '/static/keditor/edmComponentPhotoSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

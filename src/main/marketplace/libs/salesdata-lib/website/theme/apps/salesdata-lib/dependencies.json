@@ -1,0 +1,61 @@
+{
+    "appDependencies": [
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/kpis.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
+            }
+        },
+//        {
+//            "js": {
+//                "group": "main",
+//                "path": "/theme/apps/salesdata/topSkus.js"
+//            }
+//        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/jquery.kpiVis.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/jquery.seriesVis.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/salesdata-dashboard.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/circle-progress.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/manageDataRecord.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/salesdata/manageDataRecord.css"
+            }
+        }
+    ]
+}
+

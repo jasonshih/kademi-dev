@@ -748,6 +748,25 @@ jsPlumb.ready(function () {
 function initJourneyBuilder() {
     flog('initJourneyBuilder');
     
+    var builder = $('#builder');
+    var btnFullscreen = $('#builder-fullscreen');
+    btnFullscreen.on('click', function (e) {
+        e.preventDefault();
+        
+        if (builder.hasClass('fullscreen-mode')) {
+            $.fullscreen.exit();
+        } else {
+            builder.addClass('fullscreen-mode');
+            builder.fullscreen();
+            btnFullscreen.attr('title', 'Exit fullscreen mode')
+        }
+    });
+    
+    builder.on('fscreenclose', function () {
+        builder.removeClass('fullscreen-mode');
+        btnFullscreen.attr('title', 'Enter fullscreen mode')
+    });
+    
     initSideBar();
     initSaveButton();
     initNodeActions();

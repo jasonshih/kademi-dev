@@ -721,6 +721,8 @@ $(function () {
     initNewUserForm();
     initEmailEventSimulator();
     initEntityFinder();
+    initCreateAccount();
+    initAddWebsite();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
@@ -995,7 +997,7 @@ function setRecentItem(title, url) {
         if (recentList == null) {
             recentList = new Array();
         } else {
-            
+        
         }
         flog("recent", recentList);
         var item = {
@@ -1016,6 +1018,41 @@ function getRecentItems() {
         return recentList;
     } else {
         return null;
+    }
+}
+
+function initCreateAccount() {
+    var modal = $("#modal-create-account");
+    modal.find("form").forms({
+        callback: function (resp) {
+            if (resp.status) {
+                Msg.info("Created account");
+                var nextHref = "/organisations/?gotoDomain=" + resp.nextHref;
+                window.location = nextHref;
+            } else {
+                Msg.error("Sorry, could not create the account because " + resp.messages);
+            }
+        }
+    });
+}
+
+function initAddWebsite() {
+    flog('initAddWebsite');
+    
+    var modal = $("#addWebsiteModal");
+    if (modal.length > 0) {
+        var form = modal.find("form");
+        
+        form.forms({
+            callback: function (resp) {
+                flog("done", resp);
+                modal.modal('hide');
+                Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');
+                var nextHref = "/websites/" + resp.nextHref + "/";
+                window.location = nextHref;
+                
+            }
+        });
     }
 }
 
@@ -1163,15 +1200,60 @@ function initColorPicker(target, onChangeHandle) {
     }
 }
 
-var K = window.K || {};
-K.alert = function (title, message, type) {
+var Kalert = {};
+Kalert.alert = function (title, message, type) {
     swal(title, message, type);
 };
-
-K.confirm = function (title, message, callback) {
-    
+Kalert.info = function (title, message) {
+    Kalert.alert(title, message, 'info');
+};
+Kalert.success = function (title, message) {
+    Kalert.alert(title, message, 'success');
+};
+Kalert.warning = function (title, message) {
+    Kalert.alert(title, message, 'warning');
+};
+Kalert.error = function (title, message) {
+    Kalert.alert(title, message, 'error');
 };
 
-K.prompt = function (title, message, callback) {
-    
+var Konfirm = {};
+Konfirm.confirm = function (options, callback) {
+    swal({
+        title: options.title || 'Are you sure?',
+        text: options.message,
+        type: options.type || 'warning',
+        showCancelButton: true,
+        confirmButtonClass: options.confirmClass,
+        confirmButtonText: options.confirmText,
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    }, callback);
+};
+Konfirm.info = function (options, callback) {
+    if (!options.confirmClass) {
+        options.confirmClass = 'btn-info';
+    }
+    Konfirm.confirm(options, callback);
+};
+Konfirm.success = function (options, callback) {
+    if (!options.confirmClass) {
+        options.confirmClass = 'btn-success';
+    }
+    Konfirm.confirm(options, callback);
+};
+Konfirm.warning = function (options, callback) {
+    if (!options.confirmClass) {
+        options.confirmClass = 'btn-warning';
+    }
+    Konfirm.confirm(options, callback);
+};
+Konfirm.error = function (options, callback) {
+    if (!options.confirmClass) {
+        options.confirmClass = 'btn-danger';
+    }
+    Konfirm.confirm(options, callback);
+};
+Konfirm.close = function () {
+    swal.close();
 };

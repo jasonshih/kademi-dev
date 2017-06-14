@@ -33,7 +33,7 @@
                                 #if( $app.appProvider || $app.themeProvider )
                                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
                                     <div class="thumbnail app">
-                                        <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
+                                        <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
                                             #set($logo = "/theme/apps/marketplace/no_logo.png")
                                             #if($app.logo)
                                             #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
@@ -42,7 +42,7 @@
                                         </a>
                                         <div class="caption">
                                             <h4 class="title">
-                                                <a href="$app.href?websiteName=$!request.params.websiteName&websiteBranch=$!request.params.websiteBranch">
+                                                <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
                                                     $app.title
                                                     <span class="parag-end"></span>
                                                 </a>
