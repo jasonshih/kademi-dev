@@ -59,6 +59,18 @@
                     <form method="post" action="">
                         <div class="step-content">
                             <div class="step-pane active sample-pane alert" data-step="1">
+                                <h4>Saved Configuration</h4>
+                                <div class="col-md-2">
+                                    <select id="savedMappings" class="form-control savedMappings">
+                                        <option>[NONE]</option>
+                                        #foreach($m in $page.savedMappings)
+                                        <option value="$formatter.htmlEncode($formatter.toJson($m))">$m.title</option>
+                                        #end
+                                    </select>
+                                </div>
+
+                                <br/><br/><br/>
+
                                 <h4>Upload Data</h4>
                                 <div id='btn-upload' class="pull-left"></div>
                                 <div class="clearfix"></div>
@@ -81,7 +93,16 @@
                                 <input type="hidden" name="fileHash" value=""/>
 
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-6">
+                                        <div class="form-horizontal">
+                                            <div class="form-group">
+                                                <div class="col-md-2">
+                                                    <button type="button" class="btn btn-info" data-target="#modal-tableUploader-saveMapping" data-toggle="modal"><i class="fa fa-save"></i> Save Configuration</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
 
                                         <div class="form-inline text-right">
                                             <div class="form-group" style="margin-right: 20px">
@@ -211,6 +232,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Start save mapping modal -->
+        <div id="modal-tableUploader-saveMapping" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form form-horizontal">
+                        <input type="hidden" name="saveMapping" value="saveMapping"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Save Configuration</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="mappingTitle" class="col-md-3 control-label">Title</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="mappingTitle" name="mappingTitle" class="form-control required" placeholder="My Mapping"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+        <!-- End -->
 
         <script type="text/javascript" src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>

@@ -9,6 +9,7 @@ var reviewRow = 3;
 
 function initManageTableUploader(hcf) {
     initUploads();
+    initSaveMappings();
 
     hasCustomForm = hcf;
 
@@ -19,6 +20,46 @@ function initManageTableUploader(hcf) {
     }
 }
 
+function initSaveMappings() {
+    var modal = $('#modal-tableUploader-saveMapping');
+    var form = modal.find('form');
+
+    var importerHead = $('#importerHead');
+
+    form.forms({
+        onValid: function (form, config) {
+            var selectedCols = [];
+
+            importerHead.find('select').each(function () {
+                if (this.value) {
+                    selectedCols.push(this.value);
+                }
+            });
+
+            if (!selectedCols.length) {
+                Msg.error('Please select at least 1 destination field to continue.');
+                importerHead.find('select').first().trigger('focus');
+                config.allowPostForm = false;
+            }
+        },
+        beforePostForm: function (form, config, data) {
+            var fields = $("#importerWizard .customForm :input").serializeArray();
+
+            for (var i in fields) {
+                var f = fields[i];
+                f.name = 'options-' + f.name;
+            }
+
+            return data + '&' + importerHead.find(':input').serialize() + '&' + $.param(fields);
+        },
+        onSuccess: function (resp) {
+            modal.modal('hide');
+            Msg.success(resp.messages);
+            $('#savedMappings').reloadFragment();
+        }
+
+    });
+}
 
 function initUploads() {
     var form = $("#importerWizard form");
@@ -83,6 +124,8 @@ function initUploads() {
                 success: function (resp, textStatus, jqXHR) {
                     if (resp.status && resp.data) {
                         populateImportTable($('#importerWizard'), resp.data);
+
+                        updateSelectedConfig(false);
 
                         $('#myWizard').wizard('selectedItem', {step: mapColumnsRow});
                     } else {
@@ -255,6 +298,8 @@ function initUploads() {
 
             populateImportTable(form, resp.result.data);
 
+            updateSelectedConfig(true);
+
             $('#myWizard').wizard("next");
         }
     });
@@ -319,6 +364,36 @@ function populateImportTable(form, data) {
             });
         }
     });
+}
+
+function updateSelectedConfig(loadOptions) {
+    var importerHead = $('#importerHead');
+
+    var opt = $('#savedMappings');
+    var val = opt.val();
+
+    if (val !== '[NONE]') {
+        var json = JSON.parse(val);
+
+        var mappings = json.mappings;
+        for (var i in mappings) {
+            var cols = mappings[i];
+            for (var o in cols) {
+                importerHead.find('[name=col' + cols[o] + ']').val(i).change();
+            }
+        }
+
+        if (loadOptions) {
+            var options = json.options;
+            if (options !== null && typeof options !== 'undefined') {
+                var inputs = $("#importerWizard .customForm");
+
+                for (var o in options) {
+                    inputs.find('[name=' + o + ']').val(options[o]);
+                }
+            }
+        }
+    }
 }
 
 function checkProcessStatus() {
