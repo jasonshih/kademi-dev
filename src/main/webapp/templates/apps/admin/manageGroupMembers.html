@@ -213,9 +213,29 @@
                     if (checkBoxes.length == 0) {
                         Msg.error("Please select the users you want to remove by clicking the checkboxs to the right");
                     } else {
-                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " users?")) {
-                            doRemoveUsers(checkBoxes);
-                        }
+                        Konfirm.error({
+                            title: "Are you sure you want to remove " + checkBoxes.length + " users?"
+                        }, function () {
+                            $.ajax({
+                                type: 'POST',
+                                data: checkBoxes,
+                                dataType: "json",
+                                url: "",
+                                success: function (data) {
+                                    log("success", data);
+                                    if (data.status) {
+                                        Msg.success("Removed members ok");
+                                        $('#manageGroup').reloadFragment();
+                                    } else {
+                                        Msg.error("There was a problem removing users. Please try again and contact the administrator if you still have problems");
+                                    }
+                                    Konfirm.close();
+                                },
+                                error: function (resp) {
+                                    Msg.error("err");
+                                }
+                            });
+                        });
                     }
                 });
             }
@@ -263,27 +283,6 @@
                         tr.append("<td>" + field + "</td>");
                     });
                     tbody.append(tr);
-                });
-            }
-
-            function doRemoveUsers(checkBoxes) {
-                $.ajax({
-                    type: 'POST',
-                    data: checkBoxes,
-                    dataType: "json",
-                    url: "",
-                    success: function (data) {
-                        log("success", data);
-                        if (data.status) {
-                            Msg.success("Removed members ok");
-                            $('#manageGroup').reloadFragment();
-                        } else {
-                            Msg.error("There was a problem removing users. Please try again and contact the administrator if you still have problems");
-                        }
-                    },
-                    error: function (resp) {
-                        Msg.error("err");
-                    }
                 });
             }
 

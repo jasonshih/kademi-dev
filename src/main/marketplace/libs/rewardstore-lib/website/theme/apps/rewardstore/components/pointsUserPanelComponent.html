@@ -21,16 +21,14 @@
 
                 <h3 class="profile-welcome-name"><b>$name</b></h3>
             </div>
+            #set( $rewardStoreApp = $applications.rewardStore )
+            #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
 
-            #if ($rewards != "")
-                #set ($rewards = $rewards.split(","))
-                #set ($rewardsTitles = $rewardsTitles.split(","))
-                #set( $rewardStoreApp = $applications.rewardStore )
-
+            #if ($pointsBuckets)
                 #set ($availablePanel = 0)
-                #foreach($reward in $rewards)
+                #foreach($reward in $pointsBuckets)
                     #set( $myPoint = false )
-                    #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
+                    #set( $myPoint = $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
                     #if ($myPoint)
                         #set ($availablePanel = $availablePanel + 1)
                     #end
@@ -38,11 +36,11 @@
 
                 #if ($availablePanel > 0)
                     <div class="">
-                        #foreach($reward in $rewards)
-                            #set ($rewardPath = "/" + $reward)
+                        #foreach($reward in $pointsBuckets)
+                            #set ($rewardPath = "/" + $reward.name)
                             #set( $rewardFolder = $page.find($rewardPath))
                             #set( $myPoint = false )
-                            #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward) )
+                            #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
 
                             #if ($myPoint)
                                 #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
@@ -52,8 +50,8 @@
                                             <span id="user-total-points" title="$myPointString">$myPointString</span>
                                         </h2>
                                         <small>
-                                            #if ($rewardsTitles[$foreach.index] && $rewardsTitles[$foreach.index] != " ")
-                                                $rewardsTitles[$foreach.index]
+                                            #if ($reward.title && $reward.title != " ")
+                                                $reward.title
                                             #else
                                                 Points
                                             #end
