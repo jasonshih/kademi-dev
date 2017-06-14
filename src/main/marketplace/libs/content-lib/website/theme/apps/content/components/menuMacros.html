@@ -91,10 +91,14 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12"><strong>Hidden</strong></label>
+        <label class="col-sm-12"><strong>Visible</strong></label>
 
         <div class="col-sm-12">
-            <input type="checkbox" name="hidden" />
+            <select class="form-control" name="hidden">
+                <option value="false">Visible for all users</option>
+                <option value="true">Hidden for all users</option>
+                <option value="anon">Visible for not logged in users</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
