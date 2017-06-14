@@ -20,7 +20,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label" for="planName">Plan Name</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="planName" name="planName" value="$!page.subscription.planName" />
+                <input type="text" class="form-control" id="planName" disabled="disabled" name="planName" value="$!page.subscription.planName" />
             </div>
         </div>
 
@@ -30,7 +30,7 @@
                 <div class="form-group">
                     <div class="col-sm-5">
                         <div class="input-group">
-                            <input type="text" name="expiryDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($!page.subscription.expiryDate)" class="form-control DateTime" />
+                            <input type="text" name="expiryDate" disabled="disabled" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($!page.subscription.expiryDate)" class="form-control DateTime" />
                             <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                         </div>
                     </div>
@@ -39,16 +39,16 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="limitsText">Limits Text</label>
+            <label class="col-sm-2 control-label" for="licenseText">License Text</label>
             <div class="col-sm-9">
-                <input type="text" class="form-control required" name="limitsText" value="$!page.subscription.limitsText"/>
+                <input type="text" class="form-control required" disabled="disabled" name="licenseText" value="$!page.subscription.licenseText"/>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label" for="licenseKey">License Key</label>
+            <label class="col-sm-2 control-label" for="licenseSig">License Signature</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control required" name="licenseKey" value="$!page.subscription.licenseKey"/>
+                <input type="text" class="form-control required" name="licenseSig" disabled="disabled" value="$!page.subscription.licenseSig"/>
             </div>
         </div>
         <div class="form-group">
@@ -61,6 +61,53 @@
         </div>
     </form>
     <div class="clearfix"></div>   
+    
+    <div class="panel panel-default">
+        <div id="licensesTableContainer" class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
+                    <colgroup>
+                        <col width="100px" />
+                        <col width="40%" />
+                        <col width="100px" />
+                        <col width="90px" />
+                        <col width="90px" />
+                        <col width="90px" />
+                        <col width="40px" />
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>License Text</th>
+                            <th>License Sig</th>
+                            <th>Plan Name</th>
+                            <th>Created Date</th>
+                            <th>From Date</th>
+                            <th>To Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="licensesTableBody" class="pagination-results">
+                        #foreach($lic in $!page.licenses)
+                        <tr>
+                            <td>$lic.licenseText</td>
+                            <td>$lic.licenseSig</td>
+                            <td>$lic.planName</td>
+                            <td>$!formatter.formatDate($!lic.createdDate)</td>
+                            <td>$!formatter.formatDate($!lic.fromDate)</td>
+                            <td>$!formatter.formatDate($!lic.toDate)</td>
+                            <td>
+                                <a href="$lic.id" class="btn btn-info">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
     <script>
         initUpdateSubscription();
     </script>

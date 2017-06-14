@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Manage License</title>
+        <script type="text/javascript" src="manageSubscriptions.js">//</script>
+    </head>
+    <body>
+    <form action="" method="POST" class="form-horizontal" role="form" id="licenseDetails">
+        <input type="hidden" name="update" value="true"/>
+        <input type="hidden" name="licenseId" value="$page.license.id"/>
+        <div class="form-group">
+            <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="name">Organisation</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control required" id="orgId" data-text="$page.license.subscription.adminOrg.formattedName" name="orgId" value="$!page.license.subscription.adminOrg.id" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="planName">Plan Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="planName" name="planName" value="$!page.license.planName" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="expiryDate">From Date</label>
+            <div class="col-sm-9">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <input type="text" name="fromDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($!page.license.fromDate)" class="form-control DateTime" />
+                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="expiryDate">To Date</label>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="col-sm-5">
+                        <div class="input-group">
+                            <input type="text" name="toDate" placeholder="Expiry date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($!page.license.toDate)" class="form-control DateTime" />
+                            <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="limitsText">License Text</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control required" name="licenseText" value="$!page.license.licenseText"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="licenseKey">License Sig</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control required" name="licenseSig" value="$!page.license.licenseSig"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-9">
+                <button type="submit" class="btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="clearfix"></div>
+    
+    <script>
+        initUpdateLicense();
+    </script>
+    </body>
+</html>

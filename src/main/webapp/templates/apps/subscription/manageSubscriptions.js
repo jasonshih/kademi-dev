@@ -37,7 +37,22 @@ function initUpdateSubscription(){
             }
        },
       onError: function( resp){
-        Msg.error("An error occured updating the subscriptions");
+        Msg.error("An error occured updating the subscription.");
+      }
+   });        
+}
+
+function initUpdateLicense(){
+    jQuery("form#licenseDetails").forms({
+       onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info(resp.messages);
+            } else {
+                Msg.error("An error occured updating the license. Please check your internet connection");
+            }
+       },
+      onError: function( resp){
+        Msg.error("An error occured updating the license.");
       }
    });        
 }
