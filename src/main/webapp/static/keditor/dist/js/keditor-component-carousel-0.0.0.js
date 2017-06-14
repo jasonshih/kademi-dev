@@ -28,17 +28,17 @@
             if (carousel.find('.carousel-img').length === 0) {
                 var self = this;
                 var images = [];
-    
+                
                 carousel.addClass('carousel-fixed-height');
                 carousel.find('.carousel-inner .item').each(function () {
                     var item = $(this);
-    
+                    
                     images.push({
                         src: item.find('img').attr('src'),
                         hash: item.attr('data-hash')
                     });
                 });
-    
+                
                 carousel.attr('data-height', 200).css('height', 200);
                 carousel.find('.carousel-inner').html('');
                 carousel.find('.carousel-indicators').html('');
@@ -64,6 +64,7 @@
         initSettingForm: function (form, keditor) {
             flog('init "carousel" settings', form);
             
+            var self = this;
             return $.ajax({
                 url: '/static/keditor/componentCarouselSettings.html',
                 type: 'get',
@@ -74,7 +75,6 @@
                     var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselImageWrap = form.find('.carouselImageWrap');
-                    var self = this;
                     
                     carouselAddImage.mselect({
                         contentTypes: ['image'],
@@ -120,7 +120,7 @@
                             value = 200;
                             this.value = 200;
                         }
-    
+                        
                         var carousel = keditor.getSettingComponent().find('.carousel');
                         carousel.attr('data-height', value);
                         carousel.css('height', value);
@@ -155,7 +155,7 @@
             form.find('.carouselImageWrap').html('');
             component.find('.carousel-inner > .item').each(function (index, item) {
                 var url = $(item).find('.carousel-img').css('background-image');
-                url = url.replace(/^url\('*(.+)'*\)$/, '$1');
+                url = url.replace(/^url\(['"]*(.+)["']*\)$/, '$1');
                 var hash = $(item).attr('data-hash');
                 self.addImageToList(form, url, hash);
             });

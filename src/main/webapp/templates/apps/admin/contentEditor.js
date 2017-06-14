@@ -129,7 +129,7 @@ function initKEditor(options) {
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         var a = $(this);
         
-        if (a.is('[data-slide-to]')) {
+        if (a.is('[data-slide]')) {
         
         } else {
             e.preventDefault();
