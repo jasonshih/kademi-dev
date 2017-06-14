@@ -208,6 +208,10 @@ table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, 
     font-weight: 300;
 }
 
+.daterangepicker .calendar {
+    max-width: 229px !important;
+}
+
 /* Supports collapse menu even on ipad portrait screen */
 @media (max-width: 991px) {
     .navbar-header {
