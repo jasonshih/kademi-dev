@@ -129,20 +129,20 @@ table.list-view {
     border-bottom: solid @input-border 1px;
     margin-bottom: 10px;
     padding-bottom: 10px;
-
+    
     .comment-user {
         float: left;
         margin-right: 8px;
         width: 52px;
     }
-
+    
     .comment-user-pic {
         img {
             display: block;
             height: 52px;
         }
     }
-
+    
     .comment-user-name {
         text-align: center;
         display: block;
@@ -150,19 +150,19 @@ table.list-view {
         text-overflow: ellipsis;
         text-align: center;
     }
-
+    
     .comment-detail {
         margin: 0 0 0 60px;
     }
-
+    
     .comment-content {
         margin: 0 0 10px;
     }
-
+    
     .comment-reply {
         margin-right: 5px;
     }
-
+    
     .comment-replies-wrapper {
         margin-top: 10px;
     }
@@ -196,7 +196,7 @@ table.list-view {
             height: 100%;
             width: 100%;
         }
-
+        
     }
 }
 
@@ -228,16 +228,16 @@ ul.tools {
 
 .form-horizontal.form-horizontal-narrow {
     .control-label {
-
+    
     }
     .controls {
-
+    
     }
 }
 
 .form-horizontal.form-horizontal-narrower {
     .control-label {
-
+    
     }
     .controls {
     }
@@ -290,7 +290,7 @@ ul.tools {
     left: -50%;
     text-align: left;
     position: relative;
-
+    
     .centerInner {
         left: 50%;
         position: relative;
@@ -386,16 +386,16 @@ ul.tools {
 .tabs-below {
     > .nav-tabs {
         border-top: 1px solid #ddd;
-
+        
         > li {
             margin-top: -1px;
             margin-bottom: 0;
-
+            
             > a {
                 -webkit-border-radius: 0 0 4px 4px;
                 -moz-border-radius: 0 0 4px 4px;
                 border-radius: 0 0 4px 4px;
-
+                
                 &:hover, &:focus {
                     border-top-color: #ddd;
                     border-bottom-color: transparent;
@@ -413,7 +413,7 @@ ul.tools {
 .tabs-left, .tabs-right {
     > .nav-tabs > li {
         float: none;
-
+        
         > a {
             min-width: 74px;
             margin-right: 0;
@@ -426,18 +426,18 @@ ul.tools {
     float: left;
     margin-right: 19px;
     border-right: 1px solid #ddd;
-
+    
     > li > a {
         margin-right: -1px;
         -webkit-border-radius: 4px 0 0 4px;
         -moz-border-radius: 4px 0 0 4px;
         border-radius: 4px 0 0 4px;
-
+        
         &:hover, &:focus {
             border-color: #eee #ddd #eee #eee;
         }
     }
-
+    
     > .active a {
         &, &:hover, &:focus {
             border-color: #ddd transparent #ddd #ddd;
@@ -450,18 +450,18 @@ ul.tools {
     float: right;
     margin-left: 19px;
     border-left: 1px solid #ddd;
-
+    
     > li > a {
         margin-left: -1px;
         -webkit-border-radius: 0 4px 4px 0;
         -moz-border-radius: 0 4px 4px 0;
         border-radius: 0 4px 4px 0;
-
+        
         &:hover, &:focus {
             border-color: #eee #eee #eee #ddd;
         }
     }
-
+    
     > .active a {
         &, &:hover, &:focus {
             border-color: #ddd #ddd #ddd transparent;
@@ -529,7 +529,7 @@ ul.tools {
     border: 1px solid @panel-inner-border;
     .border-top-radius((@panel-border-radius - 1));
     .border-bottom-radius((@panel-border-radius - 1));
-
+    
     .tile-content {
         margin: 15px;
         p {
@@ -620,11 +620,11 @@ h2.course-selector {
         padding-bottom: 10px;
         min-height: 130px;
     }
-
+    
     .dropdown-menu li > div.loading {
         background: url("/static/images/loading.gif") 50% 50% no-repeat;
     }
-
+    
     .dropdown-menu li > p {
         border-bottom: 2px solid #ccc;
         margin-bottom: 0;
@@ -634,7 +634,7 @@ h2.course-selector {
         padding: 5px;
         text-decoration: none;
     }
-
+    
     .dropdown-menu li a.active {
         background: #428BCA;
         color: #fff;
@@ -671,7 +671,7 @@ h2.course-selector {
     .border-top-radius((@panel-border-radius - 1));
     .border-bottom-radius((@panel-border-radius - 1));
     position: relative;
-
+    
     .module-image-time {
         position: absolute;
         bottom: 5px;
@@ -763,13 +763,12 @@ h2.course-selector {
 .row-sm {
     margin-left: -5px;
     margin-right: -5px;
-
+    
     [class*="col-"] {
         padding-left: 5px;
         padding-right: 5px;
     }
 }
-
 
 // ==================================================
 // Inverse styles
@@ -792,23 +791,41 @@ h2.course-selector {
 .breadcrumb-inverse {
     background: @breadcrumb-inverse-bg;
     color: @breadcrumb-inverse-color;
-    li a{
+    li a {
         color: @breadcrumb-inverse-color;
     }
-    li.active a{
+    li.active a {
         color: lighten(@gray-light, 55%);
     }
 }
 
 .video-wrapper {
     .clearfix;
-
+    
     .jw_container_outer {
         .clearfix;
     }
-
+    
     .jwplayer-wrapper {
         float: left;
+    }
+}
+
+// ==================================================
+// Carousel components
+// ==================================================
+.carousel-fixed-height {
+    .carousel-inner {
+        height: 100%;
+        
+        > .item {
+            height: 100%;
+            
+            .carousel-img {
+                background: no-repeat 50% 50% / cover;
+                height: 100%;
+            }
+        }
     }
 }
 

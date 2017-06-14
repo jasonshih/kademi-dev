@@ -15,6 +15,22 @@
 }
 
 /* ============================================================================
+   Carousel
+   ============================================================================ */
+.carousel-fixed-height .carousel-inner {
+    height: 100%;
+}
+
+.carousel-fixed-height .carousel-inner > .item {
+    height: 100%;
+}
+
+.carousel-fixed-height .carousel-inner > .item .carousel-img {
+    background: no-repeat 50% 50% / cover;
+    height: 100%;
+}
+
+/* ============================================================================
    Dropzone
    ============================================================================ */
 .dropzone a.dz-remove, .dropzone-previews a.dz-remove {

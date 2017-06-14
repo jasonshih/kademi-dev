@@ -127,9 +127,15 @@ function initKEditor(options) {
     
     // Stop prevent reloading page or redirecting to other pages
     $(document.body).on('click', '.keditor-component-content a', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        e.stopPropagation();
+        var a = $(this);
+        
+        if (a.is('[data-slide-to]')) {
+        
+        } else {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.stopPropagation();
+        }
     });
 }
 
