@@ -110,7 +110,7 @@
             url: '/static/jquery.edmEditor/1.0.0/jquery.edmEditorStyles-1.0.0.css',
             type: 'get',
             success: function (resp) {
-                flog('[jquery.edmEditor] EDM default styles are loaded');
+                flog('[jquery.edmEditor] EDM default styles are loaded\n', resp);
                 edmEditor.defaultStyles = resp;
             }
         });
@@ -194,7 +194,9 @@
             '<div id="edm-footer">' + edmFooterContent + '</div>'
         );
         
-        return fragment.find('style').html();
+        var edmStyle = fragment.find('style').html();
+        
+        return edmStyle === undefined || !edmStyle ? '' : edmStyle;
     };
     
     edmEditor.rgb2Hex = function (value) {
@@ -691,7 +693,7 @@
                             content: edmStyle || edmEditor.defaultStyles
                         });
                     } else {
-                        $('head').append('<style type="text/css" id="edm-base-style">' + edmStyle || edmEditor.defaultStyles + '</style>');
+                        $('head').append('<style type="text/css" id="edm-base-style">' + (edmStyle || edmEditor.defaultStyles) + '</style>');
                     }
                     
                     target.keditor({
