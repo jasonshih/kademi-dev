@@ -86,10 +86,6 @@
                 reloadQuoteTable();
             }
         });
-        
-        modal.find("#add-quote-button").on("click", function() {
-            $("#add-quote-form").submit();
-        });
     }
 
     function initQuoteStatusSelect() {
