@@ -15,11 +15,7 @@
             <option value="">[No default group]</option>
             #foreach($group in $rootFolder.groups)
             <option value="$group.name">
-                #if( $group.title)
-                $group.title
-                #else
-                $group.name
-                #end
+                $formatter.firstNotNull($group.title, $group.name)
             </option>
             #end
         </select>
