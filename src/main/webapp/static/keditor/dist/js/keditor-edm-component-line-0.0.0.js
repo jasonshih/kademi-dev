@@ -40,15 +40,23 @@
                         keditor.getSettingComponent().find('.wrapper div').css('height', this.value);
                     });
     
-                    var lineHeight = form.find('#line-width');
-                    lineHeight.on('change', function () {
+                    var lineWidth = form.find('#line-width');
+                    lineWidth.on('change', function () {
                         keditor.getSettingComponent().find('.wrapper table').attr('width', this.value);
+                    });
+                    
+                    form.find('[name=width]').on('click', function () {
+                        lineWidth.prop('disabled', this.value);
+                        
+                        if (this.value) {
+                            keditor.getSettingComponent().find('.wrapper table').attr('width', '100%');
+                        }
                     });
     
                     var lineColorPicker = form.find('.line-color-picker');
                     edmEditor.initSimpleColorPicker(lineColorPicker, function (color) {
                         var wrapper = keditor.getSettingComponent().find('.wrapper');
-                        var div = wrapper.children('div');
+                        var div = wrapper.find('div');
         
                         edmEditor.setStyles('background-color', color, div);
                     });
@@ -65,12 +73,13 @@
 
             var lineWidth = form.find('#line-width');
             var width = component.find('.wrapper table').attr('width');
-            lineWidth.val(width ? width.replace('px', '') : '0');
+            form.find('[name=width]')[width === '100%' ? 'filter' : 'not']('[value="line-full-width"]').trigger('click');
+            lineWidth.val(width === '100%' ? '' : width ? width.replace('px', '') : '0');
             
             edmEditor.showDefaultComponentControls(form, component, keditor);
 
             var wrapper = component.find('.wrapper');
-            var div = wrapper.children('div');
+            var div = wrapper.find('div');
             var lineColorPicker = form.find('.line-color-picker');
             lineColorPicker.val(div.css('background-color') || '').trigger('update');
         }
