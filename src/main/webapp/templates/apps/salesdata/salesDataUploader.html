@@ -4,9 +4,7 @@
         <select id="salesDataSeries" name="salesDataSeries" class="form-control">
             <option value="">[No Sales Data Series Selected]</option>
             #foreach($sds in $rootFolder.find("/sales/").children.ofType.salesDataSeries)
-            <option value="$sds.name">
-                $formatter.firstNotNull($sds.title, $sds.name)
-            </option>
+            $formatter.option($sds.name, $formatter.firstNotNull($sds.title, $sds.name), $request.params.salesDataSeries)
             #end
         </select>
     </div>
