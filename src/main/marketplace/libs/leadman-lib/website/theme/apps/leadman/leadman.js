@@ -716,10 +716,6 @@ function initNewQuoteForm() {
 
     $('#quoteExpiryDate').datetimepicker(opts);
 
-    modal.find("#add-quote-button").on("click", function () {
-        $("#add-quote-form").submit();
-    });
-
     $('#quoteExpiryDate').on('dp.show', function () {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {

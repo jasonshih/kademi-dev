@@ -1,0 +1,11 @@
+<div class="form-group" >
+    <label class="control-label col-md-2" for="defaultGsalesDataSeriesroup">Sales Data Series: </label>
+    <div class="col-md-10">
+        <select id="salesDataSeries" name="salesDataSeries" class="form-control">
+            <option value="">[No Sales Data Series Selected]</option>
+            #foreach($sds in $rootFolder.find("/sales/").children.ofType.salesDataSeries)
+            $formatter.option($sds.name, $formatter.firstNotNull($sds.title, $sds.name), $request.params.salesDataSeries)
+            #end
+        </select>
+    </div>
+</div>
