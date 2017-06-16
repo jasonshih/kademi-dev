@@ -2,11 +2,11 @@
     "appDependencies": [
         {
             "appId": "moment-lib",
-            "branch": "2.18.1"
+            "branch": "2.18.2"
         },
         {
             "appId": "dropzone-lib",
-            "branch": "4.3.0"
+            "branch": "4.3.0.1"
         },
         {
             "appId": "nvd3-lib",

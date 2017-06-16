@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "search-lib",
-            "branch": "1.0.0"
+            "branch": "1.0.3"
         }
     ],
     "dependencies": [
