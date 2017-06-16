@@ -7,45 +7,48 @@
         #macro(rightSidebar $store)
             #script()
                 <script>
-                    var shopStore = page.find(templatingContext.store.href);
-                    if(shopStore) {
-                        var productsSearch = shopStore.searchProducts(null, null, 0, 100, 'product', false);
-                        var lastViewedCookie = http.request.getCookie('viewed-products');
-                        if (lastViewedCookie) {
-                            lastViewedCookie = decodeURIComponent(lastViewedCookie.value);
-                        }
-                        lastViewedCookie = ',' + lastViewedCookie + ',';
-                        var recentlyAdded = [];
-                        var lastViewed = [];
+                    if(page) {
+                        var shopStore = page.find(templatingContext.store.href);
+                        if(shopStore) {
+                            var productsSearch = shopStore.searchProducts(null, null, 0, 100, 'product', false);
+                            var lastViewedCookie = http.request.getCookie('viewed-products');
+                            if (lastViewedCookie) {
+                                lastViewedCookie = decodeURIComponent(lastViewedCookie.value);
+                            }
+                            lastViewedCookie = ',' + lastViewedCookie + ',';
+                            var recentlyAdded = [];
+                            var lastViewed = [];
 
-                        for (var i = 0; i < productsSearch.hits.hits.length; i++) {
-                            var product = productsSearch.hits.hits[i];
-                            var productId = ',' + product.fields.product.value + ',';
+                            for (var i = 0; i < productsSearch.hits.hits.length; i++) {
+                                var product = productsSearch.hits.hits[i];
+                                var productId = ',' + product.fields.product.value + ',';
 
-                            if (i < 2) {
-                                recentlyAdded.push(product);
+                                if (i < 2) {
+                                    recentlyAdded.push(product);
+                                }
+
+                                if (lastViewedCookie.indexOf(productId) !== -1 && lastViewed.length <= 2) {
+                                    lastViewed.push(product);
+                                }
                             }
 
-                            if (lastViewedCookie.indexOf(productId) !== -1 && lastViewed.length <= 2) {
-                                lastViewed.push(product);
+                            if (lastViewed.length > 0) {
+                                lastViewed.sort(function (a, b) {
+                                    var productAId = ',' + a.fields.product.value + ',';
+                                    var productBId = ',' + b.fields.product.value + ',';
+
+                                    return lastViewedCookie.indexOf(productAId) - lastViewedCookie.indexOf(productBId);
+                                });
                             }
+
+                            templatingContext.lastViewed = lastViewed;
+                            templatingContext.recentlyAdded = recentlyAdded;
+                        } else {
+                            templatingContext.lastViewed = [];
+                            templatingContext.recentlyAdded = [];
                         }
-
-                        if (lastViewed.length > 0) {
-                            lastViewed.sort(function (a, b) {
-                                var productAId = ',' + a.fields.product.value + ',';
-                                var productBId = ',' + b.fields.product.value + ',';
-
-                                return lastViewedCookie.indexOf(productAId) - lastViewedCookie.indexOf(productBId);
-                            });
-                        }
-
-                        templatingContext.lastViewed = lastViewed;
-                        templatingContext.recentlyAdded = recentlyAdded;
-                    } else {
-                        templatingContext.lastViewed = [];
-                        templatingContext.recentlyAdded = [];
                     }
+
 
                 </script>
             #end
