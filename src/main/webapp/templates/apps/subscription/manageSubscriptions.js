@@ -1,5 +1,11 @@
-$(function () {
-    
+function initOrgFinder() {
+    $('input#orgId').entityFinder({
+        useActualId: true,
+        type: 'organisation'
+    });
+}
+
+function initCreateSubscription(){
     jQuery("form.createSubscription").forms({
         callback: function () {
             $.ajax({
@@ -19,14 +25,39 @@ $(function () {
             });
         }
     });
-    
-    function initOrgFinder() {
-        $('input#orgId').entityFinder({
-            useActualId: false,
-            type: 'organisation'
-        });
-    }
-    
+}
+
+function initUpdateSubscription(){
+    jQuery("form#subscriptionDetails").forms({
+       onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info(resp.messages);
+            } else {
+                Msg.error("An error occured updating the subscription. Please check your internet connection");
+            }
+       },
+      onError: function( resp){
+        Msg.error("An error occured updating the subscription.");
+      }
+   });        
+}
+
+function initUpdateLicense(){
+    jQuery("form#licenseDetails").forms({
+       onSuccess: function (resp) {
+            if (resp.status) {
+                Msg.info(resp.messages);
+            } else {
+                Msg.error("An error occured updating the license. Please check your internet connection");
+            }
+       },
+      onError: function( resp){
+        Msg.error("An error occured updating the license.");
+      }
+   });        
+}
+
+function initDeleteSubscriptions(){
     $('body').on('click', '.btn-delete-subscriptions', function (e) {
         e.preventDefault();
         var listToDelete = [];
@@ -43,29 +74,7 @@ $(function () {
             Msg.error('Please select the subscriptions you want to remove by clicking the checkboxes on the right');
         }
     });
-    
-    function deleteSubscriptions(listToDelete) {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: window.location.pathname,
-            data: {
-                deleteSubscriptions: listToDelete,
-            },
-            success: function (data) {
-                if (data.status) {
-                    Msg.info(data.messages);
-                    $("#subscriptionsTableBody").reloadFragment();
-                } else {
-                    Msg.error("An error occured deleting the subscriptions. Please check your internet connection");
-                }
-            },
-            error: function (resp) {
-                Msg.error("An error occured deleting the subscriptions");
-            }
-        });
-    }
-    
+
     $('body').on('change', '.check-all', function (e) {
         flog($(this).is(":checked"));
         var checkedStatus = this.checked;
@@ -73,6 +82,33 @@ $(function () {
             $(this).prop('checked', checkedStatus);
         });
     });
-    
-    initOrgFinder();
-});
+}
+
+function deleteSubscriptions(listToDelete) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: window.location.pathname,
+        data: {
+            deleteSubscriptions: listToDelete,
+        },
+        success: function (data) {
+            if (data.status) {
+                Msg.info(data.messages);
+                $("#subscriptionsTableBody").reloadFragment();
+            } else {
+                Msg.error("An error occured deleting the subscriptions. Please check your internet connection");
+            }
+        },
+        error: function (resp) {
+            Msg.error("An error occured deleting the subscriptions");
+        }
+    });
+}
+
+function initManageSubscriptions(){
+    initCreateSubscription();
+    initDeleteSubscriptions();
+}
+
+initOrgFinder();

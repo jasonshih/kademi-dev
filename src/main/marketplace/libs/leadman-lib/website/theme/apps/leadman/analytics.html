@@ -1,37 +1,41 @@
 <html>
-<head>
-    <title>Analytics</title>
-</head>
-<body>
-<div id="leadAnalyticsPage">
-    <section>
-        <div class="container-bg">
-            <div class="container-layout container-fluid">
-                <div class="container-content-wrapper">
-                <div class="row">
-                    <div class="col-md-6" data-type="container-content">
-                        <section data-type="component-leadAnalyticsStats">
-                            <div data-dynamic-href="_components/leadAnalyticsStats"></div>
-                        </section>
-                    </div>
-                    <div class="col-md-6" data-type="container-content">
-                        <section data-type="component-leadAnalyticsFunnel">
-                            <div data-dynamic-href="_components/leadAnalyticsFunnel"></div>
-                        </section>
+    <head>
+        <title>Analytics</title>
+    </head>
+    <body>
+        <div id="leadAnalyticsPage">
+            <section>
+                <div class="container-bg">
+                    <div class="container-layout container-fluid">
+                        <div class="container-content-wrapper">
+                            <div class="row">
+                                <div class="col-md-6" data-type="container-content">
+                                    <section data-type="component-dateRange" data-picker-align="left" data-picker-size="btn-md" data-picker-color="btn-primary">
+                                        <div data-dynamic-href="_components/dateRange" id="keditor-dynamic-element-1497437081559"></div>
+                                    </section>
+                                    
+                                    <section data-type="component-leadAnalyticsStats">
+                                        <div data-dynamic-href="_components/leadAnalyticsStats"></div>
+                                    </section>
+                                </div>
+                                <div class="col-md-6" data-type="container-content">
+                                    <section data-type="component-leadAnalyticsFunnel">
+                                        <div data-dynamic-href="_components/leadAnalyticsFunnel"></div>
+                                    </section>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12" data-type="container-content">
+                                    <section data-type="component-leadAnalyticsTable">
+                                        <div data-dynamic-href="_components/leadAnalyticsTable"></div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-12" data-type="container-content">
-                        <section data-type="component-leadAnalyticsTable">
-                            <div data-dynamic-href="_components/leadAnalyticsTable"></div>
-                        </section>
-                    </div>
-                </div>
-                </div>
-            </div>
+            </section>
         </div>
-    </section>
-</div>
-</body>
+    </body>
 </html>
 

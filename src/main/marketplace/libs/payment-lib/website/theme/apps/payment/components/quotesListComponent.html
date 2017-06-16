@@ -119,15 +119,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="modal fade" id="addQuoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                        <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="add-quote-form" class="form-horizontal" method="POST" action=".">
+                                        <form id="add-quote-form" class="form-horizontal" method="POST" action=".">
+                                            <div class="modal fade" id="addQuoteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                            <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
+                                                        </div>
+                                                        <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
                                                                 <div class="col-sm-8">
@@ -153,15 +153,15 @@
                                                                 </div>
                                                             </div>
                                                             <input type="hidden" name="createQuoteFolder" value="true" />
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                                                        <button id="add-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                                            <button id="add-quote-button" type="button" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div><!-- /.modal -->
+                                            </div><!-- /.modal -->
+                                        </form>
                                     </div>
                                 </div>
 

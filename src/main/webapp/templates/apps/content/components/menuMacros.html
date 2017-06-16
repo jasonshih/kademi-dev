@@ -11,39 +11,62 @@
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show user menu or not</label><br />
-        <input type="checkbox" class="cbb-show-user-menu" />
+        <label>Display menu item as</label><br />
+        <select class="cbb-display-menu-item form-control">
+            <option value="text">Text</option>
+            <option value="text-icon">Text &amp; icon</option>
+            <option value="icon">Icon</option>
+        </select>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show search form or not</label><br />
-        <input type="checkbox" class="cbb-show-search" />
+        <label>
+            <input type="checkbox" class="chk-show-user-menu" />
+            Show profile drop-down
+        </label>
+        <br />        
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show organisation selector or not</label><br />
-        <input type="checkbox" class="cbb-show-org-selector" />
+        <label>
+            <input type="checkbox" class="chk-show-search" />
+            Show search form
+        </label><br />        
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-sm-12">
+        <label>
+            <input type="checkbox" class="chk-show-org-selector" />
+            Organisation selector
+        </label><br />        
         <small class="help-block text-mute">Requires <code>reporting-lib</code></small>
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show language selector or not</label><br />
-        <input type="checkbox" class="cbb-show-lang-selector" />
+        <label>
+            <input type="checkbox" class="chk-show-lang-selector" />
+            Language selector
+        </label><br />        
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Inverse menu</label><br />
-        <input type="checkbox" class="cbb-inverse-menu" />
+        <label>
+            <input type="checkbox" class="chk-inverse-menu" />
+            Inverse menu
+        </label><br />        
     </div>
 </div>
 <div class="form-group">
     <div class="col-sm-12">
-        <label>Show sub menu on hover</label><br />
-        <input type="checkbox" class="cbb-show-sub-menu-on-hover" />
+        <label>
+            <input type="checkbox" class="chk-show-sub-menu-on-hover" />
+            Show sub menu on hover
+        </label><br />        
     </div>
 </div>
 <hr />
@@ -81,10 +104,14 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-12"><strong>Hidden</strong></label>
+        <label class="col-sm-12"><strong>Visible</strong></label>
 
         <div class="col-sm-12">
-            <input type="checkbox" name="hidden" />
+            <select class="form-control" name="hidden">
+                <option value="false">Visible for all users</option>
+                <option value="true">Hidden for all users</option>
+                <option value="anon">Visible for not logged in users</option>
+            </select>
         </div>
     </div>
     <div class="form-group">

@@ -5,6 +5,10 @@
         filters: null,
         stage: null
     };
+    
+    $(document).on("pageDateChanged", function() {
+        loadFunnel();
+    });
 
     loadFunnel = function (url) {
         var data_url = url || w.location.pathname + "?asJson&" + $.param(searchOptions);

@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <title>License</title>
+    </head>
+    <body>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-bar-chart-o"></i>
+                License details
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <p>These are the details of your license:</p>
+                    <ul>
+                        <li><h4>Plan: $page.license.planName </h4></li>
+                        <li><h4>Created Date: $!formatter.formatDate($page.license.createdDate) </h4></li>
+                        <li><h4>Expiration Date: $page.license.toDate </h4></li>
+                    </ul>
+                    <a href="$page.licenseServerAddress" class="btn btn-success">Manage Details</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -583,7 +583,7 @@
             var itemHref = menuItem.attr('data-href');
             var itemText = menuItem.children('.menuItemText').text().trim();
             var isCustom = itemId.startsWith('menu-custom-'); // different format to native menu items
-            var isHidden = menuItem.attr('data-hidden');
+            var hidden = menuItem.attr('data-hidden');
             
             list.push({
                 id: itemId,
@@ -592,7 +592,7 @@
                 ordering: i,
                 parentId: parentId,
                 custom: isCustom,
-                hidden: isHidden
+                hidden: hidden
             });
             
             contentEditor.toMenuData(li.children('.menuList'), list);
@@ -746,11 +746,11 @@
             var id = menuItem.attr('data-id');
             var text = menuItem.find('.menuItemText').text().trim();
             var href = menuItem.attr('data-href');
-            var isHidden = menuItem.attr('data-hidden') === 'true';
+            var hidden = menuItem.attr('data-hidden') || 'false';
             
             menuItemEditor.find('input[name=href]').val(href);
             menuItemEditor.find('input[name=text]').val(text);
-            menuItemEditor.find('input[name=hidden]').prop('checked', isHidden);
+            menuItemEditor.find('[name=hidden]').val(hidden)
             
             var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
             if (id.startsWith('menu-custom-')) {
@@ -769,10 +769,10 @@
             var href = menuItemEditor.find('input[name=href]').val();
             var text = menuItemEditor.find('input[name=text]').val();
             text = text.trim();
-            var isHidden = menuItemEditor.find('input[name=hidden]').is(':checked');
+            var hidden = menuItemEditor.find('[name=hidden]').val();
             
             editItem.attr('data-href', href);
-            editItem.attr('data-hidden', isHidden);
+            editItem.attr('data-hidden', hidden);
             editItem.find('.menuItemText').text(text);
             editItem = null;
             
@@ -822,6 +822,12 @@
                 }
             });
         });
+        
+        var groupsStr = '';
+        $.each(keditor.options.allGroups, function (name, title) {
+            groupsStr += '<option value="' + name + '">Visible only for "' + title + '"</option>';
+        });
+        menuItemEditor.find('[name=hidden]').append(groupsStr);
     };
     
     contentEditor.showDefaultMenuControls = function (form, component, keditor) {
