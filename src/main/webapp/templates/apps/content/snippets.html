@@ -8,7 +8,7 @@
 <!-- DYNAMIC COMPONENTS -->
 <!-------------------------------------------------------------------------------------------------->
 #foreach( $component in $page.components )
-<div data-type="component-${component.componentId}" data-preview="${component.previewImageHref}" #foreach( $defaultAtt in $component.defaultAtts.entrySet()) data-${defaultAtt.key}="$!{defaultAtt.value}" #end data-keditor-title="$!{component.description}" data-categories="$!{component.categories};Dynamic component">
+<div data-type="component-${component.componentId}" data-preview="${component.previewImageHref}" #foreach( $defaultAtt in $component.defaultAtts.entrySet()) data-${defaultAtt.key}="$!{defaultAtt.value}" #end data-keditor-title="$!{component.description}" data-keditor-categories="$!{component.categories};Dynamic component">
         $component.snippetHtml
     </div>
 #end
