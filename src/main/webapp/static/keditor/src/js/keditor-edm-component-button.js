@@ -44,7 +44,7 @@
                         var dataCss = input.attr('data-css');
         
                         edmEditor.initPaddingControl(input, function (value) {
-                            edmEditor.setStyles(dataCss, value, keditor.getSettingComponent().find('.button-inner'));
+                            edmEditor.setStyles(dataCss, value + 'px', keditor.getSettingComponent().find('.button-inner'));
                         });
                     });
     
@@ -143,8 +143,8 @@
             
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
-                var propName = input.attr('data-prop');
-                var value = buttonInner.get(0).style[propName];
+                var propName = input.attr('data-css');
+                var value = buttonInner.css(propName);
                 
                 input.val(value ? value.replace('px', '') : '0');
             });
