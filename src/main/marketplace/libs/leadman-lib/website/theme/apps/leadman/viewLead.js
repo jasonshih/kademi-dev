@@ -577,6 +577,10 @@
 
 
     function initTagsInput() {
+        if ($("#view-lead-tags").length === 0) {
+            return;
+        }
+        
         var tagsSearch = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
