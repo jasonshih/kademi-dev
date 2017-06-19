@@ -35,7 +35,6 @@
 
         $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
         $templater.pushLess("/theme/theme-params.less", "all")
-        $templater.pushLess("/theme/ktoolbar.less", "all")
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
