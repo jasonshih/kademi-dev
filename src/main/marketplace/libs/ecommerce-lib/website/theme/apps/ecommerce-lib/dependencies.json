@@ -1,6 +1,5 @@
 {
     "appDependencies": [
-
     ],
     "dependencies": [
         {
@@ -73,6 +72,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/ecommerce/storeCheckout.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/ecommerce-store.js"
             }
         }
     ]
