@@ -843,7 +843,7 @@ function initNoteMoreLess() {
 function initChangeLeadAvatar() {
     var url = $('#btn-change-lead-ava').data("href");
 
-    $('#btn-change-lead-ava').upcropImage({
+    $('#btn-change-lead-ava, .change-lead-avatar').upcropImage({
         url: url,
         onCropComplete: function (resp) {
             flog("onCropComplete:", resp, resp.nextHref);
