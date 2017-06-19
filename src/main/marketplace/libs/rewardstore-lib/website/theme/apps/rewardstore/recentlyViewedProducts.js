@@ -7,6 +7,7 @@ $(function () {
         if (slider.length) {
             slider.not('.slick-initialized').slick({
                 dots: false,
+                draggable: false,
                 infinite: true,
                 speed: 300,
                 slidesToShow: 5,

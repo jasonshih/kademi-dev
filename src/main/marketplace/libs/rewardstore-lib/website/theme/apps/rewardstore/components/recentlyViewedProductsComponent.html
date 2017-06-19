@@ -15,7 +15,7 @@
             #else
                 #foreach($p in $recentlyViewedRewardProducts)
                     #if($foreach.count <= $number)
-                        #set ($prodUrl = "/$reward/$p.parent.name/$p.name")
+                        #set ($prodUrl = $p.href)
 
                         #set($bg = "/static/images/photo_holder.png")
                         #if( $p.primaryImageHref )
