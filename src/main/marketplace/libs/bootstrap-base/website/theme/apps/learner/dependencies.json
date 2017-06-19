@@ -67,12 +67,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/competitionPage.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/theme/apps/learner/moduleSearch.js"
             }
         },
