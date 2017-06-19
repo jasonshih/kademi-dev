@@ -41,7 +41,6 @@
         $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
         $templater.pushLess("/theme/theme-params.less", "all")
         $templater.pushLess("/theme/styles.less", "all")
-        $templater.pushLess("/theme/ktoolbar.less", "all")
         $!bodyContent
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
