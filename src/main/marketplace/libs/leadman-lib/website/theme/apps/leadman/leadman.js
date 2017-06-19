@@ -28,6 +28,7 @@ function initLeadManEvents() {
     initTopNavSearch();
     initOrgSearch();
     initProfileSearchTable();
+    initTagsInput();
     initAudioPlayer();
     initDeleteFile();
     initCreatedDateModal();
@@ -1345,6 +1346,29 @@ function initProfileSearchTable() {
             $('#table-result table').addClass('hide');
         } catch (ex) {
             flog('json parsing error', ex);
+        }
+    });
+}
+
+function initTagsInput() {
+    var tagsSearch = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+            url: '/leads/?asJson&tags&q=%QUERY',
+            wildcard: '%QUERY'
+        }
+    });
+
+    tagsSearch.initialize();
+
+    $(".tag-finder").tagsinput({
+        itemValue: 'id',
+        itemText: 'name',
+        typeaheadjs: {
+            name: tagsSearch.name,
+            displayKey: 'name',
+            source: tagsSearch.ttAdapter()
         }
     });
 }

@@ -2,11 +2,11 @@
     "appDependencies": [
         {
             "appId": "moment-lib",
-            "branch": "2.18.1"
+            "branch": "2.18.2"
         },
         {
             "appId": "dropzone-lib",
-            "branch": "4.3.0"
+            "branch": "4.3.0.1"
         },
         {
             "appId": "nvd3-lib",
@@ -132,6 +132,18 @@
                 "group": "main",
                 "path": "/theme/apps/leadman/leadTasks.js"
             }
+        }, 
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"
+            }
+        },
+         {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-typeahead/0.4.2/bootstrap3-typeahead.min.js"
+            }
         },
         {
             "css": {
@@ -185,6 +197,12 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/leadman/analytics.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css"
             }
         }
     ]

@@ -471,7 +471,7 @@
             
             snippets.each(function () {
                 var snippet = $(this);
-                var categories = snippet.attr('data-categories') || '';
+                var categories = snippet.attr('data-keditor-categories') || '';
                 var filterCategories = categories.toLowerCase();
                 categories = categories.split(options.snippetsCategoriesSeparator);
                 filterCategories = filterCategories.split(options.snippetsCategoriesSeparator);
@@ -587,11 +587,11 @@
                 var type = snippet.attr('data-type');
                 var title = snippet.attr('data-keditor-title');
                 var snippetHtml = '';
-                var categories = snippet.attr('data-categories') || '';
+                var categories = snippet.attr('data-keditor-categories') || '';
                 
                 flog('Snippet #' + i + ' type=' + type + ' categories=' + categories, previewUrl, content);
                 
-                snippetHtml += '<section class="keditor-ui keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '"' : '') + ' title="' + title + '" data-categories="' + categories + '">';
+                snippetHtml += '<section class="keditor-ui keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '"' : '') + ' title="' + title + '" data-keditor-categories="' + categories + '">';
                 snippetHtml += '   <img class="keditor-ui keditor-snippet-preview" src="' + previewUrl + '" />';
                 snippetHtml += '</section>';
                 
@@ -605,7 +605,7 @@
                     self.snippetsComponentCategories = self.snippetsComponentCategories.concat(categories);
                 }
                 
-                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type', 'data-keditor-title', 'data-categories'], true);
+                var dataAttributes = self.getDataAttributes(snippet, ['data-preview', 'data-type', 'data-keditor-title', 'data-keditor-categories'], true);
                 snippetsContentHtml += '<script id="keditor-snippet-' + i + '" type="text/html" ' + dataAttributes.join(' ') + '>' + content + '</script>';
             });
             
