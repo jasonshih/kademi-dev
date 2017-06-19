@@ -19,7 +19,11 @@
         {
             "appId": "entityFinder-lib",
             "branch": "1.0.0"
-        }        
+        },
+        {
+            "appId": "bootstrap-tagsinput-lib",
+            "branch": "0.6.1"
+        }  
     ],
 
     "dependencies": [
@@ -138,18 +142,6 @@
             }
         }, 
         {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"
-            }
-        },
-         {
-            "js": {
-                "group": "main",
-                "path": "/static/bootstrap-typeahead/0.4.2/bootstrap3-typeahead.min.js"
-            }
-        },
-        {
             "css": {
                 "cssMedia": "all",
                 "path": "/static/DataTables/datatables.min.css"
@@ -204,9 +196,8 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css"
+            "less": {
+                "path": "/theme/apps/leadman/leadman-typeahead.less"
             }
         }
     ]
