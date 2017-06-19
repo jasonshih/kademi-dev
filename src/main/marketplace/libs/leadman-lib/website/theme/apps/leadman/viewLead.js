@@ -649,7 +649,8 @@
             }
             
             var tag = event.item;
-            // Do some processing here
+            
+            $("#membershipsContainer .twitter-typeahead input").data("adding", true);
             
             $.ajax({
                 type: 'POST',
@@ -658,6 +659,8 @@
                     addTag: tag.id
                 },
                 success: function (resp) {
+                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
+                    
                     if (resp.status) {
                         reloadTags();
                     } else {
@@ -667,11 +670,45 @@
                     }
                 },
                 error: function (e) {
+                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
+                    
                     Msg.error(e.status + ': ' + e.statusText);
                     
                     reloadTags();
                 }
             });
+        });
+        
+        
+        $("#membershipsContainer .twitter-typeahead input").on("keyup", function(event) {
+            if (event.keyCode !== 13 || $(this).data("adding") === true) {
+                return;
+            }
+            
+            if (confirm('Are you sure you want to add this tag?')) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        title: $(this).val()
+                    },
+                    success: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages);
+                            reloadTags();
+                        } else {
+                            Msg.error("Couldnt add tag: " + resp.messages);
+                            
+                            reloadTags();
+                        }
+                    },
+                    error: function (e) {
+                        Msg.error(e.status + ': ' + e.statusText);
+                        
+                        reloadTags();
+                    }
+                });
+            }
         });
         
         $("#membershipsContainer .twitter-typeahead").focus();
@@ -690,11 +727,11 @@
         initOrgSearchTab();
         initReopenTask();
         initBodyForm();
+        initTagsInput();
         initAddTag();
         initJobTitleSearch();
         initLeadTimerControls();
         initUnlinkCompany();
         initLeadManEvents();
-        initTagsInput();
     }
 })();
