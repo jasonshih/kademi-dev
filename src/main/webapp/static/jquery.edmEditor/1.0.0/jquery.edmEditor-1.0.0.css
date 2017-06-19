@@ -177,3 +177,9 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
     height: 50px;
     vertical-align: top;
 }
+
+/*Customize colorpicker for EDM*/
+.edm-color-picker {
+    border: 1px solid #ccc;
+    position: relative;
+}
