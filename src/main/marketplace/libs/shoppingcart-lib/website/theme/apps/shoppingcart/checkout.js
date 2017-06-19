@@ -131,7 +131,7 @@ function initItemQuantity() {
     var changeQuantity = function (trigger, isIncrease) {
         var inputGroup = trigger.closest('.input-group');
         var txtQuantity = inputGroup.find('.txt-quantity');
-        var quantity = txtQuantity.val().trim();
+        var quantity = $.trim(txtQuantity.val());
 
         if (isNaN(quantity)) {
             quantity = 0;
