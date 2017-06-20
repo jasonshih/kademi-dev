@@ -193,6 +193,11 @@
                             <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-search"></div>
                             #[[<script type="text/html" class="backgroundTaskTemplate">
                                 {{#if data}}
+                                {{#if data.statusInfo.complete}}
+                                <div class="panel-footer">
+                                    <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                                </div>
+                                {{/if}}
                                 {{else}}
                                 <div class="panel-footer">
                                     <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
