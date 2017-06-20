@@ -5,6 +5,10 @@
             "branch" : ""
         },        
         {
+            "appId": "rewardstore-lib",
+            "branch" : "1.0.9"
+        },                
+        {
             "appId": "userDashboardApp",
             "branch" : ""
         },        
@@ -15,6 +19,10 @@
         {
             "appId": "search",
             "branch" : ""
-        }                
+        },
+        {
+            "appId": "search-lib",
+            "branch" : "1.0.3"
+        }        
   ]
 }

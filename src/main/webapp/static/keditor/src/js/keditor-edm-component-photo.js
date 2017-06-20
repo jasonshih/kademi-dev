@@ -111,6 +111,12 @@
                         img[this.checked ? 'addClass' : 'removeClass']('full-width');
                         self.adjustWidthForImg(img, this.checked);
                     });
+                    
+                    var cbbAlign = form.find('#photo-align');
+                    cbbAlign.on('change', function () {
+                        var td = keditor.getSettingComponent().find('.text-wrapper');
+                        td.attr('align', this.value);
+                    });
                 }
             });
         },
@@ -120,6 +126,7 @@
             
             edmEditor.showDefaultComponentControls(form, component, keditor);
             
+            var td = component.find('.text-wrapper');
             var img = component.find('img');
             
             var inputAlt = form.find('#photo-alt');
@@ -131,7 +138,9 @@
             var txtLink = form.find('#photo-link');
             var cbbTarget = form.find('#photo-target');
             var chkLinkable = form.find('#photo-linkable');
+            var cbbAlign = form.find('#photo-align');
             
+            cbbAlign.val(td.attr('align') || 'left');
             txtLink.next().hide();
             txtLink.closest('.form-group').removeClass('has-error');
             

@@ -5,12 +5,20 @@
             "branch" : ""
         },
         {
+            "appId": "leadman-lib",
+            "branch" : "1.1.6"
+        },             
+        {
             "appId": "userDashboardApp",
             "branch" : ""
         },        
         {
             "appId": "search",
             "branch" : ""
+        },
+        {
+            "appId": "search-lib",
+            "branch" : "1.0.3"
         }          
   ]
 }
