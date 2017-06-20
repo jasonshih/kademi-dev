@@ -111,6 +111,14 @@
                         img[this.checked ? 'addClass' : 'removeClass']('full-width');
                         self.adjustWidthForImg(img, this.checked);
                     });
+                    
+                    var cbbAlign = form.find('#photo-align');
+                    cbbAlign.on('change', function () {
+                        var img = keditor.getSettingComponent().find('img');
+                        img.attr('align', this.value);
+                        edmEditor.setStyles('margin-left', this.value === 'center' ? 'auto' : '', img);
+                        edmEditor.setStyles('margin-right', this.value === 'center' ? 'auto' : '', img);
+                    });
                 }
             });
         },
@@ -131,7 +139,9 @@
             var txtLink = form.find('#photo-link');
             var cbbTarget = form.find('#photo-target');
             var chkLinkable = form.find('#photo-linkable');
+            var cbbAlign = form.find('#photo-align');
             
+            cbbAlign.val(img.attr('align') || 'left');
             txtLink.next().hide();
             txtLink.closest('.form-group').removeClass('has-error');
             
