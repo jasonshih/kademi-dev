@@ -8,7 +8,7 @@
                     #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
                     #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
                     #end
-                    <div class="media-left media-middle"><a href=""><img src="$ava" class="profile-avatar-img media-object thumb96 img-circle"></a></div>
+                    <div class="media-left media-middle"><a class="change-lead-avatar" href="#"><img src="$ava" class="profile-avatar-img media-object thumb96 img-circle"></a></div>
                     <div class="media-body">
                         <h2 class="mv-lg media-heading">
                             #if($page.leadOrg)
@@ -140,11 +140,45 @@
             #end
         </ul>
     </div>
+    #set( $selectedTags = '[' )
+    #foreach($m in $page.assignedTags)
+        #if ($selectedTags == '[')
+            #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+        #else
+            #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+        #end
+    #end
+    #set( $selectedTags = $selectedTags + ']' )
+    
+    <input type="text" id="view-lead-tags" placeholder="Type to Add Tags" value="$selectedTags" />
+
+    <!--<div class="dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
+            <i class="fa fa-plus-circle"></i> Tags
+        </a>
+        <ul class="dropdown-menu">
+            <a href="#" class="createTagModal" >
+                <li style="padding: 3px 15px">
+                    <strong>Create and add tag</strong>
+                </li>
+            </a>
+            <li style="padding: 3px 15px">
+                <strong>Quick add</strong>
+            </li>
+            #foreach($group in $page.tags)
+            <li class="addTag">
+                <a href="$group.name">
+                    <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                </a>
+            </li>
+            #end
+        </ul>
+    </div>
     <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
         #foreach($m in $page.assignedTags)
         #showGroupTag( $m )
         #end
-    </div>
+    </div>-->
 </div>
 <br>
 #end

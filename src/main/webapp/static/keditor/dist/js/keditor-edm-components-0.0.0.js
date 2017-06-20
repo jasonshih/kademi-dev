@@ -51,7 +51,7 @@
                         var dataCss = input.attr('data-css');
         
                         edmEditor.initPaddingControl(input, function (value) {
-                            edmEditor.setStyles(dataCss, value, keditor.getSettingComponent().find('.button-inner'));
+                            edmEditor.setStyles(dataCss, value + 'px', keditor.getSettingComponent().find('.button-inner'));
                         });
                     });
     
@@ -150,8 +150,8 @@
             
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
-                var propName = input.attr('data-prop');
-                var value = buttonInner.get(0).style[propName];
+                var propName = input.attr('data-css');
+                var value = buttonInner.css(propName);
                 
                 input.val(value ? value.replace('px', '') : '0');
             });
@@ -384,6 +384,12 @@
                         img[this.checked ? 'addClass' : 'removeClass']('full-width');
                         self.adjustWidthForImg(img, this.checked);
                     });
+                    
+                    var cbbAlign = form.find('#photo-align');
+                    cbbAlign.on('change', function () {
+                        var td = keditor.getSettingComponent().find('.text-wrapper');
+                        td.attr('align', this.value);
+                    });
                 }
             });
         },
@@ -393,6 +399,7 @@
             
             edmEditor.showDefaultComponentControls(form, component, keditor);
             
+            var td = component.find('.text-wrapper');
             var img = component.find('img');
             
             var inputAlt = form.find('#photo-alt');
@@ -404,7 +411,9 @@
             var txtLink = form.find('#photo-link');
             var cbbTarget = form.find('#photo-target');
             var chkLinkable = form.find('#photo-linkable');
+            var cbbAlign = form.find('#photo-align');
             
+            cbbAlign.val(td.attr('align') || 'left');
             txtLink.next().hide();
             txtLink.closest('.form-group').removeClass('has-error');
             

@@ -3,6 +3,22 @@
         {
             "appId": "leadMan",
             "branch" : ""
-        }        
+        },
+        {
+            "appId": "search",
+            "branch" : ""
+        },
+        {
+            "appId": "userDashboardApp",
+            "branch" : ""
+        },                
+        {
+            "appId": "alerts",
+            "branch" : ""
+        },
+        {
+            "appId": "funnels",
+            "branch" : ""
+        }                                
   ]
 }

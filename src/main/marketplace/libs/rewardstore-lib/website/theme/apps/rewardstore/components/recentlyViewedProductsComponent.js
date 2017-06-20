@@ -42,7 +42,7 @@
                         var number = this.value;
 
                         if (isNaN(number) || +number <= 0) {
-                            number = 1;
+                            number = 12;
                             this.value = number;
                         }
 
@@ -63,7 +63,7 @@
             flog('showSettingForm "recentlyViewedProducts" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.number-of-products').val(dataAttributes['data-number-of-products']);
+            form.find('.number-of-products').val(dataAttributes['data-number-of-products'] || 12);
         },
         initSlickSlider: function (){
             var slider =  $('.recentlyViewedRewardProducts');

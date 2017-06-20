@@ -77,11 +77,11 @@
                     '</div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile(
-                    '<div>'
-                    + '<div>{{name}}</div>'
-                    + '<div>{{phone}}</div>'
-                    + '<div>{{email}}</div>'
-                    + '</div><hr>')
+                        '<div>'
+                        + '<div>{{name}}</div>'
+                        + '<div>{{phone}}</div>'
+                        + '<div>{{email}}</div>'
+                        + '</div><hr>')
             }
         });
 
@@ -234,13 +234,13 @@
                     '</div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile(
-                    '<div>'
-                    + '<strong>{{title}}</strong>'
-                    + '</br>'
-                    + '<span>{{phone}}</span>'
-                    + '</br>'
-                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                    + '</div>')
+                        '<div>'
+                        + '<strong>{{title}}</strong>'
+                        + '</br>'
+                        + '<span>{{phone}}</span>'
+                        + '</br>'
+                        + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                        + '</div>')
             }
         });
 
@@ -441,8 +441,8 @@
 
             doAddToGroup(groupName);
         });
-        
-        
+
+
         var modal = $('#newTagModal');
         var form = modal.find('form');
 
@@ -461,7 +461,7 @@
                 }
 
                 reloadTags();
-                
+
                 Msg.info('Created tag');
                 modal.modal("hide");
             }
@@ -473,58 +473,16 @@
         });
     }
 
-    function initDeleteTag() {
-        $('body').on('click', '.btn-delete-tag', function (e) {
-            e.preventDefault();
-
-            var btn = $(this);
-            var href = btn.attr('href');
-
-            if (confirm('Are you sure you want to remove this tag?')) {
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        deleteTag: href
-                    },
-                    success: function (resp) {
-                        if (resp.status) {
-                            reloadTags();
-                        } else {
-                            Msg.error("Couldnt remove tag: " + resp.messages);
-                        }
-                    },
-                    error: function (e) {
-                        Msg.error(e.status + ': ' + e.statusText);
-                    }
-                });
-            }
-        });
-    }
-
     function doAddToGroup(groupName) {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                addTag: groupName
-            },
-            success: function (resp) {
-                if (resp.status) {
-                    reloadTags();
-                } else {
-                    Msg.error("Couldnt add tag: " + resp.messages);
-                }
-            },
-            error: function (e) {
-                Msg.error(e.status + ': ' + e.statusText);
-            }
-        })
-
+        $('#view-lead-tags').tagsinput('add', {id: groupName, name: groupName});
     }
 
     function reloadTags() {
-        $('#membershipsContainer').reloadFragment();
+        $('#membershipsContainer').reloadFragment({
+            whenComplete: function () {
+                initTagsInput();
+            }
+        });
     }
 
     function initLeadTimerControls() {
@@ -553,7 +511,7 @@
             var btn = $(e.target).closest("button");
             var modal = btn.closest(".modal");
             var dateControl = modal.find(".date-time");
-            
+
             var timerDate = dateControl.val();
             flog("reschdule", dateControl, timerDate);
             $.ajax({
@@ -617,12 +575,151 @@
         });
     }
 
+
+    function initTagsInput() {
+        if ($("#view-lead-tags").length === 0) {
+            return;
+        }
+        
+        var tagsSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/leads/?asJson&tags&q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+        
+        tagsSearch.initialize();
+        
+        $("#view-lead-tags").tagsinput({
+            itemValue: 'id',
+            itemText: 'name',
+            typeaheadjs: {
+                name: tagsSearch.name,
+                displayKey: 'name',
+                source: tagsSearch.ttAdapter()
+            }
+        });
+        
+        var data = JSON.parse($("#view-lead-tags").val());
+        
+        $.each(data, function(key, element) {
+            $('#view-lead-tags').tagsinput('add', {id: element.id, name: element.name}, {preventPost: true});
+        });
+        
+        $("#view-lead-tags").on('beforeItemRemove', function (event) {
+            if (event.options !== undefined && event.options.preventPost !== undefined && event.options.preventPost === true) {
+                return;
+            }
+
+            var tag = event.item.id;
+            
+            if (confirm('Are you sure you want to remove this tag?')) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        deleteTag: tag
+                    },
+                    success: function (resp) {
+                        if (resp.status) {
+                            reloadTags();
+                        } else {
+                            Msg.error("Couldnt remove tag: " + resp.messages);
+                            
+                            reloadTags();
+                        }
+                    },
+                    error: function (e) {
+                        Msg.error(e.status + ': ' + e.statusText);
+                        
+                        reloadTags();
+                    }
+                });
+            } else {
+                event.cancel = true;
+                return false;
+            }
+        });
+        
+        $('#view-lead-tags').on('beforeItemAdd', function (event) {
+            if (event.options !== undefined && event.options.preventPost !== undefined && event.options.preventPost === true) {
+                return;
+            }
+            
+            var tag = event.item;
+            
+            $("#membershipsContainer .twitter-typeahead input").data("adding", true);
+            
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    addTag: tag.id
+                },
+                success: function (resp) {
+                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
+                    
+                    if (resp.status) {
+                        reloadTags();
+                    } else {
+                        Msg.error("Couldnt add tag: " + resp.messages);
+                        
+                        reloadTags();
+                    }
+                },
+                error: function (e) {
+                    $("#membershipsContainer .twitter-typeahead input").data("adding", false);
+                    
+                    Msg.error(e.status + ': ' + e.statusText);
+                    
+                    reloadTags();
+                }
+            });
+        });
+        
+        
+        $("#membershipsContainer .twitter-typeahead input").on("keyup", function(event) {
+            if (event.keyCode !== 13 || $(this).data("adding") === true) {
+                return;
+            }
+            
+            if (confirm('Are you sure you want to add this tag?')) {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        title: $(this).val()
+                    },
+                    success: function (resp) {
+                        if (resp.status) {
+                            Msg.info(resp.messages);
+                            reloadTags();
+                        } else {
+                            Msg.error("Couldnt add tag: " + resp.messages);
+                            
+                            reloadTags();
+                        }
+                    },
+                    error: function (e) {
+                        Msg.error(e.status + ': ' + e.statusText);
+                        
+                        reloadTags();
+                    }
+                });
+            }
+        });
+        
+        $("#membershipsContainer .twitter-typeahead").focus();
+    }
+
     // Run init functions
     $(function () {
         initViewLeadsPage();
     });
-    
-    function initViewLeadsPage(){
+
+    function initViewLeadsPage() {
         initNewTaskModal();
         initFileUploads();
         initFileNoteEdit();
@@ -630,8 +727,8 @@
         initOrgSearchTab();
         initReopenTask();
         initBodyForm();
+        initTagsInput();
         initAddTag();
-        initDeleteTag();
         initJobTitleSearch();
         initLeadTimerControls();
         initUnlinkCompany();

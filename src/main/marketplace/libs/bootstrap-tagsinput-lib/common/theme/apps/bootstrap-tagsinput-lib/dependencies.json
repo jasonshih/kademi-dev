@@ -1,0 +1,25 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/bootstrap-tagsinput-lib/bootstrap-tagsinput.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/bootstrap-tagsinput-lib/bootstrap3-typeahead.min.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/bootstrap-tagsinput-lib/bootstrap-tagsinput.css"
+            }
+        }
+    ]
+}
