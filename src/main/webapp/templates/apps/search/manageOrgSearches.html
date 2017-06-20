@@ -52,81 +52,79 @@
                 <div role="tabpanel" class="tab-pane active" id="home">
                     <h2>App Indexers</h2>
                     <div class="manage-search">
-                        
+
                         <form method="post" action="$page.href" class="form-horizontal reindexForm" role="form">
-                        <div class="form-group">
-                            <div class="col-md-9">
-                                <button class="btn btn-danger hide" name="cancel" type="button" id="btn-cancel">Cancel Re-Index</button>
+                            <div class="form-group">
+                                <div class="col-md-9">
+                                    <button class="btn btn-danger hide" name="cancel" type="button" id="btn-cancel">Cancel Re-Index</button>
+                                </div>
                             </div>
-                        </div>
-                            
-                        <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-search"></div>
-                        #[[<script type="text/html" class="backgroundTaskTemplate">
+
+                            <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-search"></div>
+                            #[[<script type="text/html" class="backgroundTaskTemplate">
                                 {{#if data}}
-                                        <div class="panel-body">
-                                            <div class="form-horizontal">
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-2"><b>Started at</b></label>
-                                                    <div class="col-md-9">
-                                                        <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.createdDate}}">{{formatDate data.statusInfo.createdDate}}</abbr></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-2"><b>Status</b></label>
-                                                    <div class="col-md-9">
-                                                        <div class="form-control-static">
-                                                            {{#if data.statusInfo.cancelled}}
-                                                                <span class="label label-info">Cancelled</span>
-                                                            {{else}}
-                                                                {{#if data.statusInfo.complete}}
-                                                                        <span class="label label-success">Completed</span>
-                                                                {{else}}
-                                                                        {{#if data.status}}
-                                                                                <span class="label label-info">{{data.status}}</span>
-                                                                        {{else}}
-                                                                                <span class="label label-default">N/A</span>
-                                                                        {{/if}}
-                                                                {{/if}}
-                                                            {{/if}}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {{#if data.statusInfo.cancelled}}
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-2"><b>Cancelled at</b></label>
-                                                        <div class="col-md-9">
-                                                            <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.cancelledDate}}">{{formatDate data.statusInfo.cancelledDate}}</abbr></div>
-                                                        </div>
-                                                    </div>
-                                                {{else}}
-                                                    {{#if data.statusInfo.complete}}
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-2"><b>Completed at</b></label>
-                                                            <div class="col-md-9">
-                                                                <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.completedDate}}">{{formatDate data.statusInfo.completedDate}}</abbr></div>
-                                                            </div>
-                                                        </div>
-                                                    {{/if}}
-                                                {{/if}}
+                                <div class="panel-body">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2"><b>Started at</b></label>
+                                            <div class="col-md-9">
+                                                <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.createdDate}}">{{formatDate data.statusInfo.createdDate}}</abbr></div>
                                             </div>
                                         </div>
-                                        <div class="panel-footer">
-                                            {{#if data.statusInfo.complete}}
-                                                <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>                     
-                                            {{else}}
-                                                <div class="progress" style="margin-bottom: 0;">
-                                                        <div class="progress-bar progress-bar-warning progress-bar-striped active" style="width: 100%;"></div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2"><b>Status</b></label>
+                                            <div class="col-md-9">
+                                                <div class="form-control-static">
+                                                    {{#if data.statusInfo.cancelled}}
+                                                    <span class="label label-info">Cancelled</span>
+                                                    {{else}}
+                                                    {{#if data.statusInfo.complete}}
+                                                    <span class="label label-success">Completed</span>
+                                                    {{else}}
+                                                    {{#if data.status}}
+                                                    <span class="label label-info">{{data.status}}</span>
+                                                    {{else}}
+                                                    <span class="label label-default">N/A</span>
+                                                    {{/if}}
+                                                    {{/if}}
+                                                    {{/if}}
                                                 </div>
-                                            {{/if}}
+                                            </div>
                                         </div>
+                                        {{#if data.statusInfo.cancelled}}
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2"><b>Cancelled at</b></label>
+                                            <div class="col-md-9">
+                                                <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.cancelledDate}}">{{formatDate data.statusInfo.cancelledDate}}</abbr></div>
+                                            </div>
+                                        </div>
+                                        {{else}}
+                                        {{#if data.statusInfo.complete}}
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2"><b>Completed at</b></label>
+                                            <div class="col-md-9">
+                                                <div class="form-control-static"><abbr class="timeago" title="{{formatISODate data.statusInfo.completedDate}}">{{formatDate data.statusInfo.completedDate}}</abbr></div>
+                                            </div>
+                                        </div>
+                                        {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                                <div class="panel-footer">
+                                    {{#if data.statusInfo.complete}}
+                                    <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                                    {{else}}
+                                    <div class="progress" style="margin-bottom: 0;">
+                                        <div class="progress-bar progress-bar-warning progress-bar-striped active" style="width: 100%;"></div>
+                                    </div>
+                                    {{/if}}
                                 </div>
                                 {{else}}
-                                    <div class="panel-footer">
-                                        <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>                     
-                                    </div>
+                                <div class="panel-footer">
+                                    <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
+                                </div>
                                 {{/if}}
-                        </script>]]#
-                        </div>
+                            </script>]]#
 
                             <br/>
                             <table class="table table-bordered">
@@ -191,18 +189,17 @@
                             </table>
                             <p class="pageMessage" style="display: none"></p>
                             <br/>
-                            
-                        <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-search"></div>
-                        #[[<script type="text/html" class="backgroundTaskTemplate">
-                            {{#if ($data)}}
-                            {{else}}
+
+                            <div class="backgroundTask" id="" style="display: none" data-task-href="/tasks/reindex-search"></div>
+                            #[[<script type="text/html" class="backgroundTaskTemplate">
+                                {{#if data}}
+                                {{else}}
                                 <div class="panel-footer">
-                                    <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>                     
+                                    <button class="btn btn-danger btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes</span></button>
                                 </div>
-                            {{/if}}
-                        </script>]]#
-                        </div>
-                            
+                                {{/if}}
+                            </script>]]#
+
                         </form>
                     </div>
                 </div>
@@ -210,17 +207,17 @@
         </div>
 
         <script type="text/javascript">
-            $(document).ready(function () {    
+            $(document).ready(function () {
 
                 var backgroundJobStatusOptions = {
                     onComplete: function () {
                         $("#btn-cancel").addClass("hide");
                     },
-                    onRunning: function(){
+                    onRunning: function () {
                         $("#btn-cancel").removeClass("hide");
                     }
                 };
-                
+
                 $(".reindexForm").forms({
                     callback: function (resp) {
                         $("#btn-cancel").removeClass("hide");
@@ -255,8 +252,8 @@
                         $(this.closest('tr')).removeClass('well');
                     }
                 });
-                
-                $("#btn-cancel").click(function(e){
+
+                $("#btn-cancel").click(function (e) {
                     e.preventDefault();
 
                     Konfirm.error({
@@ -278,9 +275,9 @@
                         });
                     });
                 });
-                
+
                 initBackgroundJobStatus(backgroundJobStatusOptions);
-            });    
+            });
         </script>
     </body>
 </html>

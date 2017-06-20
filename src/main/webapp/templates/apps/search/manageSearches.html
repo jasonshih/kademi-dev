@@ -57,8 +57,8 @@
 
         <div class="well">
             <p>
-            If the search indexes for a repository become out of date and inconsistent with the content,
-            just  check the required indexes below and click the Re-index button here to regenerate them.
+                If the search indexes for a repository become out of date and inconsistent with the content,
+                just  check the required indexes below and click the Re-index button here to regenerate them.
             </p>
             <p>
                 This will not normally be required.
@@ -73,54 +73,54 @@
         </div>
 
         <h2>Indexes</h2>
-	        <div class="manage-search">
-	            <form method="post" action="" class="form-horizontal" role="form">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>No. items</th>
-                    <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
-                </tr>
-            </thead>
-            <tbody>
-                #foreach($index in $page.children)
-                <tr>
-                    <td>
-                        <a href="$index.name">$index.name</a>
-                    </td>
-                    <td>$index.numItems</td>
-                    <td><input type="checkbox" class="idx-check" name="$index.name" value="$index.name"/></td>
-                </tr>
-                #end
-            </tbody>
-        </table>
-	            <p class="pageMessage" style="display: none"></p>
-	            <br/>
-	                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes in</span> : $page.closest("repository").name</button>
-	            </form>
-	        </div>
+        <div class="manage-search">
+            <form method="post" action="" class="form-horizontal" role="form">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>No. items</th>
+                            <th style="width:120px"><input class="check-all" type="checkbox"/> Select All</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        #foreach($index in $page.children)
+                        <tr>
+                            <td>
+                                <a href="$index.name">$index.name</a>
+                            </td>
+                            <td>$index.numItems</td>
+                            <td><input type="checkbox" class="idx-check" name="$index.name" value="$index.name"/></td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+                <p class="pageMessage" style="display: none"></p>
+                <br/>
+                <button class="btn btn-warning btn-lg btn-reindex btn-block"><i class="fa fa-arrow-circle-right"></i> <span class="lbl-reindex-action">Re-index selected indexes in</span> : $page.closest("repository").name</button>
+            </form>
+        </div>
 
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(document).ready(function () {
                 initReindexForms();
-                $('.check-all').change(function() {
+                $('.check-all').change(function () {
                     var checked = this.checked;
-                	$(this.closest('form')).find('.idx-check').each(function() {
-                		this.checked = checked;
-                    	if (this.checked) {
-                    		$(this.closest('tr')).addClass('well');
-                    	} else {
-                    		$(this.closest('tr')).removeClass('well');
-                    	}
-                	});
+                    $(this.closest('form')).find('.idx-check').each(function () {
+                        this.checked = checked;
+                        if (this.checked) {
+                            $(this.closest('tr')).addClass('well');
+                        } else {
+                            $(this.closest('tr')).removeClass('well');
+                        }
+                    });
                 });
-                $('.idx-check').change(function() {
-                	if (this.checked) {
-                		$(this.closest('tr')).addClass('well');
-                	} else {
-                		$(this.closest('tr')).removeClass('well');
-                	}
+                $('.idx-check').change(function () {
+                    if (this.checked) {
+                        $(this.closest('tr')).addClass('well');
+                    } else {
+                        $(this.closest('tr')).removeClass('well');
+                    }
                 });
             });
         </script>
