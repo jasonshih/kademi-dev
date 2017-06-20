@@ -121,10 +121,8 @@
                     
                     var cbbAlign = form.find('#photo-align');
                     cbbAlign.on('change', function () {
-                        var img = keditor.getSettingComponent().find('img');
-                        img.attr('align', this.value);
-                        edmEditor.setStyles('margin-left', this.value === 'center' ? 'auto' : '', img);
-                        edmEditor.setStyles('margin-right', this.value === 'center' ? 'auto' : '', img);
+                        var td = keditor.getSettingComponent().find('.text-wrapper');
+                        td.attr('align', this.value);
                     });
                 }
             });
@@ -135,6 +133,7 @@
             
             edmEditor.showDefaultComponentControls(form, component, keditor);
             
+            var td = component.find('.text-wrapper');
             var img = component.find('img');
             
             var inputAlt = form.find('#photo-alt');
@@ -148,7 +147,7 @@
             var chkLinkable = form.find('#photo-linkable');
             var cbbAlign = form.find('#photo-align');
             
-            cbbAlign.val(img.attr('align') || 'left');
+            cbbAlign.val(td.attr('align') || 'left');
             txtLink.next().hide();
             txtLink.closest('.form-group').removeClass('has-error');
             
