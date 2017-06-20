@@ -1,0 +1,57 @@
+{
+    "name": "journey1",
+    "title": "Journey 1",
+    "leadsGroup": "leads",
+    "sources": [],
+    "stages": [
+        {
+            "name": "cold",
+            "desc": "Cold"
+        },
+        {
+            "name": "warm",
+            "desc": "Warm"
+        },
+        {
+            "name": "hot",
+            "desc": "Hot"
+        }
+    ],
+    "hiddenToSales": false,
+    "nodes": [
+        {
+            "begin": {
+                "nodeId": "begin1",
+                "title": "Begin",
+                "nextNodeId": "email1",
+                "x": 50,
+                "y": 50,
+                "onePerProfile": null,
+                "initialGoal": null
+            }
+        },
+        {
+            "emailAction": {
+                "title": "Send an email",
+                "nextNodeId": null,
+                "x": 590,
+                "y": 50,
+                "website": null,
+                "contentFileName": "email1.html",
+                "subject": "First email",
+                "from": null,
+                "replyTo": null,
+                "to": null,
+                "attachments": null,
+                "nodeId": "email1"
+            }
+        }
+    ],
+    "extraFields": [],
+    "lostReasons": [],
+    "customerActivities": [],
+    "closedActions": null,
+    "cancelledActions": null,
+    "funnelTesters": [],
+    "requestAttributes": {}
+}
