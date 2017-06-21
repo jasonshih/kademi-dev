@@ -128,6 +128,16 @@ function reloadAuctionTable() {
         whenComplete: function () {
             $('abbr.timeago').timeago();
             initAuctionTable();
+            initAuctionDelete();
         }
     });
-}
+};
+
+$(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
+    if (initial) {
+        flog("Ignore initial");
+        return;
+    }
+    reloadAuctionTable();
+
+});
