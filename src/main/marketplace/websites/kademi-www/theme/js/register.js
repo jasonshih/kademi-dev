@@ -57,18 +57,22 @@
 
 // // --------- END VIMEO TRACKING ---------------
 
-$(function() {
+$(function () {
     // This is the registration form, on many pages
     $("form.register-form").forms({
         confirmMessage: "Registered, redirecting to your new account...",
-        validate: function() {
-            flog("Track validation");
-            _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "validate"]);
+        validate: function () {
+            if (hasGaq()) {
+                flog("Track validation");
+                _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "validate"]);
+            }
             return true;
         },
-        callback: function(resp) {
-            flog("Created account", resp, this);
-            _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "success"]);
+        callback: function (resp) {
+            if (hasGaq()) {
+                flog("Created account", resp, this);
+                _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "success"]);
+            }
             //alert("Your account has been created, you will now be taken to your admin dashboard...");
             window.location.href = resp.nextHref;
         }
@@ -78,13 +82,17 @@ $(function() {
     // different site
     $("form.offsite-login").forms({
         confirmMessage: "Logged in ok, taking you to your account...",
-        validate: function() {
-            _gaq.push(['_trackEvent', 'Login', window.location.pathname, "validate"]);
+        validate: function () {
+            if (hasGaq()) {
+                _gaq.push(['_trackEvent', 'Login', window.location.pathname, "validate"]);
+            }
             return true;
         },
-        callback: function(resp) {
-            flog("Login result", resp, this);
-            _gaq.push(['_trackEvent', 'Login', window.location.pathname, "success"]);
+        callback: function (resp) {
+            if (hasGaq()) {
+                flog("Login result", resp, this);
+                _gaq.push(['_trackEvent', 'Login', window.location.pathname, "success"]);
+            }
             if (resp.status) {
                 window.location.href = resp.nextHref;
             } else {
@@ -96,15 +104,23 @@ $(function() {
     // The contact form
     $("form.contactus").forms({
         confirmMessage: "Sending your message...",
-        validate: function() {
-            _gaq.push(['_trackEvent', 'Contact', window.location.pathname, "validate"]);
+        validate: function () {
+            if (hasGaq()) {
+                _gaq.push(['_trackEvent', 'Contact', window.location.pathname, "validate"]);
+            }
             return true;
         },
-        callback: function(resp) {
-            _gaq.push(['_trackEvent', 'Contact', window.location.pathname, "success"]);
-            $("form.contactus").animate({opacity: 0}, 500, function() {
+        callback: function (resp) {
+            if (hasGaq()) {
+                _gaq.push(['_trackEvent', 'Contact', window.location.pathname, "success"]);
+            }
+            $("form.contactus").animate({opacity: 0}, 500, function () {
                 $("#contactThankyou").modal();
             });
         }
     });
+    
+    function hasGaq() {
+        return (typeof _gaq !== 'undefined' && _gaq !== null);
+    }
 });

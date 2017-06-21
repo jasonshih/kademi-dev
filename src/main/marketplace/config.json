@@ -107,6 +107,7 @@
                 "publicContent": true,
                 "name": "kademi-www",
                 "apps": [
+                    
                     {
                         "branch": "version56",
                         "apps": [
@@ -139,7 +140,13 @@
                                 "settings": null,
                                 "appId": "organisationCreator",
                                 "enabled": true
+                            },
+                            {
+                                "settings": null,
+                                "appId": "content",
+                                "enabled": true
                             }
+
 
                         ]
                     }

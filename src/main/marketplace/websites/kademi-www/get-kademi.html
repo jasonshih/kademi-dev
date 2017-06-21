@@ -11,9 +11,31 @@
                 <div class="container clearfix">
                     <div class="heading-block center">
                         <h1>Scalable Pricing</h1>
-                        <span>Pricing that scales with you.  Only pay for what you use.</span> </div>
+                        <span>Pricing that scales with you.  Only pay for what you use.</span> 
+                    </div>
+
                     <div id="widget-subscribe-form-result" data-notify-type="success" data-notify-msg=""></div>
 
+                    <form action="/createAccount" method="post" class="register-form">
+                        <div class="pageMessage">.</div>
+                                                
+                        <div class="input-group input-group-lg divcenter" style="max-width:700px;"> 
+                            <span class="input-group-addon"><i class="icon-email2"></i></span>
+                            
+                            <input type="email" name="email" class="form-control required email required" required placeholder="Enter your Email" style="width: 200px" />
+                            
+                            <input class="form-control required" required type="password" id="password" name="password" placeholder="&nbsp;&nbsp;Password"  style="width: 200px"/>
+                            
+                            <span class="input-group-btn">
+                                <button class="btn btn-info" type="submit" style="background-color:#3988b7 !important; border-color:#3988b7 !important;">Request a Free account</button>
+                            </span>
+                        </div>
+                        
+                        <center><br/><div class="g-recaptcha" data-sitekey="6LeP4hwTAAAAABbp3XTWFg2l1Xiyxs95gYy0CWQO"></div> <br/></center>
+                        
+                    </form>                         
+
+                    <!--
                     <form class="form-contact form-horizontal" action="/contactus" method="post">
                         <div class="input-group input-group-lg divcenter" style="max-width:600px;"> <span class="input-group-addon"><i class="icon-email2"></i></span>
                             <input type="email" name="email" class="form-control required email required" required placeholder="Enter your Email">
@@ -23,6 +45,7 @@
                         </div>
                         <center><br/><div class="g-recaptcha" data-sitekey="6LeP4hwTAAAAABbp3XTWFg2l1Xiyxs95gYy0CWQO"></div> <br/></center>
                     </form>
+                    -->
 
                     <div class="pricing bottommargin clearfix bottommargin-lg topmargin-lg">
                         <div class="col-sm-4">
@@ -85,32 +108,15 @@
                         <span>Need more users and websites? Contact the Kademi team at support@kademi.co for more information.</span> <a href="contact.html" class="button button-xlarge button-rounded">Contact the team</a> </div>
                 </div>
             </div>
+
+
+
         </section>
 
-        <form action="/createAccount" method="post" class="register-form">
-            <div class="pageMessage">.</div>
-            <div class="form-group">
-                <label class="sr-only" for="email">Email</label>
-                <input type="email" name="email" id="email" class="form-control required" required placeholder="&nbsp;&nbsp;Email address">
-            </div>
-            <div class="form-group">
-                <label class="sr-only" for="password">Email</label>
-                <input class="form-control required" required type="password" id="password" name="password" placeholder="&nbsp;&nbsp;Password">
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="agree" id="checkbox" class="required"/>
-                    I agree to the terms & conditions* of this offer </label>
-            </div>
-            <br>
-            <div>
-                <input type="submit" class="btn btn-default" value="SEND ME MY VOUCHER" onClick="_gaq.push(['_trackEvent', 'Offer', 'Click', 'Signup']);" />
-            </div>
-        </form>
 
-        
+
 
         <!-- #content end -->
-
+        <script src="/theme/js/register.js" ></script>
     </body>
 </html>
