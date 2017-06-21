@@ -1,0 +1,128 @@
+<html>
+<head>
+<!-- Google Analytics Content Experiment code -->
+<script>function utmx_section(){}function utmx(){}(function(){var
+k='86896126-9',d=document,l=d.location,c=d.cookie;
+if(l.search.indexOf('utm_expid='+k)>0)return;
+function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
+indexOf(';',i);return escape(c.substring(i+n.length+1,j<0?c.
+length:j))}}}var x=f('__utmx'),xx=f('__utmxx'),h=l.hash;d.write(
+'<sc'+'ript src="'+'http'+(l.protocol=='https:'?'s://ssl':
+'://www')+'.google-analytics.com/ga_exp.js?'+'utmxkey='+k+
+'&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
+valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
+'" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
+</script><script>utmx('url','A/B');</script>
+<!-- End of Google Analytics Content Experiment code -->
+
+
+
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+<title>Powerful CPD training software</title>
+<script title="attach.1" type="data/parameter" >/campaigns/kademi-presentation-2.pdf</script>
+<script title="autoRespondSubject" type="data/parameter" >Re: Kademi Presentation</script>
+<script title="autoRespondFromAddress" type="data/parameter" >patrick@kademi.co</script>
+<script title="isAutoResponse" type="data/parameter" >true</script>
+<script title="assignToGroup" type="data/parameter" >presentation-video</script>
+<style>
+.navbar {
+	display: block;
+	height: 85px;
+}
+.navbar li {
+	display: none !important;
+}
+</style>
+</head>
+<body class="landing-page">
+<br>
+<div class="container">
+<div class="row">
+  <div class="col-md-8" > <br>
+     <h1><strong> Take your CPD training<br>
+        further with Kademi! </strong> </h1>
+    <p class="lead">Click the video below and we'll show you how one of the world's largest Pharmaceuticals used Kademi to roll out an award winning CPD pharmacy training program.</p>
+    <iframe width="100%" height="450" src="//www.youtube.com/embed/LFNQcQyD1I4?rel=0" frameborder="0" allowfullscreen></iframe>
+    <br>
+    <br>
+    <div class="box">
+      <div class="row">
+        <div class="col-md-4"> <a href="../features/index.html"><img src="/theme/images/campaigns/tile-features.png" class="img-responsive" alt="" style="margin-bottom:10px;" /></a>
+          <p>Take your training further with Kademi's Next Generation feature-set.</p>
+          <a href="../features/index.html" class="btn btn-primary"> KADEMI'S FEATURES </a> </div>
+        <div class="col-md-4"> <a href="../blogs/?tag=Case study"><img src="/theme/images/campaigns/tile-logos.png" class="img-responsive" alt="" style="margin-bottom:10px;" /></a>
+          <p>Learn how customers use Kademi to support their business.</p>
+          <a href="../blogs/?tag=Case study" class="btn btn-primary">CUSTOMER CASE STUDIES</a> </div>
+        <div class="col-md-4"> <a href="../get-kademi.html"><img src="/theme/images/campaigns/tile-free.png" class="img-responsive" alt="" style="margin-bottom:10px;" /></a>
+          <p>Create a free Kademi account in seconds using only your email address.</p>
+          <a href="../get-kademi.html" class="btn btn-primary">CREATE A FREE ACCOUNT</a> </div>
+      </div>
+    </div>
+    <a href="../blogs/?tag=Case study"><img src="../theme/images/campaigns/logos.png" class="img-responsive" ></a> <br>
+    <br>
+  </div>
+  <div class="col-md-4"> <br>
+    <a href="../get-kademi.html"><img src="../theme/images/campaigns/laptop-offer.jpg" class="img-responsive" ></a> <br>
+    <div class="box">
+      <div class="row">
+        <div class="col-md-12" >
+          <h3>Use Kademi for free</h3>
+          <p>Enter your email address and chosen password below to get INSTANT access to Kademi's full range of features. <strong>No obligation, no credit cards, no risk.</strong></p>
+          <form action="/createAccount" method="post" class="register-form">
+            <div class="pageMessage"></div>
+            <div class="form-group">
+              <label class="sr-only" for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control required" required placeholder="&nbsp;&nbsp;Email address">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="password">Email</label>
+              <input class="form-control required" required type="password" id="password" name="password" placeholder="&nbsp;&nbsp;Password">
+            </div>
+            <div>
+              <input type="submit" class="btn btn-primary" value="CREATE MY FREE ACCOUNT" />
+            </div>
+          </form>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade thank-you-agency">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Awesome!</h4>
+      </div>
+      <div class="modal-body">
+        <p>Thanks for getting in touch.  One of our team will be in touch shortly</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content --> 
+  </div>
+  <!-- /.modal-dialog --> 
+</div>
+<script type="text/javascript">
+            $(function() {
+                  flog("setup agency contact form", $(".agency-contact-form"));
+                  $(".agency-contact-form").forms({
+                    confirmMessage: "Request sent",
+                    validate: function() {
+                        flog("calling validate ... copy email content");
+                        var emailContent = $("#email-content").html();
+                        $("#form-email-content").val(emailContent);
+                        return true;
+                    },
+                    callback: function() {
+                        flog("done submit, show thank you");
+                        $(".thank-you-agency").modal();
+                    }
+                });
+            });            
+        </script>
+</body>
+</html>
