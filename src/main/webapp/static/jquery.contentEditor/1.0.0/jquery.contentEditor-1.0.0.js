@@ -37,14 +37,16 @@
         '/static/ckeditor456/adapters/jquery.js',
         '/static/keditor/dist/js/keditor-0.0.0.min.js',
         '/static/keditor/dist/js/keditor-components-0.0.0.js',
-        '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js'
+        '/static/jquery.mselect/1.1.0/jquery.mselect-1.1.0.js',
+        '/static/bootstrap-colorpicker/2.5.1/js/bootstrap-colorpicker.min.js'
     ];
     
     contentEditor.dependStyles = [
         '/static/keditor/dist/css/keditor-0.0.0.min.css',
         '/static/keditor/dist/css/keditor-components-0.0.0.min.css',
         '/static/font-awesome/4.7.0/css/font-awesome.min.css',
-        '/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.css'
+        '/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.css',
+        '/static/bootstrap-colorpicker/2.5.1/css/bootstrap-colorpicker.min.css'
     ];
     
     contentEditor.checkDependencies = function (options, callback) {
@@ -914,6 +916,38 @@
             update: function () {
                 previewer.css('color', '');
                 target.val(getColor(target.val()));
+            }
+        });
+    };
+
+    contentEditor.initColorPicker = function (target, onChange) {
+        flog('[jquery.contentEditor] initColorPicker', target);
+        var inputColor = target.val();
+        var strVar = "";
+        strVar += "<div class=\"input-group colorpicker-component\">";
+        strVar += "    <span class=\"input-group-addon\"><i><\/i><\/span>";
+        strVar += "<\/div>";
+
+        var newElement = $($.parseHTML(strVar));
+        newElement.append(target.clone());
+
+        target.replaceWith(newElement);
+
+        newElement.colorpicker({
+            format: 'hex',
+            align: 'left',
+            color: inputColor,
+            customClass: 'edm-color-picker',
+            container: newElement.parent()
+        });
+
+
+        newElement.find('input').on({
+            change: function () {
+                var color = newElement.colorpicker('getValue', "#fff");
+                if (typeof onChange === 'function') {
+                    onChange.call(target, color);
+                }
             }
         });
     };

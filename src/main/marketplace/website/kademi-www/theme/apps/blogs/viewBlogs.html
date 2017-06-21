@@ -1,0 +1,173 @@
+<html>
+    <head>
+        <title>Edit Event</title>
+        <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+        <script type="text/javascript" src="/theme/js/jquery.dotdotdot.min.js">//</script>
+    </head>
+    <body class="blogs-home has-navbar-white">
+
+        <!-- Content -->
+        <section id="content">
+            <div class="content-wrap">
+                <div class="container clearfix">        
+        
+                    <div class="postcontent nobottommargin clearfix blog-wrapper blog-wrapper">
+                        <div id="posts" class="row post-grid grid-2 clearfix">
+                            
+                                        #foreach($article in $page.articles.sortByDate)
+            
+                                           
+                                            #if($velocityCount > 8)
+                                                #set($visible="b-none")    
+                                            #else
+                                                #set($visible="b-block")  
+                                           #end
+                                            <div class="blog blog-featured $visible">
+                                                #set($image = false)
+                                                #set($image = $article.bestDefaultImageHref)
+                                                #if( $image )
+                                                #else
+                                                    #set($image = "/theme/images/blog/grid/17.jpg")
+                                                #end
+                
+                                                <div class="entry clearfix">
+                                                    <div class="entry-image imageblog">
+                                                        <center>
+                                                            <a href="$article.href">
+                                                                <img class="image_fade" src="$image" alt="$article.title">
+                                                            </a>
+                                                        </center>
+                                                    </div>
+                                                    <div class="entry-title">
+                                                        #set($title = $!article.title)
+                                                       <h2><a href="$article.href">$title</a></h2>
+                                                    </div>
+                                                    <ul class="entry-meta clearfix">
+                                                        <li><i class="icon-calendar3"></i>$article.articleDate</li>
+                                                    </ul>
+                                                    <div class="entry-content">
+                                                        #set($abrief = $!article.brief)
+                                                        <div class="briefwrapper">
+                                                            <p>$abrief</p>
+                                                        </div>    
+                                                        <a href="$article.href" class="more-link">Read More</a>
+                                                    </div>
+                                                </div>                                                
+
+
+                                            </div>
+
+                                        #end
+                    
+                        </div><!-- posts end -->
+
+
+<script type="text/javascript">
+    $(function() {
+    
+         $('.entry-content p').each(function() {
+            var $this = $(this);
+            if($this.html().length == 0){
+                $this.remove();
+            }else if($this.html() == " "){
+                $this.remove();
+            }else if($this.html() == "&nbsp;"){
+                $this.remove();
+            } 
+        }); 
+
+
+    });   
+</script>
+
+                    </div><!-- .postcontent end -->                    
+
+                    <!-- Sidebar -->
+                    <div class="sidebar nobottommargin col_last clearfix">
+                        <div class="sidebar-widgets-wrap">
+
+
+                            
+                            <div class="widget clearfix">
+                                <h4>Categories</h4>
+                                <div class="tagcloud">
+                                    <div  id="kademi-blog-sidebar">
+                                        <ul class="nav nav-pills nav-stacked blog-tags">
+                                            #foreach($categoryCount in $page.categoryCounts)
+                                                #set ($name = $categoryCount.item)
+                                                <li style="margin-top:0px;">
+                                                    <a href="$page.href?cat=$name" class="highlighta"  style="padding:3px 6px">
+                                                        $name
+                                                    </a>
+                                                </li>
+                                            #end
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+
+                             <div class="widget clearfix">
+                                <h4>Tags</h4>
+                                <div class="tagcloud">
+                                    <div  id="kademi-blog-sidebar">
+                                        <ul class="nav nav-pills nav-stacked blog-tags">
+                                            #foreach($tagCount in $page.tagCounts)
+                                                #set ($name = $tagCount.item)
+                                                <li style="margin-top:0px;">
+                                                    <a href="$page.href?tag=$name" class="highlighta" style="padding:3px 6px">
+                                                        $name
+                                                    </a>
+                                                </li>
+                                            #end
+                                        </ul>
+                                    </div> 
+                                </div>
+                            </div>
+                            
+
+                                                      
+                            
+                        </div>
+                    </div><!-- .sidebar end -->                    
+                    
+
+                </div>
+            </div>
+        </section><!-- content end --> 
+        <script type="text/javascript">
+            $(function () {
+               $("a.highlighta:contains('deleted')").hide();
+            });
+        </script>           
+        <script type="text/javascript" src="/theme/js/jquery.pjax.js" >//</script>
+        <script type="text/javascript">
+
+            $(function () {
+        
+                $("body").on("click", "a.highlighta", function (event) {
+                    $(".blog-tags li").removeClass("active");
+                    $(this).closest("li").addClass("active");
+                    
+                    $.pjax({
+                        "url": $(this).attr("href"),
+                        "fragment": "#posts",
+                        "container": "#posts",
+                        "success": function (data) { 
+                        }
+                    });
+                    event.preventDefault();
+                });
+            });
+        </script>        
+        <script type="text/javascript">
+            $(function() {
+                initBlogPage();
+                initBlogHome();
+            });
+        </script>
+    </body>
+</html>
+
+                            
+                            
+                            
