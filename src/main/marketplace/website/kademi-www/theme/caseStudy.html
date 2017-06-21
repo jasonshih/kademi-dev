@@ -1,0 +1,177 @@
+<html>
+    <head>
+
+    </head>
+    
+<body>
+		<!-- Content
+		============================================= -->
+		<section id="content">
+
+			<div class="content-wrap">
+
+				<div class="container clearfix">
+				    
+				    
+	        
+                $page.body
+
+
+						<!-- Portfolio Single - Share
+						============================================= -->
+						<div class="si-share clearfix">
+							<span>Share:</span>
+							<div>
+                                            <div class="addthis_toolbox addthis_default_style addthis_32x32_style" 
+                                                                        addthis:url="http://${page.find("/").domainName}${page.href}"
+                                                                        addthis:title="$page.title" > 
+                            <a class="social-icon si-borderless si-facebook addthis_button_preferred_1" id="fb">
+                                    <i class="icon-facebook"></i>
+                                    <i class="icon-facebook"></i>
+                            </a>  
+                            <a class="social-icon si-borderless si-twitter addthis_button_preferred_2" id="tw">
+                                    <i class="icon-twitter"></i>
+                                    <i class="icon-twitter"></i>
+                            </a>  
+        
+                            <a class="social-icon si-borderless si-linkedin addthis_button_preferred_3" id="li">
+                                    <i class="icon-linkedin"></i>
+                                    <i class="icon-linkedin"></i>
+                            </a>  
+                            <a class="social-icon si-borderless si-gplus addthis_button_preferred_4" id="gplus">
+                                    <i class="icon-gplus"></i>
+                                    <i class="icon-gplus"></i>
+                            </a>      
+
+                            
+                            
+                                                                                                                
+                                                                      
+                                                        <script type="text/javascript">
+                                                                                var addthis_config = {
+                                                                                    "data_track_addressbar": true
+                                                                                };
+                                                                            </script> 
+                                                        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-518336b66f2b2da2"></script> 
+                                                        <!-- AddThis Button END --> 
+                                            </div>   
+							</div>
+						</div>
+						<!-- Portfolio Single - Share End -->
+
+					</div><!-- .portfolio-single-content end -->        
+
+					<div class="clear"></div>
+
+					<div class="divider divider-center"><i class="icon-circle"></i></div>
+					
+					
+					<!-- Related Portfolio Items
+					============================================= -->
+					<h4>Other Projects:</h4>
+
+					<div id="related-portfolio" class="owl-carousel portfolio-carousel">
+
+						<div class="oc-item">
+        <div class="iportfolio">
+          <div class="portfolio-image"> <a href="case-study-1.html"> <img src="/theme/images/overview/case-study-1.jpg" alt="Open Imagination"> </a>
+            <div class="portfolio-overlay"> <a href="case-study-1.html" class="center-icon"><i class="icon-line-plus"></i></a> </div>
+          </div>
+          <div class="portfolio-desc">
+            <h3><a href="case-study-1.html">Channel Engagement</a></h3>
+            <span><a href="case-study-1.html">Driving sales  at POS through training & rewards.</a>, <a href="#">Icons</a></span> </div>
+        </div>
+      </div>
+      <!--<div class="oc-item">
+        <div class="iportfolio">
+          <div class="portfolio-image"> <a href="case-study-2.html"> <img src="/theme/images/overview/case-study-2.jpg" alt="Open Imagination"> </a>
+            <div class="portfolio-overlay"> <a href="case-study-2.html" class="center-icon"><i class="icon-line-plus"></i></a> </div>
+          </div>
+          <div class="portfolio-desc">
+            <h3><a href="case-study-2.html">Reward Stores</a></h3>
+            <span><a href="case-study-2.html">Rewarding and engaging with dealer networks.</a></span> </div>
+        </div>
+      </div>-->
+      <div class="oc-item">
+        <div class="iportfolio">
+          <div class="portfolio-image"> <a href="case-study-5.html"> <img src="/theme/images/overview/case-study-5.jpg" alt="Open Imagination"> </a>
+            <div class="portfolio-overlay"> <a href="case-study-5.html" class="center-icon"><i class="icon-line-plus"></i></a> </div>
+          </div>
+          <div class="portfolio-desc">
+            <h3><a href="case-study-5.html">Asset management</a></h3>
+            <span><a href="case-study-5.html">Managing and disseminating brand assets across large networks.</a></span> </div>
+        </div>
+      </div>
+      <div class="oc-item">
+        <div class="iportfolio">
+          <div class="portfolio-image"> <a href="case-study-3.html"> <img src="/theme/images/overview/case-study-3.jpg" alt="Open Imagination"> </a>
+            <div class="portfolio-overlay"> <a href="case-study-3.html" class="center-icon"><i class="icon-line-plus"></i></a> </div>
+          </div>
+          <div class="portfolio-desc">
+            <h3><a href="case-study-3.html">Custom App Development</a></h3>
+ <span><a href="case-study-3.html">Creating highly bespoke solutions inside Kademi.</a></span> </div>
+        </div>
+      </div>
+      <div class="oc-item">
+        <div class="iportfolio">
+          <div class="portfolio-image"> <a href="case-study-4.html"> <img src="/theme/images/overview/case-study-4.jpg" alt="Open Imagination"> </a>
+            <div class="portfolio-overlay"> <a href="case-study-4.html" class="center-icon"><i class="icon-line-plus"></i></a> </div>
+          </div>
+          <div class="portfolio-desc">
+            <h3><a href="case-study-4.html">Driving customer leads</a></h3>
+           <span><a href="case-study-4.html">Develop highly targeted and automated ECRM campaigns.</a></span> </div>
+        </div>
+      </div>
+						
+						
+					</div><!-- .portfolio-carousel end -->
+
+					<script type="text/javascript">
+
+						jQuery(document).ready(function($) {
+
+							var relatedPortfolio = $("#related-portfolio");
+
+							relatedPortfolio.owlCarousel({
+								margin: 20,
+								nav: false,
+								dots:true,
+								autoplay: true,
+								autoplayHoverPause: true,
+								responsive:{
+									0:{ items:1 },
+									480:{ items:2 },
+									768:{ items:3 },
+									992: { items:4 }
+								}
+							});
+
+						});
+
+					</script>
+        
+        
+        
+				</div>
+
+			</div>
+
+		</section><!-- content end -->
+		
+                              <script type="text/javascript">
+                                  $(function() {
+                                      $("#fb").removeAttr('class');
+                                       $("#tw").removeAttr('class');
+                                        $("#li").removeAttr('class');
+                                         $("#gplus").removeAttr('class');
+                                      $('#fb').addClass('addthis_button_facebook social-icon si-borderless si-facebook addthis_button_preferred_1');
+                                      $('#tw').addClass('addthis_button_twitter social-icon si-borderless si-twitter addthis_button_preferred_2');
+                                      $('#li').addClass('addthis_button_linkedin social-icon si-borderless si-linkedin addthis_button_preferred_3');
+                                      $('#gplus').addClass('addthis_button_google_plusone_share social-icon si-borderless si-gplus addthis_button_preferred_4');
+                                    });
+                              </script>             
+</body>
+</html>                
+                            
+                            
+                            

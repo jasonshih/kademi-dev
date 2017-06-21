@@ -1,0 +1,67 @@
+<html>
+    <head>
+        <title>Member Login</title>
+    </head>
+    <body class="login-page">
+
+        <div class="logincontainer">
+            #if( $user )
+							<script type="text/javascript">
+							   window.location="/";
+							</script>	
+            #else
+
+        	       
+                    
+        		<section id="content">
+        			<div class="content-wrap">
+        				<div class="container clearfix divcenter">
+        					<div class="col_one_third nobottommargin ">
+        						<div class="well well-lg nobottommargin">
+        							<div class="login-container">
+        								<form class="login form-horizontal" method="POST" role="form">
+        								    <h3>Login to your Account</h3>
+        								    
+        									<p class="login message" style="display: none">.</p>
+        									
+								<div class="col_full">
+									<label for="login-form-username">Email</label>
+<input type="text"  autocapitalize="off" autocorrect="off" class="form-control" required="true" name="email" id="login-form-username" title="Email address"/>						
+								</div>        									
+        									
+								<div class="col_full">
+									<label for="login-form-password">Password</label>
+									<input type="password" class="form-control" required="true" name="password" id="login-form-password" title="Password"  />
+								</div>
+								
+
+        					
+								<div class="col_full nobottommargin">
+								    <button type="submit" class="button button-3d nomargin" id="login-form-submit">Login</button>
+								    <a class="Forgot fright" title="Forgotten password" href="/password-reset">Forgotten password</a>
+								</div>
+								
+
+        								</form>
+        							</div>	
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        		</section>
+
+            #end
+        </div>
+
+        <script type="text/javascript">
+            $(function () {
+                jQuery(".login-container").user({
+                    afterLoginUrl:"/",
+                    valiationMessageSelector: "p.login.message"
+                }); // setup login and logout
+            });
+        </script>
+    </body>
+</html>
+            
+            
