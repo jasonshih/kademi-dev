@@ -1369,7 +1369,8 @@
                     });
                     
                     var colorPicker = form.find('.txt-bg-color');
-                    contentEditor.initSimpleColorPicker(colorPicker, function (color) {
+                    contentEditor.initColorPicker(colorPicker, function (color) {
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('background-color', color);
                     });
                     
@@ -1495,8 +1496,10 @@
             form.find('.select-bg-repeat').val(target.style.backgroundRepeat || 'repeat');
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
-            
-            form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
+
+            var colorPicker = form.find('.txt-bg-color').parent();
+            colorPicker.colorpicker('setValue', target.style.backgroundColor);
+            // form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
             
             form.find('.txt-padding').each(function () {
                 var txt = $(this);

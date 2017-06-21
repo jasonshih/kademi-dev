@@ -1,0 +1,386 @@
+<html>
+<head>
+<title>View Blog Article</title>
+<script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
+<style>
+    .hid{
+        display:none;
+    }
+    .entry-sidebarimage{
+        display:block !important;
+    }
+
+   .comments-stream .forumReply{
+        margin: 0px 0 30px 0px;
+        position: relative;
+        float:left;
+        width:100%;
+        border: 1px solid #e5e5e5;
+        border-radius: 5px;
+        padding: 20px 20px 20px 50px;
+        position: relative;        
+   } 
+    .comments-stream .profilePic{
+        background: #fff none repeat scroll 0 0;
+        border: 1px solid #e5e5e5;
+        border-radius: 50%;
+        left: -35px;
+        padding: 4px;
+        position: absolute;
+        top: 15px;  
+    }
+    
+    .comments-stream .profilePic img{
+        width:60px;
+        height:60px;
+        display:block;
+        border-radius:50%;
+    }  
+    
+    .comments-stream .user{
+        font-size: 16px;
+        line-height:18px;
+        font-weight: bold;
+        width:100%;
+        float:left;
+        margin-bottom:7px;
+        margin-top:0px;
+        border: medium none;
+        color: #333;      
+        text-transform:capitalize;
+    }
+    
+    .comments-stream .user:hover{
+        color:#ec135b;
+    }
+    p.cmt{
+        margin-bottom:10px;
+        width:100%;
+        float:left;
+        line-height:20px !important;
+    }
+    
+    
+    .comments-stream .auxText{
+        width:100%;
+        float:left;
+        margin-bottom:7px;
+        
+        color: #aaa;
+        font-family: "robotomedium_italic";
+        font-size: 12px;
+        font-weight: normal; 
+        border-bottom:0px solid #777777;
+        text-decoration: none;
+        
+        cursor:text;
+    }
+  
+    
+
+</style>     
+</head>
+<body class="blog-details blog-article has-navbar-white">
+        <!-- Content  -->
+        <section id="content">
+            <div class="content-wrap">
+                <div class="container clearfix">
+
+                                            #set($tt="Case study")
+               
+                                            #if ($page.category==$tt)
+                                        	    #set($style1 = "width:100%;") 
+                                        	    #set($style2 = "display:none;")
+                                        	#end
+
+                    <div class="postcontent nobottommargin clearfix" style="$style1">
+                        <div class="single-post nobottommargin">
+    
+                            <!-- Single Post  -->
+                            <div class="entry clearfix">
+    
+                                <!-- Entry Title -->
+                                <div class="entry-title">
+                                    <h2>$page.title</h2>
+                                </div><!-- .entry-title end -->
+    
+                                <!-- Entry Meta  -->
+                                <ul class="entry-meta clearfix">
+                                    <li><i class="icon-calendar3"></i>$page.articleDate</li>
+                                    
+                                    #if($page.selectedTags.size() <1)
+
+                                    #else
+                                        <li><i class="icon-folder-open"></i> 
+                                            #set($count=0)
+                                            #foreach($tag in $page.selectedTags)
+                                            	##if ($page.isSelectedTag($tag))
+                                            	#set($count=$count+1)
+                                            	#if($count==$page.selectedTags.size())
+                                            	    <a href="/blogs/?tag=$formatter.percentEncode( $tag)">$tag</a>
+                                            	#else
+                                            	   <a href="/blogs/?tag=$formatter.percentEncode( $tag)">$tag,</a>
+                                            	#end
+                                            #end                                    
+                                        </li>                                        
+                                    #end
+                                    <li><i class="icon-comments"></i> $page.numComments Comments</li>                                    
+                                </ul><!-- .entry-meta end -->
+    
+                                <!-- Entry Image  -->
+    
+                                    #if($page.bestDefaultImageHref) 
+                                        #set($image = $page.bestDefaultImageHref) 
+                                    #else
+                                        #set($image ="/theme/images/blog/full/10.jpg") 
+                                    #end                            
+                                <div class="entry-image bottommargin imageblogarticle">
+                                    <center>
+                                        <a href="#"><img src="$image" alt="$page.title"></a>
+                                    </center>
+                                </div><!-- .entry-image end -->
+    
+                                <!-- Entry Content -->
+                                <div class="entry-content notopmargin">
+                                                    $page.body
+                                    <!-- Post Single - Content End -->
+                                    
+                                    
+                                                                                
+                                    <!-- Tag Cloud
+                                   
+                                    <div class="tagcloud clearfix bottommargin">
+                                        #foreach($tag in $page.tags)
+                                        	#if ($page.isSelectedTag($tag))
+                                        	<a href="/blogs/?tag=$formatter.percentEncode( $tag)">$tag</a>
+                                        	#end
+                                        #end
+                                    </div>
+                                     -->
+    
+    
+                                    <div class="clear"></div>
+    
+    
+                                    <!-- Post Single - Share  -->
+                                    <div class="si-share noborder clearfix">
+                                       <!-- <span>Share this Post:</span>-->
+                                        <div>
+                                        
+                                        
+                                                <div class="addthis_toolbox addthis_default_style addthis_32x32_style" 
+                                                                            addthis:url="http://${page.find("/").domainName}${page.href}"
+                                                                            addthis:title="$page.title" > 
+                                <a class="social-icon si-borderless si-facebook addthis_button_preferred_1" id="fb">
+                                        <i class="icon-facebook"></i>
+                                        <i class="icon-facebook"></i>
+                                </a>  
+                                <a class="social-icon si-borderless si-twitter addthis_button_preferred_2" id="tw">
+                                        <i class="icon-twitter"></i>
+                                        <i class="icon-twitter"></i>
+                                </a>  
+            
+                                <a class="social-icon si-borderless si-linkedin addthis_button_preferred_3" id="li">
+                                        <i class="icon-linkedin"></i>
+                                        <i class="icon-linkedin"></i>
+                                </a>  
+                                <a class="social-icon si-borderless si-gplus addthis_button_preferred_4" id="gplus">
+                                        <i class="icon-gplus"></i>
+                                        <i class="icon-gplus"></i>
+                                </a>      
+    
+                                
+                                
+                                                                                                                    
+                                                                          
+                                                            <script type="text/javascript">
+                                                                                    var addthis_config = {
+                                                                                        "data_track_addressbar": true
+                                                                                    };
+                                                                                </script> 
+                                                            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-518336b66f2b2da2"></script> 
+                                                            <!-- AddThis Button END --> 
+                                                </div>                                    
+    
+                                        </div>
+                                    </div><!-- Post Single - Share End -->
+    
+                                </div>
+                            </div><!-- .entry end -->
+    
+                            <!-- Post Navigation
+                            ============================================= -->
+                            <div class="post-navigation clearfix">
+    
+                                <div class="col_half nobottommargin">
+                					#set( $prev = $page.parent.articles.sortByDate.previous($page) )
+                					#set ($lastItemIndex = $page.parent.articles.size())
+                					#set ($lastIndex = $lastItemIndex - 1)
+                					
+                					#if( $prev )
+                						 <a href="$prev.href">&lArr; Previous</a>
+                					#else
+                					
+                					#end
+                                </div>
+    
+    
+                                <div class="col_half col_last tright nobottommargin">
+                					#set( $next = $page.parent.articles.sortByDate.next($page) )
+                					#if( $next )
+                						<a href="$next.href">Next &rArr;</a>
+                					#else
+                					#end                            
+                                    
+                                </div>
+    
+                            </div><!-- .post-navigation end -->
+                            
+                            
+                            
+                            
+                            
+                            
+          
+                                <div id="comments">
+                                    <h3 id="comments-title"><span>$page.numComments</span> Comments</h3>
+                                    <div class="comments-stream">
+                                        <img src="/static/common/ajax-loader.gif" />
+                                    </div>  
+
+                                    <div class="clr"></div>            
+
+                                    <div id="respond" class="clearfix">
+                                        <h3>Leave a <span>Comment</span></h3>
+                                        <form action="#" method="post" class="postComment" id="postComment">  
+                                            <div class="commentContainer">
+                                                <div class="col_full">
+                                                    <label for="comment">Comment</label>
+                                                    <textarea name="comment" cols="58" rows="7"  id="postQuestion" tabindex="4" class="sm-form-control required"></textarea>
+                                                </div>
+                                                <div class="col_full nobottommargin commentControls">
+                                                    <button name="submit" type="submit" id="submit-button" tabindex="5" value="Submit" class="button button-3d nomargin #if(!$page.allowAnonComments)requiresUser#end">Submit Comment</button>
+                                                </div>
+                                                
+                                            </div>
+                                        </form>
+                                    </div><!-- #respond end -->
+                                </div>
+
+                 
+
+           
+  
+
+                        </div>
+                    </div><!-- .postcontent end -->
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    <!-- Sidebar
+                    ============================================= -->
+                    <div class="sidebar nobottommargin col_last clearfix" style="$style2">
+                        <div class="sidebar-widgets-wrap">
+
+
+
+                            <div class="widget clearfix">
+
+                                <div class="tabs nobottommargin clearfix" id="sidebar-tabs">
+
+
+                                    <div class="tab-container">
+                                        <div class="tab-content clearfix" id="tabs-1">
+                                            <div id="popular-post-list-sidebar">
+												<h4>Other blog stories</h4>
+                                            #foreach($article in $page.parent.recentArticles)
+                                                <div class="spost clearfix">
+                                                    <div class="entry-image entry-sidebarimage">
+                                                        #set($image = false)
+                                                        #set($image = $article.bestDefaultImageHref)
+                                                        #if( $image )
+                                                        
+                                                        #else
+                                                            #set($image = "/theme/images/blog/grid/17.jpg")
+                                                        #end                                                        
+                                                        
+                                                        <a href="$article.href" class="nobg"><img class="img-circle" src="$image" alt="$article.title"></a>
+                                                    </div>
+                                                    <div class="entry-c">
+                                                        <div class="entry-title">
+                                                            <h4><a href="$article.href">$article.title</a></h4>
+                                                        </div>
+                                                        <ul class="entry-meta">
+                                                            <li><i class="icon-comments-alt"></i>$article.numComments Comments</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            #end
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="widget clearfix">
+                                <script type="text/javascript">
+                                    jQuery(document).ready(function($) {
+                                        var ocClients = $("#oc-portfolio-sidebar");
+                                        ocClients.owlCarousel({
+                                            items: 1,
+                                            margin: 10,
+                                            loop: true,
+                                            nav: false,
+                                            autoplay: true,
+                                            dots: true,
+                                            autoplayHoverPause: true
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div><!-- .sidebar end -->                    
+                </div>
+            </div>
+
+
+                            <div>
+                            </div>
+        </section><!-- content end -->
+        
+                                <script type="text/javascript">
+                                    $(function () {
+                                       $(".entry-meta>li>a:contains('deleted')").hide();
+                                    });
+                                </script>        
+                                <script type="text/javascript">
+                                    jQuery(document).ready(function () {
+                                        initBlogPage();
+                                        //$(".timeago").timeago();
+                                        initComments(window.location.pathname, '.btn-follow-post', '.btn-unfollow-post');
+                                    });
+                                </script> 
+        
+          
+        
+                                <script>
+                                  $(function() {
+                                      $("#fb").removeAttr('class');
+                                       $("#tw").removeAttr('class');
+                                        $("#li").removeAttr('class');
+                                         $("#gplus").removeAttr('class');
+                                      $('#fb').addClass('addthis_button_facebook social-icon si-borderless si-facebook addthis_button_preferred_1');
+                                      $('#tw').addClass('addthis_button_twitter social-icon si-borderless si-twitter addthis_button_preferred_2');
+                                      $('#li').addClass('addthis_button_linkedin social-icon si-borderless si-linkedin addthis_button_preferred_3');
+                                      $('#gplus').addClass('addthis_button_google_plusone_share social-icon si-borderless si-gplus addthis_button_preferred_4');
+                                    });
+                                </script>    
+                             
+</body>
+</html>
+                            
