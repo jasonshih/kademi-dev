@@ -2,11 +2,12 @@ function initManageAuctions() {
     flog("initManageWebsites");
 
     initTimeAgo();
-    initAuctionFilter();
+    // initAuctionFilter();
     initModalForm();
     initDateTimePicker();
     initAuctionDelete();
     initAuctionTable();
+    handlePageDateRangePicker();
 }
 
 function initTimeAgo() {
@@ -86,7 +87,7 @@ function initDateTimePicker() {
 }
 
 function initAuctionDelete() {
-    $('#auction-wrapper').on('click', '.XAuction', function (e) {
+    $(document).on('click', '#auction-wrapper .XAuction', function (e) {
         e.preventDefault();
         var href = $(this).attr('href');
         confirmDelete(href, getFileName(href), function () {
@@ -117,27 +118,19 @@ function initAuctionTable() {
     });
 }
 
-var filter_options = {
-    state: ''
-};
-
 function reloadAuctionTable() {
-    var href = window.location.pathname + '?' + $.param(filter_options);
+    var href = window.location.pathname + window.location.search;
     $('#auctionTableWrapper').reloadFragment({
         url: href,
         whenComplete: function () {
             $('abbr.timeago').timeago();
             initAuctionTable();
-            initAuctionDelete();
         }
     });
-};
+}
 
-$(document.body).on('pageDateChanged', function (e, startDate, endDate, text, trigger, initial) {
-    if (initial) {
-        flog("Ignore initial");
-        return;
-    }
-    reloadAuctionTable();
-
-});
+function handlePageDateRangePicker() {
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        reloadAuctionTable();
+    })
+}
