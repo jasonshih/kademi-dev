@@ -1,0 +1,30 @@
+{
+    "nodes": [
+        {
+            "begin": {
+                "nodeId": "begin1",
+                "nodeType": "begin",
+                "x": 23,
+                "y": 15,
+                "nextNodeId": "taskCompleteGoal-ce259e"
+            }
+        },        
+        
+        {
+            "taskCompleteGoal": {
+                "nodeId": "taskCompleteGoal-ce259e",
+                "nodeType": "taskCompleteGoal",
+                "x": 360,
+                "y": 20,
+                "action": "STARTED",
+                "timeoutUnits": null,
+                "timeoutMultiples": null,
+                "stageName": null,
+                "source": null,
+                "cost": null,
+                "probability": null,
+                "timerTime": null
+            }
+        }
+    ]
+}
