@@ -1,22 +1,65 @@
 {
+    "name": "ksub",
+    "title": null,
+    "leadsGroup": null,
+    "hiddenToSales": false,
+    "sources": null,
+    "stages": null,
     "nodes": [
-        {
-            "begin": {
-                "nodeId": "begin1",
-                "nodeType": "begin",
-                "x": 23,
-                "y": 15,
-                "nextNodeId": "taskCompleteGoal-ce259e"
-            }
-        },        
-        
         {
             "taskCompleteGoal": {
                 "nodeId": "taskCompleteGoal-ce259e",
-                "nodeType": "taskCompleteGoal",
+                "title": "Trial started",
                 "x": 360,
                 "y": 20,
-                "action": "STARTED",
+                "timeoutMultiples": null,
+                "timeoutUnits": null,
+                "timeoutNode": null,
+                "stageName": null,
+                "cost": null,
+                "probability": null,
+                "source": null,
+                "taskName": null,
+                "nextNodeId": "emailAction-a37885",
+                "description": "Task complete: null",
+                "timoutTime": null,
+                "name": "taskCompleteGoal-ce259e"
+            }
+        },
+        {
+            "begin": {
+                "nodeId": "begin-cc196c",
+                "title": null,
+                "nextNodeId": "taskCompleteGoal-ce259e",
+                "x": 23,
+                "y": 15,
+                "onePerProfile": null,
+                "initialGoal": null
+            }
+        },
+        {
+            "emailAction": {
+                "title": "Welcome EDM",
+                "nextNodeId": "taskCompleteGoal-dd06d7",
+                "x": 40,
+                "y": 250,
+                "website": "688",
+                "contentFileName": "emailAction-a37885-content.html",
+                "subject": "welcome",
+                "from": null,
+                "replyTo": null,
+                "to": null,
+                "attachments": null,
+                "nodeId": "emailAction-a37885"
+            }
+        },
+        {
+            "taskCompleteGoal": {
+                "nodeId": "taskCompleteGoal-dd06d7",
+                "nodeType": "taskCompleteGoal",
+                "x": 354,
+                "y": 270,
+                "action": "PAYMENT_DUE",
                 "timeoutUnits": null,
                 "timeoutMultiples": null,
                 "stageName": null,
@@ -26,5 +69,11 @@
                 "timerTime": null
             }
         }
-    ]
+    ],
+    "extraFields": [],
+    "lostReasons": [],
+    "customerActivities": null,
+    "closedActions": null,
+    "cancelledActions": null,
+    "funnelTesters": null
 }
