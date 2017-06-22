@@ -17,6 +17,18 @@
                 "group": "main",
                 "path": "/theme/apps/content/selectLang.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.lightbox-0.5.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/page.js"
+            }
         }
     ]
 }

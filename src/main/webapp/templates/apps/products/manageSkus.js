@@ -216,7 +216,8 @@
             var td = $(row).find('td:first-child');
             
             var skuId = td.data('skuid');
-            var imgHashes = td.attr('data-selectableimg').split(',');
+            var imgHashes = (td.attr('data-selectableimg') || '').trim();
+            imgHashes = imgHashes === '' ? [] : imgHashes.split(',');
             var modalOptionImg = $('#modal-option-img');
             modalOptionImg.find('input[name=skuId]').val(skuId);
             

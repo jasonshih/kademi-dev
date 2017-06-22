@@ -227,7 +227,7 @@
 
 .node {
     position: absolute;
-    z-index: 4;
+    z-index: 5;
     width: 210px;
     height: 130px;
     box-shadow: 0 0 7px 0 rgba(0, 0, 0, .37);

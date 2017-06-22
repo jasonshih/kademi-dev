@@ -602,11 +602,16 @@
             }
         });
         
-        var data = JSON.parse($("#view-lead-tags").val());
-        
-        $.each(data, function(key, element) {
-            $('#view-lead-tags').tagsinput('add', {id: element.id, name: element.name}, {preventPost: true});
-        });
+        try {
+            var data = JSON.parse($("#view-lead-tags").val());
+            
+            $.each(data, function (key, element) {
+                $('#view-lead-tags').tagsinput('add', {id: element.id, name: element.name}, {preventPost: true});
+            });
+        } catch (e) {
+            flog("Could not parse tags JSON " + e);
+        }
+
         
         $("#view-lead-tags").on('beforeItemRemove', function (event) {
             if (event.options !== undefined && event.options.preventPost !== undefined && event.options.preventPost === true) {
