@@ -1,14 +1,12 @@
-#parse("/theme/masterTemplate.html")
-#@render()
 <html>
-    <head>
-       <title>Checkout</title>
-    </head>
-    <body>
-    <section>
-        <div class="container-bg">
-            <div class="container-layout container">
-                <div class="container-content-wrapper">
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+<section>
+    <div class="container-bg store-checkout-page">
+        <div class="container-layout container">
+            <div class="container-content-wrapper">
 
                 <div class="row">
                     <div class="col-sm-7" data-type="container-content">
@@ -29,19 +27,10 @@
                         </section>
                     </div>
                 </div>
-                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <script type="text/javascript" src="/theme/apps/ecommerce/storeCheckout.js">//</script>
-    <script type="text/javascript">
-        $(function () {
-            initEcommerceCheckout();
-        });
-    </script>
-
-
-    </body>
+</body>
 </html>
-#end
