@@ -20,35 +20,43 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
                         <colgroup>
+                            <col width="20%" />
+                            <col width="20%" />
+                            <col width="100px" />
+                            <col width="100px" />
+                            <col width="30%" />
                             <col width="100px" />
                             <col width="100px" />
                             <col width="100px" />
-                            <col width="16%" />
-                            <col width="40%" />
-                            <col width="100px" />
-                            <col width="100px" />
-                            <col width="20px" />
+                            <col width="50px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Admin Org</th>
+                                <th>Billing contact</th>
                                 <th>Expiry Date</th>
                                 <th>Plan Name</th>
                                 <th>Limits Text</th>
-                                <th>License Key</th>
                                 <th>Created Date</th>
                                 <th>Modified Date</th>
                                 <th><input type="checkbox" class="check-all"/></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="subscriptionsTableBody" class="pagination-results">
                             #foreach($sub in $!page.subscriptions)
                             <tr>
-                                <td>$sub.id</td>
+                                <td>
+                                    <a href="/organisations/$sub.adminOrg.id/edit">$sub.adminOrg.orgId</a>                                    
+                                </td>
+                                <td>
+                                    #if( $sub.billingContact )
+                                    <a href="/manageUsers/$sub.billingContact.id/">$sub.billingContact.email</a>
+                                    #end
+                                </td>
                                 <td>$!formatter.formatDate($!sub.expiryDate)</td>
-                                <td>$sub.planName</td>
-                                <td>$sub.licenseText</td>
-                                <td>$sub.licenseSig</td>
+                                <td>$!sub.planName</td>
+                                <td>$!sub.licenseText</td>
                                 <td>$!formatter.formatDate($!sub.createdDate)</td>
                                 <td>$!formatter.formatDate($!sub.modifiedDate)</td>
                                 <td><input type="checkbox" data-id="$sub.id" class="subscription-check"/></td>
