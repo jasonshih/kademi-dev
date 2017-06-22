@@ -145,6 +145,7 @@
         initKToolbarSideBar();
         
         window.onbeforeunload = function () {
+            var body = $("body");
             if (body.hasClass('content-changed')) {
                 return 'Are you sure to leave the editor? You will lose any unsaved changes';
             }
