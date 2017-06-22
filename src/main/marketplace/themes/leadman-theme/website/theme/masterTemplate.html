@@ -51,18 +51,15 @@
         <link rel="stylesheet" href="/theme/overrides.css" />
 
         <!-- Injected CSS sources -->
-        #foreach($groupEntry in $templater.cssSources.entrySet())
-            #foreach($cssFile in $groupEntry.value)
-                <link rel="stylesheet" type="text/css" href="$cssFile" />
-            #end
+        #foreach($groupEntry in $templater.cssSources.entrySet())        
+        <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />        
         #end
         <!-- End injected CSS sources -->
 
-        <!-- Injected JS sources -->
+        
+        <!-- Injected JS sources -->                
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script src="$jsFile" type="text/javascript">//</script>
-            #end
+            <script src="/$templater.getCombinedJsPath($groupEntry.value)" type="text/javascript">//</script>
         #end
         <!-- End injected JS sources -->
 
