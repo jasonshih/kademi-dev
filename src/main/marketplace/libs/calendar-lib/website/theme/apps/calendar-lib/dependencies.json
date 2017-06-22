@@ -19,6 +19,12 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/dashboardUpcomingEvents.js"
+            }
+        },
+        {
           "css": {
               "cssMedia": "all",
               "path": "/static/css/fullcalendar-1.6.4.css"

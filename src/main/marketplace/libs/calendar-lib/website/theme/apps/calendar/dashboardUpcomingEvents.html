@@ -1,4 +1,4 @@
-<form id="event-range-form" method="post" action="/profile">
+<form id="event-range-form" class="dashboard-upcomming-events" method="post" action="/profile">
     <div class="dashboard-upcoming-events" id="dashboard-upcoming-events">
         #if( $userResource.find("Calendars").calendarInvites.size() > 0 )
         <div class="panel panel-default">
@@ -61,5 +61,3 @@
         </div>
     </div>
 </form>
-
-<script type="text/javascript" src="/theme/apps/calendar/dashboardUpcomingEvents.js">//</script>
