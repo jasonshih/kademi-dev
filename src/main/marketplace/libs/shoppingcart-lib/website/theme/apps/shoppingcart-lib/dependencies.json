@@ -1,9 +1,6 @@
 {
     "appDependencies": [
-        {
-            "appId": "shoppingcart-lib",
-            "branch": "1.0.2"
-        }
+
     ],
     "dependencies": [
         {

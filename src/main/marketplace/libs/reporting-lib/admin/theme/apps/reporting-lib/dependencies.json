@@ -1,12 +1,8 @@
 {
     "appDependencies": [
         {
-            "appId": "d3-lib",
-            "branch": "3.4.1"
-        },
-        {
             "appId": "nvd3-lib",
-            "branch": "1.8.1"
+            "branch": "1.8.2"
         },
         {
             "appId": "moment-lib",
