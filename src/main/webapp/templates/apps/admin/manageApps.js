@@ -32,6 +32,7 @@ function initApps() {
     });
     
     initSettingsForms();
+    initUpdates();
     initAppSearchers();
     initAppBuilder();
     
@@ -40,6 +41,12 @@ function initApps() {
     //    var form = modal.find('form');
     //    resetForm(form);
     //});
+}
+
+function initUpdates() {
+    $("body").on("click", ".update-all-apps", function(e) {
+        
+    });
 }
 
 function initAppBuilder() {
