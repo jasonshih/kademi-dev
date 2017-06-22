@@ -73,7 +73,7 @@
                 #end
 
 
-                <div class="row products-list ecomStoreCategoryProductsComponent" id="products-list-${prodsListId}">
+                <div class="row products-list grid-layout ecomStoreCategoryProductsComponent ecom-store-category-products" id="products-list-${prodsListId}">
                     #foreach($p in $prods)
                         #set ($prodUrl = "$store/$category/$p.name")
                         #set($bg = "/static/images/photo_holder.png")
@@ -105,36 +105,11 @@
                         </div>
 
                     #end
-
-                    <script type="text/javascript">
-                        $(function () {
-                            var win = $(window);
-                            var timer = null;
-
-                            win.on('resize', function () {
-                                clearTimeout(timer);
-                                timer = setTimeout(function () {
-                                    var brieves = $('#products-list-${prodsListId}').find('.product-brief');
-                                    brieves.css('height', '');
-
-                                    if (win.width() > 767) {
-                                        var heights = [];
-                                        brieves.each(function () {
-                                            heights.push($(this).innerHeight());
-                                        });
-
-                                        brieves.css('height', Math.max.apply(Math, heights));
-                                    }
-                                }, 150);
-                            }).trigger('resize');
-                        });
-                    </script>
                 </div>
 
 
-
             #else
-            <div class="products-list" id="products-list-${prodsListId}">
+            <div class="products-list ecom-store-category-products" id="products-list-${prodsListId}">
                 #foreach($p in $prods)
                     #set ($prodUrl = "/$store/$category/$p.name")
                     <div class="media prod">
@@ -167,8 +142,6 @@
                 #end
             </div>
             #end
-
-        <script type="text/javascript" src="/theme/apps/ecommerce/storeProductList.js">//</script>
 
         #else
         <p>Sorry, we couldnt find any products for you</p>

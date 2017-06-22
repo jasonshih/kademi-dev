@@ -16,3 +16,13 @@
     position: relative;
     z-index: 1;
 }
+
+#infinitive-loader {
+    text-align: center;
+    padding: 30px;
+    display: none;
+}
+
+#products-list {
+    overflow: hidden;
+}

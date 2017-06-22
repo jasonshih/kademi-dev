@@ -129,7 +129,11 @@
         initShowBy();
     };
 
-    initEcomCategoryPage();
+    if ($('.ecom-category-products-component').length > 0) {
+        initEcomCategoryPage();
+    }
+
+
 })(jQuery);
 
 
