@@ -599,7 +599,221 @@
             
             contentEditor.toMenuData(li.children('.menuList'), list);
         });
-    }
+    };
+    
+    contentEditor.generateMenuItemHtml = function (menuItem, items, isRootChild) {
+        var itemHtml = '';
+        itemHtml += '<li>';
+        itemHtml += '    <div data-id="' + menuItem.id + '" data-href="' + (menuItem.href || '') + '" data-hidden="' + (menuItem.hidden || 'false') + '" class="menuItem">';
+        itemHtml += '        <span class="btn-group btn-group-xs small">';
+        itemHtml += '            <a class="btn btn-success btnAddMenuItem" href="#">';
+        itemHtml += '                <span class="fa fa-plus small"></span>';
+        itemHtml += '            </a>';
+        itemHtml += '            <a class="btn btn-info btnSortMenuItem" href="#">';
+        itemHtml += '                <span class="fa fa-sort small"></span>';
+        itemHtml += '            </a>';
+        itemHtml += '            <a class="btn btn-primary btnEditMenuItem" href="#">';
+        itemHtml += '                <span class="fa fa-pencil small"></span>';
+        itemHtml += '            </a>';
+        itemHtml += '        </span>';
+        itemHtml += '        <span class="menuItemText">' + (menuItem.text || '') + '</span>';
+        itemHtml += '    </div>';
+        itemHtml += '    <ol class="menuList" data-id="' + menuItem.id + '">';
+        
+        if (isRootChild) {
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].parentId === menuItem.id) {
+                    itemHtml += contentEditor.generateMenuItemHtml(items[i], items);
+                }
+            }
+        }
+        
+        itemHtml += '    </ol>';
+        itemHtml += '</li>';
+        
+        return itemHtml;
+    };
+    
+    contentEditor.initMenuEditor = function (form, keditor) {
+        flog('[jquery.contentEditor] initMenuEditor', form, keditor);
+        
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: '/theme/menu.json',
+            success: function (resp) {
+                flog('[jquery.contentEditor] Menu item data', resp);
+                
+                var menuItemsHtml = '';
+                
+                var items = resp.items;
+                items.splice(0, 1);
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].parentId === 'menuRoot') {
+                        menuItemsHtml += contentEditor.generateMenuItemHtml(items[i], items, true);
+                    }
+                }
+                
+                $('.menuList.rootMenuList').html(
+                    '<li class="rootMenuItem">' +
+                    '    <div data-id="menuRoot" class="menuItem">' +
+                    '        <span class="btn-group btn-group-xs small">' +
+                    '            <a class="btn btn-success btnAddMenuItem" href="#">' +
+                    '                <span class="fa fa-plus small"></span>' +
+                    '            </a>' +
+                    '        </span>' +
+                    '        <span class="menuItemText">Root Menu Item</span>' +
+                    '    </div>' +
+                    '    <ol class="menuList" data-id="menuRoot">' + menuItemsHtml + '</ol>' +
+                    '</li>'
+                );
+                
+                var menuItemEditor = form.find('.editMenuItem');
+                var menuEditor = form.find('.menuEditor');
+                var editItem = null;
+                
+                var groupsStr = '';
+                $.each(keditor.options.allGroups, function (name, title) {
+                    groupsStr += '<option value="' + name + '">Visible only for "' + title + '"</option>';
+                });
+                menuItemEditor.find('[name=hidden]').append(groupsStr);
+                
+                form.on('click', '.btnAddMenuItem', function (e) {
+                    e.preventDefault();
+                    
+                    flog('aaaaaaaaaaaaa==================')
+                    
+                    var li = $(this).closest('li');
+                    var ol = li.children('ol');
+                    var isRootChild = li.hasClass('rootMenuItem');
+                    var btnAddHtml = '';
+                    
+                    if (isRootChild) {
+                        btnAddHtml += '<a class="btn btn-success btnAddMenuItem" href="#">';
+                        btnAddHtml += '     <span class="fa fa-plus small"></span>';
+                        btnAddHtml += '</a>';
+                    }
+                    
+                    var newId = 'menu-custom-' + Math.floor((Math.random() * 10000));
+                    ol.append(
+                        '<li>' +
+                        '   <div data-id="' + newId + '" class="menuItem">' +
+                        '       <span class="btn-group btn-group-xs small">' + btnAddHtml +
+                        '           <a class="btn btn-info btnSortMenuItem" href="#">' +
+                        '               <span class="fa fa-sort small"></span>' +
+                        '           </a>' +
+                        '           <a class="btn btn-primary btnEditMenuItem" href="#">' +
+                        '               <span class="fa fa-pencil small"></span>' +
+                        '           </a>' +
+                        '       </span>' +
+                        '       <span class="menuItemText">Enter text</span>' +
+                        '   </div>' +
+                        '   <ol class="menuList" data-id="' + newId + '"></ol>' +
+                        '</li>'
+                    );
+                    
+                    var tree = $('.menuTree ol').not('.rootMenuList');
+                    try {
+                        tree.sortable('destroy');
+                    } catch (e) {
+                    }
+                    tree.sortable({
+                        handle: '.btnSortMenuItem',
+                        items: '> li',
+                        axis: 'y',
+                        tolerance: 'pointer'
+                    });
+                });
+                
+                form.on('click', '.btnEditMenuItem', function (e) {
+                    e.preventDefault();
+                    
+                    var btn = $(this);
+                    var menuItem = btn.closest('.menuItem');
+                    editItem = menuItem;
+                    
+                    var id = menuItem.attr('data-id');
+                    var text = menuItem.find('.menuItemText').text().trim();
+                    var href = menuItem.attr('data-href');
+                    var hidden = menuItem.attr('data-hidden') || 'false';
+                    
+                    menuItemEditor.find('input[name=href]').val(href);
+                    menuItemEditor.find('input[name=text]').val(text);
+                    menuItemEditor.find('[name=hidden]').val(hidden)
+                    
+                    var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
+                    if (id.startsWith('menu-custom-')) {
+                        deleteBtn.show();
+                    } else {
+                        deleteBtn.hide();
+                    }
+                    
+                    menuItemEditor.fshow();
+                    menuEditor.fhide();
+                });
+                
+                form.on('click', '.editMenuItemOk', function (e) {
+                    e.preventDefault();
+                    
+                    var href = menuItemEditor.find('input[name=href]').val();
+                    var text = menuItemEditor.find('input[name=text]').val();
+                    text = text.trim();
+                    var hidden = menuItemEditor.find('[name=hidden]').val();
+                    
+                    editItem.attr('data-href', href);
+                    editItem.attr('data-hidden', hidden);
+                    editItem.find('.menuItemText').text(text);
+                    editItem = null;
+                    
+                    menuItemEditor.fhide();
+                    menuEditor.fshow();
+                });
+                
+                form.on('click', '.editMenuItemDelete', function (e) {
+                    e.preventDefault();
+                    
+                    editItem.closest('li').remove();
+                    
+                    menuItemEditor.fhide();
+                    menuEditor.fshow();
+                });
+                
+                form.on('click', '.editMenuItemCancel', function (e) {
+                    e.preventDefault();
+                    editItem = null;
+                    menuItemEditor.fhide();
+                    menuEditor.fshow();
+                });
+                
+                form.on('click', '.saveMenu', function (e) {
+                    e.preventDefault();
+                    
+                    var topOl = $('.menuTree ol.rootMenuList');
+                    var list = [];
+                    contentEditor.toMenuData(topOl, list);
+                    var menuJson = JSON.stringify({
+                        items: list
+                    }, null, 4);
+                    
+                    
+                    $.ajax({
+                        url: '/theme/menu.json',
+                        type: 'PUT',
+                        data: menuJson,
+                        success: function () {
+                            Msg.info('Saved menu');
+                            var component = keditor.getSettingComponent();
+                            var dynamicElement = component.find('[data-dynamic-href]');
+                            keditor.initDynamicContent(dynamicElement);
+                        },
+                        error: function (e) {
+                            Msg.error(e.status + ': ' + e.statusText);
+                        }
+                    });
+                });
+            }
+        });
+    };
     
     contentEditor.initDefaultMenuControls = function (form, keditor) {
         flog('[jquery.contentEditor] initDefaultMenuControls', form, keditor);
@@ -688,148 +902,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        var menuItemEditor = form.find('.editMenuItem');
-        var menuEditor = form.find('.menuEditor');
-        
-        form.on('click', '.btnAddMenuItem', function (e) {
-            e.preventDefault();
-            
-            var li = $(this).closest('li');
-            var ol = li.children('ol');
-            var isRootChild = li.hasClass('rootMenuItem');
-            var btnAddHtml = '';
-            
-            if (isRootChild) {
-                btnAddHtml += '<a class="btn btn-success btnAddMenuItem" href="#">';
-                btnAddHtml += '     <span class="fa fa-plus small"></span>';
-                btnAddHtml += '</a>';
-            }
-            
-            var newId = 'menu-custom-' + Math.floor((Math.random() * 10000));
-            ol.append(
-                '<li>' +
-                '   <div data-id="' + newId + '" class="menuItem">' +
-                '       <span class="btn-group btn-group-xs small">' + btnAddHtml +
-                '           <a class="btn btn-info btnSortMenuItem" href="#">' +
-                '               <span class="fa fa-sort small"></span>' +
-                '           </a>' +
-                '           <a class="btn btn-primary btnEditMenuItem" href="#">' +
-                '               <span class="fa fa-pencil small"></span>' +
-                '           </a>' +
-                '       </span>' +
-                '       <span class="menuItemText">Enter text</span>' +
-                '   </div>' +
-                '   <ol class="menuList" data-id="' + newId + '"></ol>' +
-                '</li>'
-            );
-            
-            var tree = $('.menuTree ol').not('.rootMenuList');
-            try {
-                tree.sortable('destroy');
-            } catch (e) {
-            }
-            tree.sortable({
-                handle: '.btnSortMenuItem',
-                items: '> li',
-                axis: 'y',
-                tolerance: 'pointer'
-            });
-        });
-        
-        var editItem = null;
-        
-        form.on('click', '.btnEditMenuItem', function (e) {
-            e.preventDefault();
-            
-            var btn = $(this);
-            var menuItem = btn.closest('.menuItem');
-            editItem = menuItem;
-            
-            var id = menuItem.attr('data-id');
-            var text = menuItem.find('.menuItemText').text().trim();
-            var href = menuItem.attr('data-href');
-            var hidden = menuItem.attr('data-hidden') || 'false';
-            
-            menuItemEditor.find('input[name=href]').val(href);
-            menuItemEditor.find('input[name=text]').val(text);
-            menuItemEditor.find('[name=hidden]').val(hidden)
-            
-            var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
-            if (id.startsWith('menu-custom-')) {
-                deleteBtn.show();
-            } else {
-                deleteBtn.hide();
-            }
-            
-            menuItemEditor.fshow();
-            menuEditor.fhide();
-        });
-        
-        form.on('click', '.editMenuItemOk', function (e) {
-            e.preventDefault();
-            
-            var href = menuItemEditor.find('input[name=href]').val();
-            var text = menuItemEditor.find('input[name=text]').val();
-            text = text.trim();
-            var hidden = menuItemEditor.find('[name=hidden]').val();
-            
-            editItem.attr('data-href', href);
-            editItem.attr('data-hidden', hidden);
-            editItem.find('.menuItemText').text(text);
-            editItem = null;
-            
-            menuItemEditor.fhide();
-            menuEditor.fshow();
-        });
-        
-        form.on('click', '.editMenuItemDelete', function (e) {
-            e.preventDefault();
-            
-            editItem.closest('li').remove();
-            
-            menuItemEditor.fhide();
-            menuEditor.fshow();
-        });
-        
-        form.on('click', '.editMenuItemCancel', function (e) {
-            e.preventDefault();
-            editItem = null;
-            menuItemEditor.fhide();
-            menuEditor.fshow();
-        });
-        
-        form.on('click', '.saveMenu', function (e) {
-            e.preventDefault();
-            
-            var topOl = $('.menuTree ol.rootMenuList');
-            var list = [];
-            contentEditor.toMenuData(topOl, list);
-            var menuJson = JSON.stringify({
-                items: list
-            }, null, 4);
-            
-            
-            $.ajax({
-                url: '/theme/menu.json',
-                type: 'PUT',
-                data: menuJson,
-                success: function () {
-                    Msg.info('Saved menu');
-                    var component = keditor.getSettingComponent();
-                    var dynamicElement = component.find('[data-dynamic-href]');
-                    keditor.initDynamicContent(dynamicElement);
-                },
-                error: function (e) {
-                    Msg.error(e.status + ': ' + e.statusText);
-                }
-            });
-        });
-        
-        var groupsStr = '';
-        $.each(keditor.options.allGroups, function (name, title) {
-            groupsStr += '<option value="' + name + '">Visible only for "' + title + '"</option>';
-        });
-        menuItemEditor.find('[name=hidden]').append(groupsStr);
+        contentEditor.initMenuEditor(form, keditor);
     };
     
     contentEditor.showDefaultMenuControls = function (form, component, keditor) {
@@ -919,7 +992,7 @@
             }
         });
     };
-
+    
     contentEditor.initColorPicker = function (target, onChange) {
         flog('[jquery.contentEditor] initColorPicker', target);
         var inputColor = target.val();
@@ -927,12 +1000,12 @@
         strVar += "<div class=\"input-group colorpicker-component\">";
         strVar += "    <span class=\"input-group-addon\"><i><\/i><\/span>";
         strVar += "<\/div>";
-
+        
         var newElement = $($.parseHTML(strVar));
         newElement.append(target.clone());
-
+        
         target.replaceWith(newElement);
-
+        
         newElement.colorpicker({
             format: 'hex',
             align: 'left',
@@ -940,8 +1013,8 @@
             customClass: 'edm-color-picker',
             container: newElement.parent()
         });
-
-
+        
+        
         newElement.find('input').on({
             change: function () {
                 var color = newElement.colorpicker('getValue', "#fff");
