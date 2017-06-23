@@ -4,7 +4,7 @@
     <groupId>co.kademi</groupId>
     <artifactId>kademi-dev</artifactId>
     <packaging>war</packaging>
-    <version>1116-es5</version>
+    <version>1117-es5</version>
 
     <build>
         <plugins>
