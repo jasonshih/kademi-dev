@@ -123,6 +123,8 @@ function initLeadsDashLoading() {
                     div.find('#dashLeadsList').append(leads);
                 }
                 
+                div.find('.timeago').timeago();
+                
                 if (leads.length < limit) {
                     btn.remove();
                 } else {
