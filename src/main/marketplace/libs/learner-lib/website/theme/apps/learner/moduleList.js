@@ -1,5 +1,3 @@
-// loaded from /templates/themes/bootstrap335/apps/learner/moduleList.js
-
 function initMyLearning() {
     flog("initMyLearning");
 
