@@ -11,7 +11,7 @@
         "profiles": [
         ],
         "orgTypes": [
-            {
+            { 
                 "displayName": "Customer Company",
                 "fieldset": [
                 ],
@@ -151,7 +151,34 @@
                         ]
                     }
                 ]
+            },
+             {
+                "title": "Subscription",
+                "groupsInWebsite": [],
+                "liveBranch": "version56",
+                "branches": [
+                    {
+                        "name": "version56",
+                        "publicTheme": "k-theme"
+                    }
+                ],
+                "publicContent": true,
+                "name": "subscription",
+                "apps": [
+                    
+                    {
+                        "branch": "version56",
+                        "apps": [
+                            {
+                                "settings": null,
+                                "appId": "subscription",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                ]
             }
+            
         ],
         "apps": [
 
