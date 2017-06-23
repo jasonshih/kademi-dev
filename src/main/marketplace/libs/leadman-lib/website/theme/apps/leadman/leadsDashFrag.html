@@ -3,11 +3,26 @@
 #set( $leadsPage = $page.find("/leads") )
 #set( $leads = $leadsPage.myVisibleLeads )
 
+#set ($start = 0)
+#if ($params.start)
+    #set ($start = $formatter.toInteger( $params.start ))
+#end
+
+#set ($limit = 10)
+#if ($params.limit)
+    #set ($limit = $formatter.toInteger( $params.limit ))
+#end
+
+#set ($end = $start + $limit)
+
+
 <ul class="list-group leadsList" id="dashLeadsList">
     #foreach($lead in $leads)
-    <li class="list-group-item">
-        #showLead($lead)
-    </li>
+        #if ($foreach.index >= $start && $foreach.index < $end)
+            <li class="list-group-item">
+                #showLead($lead)
+            </li>
+        #end
     #end
 </ul>
 #if( $leads.size() > 0 )
