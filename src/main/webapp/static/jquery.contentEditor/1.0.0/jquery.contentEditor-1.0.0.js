@@ -578,7 +578,7 @@
         ol.find('> li').each(function (i) {
             var li = $(this);
             
-            flog('toMenuData - item', li);
+            flog('[jquery.contentEditor] toMenuData - item', li);
             
             var menuItem = li.children('.menuItem');
             var itemId = menuItem.attr('data-id');
@@ -680,8 +680,6 @@
                 
                 form.on('click', '.btnAddMenuItem', function (e) {
                     e.preventDefault();
-                    
-                    flog('aaaaaaaaaaaaa==================')
                     
                     var li = $(this).closest('li');
                     var ol = li.children('ol');
