@@ -8,19 +8,19 @@ controllerMappings.addComponent("rewardstore/components", "productSort", "html",
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 
 controllerMappings
-    .websitePortletController()
-    .portletSection('shoppingCart')
-    .templatePath('/theme/apps/rewardstore/pointsBalancePortlet.html')
-    .method('getPointsBalance')
-    .enabled(true)
-    .build();
+        .websitePortletController()
+        .portletSection('shoppingCart')
+        .templatePath('/theme/apps/rewardstore/pointsBalancePortlet.html')
+        .method('getPointsBalance')
+        .enabled(true)
+        .build();
 
 function getPointsBalance() {
     log.info('getPointsBalance');
 }
 function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {
     log.info('findProducts | query {} | category {} | rewardStoreId {} | from {} | max {} | priceStart {} | priceEnd {} | sort {} | asc {}', query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc);
-    if (category == false){
+    if (category == false) {
         category = null;
     }
     if (isBlank(sort)) {
@@ -48,7 +48,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
             }
         },
         "min_score": 0.05,
-        "fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
+        "stored_fields": ["title.keyword", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
         "sort": {},
         "highlight": {
             "fields": {
@@ -59,7 +59,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
             }
         }
     };
-    if (rewardStoreId && !isNaN(rewardStoreId)){
+    if (rewardStoreId && !isNaN(rewardStoreId)) {
         searchConfig.query.bool.must.push({
             "term": {
                 "rewardStoreId": rewardStoreId
@@ -82,7 +82,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
         var q = {
             "multi_match": {
                 "query": query,
-                "fields": ["title", "content"]
+                "fields": ["title.keyword", "content.keyword"]
             }
         };
         searchConfig.query.bool.must.push(q);
@@ -120,7 +120,7 @@ function getRecentlyViewedRewardProducts(page, size) {
         return list;
     }
 
-    if (!size){
+    if (!size) {
         size = 20;
     }
 
@@ -171,7 +171,7 @@ function getRecentlyViewedRewardProducts(page, size) {
             }
         }
     };
-    log.info ("recentlyViewedRewardProductsComponent {}", JSON.stringify(searchConfig));
+    log.info("recentlyViewedRewardProductsComponent {}", JSON.stringify(searchConfig));
     var sm = applications.search.searchManager;
     var result = sm.search(JSON.stringify(searchConfig), 'log');
 
@@ -185,7 +185,7 @@ function getRecentlyViewedRewardProducts(page, size) {
             var b = buckets[a];
             var url = b.key;
             var item = page.find(url);
-            if (item && item.is('rewardProduct') && list.size() < size ) {
+            if (item && item.is('rewardProduct') && list.size() < size) {
                 list.add(item);
             }
         }
