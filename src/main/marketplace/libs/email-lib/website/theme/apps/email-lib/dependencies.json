@@ -14,6 +14,12 @@
                 "group": "main",
                 "path": "/theme/apps/email/myInbox.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/email/emailDashboardPortlet.js"
+            }
         }
     ]
 }
