@@ -8,6 +8,7 @@ function initLeadManEvents() {
     window.Msg.iconMode = "fa";
     jQuery.timeago.settings.allowFuture = true;
 
+    initLeadsDashLoading();
     initNewLeadForm();
     initNewLeadFromEmail();
     initNewQuickLeadForm();
@@ -90,6 +91,26 @@ function initLeadManEvents() {
         inp.val(text);
     });
     $('abbr.timeago').timeago();
+}
+
+function initLeadsDashLoading() {
+    var div = $("#all_contacts");
+    if (div.length == 0) {
+        return;
+    }
+    // load leads with ajax
+    var href = "/leads/?dash";
+    $.ajax({
+        url: href,
+        dataType: 'html',
+        success: function (resp) {
+            div.html(resp);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            flog('Error', textStatus, errorThrown);
+        }
+    });
+
 }
 
 function initNewLeadFromEmail() {
@@ -259,7 +280,7 @@ function initTasks() {
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('Error', textStatus, errorThrown);
             }
-        })
+        });
     });
     $(document.body).on("click", ".btnTaskDone", function (e) {
         flog("click");

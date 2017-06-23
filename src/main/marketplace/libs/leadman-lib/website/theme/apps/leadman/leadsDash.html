@@ -133,20 +133,7 @@
 #if($userResource.hasRole('Sales'))
 <div class="">
     <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-        #set( $leads = $leadsPage.myVisibleLeads )
 
-        <ul class="list-group leadsList" id="dashLeadsList">
-            #foreach($lead in $leads)
-                <li class="list-group-item">
-                    #showLead($lead)
-                </li>
-            #end
-        </ul>
-        #if( $leads.size() > 0 )
-
-        #else
-            <p class="lead">Couldnt find any leads</p>
-        #end
     </div>
 </div>
 #end
