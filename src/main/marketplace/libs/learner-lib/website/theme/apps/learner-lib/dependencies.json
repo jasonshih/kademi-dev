@@ -71,6 +71,12 @@
                 "group": "main",
                 "path": "/static/jquery.module/1.0.0/jquery.module-1.0.0.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/learner/learningAdminDashboardPortlet.js"
+            }
         }
     ]
 }
