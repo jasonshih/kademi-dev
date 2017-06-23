@@ -13,7 +13,7 @@
                 "group": "main",
                 "path": "/theme/apps/formBuilder/form-render.js"
             }
-        },        
+        },
         {
             "css": {
                 "path": "/theme/apps/formBuilder/form-builder.css",
@@ -25,7 +25,7 @@
                 "path": "/theme/apps/formBuilder/form-render.css",
                 "cssMedia": "all"
             }
-        }        
+        }
     ]
 }
 
