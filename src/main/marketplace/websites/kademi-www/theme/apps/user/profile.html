@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <title>Profile</title>
+        <link href="profile.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="/theme/apps/user/changeOrg.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        
+ 
+        
+    </head>
+    <body class="profile">
+        <div class="container">
+            <br/>
+            <!--<h3>Manage My Profile</h3>-->
+            <div class="row row-fluid">
+                <div class="span6 col-md-6">
+                   
+                   <div class="well well-unsubscribe">
+                        <form action="$request.absolutePath" method="POST" class="form-inline form-unsubscribe">
+                            <img class='ajax-loader' src='/static/common/loading.gif'/>
+                            <h3>Unsubscribe</h3>
+                            <p>Unsubscribe below and you will no longer receive any email communications, and you will not be able to login.</p>
+                            <input type="hidden" name="unsubscribe" value="true"/>
+                            <button class="btn-danger button  button-rounded button-small ">Unsubscribe - $page.profile.email</button>
+                        </form>
+                    </div>
+                   
+                    <div class="details well">
+                        <form action="$request.absolutePath" method="POST" enctype="multipart/form-data" class="profile form-horizontal form-horizontal-narrow" role="form">
+                            <h3>Update your details</h3>
+                            <p class="pageMessage alert alert-danger" style="display: none">
+
+                            </p>
+                            <fieldset class="name">
+                                <p>Please update your details below then click the 'Save' button.</p>
+                                <!--
+                                <div class="control-group form-group row">
+                                    <label class="control-label col-md-3" for="nickName">Nickname</label>
+                                    <div class="controls col-md-8">
+                                        <input type="text" name="nickName" id="nickName" required="true" class="required sm-form-control" value="$!page.profile.nickName"/>
+                                    </div>
+                                </div>-->
+                                <div class="control-group form-group">
+                                    <label class="control-label col-md-3" for="nickName">Email</label>
+                                    <div class="controls col-md-8">
+                                        <input type="text" id="email" name="email" required="true" class="required sm-form-control" value="$!page.profile.email" />
+                                    </div>
+                                </div>
+                                <div class="control-group form-group">
+                                    <label class="control-label col-md-3" for="firstName">First name</label>
+                                    <div class="controls col-md-8">
+                                        <input type="text" id="firstName" name="firstName" class="sm-form-control" value="$!page.profile.firstName" />
+                                    </div>
+                                </div>
+                                <div class="control-group form-group">
+                                    <label class="control-label col-md-3" for="nickName">Surname</label>
+                                    <div class="controls col-md-8">
+                                        <input type="text" id="surName" name="surName" class="sm-form-control" value="$!page.profile.surName" />
+                                    </div>
+                                </div>
+                                <div class="control-group form-group">
+                                    <label class="control-label col-md-3" for="nickName">Phone</label>
+                                    <div class="controls col-md-8">
+                                        <input type="text" id="phone" name="phone" class="sm-form-control" value="$!page.profile.phone" />
+                                    </div>
+                                </div>
+                                #set($fields = $page.extraFields)
+                                #foreach($field in $fields.keySet())
+                                <div class="control-group form-group">
+                                    <label class="control-label col-md-3" for="field_${field.name}">$field.text</label>
+                                    <div class="controls col-md-8">
+                                        $field.html( $fields[$field] )
+                                    </div>
+                                </div>
+                                #end
+
+                            </fieldset>
+                            <div class="control-group form-group">
+                                <div class="controls col-md-offset-3 col-md-8">
+                                    <button class="button button-border button-rounded button-small" type="submit">Save</button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                     
+                    
+                    <div class="well well-notifications">
+                        <form action="$request.absolutePath" method="POST" class="form-horizontal" role="form">
+                            <input type='hidden' name='notifications' value='notifications' />
+                            <h3>Notifications Settings</h3>
+                            #set($notifyPreference = $page.notifyPreference)  
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name='notifyEmails' type="checkbox" value="true" #if(!$notifyPreference || $notifyPreference.receiveEmails)checked="checked"#end>
+                                            <input name='notifyEmails_checkbox' type="hidden" value="false">
+                                            Receive email notifications for new blog comments
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="button button-border button-rounded button-small">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                 
+                   
+                </div>
+                <div class="span6 col-md-6 profilePic">
+                    
+                       #portlets("profilePrimary")
+                    
+                   
+                   <!--
+                    <div class="well well-avatar">
+                        <p class="confirm">Your profile photo has been updated</p>
+                        <div>
+                            <img src="$page.photoHref" class="avatar" /><h4>Update photo</h4>
+                            <p>Update your profile image below. This must be less then 10Mb.</p>
+                        </div>
+                        <button id="btn-change-ava" class="button button-border button-rounded button-small">Change avatar</button>
+                    </div>
+
+-->
+<!--
+                    <div class="well well-password">
+                        <form action="$request.absolutePath" method="POST" class="form-inline" role="form">
+                            <h4>Update your password</h4>
+                            <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label class="sr-only" for="password">Enter a new password</label>
+                                    <input type="password" name="password" id="password" class="required  sm-form-control" placeholder="New password">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="sr-only" for="confirmPassword">Confirm your new password</label>
+                                    <input type="password" name="confirmPassword" id="confirmPassword" class="required  sm-form-control" placeholder="Confirm">
+                                </div>
+                                <button type="submit" class="button button-border button-rounded button-small">Change</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+
+                    -->
+
+
+<!--
+                    <div class="well well-memberships">
+                        <form action="$request.absolutePath" method="POST" class="form-inline memberships">
+                            <img class='ajax-loader' src='/static/common/loading.gif'/>
+                            <h4>Memberships</h4>
+                            <ul class='list-unstyled memberships'>
+                                #foreach($membership in $page.memberships)
+                                <li>
+                                    Member of the <b>$membership.groupEntity.name</b> group in
+                                    #if( $membership.groupEntity.openGroup )
+                                    <a href="?changeMemberOrg=${membership.id} .change-org-modal-content" data-toggle="modal" data-target="#myModal">$membership.withinOrg.formattedName</a>
+                                    #else
+                                    <b>$membership.withinOrg.formattedName</b>
+                                    #end
+
+                                <acronym title='Remove this membership. If this is your last membership you will lose access to this site'>
+                                    <a href='$membership.id' class='membership-remove'><i class="glyphicon glyphicon-remove-circle icon-remove-circle"></i><span>Remove</span></a>
+                                </acronym>
+                                </li>
+                                #end
+                            </ul>
+                        </form>
+                    </div>
+-->
+                    
+
+                    #if( $page.optins.size() gt 0 )
+                    <div class="well">
+                        <form action="." method="POST" class="form-inline optins">
+                            <img class='ajax-loader' src='/static/common/loading.gif'/>
+                            <h4>Optional Mailing Lists</h4>
+                            <ul class='list memberships'>
+                                #foreach($optin in $page.optins)
+                                <li>
+                                    #set($id = "optins_" + $optin.optinGroup.name)
+                                    <label for="$id" class="optin">
+                                        $formatter.checkbox($id, "optins", $user.isInGroup($optin.optinGroup) , $optin.optinGroup.name)
+                                        $optin.message
+                                    </label>
+                                </li>
+                                #end
+                            </ul>
+                        </form>
+                    </div>
+                    #end
+
+                    <div class="sideBar">
+                        #portlets("profileSecondary")
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Appears to be a bug affecting bs3, the shown event doesnt fire if using the 'fade' class -->
+        <div id="myModal" class="modal profile-change-org" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Change membership</h4>
+                    </div>
+                    <div class="modal-body modal-overflow"  id="changeOrgModalBody">
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                        <button class="btn btn-primary btn-save">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <script type="text/javascript" src="/static/js/jquery.fileupload.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/theme/apps/user/profile.js">//</script>
+        <script type="text/javascript">
+            $(function () {
+                initProfile();
+
+                $('#btn-change-ava').upcropImage({
+                    url: window.location.pathname, // this is actually the default value anyway
+                    onCropComplete: function (resp) {
+                        flog("onCropComplete:", resp, resp.nextHref);
+                        $(".profile-photo img, img.avatar").attr("src", resp.nextHref);
+                        $(".modal").modal("hide");
+                    }
+                });
+
+                $("#field_dealershipAdress").removeClass("form-control");
+                $("#field_dealershipAdress").addClass("sm-form-control");
+            });
+        </script>
+    </body>
+
+</html>

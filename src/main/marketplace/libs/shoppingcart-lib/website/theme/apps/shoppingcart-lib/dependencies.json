@@ -1,9 +1,6 @@
 {
     "appDependencies": [
-        {
-            "appId": "shoppingcart-lib",
-            "branch": "1.0.2"
-        }
+
     ],
     "dependencies": [
         {
@@ -21,7 +18,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/shoppingcart/checkout.js?v=1.0.4"
+                "path": "/theme/apps/shoppingcart/checkout.js"
             }
         },
         {

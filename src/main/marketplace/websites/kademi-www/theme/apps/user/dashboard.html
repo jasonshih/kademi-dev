@@ -1,0 +1,47 @@
+<html>
+    <head>
+        <title>My Dashboard</title>
+    </head>
+    <body class="dashboard">
+        
+            #if( $user )
+							<script type="text/javascript">
+							   window.location="/";
+							</script>	
+            #else
+							<script type="text/javascript">
+							   window.location="/login";
+							</script>
+		    #end					
+            
+        <div class="">
+            <div class="">
+                <div class="col-md-8 dash-primary">
+
+                    #portlets("beforeDashboardPrimary")
+
+                    <!-- Start dashboardPrimary  -->
+                    #portlets("dashboardPrimary")
+                    <!-- End dashboardPrimary  -->
+
+                    #portlets("afterDashboardPrimary")
+
+                </div>
+                <div class="col-md-4 dash-secondary">
+                    #portlets("dashboardSecondary")
+
+                    #foreach($msg in $alerts)
+                    <div class="dashboard-alert alert alert-${msg.type}" >
+                        #if( $msg.id )
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <a class="hide msg" href="$msg.href">Ack</a>
+                        #end
+                        $msg.body
+                    </div>
+                    #end
+                </div>
+            </div>
+        </div>
+        #portlets("dashboardBottom")
+    </body>
+</html>

@@ -129,3 +129,9 @@ function initAddToCart() {
         doAddToCart(href, quantity);
     });
 }
+
+$(document).ready(function () {
+    if ($('.ecom-product-component').length > 0) {
+        initEcomProductDetails();
+    }
+});

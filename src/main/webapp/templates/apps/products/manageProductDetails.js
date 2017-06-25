@@ -23,16 +23,36 @@ function initProductContentsTab(editorType, allGroups) {
     if (editorType === 'html') {
         initHtmlEditors();
     } else {
-        $('.contenteditor').contentEditor({
-            iframeMode: true,
-            allGroups: allGroups,
-            snippetsUrl: '_components'
+        $('.contenteditor').each(function () {
+            var editor = $(this);
+            editor.closest('.col-sm-12').addClass('editor-wrapper');
+            var loading = $(
+                '<div class="editor-loading">' +
+                '    <span>' +
+                '        <span class="loading-icon">' +
+                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+                '        </span>' +
+                '        <span class="loading-text">Initializing Content Editor...</span>' +
+                '    </span>' +
+                '</div>'
+            );
+    
+            editor.before(loading);
+            editor.hide();
+    
+            editor.contentEditor({
+                iframeMode: true,
+                allGroups: allGroups,
+                snippetsUrl: '_components',
+                onReady: function () {
+                    loading.remove();
+                }
+            });
         });
     }
     
     $('.updateProductContents').forms({
         onValid: function () {
-            flog(editorType, '======================');
             if (editorType !== 'html') {
                 var brief = $('#brief');
                 brief.val(brief.contentEditor('getContent'));

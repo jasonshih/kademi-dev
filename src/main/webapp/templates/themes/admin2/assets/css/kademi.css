@@ -323,16 +323,75 @@ label small {
 }
 
 /* ============================================================================
-Btn translate
-============================================================================ */
+   Btn translate
+   ============================================================================ */
 #btn-translate {
     position: absolute;
     z-index: 1000;
 }
 
 /* ============================================================================
-Utilities
-============================================================================ */
+   Editor wrapper
+   ============================================================================ */
+.editor-wrapper {
+    position: relative;
+    min-height: 500px;
+}
+
+.editor-loading {
+    position: fixed;
+    top: 50px;
+}
+
+.editor-wrapper .editor-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    z-index: 999999;
+    font-size: 18px;
+    color: #333;
+    font-family: Arial, Helvetica, san-serif !important;
+    line-height: 26px !important;
+}
+
+.editor-wrapper[class*="col-"] .editor-loading {
+    left: 15px;
+    right: 15px;
+}
+
+.editor-wrapper .editor-loading > span {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    left: 0;
+    text-align: center;
+}
+
+.editor-wrapper .editor-loading .loading-text {
+    display: block;
+    padding-top: 20px;
+}
+
+.editor-wrapper .editor-loading .loading-icon {
+    display: block;
+    height: 62px;
+    padding: 0;
+}
+
+.editor-wrapper .editor-loading i.fa {
+    font-size: 80px;
+}
+
+.editor-wrapper .editor-loading.loading {
+    background: rgba(255, 255, 255, .7);
+}
+
+/* ============================================================================
+   Utilities
+   ============================================================================ */
 .ps-container {
     position: relative;
     overflow: hidden;
@@ -557,8 +616,8 @@ body .form-control::-webkit-input-placeholder {
 
 /* New User Modal */
 #org-search {
-	margin: -1px 15px 0;
-	display: none;
+    margin: -1px 15px 0;
+    display: none;
 }
 
 /*

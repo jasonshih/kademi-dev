@@ -1,6 +1,6 @@
 #if ($page)
     #if($formatter && $page.poster)
-    <div class="panel panel-default">
+    <div class="panel panel-default forum-question-component">
         <div class="panel-heading">
             <div class="bs-avatar pull-left">
                 <img src="$formatter.profilePicHref($page.poster)" alt="$!post.poster.nickName"  width="50" height="50"/>
@@ -18,11 +18,7 @@
         </div>
     </div>
     </div>
-    <script>
-    $(function(){
-        initMyQuestion();
-    });
-    </script>
+
     #else
         #fakeUI()
     #end

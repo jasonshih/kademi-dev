@@ -128,30 +128,16 @@
 </div>
 #end
 
-
 #parse('/theme/apps/leadman/leadManMacros.html')
 #if($userResource.hasRole('Sales'))
 <div class="">
     <div role="tabpanel" id="all_contacts" class="tab-pane animation-fade active">
-        #set( $leads = $leadsPage.myVisibleLeads )
-
-        <ul class="list-group leadsList" id="dashLeadsList">
-            #foreach($lead in $leads)
-                <li class="list-group-item">
-                    #showLead($lead)
-                </li>
-            #end
-        </ul>
-        #if( $leads.size() > 0 )
-
-        #else
-            <p class="lead">Couldnt find any leads</p>
-        #end
+        <p class="text-center">
+            <button type="button" class="btn btn-default btn-load-more-lead" disabled="disabled">Loading...</button>
+        </p>
     </div>
 </div>
 #end
-
-
 
 #if( false && $leadsPage.teamStats)
 <div class="fw-boxed hidden-xs">
@@ -231,7 +217,6 @@
 
 <script src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js" type="text/javascript">//</script>
 <script type="text/javascript">
-
     $(function () {
         var mainContainer = $('#maincontentContainer');
         var divs = mainContainer.find('>div').detach();

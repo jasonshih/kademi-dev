@@ -322,3 +322,9 @@
 
 })(jQuery);
 
+$(document).ready(function(){
+    if($('.store-checkout-page').length > 0) {
+        initEcommerceCheckout();
+    }
+});
+

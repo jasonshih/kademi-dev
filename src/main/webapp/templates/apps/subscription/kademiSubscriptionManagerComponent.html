@@ -11,7 +11,7 @@
         
         $(".productSelected").on("click", function(){
             $("#TotalAmount").val($(this).val());
-            $("#PlanName").val($(this).parent().parent().find("td:first").html());
+            $("#productName").val($(this).parent().find(".productName").val());
         });
         
         $("body").on('click', '#paymentBtn', function (e) {
@@ -20,8 +20,6 @@
             var num = $('#Number').val();
             var cvn = $('#CVN').val();
             flog("payment", num, cvn);
-            
-            console.log($('#CurrencyCode').val());
             
             $.ajax({
                 url: "",
@@ -33,7 +31,7 @@
                     expiryMonth: $('#ExpiryMonth').val(),
                     expiryYear: $('#ExpiryYear').val(),
                     totalAmount: $('#TotalAmount').val(),
-                    planName: $("#PlanName").val(),
+                    productName: $("#productName").val(),
                     currencyCode: $('#CurrencyCode').val(),
                     firstName: $('#firstName').val(),
                     f: $('#firstName').val(),
@@ -78,7 +76,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-bar-chart-o"></i>
-        Manage Subscription
+        Manage Subscription 
     </div>
     <div class="panel-body">
         <div class="table-responsive">
@@ -106,7 +104,10 @@
                         <tr>
                             <td>$prod.title</td>
                             #if ($prod.baseCost)
-                                <td><input type="radio" class="productSelected" name="product" value="$prod.baseCost" class=""/></td>
+                                <td>
+                                    <input type="radio" class="productSelected" name="product" value="$prod.baseCost" class=""/>
+                                    <input type="hidden" class="productName" value="$prod.name" />
+                                </td>
                             #else
                                 <td></td>
                             #end
@@ -128,7 +129,7 @@
                 #end
 
                 <form class="form-horizontal" data-eway-encrypt-key="$!encKey" id="paymentForm" method="POST">
-
+                    <input type="hidden" id="productName" value="" />
                     <div class="form-group">
                         <label for="Name" class="col-sm-3 control-label">Card Name</label>
                         <div class="col-sm-9">
@@ -205,7 +206,6 @@
                     <div class="form-group">
                         <label for="TotalAmount" class="col-sm-3 control-label">Total Amount/Currency</label>
                         <div class="col-sm-2">
-                            <input type="hidden" id="PlanName" value="" />
                             <input type="text" class="form-control required" required="true" disabled="disabled" id="TotalAmount" name="TotalAmount" data-regex="^[0-9]+$" value="897"/>
                         </div>
                         <div class="col-sm-2">

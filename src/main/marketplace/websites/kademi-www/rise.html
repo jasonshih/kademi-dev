@@ -1,0 +1,105 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+        <title>Kademi - Scalable and Affordable Pricing</title>
+        <script title="recipGroupName" type="data/parameter" >NONE</script>
+        <script title="isAutoResponse" type="data/parameter" >false</script>
+        <script title="assignToGroup" type="data/parameter" >RISE</script>
+        
+        <style>
+            #header,#footer{display:none;}
+        </style>
+    </head>
+
+    <body class="stretched">
+         <!-- Page Title
+        ============================================= -->
+        <section id="page-title">
+            <div class="container clearfix">
+                <h1>Rise</h1>
+                <span>..</span>
+                <ol class="breadcrumb">
+                   <!-- <li><a href="/">Home</a></li>
+                    <li class="active">Blog</li>-->
+                </ol>
+            </div>
+        </section><!-- #page-title end -->       
+        
+        <!-- Content
+        ============================================= -->
+        <!-- Section 1 -->
+        <div class="section notopborder nomargin">
+            <div class="container clearfix">
+                <div class="container clearfix">
+                    
+                    
+                    
+                    <form id="riseForm" method="POST" action="/contactus">
+                        <input id="contactForm" name="contactForm" type="hidden" value="/rise.html" />
+                        <div style="max-width:600px" class="divcenter">
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-name">Rise
+                                    <small>*</small>
+                                </label>
+                                <input type="text" id="template-contactform-name" name="rise" value="Rise Contact" class="sm-form-control required" />
+                            </div>
+    
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-name">First Name
+                                    <small>*</small>
+                                </label>
+                                <input type="text" id="template-contactform-name" name="firstName" value="" class="sm-form-control required" />
+                            </div>
+    
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-name">Last Name
+                                    <small></small>
+                                </label>
+                                <input type="text" id="template-contactform-name" name="surName" value="" class="sm-form-control required" />
+                            </div>
+    
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-email">Email
+                                    <small>*</small>
+                                </label>
+                                <input type="email" id="template-contactform-email" name="email" value="" class="required email sm-form-control" />
+                            </div>
+    
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-name">Company
+                                    <small></small>
+                                </label>
+                                <input type="text" id="template-contactform-name" name="company" value="" class="sm-form-control required" />
+                            </div>
+    
+                            <div class="topmargin-sm">
+                                <label for="template-contactform-name">Interests
+                                    <small></small>
+                                </label>
+                                <input type="text" id="template-contactform-name" name="message" value="" class="sm-form-control required" />
+                            </div>
+                            <div><button type="submit" class="button button-3d  noleftmargin topmargin-sm">Submit</button></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function(){
+                $('#riseForm').forms({
+                    callback: function(resp, form){
+                        if(resp.status){
+                            Msg.success("Done!");
+                            $('#riseForm').trigger('reset');
+                        }else{
+                            
+                        }
+                    },
+                    error: function(){
+                        
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

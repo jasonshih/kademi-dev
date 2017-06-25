@@ -28,13 +28,6 @@
 
 #set( $products = $page.searchProducts( $request.params.q, $fromRange, $toRange, $sort, $asc))
 
-<style type="text/css">
-    #infinitive-loader {
-        text-align: center;
-        padding: 30px;
-        display: none;
-    }
-</style>
 
 <div class="show-by-$showBy" id="products-list">
     #if( $products.hits.hits.size() == 0 )
@@ -51,27 +44,12 @@
 </div>
 
 <script type="text/javascript">
-    var win = $(window);
     var DEFAULT_START_FROM = $toRange;
     var startFrom = DEFAULT_START_FROM;
 </script>
-<script type="text/javascript" src="/theme/apps/ecommerce/ecomCategoryProducts.js">//</script>
-
 
 #else
 <div>
-
-    <style type="text/css">
-        #infinitive-loader {
-            text-align: center;
-            padding: 30px;
-            display: none;
-        }
-
-        #products-list {
-            overflow: hidden;
-        }
-    </style>
 
     <div class="show-by-grid" id="products-list">
 

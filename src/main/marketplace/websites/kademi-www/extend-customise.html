@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" />
+<title>Kademi - A platform to create incredible customer experiences.</title>
+<meta property="og:title" content="Software to create Customer Experiences that drive growth." />
+<meta property="og:description" content="All the tools you need in a single platform to create and manage each customer touch-point from Marketing Automation to Loyalty, eLearning and more." />
+<meta property="og:image" content="http://www.kademi.co/theme/images/Media-Image.jpg" />
+</head>
+
+<body class="stretched homepage">
+
+<!-- Content -->
+
+<section id="content">
+  <div class="content-wrap" style="margin-top:-80px !important; margin-bottom:-80px !important;"> 
+    
+
+    <!-- Section -->
+    
+    <div class="container clearfix topmargin-lg bottommargin-lg">
+      <div class="row clearfix">
+        <div class="col-md-12">
+          <div class="heading-block title-center nobottomborder page-section">
+            <h2>Extend and customise
+</h2>
+            <span>Go beyond a traditional out-of-the-box software experience and highly customise the workflow of any Kademi application, component and template in order to create a truly unique customer experience.  </span> </div>
+        </div>
+        <div class="col-md-12 center"> <img data-animate="fadeIn" src="theme/images/image-large.png" alt=""> </div>
+        
+      </div>
+    </div>
+    
+    <!-- Section --> 
+    
+    <!--<div class="divider">&nbsp:</div>--> 
+    <!-- Section -->
+    
+    <div class="section notopmargin nobottommargin notoppadding nobottompadding">
+      <div class="container clearfix topmargin-lg bottommargin-lg">
+        <div class="row clearfix">
+          <div class="col-md-6">
+            <div class="heading-block nobottomborder page-section">
+              <h2>Lorem ipsum dolor sit ame</h2>
+            </div>
+            <p>Vel assum singulis scribentur ea. Et primis petentium mel, cum vidit magna comprehensam at, assentior scriptorem sit no.</p>
+            <ul class="iconlist iconlist-dark" style="font-size:16px !important;">
+              <li><i class="icon-ok"></i> Vel assum singulis scribentur ea</li>
+              <li><i class="icon-ok"></i> Vel assum singulis scribentur ea</li>
+            <li><i class="icon-ok"></i> Vel assum singulis scribentur ea</li>
+             <li><i class="icon-ok"></i> Vel assum singulis scribentur ea</li>
+              <li><i class="icon-ok"></i> Vel assum singulis scribentur ea</li>
+           
+            </ul>
+          </div>
+          <div class="col-6 center visible-lg visible-md"> <img data-animate="fadeIn" src="theme/images/image-medium.png" alt=""> </div>
+          <div class="visible-sm visible-xs topmargin-lg"> <img data-animate="fadeIn" src="theme/images/image-medium.png" alt=""> </div>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+
+
+
+    
+    <!-- Section --> 
+    
+        <!-- Section -->
+    
+    <div class="container clearfix topmargin-lg bottommargin-lg">
+      <div class="row clearfix">
+        <div class="col-md-6 left"> <img data-animate="fadeIn" src="theme/images/image-medium.png" alt=""> </div>
+        <div class="col-md-6">
+          <div class="heading-block nobottomborder page-section topmargin-lg">
+            <h2>Usu purto liber definitionem ad. Nec error </h2>
+          </div>
+          <p>Vel assum singulis scribentur ea. Et primis petentium mel, cum vidit magna comprehensam at, assentior scriptorem sit no. Ex officiis vulputate eum, at usu offendit definitionem, congue oporteat vivendum his ex. 
+
+</p>
+         
+      
+        </div>
+      </div>
+    </div>
+    
+    <!-- Section --> 
+    <!--<div class="divider">&nbsp:</div>--> 
+    
+    
+  
+  </div>
+</section>
+<!-- #content end --> 
+
+<script type="text/javascript">
+        $(function() {
+            initHomepage();
+        });
+</script> 
+<script type="text/javascript">
+/*
+* rwdImageMaps jQuery plugin v1.5
+*
+* Allows image maps to be used in a responsive design by recalculating the area coordinates to match the actual image size on load and window.resize
+*
+* Copyright (c) 2013 Matt Stow
+* https://github.com/stowball/jQuery-rwdImageMaps
+* http://mattstow.com
+* Licensed under the MIT license
+*/
+;(function($) {
+	$.fn.rwdImageMaps = function() {
+		var $img = this;
+		
+		var rwdImageMap = function() {
+			$img.each(function() {
+				if (typeof($(this).attr('usemap')) == 'undefined')
+					return;
+				
+				var that = this,
+					$that = $(that);
+				
+				// Since WebKit doesn't know the height until after the image has loaded, perform everything in an onload copy
+				$('<img />').load(function() {
+					var attrW = 'width',
+						attrH = 'height',
+						w = $that.attr(attrW),
+						h = $that.attr(attrH);
+					
+					if (!w || !h) {
+						var temp = new Image();
+						temp.src = $that.attr('src');
+						if (!w)
+							w = temp.width;
+						if (!h)
+							h = temp.height;
+					}
+					
+					var wPercent = $that.width()/100,
+						hPercent = $that.height()/100,
+						map = $that.attr('usemap').replace('#', ''),
+						c = 'coords';
+					
+					$('map[name="' + map + '"]').find('area').each(function() {
+						var $this = $(this);
+						if (!$this.data(c))
+							$this.data(c, $this.attr(c));
+						
+						var coords = $this.data(c).split(','),
+							coordsPercent = new Array(coords.length);
+						
+						for (var i = 0; i < coordsPercent.length; ++i) {
+							if (i % 2 === 0)
+								coordsPercent[i] = parseInt(((coords[i]/w)*100)*wPercent);
+							else
+								coordsPercent[i] = parseInt(((coords[i]/h)*100)*hPercent);
+						}
+						$this.attr(c, coordsPercent.toString());
+					});
+				}).attr('src', $that.attr('src'));
+			});
+		};
+		$(window).resize(rwdImageMap).trigger('resize');
+		
+		return this;
+	};
+})(jQuery);
+</script> 
+<script type="text/javascript">
+$(document).ready(function(e) {
+    $('img[usemap]').rwdImageMaps();
+});
+</script>
+</body>
+</html>

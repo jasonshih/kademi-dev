@@ -1,0 +1,199 @@
+{
+    "admin": {
+        "automations": [
+        ],
+        "repositories": [
+        ],
+        "groupEmails": [
+        ],
+        "scheduledEmails": [
+        ],
+        "profiles": [
+        ],
+        "orgTypes": [
+            { 
+                "displayName": "Customer Company",
+                "fieldset": [
+                ],
+                "name": "cust-company"
+            },
+            {
+                "displayName": "Broker Office",
+                "fieldset": [
+                ],
+                "name": "broker-office"
+            }
+        ],
+        "groups": [
+            {
+                "groupType": "P",
+                "notes": null,
+                "groupFolder": null,
+                "regoOrgType": null,
+                "fieldSet": [
+                ],
+                "name": "broker",
+                "groupRoles": [
+                    {
+                        "roleName": "Content Viewer",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    },
+                    {
+                        "roleName": "Sales",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    },
+                    {
+                        "roleName": "SalesManager",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    },
+                    {
+                        "roleName": "SalesTeamViewer",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    },
+                    {
+                        "roleName": "TakeLead",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    },
+                    {
+                        "roleName": "User Administrator",
+                        "withinOrg": null,
+                        "repository": null,
+                        "repositoryClass": null
+                    }
+                ],
+                "title": "Broker",
+                "rootRegoOrg": null,
+                "registrationMode": "c"
+            },
+            {
+                "groupType": "P",
+                "notes": null,
+                "createdDate": 1493077648236,
+                "groupFolder": null,
+                "regoOrgType": null,
+                "fieldSet": [
+                ],
+                "modifiedDate": 1493077648236,
+                "name": "customers",
+                "groupRoles": [
+                ],
+                "title": "Customers",
+                "rootRegoOrg": null,
+                "registrationMode": "a"
+            }
+        ],
+        "websites": [
+            {
+                "title": "Kademi WWW",
+                "groupsInWebsite": [
+                ],
+                "liveBranch": "version56",
+                "branches": [
+                    {
+                        "name": "version56",
+                        "publicTheme": "bootstrap320"
+                    }
+                ],
+                "publicContent": true,
+                "name": "kademi-www",
+                "apps": [
+                    
+                    {
+                        "branch": "version56",
+                        "apps": [
+                            {
+                                "settings": null,
+                                "appId": "userApp",
+                                "enabled": true
+                            },
+                            {
+                                "settings": null,
+                                "appId": "userDashboardApp",
+                                "enabled": true
+                            },
+                            {
+                                "settings": null,
+                                "appId": "dynamicCss",
+                                "enabled": true
+                            },
+                            {
+                                "settings": null,
+                                "appId": "search",
+                                "enabled": false
+                            },
+                            {
+                                "settings": null,
+                                "appId": "OffSiteLoginApp",
+                                "enabled": false
+                            },
+                            {
+                                "settings": null,
+                                "appId": "organisationCreator",
+                                "enabled": true
+                            },
+                            {
+                                "settings": null,
+                                "appId": "content",
+                                "enabled": true
+                            }
+
+
+                        ]
+                    }
+                ]
+            },
+             {
+                "title": "Subscription",
+                "groupsInWebsite": [],
+                "liveBranch": "version56",
+                "branches": [
+                    {
+                        "name": "version56",
+                        "publicTheme": "k-theme"
+                    }
+                ],
+                "publicContent": true,
+                "name": "subscription",
+                "apps": [
+                    
+                    {
+                        "branch": "version56",
+                        "apps": [
+                            {
+                                "settings": null,
+                                "appId": "subscription",
+                                "enabled": true
+                            }
+                        ]
+                    }
+                ]
+            }
+            
+        ],
+        "apps": [
+
+        ]
+    },
+    "funnels": {
+        "funnelRepositories": [
+            {
+                "publicContent": false,
+                "notes": null,
+                "name": "ksub",
+                "title": "Kademi Subscriptions",
+                "type": null,
+                "liveBranch": "version1"
+            }
+        ]
+    }
+}
