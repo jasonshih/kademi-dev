@@ -1,14 +1,23 @@
 {
     "name": "ksub",
-    "title": null,
-    "leadsGroup": null,
+    "title": "Kademi Trial",
+    "leadsGroup": "customers",
     "hiddenToSales": false,
-    "sources": null,
-    "stages": null,
+    "sources": [],
+    "stages": [
+        {
+            "name": "Trial",
+            "desc": "Trial"
+        },
+        {
+            "name": "TrialEnding",
+            "desc": "Trial ending"
+        }
+    ],
     "nodes": [
         {
             "ksubscription": {
-                "nodeId": "ksub-trial-started",
+                "nodeId": "taskCompleteGoal-ce259e",
                 "title": "Trial started",
                 "x": 300,
                 "y": 20,
@@ -19,20 +28,17 @@
                 "cost": null,
                 "probability": null,
                 "source": null,
-                "taskName": null,
-                "nextNodeId": "emailAction-a37885",
-                "description": "Task complete: null",
+                "description": "KSubscription null",
                 "timoutTime": null,
                 "name": "taskCompleteGoal-ce259e",
-                "action": "STARTED",
-                "timerTime": null
+                "nextNodeId": "emailAction-a37885"
             }
         },
         {
             "begin": {
                 "nodeId": "edm-welcome",
                 "title": null,
-                "nextNodeId": "ksub-trial-started",
+                "nextNodeId": "taskCompleteGoal-ce259e",
                 "x": 23,
                 "y": 15,
                 "onePerProfile": null,
@@ -58,65 +64,190 @@
         {
             "ksubscription": {
                 "nodeId": "ksubscription-trial-ended",
+                "title": "Trial ending",
                 "x": 30,
                 "y": 190,
-                "action": "PAYMENT_DUE",
-                "timeoutUnits": null,
                 "timeoutMultiples": null,
+                "timeoutUnits": null,
+                "timeoutNode": null,
                 "stageName": null,
-                "source": null,
                 "cost": null,
                 "probability": null,
-                "timerTime": null,
-                "taskName": "PAYMENT_DUE",
-                "title": "Trial ending",
+                "source": null,
+                "description": "KSubscription null",
+                "timoutTime": null,
+                "name": "ksubscription-trial-ended",
                 "nextNodeId": "emailAction-524179"
             }
         },
         {
             "emailAction": {
-                "nodeId": "emailAction-524179",
-                "nodeType": "emailAction",
+                "title": "Upgrade EDM",
+                "nextNodeId": "branchGoal-82e82d",
                 "x": 310,
                 "y": 190,
-                "title": "Upgrade EDM",
-                "nextNodeId": "ksubscription-cf0fe5"
+                "website": null,
+                "contentFileName": null,
+                "subject": null,
+                "from": null,
+                "replyTo": null,
+                "to": null,
+                "attachments": null,
+                "nodeId": "emailAction-524179"
             }
         },
         {
             "ksubscription": {
                 "nodeId": "ksubscription-cf0fe5",
-                "nodeType": "ksubscription",
-                "x": 640,
-                "y": 200,
                 "title": "Paid",
+                "x": 370,
+                "y": 380,
+                "timeoutMultiples": null,
+                "timeoutUnits": null,
+                "timeoutNode": null,
+                "stageName": null,
+                "cost": null,
+                "probability": null,
+                "source": null,
+                "description": "KSubscription null",
+                "timoutTime": null,
+                "name": "ksubscription-cf0fe5",
                 "nextNodeId": "emailAction-34d149"
             }
         },
         {
             "emailAction": {
-                "nodeId": "emailAction-34d149",
-                "nodeType": "emailAction",
-                "x": 10,
-                "y": 390,
                 "title": "Thankyou EDM",
-                "nextNodeId": "end-210ef7"
+                "nextNodeId": "end-210ef7",
+                "x": 680,
+                "y": 390,
+                "website": null,
+                "contentFileName": null,
+                "subject": null,
+                "from": null,
+                "replyTo": null,
+                "to": null,
+                "attachments": null,
+                "nodeId": "emailAction-34d149"
             }
         },
         {
             "end": {
-                "nodeId": "end-210ef7",
-                "nodeType": "end",
-                "x": 290,
+                "title": "Completed successfully",
+                "nextNodeId": null,
+                "x": 940,
                 "y": 400,
-                "title": "Completed successfully"
+                "nodeId": "end-210ef7"
+            }
+        },
+        {
+            "branchGoal": {
+                "nodeId": "branchGoal-82e82d",
+                "title": null,
+                "x": 610,
+                "y": 200,
+                "timeoutMultiples": null,
+                "timeoutUnits": null,
+                "timeoutNode": null,
+                "stageName": null,
+                "cost": null,
+                "probability": null,
+                "source": null,
+                "branchNodeIds": [
+                    "ksubscription-8bdfe3",
+                    "ksubscription-cf0fe5"
+                ],
+                "description": "BranchGoal ksubscription-8bdfe3,ksubscription-cf0fe5",
+                "timoutTime": null,
+                "name": "branchGoal-82e82d"
+            }
+        },
+        {
+            "ksubscription": {
+                "nodeId": "ksubscription-8bdfe3",
+                "title": "Trial Expired",
+                "x": 20,
+                "y": 380,
+                "timeoutMultiples": null,
+                "timeoutUnits": null,
+                "timeoutNode": null,
+                "stageName": null,
+                "cost": null,
+                "probability": null,
+                "source": null,
+                "description": "KSubscription null",
+                "timoutTime": null,
+                "name": "ksubscription-8bdfe3",
+                "nextNodeId": "emailAction-05a071"
+            }
+        },
+        {
+            "emailAction": {
+                "title": "Send expired EDM",
+                "nextNodeId": "cancel-6e5ddc",
+                "x": 20,
+                "y": 590,
+                "website": null,
+                "contentFileName": null,
+                "subject": null,
+                "from": null,
+                "replyTo": null,
+                "to": null,
+                "attachments": null,
+                "nodeId": "emailAction-05a071"
+            }
+        },
+        {
+            "cancel": {
+                "title": "Did not convert",
+                "nextNodeId": null,
+                "x": 360,
+                "y": 580,
+                "reason": "Trial expired",
+                "nodeId": "cancel-6e5ddc"
             }
         }
     ],
     "extraFields": [],
     "lostReasons": [],
-    "customerActivities": null,
+    "customerActivities": [
+        {
+            "id": "customActivity1498432699482",
+            "text": "Emailed",
+            "inbound": true
+        },
+        {
+            "id": "customActivity1498432703267",
+            "text": "Called",
+            "inbound": true
+        },
+        {
+            "id": "customActivity1498432707778",
+            "text": "Emailed",
+            "inbound": false
+        },
+        {
+            "id": "customActivity1498432710990",
+            "text": "Called",
+            "inbound": false
+        },
+        {
+            "id": "customActivity1498432714373",
+            "text": "Sent proposal",
+            "inbound": false
+        },
+        {
+            "id": "customActivity1498432729223",
+            "text": "Proposal requested",
+            "inbound": true
+        }
+    ],
     "closedActions": null,
     "cancelledActions": null,
-    "funnelTesters": null
+    "funnelTesters": [
+        {
+            "emailDomain": "mailinator.com",
+            "delayMins": 1
+        }
+    ]
 }
