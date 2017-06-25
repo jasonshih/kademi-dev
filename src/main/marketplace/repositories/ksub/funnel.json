@@ -7,10 +7,10 @@
     "stages": null,
     "nodes": [
         {
-            "taskCompleteGoal": {
-                "nodeId": "taskCompleteGoal-ce259e",
+            "ksubscription": {
+                "nodeId": "ksub-trial-started",
                 "title": "Trial started",
-                "x": 360,
+                "x": 300,
                 "y": 20,
                 "timeoutMultiples": null,
                 "timeoutUnits": null,
@@ -23,14 +23,16 @@
                 "nextNodeId": "emailAction-a37885",
                 "description": "Task complete: null",
                 "timoutTime": null,
-                "name": "taskCompleteGoal-ce259e"
+                "name": "taskCompleteGoal-ce259e",
+                "action": "STARTED",
+                "timerTime": null
             }
         },
         {
             "begin": {
-                "nodeId": "begin-cc196c",
+                "nodeId": "edm-welcome",
                 "title": null,
-                "nextNodeId": "taskCompleteGoal-ce259e",
+                "nextNodeId": "ksub-trial-started",
                 "x": 23,
                 "y": 15,
                 "onePerProfile": null,
@@ -40,9 +42,9 @@
         {
             "emailAction": {
                 "title": "Welcome EDM",
-                "nextNodeId": "taskCompleteGoal-dd06d7",
-                "x": 40,
-                "y": 250,
+                "nextNodeId": "ksubscription-trial-ended",
+                "x": 610,
+                "y": 30,
                 "website": "688",
                 "contentFileName": "emailAction-a37885-content.html",
                 "subject": "welcome",
@@ -54,11 +56,10 @@
             }
         },
         {
-            "taskCompleteGoal": {
-                "nodeId": "taskCompleteGoal-dd06d7",
-                "nodeType": "taskCompleteGoal",
-                "x": 354,
-                "y": 270,
+            "ksubscription": {
+                "nodeId": "ksubscription-trial-ended",
+                "x": 30,
+                "y": 190,
                 "action": "PAYMENT_DUE",
                 "timeoutUnits": null,
                 "timeoutMultiples": null,
@@ -66,7 +67,49 @@
                 "source": null,
                 "cost": null,
                 "probability": null,
-                "timerTime": null
+                "timerTime": null,
+                "taskName": "PAYMENT_DUE",
+                "title": "Trial ending",
+                "nextNodeId": "emailAction-524179"
+            }
+        },
+        {
+            "emailAction": {
+                "nodeId": "emailAction-524179",
+                "nodeType": "emailAction",
+                "x": 310,
+                "y": 190,
+                "title": "Upgrade EDM",
+                "nextNodeId": "ksubscription-cf0fe5"
+            }
+        },
+        {
+            "ksubscription": {
+                "nodeId": "ksubscription-cf0fe5",
+                "nodeType": "ksubscription",
+                "x": 640,
+                "y": 200,
+                "title": "Paid",
+                "nextNodeId": "emailAction-34d149"
+            }
+        },
+        {
+            "emailAction": {
+                "nodeId": "emailAction-34d149",
+                "nodeType": "emailAction",
+                "x": 10,
+                "y": 390,
+                "title": "Thankyou EDM",
+                "nextNodeId": "end-210ef7"
+            }
+        },
+        {
+            "end": {
+                "nodeId": "end-210ef7",
+                "nodeType": "end",
+                "x": 290,
+                "y": 400,
+                "title": "Completed successfully"
             }
         }
     ],
