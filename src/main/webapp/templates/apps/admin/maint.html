@@ -227,12 +227,22 @@
                         </div>
                         <div class="panel-body">
                             <p>Please enter the new date/time offset in minutes. This will be added to the actual time when used in system calculations.</p>
+                            <p>Or enter a date time in the format dd/MM/yyyy hh:mm</p>
                             <br/>
                             <form method="POST" action="maint" class="maintForm" >
+                                
                                 <input type="text" name="dateOffsetMinutes" value="$!{page.dateOffsetMinutes}" />
+                                
                                 <button class="btn-sm btn btn-warning">Submit</button>
                             </form>
 
+                            <form method="POST" action="maint" class="maintForm" >
+                                
+                                <input type="text" name="dateTimeVal" value="" placeholder="enter a date/time" />
+                                
+                                <button class="btn-sm btn btn-warning">Submit</button>
+                            </form>
+                            
                             <p>Current date/time: <span class="now">$page.currentDateService.now</span> <i>adjusted by offset</i> <small>($page.currentDateService.now.time)</small> </p>
                         </div>
                     </article>
