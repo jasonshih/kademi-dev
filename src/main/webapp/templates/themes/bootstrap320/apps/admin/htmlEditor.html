@@ -23,7 +23,7 @@
                     <div class="btn-group btn-group-sm">
                         <button class="btn btn-success btn-save-file"><i class="fa fa-save"></i> Save file</button>
                         #if( $file.template )
-                        <a href="$page.getEditTemplateLink( $file.template )" target="_blank" class="btn btn-info"><i class="fa fa-pencil"></i> Template: <b>$file.template</b></a>
+                            <a href="$page.getEditTemplateLink( $file.template )" target="_blank" class="btn btn-info"><i class="fa fa-pencil"></i> Template: <b>$file.template</b></a>
                         #end
                     </div>
                 </div>
@@ -33,7 +33,7 @@
         </div>
 
         #foreach($cssPath in $file.cssPaths)
-        <link rel="editor-stylesheet" href="${cssPath}" />
+            <link rel="editor-stylesheet" href="${cssPath}" />
         #end
 
 
