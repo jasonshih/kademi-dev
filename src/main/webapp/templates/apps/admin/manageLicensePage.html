@@ -14,7 +14,7 @@
                     <ul>
                         <li><h4>Plan: $page.license.planName </h4></li>
                         <li><h4>Created Date: $!formatter.formatDate($page.license.createdDate) </h4></li>
-                        <li><h4>Expiration Date: $page.license.toDate </h4></li>
+                        <li><h4>Expiration Date: $!formatter.formatDate($page.license.toDate) </h4></li>
                     </ul>
                     <a href="$page.licenseServerAddress" class="btn btn-success">Manage Details</a>
                 </div>
