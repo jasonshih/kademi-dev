@@ -1,4 +1,4 @@
-JBNodes['taskCompleteGoal'] = {
+JBNodes['ksubscription'] = {
     icon: 'fa fa-thumbs-o-up',
     title: 'KSubscription',
     type: JB_NODE_TYPE.GOAL,
