@@ -3,31 +3,77 @@
     #set ($productImage = "/theme/img/photo_holder.png")
 
     #if( $page.primaryImageHref )
-    #if ($page.selectedParameterOptions.size() > 0)
-    #set ($productImage = $page.variantImageHref)
-    #else
-    #set ($productImage = '/_hashes/files/' + $page.productInReward.product.images.get(0).imageHash + '/alt-640-640.png')
-    #end
+        #if ($page.selectedParameterOptions.size() > 0)
+            #set ($productImage = $page.variantImageHref)
+        #else
+            #set ($productImage = '/_hashes/files/' + $page.productInReward.product.images.get(0).imageHash + '/alt-640-640.png')
+        #end
     #end
 
     <div class="product-item">
         <div class="thumbnail product">
-            <div class="product-info">
+            <div class="product-info" id="product-images">
                 <div class="embed-responsive embed-responsive-4by3">
                     <a href="$page.href" class="embed-responsive-item" style="background-image: url('${productImage}'); background-repeat: no-repeat; background-size: contain; background-position: center"></a>
                 </div>
             </div>
-            <div class="caption">
 
-                <h3 class="text-center product-price bg-info">#set( $opts = $page.selectedParameterOptions )
+            #set ($totalParams = 0)
+            #foreach( $param in $page.parameters)
+                #if( $param.options.size() > 0 )
+                    #set ($totalParams = $totalParams + 1)
+                #end
+            #end
+            #if ($totalParams > 0)
+                #set ($paramClass = "col-sm-12")
+                #set ($paramLabelClass = "col-sm-4")
+                #set ($paramInputClass = "col-sm-8")
+                #if ($totalParams > 1)
+                    #set ($paramClass = "col-sm-6")
+                    #set ($paramLabelClass = "col-sm-12")
+                    #set ($paramInputClass = "col-sm-12")
+                #end
+
+                <div class="product-variants form-horizontal">
+                    <div class="row">
+                        #foreach( $param in $page.parameters)
+                            #if( $param.options.size() > 0 )
+                                <div class="$paramClass">
+                                    <div class="form-group">
+                                        <label for="param-$param.name" class="$paramLabelClass control-label variant-name">$param.title</label>
+                                        <div class="$paramInputClass">
+                                            <select name="param-$param.name" class="form-control productParameterSelect">
+                                                <option value="">[ $param.title ]</option>
+                                                #foreach( $opt in $param.options)
+                                                    $formatter.option( $opt.name, $opt.title, $page.selectedParameterOptions.get($param.name) )
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            #end
+                        #end
+                    </div>
+                </div>
+            #end
+            <div class="caption">
+                <h3 id="product-price" class="text-center product-price bg-info">#set( $opts = $page.selectedParameterOptions )
                     #set( $price = $page.getPurchaseAmount($opts) )
                     #if( $price )
-                    $formatter.formatCurrency($price.amount, false)
+                        $formatter.formatCurrency($price.amount, false)
                     #end
                     <small>POINTS</small>
                 </h3>
 
-                <a href="$page.href" class="btn btn-info btn-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
+                #set ($variantsQuery = "")
+                #foreach($paramName in $page.selectedParameterOptions.keySet())
+                    #if ($variantsQuery == "")
+                        #set ($variantsQuery = "?param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+                    #else
+                        #set ($variantsQuery = $variantsQuery + "&amp;param-" + $paramName + "=" + $page.selectedParameterOptions.get($paramName))
+                    #end
+                #end
+                <a href="$page.href$!variantsQuery" class="btn btn-info btn-add-to-cart" role="button"><i class="fa fa-shopping-cart"></i></a>
             </div>
         </div>
     </div>

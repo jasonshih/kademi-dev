@@ -1,7 +1,7 @@
 $(function () {
-    if ($('[data-type=component-rewardProductCartButton]').length) {
+    if ($('.productParameterSelect').length) {
         $('abbr.timeago').timeago();
-
+        
         $('.productParameterSelect').change(function () {
             var optSelect = $(this);
             flog('productParameterSelect changed', optSelect);
@@ -10,7 +10,7 @@ $(function () {
             var href = uri.toString();
             flog('New uri', href);
             history.pushState(null, null, href);
-
+            
             $('#product-images, #product-price, #btn-add-to-cart-wrapper').reloadFragment({
                 url: href
             });
