@@ -15,7 +15,7 @@
                 "displayName": "Customer Company",
                 "fieldset": [
                 ],
-                "name": "cust-company"
+                "name": "cust-company" 
             },
             {
                 "displayName": "Broker Office",
@@ -167,7 +167,6 @@
                 "apps": [
                     
                     {
-                        "branch": "version56",
                         "apps": [
                             {
                                 "settings": null,
