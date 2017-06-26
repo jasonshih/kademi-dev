@@ -16,33 +16,36 @@
     ],
     "nodes": [
         {
+            "begin": {
+                "nodeId": "begin-trial",
+                "title": null,
+                "nextNodeId": "ksub-trial-started",
+                "x": 23,
+                "y": 15,
+                "onePerProfile": null,
+                "initialGoal": true
+            }
+        },
+        
+        {
             "ksubscription": {
-                "nodeId": "taskCompleteGoal-ce259e",
+                "nodeId": "ksub-trial-started",
                 "title": "Trial started",
                 "x": 300,
                 "y": 20,
                 "timeoutMultiples": null,
                 "timeoutUnits": null,
                 "timeoutNode": null,
-                "stageName": null,
+                "stageName": "Trial",
                 "cost": null,
                 "probability": null,
                 "source": null,
                 "description": "KSubscription null",
                 "timoutTime": null,
-                "name": "taskCompleteGoal-ce259e",
-                "nextNodeId": "emailAction-a37885"
-            }
-        },
-        {
-            "begin": {
-                "nodeId": "edm-welcome",
-                "title": null,
-                "nextNodeId": "taskCompleteGoal-ce259e",
-                "x": 23,
-                "y": 15,
-                "onePerProfile": null,
-                "initialGoal": null
+                "name": "ksub-trial-started",
+                "nextNodeId": "edm-welcome",
+                "action": "STARTED",
+                "timerTime": null
             }
         },
         {
@@ -58,7 +61,7 @@
                 "replyTo": null,
                 "to": null,
                 "attachments": null,
-                "nodeId": "emailAction-a37885"
+                "nodeId": "edm-welcome"
             }
         },
         {
@@ -171,14 +174,16 @@
                 "timeoutMultiples": null,
                 "timeoutUnits": null,
                 "timeoutNode": null,
-                "stageName": null,
+                "stageName": "TrialEnding",
                 "cost": null,
                 "probability": null,
                 "source": null,
                 "description": "KSubscription null",
                 "timoutTime": null,
                 "name": "ksubscription-8bdfe3",
-                "nextNodeId": "emailAction-05a071"
+                "nextNodeId": "emailAction-05a071",
+                "action": null,
+                "timerTime": null
             }
         },
         {
