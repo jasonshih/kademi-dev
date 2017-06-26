@@ -36,10 +36,10 @@ function initProductContentsTab(editorType, allGroups) {
                 '    </span>' +
                 '</div>'
             );
-    
+            
             editor.before(loading);
             editor.hide();
-    
+            
             editor.contentEditor({
                 iframeMode: true,
                 allGroups: allGroups,
@@ -51,15 +51,23 @@ function initProductContentsTab(editorType, allGroups) {
         });
     }
     
-    $('.updateProductContents').forms({
+    $('.updateProductBrief').forms({
         onValid: function () {
             if (editorType !== 'html') {
                 var brief = $('#brief');
                 brief.val(brief.contentEditor('getContent'));
-                flog(brief.val());
+            }
+        },
+        onSuccess: function () {
+            Msg.success('Successfully updated product\'s brief!');
+        }
+    });
+    
+    $('.updateProductContent').forms({
+        onValid: function () {
+            if (editorType !== 'html') {
                 var notes = $('#notes');
                 notes.val(notes.contentEditor('getContent'));
-                flog(notes.val());
             }
         },
         onSuccess: function () {
