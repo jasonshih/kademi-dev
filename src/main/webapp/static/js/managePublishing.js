@@ -1,67 +1,83 @@
-
 function initPublishingMenu(managePage) {
-    flog("initPublishingMenu", $(".publishing .branches"));
-    $(".publishing .branches").on("click", "a.copy", function(e) {
+    flog('initPublishingMenu', $('.publishing .branches'));
+    
+    var modal = initCopyVersionModal(managePage);
+    
+    $('.publishing .branches').on('click', 'a.copy', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var node = $(e.target);
-        var link = node.closest("li").find("a").not(".copy");
-        showCopyBranch(link, function(newName, resp) {
-            flog("done copy branch");
-            var s = "<a class='branch noclear' href='" + resp.nextHref + (managePage ? "/" + managePage : "") + "'>" + newName + "</a>";
-            s = "<li class='list-item' role='presentation'>" + s + "</li>";
-            node.closest("ul").append(s);
-        });
-    });
-    $(".publishing .branches").on("click", "a.hide-branch", function(e) {
+        
+        var btn = $(this);
+        var link = btn.closest('li').find('.branch');
+        var srcHref = link.attr('href');
+        srcHref = toFolderPath(srcHref);
+        modal.find('form').attr('action', srcHref);
+        modal.modal('show');
+    }).on('click', 'a.hide-branch', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var link = $(e.target).closest("a");
-        flog("hide branch:", link);
-        var li = link.closest("li");
-        var srcHref = link.attr("href");
-        srcHref = toFolderPath(srcHref);        
-        hideBranch(srcHref, function() {
-            li.next(".divider").hide();
+        
+        var link = $(this);
+        flog('hide branch:', link);
+        
+        var li = link.closest('li');
+        var srcHref = link.attr('href');
+        srcHref = toFolderPath(srcHref);
+        
+        hideBranch(srcHref, function () {
+            li.next('.divider').hide();
             li.hide(700);
         });
     });
+}
+
+function initCopyVersionModal(managePage) {
+    flog('initCopyVersionModal');
     
-}
-
-function showCopyBranch(link, callback) {
-    var srcHref = link.attr("href");
-    srcHref = toFolderPath(srcHref);
-    myPrompt("copyVersion", "", "Copy website version", "Make a copy of this version of the website", "Enter a name", "newName", "Copy", "simpleChars", "Enter a simple name for the version, eg version2", function(newName, form) {
-        newName = newName.toLowerCase();
-        log("create version", newName, form);
-        createBranch(srcHref, newName, function(newName, resp) {
-            closeMyPrompt();
-            callback(newName, resp);
-            return false;
-        });
-        return false;
-    });
-}
-
-function createBranch(src, destName, callback) {
-    flog("createBranch", src, destName);
-    $.ajax({
-        type: 'POST',
-        url: src,
-        data: {
-            copyToName: destName
-        },
-        dataType: "json",
-        success: function(resp) {
-            log("created branch", resp);
-            callback(destName, resp);
-        },
-        error: function(resp) {
-            log("error", resp);
-            alert("Sorry couldnt create new new version: " + resp);
+    var modal = $(
+        '<div id="modal-copy-version" class="modal fade" tabindex="-1" data-manage-page="' + managePage + '">' +
+        '    <div class="modal-dialog modal-sm">' +
+        '       <div class="modal-content">' +
+        '           <div class="modal-header">' +
+        '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+        '               <h4 class="modal-title">Copy website version</h4>' +
+        '       </div>' +
+        '           <form method="POST" class="form-horizontal" action="">' +
+        '               <div class="modal-body">' +
+        '                   <p class="alert alert-info">Make a copy of this version of the website</p>' +
+        '                   <p class="form-message alert alert-danger" style="display: none;"></p>' +
+        '                   <div class="form-group">' +
+        '                       <label for="copyVersion_" class="control-label col-md-3">Enter a name</label>' +
+        '                       <div class="col-md-8">' +
+        '                           <input type="text" class="form-control regex required" required="true" id="copyVersion_" name="copyToName" data-regex="^[a-zA-Z0-9-]+$" data-message="Version name is invalid" placeholder="Enter a simple name for the version, eg version2" />' +
+        '                           <small class="help-block">Simple characters only, no punctuation, dots, etc, all lower case</small>' +
+        '                       </div>' +
+        '                   </div>' +
+        '               </div>' +
+        '               <div class="modal-footer">' +
+        '                   <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
+        '                   <button class="btn btn-sm btn-primary" type="submit" type="submit">Copy</button>' +
+        '               </div>' +
+        '           </form>' +
+        '       </div>' +
+        '    </div>' +
+        '</div>'
+    );
+    
+    $(document.body).append(modal);
+    
+    modal.find('form').forms({
+        onSuccess: function (resp) {
+            $(".publishing .branches").append(
+                '<li class="list-item" role="presentation">' +
+                '    <a class="branch noclear" href="' + resp.nextHref + (managePage ? '/' + managePage : '') + '">' + modal.find('[name=copyToName]').val() + '</a>' +
+                '</li>'
+            );
+            modal.modal('hide');
         }
     });
+    
+    return modal;
 }
 
 
@@ -74,13 +90,13 @@ function hideBranch(href, callback) {
             hide: true
         },
         dataType: "json",
-        success: function(resp) {
+        success: function (resp) {
             log("hid branch", resp);
-            if( callback ) {
+            if (callback) {
                 callback(resp);
             }
         },
-        error: function(resp) {
+        error: function (resp) {
             flog("error", resp);
             Msg.error("Sorry couldnt hide the version: " + resp);
         }
