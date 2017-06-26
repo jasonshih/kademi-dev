@@ -57,6 +57,12 @@
                 "group": "main",
                 "path": "/theme/apps/forums/init-comments.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/forums/pageInitFunctions.js"
+            }
         }
     ]
 }

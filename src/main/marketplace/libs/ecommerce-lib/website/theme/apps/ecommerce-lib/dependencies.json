@@ -41,19 +41,13 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/ecommerce/storeDashboard.js"
+                "path": "/static/uri/1.15.1/URI.js"
             }
         },
         {
             "js": {
                 "group": "main",
                 "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/uri/1.15.1/URI.js"
             }
         },
         {
@@ -66,6 +60,12 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.zoom/1.7.14/jquery.zoom.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/ecommerce/storeDashboard.js"
             }
         },
         {

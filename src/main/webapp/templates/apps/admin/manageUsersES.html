@@ -92,11 +92,7 @@
                                     </div>
                                     <div class="values">
                                         <strong>
-                                            #if( !$page.paginator.isEmpty() )
-                                            $page.paginator.records[0].totalProfiles
-                                            #else
-                                            0
-                                            #end
+                                            $!page.totalProfiles
                                         </strong>
                                         Profiles
                                     </div>
@@ -107,11 +103,7 @@
                                     </div>
                                     <div class="values">
                                         <strong>
-                                            #if( !$page.paginator.isEmpty() )
-                                            $page.paginator.records[0].groupsCount
-                                            #else
-                                            0
-                                            #end
+                                            $!page.groupsCount
                                         </strong>
                                         Groups
                                     </div>
@@ -122,11 +114,7 @@
                                     </div>
                                     <div class="values">
                                         <strong>
-                                            #if( !$page.paginator.isEmpty() )
-                                            $page.paginator.records[0].orgsCount
-                                            #else
-                                            0
-                                            #end
+                                            $!page.orgsCount
                                         </strong>
                                         Organisations
                                     </div>

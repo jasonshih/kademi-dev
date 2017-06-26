@@ -18,7 +18,7 @@ function initRegister(afterRegisterHref) {
 
 function initRegisterForms(afterRegisterHref, callback) {
     var registerForm = $('#registerForm');
-    log('initRegisterForms - bootstrap335', registerForm);
+    log('initRegisterForms - signup-lib', registerForm);
 
     var params = {};
     var datas = window.location.search.substr(1).split("&");
