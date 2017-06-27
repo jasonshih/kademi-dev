@@ -3,19 +3,19 @@
         {
             "appId": "rewardStore",
             "branch" : ""
-        },        
+        },
         {
             "appId": "rewardstore-lib",
-            "branch" : "1.0.9"
-        },                
+            "branch" : "1.1.0"
+        },
         {
             "appId": "userDashboardApp",
             "branch" : ""
-        },        
+        },
         {
             "appId": "shoppingCart",
             "branch" : ""
-        },        
+        },
         {
             "appId": "search",
             "branch" : ""
@@ -23,6 +23,6 @@
         {
             "appId": "search-lib",
             "branch" : "1.0.3"
-        }        
+        }
   ]
 }

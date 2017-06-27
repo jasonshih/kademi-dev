@@ -42,13 +42,12 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
         "size": max,
         "query": {
             "bool": {
-                "must": [
-
-                ]
+                "must": [],
+                "should": []
             }
         },
         "min_score": 0.05,
-        "stored_fields": ["title.keyword", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
+        "stored_fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
         "sort": {},
         "highlight": {
             "fields": {
@@ -79,13 +78,16 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
     searchConfig.sort[sort] = asc;
 
     if (query !== null && typeof query !== 'undefined' && query.trim().length > 0) {
-        var q = {
-            "multi_match": {
-                "query": query,
-                "fields": ["title.keyword", "content.keyword"]
-            }
-        };
-        searchConfig.query.bool.must.push(q);
+        var searchFields = ["title", "content"];
+        for (var i in searchFields) {
+            var q = '{'
+                    + '    "prefix": {'
+                    + '        "' + searchFields[i] + '": "' + query + '"'
+                    + '    }'
+                    + '}';
+            searchConfig.query.bool.should.push(JSON.parse(q));
+            searchConfig.query.bool.minimum_should_match = 1;
+        }
     }
 
     if (isNotBlank(priceStart) && isNotNull(priceStart) && +priceStart > 0) {

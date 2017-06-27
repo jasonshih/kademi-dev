@@ -1,37 +1,37 @@
 #if("$!numberOfProducts" == "")
-    #set($numberOfProducts = 12)
+#set($numberOfProducts = 12)
 #end
 #set ($number = $formatter.toInteger($numberOfProducts))
 
 #if($page)
-    <ul class="recentlyViewedRewardProducts">
-        #set ($app = $applications.get("rewardstore-lib"))
-        #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $number))
+<ul class="recentlyViewedRewardProducts">
+    #set ($app = $applications.get("rewardstore-lib"))
+    #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $number))
+    $$recentlyViewedRewardProducts
+    #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
+    <li>You have no recently viewed items</li>
+    #else
+    #foreach($p in $recentlyViewedRewardProducts)
+    #if($foreach.count <= $number)
+    #set ($prodUrl = $p.href)
 
-        #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
-            <li>You have no recently viewed items</li>
-        #else
-            #foreach($p in $recentlyViewedRewardProducts)
-                #if($foreach.count <= $number)
-                    #set ($prodUrl = $p.href)
+    #set($bg = "/static/images/photo_holder.png")
+    #if( $p.primaryImageHref )
+    #set($bg = $p.primaryImageHref)
+    #end
+    <li class="slickItem">
+        <a class="embed-responsive embed-responsive-4by3" href="$!prodUrl" title="$!p.title">
+            <div style="background-image: url($bg);" class="embed-responsive-item"></div>
+        </a>
+        <a href="$!prodUrl">$!p.title</a>
+    </li>
+    #end
+    #end
+    #end
 
-                    #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.primaryImageHref )
-                        #set($bg = $p.primaryImageHref)
-                    #end
-                    <li class="slickItem">
-                        <a class="embed-responsive embed-responsive-4by3" href="$!prodUrl" title="$!p.title">
-                            <div style="background-image: url($bg);" class="embed-responsive-item"></div>
-                        </a>
-                        <a href="$!prodUrl">$!p.title</a>
-                    </li>
-                #end
-            #end
-        #end
-
-    </ul>
+</ul>
 #else
-    #fakeUI()
+#fakeUI()
 #end
 
 
