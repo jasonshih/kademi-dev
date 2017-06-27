@@ -117,7 +117,9 @@
                             #set($auctions = $closedAuctions)
                         #end
                         #foreach($v in $auctions)
-                            #if ($v.createdDate.after($queryManager.commonStartDate) && $v.createdDate.before($queryManager.commonFinishDate))
+
+                            #if ($v.auctionStartDate.after($formatter.toSqlTimestamp($queryManager.commonStartDate)) &&
+                                $v.auctionStartDate.before($formatter.toSqlTimestamp($queryManager.commonFinishDate)))
                             <tr>
                                 <td title="$v.auctionState" class="text-center lead">
                                     #if($v.auctionState == "draft")
