@@ -1,7 +1,7 @@
 #cates-list .cate-item .embed-responsive-item,
 [id*="products-list"] .product-item .embed-responsive-item,
 #products-list .product-item .embed-responsive-item,
-.product-images .product-item .embed-responsive-item  {
+.product-images .product-item .embed-responsive-item {
     background: no-repeat 50% 50%;
     background-size: contain;
 }
@@ -19,50 +19,67 @@
     min-height: 60px;
 }
 
-#products-list{
+#products-list {
     min-height: 200px;
 }
+
 .rewardStoreCategoryProductsComponent {
     .product-item {
         margin-bottom: 40px;
+        
         .thumbnail {
             padding: 0;
             border: 0;
         }
+        
         .product-info {
             border: 1px solid @gray-light;
             border-bottom: 0;
             padding: 20px;
             text-align: center;
         }
+        
         .product-title {
             font-size: 25px;
             margin: 0 0 30px;
             font-weight: 300;
             min-height: 55px;
         }
+        
         .product-content {
             margin-top: 10px;
         }
+        
+        .product-variants {
+            background: @well-bg;
+            border: 1px solid @gray-light;
+            padding: 15px 15px 0;
+            margin-bottom: 0;
+        }
+        
         .caption {
             position: relative;
             background: #fff;
             height: 65px;
+            
             h3, a {
                 position: absolute;
                 top: 0;
                 bottom: 0;
                 color: #fff;
             }
+            
             h3 {
                 left: 0;
                 right: 68px;
                 margin: 0;
             }
+            
             a {
                 right: 0;
                 width: 67px;
                 border: 0;
+                
                 i {
                     font-size: 28px;
                     position: absolute;
@@ -74,10 +91,12 @@
                     transform: translate(0, -50%);
                 }
             }
-            .product-price{
+            
+            .product-price {
                 font-size: 24px;
                 font-weight: 300;
                 padding-top: 9px;
+                
                 small {
                     color: inherit;
                     font-size: 12px;
@@ -91,14 +110,16 @@
 }
 
 #cates-list {
-    .cate-item{
+    .cate-item {
         display: block;
         margin-bottom: 20px;
         border: 1px solid #e3e3e6;
         text-decoration: none;
+        
         .embed-responsive-item {
             background-size: cover;
         }
+        
         .cate-title {
             white-space: nowrap;
             overflow: hidden;
@@ -114,21 +135,25 @@
 }
 
 .rewardStoreCategoriesList,
-.pointsRangeList{
-    i.fa-angle-right{
+.pointsRangeList {
+    
+    i.fa-angle-right {
         display: none;
     }
-    .selected{
+    
+    .selected {
         background: @gray-lighter !important;
         border: 1px solid @gray-light !important;
         margin-bottom: 0;
+        
         i.fa-angle-right {
             display: inline-block;
             font-size: larger;
             margin-top: 1px;
-
+            
         }
     }
+    
     .heading-item {
         padding-left: 0;
         border-bottom: 1px solid @gray-light !important;
@@ -142,22 +167,26 @@
     margin-bottom: 20px;
 }
 
-.btn-decrease-quantity,.btn-increase-quantity{
+.btn-decrease-quantity, .btn-increase-quantity {
     border-left-width: 1px !important;
 }
 
-.recentlyViewedRewardProducts{
+.recentlyViewedRewardProducts {
     padding-left: 0;
-    .slickItem{
+    
+    .slickItem {
         outline: transparent none;
-        .embed-responsive-item{
+        
+        .embed-responsive-item {
             background-position: center;
             background-size: cover;
         }
-        a{
+        
+        a {
             outline: transparent none;
         }
     }
+    
     .slick-prev::before,
     .slick-next::before {
         color: @brand-primary;

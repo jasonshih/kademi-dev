@@ -26,7 +26,6 @@
                 "initialGoal": true
             }
         },
-        
         {
             "ksubscription": {
                 "nodeId": "ksub-trial-started",
@@ -73,14 +72,16 @@
                 "timeoutMultiples": null,
                 "timeoutUnits": null,
                 "timeoutNode": null,
-                "stageName": null,
+                "stageName": "TrialEnding",
                 "cost": null,
                 "probability": null,
                 "source": null,
                 "description": "KSubscription null",
                 "timoutTime": null,
                 "name": "ksubscription-trial-ended",
-                "nextNodeId": "emailAction-524179"
+                "nextNodeId": "emailAction-524179",
+                "action": "PAYMENT_DUE",
+                "timerTime": null
             }
         },
         {
@@ -115,7 +116,9 @@
                 "description": "KSubscription null",
                 "timoutTime": null,
                 "name": "ksubscription-cf0fe5",
-                "nextNodeId": "emailAction-34d149"
+                "nextNodeId": "emailAction-34d149",
+                "action": "PAYMENT_SUCCEEDED",
+                "timerTime": null
             }
         },
         {
@@ -146,7 +149,7 @@
         {
             "branchGoal": {
                 "nodeId": "branchGoal-82e82d",
-                "title": null,
+                "title": "Wait for payment or expiry",
                 "x": 610,
                 "y": 200,
                 "timeoutMultiples": null,
@@ -182,7 +185,7 @@
                 "timoutTime": null,
                 "name": "ksubscription-8bdfe3",
                 "nextNodeId": "emailAction-05a071",
-                "action": null,
+                "action": "EXPIRED",
                 "timerTime": null
             }
         },

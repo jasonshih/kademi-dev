@@ -247,7 +247,6 @@ function doSMSHistorySearch(startDate, endDate) {
             var newBody = $(content).find("#sms-history-table-body");
             target.replaceWith(newBody);
             $('#sms-history-table').find("abbr.timeago").timeago();
-            window.history.pushState(null, "SMS History", href);
         }
     });
 }

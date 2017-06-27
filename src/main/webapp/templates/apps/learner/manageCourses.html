@@ -9,46 +9,8 @@
     </head>
     <body class="manage-course">
         #set($currentBranch = $page.closest("branch"))
-        <div class="btn-group publishing pull-right">
-            #if( $currentBranch.live )
-            <a href="${currentBranch.href}../manageBranches" class="islive btn btn-sm btn-danger">
-                <i class="fa fa-gear"></i>
-                LIVE
-            </a>
-            #else
-            <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
-                <i class="glyphicon glyphicon-ok-sign"></i>
-                PUBLISH
-            </a>
-            <a href="${currentBranch.href}../manageBranches" class="btn btn-sm btn-primary">
-                <i class="fa fa-gear"></i>
-                Manage versions
-            </a>
-            #end
 
-            <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
-                <b>Editing version:</b>
-                $currentBranch.name
-                <span class="caret"></span>
-            </a>
-            <ul role="menu" class="dropdown-menu list branches">
-                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
-                <li role="presentation" class="list-item">
-                    <aside class="list-item-controller">
-                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
-                        #if( $b.live )
-
-                        #else
-                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
-                        #end
-                    </aside>
-                    <a href="${b.href}manageCourses" class="branch noclear">
-                        $b.name
-                    </a>
-                </li>
-                #end
-            </ul>
-        </div>
+        #parse("/theme/apps/admin/versionController.html")
 
         <div class="btn-group" #if (!$page.externalUrl) title="Please add at least 1 course to View website" #end>
             #if ($page.externalUrl)
