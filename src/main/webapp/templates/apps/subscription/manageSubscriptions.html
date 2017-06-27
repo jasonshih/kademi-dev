@@ -29,6 +29,7 @@
                             <col width="100px" />
                             <col width="100px" />
                             <col width="50px" />
+                            <col width="50px" />
                         </colgroup>
                         <thead>
                             <tr>
@@ -40,6 +41,7 @@
                                 <th>Created Date</th>
                                 <th>Modified Date</th>
                                 <th><input type="checkbox" class="check-all"/></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -63,6 +65,11 @@
                                 <td>
                                     <a href="$sub.id" class="btn btn-info">
                                         <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/subscriptions-stats/?org=$sub.adminOrg.id" class="btn btn-info">
+                                        <i class="fa fa-eye "></i>
                                     </a>
                                 </td>
                             </tr>
