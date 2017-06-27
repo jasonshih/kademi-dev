@@ -29,17 +29,20 @@
                             <col width="100px" />
                             <col width="100px" />
                             <col width="50px" />
+                            <col width="50px" />
                         </colgroup>
                         <thead>
                             <tr>
                                 <th>Admin Org</th>
                                 <th>Billing contact</th>
                                 <th>Expiry Date</th>
+                                <th>Due</th>
                                 <th>Plan Name</th>
                                 <th>Limits Text</th>
                                 <th>Created Date</th>
                                 <th>Modified Date</th>
                                 <th><input type="checkbox" class="check-all"/></th>
+                                <th></th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -54,7 +57,15 @@
                                     <a href="/manageUsers/$sub.billingContact.id/">$sub.billingContact.email</a>
                                     #end
                                 </td>
-                                <td>$!formatter.formatDate($!sub.expiryDate)</td>
+                                <td>
+                                    $!formatter.formatDate($!sub.expiryDate)
+                                    #if( $sub.expiryProcessedDate )
+                                    <span class="label label-warning">Expired $!formatter.formatDate($!sub.expiryProcessedDate)</span>
+                                    #end
+                                </td>
+                                <td>
+                                    $!formatter.formatDate($!sub.paymentDueNoticeDate)
+                                </td>
                                 <td>$!sub.planName</td>
                                 <td>$!sub.licenseText</td>
                                 <td>$!formatter.formatDate($!sub.createdDate)</td>
@@ -63,6 +74,11 @@
                                 <td>
                                     <a href="$sub.id" class="btn btn-info">
                                         <i class="fa fa-pencil"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/subscriptions-stats/?org=$sub.adminOrg.id" class="btn btn-info">
+                                        <i class="fa fa-eye "></i>
                                     </a>
                                 </td>
                             </tr>
