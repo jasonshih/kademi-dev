@@ -172,7 +172,12 @@
                                 "settings": null,
                                 "appId": "subscription",
                                 "enabled": true
-                            }
+                            },
+                            {
+                                "settings": null,
+                                "appId": "userApp",
+                                "enabled": true
+                            } 
                         ]
                     }
                 ]
