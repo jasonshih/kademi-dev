@@ -14,12 +14,14 @@
             <div class="row" id="textual-description">
                 <div class="col-sm-8 col-lg-8"><p class="lead">$page.description</p></div>
                 <div class="col-sm-4 col-lg-4"><p class="lead">
-                        <i class="fa fa-clock-o"></i> Next run: <br class="hidden-lg" /> <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDate($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
-                    </p></div>
+                    <i class="fa fa-clock-o"></i> Next run: <br class="hidden-lg" />
+                    <abbr title="$!formatter.formatDateISO8601($page.nextRunTime, $page.organisation.timezone)" class="timeago">$!formatter.formatDate($page.nextRunTime, $page.organisation.timezone)</abbr>, at $!formatter.formatTime($page.nextRunTime, $page.organisation.timezone)
+                </p></div>
             </div>
-            <form name="frmDetails" action="." method="post" class="form-horizontal">
+            <form name="frmDetails" action="." method="post" class="form-horizontal" enctype="multipart/form-data">
                 <div class="enabledSwitchContainer pull-right" style="z-index: 2; margin-right: 10px; position: relative;">
-                    <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' data-size="small" $formatter.ifTrue($page.job.enabled,'checked','') value="true" id="enabled" />
+                    <input class='make-switch' type='checkbox' data-on-color='success' data-off-color='danger' data-size="small" $formatter.ifTrue($page.job.enabled,'checked',
+                        '') value="true" id="enabled" />
                 </div>
                 <div class="tabbable">
                     <ul class="nav nav-tabs tab-bricky">
@@ -78,10 +80,11 @@
                                                 <input type="number" min="1" class="form-control" name="periodMultiples" value="$!page.job.periodMultiples" />
                                                 <input type="hidden" name="sFrequency" id="sFrequency" value="$page.job.frequency" />
                                                 <div class="input-group-btn" id="frequency-group">
-                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$page.job.frequency </span> <span class="caret"></span></button>
+                                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <span class="btn-text">$page.job.frequency </span> <span class="caret"></span></button>
                                                     <ul class="dropdown-menu dropdown-menu-right">
                                                         #foreach($f in $page.allFrequencies)
-                                                        <li><a href="#" data-value="$f">$f</a></li>
+                                                            <li><a href="#" data-value="$f">$f</a></li>
                                                         #end
                                                     </ul>
                                                 </div>
@@ -117,7 +120,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="col-md-12 control-label show-time-details" style="text-align: left">
-                                            <a href="#">Date & Time details  <i class="fa fa-arrow-circle-down"></i></a>
+                                            <a href="#">Date & Time details <i class="fa fa-arrow-circle-down"></i></a>
                                         </label>
                                     </div>
                                     <div class="form-group time-details">
@@ -149,11 +152,11 @@
                                             <select name="pipeline" id="pipeline" class="form-control">
                                                 <option value="">No Pipeline</option>
                                                 #foreach($entry in $page.outboundPipelines.entrySet())
-                                                #foreach($pipeline in $entry.value)
-                                                #set($pId = $entry.key.id + '_' + $pipeline.id)
-                                                #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
-                                                $formatter.option($pId, $pName, $page.job.pipeline)
-                                                #end
+                                                    #foreach($pipeline in $entry.value)
+                                                        #set($pId = $entry.key.id + '_' + $pipeline.id)
+                                                        #set($pName = $entry.key.repository.name + ' - ' + $pipeline.id)
+                                                        $formatter.option($pId, $pName, $page.job.pipeline)
+                                                    #end
                                                 #end
                                             </select>
                                         </div>
@@ -166,7 +169,7 @@
                                             <select name="hrefTemplate" class="form-control">
                                                 <option value="">No attachment</option>
                                                 #foreach($att in $page.attachmentChoices)
-                                                $formatter.option($att.path, $att.title, $page.job.hrefTemplate)
+                                                    $formatter.option($att.path, $att.title, $page.job.hrefTemplate)
                                                 #end
                                             </select>
                                         </div>
@@ -174,7 +177,9 @@
                                 </div>
                             </div>
                             <hr />
-                            <p class="lead">Recipients <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small></p>
+                            <p class="lead">Recipients
+                                <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small>
+                            </p>
                             <div class="Recipient Content">
                                 <p class="clearfix">
                                     <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
@@ -184,25 +189,27 @@
                                 </p>
                                 <div class="GroupList blocks-wrapper">
                                     #foreach($g in $page.groupRecipients)
-                                    <span class="block $g.name">$g.name
-                                        #if( $page.status == "Draft" )
-                                        <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
-                                        #end
-                                    </span>
+                                        <span class="block $g.name">$g.name
+                                            #if( $page.status == "Draft" )
+                                                <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
+                                            #end
+                                        </span>
                                     #end
                                 </div>
                             </div>
                             <hr />
                             <p class="lead">Message template</p>
                             <div class="form-group">
-                                <div class="col-md-12">
-                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control htmleditor">$!page.job.html</textarea>
+                                <div class="col-md-12 editor-wrapper">
+                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control edmeditor">$!page.job.html</textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div id="history" class="tab-pane in Content Details">
-                            <p class="alert alert-info"><i class="fa fa-info-circle"></i> Last run at: <b title="$!formatter.formatDateISO8601($page.lastRunDate, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.lastRunDate, $page.organisation.timezone)</b></p>
+                            <p class="alert alert-info"><i class="fa fa-info-circle"></i> Last run at:
+                                <b title="$!formatter.formatDateISO8601($page.lastRunDate, $page.organisation.timezone)" class="timeago">$!formatter.formatDateTime($page.lastRunDate, $page.organisation.timezone)</b>
+                            </p>
                             <table id="emails" class="table table-hover">
                                 <thead>
                                     <tr>
@@ -218,17 +225,17 @@
                                     <tr>
                                         <td colspan="5">No emails have been sent</td>
                                     </tr>
-                                    #else 
+                                #else
                                     #foreach($item in $history)
-                                    <tr>
-                                        <td><a href="/emails/$item.id">$item.subject <i class="fa fa-arrow-circle-right"></i></a></td>
-                                        <td>#if($item.recipient.formattedName) $item.recipient.formattedName #end</td>
-                                        <td>#if($item.recipientAddress) $item.recipientAddress #end</td>
-                                        <td>#if($item.sendStatus) <span class="label label-info">$item.sendStatus</span> #end</td>
-                                        <td>#if($item.sendStatusDate) $formatter.formatDateTime($item.sendStatusDate, $page.organisation.timezone) #end</td>
-                                    </tr>
-                                    #end 
+                                        <tr>
+                                            <td><a href="/emails/$item.id">$item.subject <i class="fa fa-arrow-circle-right"></i></a></td>
+                                            <td>#if($item.recipient.formattedName) $item.recipient.formattedName #end</td>
+                                            <td>#if($item.recipientAddress) $item.recipientAddress #end</td>
+                                            <td>#if($item.sendStatus) <span class="label label-info">$item.sendStatus</span> #end</td>
+                                            <td>#if($item.sendStatusDate) $formatter.formatDateTime($item.sendStatusDate, $page.organisation.timezone) #end</td>
+                                        </tr>
                                     #end
+                                #end
                                 </tbody>
                             </table>
                         </div>
@@ -263,9 +270,16 @@
                 </div>
             </div>
         </div>
+
+        <script type="text/javascript" src="/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js"></script>
         <script type="text/javascript">
             $(function () {
-                initManageScheduledEmail();
+                var allGroups = {
+                    #foreach ($group in $page.find("/").allGroups)
+                    '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
+                    #end
+                };
+                initManageScheduledEmail(allGroups);
             });
         </script>
     </body>
