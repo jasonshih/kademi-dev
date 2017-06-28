@@ -166,7 +166,7 @@
                 <h4 class="modal-title">Complete goal - $page.nodeTitle( $page.currentGoal )</h4>
             </div>
             <div class="modal-body">
-                <p class="lead">Please select the next node in the journey you would like to progress to</p>
+                <p class="lead">Please select the another goal in the journey you would like to progress to</p>
                 #foreach($nextNodeId in $page.nextNodeIds)
                     <a class="btn btn-success timer-btn-go-next" href="$nextNodeId">$page.nodeTitle($nextNodeId)</a>
                 #end
@@ -185,7 +185,7 @@
                 <h4 class="modal-title">Switch to another goal - $page.nodeTitle( $page.currentGoal )</h4>
             </div>
             <div class="modal-body">
-                <p class="lead">Please select the next node in the journey you would like to progress to</p>
+                <p class="lead">Please select the another goal in the journey you would like to progress to</p>
                 #foreach($nextNode in $page.goals)
                     <a class="btn btn-success timer-btn-go-next" href="$nextNode.nodeId">$page.nodeTitle($nextNode.nodeId)</a>
                 #end

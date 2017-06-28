@@ -77,6 +77,12 @@
                 "group": "main",
                 "path": "/theme/apps/learner/learningAdminDashboardPortlet.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/learner/myLearningModulesComponent.js"
+            }
         }
     ]
 }
