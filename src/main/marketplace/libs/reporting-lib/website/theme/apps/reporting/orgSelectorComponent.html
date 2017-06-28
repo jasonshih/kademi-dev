@@ -1,13 +1,20 @@
 #if (!$groups)
 #set ($groups = '')
 #end
+
+#set ($groups = $formatter.fromCsv($groups))
+
 #set($selectedOrgId = "")
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
 #if( $orgCookie )
 #set( $selectedOrgId = $orgCookie.value )
-#else
+#end
 
+#if( $selectedOrgId == $rootFolder.orgData.orgId )
+#set ($selectedOrg = $rootFolder.orgData )
+#else
+#set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
 #if ($profile)
@@ -31,23 +38,21 @@
                 </button>
                 <ul id="dropdownMenuOrgSelector" class="dropdown-menu" aria-labelledby="dropdownMenuOrgSelector">
                     #if($request.params.containsKey("loadOrgSelector"))
-                    #set ($orgList = $formatter.newArrayList())
+
+                    #set($orgsMap = $formatter.newMap())
+
                     #foreach($membership in $profile.allMemberships())
-                    #if ($groups.contains($membership.groupName) && !$orgList.contains($membership.org))
-                    #call($orgList.add($membership.org))
+                    #if ($groups.contains($membership.groupName) && !$orgsMap.containsKey($membership.org.parent.orgId))
+                    #call($orgsMap.put($membership.org.orgId, $membership.org))
                     #end
                     #end
+
                     #set ($orgList = $formatter.sortByProperty($orgList, "title"))
 
-                    #if( $selectedOrgId == $rootFolder.orgData.orgId )
-                    #set ($selectedOrg = $rootFolder.orgData )
-                    #else
-                    #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
-                    #end
-                    #if( $orgList.isEmpty() )
+                    #if( $orgsMap.isEmpty() )
                     <li>No selections available</li>
                     #else
-                    #foreach( $m in $orgList)
+                    #foreach( $m in $orgsMap.values())
                     #if ($selectedOrg.orgId == $m.orgId || $selectedOrg.parent.orgId == $m.orgId)
                     <li><a href="#"><i class="fa fa-check text-success"></i> $m.title</a></li>
                     #else
@@ -95,4 +100,6 @@
 #end
 
 
-#macro( call $foo )#if($foo)#**##end#end
+#macro( call $foo )
+#if($foo) #end
+#end
