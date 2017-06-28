@@ -556,6 +556,15 @@ body .form-control::-webkit-input-placeholder {
     */
 }
 
+@media (min-width: 768px) {
+    /**
+     * Fix issue: Scrollbar is showed when dropdown menu is opened in desktop screen
+     */
+    .table-responsive {
+        overflow: visible !important;
+    }
+}
+
 .fluidLabel {
     height: 30px;
     float: left;
