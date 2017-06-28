@@ -69,7 +69,7 @@
                             },
                             onReady: function () {
                                 previewContainer = modalBody.find('.milton-file-preview');
-    
+                                
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
@@ -81,7 +81,7 @@
                                     '    <input type="text" class="form-control txt-height" placeholder="Image width" />' +
                                     '</div>'
                                 );
-    
+                                
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
                                 var updateImageSize = function (width, height) {
@@ -90,7 +90,7 @@
                                         height: height
                                     });
                                 };
-    
+                                
                                 var typewatch = (function () {
                                     var timer = 0;
                                     return function (callback, ms) {
@@ -98,33 +98,33 @@
                                         timer = setTimeout(callback, ms);
                                     }
                                 })();
-    
+                                
                                 txtWidth.on('keydown', function () {
                                     typewatch(function () {
                                         var width = txtWidth.val();
                                         var height = txtHeight.val();
                                         var ratio = +previewContainer.find('img').attr('data-ratio');
-            
+                                        
                                         if (width) {
                                             height = +width / ratio;
                                             txtHeight.val(height);
-                                            updateImageSize(height, width);
+                                            updateImageSize(width, height);
                                         } else {
                                             txtWidth.val(+height * ratio);
                                         }
                                     }, 200);
                                 });
-    
+                                
                                 txtHeight.on('keydown', function () {
                                     typewatch(function () {
                                         var width = txtWidth.val();
                                         var height = txtHeight.val();
                                         var ratio = previewContainer.find('img').attr('data-ratio');
-            
+                                        
                                         if (height) {
                                             width = +height * ratio;
                                             txtWidth.val(width);
-                                            updateImageSize(height, width);
+                                            updateImageSize(width, height);
                                         } else {
                                             txtWidth.val(+width / ratio);
                                         }
