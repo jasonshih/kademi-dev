@@ -1,4 +1,12 @@
 (function (CKEDITOR) {
+    var modal;
+    var modalBody;
+    var txtWidth;
+    var txtHeight;
+    var cbbAlign;
+    var previewContainer;
+    
+    
     CKEDITOR.plugins.add('fuse-image', {
         init: function (editor) {
             var that = this;
@@ -7,7 +15,7 @@
             // ===========================================================
             // Init modal for plugin
             // ===========================================================
-            var modal = $('#modal-fuse-image');
+            modal = $('#modal-fuse-image');
             if (modal.length === 0) {
                 $(document.body).append(
                     '<div id="modal-fuse-image" class="modal fade" aria-hidden="true" tabindex="-1">' +
@@ -25,11 +33,7 @@
                 modal = $('#modal-fuse-image');
             }
             
-            var modalBody = modal.find('.modal-body');
-            var txtWidth;
-            var txtHeight;
-            var cbbAlign;
-            var previewContainer;
+            modalBody = modal.find('.modal-body');
             
             // ===========================================================
             // Add imageDialog for plugin
@@ -37,6 +41,8 @@
             editor.addCommand('imageDialog', new CKEDITOR.command(editor, {
                 exec: function (instance) {
                     if (!modalBody.data('mselectOptions')) {
+                        flog('[fuse-image] Init mselect modal');
+                        
                         var options = {
                             contentTypes: ['image'],
                             useModal: false,
@@ -140,10 +146,12 @@
                                         }
                                     }, 200);
                                 });
-    
+                                
                                 cbbAlign.on('change', function () {
                                     previewContainer.find('img').attr('align', this.value);
                                 });
+                                
+                                openModal(that, instance);
                             }
                         };
                         
@@ -156,41 +164,9 @@
                         }
                         
                         modalBody.mselect(options);
-                    }
-                    
-                    var sel = instance.getSelection();
-                    var element = sel.getStartElement();
-                    if (element) {
-                        element = element.getAscendant('img', true);
-                    }
-                    
-                    if (CKEDITOR.plugins.fuseImage.isImage(element)) {
-                        that.insertMode = false;
-                        var hash = element.getAttribute('data-hash');
-                        var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
-                        var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
-                        var src = element.getAttribute('src');
-                        modalBody.mselect('selectFile', hash);
-                        
-                        $('<img />').attr('src', src).load(function () {
-                            var realWidth = this.width;
-                            var realHeight = this.height;
-                            var ratio = realWidth / realHeight;
-                            
-                            previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
-                            txtWidth.val(width || realWidth);
-                            txtHeight.val(height || realHeight);
-                            cbbAlign.val(element.getAttribute('align') || 'left');
-                        });
                     } else {
-                        element = instance.document.createElement('img');
-                        that.insertMode = true;
-                        // modalBody.mselect('selectFile', '');
+                        openModal(that, instance);
                     }
-                    
-                    that.element = element;
-                    modal.data('ckeditorInstance', instance);
-                    modal.modal('show');
                 }
             }));
             
@@ -270,6 +246,42 @@
             
             return element && element.getName() === 'img' && !element.data('cke-realelement') && !element.data('kaudio') && !element.hasClass('video-jw');
         }
+    };
+    
+    function openModal(that, instance) {
+        var sel = instance.getSelection();
+        var element = sel.getStartElement();
+        if (element) {
+            element = element.getAscendant('img', true);
+        }
+        
+        if (CKEDITOR.plugins.fuseImage.isImage(element)) {
+            that.insertMode = false;
+            var hash = element.getAttribute('data-hash');
+            var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
+            var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
+            var src = element.getAttribute('src');
+            modalBody.mselect('selectFile', hash);
+            
+            $('<img />').attr('src', src).load(function () {
+                var realWidth = this.width;
+                var realHeight = this.height;
+                var ratio = realWidth / realHeight;
+                
+                previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
+                txtWidth.val(width || realWidth);
+                txtHeight.val(height || realHeight);
+                cbbAlign.val(element.getAttribute('align') || 'left');
+            });
+        } else {
+            element = instance.document.createElement('img');
+            that.insertMode = true;
+            // modalBody.mselect('selectFile', '');
+        }
+        
+        that.element = element;
+        modal.data('ckeditorInstance', instance);
+        modal.modal('show');
     };
     
 })(CKEDITOR);
