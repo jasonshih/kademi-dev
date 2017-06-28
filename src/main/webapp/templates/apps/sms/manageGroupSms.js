@@ -19,7 +19,7 @@ function initJobButtons() {
         flog('do it', btn);
 
         var href = btn.attr('href');
-        var name = getFileName(href);
+        var name = href;
 
         confirmDelete(href, name, function () {
             flog('remove', btn);
