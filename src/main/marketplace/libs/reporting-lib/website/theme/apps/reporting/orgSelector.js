@@ -17,38 +17,14 @@ $(function () {
             window.location.reload();
         });
 
-        var template = Handlebars.compile(
-                '{{#if this}}'
-                + '{{#each this}}'
-                + '<li>\n'
-                + '    <a data-orgid="{{orgId}}" href="#"><i class="fa fa-check" style="visibility: hidden"></i> {{formattedName}}</a>'
-                + '</li>'
-                + '{{/each}}'
-                + '{{else}}'
-                + '<li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>'
-                + '{{/if}}'
-                );
-
-        var groupName = $('.orgSelectorWrap').data('groupname');
-        var dropdownMenuOrgSelector = $('.orgSelectorWrap .dropdownMenuOrgSelector');
+        var dropdownMenuOrgSelector = $('#dropdownMenuOrgSelector');
 
         $('.orgSelectorWrap').on('click', '.btn-select-org-selector', function (e) {
             if (!dropdownMenuOrgSelector.data('loaded')) {
-                dropdownMenuOrgSelector.data('loaded', true)
-                dropdownMenuOrgSelector.empty();
+                dropdownMenuOrgSelector.data('loaded', true);
 
-                dropdownMenuOrgSelector.append('<li><i class="fa fa-check" style="visibility: hidden"></i> Loading...</li>');
-
-                $.ajax({
-                    url: '/queries/?userOrgs&groupName=' + groupName,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (resp) {
-
-                        var newValues = template(resp);
-
-                        dropdownMenuOrgSelector.empty().append(newValues);
-                    }
+                dropdownMenuOrgSelector.reloadFragment({
+                    url: window.location.pathname + (window.location.search || '?') + '&loadOrgSelector'
                 });
             }
         });
