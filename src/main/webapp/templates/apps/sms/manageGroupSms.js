@@ -15,7 +15,6 @@ function initCreateSMS(){
 function initJobButtons() {
     $('body').on('click', 'a.btn-delete-sms', function (e) {
         e.preventDefault();
-
         var btn = $(e.target);
         flog('do it', btn);
 
@@ -30,7 +29,6 @@ function initJobButtons() {
         });
     });
 }
-
 
 function reloadTBody(){
     $("#smsTbody").reloadFragment({
