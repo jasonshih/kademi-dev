@@ -11,7 +11,6 @@ function initManageBlogArticle() {
     } else {
         $('.contenteditor').each(function () {
             var editor = $(this);
-            editor.closest('.col-sm-12').addClass('editor-wrapper');
             var loading = $(
                 '<div class="editor-loading">' +
                 '    <span>' +
