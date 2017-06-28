@@ -1,29 +1,20 @@
 #if (!$groups)
-    #set ($groups = '')
+#set ($groups = '')
 #end
 #set($selectedOrgId = "")
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
 #if( $orgCookie )
-    #set( $selectedOrgId = $orgCookie.value )
-#else
-
+#set( $selectedOrgId = $orgCookie.value )
 #end
 
 #if ($profile)
-    #set ($orgList = $formatter.newArrayList())
-    #foreach($membership in $profile.allMemberships())
-        #if ($groups.contains($membership.groupName) && !$orgList.contains($membership.org))
-            #call($orgList.add($membership.org))
-        #end
-    #end
-    #set ($orgList = $formatter.sortByProperty($orgList, "title"))
 
-    #if( $selectedOrgId == $rootFolder.orgData.orgId )
-        #set ($selectedOrg = $rootFolder.orgData )
-    #else
-        #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
-    #end
+#if( $selectedOrgId == $rootFolder.orgData.orgId )
+#set ($selectedOrg = $rootFolder.orgData )
+#else
+#set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
+#end
 
 <div class="org-selector">
     <div class="dropdown">
@@ -34,62 +25,18 @@
 
             <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
 
-            <div class="input-group-btn orgSelectorWrap">
+            <div class="input-group-btn orgSelectorWrap" data-groupname="$groups">
                 <a data-orgId="" href="javascript:void (0)" class="btn btn-default">
                     <i class="fa fa-times-circle"></i>
                 </a>
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn btn-default dropdown-toggle btn-select-org-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Select
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuOrgSelector">
-                    #if( $orgList.isEmpty() )
-                        <li>No selections available</li>
-                    #else
-                        #foreach( $m in $orgList)
-                            #if ($selectedOrg.orgId == $m.orgId || $selectedOrg.parent.orgId == $m.orgId)
-                                <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $m.title</a></li>
-                            #else
-                                <li><a data-orgId="$!m.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $m.title</a></li>
-                            #end
-                            
-                            #set( $childOrgs = $formatter.sortByProperty($m.childOrgs(), "title") )
-                            #foreach( $childOrg in $childOrgs )
-                                #if( $foreach.count < 20 )
-                                    #if ($selectedOrg.orgId == $childOrg.orgId || $selectedOrg.parent.orgId == $childOrg.orgId)
-                                    <li style="padding-left: 10px"><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check text-success"></i> $childOrg.title</a></li>
-                                    
-                                    #set( $subChildOrgs = $formatter.sortByProperty($childOrg.childOrgs(), "title") )
-                                    #foreach( $subChildOrg in $subChildOrgs )
-                                        #if( $foreach.count < 20 )
-                                        #if ($selectedOrg.orgId == $subChildOrg.orgId )
-                                        <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check"></i> $subChildOrg.title</a></li>
-                                        #else
-                                        <li style="padding-left: 20px"><a data-orgId="$subChildOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $subChildOrg.title</a></li>
-                                        #end
-                                        #else
-                                        <li style="padding-left: 20px"><a href="#"><i class="fa fa-check" style="visibility: hidden"></i> <i><small>Results truncated. Use search for more</small></i></a></li>
-                                        #break
-                                        #end
-                                    #end
-                                    
-                                    #else
-                                    <li style="padding-left: 10px"><a data-orgId="$childOrg.orgId" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $childOrg.title</a></li>
-                                    #end
-                                #else
-                                    <li><a href="#"><i>Results truncated. Use search for more</i></a></li>
-                                    #break
-                                #end
-                            #end
-                        #end
-                    #end
+                <ul class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector" data-loaded="false">
                 </ul>
             </div><!-- /btn-group -->
         </div><!-- /input-group -->
     </div>
 </div>
-#else
 #end
-
-
-#macro( call $foo )#if($foo)#**##end#end
