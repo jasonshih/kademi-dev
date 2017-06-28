@@ -77,6 +77,11 @@
         <li>Loading...</li>
     </ol>
 
+    #set( $myMenu = $menuManager.rootMenuItem )
+    <script type="text/html" id="menuTreeTemplate">
+        #showMenu( $myMenu true )
+    </script>
+
     <button class="btn btn-primary saveMenu btn-block">
         <span class="fa fa-check"></span>
         Save menu
@@ -129,4 +134,38 @@
         </div>
     </div>
 </div>
+#end
+
+#macro( showMenu $menuItem $isRootMenuItem )
+<li #if ($isRootMenuItem) class="rootMenuItem" #end>
+    <div data-id="$menuItem.id" data-href="$!menuItem.href" data-hidden="$menuItem.hidden" class="menuItem">
+        <span class="btn-group btn-group-xs small">
+            <a class="btn btn-success btnAddMenuItem" href="#">
+                <span class="fa fa-plus small"></span>
+            </a>
+            #if (!$isRootMenuItem)
+                <a class="btn btn-info btnSortMenuItem" href="#">
+                    <span class="fa fa-sort small"></span>
+                </a>
+            #end
+            #if (!$isRootMenuItem)
+                <a class="btn btn-primary btnEditMenuItem" href="#">
+                    <span class="fa fa-pencil small"></span>
+                </a>
+            #end
+        </span>
+
+        <span class="menuItemText">#if ($menuItem.text) $!menuItem.text #else Root Menu Item #end </span>
+    </div>
+
+    #showMenuList($menuItem)
+</li>
+#end
+
+#macro( showMenuList $menuItem )
+<ol class="menuList" data-id="$menuItem.id">
+    #foreach($item in $menuItem.items)
+    #showMenu( $item false )
+    #end
+</ol>
 #end

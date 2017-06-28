@@ -53,13 +53,13 @@ $.fn.exist = function (whenExist, whenNotExist) {
 
 (function ($) {
     var oldModal = $.fn.modal;
-
+    
     function checkModal(modal) {
         var modalDialog = modal.find('.modal-dialog');
-
+        
         if (modalDialog.length === 0) {
             flog('Modal has old structure. Modifying structure...');
-
+            
             var modalContent = modal.html();
             var sizeClass = '';
             if (modal.hasClass('modal-lg')) {
@@ -78,38 +78,38 @@ $.fn.exist = function (whenExist, whenNotExist) {
                 sizeClass = 'modal-xss';
                 modal.removeClass('modal-xss');
             }
-
+            
             modal.html('<div class="modal-dialog ' + sizeClass + '"><div class="modal-content">' + modalContent + '</div></div>');
             flog('Modifying structure is DONE');
-
+            
             modal.trigger('modal.bs.done');
-
+            
             if (console && console.log) {
                 console.log('%cHey! You\'re using old modal structure of Bootstrap2. You SHOULD change your modal structure! \n%c- url="' + window.location.href + '" \n- id="' + modal.attr('id') + '" \n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 16px; color: #000;', 'font-size: 11px; color: #aaa;');
             }
         }
     }
-
+    
     $.fn.modal = function (option, _relatedTarget) {
         var targets = $(this);
         targets.each(function () {
             checkModal($(this));
         });
-
+        
         return oldModal.call(targets, option, _relatedTarget);
     };
-
+    
     $(function () {
         $('.modal').each(function () {
             checkModal($(this));
         });
     });
-
+    
 })(jQuery);
 
 function initToggled() {
     flog('initToggled');
-
+    
     $('[data-toggled=display]').exist(function () {
         this.each(function () {
             var panel = $(this);
@@ -123,9 +123,9 @@ function initToggled() {
                     actor.trigger('unchecked.toggled', panel);
                 }
             };
-
+            
             actor.addClass('toggler');
-
+            
             actor.on('click', function () {
                 checkActor();
             });
@@ -138,23 +138,23 @@ function initToggled() {
 
 function doMasonryPanel() {
     flog('doMasonryPanel');
-
+    
     $('.masonry-panel').each(function () {
         var panel = $(this);
-
+        
         // Bind event listener
         panel.on('layoutComplete', function () {
             var items = panel.find(".masonry-item");
-
+            
             flog("onlayout", items);
-
+            
             items.animate({
                 opacity: 1
             }, 1000, function () {
                 flog("complete");
             });
         });
-
+        
         panel.masonry({
             columnWidth: ".masonry-sizer",
             percentPosition: true
@@ -164,7 +164,7 @@ function doMasonryPanel() {
 
 function initMasonryPanel() {
     flog('initMasonryPanel');
-
+    
     if (typeof window.Masonry === 'function') {
         doMasonryPanel();
     } else {
@@ -176,14 +176,14 @@ function initMasonryPanel() {
 
 function initDatePicker() {
     flog('initDatePicker');
-
+    
     $('.date-picker').exist(function () {
         var datePicker = this;
         var container = 'body';
         var inputGroup = datePicker.closest('.input-group');
         var formGroup = datePicker.closest('.form-group');
         var id = 'date-picker-wrapper' + (new Date()).getTime();
-
+        
         if (inputGroup.length > 0) {
             inputGroup.attr('id', id);
             container = '#' + id;
@@ -191,18 +191,18 @@ function initDatePicker() {
             formGroup.attr('id', id);
             container = '#' + id;
         }
-
+        
         datePicker.datepicker({
             autoclose: true,
             format: 'dd/mm/yyyy',
             container: container
         });
-
+        
         var impactedTargetSelector = datePicker.attr('data-impacted');
-
+        
         if (impactedTargetSelector) {
             var changedOption = datePicker.attr('data-impact') === 'startDate' ? 'StartDate' : 'EndDate';
-
+            
             datePicker.on('changeDate', function (ev) {
                 flog(ev);
                 var impactedTarget = $(impactedTargetSelector);
@@ -211,17 +211,17 @@ function initDatePicker() {
             });
         }
     });
-
+    
     $(document.body).on('click', '[data-role="date-picker-trigger"]', function (e) {
         e.preventDefault();
-
+        
         var trigger = $(this);
         var datePickerId = trigger.attr('href');
         var datePicker = $(datePickerId);
-
+        
         datePicker.datepicker('show');
     });
-
+    
     $('.date-time-picker').exist(function () {
         flog('Found date-time-picker', this);
         var options = {};
@@ -235,7 +235,7 @@ function initDatePicker() {
 
 function initTabbable() {
     flog('initTabbable');
-
+    
     $('.tabbable').exist(function () {
         this.each(function () {
             var wrapper = $(this);
@@ -243,27 +243,27 @@ function initTabbable() {
             var tabHeader = wrapper.find('.nav-tabs');
             var links = tabHeader.find('a');
             var hash = window.location.hash;
-
+            
             links.each(function () {
                 var link = $(this);
                 link.on('click', function (e) {
                     e.preventDefault();
-
+                    
                     if (!isModal) {
                         window.location.hash = $(this).attr('href') + '-tab';
                     }
                 });
             });
-
+            
             if (hash === '') {
                 links.eq(0).trigger('click');
             }
         });
-
+        
         $(window).on('hashchange', function () {
             var hash = window.location.hash.replace('-tab', '');
             flog('hashchanged', hash);
-
+            
             var tabbable = $('.tabbable .nav-tabs a[href="' + hash + '"]');
             tabbable.trigger('click');
         }).trigger('hashchange');
@@ -272,11 +272,11 @@ function initTabbable() {
 
 function initChkAll() {
     flog('initChkAll');
-
+    
     $('.chk-all').exist(function () {
         this.each(function () {
             var chkAll = $(this);
-
+            
             chkAll.on('click', function () {
                 var table = chkAll.parents('table');
                 var chks = table.find('tbody input:checkbox');
@@ -288,12 +288,12 @@ function initChkAll() {
 
 function initClearer() {
     flog('initClearer');
-
+    
     var body = $(document.body);
-
+    
     body.on('click', '[data-type=clearer]', function (e) {
         e.preventDefault();
-
+        
         var target = $($(this).data('target'));
         flog("clearer click", target);
         target.val('');
@@ -305,11 +305,11 @@ function initClearer() {
 function initSwitch() {
     flog("kademi.js: make switch");
     if ($(document).bootstrapSwitch) {
-
+        
         $(".make-switch input[type=checkbox], input.make-switch").each(function () {
             var target = $(this);
             var dataHolder = target.is('.make-switch') ? target : target.closest('.make-switch');
-
+            
             target.bootstrapSwitch({
                 onColor: dataHolder.attr('data-on-color') || 'info',
                 offColor: dataHolder.attr('data-off-color') || 'default',
@@ -326,70 +326,83 @@ function initSwitch() {
 
 function validateFuseEmail(emailAddress) {
     var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
-
+    
     if (pattern.test(emailAddress)) {
         return true;
     } else {
         emailAddress = (emailAddress || '').replace(/^.*\<(.*)\>$/, '$1');
-
+        
         return pattern.test(emailAddress);
     }
 }
 
 function initFuseModals() {
     flog("initFuseModal");
-
+    
     $(document.body).on('click', '[data-toggle=modal]', function (e) {
         e.preventDefault();
     });
-
+    
     $(document.body).on('click', '[data-type=form-submit]', function (e) {
         e.preventDefault();
         flog("click submit");
         $(this).closest('.modal').find('form').not('.dz-clickable').trigger('submit');
-
+        
         if (console && console.log) {
             console.log('%cHey! You\'re using data-type="form-submit" button. You SHOULD change it to type="submit" and move this button inside your form.\n%cMessage from duc@kademi.co', 'font-size: 24px; color: blue;', 'font-size: 11px; color: #aaa;');
         }
     });
-
+    
     $(document.body).on('shown.bs.modal loaded.bs.modal', '.modal', function () {
         var textbox = $(this).find('input, textarea').filter(':visible');
         textbox.eq(0).focus();
     });
+    
+    $(document).on({
+        'show.bs.modal': function () {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function () {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
+        },
+        'hidden.bs.modal': function () {
+            $('.modal:visible').length && $(document.body).addClass('modal-open');
+        }
+    }, '.modal');
 }
 
 function initFuseModal(modal, callback) {
     flog('initFuseModal', modal, callback);
-
+    
     modal.modal({
         show: false
     });
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
 }
 
 function initNewUserForm() {
-    var modal = $('#modal-new-user'),
-            form = modal.find('form'),
-            newOrganisationBtn = modal.find(".newOrganisation"),
-            existingOrganisationBtn = modal.find(".existingOrganisation"),
-            orgIdTxt = modal.find("#newOrgId"),
-            nextAction = 'view';
-
+    var modal = $('#modal-new-user');
+    var form = modal.find('form');
+    var newOrganisationBtn = modal.find(".newOrganisation");
+    var existingOrganisationBtn = modal.find(".existingOrganisation");
+    var orgIdTxt = modal.find("#newOrgId");
+    var nextAction = 'view';
+    
     $(newOrganisationBtn).click(function () {
         $("#existingOrganisation").addClass("hide");
         $("#createNewOrganisation").removeClass("hide");
     });
-
+    
     $(existingOrganisationBtn).click(function () {
         $("#existingOrganisation").removeClass("hide");
         $("#createNewOrganisation").addClass("hide");
     });
-
-
+    
+    
     form.on("input", ".orgTitle", function (e) {
         var inp = $(e.target);
         var val = inp.val();
@@ -407,81 +420,81 @@ function initNewUserForm() {
             orgIdTxt.val(newVal);
         }
     });
-
+    
     $('.btn-add-user').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-
+        
         modal.modal('show');
     });
-
+    
     $('.btn-add-and-view').on('click', function (e) {
         nextAction = 'view';
     });
-
+    
     $('.btn-add-and-add').on('click', function (e) {
         nextAction = 'add';
     });
-
+    
     $('.btn-add-and-close').on('click', function (e) {
         nextAction = 'close';
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         resetForm(form);
     });
-
+    
     form.forms({
         validate: function () {
             var newUserEmail = $('#newUserEmail');
             var newUserEmailStr = newUserEmail.val();
-
+            
             if (newUserEmailStr == null || newUserEmailStr == "") {
                 return true; // blank is ok now!
             }
-
+            
             var error = 0;
-
+            
             if (!validateFuseEmail(newUserEmailStr)) {
                 error++;
                 showErrorField(newUserEmail);
             }
-
+            
             if (error === 0) {
                 return true;
             } else {
                 showMessage('Email address is invalid!', form);
-
+                
                 return false;
             }
         },
         callback: function (resp) {
             flog('done new user', resp);
-
+            
             switch (nextAction) {
                 case 'view':
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
-
+                    
                     modal.modal('hide');
                     break;
-
+                
                 case 'close':
                     modal.modal('hide');
                     break;
-
+                
                 case 'add':
                     $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
                     break;
             }
-
+            
             Msg.info('Saved');
         }
     });
-
+    
     initOrgFinder();
-
+    
 }
 
 function initOrgFinder() {
@@ -495,10 +508,10 @@ function initEntityFinder(targets) {
     if (!targets) {
         targets = $('.entity-finder');
     }
-
+    
     targets.each(function () {
         var input = $(this);
-
+        
         input.entityFinder({
             useActualId: input.attr('data-use-actual-id') === 'true'
         });
@@ -507,9 +520,9 @@ function initEntityFinder(targets) {
 
 function openFuseModal(modal, callback, time) {
     flog("openFuseModal");
-
+    
     modal.modal('show');
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -517,7 +530,7 @@ function openFuseModal(modal, callback, time) {
 
 function closeFuseModal(modal, callback) {
     modal.modal('hide');
-
+    
     if (typeof callback === 'function') {
         callback.apply(this);
     }
@@ -614,7 +627,7 @@ function initAjaxStatus() {
 
 function initAdminTopNavSearch() {
     flog('initAdminTopNavSearch');
-
+    
     var txt = $('#top-nav-search-input');
     txt.entityFinder({
         onSelectSuggestion: function (suggestion, id, actualId, type) {
@@ -629,7 +642,7 @@ function initAdminTopNavSearch() {
 
 function drawPieChart(chart, options, padding, isFirstTime) {
     flog('drawPieChart', chart, options, padding, isFirstTime);
-
+    
     var wrapper = chart.closest('.col-sm-6');
     var canvas = chart.find('canvas');
     var sizeChart = wrapper.width() - padding;
@@ -638,22 +651,22 @@ function drawPieChart(chart, options, padding, isFirstTime) {
     }
     var currentSize = +chart.attr('data-size');
     flog("got size", sizeChart, chart);
-
+    
     // Hide canvas
     canvas.hide();
-
+    
     if (currentSize !== sizeChart || isFirstTime) {
         flog('Render new chart', sizeChart);
-
+        
         // Clear data pf easyPieChart
         if (!isFirstTime) {
             chart.data('easy-pie-chart', null);
             chart.data('size', sizeChart);
         }
-
+        
         // Remove the chart
         canvas.remove();
-
+        
         // Render new chart
         options.size = sizeChart;
         flog("chart size", sizeChart);
@@ -670,7 +683,7 @@ function drawPieChart(chart, options, padding, isFirstTime) {
 
 function initPieChart(target, options, padding) {
     drawPieChart(target, options, padding, true);
-
+    
     var timer = null;
     $(window).on('resize', function () {
         clearTimeout(timer);
@@ -682,12 +695,12 @@ function initPieChart(target, options, padding) {
 
 function initPageDatePicker() {
     flog('initPageDatePicker');
-
+    
     var range = $('#commonControlsRange');
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
         var position = range.attr('data-position') || 'right';
-
+        
         range.pageDatePicker({
             extraClass: extraClass,
             position: position
@@ -704,7 +717,7 @@ function initTimeago() {
 
 $(function () {
     flog("Fuse init");
-
+    
     initLoadingOverlay();
     initAdminTopNavSearch();
     initSwitch();
@@ -723,7 +736,7 @@ $(function () {
     initEntityFinder();
     initCreateAccount();
     initAddWebsite();
-
+    
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
@@ -760,35 +773,35 @@ $(window).load(function () {
 
 function initMultiLingual() {
     initModalTranslate();
-
+    
     $('.select-lang').on('click', function (e) {
         e.preventDefault();
-
+        
         var langCode = $(this).attr('href');
         flog('Selected lang: ' + langCode);
-
+        
         $.cookie('selectedLangCode', langCode, {
             expires: 360, path: '/'
         });
         window.location.reload();
     });
-
+    
     var timer;
     CKEDITOR.on('instanceReady', function (e) {
         var editor = e.editor;
-
+        
         var element = $(editor.element.$);
         if (element.hasClass('translatable')) {
             editor.on('focus', function () {
                 showTranslateButton(element, timer);
             });
-
+            
             editor.on('blur', function () {
                 hideTranslateButton(timer);
             });
         }
     });
-
+    
     $(document.body).on({
         focus: function () {
             showTranslateButton($(this), timer);
@@ -801,69 +814,69 @@ function initMultiLingual() {
 
 function showTranslateButton(target, timer) {
     flog(showTranslateButton, target, timer);
-
+    
     clearTimeout(timer);
-
+    
     var btn = $('#btn-translate');
     if (btn.length === 0) {
         btn = $('<button class="btn btn-warning btn-sm" id="btn-translate"><i class="fa fa-language"></i></button>');
         $(document.body).append(btn);
     }
-
+    
     btn.off('click').on('click', function (e) {
         e.preventDefault();
-
+        
         showModalTranslate(target);
     });
-
+    
     var position;
     if (target.is('.htmleditor')) {
         position = $('#cke_' + target.attr('id')).offset();
     } else {
         position = target.offset();
     }
-
+    
     position.top = position.top - 30;
     btn.css(position).show();
 }
 
 function initModalTranslate() {
     var modal = $(
-            '<div id="modal-translate" class="modal fade" tabindex="-1">' +
-            '     <div class="modal-dialog modal-sm">' +
-            '        <div class="modal-content">' +
-            '            <div class="modal-header">' +
-            '                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-            '                <h4 class="modal-title">Save translated text</h4>' +
-            '            </div>' +
-            '            <form method="POST" class="form-horizontal" action="/translations/">' +
-            '                <div class="modal-body">' +
-            '                    <p class="form-message alert alert-danger" style="display: none;"></p>' +
-            '                    <input type="hidden" name="sourceType" value="" />' +
-            '                    <input type="hidden" name="sourceId" value="" />' +
-            '                    <input type="hidden" name="sourceField" value="" />' +
-            '                    <input type="hidden" name="langCode" value="" />' +
-            '                    <div class="form-group">' +
-            '                        <label for="translated" class="control-label col-md-3">Translated text</label>' +
-            '                        <div class="col-md-9">' +
-            '                            <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />' +
-            '                            <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>' +
-            '                            <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>' +
-            '                        </div>' +
-            '                    </div>' +
-            '                </div>' +
-            '                <div class="modal-footer">' +
-            '                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-            '                    <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>' +
-            '                </div>' +
-            '            </form>' +
-            '        </div>' +
-            '     </div>' +
-            '</div>'
-            );
+        '<div id="modal-translate" class="modal fade" tabindex="-1">' +
+        '     <div class="modal-dialog modal-sm">' +
+        '        <div class="modal-content">' +
+        '            <div class="modal-header">' +
+        '                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
+        '                <h4 class="modal-title">Save translated text</h4>' +
+        '            </div>' +
+        '            <form method="POST" class="form-horizontal" action="/translations/">' +
+        '                <div class="modal-body">' +
+        '                    <p class="form-message alert alert-danger" style="display: none;"></p>' +
+        '                    <input type="hidden" name="sourceType" value="" />' +
+        '                    <input type="hidden" name="sourceId" value="" />' +
+        '                    <input type="hidden" name="sourceField" value="" />' +
+        '                    <input type="hidden" name="langCode" value="" />' +
+        '                    <div class="form-group">' +
+        '                        <label for="translated" class="control-label col-md-3">Translated text</label>' +
+        '                        <div class="col-md-9">' +
+        '                            <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />' +
+        '                            <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>' +
+        '                            <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>' +
+        '                        </div>' +
+        '                    </div>' +
+        '                </div>' +
+        '                <div class="modal-footer">' +
+        '                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
+        '                    <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>' +
+        '                </div>' +
+        '            </form>' +
+        '        </div>' +
+        '     </div>' +
+        '</div>'
+    );
     $(document.body).append(modal);
     initHtmlEditors();
-
+    
     modal.find('form').forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -874,25 +887,25 @@ function initModalTranslate() {
             }
         }
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         modal.find('[name=translated]').prop('disabled', true).removeClass('required').hide();
         modal.find('.htmleditor-wrapper').hide();
         var ckeditor = CKEDITOR.instances[modal.find('.htmleditor').attr('id')];
         ckeditor.setReadOnly(true);
     });
-
+    
     return modal;
 }
 
 function showModalTranslate(target) {
     flog('showTranslateButton', target);
-
+    
     var modal = $('#modal-translate');
     if (modal.length === 0) {
         modal = initModalTranslate();
     }
-
+    
     var sourceType = target.data("source-type");
     if (sourceType == null) {
         sourceType = target.closest("form").data("source-type");
@@ -903,12 +916,12 @@ function showModalTranslate(target) {
     }
     var sourceField = target.data("source-field");
     var langCode = $.cookie('selectedLangCode');
-
+    
     modal.find('[name=sourceType]').val(sourceType);
     modal.find('[name=sourceId]').val(sourceId);
     modal.find('[name=sourceField]').val(sourceField);
     modal.find('[name=langCode]').val(langCode);
-
+    
     $.ajax({
         url: '/translations',
         dataType: 'json',
@@ -928,7 +941,7 @@ function showModalTranslate(target) {
             if (resp && resp.status && resp.data.length > 0) {
                 translatedText = resp.data[0].translated || '';
             }
-
+            
             var modalSize = 'modal-sm';
             var translatedTextboxes = modal.find('[name=translated]');
             var destinationTextbox;
@@ -936,7 +949,7 @@ function showModalTranslate(target) {
                 modalSize = 'modal-lg';
                 destinationTextbox = translatedTextboxes.filter('textarea.htmleditor');
                 modal.find('.htmleditor-wrapper').show();
-
+                
                 var ckeditor = CKEDITOR.instances[destinationTextbox.attr('id')];
                 ckeditor.setReadOnly(false);
                 ckeditor.setData(translatedText);
@@ -945,10 +958,10 @@ function showModalTranslate(target) {
             } else {
                 destinationTextbox = translatedTextboxes.filter('textarea').not('.htmleditor');
             }
-
+            
             destinationTextbox.prop('disabled', false).addClass('required').not('.htmleditor').show();
             destinationTextbox.val(translatedText);
-
+            
             modal.find('.modal-dialog').attr('class', 'modal-dialog ' + modalSize);
             modal.modal('show');
         }
@@ -980,8 +993,8 @@ function showLoginAs(profileId) {
                 newList += "<li>The user does not have access to any websites. Check the user's group memberships, and that those groups have been added to the right websites</li>";
             }
             modal.find("ul")
-                    .empty()
-                    .html(newList);
+                .empty()
+                .html(newList);
         },
         error: function (resp) {
             Msg.error("An error occured loading websites. Please try again");
@@ -997,7 +1010,7 @@ function setRecentItem(title, url) {
         if (recentList == null) {
             recentList = new Array();
         } else {
-
+        
         }
         flog("recent", recentList);
         var item = {
@@ -1038,11 +1051,11 @@ function initCreateAccount() {
 
 function initAddWebsite() {
     flog('initAddWebsite');
-
+    
     var modal = $("#addWebsiteModal");
     if (modal.length > 0) {
         var form = modal.find("form");
-
+        
         form.forms({
             callback: function (resp) {
                 flog("done", resp);
@@ -1050,7 +1063,7 @@ function initAddWebsite() {
                 Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');
                 var nextHref = "/websites/" + resp.nextHref + "/";
                 window.location = nextHref;
-
+                
             }
         });
     }
@@ -1060,20 +1073,20 @@ function initBackgroundJobStatus(options) {
     // Find divs which need to reload to get job status. For each div get the current
     // job status and then apply data to the handlebars template in the div
     flog("initBackgroundJobStatus", options);
-
+    
     options = $.extend({}, options);
-
+    
     Handlebars.registerHelper('formatISODate', function (millis) {
         if (millis) {
             var m = millis;
             var date = new Date(m);
-
+            
             return date.toISOString();
         } else {
             return "";
         }
     });
-
+    
     Handlebars.registerHelper('formatDate', function (millis) {
         if (millis) {
             return moment(millis).format('DD/MM/YYYY');
@@ -1081,14 +1094,14 @@ function initBackgroundJobStatus(options) {
             return "";
         }
     });
-
+    
     Handlebars.registerHelper('notRunning', function (data, options) {
         var b = (data == null || data.statusInfo.complete);
         var out = options.fn(data);
-
+        
         return out;
     });
-
+    
     $(".backgroundTask").each(function () {
         var div = $(this);
         var href = div.data("task-href");
@@ -1100,20 +1113,20 @@ function initBackgroundJobStatus(options) {
 
 function checkBackgroundJobStatus(href, div, template, options) {
     flog('checkBackgroundJobStatus', href, div, template, options);
-
+    
     $.ajax({
         url: href,
         method: "GET",
         dataType: 'json',
         success: function (resp) {
             flog('Success in checking background task', resp);
-
+            
             if (resp.status) {
                 var htmlStr = template(resp);
                 flog('Background task status HTML:', htmlStr);
                 div.html(htmlStr);
                 div.show(400);
-
+                
                 if (resp.data.statusInfo.complete) {
                     if (typeof options.onComplete === 'function') {
                         options.onComplete.call(this, resp);
@@ -1124,7 +1137,7 @@ function checkBackgroundJobStatus(href, div, template, options) {
                     window.setTimeout(function () {
                         checkBackgroundJobStatus(href, div, template, options);
                     }, 3000);
-
+                    
                     if (typeof options.onRunning === 'function') {
                         options.onRunning.call(this, resp);
                     }
@@ -1134,24 +1147,24 @@ function checkBackgroundJobStatus(href, div, template, options) {
                 flog('Background task status HTML:', htmlStr);
                 div.html(htmlStr);
                 div.show(400);
-
+                
                 if (typeof options.onError === 'function') {
                     options.onError.call(this, resp);
                 }
             }
-
+            
             div.find('.timeago').timeago();
         },
         error: function (jqXHR) {
             // probably a 404, which is fine, show the template with no data so it can render a run form
             flog("No task resource, thats cool, means not running and hasnt been run");
-
+            
             var htmlStr = template(null);
             flog('Background task status HTML:', htmlStr);
             div.html(htmlStr);
             div.show(400);
             div.find('.timeago').timeago();
-
+            
             if (typeof options.onError === 'function') {
                 options.onError.call(this, jqXHR);
             }
@@ -1163,7 +1176,7 @@ function getParam(name) {
     var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     var value = regex.exec(window.location.href) || '';
     value = decodeURIComponent(value[1]);
-
+    
     return value;
 }
 
@@ -1173,7 +1186,7 @@ function initColorPicker(target, onChangeHandle) {
             var colorPicker = $(this);
             var input = colorPicker.find('input');
             var previewer = colorPicker.find('.input-group-addon i');
-
+            
             colorPicker.colorpicker({
                 format: 'hex',
                 container: colorPicker.parent(),
@@ -1184,12 +1197,12 @@ function initColorPicker(target, onChangeHandle) {
                 }
             }).on('changeColor.colorpicker', function (e) {
                 var colorHex = e.color.toHex();
-
+                
                 if (!input.val() || input.val().trim().length === 0) {
                     colorHex = '';
                     previewer.css('background-color', '');
                 }
-
+                
                 if (typeof onChangeHandle === 'function') {
                     onChangeHandle(colorHex);
                 }
