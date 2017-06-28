@@ -28,6 +28,7 @@
             var modalBody = modal.find('.modal-body');
             var txtWidth;
             var txtHeight;
+            var cbbAlign;
             var previewContainer;
             
             // ===========================================================
@@ -46,6 +47,7 @@
                                 var previewImg = previewContainer.find('img');
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
+                                that.element.setAttribute('align', previewImg.attr('align') || 'left');
                                 that.element.$.style.width = previewImg.width() + 'px';
                                 that.element.$.style.height = previewImg.height() + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
@@ -79,11 +81,19 @@
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
                                     '    <span class="input-group-addon">Height</span>' +
                                     '    <input type="text" class="form-control txt-height" placeholder="Image width" />' +
+                                    '</div>' +
+                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
+                                    '    <span class="input-group-addon">Align</span>' +
+                                    '    <select class="form-control cbb-align">' +
+                                    '        <option value="left">Left</option>' +
+                                    '        <option value="right">Right</option>' +
+                                    '    </select>' +
                                     '</div>'
                                 );
                                 
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
+                                cbbAlign = modalBody.find('.cbb-align');
                                 var updateImageSize = function (width, height) {
                                     previewContainer.find('img').css({
                                         width: width,
@@ -130,6 +140,10 @@
                                         }
                                     }, 200);
                                 });
+    
+                                cbbAlign.on('change', function () {
+                                    previewContainer.find('img').attr('align', this.value);
+                                });
                             }
                         };
                         
@@ -166,6 +180,7 @@
                             previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
                             txtWidth.val(width || realWidth);
                             txtHeight.val(height || realHeight);
+                            cbbAlign.val(element.getAttribute('align') || 'left');
                         });
                     } else {
                         element = instance.document.createElement('img');
