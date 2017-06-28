@@ -1,22 +1,12 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-function initManageSms() {
-    initCreateSmsForm()
-    initJobButtons()
-}
-
-function initCreateSmsForm() {
-    $("#SmsForm").forms({
-        callback: function (resp) {
+function initCreateSMS(){ 
+    jQuery("form.createSMS").forms({
+        onSuccess: function (resp) {
             flog("done", resp);
-            Msg.success($('#Smsname').val() + " is created");
+            Msg.success($('#smsTitle').val() + " is created");
+            $("#modal-add-sms").modal('hide');
             reloadTBody();
         },
-        error: function () {
+        onError: function () {
             Msg.error("Oops! Something went wrong!");
         }
     });
