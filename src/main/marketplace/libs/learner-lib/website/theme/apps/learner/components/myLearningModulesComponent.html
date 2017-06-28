@@ -1,7 +1,7 @@
 
 #if($page)
     #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
-    <div class="my-learning-container">
+    <div class="my-learning-container my-learning-modules">
         <div class="btn-group program-course-module-mix" style="z-index: 2">
             #set($programs = $page.find("/programs"))
             #if($page.is("course"))
@@ -63,13 +63,7 @@
 
     <script type="text/javascript">
         var courseHref = "$curCourse.href";
-        jQuery(document).ready(function() {
-            initMyLearning();
-            storeCurrentCookie();
-        });
-        function storeCurrentCookie() {
-            storeCourseCookie(courseHref);
-        }
+
     </script>
 
     #else
