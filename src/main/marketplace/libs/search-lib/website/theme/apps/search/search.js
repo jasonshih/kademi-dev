@@ -22,7 +22,7 @@ function initContentSearch() {
                         },
                         dataType: 'html',
                         success: function (data) {
-                            flog("complete");
+                            flog("complete", searchResults);
                             searchResults.html(data);
                             searchResults.removeClass("hide");
                         }
