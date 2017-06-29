@@ -249,4 +249,10 @@
             loadFunnel(uri.toString());
         });
     };
+
+    $(document).ready(function(){
+        if($('.lead-analytics-funnel-component').length > 0) {
+            initLeadManAnalytics();
+        }
+    });
 })(this, jQuery);

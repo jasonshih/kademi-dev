@@ -4,41 +4,54 @@ var win = $(window);
 function initManageBlogArticle() {
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
-    if (isKEditor) {
-        initEditorFrame();
-        initPostMessage();
+    
+    var contentEditor = $('.contenteditor');
+    if (contentEditor.length === 0) {
+        initHtmlEditors();
     } else {
-        initHtmlEditors(null, null, null, null, null, function (editor) {
-            editor.addCommand('saveContent', {
-                exec: function () {
-                    $('#article-form').trigger('submit');
+        $('.contenteditor').each(function () {
+            var editor = $(this);
+            var loading = $(
+                '<div class="editor-loading">' +
+                '    <span>' +
+                '        <span class="loading-icon">' +
+                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+                '        </span>' +
+                '        <span class="loading-text">Initializing Content Editor...</span>' +
+                '    </span>' +
+                '</div>'
+            );
+            
+            editor.before(loading);
+            editor.hide();
+            
+            editor.contentEditor({
+                iframeMode: true,
+                allGroups: allGroups,
+                snippetsUrl: '_components',
+                onReady: function () {
+                    loading.remove();
                 }
             });
-
-            editor.keystrokeHandler.keystrokes[CKEDITOR.CTRL + 83 /* S */] = 'saveContent';
         });
     }
-
+    
     $('.article-form').forms({
+        onValid: function () {
+            if (contentEditor.length > 0) {
+                contentEditor.val(contentEditor.contentEditor('getContent'));
+            }
+        },
         callback: function (resp, form) {
             flog('Done', form, resp);
-            if (isKEditor) {
-                var editorFrame = $('#editor-frame');
-                var postData = {
-                    url: window.location.href.split('#')[0],
-                    triggerSave: true,
-                    pageName: getFileName('index.html'),
-                    resp: resp
-                };
-
-                editorFrame[0].contentWindow.postMessage(JSON.stringify(postData), iframeUrl);
-            } else {
-                onArticleSaved(resp);
+            if (resp.nextHref) {
+                window.location = resp.nextHref;
             }
+            Msg.info('Saved');
         }
     });
-
-
+    
+    
     initPublish();
     initGroupEditing();
     initManageArticleImage();
@@ -56,7 +69,7 @@ function initDateTimePicker() {
         format: "DD/MM/YYYY HH:mm"
     };
     $('.datetimepicker').datetimepicker(opts);
-    $('.datetimepicker').on('dp.show', function() {
+    $('.datetimepicker').on('dp.show', function () {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();
@@ -80,36 +93,6 @@ function initDateTimePicker() {
     });
 }
 
-function onArticleSaved(resp) {
-    if (resp.nextHref) {
-        window.location = resp.nextHref;
-    }
-    Msg.info('Saved');
-}
-
-function initPostMessage() {
-    flog('initPostMessage');
-
-    win.on('message', function (e) {
-        flog('On got message', e, e.originalEvent);
-
-        var data = $.parseJSON(e.originalEvent.data);
-        if (data.isSaved) {
-            var resp = data.resp;
-            onArticleSaved(resp);
-        } else {
-            iframeUrl = data.url;
-        }
-    });
-}
-
-function initEditorFrame() {
-    flog('initEditorFrame');
-
-    var editorFrame = $('#editor-frame');
-    editorFrame.attr('src', window.location.pathname + '?goto=editor' + '&url=' + encodeURIComponent(window.location.href.split('#')[0]));
-}
-
 function initPublish() {
     var rejectModal = $('#rejectModal');
     $('.article-reject').click(function (e) {
@@ -122,7 +105,7 @@ function initPublish() {
             window.location.reload();
         }
     });
-
+    
     $('.article-submit').click(function (e) {
         e.preventDefault();
         $.ajax({
@@ -136,13 +119,13 @@ function initPublish() {
             window.location.reload();
         });
     });
-
+    
     var publishModal = $('#publishModal');
     $('.article-publish').click(function (e) {
         e.preventDefault();
         publishModal.modal('show');
     });
-
+    
     publishModal.find('form').forms({
         callback: function (data) {
             Msg.info('Published');
@@ -166,11 +149,11 @@ function loadGraphData() {
         dataType: 'html',
         success: function (resp) {
             var json = null;
-
+            
             if (resp !== null && resp.length > 0) {
                 json = JSON.parse(resp);
             }
-
+            
             flog('response', json);
             handleData(json);
         }
@@ -179,7 +162,7 @@ function loadGraphData() {
 
 function handleData(resp) {
     var aggr = (resp !== null ? resp.aggregations : null);
-
+    
     initHistogram(aggr);
 }
 
@@ -187,13 +170,13 @@ function handleData(resp) {
 function initGraphControls() {
     flog("initGraphControls");
     var reportRange = $('#analytics-range');
-
+    
     function cb(start, end) {
         options.startDate = start.format('DD/MM/YYYY');
         options.endDate = end.format('DD/MM/YYYY');
         loadGraphData();
     }
-
+    
     reportRange.exist(function () {
         flog("init analytics range");
         reportRange.daterangepicker({
@@ -228,10 +211,10 @@ function initGraphControls() {
 
 function initHistogram(aggr) {
     flog("initHistogram", aggr);
-
+    
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
-
+        
         var myData = [];
         $.each(aggr.type.buckets, function (b, typeBucket) {
             var series = {
@@ -240,7 +223,7 @@ function initHistogram(aggr) {
             };
             myData.push(series);
         });
-
+        
         $.each(aggr.reqDate.buckets, function (i, dateBucket) {
             var typeBuckets = dateBucket.type.buckets;
             var map = {};
@@ -248,7 +231,7 @@ function initHistogram(aggr) {
                 //flog("add to map",dateBucket.key, typeBucket.doc_count);
                 map[typeBucket.key] = typeBucket.doc_count;
             });
-
+            
             $.each(myData, function (s, series) {
                 var docCount = map[series.key];
                 //flog("point", docCount, series.key, map);
@@ -258,38 +241,38 @@ function initHistogram(aggr) {
                     series.values.push({x: dateBucket.key, y: 0});
                 }
             });
-
+            
         });
-
+        
         flog(myData);
-
+        
         var chart = nv.models.stackedAreaChart()
-                .margin({right: 100})
-                .x(function (d) {
-                    return d.x;
-                })   //We can modify the data accessor functions...
-                .y(function (d) {
-                    return d.y;
-                })   //...in case your data is formatted differently.
-                .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
-                .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
-                .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
-                .clipEdge(true);
-
+            .margin({right: 100})
+            .x(function (d) {
+                return d.x;
+            })   //We can modify the data accessor functions...
+            .y(function (d) {
+                return d.y;
+            })   //...in case your data is formatted differently.
+            .useInteractiveGuideline(true)    //Tooltips which show all data points. Very nice!
+            .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
+            .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+            .clipEdge(true);
+        
         chart.xAxis
-                .tickFormat(function (d) {
-                    return d3.time.format('%x')(new Date(d))
-                });
-
+            .tickFormat(function (d) {
+                return d3.time.format('%x')(new Date(d))
+            });
+        
         chart.yAxis
-                .tickFormat(d3.format(',.2f'));
-
+            .tickFormat(d3.format(',.2f'));
+        
         d3.select('#chart_histogram svg')
-                .datum(myData)
-                .call(chart);
-
+            .datum(myData)
+            .call(chart);
+        
         nv.utils.windowResize(chart.update);
-
+        
         return chart;
     });
 }
@@ -298,12 +281,12 @@ function initManageArticleFiles() {
     var filesContainer = $('#files-container');
     var addFileModal = $('#modal-add-file');
     addFileModal.find('form.form-horizontal').forms({
-        onProgress:function (percentComplete, form) {
+        onProgress: function (percentComplete, form) {
             $(".modal").modal("hide");
             form[0].reset();
             $('.progress-bar')
-            .html(round(percentComplete, 1) + '%')
-            .css('width', percentComplete + '%');
+                .html(round(percentComplete, 1) + '%')
+                .css('width', percentComplete + '%');
             $('.progressContainer').show();
         },
         callback: function (resp, form) {
@@ -314,7 +297,7 @@ function initManageArticleFiles() {
         e.preventDefault();
         var href = $(e.target).closest('a').attr('href');
         flog('delete image', $(e.target), href);
-
+        
         confirmDelete(href, href, function () {
             filesContainer.reloadFragment();
         });
@@ -330,7 +313,7 @@ function initManageArticleImage() {
             $(".modal").modal("hide");
         }
     });
-
+    
     var upcropZone = addImageModal.find('.upcrop-zone');
     var editImageZone = addImageModal.find('.edit-image-zone');
     upcropZone.upcropImage({
@@ -339,37 +322,36 @@ function initManageArticleImage() {
         modalTitle: 'Add and crop image',
         ratio: 0,
         isEmbedded: true,
-        embeddedTemplate:
-                '<div class="upcrop-embedded" id="{{upcropId}}">' +
-                '   <div class="modal-header">' +
-                '       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
-                '       <h4 class="modal-title">Add and crop image</h4>' +
-                '   </div>' +
-                '   <div class="modal-body">' +
-                '       <div class="form-horizontal">' +
-                '           <div class="form-group orientation hide">' +
-                '               <label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
-                '               <div class="col-sm-9">' +
-                '                   <select class="form-control">' +
-                '                       <option value="">Default</option>' +
-                '                       <option value="square">Square</option>' +
-                '                       <option value="vertical">Vertical</option>' +
-                '                       <option value="horizontal">Horizontal</option>' +
-                '                   </select>' +
-                '               </div>' +
-                '           </div>' +
-                '       </div>' +
-                '       {{upcropZone}}' +
-                '   </div>' +
-                '   <div class="modal-footer">' +
-                '       <div class="pull-left">' +
-                '           {{buttonUploadOther}}' +
-                '       </div>' +
-                '       <button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
-                '       {{buttonCrop}} ' +
-                '       {{buttonContinue}}' +
-                '   </div>' +
-                '</div>'
+        embeddedTemplate: '<div class="upcrop-embedded" id="{{upcropId}}">' +
+        '   <div class="modal-header">' +
+        '       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' +
+        '       <h4 class="modal-title">Add and crop image</h4>' +
+        '   </div>' +
+        '   <div class="modal-body">' +
+        '       <div class="form-horizontal">' +
+        '           <div class="form-group orientation hide">' +
+        '               <label class="col-sm-3 control-label" for="newTagName">Orientation</label>' +
+        '               <div class="col-sm-9">' +
+        '                   <select class="form-control">' +
+        '                       <option value="">Default</option>' +
+        '                       <option value="square">Square</option>' +
+        '                       <option value="vertical">Vertical</option>' +
+        '                       <option value="horizontal">Horizontal</option>' +
+        '                   </select>' +
+        '               </div>' +
+        '           </div>' +
+        '       </div>' +
+        '       {{upcropZone}}' +
+        '   </div>' +
+        '   <div class="modal-footer">' +
+        '       <div class="pull-left">' +
+        '           {{buttonUploadOther}}' +
+        '       </div>' +
+        '       <button class="btn btn-default btn-cancel" type="button" data-dismiss="modal">Cancel</button> ' +
+        '       {{buttonCrop}} ' +
+        '       {{buttonContinue}}' +
+        '   </div>' +
+        '</div>'
         ,
         onUploadComplete: function (data, name, href) {
             flog("manageBlogArticle.js: onUploadComplete");
@@ -397,34 +379,34 @@ function initManageArticleImage() {
                     case 'square':
                         ratio = 1;
                         break;
-
+                    
                     case 'vertical':
                         ratio = 1 / 2;
                         break;
-
+                    
                     case 'horizontal':
                         ratio = 2 / 1;
                         break;
-
+                    
                     default:
                         ratio = 0;
                 }
-
+                
                 var jcropApi = upcropZone.upcropImage('getJcropApi');
                 jcropApi.setOptions({
                     aspectRatio: ratio
                 });
             });
-
+            
             var btnCancel = upcropContainer.find('.btn-cancel');
             var btnUploadOther = upcropContainer.find('.btn-upload-other');
-
+            
             btnCancel.on('click', function (e) {
                 btnUploadOther.trigger('click');
             });
         }
     });
-
+    
     function setAddImageFormData(data, name, ignoreOrientation) {
         if (data.result) {
             data = data.result;
@@ -435,7 +417,7 @@ function initManageArticleImage() {
         }
         flog("setAddImageFormData: data=", data);
         flog("setAddImageFormData: hash=", hash);
-
+        
         addImageModal.find('.preview').attr('src', data.nextHref);
         addImageModal.find('input[name=hash]').val(hash); // the hash of the 'file' file input that was uploaded
         addImageModal.find('input[name=fileName]').val(name);
@@ -445,29 +427,29 @@ function initManageArticleImage() {
         upcropZone.addClass('hide');
         editImageZone.removeClass('hide');
     }
-
+    
     imageContainer.on('click', '.image-delete', function (e) {
         e.preventDefault();
         var href = $(e.target).closest('a').attr('href');
         flog('delete image', $(e.target), href);
-
+        
         confirmDelete(href, getFileName(href), function () {
             imageContainer.reloadFragment();
         });
     });
-
-
+    
+    
     addImageModal.find('.btn-add-other-img').on('click', function (e) {
         e.preventDefault();
-
+        
         upcropZone.removeClass('hide');
         editImageZone.addClass('hide');
         addImageModal.find('.btn-upload-other').trigger('click');
     });
-
-
+    
+    
     addImageModal.find('.btn-close').on('click', function (e) {
-
+        
         upcropZone.removeClass('hide');
         editImageZone.addClass('hide');
         addImageModal.find('.btn-upload-other').trigger('click');
@@ -495,7 +477,7 @@ function initManageArticleGallery() {
                 flog('uploaded image:', data, name, data.result.nextHref);
                 uploadedHref = data.result.nextHref;
                 uploadedName = name;
-
+                
                 if (data.result) {
                     data = data.result;
                 }
@@ -503,12 +485,12 @@ function initManageArticleGallery() {
                 if (typeof hash == "object") {
                     hash = hash.file;
                 }
-
+                
                 saveManageArticleGallery(hash, uploadedName, "");
             }
         });
     });
-
+    
     addGalleryModal.on('hide.bs.modal', function (e) {
         galleryContainer.reloadFragment();
     });
@@ -520,16 +502,18 @@ function saveManageArticleGallery(hash, name, ignoreOrientation) {
         fileName: name,
         orientation: ignoreOrientation
     };
-
+    
     var saveData = $.ajax({
         type: 'POST',
         url: window.location.pathname,
         data: objImage,
-        success: function(resultData) {
+        success: function (resultData) {
             flog("save galleries data success", resultData);
         }
     });
-    saveData.error(function() { alert("Something went wrong"); });
+    saveData.error(function () {
+        alert("Something went wrong");
+    });
 }
 
 function initGroupEditing() {

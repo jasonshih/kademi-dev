@@ -236,7 +236,7 @@
                     }
                     progressBar.hide();
                 }
-    
+                
                 previewContainer.attr('data-url', selectedUrl);
                 previewContainer.attr('data-hash', hash);
             },

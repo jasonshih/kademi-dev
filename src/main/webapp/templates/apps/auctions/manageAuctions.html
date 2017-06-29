@@ -7,11 +7,11 @@
     <body>
         <div class="">
             <p>
-                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addWebsiteModal" ><i class="fa fa-plus"></i> Create new auction</a>
+                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addAuctionModal" ><i class="fa fa-plus"></i> Create new auction</a>
                 <a href="auctionWinners.csv" class="btn btn-sm btn-success pull-right" ><i class="fa fa-download"></i> Winners CSV</a>
             </p>
 
-            <div class="modal fade" id="addWebsiteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="addAuctionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -32,7 +32,7 @@
                                     <div class="col-sm-8">
                                         <select id="auctionWebsite" name="auctionWebsite" class="form-control">
                                             #foreach($website in $page.organisation.websites())
-                                                <option value="$website.name">$website.name</option>
+                                            <option value="$website.name">$website.name</option>
                                             #end
                                         </select>
                                     </div>
@@ -42,8 +42,8 @@
                                     <div class="col-sm-8">
                                         <select name="auctionBidType" class="form-control">
                                             #foreach($st in $page.auctionTypesMap.entrySet())
-                                    $formatter.option($st.key, $st.value, null)
-                                    #end
+                                            $formatter.option($st.key, $st.value, null)
+                                            #end
                                         </select>
                                     </div>
                                 </div>
@@ -59,11 +59,11 @@
                                         <input type='text' class="form-control date required" id="auctionEndDate" name="auctionEndDate" style="cursor:pointer;"/>
                                     </div>
                                 </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Create Auction</button>
-                        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Create Auction</button>
+                            </div>
                         </form>
                     </div>
                 </div>
@@ -112,82 +112,84 @@
                         #set($auctions = $page.children.ofType("auction"))
                         #set($state = $request.params.state)
                         #if(!$state || $state == '' || $state == 'open')
-                            #set($auctions = $openAuctions)  
+                        #set($auctions = $openAuctions)
                         #else
-                            #set($auctions = $closedAuctions)
+                        #set($auctions = $closedAuctions)
                         #end
                         #foreach($v in $auctions)
-                            #if ($v.createdDate.after($queryManager.commonStartDate) && $v.createdDate.before($queryManager.commonFinishDate))
-                            <tr>
-                                <td title="$v.auctionState" class="text-center lead">
-                                    #if($v.auctionState == "draft")
-                                    <i class="fa fa-pencil-square-o text-muted"></i>
-                                    #elseif($v.auctionState == "active")
-                                    <i class="fa fa-check-circle text-success"></i>
-                                    #elseif($v.auctionState == "closed")
-                                    <i class="fa fa-exclamation-circle text-danger"></i>
-                                    #elseif($v.auctionState == "open")
-                                    <i class="fa fa-check-circle text-success"></i>
-                                    #else
-                                    <i class="fa fa-exclamation-circle text-danger"></i>
-                                    #end
-                                </td>
-                                <td><a href="$v.href">$v.auctionTitle</a></td>
-                                <td>
-                                    #foreach($g in $v.selectedGroups)
-                                    #genGroup($g)
-                                    #end
-                                </td>
-                                <td>$v.auctionTypesMap.get($v.auctionType)</td>
-                                <td>$!v.currentBidCount</td>
-                                <td><abbr title="$formatter.formatDateISO8601($v.auctionStartDate)" class="timeago">$v.auctionStartDate</abbr></td>
-                                <td><abbr title="$formatter.formatDateISO8601($v.auctionEndDate)" class="timeago">$v.auctionEndDate</abbr></td>
-                                <td>$v.website.name</td>
-                                <td>
-                                    #if( $v.winningBid )
-                                    <a class="btn btn-success" href="/manageUsers/$v.winningBid.changedBy.userId">
-                                        <span class="fa fa-check-circle"></span>
-                                        $v.winningBid.changedBy.name
-                                    </a>
 
-                                    #elseif( $v.leadingBid )
-                                    <a href="/manageUsers/$v.leadingBid.changedBy.userId">$v.leadingBid.changedBy.name</a>
-                                    #end
-                                </td>
-                                <td>
-                                    $!v.leadingBid.bidValue
-                                </td>
-                                <td class="action">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
-                                        <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a class="XAuction" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                        #if ($v.auctionStartDate.after($formatter.toSqlTimestamp($queryManager.commonStartDate)) &&
+                        $v.auctionStartDate.before($formatter.toSqlTimestamp($queryManager.commonFinishDate)))
+                        <tr>
+                            <td title="$v.auctionState" class="text-center lead">
+                                #if($v.auctionState == "draft")
+                                <i class="fa fa-pencil-square-o text-muted"></i>
+                                #elseif($v.auctionState == "active")
+                                <i class="fa fa-check-circle text-success"></i>
+                                #elseif($v.auctionState == "closed")
+                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                #elseif($v.auctionState == "open")
+                                <i class="fa fa-check-circle text-success"></i>
+                                #else
+                                <i class="fa fa-exclamation-circle text-danger"></i>
+                                #end
+                            </td>
+                            <td><a href="$v.href">$v.auctionTitle</a></td>
+                            <td>
+                                #foreach($g in $v.selectedGroups)
+                                #genGroup($g)
+                                #end
+                            </td>
+                            <td>$v.auctionTypesMap.get($v.auctionType)</td>
+                            <td>$!v.currentBidCount</td>
+                            <td><abbr title="$formatter.formatDateISO8601($v.auctionStartDate)" class="timeago">$v.auctionStartDate</abbr></td>
+                            <td><abbr title="$formatter.formatDateISO8601($v.auctionEndDate)" class="timeago">$v.auctionEndDate</abbr></td>
+                            <td>$v.website.name</td>
+                            <td>
+                                #if( $v.winningBid )
+                                <a class="btn btn-success" href="/manageUsers/$v.winningBid.changedBy.userId">
+                                    <span class="fa fa-check-circle"></span>
+                                    $v.winningBid.changedBy.name
+                                </a>
 
-                            #end
+                                #elseif( $v.leadingBid )
+                                <a href="/manageUsers/$v.leadingBid.changedBy.userId">$v.leadingBid.changedBy.name</a>
+                                #end
+                            </td>
+                            <td>
+                                $!v.leadingBid.bidValue
+                            </td>
+                            <td class="action">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="$v.name" class="btn btn-sm btn-info"><i class="fa fa-cog"></i> Manage</a>
+                                    <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul role="menu" class="dropdown-menu pull-right">
+                                        <li><a class="XAuction" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+
+                        #end
                         #end
                     </tbody>
                 </table>
             </div>
         </div>
         #macro(isActive $state)
-            #if(!$request.params.state || $request.params.state == '')
-                #if($state == 'open')
-                active
-                #end
-            #elseif($request.params.state == $state)
-            active            
-            #end
+        #if(!$request.params.state || $request.params.state == '')
+        #if($state == 'open')
+        active
+        #end
+        #elseif($request.params.state == $state)
+        active
+        #end
 
         #end
-        
+
         #macro(genGroup $group)
         #set($gc = "label label-info")
         #set($gIcon = "")

@@ -1,0 +1,109 @@
+#set ($width = $formatter.toInteger($width))
+#set ($itemsPerRow = $formatter.toInteger($itemsPerRow))
+#set ($horizontalPadding = $formatter.toInteger($horizontalPadding))
+#set ($tableWidth = $width / $itemsPerRow)
+#set ($imgWidth = $tableWidth - $horizontalPadding - $horizontalPadding)
+
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
+
+#if ($tag)
+#else
+    #set ($tag = 'h3')
+#end
+
+#if ($reward && $reward != "" && $categories && $categories != "")
+    #set ($rewardPath = "/" + $reward)
+    #set ($rewardResource = $rootFolder.find($rewardPath))
+    #renderCateList($rewardResource)
+#else
+    #if ($page)
+        #set ($rewardResource = $page.closest("store") )
+        #renderCateList($rewardResource)
+    #else
+    <p class="alert alert-warning">No reward store selected</p>
+    #end
+#end
+
+#macro(renderCateList $rewardResource)
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+            <td>
+                <!--[if (gte mso 9)|(IE)]>
+                <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <![endif]-->
+                #foreach( $cate in $categories.split(",") )
+                    #set ($newLine = false)
+                    #if ($foreach.index % $itemsPerRow == 0)
+                        #set ($newLine = true)
+                    #end
+
+                    #set ($endLine = false)
+                    #if ($foreach.count % $itemsPerRow == 0)
+                        #set ($endLine = true)
+                    #end
+
+                    #if ($newLine)
+                        #if ($foreach.index != 0)
+                            <div style="clear: both"></div>
+                        #end
+                        <!--[if (gte mso 9)|(IE)]>
+                        <tr>
+                            <td width="$tableWidth">
+                        <![endif]-->
+                    #else
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        <td width="$tableWidth">
+                        <![endif]-->
+                    #end
+                    #set ($catePath = "/categories/" + $cate)
+                    #set ($cateResource = $rootFolder.find($catePath))
+                    #set ($cateLink = "http://${rootFolder.domainName}${formatter.portString}/$reward/$category/")
+                    #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}/static/images/photo_holder.png")
+                    #if( $cateResource.imageHref )
+                        #set($cateImage = "http://${rootFolder.domainName}${formatter.portString}${$cateResource.imageHref}/alt-600-400.png")
+                    #end
+                <table data-index="$foreach.index" data-count="$foreach.count" data-new="$newLine" data-end="$endLine" cellpadding="0" cellspacing="0" border="0" width="$tableWidth" align="left" class="col">
+                        <tbody>
+                            <tr>
+                                <td valign="top" align="center" style="padding-left: $horizontalPaddingpx; padding-right: $horizontalPaddingpx; $baseStyles">
+                                    <a href="$cateLink" target="_blank" style="$linkStyles">
+                                        <img src="$cateImage" width="$imgWidth" alt="$cateResource.title" />
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="10" style="font-size: 0; line-height: 0;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    #set ($fontSizeName = "$" + "fontSize" + $tag.toUpperCase())
+                                    #set ($lineHeightName = "$" + "lineHeight" + $tag.toUpperCase())
+                                    <a href="$cateLink" target="_blank" style="$linkStyles">
+                                        <$tag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
+                                            $cateResource.title
+                                        </$tag>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td height="20" style="font-size: 0; line-height: 0;">&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    #if ($endLine)
+                        <!--[if (gte mso 9)|(IE)]>
+                        </td>
+                        </tr>
+                        <![endif]-->
+                    #end
+                #end
+
+                <!--[if (gte mso 9)|(IE)]>
+                </table>
+                <![endif]-->
+            </td>
+        </tr>
+    </table>
+#end

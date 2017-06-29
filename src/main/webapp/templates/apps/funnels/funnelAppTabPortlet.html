@@ -3,15 +3,15 @@
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-        <a href="/funnels/$funnel.name">
-            #if( $funnel.title )
+            <a href="/funnels/$funnel.name">
+                #if( $funnel.title )
             $funnel.title
             #else
-            $funnel.name
-            #end
-        </a>
+                    $funnel.name
+                #end
+            </a>
         #else
-        COULD NOT FIND FUNNEL -$lead.funnel
+            COULD NOT FIND FUNNEL -$lead.funnel
         #end
         
         <b>ID=$lead.id</b>
@@ -21,7 +21,9 @@
             <tr>
                 <td>Created</td>
                 <td>
-                    $formatter.formatDateTime($lead.createDate, $page.organisation.timezone)
+                    <abbr title="$formatter.formatDateISO8601($lead.createDate, $page.organisation.timezone)" class="timeago">
+                        $formatter.formatDateTime($lead.createDate, $page.organisation.timezone)
+                    </abbr>
                 </td>
             </tr>
             <tr>
@@ -49,10 +51,10 @@
                 <td>Current goal</td>
                 <td>
                     #if( $lead.currentGoal )
-                    $!funnel.get($lead.currentGoal).title
-                    ( <a href="/funnels/$funnel.name/$lead.currentGoal">$lead.currentGoal</a> )
+                        $!funnel.get($lead.currentGoal).title
+                        ( <a href="/funnels/$funnel.name/$lead.currentGoal">$lead.currentGoal</a> )
                     #else
-                    <span class="label label-warning">No current goal. Not being processed.</span>
+                        <span class="label label-warning">No current goal. Not being processed.</span>
                     #end
                 </td>
             </tr>
@@ -60,11 +62,16 @@
                 <td>Last attained goal</td>
                 <td>
                     #if( $lead.lastAttainedGoal )
-                    $lead.lastAttainedGoal
-                    -
-                    $!lead.lastAttainedDate
+                        $lead.lastAttainedGoal
+                        -
+                        <abbr title="$formatter.formatDateISO8601($lead.lastAttainedDate, $page.organisation.timezone)" class="timeago">
+                            $formatter.formatDateTime($lead.lastAttainedDate, $page.organisation.timezone)
+                        </abbr>
                     #else
-                    Unknown last goal attained. Transitioned at $!lead.lastAttainedDate
+                        Unknown last goal attained. Transitioned at
+                        <abbr title="$formatter.formatDateISO8601($lead.lastAttainedDate, $page.organisation.timezone)" class="timeago">
+                            $formatter.formatDateTime($lead.lastAttainedDate, $page.organisation.timezone)
+                        </abbr>
                     #end
                 </td>
             </tr>
@@ -73,11 +80,12 @@
                 <td>Timer</td>
                 <td>
                     #if( $lead.timerDate )
-                    $formatter.formatDateTime($lead.timerDate, $page.organisation.timezone)
-
-                    <i class="text-muted">time now: $formatter.formatDateTime($formatter.now, $page.organisation.timezone))</i>
+                        <abbr title="$formatter.formatDateISO8601($lead.timerDate, $page.organisation.timezone)" class="timeago">
+                            $formatter.formatDateTime($lead.timerDate, $page.organisation.timezone)
+                        </abbr>
+                        (<small class="text-muted">Current time: $formatter.formatDateTime($formatter.now, $page.organisation.timezone)</small>)
                     #else
-                    No current timer
+                        No current timer
                     #end
                 </td>
             </tr>
@@ -86,20 +94,20 @@
                 <td>Timer processing</td>
                 <td>
                     #if( $lead.processingStartedAt || $lead.completedProcessingAt || $lead.numAttempts )
-                    <table class="table">
-                        <tr>
-                            <th>Started</th>
-                            <th>Completed</th>
-                            <th>Attempts</th>
-                        </tr>
-                        <tr>
-                            <td>$!formatter.formatDateTime($formatter.processingStartedAt, $page.organisation.timezone))</td>
-                            <td>$!formatter.formatDateTime($formatter.completedProcessingAt, $page.organisation.timezone))</td>
-                            <td>$!formatter.numAttempts</td>
-                        </tr>
-                    </table>
+                        <table class="table">
+                            <tr>
+                                <th>Started</th>
+                                <th>Completed</th>
+                                <th>Attempts</th>
+                            </tr>
+                            <tr>
+                                <td>$!formatter.formatDateTime($formatter.processingStartedAt, $page.organisation.timezone)</td>
+                                <td>$!formatter.formatDateTime($formatter.completedProcessingAt, $page.organisation.timezone)</td>
+                                <td>$!formatter.numAttempts</td>
+                            </tr>
+                        </table>
                     #else
-                    No timer processing information
+                        No timer processing information
                     #end
                 </td>
             </tr>
@@ -120,37 +128,37 @@
             </thead>
             #set( $tasks = $lead.tasks() )
             #if( $tasks.empty )
-            <tr>
-                <td>There are no tasks</td>
-            </tr>            
+                <tr>
+                    <td>There are no tasks</td>
+                </tr>
             #else
-            #foreach( $task in $tasks )
-            <tr>
-                <td>$!task.title</td>
-                <td>$!task.taskDescription</td>                
-                <td>$!task.dueDate</td>
-                <td>$!task.taskName</td>
-                <td>$!task.assignedToGroup.name</td>
-                <td>$!task.assignedToOrg.orgId</td>
-                <td>$!task.assignedToProfile.name</td>                
-            </tr>
-            #end
+                #foreach( $task in $tasks )
+                    <tr>
+                        <td>$!task.title</td>
+                        <td>$!task.taskDescription</td>
+                        <td>$!task.dueDate</td>
+                        <td>$!task.taskName</td>
+                        <td>$!task.assignedToGroup.name</td>
+                        <td>$!task.assignedToOrg.orgId</td>
+                        <td>$!task.assignedToProfile.name</td>
+                    </tr>
+                #end
             #end
         </table>
 
         <h3>EDMs</h3>
         <table class="table">
             #foreach($funnelEdm in $lead.funnelEdms)
-            <tr>
-                <td>
-                    #if( $funnelEdm.emailItem )
-                    <a href="/emails/$funnelEdm.emailItem.id">$funnelEdm.emailItem.subject</a>
-                    #else if( $funnelEdm.smsItem )
-                    SMS
-                    #end
-                </td>
-                <td></td>
-            </tr>
+                <tr>
+                    <td>
+                        #if( $funnelEdm.emailItem )
+                            <a href="/emails/$funnelEdm.emailItem.id">$funnelEdm.emailItem.subject</a>
+                        #else if( $funnelEdm.smsItem )
+                            SMS
+                        #end
+                    </td>
+                    <td></td>
+                </tr>
             #end
         </table>
     </div>

@@ -59,6 +59,12 @@ function initPropertiesList() {
 
 function initPropertiesForm() {
     flog('initPropertiesForm');
+    
+    $('.stage-wrapper').sortable({
+        items: '.stage',
+        handle: '.btn-move-stage',
+        axis: 'y'
+    });
 
     var form = $('.form-properties');
     form.forms({

@@ -143,7 +143,7 @@
                     } else {
                         element = instance.document.createElement('img');
                         that.insertMode = true;
-                        modalBody.mselect('selectFile', '');
+                        // modalBody.mselect('selectFile', '');
                     }
                     
                     that.element = element;

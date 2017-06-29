@@ -600,7 +600,7 @@
                             var componentData = $.keditor.components[componentType];
 
                             if (typeof componentData.onWithChanged === 'function') {
-                                componentData.onWithChanged.call(componentData, component, width, keditor);
+                                componentData.onWithChanged.call(componentData, component, componentWidth, keditor);
                             }
                         }
                     });

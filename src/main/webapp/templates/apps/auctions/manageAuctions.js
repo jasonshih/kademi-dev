@@ -1,5 +1,5 @@
 function initManageAuctions() {
-    flog("initManageWebsites");
+    flog("initManageAuctions");
 
     initTimeAgo();
     // initAuctionFilter();
@@ -31,7 +31,7 @@ function initAuctionFilter() {
 }
 
 function initModalForm() {
-    var modal = $("#addWebsiteModal");
+    var modal = $("#addAuctionModal");
     var form = modal.find(" form");
 
     form.forms({
@@ -47,22 +47,22 @@ function initModalForm() {
 function initDateTimePicker() {
     var date = new Date();
     date.setDate(date.getDate() - 1);
-    $('body').css('position','relative');
+    $('body').css('position', 'relative');
     var opts = {
         widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm",
         minDate: moment()
     };
-    $('#auctionStartDate').datetimepicker(opts).on('dp.change', function(e){
+    $('#auctionStartDate').datetimepicker(opts).on('dp.change', function (e) {
         var d = $('#auctionEndDate').data("DateTimePicker").date();
-        if (!d || d.isBefore(e.date, 'day')){
+        if (!d || d.isBefore(e.date, 'day')) {
             var n = e.date.add(1, 'd');
             $('#auctionEndDate').data("DateTimePicker").date(n);
         }
     });
     $('#auctionEndDate').datetimepicker(opts);
 
-    $('#auctionStartDate, #auctionEndDate').on('dp.show', function() {
+    $('#auctionStartDate, #auctionEndDate').on('dp.show', function () {
         var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
         if (datepicker.hasClass('bottom')) {
             var top = $(this).offset().top - $(this).outerHeight();

@@ -7,16 +7,27 @@ $(function () {
             var orgId = $(this).attr('data-orgId');
             var orgTitle;
             if (orgId) {
-                orgTitle = $(this).text();                
+                orgTitle = $(this).text();
                 $.cookie('selectedOrg', orgId, {expires: 360, path: '/'});
             } else {
                 $.cookie('selectedOrg', "", {expires: 360, path: '/'});
                 orgTitle = "";
-            }            
+            }
             $(e.target).closest(".org-selector").find(".selectOrgSearch").val(orgTitle);
-            //flog("org cookie", $.cookie('selectedOrg'), "reward", $.cookie('selectedReward'));
             window.location.reload();
-        })
+        });
+
+        var dropdownMenuOrgSelector = $('#dropdownMenuOrgSelector');
+
+        $('.orgSelectorWrap').on('click', '.btn-select-org-selector', function (e) {
+            if (!dropdownMenuOrgSelector.data('loaded')) {
+                dropdownMenuOrgSelector.data('loaded', true);
+
+                dropdownMenuOrgSelector.reloadFragment({
+                    url: window.location.pathname + (window.location.search || '?') + '&loadOrgSelector'
+                });
+            }
+        });
     }
 
 
@@ -25,7 +36,7 @@ $(function () {
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             remote: {
-                url:  '/queries/?searchOrgs=%QUERY',
+                url: '/queries/?searchOrgs=%QUERY',
                 wildcard: '%QUERY'
             }
         });
