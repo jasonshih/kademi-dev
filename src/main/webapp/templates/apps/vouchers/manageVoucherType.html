@@ -61,12 +61,13 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="redeemingOrg">Redeeming organisation</label>
                             <div class="col-sm-9">
-                                <a href="#" class="btn btn-default change-redeeming-org">
+<!--                                <a href="#" class="btn btn-default change-redeeming-org">
                                     <span class="org-title">$page.voucherType.redeemingOrg.formattedName</span>
                                     <span class="glyphicon glyphicon-cog"></span>
                                 </a>
                                 <input id="redeemingOrgId" type="hidden" class="form-control" name="redeemingOrg" value="$!page.voucherType.redeemingOrg.orgId"/>
-                                <br/>
+                                <br/>-->
+                                <input type="text" class="form-control required" id="redeemingOrgId" data-text="$!page.voucherType.redeemingOrg.formattedName" name="redeemingOrgId" value="$!page.voucherType.redeemingOrg.id" />
                                 <small><i>Users within this organisation will be able to redeem vouchers</i></small>
                             </div>
                         </div>
@@ -485,6 +486,7 @@
                     e.preventDefault();
                     selectOrgModal.modal('show');
                 });
+                /*
                 selectRedeemingOrgForm.submit(function (e) {
                     e.preventDefault();
                     var val = selectRedeemingOrgForm.find("input").val();
@@ -492,7 +494,7 @@
                     selectOrgModal.modal("hide");
                     $(".change-redeeming-org .org-title").text(val);
                 });
-
+                */
                 $("#doUploadCsv").mupload({
                     buttonText: "<i class=\"clip-folder\"></i> Upload spreadsheet",
                     url: "vouchers.csv",
@@ -593,6 +595,12 @@
                             }
                         });
                     }
+                });
+            }
+            function initOrgFinder() {
+                $('input#redeemingOrgId').entityFinder({
+                    useActualId: true,
+                    type: 'organisation'
                 });
             }
 

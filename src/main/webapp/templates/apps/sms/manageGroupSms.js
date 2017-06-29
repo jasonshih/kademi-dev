@@ -15,12 +15,11 @@ function initCreateSMS(){
 function initJobButtons() {
     $('body').on('click', 'a.btn-delete-sms', function (e) {
         e.preventDefault();
-
         var btn = $(e.target);
         flog('do it', btn);
 
         var href = btn.attr('href');
-        var name = getFileName(href);
+        var name = href;
 
         confirmDelete(href, name, function () {
             flog('remove', btn);
@@ -30,7 +29,6 @@ function initJobButtons() {
         });
     });
 }
-
 
 function reloadTBody(){
     $("#smsTbody").reloadFragment({
