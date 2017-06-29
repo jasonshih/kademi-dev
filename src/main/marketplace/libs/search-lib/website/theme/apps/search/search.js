@@ -10,6 +10,7 @@ function initContentSearch() {
         keyup: function () {
             var query = $(this).val();
             typewatch(function () {
+                flog("do search ", query);
                 // Load fragment
                 try {
                     var href = 'contentSearch';
@@ -40,7 +41,7 @@ function initContentSearch() {
         }
     });
 
-    txtKeyword.keyup();
+    //txtKeyword.keyup();
 
     txtKeyword.closest('form').on('submit', function (e) {
         var keyword = txtKeyword.val().trim();
