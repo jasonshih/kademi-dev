@@ -24,20 +24,20 @@
         padding-left: 10px;
     }
 </style>
-<script>
-    var searchOptions = {
-        team: '$!params.team',
-        query: "$!params.query",
-        leadType: "$!params.leadType",
-        tags: "$!params.tags",
-        assignedTo: '$!params.assignedTo',
-        sources: '$!params.sources'
-    };
+<div class="fw-boxed leads-page-table-component" data-team="$!params.team" data-query="$!params.query"
+     data-lead-type="$!params.leadType" data-tags="$!params.tags"
+     data-assigned-to="$!params.assignedTo"
+     data-sources="$!params.sources"
+
     #if (!$params.leadType)
-        searchOptions.leadType = 'active';
+     data-lead-type="active"
+     #else
+     data-lead-type="$!params.leadType"
     #end
-</script>
-<div class="fw-boxed">
+
+    >
+
+
     <div class="panel panel-default ">
         <div class="row">
             <div class="col-md-12">
@@ -68,9 +68,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(function () {
-        initLeadManPage();
-    });
-</script>

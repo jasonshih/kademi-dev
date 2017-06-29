@@ -5,7 +5,7 @@
 	#end
 
 
-<div style="background:url(/theme/img/profile.jpg) center center; background-size:cover;" class="">
+<div style="background:url(/theme/img/profile.jpg) center center; background-size:cover;" class="lead-profile-cover-component">
     <div class="container container-lg p-lg">
         <div class="pull-right">
 
@@ -131,24 +131,6 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
-<script>
-    $(function () {
-        var form = $("#leadDetails");
-        form.forms({
-            callback: function (resp) {
-                Msg.info('Saved');
-            }
-        });
-        initNewProfileLeadForm();
-        initAssignOrg();
-
-        $('.modal').on('hidden.bs.modal', function () {
-            var form = $(this).find('form');
-            form.trigger('reset');
-            $('input[name=newOrgId]', form).val('');
-        });
-    });
-</script>
 #else
 
 	#fakeUI()

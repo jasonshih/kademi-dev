@@ -292,7 +292,7 @@
 </div>
 
 
-<div style="display:none">
+<div style="display:none" class="lead-task-modal-content-component">
     <div class="taskViewModal modal-body">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <div class="hideOnComplete">
@@ -418,13 +418,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('body').on('loaded.bs.modal', '#modalEditTask', function (e) {
-            flog('Modal Loaded');
-            $(".completeTaskDiv").show(300);
-            $(".hideOnComplete").hide(300);
-        });
-    });
-</script>

@@ -133,15 +133,3 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    function removeQuote(href, quoteId) {
-        confirmDelete(href, getFileName(href), function (data) {
-            $("#quoteComponent").reloadFragment({
-                whenComplete: function () {
-                    $('abbr.timeago').timeago();
-                }
-            });
-        });
-    }
-    ;
-</script>
