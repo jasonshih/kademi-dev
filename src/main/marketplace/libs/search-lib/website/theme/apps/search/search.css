@@ -27,3 +27,7 @@
     font-style: normal;
     font-weight: bold;
 }
+
+#omni-search-suggestions {
+    background: white;
+}
