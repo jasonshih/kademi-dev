@@ -11,6 +11,40 @@
             #end
             <button class="btn btn-danger" data-toggle="modal" data-target="#changeStatusModal">Change status</button>
 
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="?goto=" target="_blank" class="btn btn-info">Preview As HTML</a>
+
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                        #foreach($entry in $page.availableWebsites.entrySet())
+                        #foreach($wb in $entry.value)
+                        <li><a href="?goto=${entry.key.name}-${wb.name}" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
+                        #end
+                        #end
+                    </ul>
+                </div>
+            </div>
+
+            <div class="btn-group" role="group" aria-label="...">
+                <a href="?goto=&pdf" target="_blank" class="btn btn-info">Preview As PDF</a>
+
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                        #foreach($entry in $page.availableWebsites.entrySet())
+                        #foreach($wb in $entry.value)
+                        <li><a href="?goto=${entry.key.name}-${wb.name}&pdf" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
+                        #end
+                        #end
+                    </ul>
+                </div>
+            </div>
+
             <hr/>
 
             <div>
@@ -75,18 +109,18 @@
                 <h4 class="modal-title" id="myModalLabel">Redeem voucher</h4>
             </div>
             <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
-            <div class="modal-body">
-                <p>Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
-                <i>Optional, you may enter any notes here</i>
-                <div class="form-message alert alert-danger" style="display: none;"></div>
+                <div class="modal-body">
+                    <p>Redeeming a voucher means it has been used for a purchase and cannot be used again.</p>
+                    <i>Optional, you may enter any notes here</i>
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
-                <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
+                    <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                     <input type="hidden" name="redeem"/>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="submit">Redeem</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Redeem</button>
+                </div>
             </form>
         </div>
 
@@ -124,12 +158,12 @@
                 <h4 class="modal-title" id="myModalLabel">Force status change</h4>
             </div>
             <form class="form-horizontal" method="POST" action="$page.href" id="redeemVoucherForm">
-            <div class="modal-body">
-                <p>You can fix mistakes or undo transactions by forcing the voucher to a different status. Note that all changes are logged.</p>
+                <div class="modal-body">
+                    <p>You can fix mistakes or undo transactions by forcing the voucher to a different status. Note that all changes are logged.</p>
 
-                <div class="form-message alert alert-danger" style="display: none;"></div>
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
 
-                <div class="form-group">
+                    <div class="form-group">
                         <label for="status" class="col-sm-3 control-label">New status:</label>
                         <div class="col-sm-8">
                             <select name="status" id="status">
@@ -143,11 +177,11 @@
 
                     <textarea name="notes" id="notes" rows="5" style="width: 100%"></textarea>
                     <small><i>Optional, you may enter any notes here</i></small>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="submit">Change</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Change</button>
+                </div>
             </form>
         </div>
 

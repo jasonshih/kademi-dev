@@ -18,6 +18,7 @@
             <div class="clearfix">
                 <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                     <li class=""><a href="#details" data-toggle="tab">Details</a></li>
+                    <li class=""><a href="#voucherContent" data-toggle="tab">Content</a></li>
                     <li class=""><a href="#vouchers" data-toggle="tab">Vouchers</a></li>
                 </ul>
             </div>
@@ -163,7 +164,20 @@
                     </div>
                 </div>
 
+                <div class="tab-pane" id="voucherContent">
+                    <form id="voucherContent-form" action="" method="POST" class="form-horizontal" role="form">
+                        <input type="hidden" name="saveContent"/>
+                        <p class="text-right pull-right">
+                            <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save Content</button>
+                        </p>
 
+                        <div class="clearfix"></div>
+
+                        <div class="editor-wrapper">
+                            <textarea class="htmleditor" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                        </div>
+                    </form>
+                </div>
 
                 <div class="tab-pane" id="vouchers">
 
@@ -356,11 +370,11 @@
                             <input type="text" class="form-control regex required" required="true" id="numVouchers" name="numVouchers"  />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="submit">Create</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Create</button>
+                </div>
             </form>
         </div>
 
@@ -379,11 +393,11 @@
                             <small><i>Enter the admin domain of the organisation to be permitted to redeem this type of voucher</i></small>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary" type="submit">Select</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit">Select</button>
+                </div>
             </form>
         </div>
 
@@ -421,11 +435,11 @@
                         </div>
                     </div>
                     <div id="options-wrapper"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                    <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
+                </div>
             </form>
         </div>
 
@@ -434,10 +448,10 @@
             $(function () {
 
                 initSearchVoucher();
-
                 initManageExtraField();
                 initSelectAll();
                 initDeleteVouchers();
+                initContentForm();
 
                 $('abbr.timeago').timeago();
 
@@ -578,6 +592,15 @@
 
                             }
                         });
+                    }
+                });
+            }
+
+            function initContentForm() {
+                var form = $('#voucherContent-form');
+                form.forms({
+                    onSuccess: function (resp) {
+                        Msg.success(resp.messages);
                     }
                 });
             }
