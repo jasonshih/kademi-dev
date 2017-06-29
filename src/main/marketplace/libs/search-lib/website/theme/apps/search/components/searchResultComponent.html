@@ -1,17 +1,36 @@
-<html>
-<head>
-    <title>Search</title>
-</head>
-<body>
-    <section>
-        <div class="container-bg">
-            <div class="container-layout container">
-                <div class="container-content-wrapper">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <section data-tag="h1" data-type="component-searchBox">
-                            <div data-dynamic-href="_components/searchBox"></div>
-                        </section>
+<div id="search-results">
+    #if($page)    
+    #if ($page.searchResults.totalHits)
+    <p class="totals text-muted">
+        <small>
+            #if( $page.hit.totalHits == 0 )
+            Couldnt find any matching results
+            #elseif( $page.hit.totalHits == 1 )
+            Oh, just one result
+            #elseif( $page.hit.totalHits < 4 )
+            Found a few results
+            #elseif( $page.hit.totalHits < 10 )
+            Found several results
+            #else
+            Found about $page.hit.totalHits results
+            #end
+        </small>
+    </p>
+    #end
+    <div class="results-wrapper">
+        #foreach($hit in $page.searchResults.searchResults)
+        <div class="result">
+            #if( $page.public )
+            <div class="pull-right">
+                #if( $hit.itemType )
+                <span class="label label-info">$hit.itemType</span>
+                #end
+                #if( $hit.category )
+                <span class="label label-primary">$hit.category</span>
+                #end
+                #foreach( $tag in $hit.tags )
+                <span class="label label-info">$tag</span>
+                #end
                     </div>
                 </div>
                 <div class="row">
@@ -29,6 +48,8 @@
                 </div>
             </div>
         </div>
-    </section>
-</body>
-</html>
+    #end
+</div>
+
+
+#end
