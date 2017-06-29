@@ -28,6 +28,39 @@
     font-weight: bold;
 }
 
+.navbar-search {
+    position: relative;
+}
+
 #omni-search-suggestions {
-    background: white;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 15px;
+    z-index: 2;
+    padding: 0;
+    min-width: 200px;
+    background: #fff;
+    max-height: 400px;
+    overflow: auto;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+    margin-top: -1px;
+}
+
+#omni-search-suggestions li.search-suggestion {
+    list-style: none;
+    padding: 0;
+}
+
+#omni-search-suggestions li.search-suggestion a {
+    display: block;
+    padding: 6px 12px;
+}
+
+#omni-search-suggestions li.search-suggestion + li.search-suggestion {
+    border-top: 1px solid #dcdcdc;
+}
+
+#omni-search-suggestions li.search-suggestion.active a {
+    background: #f0f0f0;
 }
