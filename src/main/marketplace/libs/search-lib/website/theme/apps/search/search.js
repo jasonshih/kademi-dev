@@ -101,6 +101,7 @@ function initContentSearch() {
             e.preventDefault();
             
             window.location.href = $(this).find('a').attr('href');
+            searchResults.hide();
         }
     }, '.search-suggestion');
     
