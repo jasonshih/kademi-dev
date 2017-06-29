@@ -53,7 +53,7 @@
                                 var previewImg = previewContainer.find('img');
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
-                                that.element.setAttribute('align', previewImg.attr('align') || 'left');
+                                that.element.setAttribute('align', previewImg.attr('align') || '');
                                 that.element.$.style.width = previewImg.width() + 'px';
                                 that.element.$.style.height = previewImg.height() + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
@@ -74,6 +74,8 @@
                                 var previewImg = previewContainer.find('img');
                                 txtWidth.val(previewImg.width());
                                 txtHeight.val(previewImg.height());
+                                cbbAlign.val('');
+                                addLoremText();
                             },
                             onReady: function () {
                                 previewContainer = modalBody.find('.milton-file-preview');
@@ -91,6 +93,7 @@
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
                                     '    <span class="input-group-addon">Align</span>' +
                                     '    <select class="form-control cbb-align">' +
+                                    '        <option value=""> - None - </option>' +
                                     '        <option value="left">Left</option>' +
                                     '        <option value="right">Right</option>' +
                                     '    </select>' +
@@ -248,6 +251,13 @@
         }
     };
     
+    function addLoremText() {
+        previewContainer.append(
+            '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint aspernatur nostrum eligendi minima sequi sed modi tenetur quis laborum nam sunt maxime similique voluptatibus consequuntur impedit, temporibus in consequatur illo mollitia a qui doloremque suscipit, facere earum. Rerum, hic, ad!</p>' +
+            '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto impedit perferendis enim, laborum. Odio, reprehenderit ad labore tempore non repellendus porro expedita, doloribus temporibus mollitia molestias officiis minima adipisci ut a repudiandae rem totam. Expedita dolorum ipsa placeat cupiditate, temporibus doloremque. Porro, possimus perferendis officia culpa aliquam libero neque aut.</p>'
+        );
+    }
+    
     function openModal(that, instance) {
         var sel = instance.getSelection();
         var element = sel.getStartElement();
@@ -267,11 +277,13 @@
                 var realWidth = this.width;
                 var realHeight = this.height;
                 var ratio = realWidth / realHeight;
+                var align = element.getAttribute('align') || '';
                 
-                previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
+                previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                addLoremText();
                 txtWidth.val(width || realWidth);
                 txtHeight.val(height || realHeight);
-                cbbAlign.val(element.getAttribute('align') || 'left');
+                cbbAlign.val(align);
             });
         } else {
             element = instance.document.createElement('img');
