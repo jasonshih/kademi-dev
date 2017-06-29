@@ -413,13 +413,13 @@ function doPostForm(form, config, event) {
             ajaxOpts.processData = false;
             ajaxOpts.contentType = false;
         }
-		
+
         if (typeof config.onProgress === 'function') {
             flog('[jquery.forms] onProcess');
-            ajaxOpts.xhr = function(){
+            ajaxOpts.xhr = function () {
                 var xhr = new window.XMLHttpRequest();
                 //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
+                xhr.upload.addEventListener("progress", function (evt) {
                     if (evt.lengthComputable) {
                         var percentComplete = (evt.loaded / evt.total) * 100;
                         flog('[jquery.forms] onProcess: ', percentComplete);
@@ -429,7 +429,7 @@ function doPostForm(form, config, event) {
                 return xhr;
             };
         }
-		
+
         ajaxOpts.beforeSend = function (xhr, options) { // et toc !
             options.data = data;
 
@@ -553,8 +553,8 @@ function showFieldMessages(fieldMessages, form) {
                 errorMessage.html(message.message);
             } else {
                 parent.append(
-                    '<p class="help-block error-message">' + message.message + '</p>'
-                );
+                        '<p class="help-block error-message">' + message.message + '</p>'
+                        );
             }
 
             showErrorField(target);
@@ -916,10 +916,10 @@ function checkPhones(form, config) {
             flog('[jquery.forms] Input: ' + val + ', Region Code: ' + config.phoneRegionCode + ', Carrier Code: ' + config.phoneCarrierCode);
             var parsingResult = phoneNumberParser(val, config.phoneRegionCode, config.phoneCarrierCode);
             flog('[jquery.forms] Parsing result', parsingResult);
-            
+
             if (parsingResult.error || (input.hasClass('allow-dodgy-phone') && !parsingResult.isPossibleNumber) || (!input.hasClass('allow-dodgy-phone') && !(parsingResult.isPossibleNumber && parsingResult.isNumberValid))) {
                 flog('[jquery.forms] Phone field is invalid', input);
-    
+
                 errorFields.push(input);
                 error++;
                 input.attr('error-message', config.phoneErrorMessage);
@@ -1120,7 +1120,7 @@ function checkValidEmailAddress(form, config) {
 
     var error = 0;
     var errorFields = [];
-    var pattern = /^(("[\w-\s]+")|([\w-'']+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
+    var pattern = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i;
 
     form.find('#email, input.email').each(function () {
         var input = $(this);
@@ -1626,11 +1626,11 @@ function validatePassword(pw, options) {
         for (i = start; i < pw.length; i++) {
             seq = seq.slice(1) + pw.charAt(i);
             if (
-                lower.indexOf(seq) > -1 ||
-                upper.indexOf(seq) > -1 ||
-                numbers.indexOf(seq) > -1 ||
-                (o.noQwertySequences && qwerty.indexOf(seq) > -1)
-            ) {
+                    lower.indexOf(seq) > -1 ||
+                    upper.indexOf(seq) > -1 ||
+                    numbers.indexOf(seq) > -1 ||
+                    (o.noQwertySequences && qwerty.indexOf(seq) > -1)
+                    ) {
                 return false;
             }
         }
@@ -1774,9 +1774,9 @@ function showValidation(target, text, form) {
     }
 
     showFieldMessages([{
-        field: id,
-        message: text
-    }], form);
+            field: id,
+            message: text
+        }], form);
 }
 
 function checkChars(form, inpClass, reg) {
