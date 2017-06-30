@@ -73,12 +73,13 @@
 
 .payment-option{
     position: relative;
+    display: inline-block;
 }
 
-.payment-option > img{
+.payment-option > img {
     position: relative;
     max-height: 50px;
-    max-width: 100px;
+    width: 100px;
     z-index: 1;
 }
 
