@@ -6,15 +6,11 @@
         dataSerialName: null,
         displayedItems: 10
     };
-    
-    $(function () {
+
+    $(document).ready(function(){
         $('.top-skus-wrapper').each(function () {
             initTopSkus($(this));
         });
-
-        // $('#prodCategories').on('change', function () {
-        //     $(document.body).trigger('topSkusCatQueryChanged', (this.value || '').trim());
-        // })
     });
     
     function initTopSkus(container) {

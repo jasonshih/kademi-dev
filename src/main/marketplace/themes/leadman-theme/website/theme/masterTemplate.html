@@ -48,13 +48,13 @@
         <link rel="stylesheet" href="/theme/overrides.css" />
 
         <!-- Injected CSS sources -->
-        #foreach($groupEntry in $templater.cssSources.entrySet())        
-        <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />        
+        #foreach($groupEntry in $templater.cssSources.entrySet())
+            <link href="/$templater.getCombinedCssPath($groupEntry.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />
         #end
         <!-- End injected CSS sources -->
 
-        
-        <!-- Injected JS sources -->                
+
+        <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
             <script src="/$templater.getCombinedJsPath($groupEntry.value)" type="text/javascript">//</script>
         #end
