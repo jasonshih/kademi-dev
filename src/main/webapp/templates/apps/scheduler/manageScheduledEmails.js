@@ -7,25 +7,54 @@ function initManageEmail() {
     initAddJob();
 }
 
-function initManageScheduledEmail() {
+function initManageScheduledEmail(allGroups) {
     flog('initManageScheduledEmail');
-
+    
     initGroupCheckbox();
     initEnableSwitcher();
     initTitleEditor();
     initFrequencyGroup();
-
+    
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
-
-    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
-
+    
+    var edmEditor = $('.edmeditor');
+    edmEditor.each(function () {
+        var editor = $(this);
+        var loading = $(
+            '<div class="editor-loading">' +
+            '    <span>' +
+            '        <span class="loading-icon">' +
+            '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+            '        </span>' +
+            '        <span class="loading-text">Initializing EDM Editor...</span>' +
+            '    </span>' +
+            '</div>'
+        );
+        
+        editor.before(loading);
+        editor.hide();
+        
+        editor.edmEditor({
+            iframeMode: true,
+            allGroups: allGroups,
+            snippetsUrl: '_components',
+            onReady: function () {
+                loading.remove();
+            }
+        });
+    });
+    
     $(".show-time-details").click(function (e) {
         e.preventDefault();
         $(".time-details").toggle(200);
     });
-
+    
     $("form").forms({
+        onValid: function () {
+            flog(edmEditor.edmEditor('getContent'));
+            edmEditor.val(edmEditor.edmEditor('getContent'));
+        },
         callback: function () {
             $('#textual-description').reloadFragment({
                 whenComplete: function () {
@@ -35,13 +64,13 @@ function initManageScheduledEmail() {
             });
         }
     });
-
+    
     $('body').on('click', '.test', function (e) {
         e.preventDefault();
-
+        
         sendTest();
     });
-
+    
     $('body').on('change', '[name=periodMultiples]', function (e) {
         var inp = $(this);
         var val = inp.val();
@@ -53,21 +82,21 @@ function initManageScheduledEmail() {
 
 function initFrequencyGroup() {
     flog('initFrequencyGroup');
-
+    
     var group = $('#frequency-group');
     var btnText = group.find('.btn .btn-text');
     var lis = group.find('.dropdown-menu li');
     var txt = $('#sFrequency');
-
+    
     lis.each(function () {
         var li = $(this);
-
+        
         li.on('click', function (e) {
             e.preventDefault();
-
+            
             var a = li.find('a');
             var value = a.attr('data-value');
-
+            
             txt.val(value);
             btnText.html(value);
         });
@@ -76,7 +105,7 @@ function initFrequencyGroup() {
 
 function initTitleEditor() {
     flog('initTitleEditor');
-
+    
     $('#emailTitle').editable({
         url: window.location.pathname,
         name: 'title',
@@ -93,7 +122,7 @@ function initTitleEditor() {
         params: function (params) {
             params.title = params.value;
             delete params.name;
-
+            
             return params;
         }
     });
@@ -101,7 +130,7 @@ function initTitleEditor() {
 
 function initEnableSwitcher() {
     flog('initEnableSwitcher');
-
+    
     $('.enabledSwitchContainer input').on('switchChange.bootstrapSwitch', function (e, state) {
         flog('Enabled=' + state);
         $.ajax({
@@ -121,14 +150,14 @@ function initEditEmailPage() {
     addGroupBtn();
     eventForModal();
     initGroupCheckbox();
-
+    
     checkPasswordResetVisible();
-
+    
     jQuery("#passwordReset").change(function () {
         checkPasswordResetVisible();
     });
-
-
+    
+    
     initStatusPolling();
     $("button.send").click(function (e) {
         e.stopPropagation();
@@ -140,7 +169,7 @@ function initEditEmailPage() {
         e.preventDefault();
         previewMail();
     });
-
+    
     flog("test", $(".test"));
     $(".test").click(function () {
         flog("send test");
@@ -243,7 +272,7 @@ function checkCookie() {
         var _type = _sort_type[0];
         var _asc = _sort_type[1] === "asc" ? true : false;
         sortBy(_type, _asc);
-
+        
         switch (_type) {
             case 'date':
                 $("a.SortByDate").attr("rel", _asc ? "desc" : "asc");
@@ -266,13 +295,13 @@ function initController() {
     //Bind event for Delete email
     $("body").on("click", "a.DeleteEmail", function (e) {
         e.preventDefault();
-
+        
         var a = $(this);
         flog("do it", a);
         var href = a.attr("href");
         var tr = a.closest('tr');
         var name = tr.attr('data-name');
-
+        
         confirmDelete(href, name, function () {
             Msg.success('Deleted!');
             tr.remove();
@@ -293,10 +322,10 @@ function initSortableButton() {
     // Bind event for Status sort button
     $("body").on("click", "a.SortByStatus", function (e) {
         e.preventDefault();
-
+        
         var _this = $(this);
         var _rel = _this.attr("rel");
-
+        
         if (_rel === "asc") {
             sortBy("status", true);
             $.cookie("email-sort-type", "status#asc");
@@ -307,14 +336,14 @@ function initSortableButton() {
             _this.attr("rel", "asc");
         }
     });
-
+    
     // Bind event for Name sort button
     $("body").on("click", "a.SortByName", function (e) {
         e.preventDefault();
-
+        
         var _this = $(this);
         var _rel = _this.attr("rel");
-
+        
         if (_rel === "asc") {
             sortBy("name", true);
             $.cookie("email-sort-type", "name#asc");
@@ -325,14 +354,14 @@ function initSortableButton() {
             _this.attr("rel", "asc");
         }
     });
-
+    
     // Bind event for Date sort button
     $("body").on("click", "a.SortByDate", function (e) {
         e.preventDefault();
-
+        
         var _this = $(this);
         var _rel = _this.attr("rel");
-
+        
         if (_rel === "asc") {
             sortBy("date", true);
             $.cookie("email-sort-type", "date#asc");
@@ -353,24 +382,24 @@ function sortBy(type, asc) {
             array = [],
             key,
             l;
-
+        
         for (key in obj) {
             if (obj.hasOwnProperty(key)) {
                 array.push(key);
             }
         }
-
+        
         array.sort();
         if (!asc) {
             array.reverse();
         }
-
+        
         for (key = 0, l = array.length; key < l; key++) {
             sorted[array[key]] = obj[array[key]];
         }
         return sorted;
     };
-
+    
     switch (type) {
         case 'date':
             for (var i = 0, _item; _item = list[i]; i++) {
@@ -397,15 +426,15 @@ function sortBy(type, asc) {
             }
             break;
     }
-
+    
     _list = sortObject(_list);
-
+    
     var _emailList = $("#manageEmail .Content ul");
     _emailList.html("");
     for (var i in _list) {
         _emailList.append(_list[i]);
     }
-
+    
     stripList();
 }
 
@@ -413,13 +442,13 @@ function sortBy(type, asc) {
 function addGroupBtn() {
     $('.AddGroup').on('click', function (e) {
         e.preventDefault();
-
+        
         var _group = [];
-
+        
         $("div.Recipient .GroupList button").each(function () {
             _group.push(this.getAttribute("data-group"));
         });
-
+        
         showGroupModal(_group);
     });
 }
@@ -431,12 +460,12 @@ function showGroupModal(group) {
 
 function eventForModal() {
     var _modal = $("#modalGroup");
-
+    
     // Bind close function to Close button
     _modal.find("a.Close").click(function (e) {
         e.preventDefault();
     });
-
+    
 }
 
 function validateEmail() {
@@ -472,7 +501,7 @@ function validateEmail() {
             return false;
         }
     }
-
+    
     return true;
 }
 
@@ -568,7 +597,7 @@ function displayStatus(data) {
         $("div.status div.SendProgress").show();
         $("div.status div.Percent").css("width", data.percent + "%");
         var txtProgress = data.successful.length + " sent ok, ";
-
+        
         if (data.failed) {
             txtProgress += data.failed.length + " failed, ";
         }
@@ -579,7 +608,7 @@ function displayStatus(data) {
             txtProgress += data.totalToSend + " in total to send";
         }
         $("div.status div.stats").text(txtProgress);
-
+        
         $.each(data.successful, function (i, emailId) {
             var tr = tbody.find("#" + emailId);
             flog("remove", emailId, tr)

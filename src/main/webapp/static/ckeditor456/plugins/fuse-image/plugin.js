@@ -1,4 +1,12 @@
 (function (CKEDITOR) {
+    var modal;
+    var modalBody;
+    var txtWidth;
+    var txtHeight;
+    var cbbAlign;
+    var previewContainer;
+    
+    
     CKEDITOR.plugins.add('fuse-image', {
         init: function (editor) {
             var that = this;
@@ -7,7 +15,7 @@
             // ===========================================================
             // Init modal for plugin
             // ===========================================================
-            var modal = $('#modal-fuse-image');
+            modal = $('#modal-fuse-image');
             if (modal.length === 0) {
                 $(document.body).append(
                     '<div id="modal-fuse-image" class="modal fade" aria-hidden="true" tabindex="-1">' +
@@ -25,10 +33,7 @@
                 modal = $('#modal-fuse-image');
             }
             
-            var modalBody = modal.find('.modal-body');
-            var txtWidth;
-            var txtHeight;
-            var previewContainer;
+            modalBody = modal.find('.modal-body');
             
             // ===========================================================
             // Add imageDialog for plugin
@@ -36,6 +41,8 @@
             editor.addCommand('imageDialog', new CKEDITOR.command(editor, {
                 exec: function (instance) {
                     if (!modalBody.data('mselectOptions')) {
+                        flog('[fuse-image] Init mselect modal');
+                        
                         var options = {
                             contentTypes: ['image'],
                             useModal: false,
@@ -46,6 +53,7 @@
                                 var previewImg = previewContainer.find('img');
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
+                                that.element.setAttribute('align', previewImg.attr('align') || '');
                                 that.element.$.style.width = previewImg.width() + 'px';
                                 that.element.$.style.height = previewImg.height() + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
@@ -66,6 +74,8 @@
                                 var previewImg = previewContainer.find('img');
                                 txtWidth.val(previewImg.width());
                                 txtHeight.val(previewImg.height());
+                                cbbAlign.val('');
+                                addLoremText();
                             },
                             onReady: function () {
                                 previewContainer = modalBody.find('.milton-file-preview');
@@ -79,11 +89,20 @@
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
                                     '    <span class="input-group-addon">Height</span>' +
                                     '    <input type="text" class="form-control txt-height" placeholder="Image width" />' +
+                                    '</div>' +
+                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
+                                    '    <span class="input-group-addon">Align</span>' +
+                                    '    <select class="form-control cbb-align">' +
+                                    '        <option value=""> - None - </option>' +
+                                    '        <option value="left">Left</option>' +
+                                    '        <option value="right">Right</option>' +
+                                    '    </select>' +
                                     '</div>'
                                 );
                                 
                                 txtWidth = modalBody.find('.txt-width');
                                 txtHeight = modalBody.find('.txt-height');
+                                cbbAlign = modalBody.find('.cbb-align');
                                 var updateImageSize = function (width, height) {
                                     previewContainer.find('img').css({
                                         width: width,
@@ -130,6 +149,12 @@
                                         }
                                     }, 200);
                                 });
+                                
+                                cbbAlign.on('change', function () {
+                                    previewContainer.find('img').attr('align', this.value);
+                                });
+                                
+                                openModal(that, instance);
                             }
                         };
                         
@@ -142,40 +167,9 @@
                         }
                         
                         modalBody.mselect(options);
-                    }
-                    
-                    var sel = instance.getSelection();
-                    var element = sel.getStartElement();
-                    if (element) {
-                        element = element.getAscendant('img', true);
-                    }
-                    
-                    if (CKEDITOR.plugins.fuseImage.isImage(element)) {
-                        that.insertMode = false;
-                        var hash = element.getAttribute('data-hash');
-                        var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
-                        var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
-                        var src = element.getAttribute('src');
-                        modalBody.mselect('selectFile', hash);
-                        
-                        $('<img />').attr('src', src).load(function () {
-                            var realWidth = this.width;
-                            var realHeight = this.height;
-                            var ratio = realWidth / realHeight;
-                            
-                            previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" />');
-                            txtWidth.val(width || realWidth);
-                            txtHeight.val(height || realHeight);
-                        });
                     } else {
-                        element = instance.document.createElement('img');
-                        that.insertMode = true;
-                        // modalBody.mselect('selectFile', '');
+                        openModal(that, instance);
                     }
-                    
-                    that.element = element;
-                    modal.data('ckeditorInstance', instance);
-                    modal.modal('show');
                 }
             }));
             
@@ -255,6 +249,51 @@
             
             return element && element.getName() === 'img' && !element.data('cke-realelement') && !element.data('kaudio') && !element.hasClass('video-jw');
         }
+    };
+    
+    function addLoremText() {
+        previewContainer.append(
+            '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint aspernatur nostrum eligendi minima sequi sed modi tenetur quis laborum nam sunt maxime similique voluptatibus consequuntur impedit, temporibus in consequatur illo mollitia a qui doloremque suscipit, facere earum. Rerum, hic, ad!</p>' +
+            '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto impedit perferendis enim, laborum. Odio, reprehenderit ad labore tempore non repellendus porro expedita, doloribus temporibus mollitia molestias officiis minima adipisci ut a repudiandae rem totam. Expedita dolorum ipsa placeat cupiditate, temporibus doloremque. Porro, possimus perferendis officia culpa aliquam libero neque aut.</p>'
+        );
+    }
+    
+    function openModal(that, instance) {
+        var sel = instance.getSelection();
+        var element = sel.getStartElement();
+        if (element) {
+            element = element.getAscendant('img', true);
+        }
+        
+        if (CKEDITOR.plugins.fuseImage.isImage(element)) {
+            that.insertMode = false;
+            var hash = element.getAttribute('data-hash');
+            var width = (element.$.style.width || '').replace('px', '') || element.getAttribute('width');
+            var height = (element.$.style.height || '').replace('px', '') || element.getAttribute('height');
+            var src = element.getAttribute('src');
+            modalBody.mselect('selectFile', hash);
+            
+            $('<img />').attr('src', src).load(function () {
+                var realWidth = this.width;
+                var realHeight = this.height;
+                var ratio = realWidth / realHeight;
+                var align = element.getAttribute('align') || '';
+                
+                previewContainer.html('<img src="' + src + '" data-hash="' + hash + '" data-real-width="' + realWidth + '" data-real-height="' + realHeight + '" data-ratio="' + ratio + '" style="width: ' + width + 'px; height: ' + height + 'px;" align="' + align + '" />');
+                addLoremText();
+                txtWidth.val(width || realWidth);
+                txtHeight.val(height || realHeight);
+                cbbAlign.val(align);
+            });
+        } else {
+            element = instance.document.createElement('img');
+            that.insertMode = true;
+            // modalBody.mselect('selectFile', '');
+        }
+        
+        that.element = element;
+        modal.data('ckeditorInstance', instance);
+        modal.modal('show');
     };
     
 })(CKEDITOR);

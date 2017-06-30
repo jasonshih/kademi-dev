@@ -402,6 +402,7 @@ function initModuleEditing(courseUrl) {
     var cont = $('section.Content');
     $('div.modules-wrapper ul').sortable({
         items: '> li',
+        axis: 'y',
         sort: function () {
             if (cont.hasClass('ajax-loading')) {
                 return false;
@@ -799,6 +800,7 @@ function saveCourses() {
 function orderCourseModuleItem() {
     $('div.courses-wrapper > ul.courses-list').sortable({
         items: '> li.course',
+        axis: 'y',
         sort: function () {
             $(this).removeClass('ui-state-default');
         },

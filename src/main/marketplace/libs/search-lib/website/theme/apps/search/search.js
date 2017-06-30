@@ -1,96 +1,135 @@
-function initContentSearch() {
-    flog("initContentSearch");
-
-    var txtKeyword = $("input[name=q][data-type=Content]");
-    var searchResults = $('#search-results');
-    txtKeyword.on({
-        keyup: function () {
-            var query = $(this).val();
-            typewatch(function () {
-                // Load fragment
-                flog("do search on keyup event", searchResults);
-                searchResults.load('contentSearch?q=' + encodeURIComponent(query.trim()) + ' #search-results > *');
-            }, 500);
-        },
-        input: function () {
-            var query = $(this).val() || '';
-            if (query.trim() === '') {
-                flog("Query is empty. Clear search result panel!", searchResults);
-                searchResults.html('');
+;(function ($) {
+    $(function () {
+        initContentSearch();
+    });
+    
+    function doContentSearch() {
+        var searchResults = $('#omni-search-suggestions');
+        
+        var txtKeyword = $('input[name=omni]');
+        var query = (txtKeyword.val() || '').trim();
+        if (query === '') {
+            flog('Query is empty. Clear search result panel!', searchResults);
+            searchResults.html('').hide();
+        } else {
+            // Load fragment
+            try {
+                var href = 'contentSearch';
+                $.ajax({
+                    url: href,
+                    type: 'GET',
+                    data: {
+                        omni: query
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        flog('complete');
+                        searchResults.html(data).show();
+                    }
+                });
+            } catch (e) {
+                flog('ERROR: ' + e);
             }
         }
-    });
-
-    txtKeyword.keyup();
-
-    txtKeyword.closest('form').on('submit', function (e) {
-        var keyword = txtKeyword.val().trim();
-
-        if (!keyword) {
-            e.preventDefault();
-        }
-    });
-}
-
-function initReindexForms() {
-    $(".manage-search form").forms({
-        confirmMessage: "Processing, Please Wait...",
-        callback: function (resp) {
-            flog("The contents of current repository have been re-indexed", resp);
-            // Should be disabled the Re-index button while processing, just enable after re-index thread was started
-            $(".btn-reindex").prop('disabled', true);
-
-            // Load state of re-indexing process
-            setTimeout(function () {
-                reIndexState()
-            }, 1500);
-        }
-    });
-}
-
-function reIndexState() {
-    $.ajax({
-        url: location.href + "../manageSearchStatus",
-        success: function (res) {
-            flog("Response", res);
-            var resp = $.parseJSON(res);
-            var data = resp.data, status = resp.status, message = resp.messages, state = message[0];
-            if (state != 'STOPPED') {
-                flog("Re-indexing state: " + data + " resources (htmls, blogs, products...) have been processed");
-                $(".pageMessage").css({"display": "block"});
-                $(".pageMessage").empty();
-                $(".pageMessage").html("<b>Re-Indexing Status: </b><i class=\"badge badge-info\">" + data + "</i> files have been processed");
-            }
-
-            var lblReindex = $(".lbl-reindex-action");
-            if (state == 'PENDING' || state == 'PROCESSING') {
-                if (state == 'PROCESSING') {
-                    $(".btn-reindex").prop('disabled', false);
-                    lblReindex.empty();
-                    lblReindex.html("Stop re-indexing process");
+    }
+    
+    function initContentSearch() {
+        flog('initContentSearch');
+        
+        var KEYMAP = {
+            ENTER: 13,
+            ESC: 27,
+            UP: 38,
+            DOWN: 40
+        };
+        
+        var txtKeyword = $('input[name=omni]');
+        var searchResults = $('#omni-search-suggestions');
+        
+        txtKeyword.on({
+            keydown: function (e) {
+                switch (e.keyCode) {
+                    case KEYMAP.ESC:
+                        searchResults.hide();
+                        break;
+                    
+                    case KEYMAP.UP:
+                    case KEYMAP.DOWN:
+                        e.preventDefault();
+                        
+                        var suggestions = searchResults.find('.search-suggestion');
+                        var suggestionsLength = suggestions.length;
+                        var actived = suggestions.filter('.active');
+                        var index;
+                        
+                        if (actived.length === 0) {
+                            index = e.keyCode === KEYMAP.UP ? suggestionsLength - 1 : 0;
+                        } else {
+                            var activeIndex = actived.index();
+                            if (e.keyCode === KEYMAP.UP) {
+                                index = activeIndex === 0 ? suggestionsLength - 1 : activeIndex - 1;
+                            } else {
+                                index = activeIndex === suggestionsLength - 1 ? 0 : activeIndex + 1;
+                            }
+                        }
+                        actived.removeClass('active');
+                        suggestions.eq(index).addClass('active');
+                        
+                        break;
+                    
+                    case KEYMAP.ENTER:
+                        e.preventDefault();
+                        
+                        if (searchResults.is(':visible')) {
+                            searchResults.find('.search-suggestion.active a').trigger('click');
+                        } else {
+                            doContentSearch();
+                        }
+                        
+                        break;
+                    
+                    default:
+                    // Do nothing
                 }
-                // Continually to check running jobs status every 500 milliseconds
+            },
+            input: function () {
+                typewatch(function () {
+                    doContentSearch();
+                }, 200);
+            },
+            blur: function () {
                 setTimeout(function () {
-                    reIndexState()
-                }, 500);
-            } else if (state == 'STOPPED' || state == 'COMPLETED' || !status) {
-                if (state == 'STOPPED') {
-                    flog("RE-INDEXING PROCESS HAVE BEEN STOPPED BY SOMEONE!!!");
-                    $(".btn-reindex").prop('disabled', false);
-                }
-
-                // Throw exception message
-                if (!status) {
-                    Msg.error(state);
-                }
-                lblReindex.empty();
-                lblReindex.html("Re-index");
-
-                setTimeout(function () {
-                    // Should be closed message after 5 minutes
-                    $(".pageMessage").css({"display": "none"});
-                }, 5000);
+                    searchResults.css('display', 'none');
+                }, 250);
+            },
+            focus: function () {
+                doContentSearch();
             }
-        }
-    });
-}
+        });
+        
+        searchResults.on({
+            mouseenter: function () {
+                searchResults.find('.search-suggestion.active').removeClass('active');
+                $(this).addClass('active');
+            },
+            mouseleave: function () {
+                $(this).removeClass('active');
+            },
+            click: function (e) {
+                e.preventDefault();
+                
+                window.location.href = $(this).find('a').attr('href');
+                searchResults.hide();
+            }
+        }, '.search-suggestion');
+        
+        txtKeyword.closest('form').on('submit', function (e) {
+            var keyword = txtKeyword.val().trim();
+            
+            if (!keyword) {
+                e.preventDefault();
+            }
+        });
+    }
+    
+})(jQuery);

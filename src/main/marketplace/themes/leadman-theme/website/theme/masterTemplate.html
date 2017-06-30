@@ -41,9 +41,6 @@
         <link rel="stylesheet" href="/static/font-awesome/4.4.0/css/font-awesome.min.css" />
         <link href="/theme/apps/leadman/quickLead.css" rel="stylesheet" type="text/css" />
 
-        <!-- Theme extensions -->
-        <script src="/theme/scripts/vendor/modernizr.js"></script>
-
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$!lessSource.key" />
         #end

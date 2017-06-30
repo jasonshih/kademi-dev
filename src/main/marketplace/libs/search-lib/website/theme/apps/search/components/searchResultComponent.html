@@ -1,5 +1,6 @@
-#if($page)
 <div id="search-results">
+    #if($page)  
+    
     #if ($page.searchResults.totalHits)
     <p class="totals text-muted">
         <small>
@@ -17,6 +18,7 @@
         </small>
     </p>
     #end
+    
     <div class="results-wrapper">
         #foreach($hit in $page.searchResults.searchResults)
         <div class="result">
@@ -49,6 +51,7 @@
     #set($size = $page.hit.size)
     #set($totalHits = $page.hit.totalHits)
     #set($pageNumber = $totalHits / $size)
+    
     #if ($totalHits == $pageNumber * $size)
     #set($pageNumber = $pageNumber - 1)
     #end
@@ -74,14 +77,8 @@
         </ul>
     </div>
     #end
-</div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        initContentSearch();
-    });
-</script>
-#else
-<div id="fake-search-results">
+    
+    #else
     <p class="totals text-muted">
         <small>
             Found a few results
@@ -123,5 +120,6 @@
             </li>
         </ul>
     </div>
+    #end
 </div>
-#end
+

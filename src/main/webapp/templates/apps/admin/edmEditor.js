@@ -10,6 +10,13 @@ function initEdmEditorPage(options) {
         basePath = options.pagePath;
     }
     
+    // Stop prevent reloading page or redirecting to other pages
+    $(document.body).on('click', '.keditor-component-content a', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        e.stopPropagation();
+    });
+    
     $('#edm-editor').edmEditor({
         snippetsUrl: options.snippetsUrl,
         snippetsHandlersUrl: options.snippetsHandlersUrl,

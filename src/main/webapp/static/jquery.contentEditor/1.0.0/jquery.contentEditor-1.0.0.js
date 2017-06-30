@@ -584,8 +584,11 @@
             var itemId = menuItem.attr('data-id');
             var itemHref = menuItem.attr('data-href');
             var itemText = menuItem.children('.menuItemText').text().trim();
+            var cssClass = menuItem.children('.menuItemIcon').find('i').attr('class');
             var isCustom = itemId.startsWith('menu-custom-'); // different format to native menu items
             var hidden = menuItem.attr('data-hidden');
+            
+            flog();
             
             list.push({
                 id: itemId,
@@ -594,7 +597,8 @@
                 ordering: i,
                 parentId: parentId,
                 custom: isCustom,
-                hidden: hidden
+                hidden: hidden,
+                cssClass: cssClass
             });
             
             contentEditor.toMenuData(li.children('.menuList'), list);
@@ -616,6 +620,7 @@
         itemHtml += '                <span class="fa fa-pencil small"></span>';
         itemHtml += '            </a>';
         itemHtml += '        </span>';
+        itemHtml += '        <span class="menuItemIcon"><i class="' + (menuItem.cssClass || '') + '"></i></span>';
         itemHtml += '        <span class="menuItemText">' + (menuItem.text || '') + '</span>';
         itemHtml += '    </div>';
         itemHtml += '    <ol class="menuList" data-id="' + menuItem.id + '">';
@@ -647,6 +652,18 @@
         });
         menuItemEditor.find('[name=hidden]').append(groupsStr);
         
+        $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                menuItemEditor.find('.btn-menu-icon').iconpicker({
+                    iconset: 'fontawesome',
+                    cols: 10,
+                    rows: 4,
+                    placement: 'left'
+                });
+            });
+        });
+        
         form.on('click', '.btnAddMenuItem', function (e) {
             e.preventDefault();
             
@@ -673,6 +690,7 @@
                 '               <span class="fa fa-pencil small"></span>' +
                 '           </a>' +
                 '       </span>' +
+                '       <span class="menuItemIcon"><i class=""></i></span>' +
                 '       <span class="menuItemText">Enter text</span>' +
                 '   </div>' +
                 '   <ol class="menuList" data-id="' + newId + '"></ol>' +
@@ -701,11 +719,19 @@
             
             var id = menuItem.attr('data-id');
             var text = menuItem.find('.menuItemText').text().trim();
+            var cssClass = menuItem.find('.menuItemIcon i').attr('class') || '';
+            cssClass = cssClass.replace('fa', '').trim();
             var href = menuItem.attr('data-href');
             var hidden = menuItem.attr('data-hidden') || 'false';
             
             menuItemEditor.find('input[name=href]').val(href);
             menuItemEditor.find('input[name=text]').val(text);
+            var btnIcon = menuItemEditor.find('.btn-menu-icon');
+            btnIcon.iconpicker('setIcon', cssClass || 'fa-');
+            if (!cssClass) {
+                btnIcon.find('i').attr('class', '');
+                btnIcon.find('input').val('');
+            }
             menuItemEditor.find('[name=hidden]').val(hidden)
             
             var deleteBtn = menuItemEditor.find('.editMenuItemDelete');
@@ -726,10 +752,12 @@
             var text = menuItemEditor.find('input[name=text]').val();
             text = text.trim();
             var hidden = menuItemEditor.find('[name=hidden]').val();
+            var icon = menuItemEditor.find('.btn-menu-icon i').attr('class') || '';
             
             editItem.attr('data-href', href);
             editItem.attr('data-hidden', hidden);
             editItem.find('.menuItemText').text(text);
+            editItem.find('.menuItemIcon i').attr('class', icon);
             editItem = null;
             
             menuItemEditor.fhide();
