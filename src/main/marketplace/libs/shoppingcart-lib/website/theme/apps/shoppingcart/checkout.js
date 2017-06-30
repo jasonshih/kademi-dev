@@ -9,7 +9,7 @@ function initCheckout() {
     initRemoveItem();
     initCheckoutPanels();
     initPromoCodes();
-
+    initOrgAddress();
     $('.btn-decrease-quantity, .btn-increase-quantity, .txt-quantity, .btn-remove-item').prop('disabled', false);
 }
 
@@ -345,3 +345,12 @@ function initCheckoutPanels() {
     });
 }
 
+function initOrgAddress() {
+    $(document).on('change', '#selectedOrgAddress', function () {
+        var selectedOrg = this.value;
+        if (selectedOrg !== $.cookie('selectedOrg')){
+            $.cookie('selectedOrg', selectedOrg);
+            $('#cart-form').reloadFragment();
+        }
+    });
+}

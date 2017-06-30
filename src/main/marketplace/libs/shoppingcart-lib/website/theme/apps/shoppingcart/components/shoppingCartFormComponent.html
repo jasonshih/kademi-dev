@@ -1,3 +1,54 @@
+#set( $orgCookie = $request.getCookie("selectedOrg") )
+#if( $orgCookie )
+#set( $selectedOrgId = $orgCookie.value )
+#end
+
+#if ($useOrgAddress && $useOrgAddress == 'true')
+    #set ($mbs = $userResource.primaryMemberships)
+    #set ($orgs = $formatter.newArrayList())
+    #set ($orgIds = $formatter.newArrayList())
+    #if ($orgType && $orgType != '')
+        #set ($mbs = $mbs.filterByOrgType($orgType))
+    #end
+    #foreach($m in $mbs)
+        #if (!$orgIds.contains($m.org.orgId))
+        #call($orgIds.add($m.org.orgId))
+        #call($orgs.add($m.org))
+        #end
+    #end
+
+    #if ($orgs.size() == 1)
+        #set ($phone = $orgs[0].phone)
+        #set ($addressLine1 = $orgs[0].address)
+        #set ($addressLine2 = $orgs[0].addressLine2)
+        #set ($postcode = $orgs[0].postcode)
+        #set ($addressState = $orgs[0].addressState)
+    #else
+        #if ($selectedOrgId)
+            #set ($selectedMbs = $mbs.filterByOrg($selectedOrgId))
+            #set ($selectedOrg = $selectedMbs.first().org)
+        #else
+            #set ($selectedOrg = $mbs.first().org)
+        #end
+
+        #if ($selectedOrg)
+            #set ($phone = $selectedOrg.phone)
+            #set ($addressLine1 = $selectedOrg.address)
+            #set ($addressLine2 = $selectedOrg.addressLine2)
+            #set ($postcode = $selectedOrg.postcode)
+            #set ($addressState = $selectedOrg.addressState)
+        #end
+    #end
+
+#else
+    #set ($phone = $userResource.phone)
+#end
+
+#macro (call $i)
+#if ($i) #end
+#end
+
+
 <form id="cart-form" action="$page.href" method="post">
     <div class="">
         <h3>Shipping Details</h3>
@@ -13,28 +64,45 @@
                         <input type="text" name="surName" class="form-control required" value="$!user.surName" placeholder="Last Name" required="required" />
                     </div>
                 </div>
+                #if ($useOrgAddress && $useOrgAddress == 'true' && $orgs && $orgs.size() > 1)
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <select name="selectedOrg" id="selectedOrgAddress" class="form-control">
+                            <option value="">Select an org</option>
+                            #foreach($o in $orgs)
+                                #if ($o.orgId == $selectedOrg.orgId)
+                                    #set ($selected = 'selected')
+                                #else
+                                    #set ($selected = '')
+                                #end
+                                <option $!selected value="$o.orgId">$o.title</option>
+                            #end
+                        </select>
+                    </div>
+                </div>
+                #end
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="phone" class="form-control" value="$!user.phone" placeholder="Phone number" required="required" />
+                        <input type="text" name="phone" class="form-control" value="$!phone" placeholder="Phone number" required="required" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="addressLine1" class="form-control required" required="required" value="" placeholder="Address 1" />
+                        <input type="text" name="addressLine1" class="form-control required" required="required" value="$!addressLine1" placeholder="Address 1" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="addressLine2" class="form-control" value="" placeholder="Address 2 (Optional)" />
+                        <input type="text" name="addressLine2" class="form-control" value="$!addressLine2" placeholder="Address 2 (Optional)" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <input type="text" name="postcode" class="form-control required" required="required" value="" placeholder="Zip/Postcode" />
+                        <input type="text" name="postcode" class="form-control required" required="required" value="$!postcode" placeholder="Zip/Postcode" />
                         <div class="visible-xs" style="height: 15px"></div>
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" name="addressState" class="form-control required" required="required" value="" placeholder="State/Province" />
+                        <input type="text" name="addressState" class="form-control required" required="required" value="$!addressState" placeholder="State/Province" />
                     </div>
                 </div>
 
