@@ -34,6 +34,14 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('.select-align').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-align', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                     form.find('.facebook[type=checkbox]').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -104,8 +112,9 @@
             flog('showSettingForm "socialLinks" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-style').val(dataAttributes['data-style'] || '');
+            form.find('.select-style').val(dataAttributes['data-style'] || 'circle-animated');
             form.find('.select-target').val(dataAttributes['data-target'] || '');
+            form.find('.select-align').val(dataAttributes['data-align'] || '');
             form.find('.facebook[type=checkbox]').prop('checked', dataAttributes['data-facebook'] != 'false');
             form.find('.twitter[type=checkbox]').prop('checked', dataAttributes['data-twitter'] != 'false');
             form.find('.google[type=checkbox]').prop('checked', dataAttributes['data-google'] != 'false');

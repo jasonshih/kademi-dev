@@ -1,4 +1,5 @@
 #if (!$style || $style == "" || $style == "circle-animated")
+<div class="$!align">
 <ul class="socialLinks socialCircle">
     #if ($facebook != "false")
     <li><a target="$!target" href="$!facebookUrl" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
@@ -13,7 +14,9 @@
     <li><a target="$!target" href="$!linkedinUrl" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
     #end
 </ul>
+</div>
 #elseif ($style == "square")
+<div class="$!align">
 <ul class="socialLinks socialSquare">
     #if ($facebook != "false")
     <li><a target="$!target" href="$!facebookUrl" class="icoFacebook" title="Facebook"><i class="fa fa-facebook-square fa-4x"></i></a></li>
@@ -28,4 +31,5 @@
     <li><a target="$!target" href="$!linkedinUrl" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin-square fa-4x"></i></a></li>
     #end
 </ul>
+</div>
 #end
