@@ -1,4 +1,4 @@
-<div class="lead-contacts-wrap" id="searchResults">
+<div class="lead-contacts-wrap lead-profiles-table-component" id="searchResults" data-task-name="$page.taskName">
     #set($searchResults = $page.searchResults)
     #if( $searchResults.isEmpty() )
     <p class="lead">No results matched the search</p>
@@ -72,14 +72,3 @@
     </ul>
     #end
 </div> <!-- End results table -->
-<script type="text/javascript">
-    $(function () {
-        initSearchLead();
-        initUploads();
-        doCheckProcessStatus();
-    });
-    function doCheckProcessStatus() {
-        checkProcessStatus("$page.taskName");
-    }
-
-</script>

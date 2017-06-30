@@ -2,41 +2,44 @@
 #set($firstPo = false)
 #set($paymentAps = $page.paymentProviders)
 #foreach($pApp in $paymentAps)
-#set($f1 = $foreach)
-#foreach($po in $pApp.paymentOptions)
-#if($f1.first && $foreach.first)
-#set($firstApp = $pApp)
-#set($firstPo = $po)
-#end
-#end
+    #set($f1 = $foreach)
+    #foreach($po in $pApp.paymentOptions)
+        #if($f1.first && $foreach.first)
+            #set($firstApp = $pApp)
+            #set($firstPo = $po)
+        #end
+    #end
 #end
 <form id="cart-form" method="POST" action="/storeCheckout">
     <!-- TODO: Currency should be configurable -->
     <input type="hidden" name="currencyCode" value="AUD" />
     <div class="panel panel-default">
         <div class="panel-heading">
-            <div class="panel-title"><small>Billing & Shipping</small></div>
+            <div class="panel-title">
+                <small>Billing & Shipping</small>
+            </div>
         </div>
         <div class="panel-body">
             <div class="form-horizontal">
                 #if(!$user)
-                <div class="form-group">
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-info text-uppercase btn-block btn-login" data-toggle="modal" data-target="#loginRegisterModal">Login for faster checkout <i class="fa fa-lock pull-right"></i></button>
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-info text-uppercase btn-block btn-login" data-toggle="modal" data-target="#loginRegisterModal">Login for faster checkout
+                                <i class="fa fa-lock pull-right"></i></button>
+                        </div>
                     </div>
-                </div>
                 #end
 
                 #foreach($pApp in $paymentAps)
-                #if($foreach.first)
+                    #if($foreach.first)
+                    #end
+                    <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
+                        $pApp.paymentForm
+                    </div>
                 #end
-                <div id="pf-${pApp.instanceId}" class="payment-form" #if(!$foreach.first) style="display:none;" #end>
-                    $pApp.paymentForm
-                </div>
-                #end
-                <input type="hidden" name="paymentProvider" value="$firstApp.instanceId"/>
-                <input type="hidden" name="paymentOption" value="$firstPo.id"/>
-                <input type="hidden" name="processCart" value="processCart"/>
+                <input type="hidden" name="paymentProvider" value="$firstApp.instanceId" />
+                <input type="hidden" name="paymentOption" value="$firstPo.id" />
+                <input type="hidden" name="processCart" value="processCart" />
                 <div class="form-group">
                     <div class="col-md-12">
                         <!--<div class="checkbox">

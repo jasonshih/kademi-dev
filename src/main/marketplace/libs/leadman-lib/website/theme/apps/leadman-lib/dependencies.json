@@ -84,6 +84,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/d3/d3.v3.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"
             }
         },
@@ -138,9 +144,51 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/leadman/leadProfileCoverComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadProfilesTableComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadQuotesComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadsPageTableComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadTaskModalContentComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/leadman/leadsDash.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/leadman/leadTasks.js"
             }
-        }, 
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery-map-donutchart/1.0.0/js/jquery.map-donutchart.js"
+            }
+        },
         {
             "css": {
                 "cssMedia": "all",
@@ -193,6 +241,18 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/leadman/analytics.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery-map-donutchart/1.0.0/css/main.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery-map-donutchart/1.0.0/css/animations.css"
             }
         },
         {

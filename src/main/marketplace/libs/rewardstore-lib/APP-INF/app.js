@@ -9,19 +9,19 @@ controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "e
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
 
 controllerMappings
-    .websitePortletController()
-    .portletSection('shoppingCart')
-    .templatePath('/theme/apps/rewardstore/pointsBalancePortlet.html')
-    .method('getPointsBalance')
-    .enabled(true)
-    .build();
+        .websitePortletController()
+        .portletSection('shoppingCart')
+        .templatePath('/theme/apps/rewardstore/pointsBalancePortlet.html')
+        .method('getPointsBalance')
+        .enabled(true)
+        .build();
 
 function getPointsBalance() {
     log.info('getPointsBalance');
 }
 function findProducts(query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc) {
     log.info('findProducts | query {} | category {} | rewardStoreId {} | from {} | max {} | priceStart {} | priceEnd {} | sort {} | asc {}', query, category, rewardStoreId, from, max, priceStart, priceEnd, sort, asc);
-    if (category == false){
+    if (category == false) {
         category = null;
     }
     if (isBlank(sort)) {
@@ -43,13 +43,12 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
         "size": max,
         "query": {
             "bool": {
-                "must": [
-
-                ]
+                "must": [],
+                "should": []
             }
         },
         "min_score": 0.05,
-        "fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
+        "stored_fields": ["title", "title_raw", "content", "product", "productCode", "tags", "itemType", "primaryImageId", "finalPoints", "path", "images.hash"],
         "sort": {},
         "highlight": {
             "fields": {
@@ -60,7 +59,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
             }
         }
     };
-    if (rewardStoreId && !isNaN(rewardStoreId)){
+    if (rewardStoreId && !isNaN(rewardStoreId)) {
         searchConfig.query.bool.must.push({
             "term": {
                 "rewardStoreId": rewardStoreId
@@ -80,13 +79,16 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
     searchConfig.sort[sort] = asc;
 
     if (query !== null && typeof query !== 'undefined' && query.trim().length > 0) {
-        var q = {
-            "multi_match": {
-                "query": query,
-                "fields": ["title", "content"]
-            }
-        };
-        searchConfig.query.bool.must.push(q);
+        var searchFields = ["title", "content"];
+        for (var i in searchFields) {
+            var q = '{'
+                    + '    "prefix": {'
+                    + '        "' + searchFields[i] + '": "' + query + '"'
+                    + '    }'
+                    + '}';
+            searchConfig.query.bool.should.push(JSON.parse(q));
+            searchConfig.query.bool.minimum_should_match = 1;
+        }
     }
 
     if (isNotBlank(priceStart) && isNotNull(priceStart) && +priceStart > 0) {
@@ -121,7 +123,7 @@ function getRecentlyViewedRewardProducts(page, size) {
         return list;
     }
 
-    if (!size){
+    if (!size) {
         size = 20;
     }
 
@@ -172,7 +174,7 @@ function getRecentlyViewedRewardProducts(page, size) {
             }
         }
     };
-    log.info ("recentlyViewedRewardProductsComponent {}", JSON.stringify(searchConfig));
+    log.info("recentlyViewedRewardProductsComponent {}", JSON.stringify(searchConfig));
     var sm = applications.search.searchManager;
     var result = sm.search(JSON.stringify(searchConfig), 'log');
 
@@ -186,7 +188,7 @@ function getRecentlyViewedRewardProducts(page, size) {
             var b = buckets[a];
             var url = b.key;
             var item = page.find(url);
-            if (item && item.is('rewardProduct') && list.size() < size ) {
+            if (item && item.is('rewardProduct') && list.size() < size) {
                 list.add(item);
             }
         }
