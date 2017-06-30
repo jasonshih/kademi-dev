@@ -597,7 +597,7 @@
             '<input type="hidden" value="" name="w" />' +
             '<input type="hidden" value="" name="h" />' +
             '<input type="hidden" value="" name="url" />' +
-            '<div class="upload-zone"></div>' +
+            '<div class="upload-zone panel panel-default"></div>' +
             '<div class="crop-zone hide clearfix">' +
             config.cropHint +
             '<div class="image-wrapper"><img class="image-crop" src="" width="100%" /></div>' +
