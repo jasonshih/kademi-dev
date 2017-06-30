@@ -1,1 +1,23 @@
-No Settings
+<form class="form-horizontal">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" class="useOrgAddress"> <b>Use organisation address</b>
+        </label>
+    </div>
+    <br>
+    <div class="form-group">
+        <label class="col-sm-12">Organisation type</label>
+
+        <div class="col-sm-12">
+            <select class="form-control select-orgtype">
+                <option value="">[Select a type]</option>
+                <option value="NONE">[No type]</option>
+                #foreach($orgType in $rootFolder.orgTypes)
+                <option value="$orgType.name">$orgType.displayName</option>
+                #end
+            </select>
+        </div>
+    </div>
+
+
+</form>
