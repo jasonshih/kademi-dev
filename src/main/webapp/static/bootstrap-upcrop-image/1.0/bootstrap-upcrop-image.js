@@ -452,7 +452,11 @@
                     }, function () {
                         cropZone.find('.jcrop-holder').children().eq(0).hide();
                     });
-                    
+
+                    img.Jcrop({
+                        setSelect: [ 106, 0, 359, 359 ]
+                    });
+
                     if (!config.isEmbedded) {
                         upcropContainer.trigger('resize');
                     }
