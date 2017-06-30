@@ -63,6 +63,15 @@
         
                         keditor.getSettingComponent().find('.button-wrapper a').attr("href", href);
                     });
+                    
+                    form.find('.btn-browse-file').mselect({
+                        mselectAll: true,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
+                        onSelectFile: function (url, relativeUrl, fileType, hash) {
+                            txtLink.val('http://' + window.location.host + '/_hashes/files/' + hash).trigger('change');
+                        }
+                    });
     
                     var buttonTextColorPicker = form.find('.button-color-text-picker');
                     edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
