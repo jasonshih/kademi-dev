@@ -61,7 +61,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/forums/pageInitFunctions.js"
+                "path": "/theme/apps/forums/postNotificationsPortlet.js"
             }
         },
         {
