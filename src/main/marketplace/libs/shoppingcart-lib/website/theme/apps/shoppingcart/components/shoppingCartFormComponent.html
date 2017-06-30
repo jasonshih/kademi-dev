@@ -23,6 +23,8 @@
         #set ($addressLine2 = $orgs[0].addressLine2)
         #set ($postcode = $orgs[0].postcode)
         #set ($addressState = $orgs[0].addressState)
+
+        #set ($readOnly = 'readonly="true"')
     #else
         #if ($selectedOrgId)
             #set ($selectedMbs = $mbs.filterByOrg($selectedOrgId))
@@ -38,6 +40,8 @@
             #set ($postcode = $selectedOrg.postcode)
             #set ($addressState = $selectedOrg.addressState)
         #end
+
+        #set ($readOnly = '')
     #end
 
 #else
@@ -83,26 +87,26 @@
                 #end
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="phone" class="form-control" value="$!phone" placeholder="Phone number" required="required" />
+                        <input type="text" $!readOnly name="phone" class="form-control" value="$!phone" placeholder="Phone number" required="required" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="addressLine1" class="form-control required" required="required" value="$!addressLine1" placeholder="Address 1" />
+                        <input type="text" $!readOnly name="addressLine1" class="form-control required" required="required" value="$!addressLine1" placeholder="Address 1" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <input type="text" name="addressLine2" class="form-control" value="$!addressLine2" placeholder="Address 2 (Optional)" />
+                        <input type="text" $!readOnly name="addressLine2" class="form-control" value="$!addressLine2" placeholder="Address 2 (Optional)" />
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-sm-6">
-                        <input type="text" name="postcode" class="form-control required" required="required" value="$!postcode" placeholder="Zip/Postcode" />
+                        <input type="text" $!readOnly name="postcode" class="form-control required" required="required" value="$!postcode" placeholder="Zip/Postcode" />
                         <div class="visible-xs" style="height: 15px"></div>
                     </div>
                     <div class="col-sm-6">
-                        <input type="text" name="addressState" class="form-control required" required="required" value="$!addressState" placeholder="State/Province" />
+                        <input type="text" $!readOnly name="addressState" class="form-control required" required="required" value="$!addressState" placeholder="State/Province" />
                     </div>
                 </div>
 
