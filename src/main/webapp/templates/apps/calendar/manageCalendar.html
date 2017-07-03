@@ -29,9 +29,17 @@
     <body class="directory">
         <!--<div class="input pull-right" id='myUploaded' style="width: 200px"></div>-->
 
-        <p class="clearfix">
-            <a class="btn btn-sm btn-success btn-add-event"><i class="fa fa-plus"></i> Add new event</a>
-        </p>
+        <div class="btn-group" role="group">
+            <a class="btn btn-sm btn-success btn-add-event"><i class="fa fa-plus"></i> Add New Event</a>
+            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu pull-right" role="menu">
+                <li><a id="btn-export-events" href="events.csv" title="Export Events CSV"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
+                <li><a href="/tableUploaders/eventsUploader/" ><i class="glyphicon glyphicon-upload"></i> Import Products</a></li>
+            </ul>
+        </div>
+
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <div class="panel panel-default">
