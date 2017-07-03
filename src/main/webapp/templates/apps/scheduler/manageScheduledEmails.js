@@ -14,6 +14,7 @@ function initManageScheduledEmail(allGroups) {
     initEnableSwitcher();
     initTitleEditor();
     initFrequencyGroup();
+    initSendTest();
     
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
@@ -67,7 +68,6 @@ function initManageScheduledEmail(allGroups) {
     
     $('body').on('click', '.test', function (e) {
         e.preventDefault();
-        
         sendTest();
     });
     
@@ -646,15 +646,22 @@ function getOrCreateEmailRow(e, tbody) {
 }
 
 
-function sendTest() {
+function sendTest(recipient) {
     flog("sendTest");
+
+    var data = {
+        test: true       
+    };
+    
+    if(recipient !== undefined && recipient !== ""){
+        data.recipient = recipient;        
+    }
+    
     try {
         $.ajax({
             type: 'POST',
             url: window.location.href,
-            data: {
-                test: true,
-            },
+            data: data,
             success: function (data) {
                 Msg.success("Test sent");
             },
@@ -666,4 +673,18 @@ function sendTest() {
     } catch (e) {
         flog("exception in createJob", e);
     }
+}
+
+function initSendTest(){
+    $(".btn-sent-test-choose").click(function (e) {
+        e.preventDefault();
+        $("#modal-send-test").modal();
+    });
+    
+    $('body').on('click', '.test', function (e) {
+        e.preventDefault();
+        var recipient = $("#recipient").val();
+        sendTest(recipient);
+    });
+
 }
