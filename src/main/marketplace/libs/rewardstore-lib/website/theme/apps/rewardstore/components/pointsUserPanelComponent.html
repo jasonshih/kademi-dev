@@ -1,6 +1,6 @@
 #if ($userResource)
-<div class="panel-user-wrapper">
-    <div class="panel panel-default panel-user">
+<div class="pointsUserPanel">
+    <div class="panel panel-default">
         <div class="panel-body">
             #set ($ava = '/theme/apps/user/profile-icon-v2.png')
             #if ($userResource.profilePicHref && $userResource.profilePicHref != "/templates/apps/user/profile.png")
@@ -12,14 +12,14 @@
                 #set ($name = $user.firstName)
             #end
 
-            <div class="profile-avatar-wrapper">
+            <div class="text-center">
                 <span class="profile-avatar" style="background-image: url($ava)"></span>
             </div>
 
             <div class="profile-welcome text-center">
-                <span>Welcome back</span>
+                <span class="lead">Welcome back</span>
 
-                <h3 class="profile-welcome-name"><b>$name</b></h3>
+                <h2 class="profile-welcome-name"><b>$name</b></h2>
             </div>
             #set( $rewardStoreApp = $applications.rewardStore )
             #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)

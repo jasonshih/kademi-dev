@@ -188,7 +188,7 @@
                             </label>
 
                             <div class="col-md-3">
-                                <select name="baselineType" id="baselineType" class="form-control required" required="true">
+                                <select name="baselineType" id="baselineType" class="form-control">
                                     <option value="">[Not selected]</option>
                                     #foreach($agg in $page.baselineTypes.entrySet() )
                                     $formatter.option($agg.key, $agg.value, $page.kpi.baselineType)
@@ -202,7 +202,7 @@
                             </label>
 
                             <div class="col-md-3">
-                                <select name="baselineSeries" id="baselineSeries" class="form-control required" required="true">
+                                <select name="baselineSeries" id="baselineSeries" class="form-control" >
                                     <option value="">[Not selected]</option>
                                     #foreach($ds in $page.find("/sales").children)
                                     $formatter.option( $ds.name,$ds.title, $page.kpi.baselineSeries.name )

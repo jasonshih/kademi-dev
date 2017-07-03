@@ -28,7 +28,7 @@ function initManageBlogArticle() {
             editor.contentEditor({
                 iframeMode: true,
                 allGroups: allGroups,
-                snippetsUrl: '_components',
+                snippetsUrl: '_components/',
                 onReady: function () {
                     loading.remove();
                 }
