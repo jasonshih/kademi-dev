@@ -79,7 +79,10 @@
                         flog("selected", selectedQuery);
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-
+                        var seelctedQueryType = component.attr('data-querytype');
+                        if (!seelctedQueryType){
+                            component.attr('data-querytype', 'query');
+                        }
                         if (selectedQuery) {
                             component.attr('data-queryname', selectedQuery);
                             var queryType = component.attr('data-querytype');
@@ -249,7 +252,7 @@
             form.find('.select-agg').val(dataAttributes['data-agg']);
             form.find('.sub-agg').val(dataAttributes['data-sub-agg']);
             form.find('.metric-agg').val(dataAttributes['data-metric-agg']);
-            form.find('.chart-type').val(dataAttributes['data-chart-type']);
+            form.find('.chart-type').val(dataAttributes['data-chart-type'] || 'bar');
 
             form.find('.show-stacked').prop("checked", toBool(dataAttributes['data-stacked']));
             form.find('.show-controls').prop("checked", toBool(dataAttributes['data-controls']));
