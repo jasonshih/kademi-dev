@@ -66,11 +66,6 @@ function initManageScheduledEmail(allGroups) {
         }
     });
     
-    $('body').on('click', '.test', function (e) {
-        e.preventDefault();
-        sendTest();
-    });
-    
     $('body').on('change', '[name=periodMultiples]', function (e) {
         var inp = $(this);
         var val = inp.val();
@@ -646,22 +641,15 @@ function getOrCreateEmailRow(e, tbody) {
 }
 
 
-function sendTest(recipient) {
+function sendTest() {
     flog("sendTest");
-
-    var data = {
-        test: true       
-    };
-    
-    if(recipient !== undefined && recipient !== ""){
-        data.recipient = recipient;        
-    }
-    
     try {
         $.ajax({
             type: 'POST',
             url: window.location.href,
-            data: data,
+            data: {
+                test: true       
+            },
             success: function (data) {
                 Msg.success("Test sent");
             },
@@ -683,8 +671,28 @@ function initSendTest(){
     
     $('body').on('click', '.test', function (e) {
         e.preventDefault();
+        flog("sendTest");
+        var data = {test: true};
         var recipient = $("#recipient").val();
-        sendTest(recipient);
+
+        if(recipient !== undefined && recipient !== ""){
+            data.recipient = recipient;        
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: data,
+            success: function (data) {
+                Msg.success("Test sent");
+                $("#modal-send-test").modal('hide');
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error("Failed to send test message");
+                $("#modal-send-test").modal('hide');
+            }
+        });
     });
 
 }
