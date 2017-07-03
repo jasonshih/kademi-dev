@@ -74,15 +74,11 @@
                                 </td>
                                 <td><input type="checkbox" name="toAddId" value="$member.id"/></td>
                             </tr>
-                            <tr class="details">
-                                <td></td>
+                            
+                            <tr class="details" style="display:none;">
                                 <td colspan="2">
                                     <div class="blocks-wrapper">
-                                        #foreach($m in $member.memberships)
-                                        #foreach($f in $m.fields.nvPairs)
-                                        <div class="block"><b>$f.name</b> : $f.propValue</div>
-                                        #end
-                                        #end  
+                                        $page.getExtraFields($member.memberships)
                                     </div>
                                 </td>
                             </tr>
