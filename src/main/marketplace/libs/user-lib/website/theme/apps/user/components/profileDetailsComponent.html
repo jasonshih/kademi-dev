@@ -1,99 +1,111 @@
 #if (!$nickName)
-#set ($nickName = 'true')
+    #set ($nickName = 'true')
 #end
 
 #if (!$email)
-#set ($email = 'true')
+    #set ($email = 'true')
 #end
 
 #if (!$firstName)
-#set ($firstName = 'true')
+    #set ($firstName = 'true')
 #end
 
 #if (!$surName)
-#set ($surName = 'true')
+    #set ($surName = 'true')
 #end
 
 #if (!$phone)
-#set ($phone = 'true')
+    #set ($phone = 'true')
+#end
+
+#if (!$title)
+    #set ($title = 'Update your details')
+#end
+
+#if (!$description)
+    #set ($description = 'Please update your details below then click the "Save" button.')
+#end
+
+#if (!$btnText)
+    #set ($btnText = 'Save')
 #end
 
 <div class="details well">
     <form action="$request.absolutePath" method="POST" enctype="multipart/form-data" class="profile form-horizontal form-horizontal-narrow" role="form">
-        <h4>Update your details</h4>
+        <h4>$title</h4>
 
         <div class="pageMessage alert alert-danger form-message" style="display: none"></div>
-        <p>Please update your details below then click the 'Save' button.</p>
+        <p>$description</p>
         #if ($nickName == "true")
-        <div class="control-group form-group row">
-            <label class="control-label col-md-3" for="nickName">Nickname</label>
+            <div class="control-group form-group row">
+                <label class="control-label col-md-3" for="nickName">Nickname</label>
 
-            <div class="controls col-md-8">
-                <input type="text" name="nickName" id="nickName" required="true" class="required form-control" value="$!page.profile.nickName" />
+                <div class="controls col-md-8">
+                    <input type="text" name="nickName" id="nickName" required="true" class="required form-control" value="$!page.profile.nickName" />
+                </div>
             </div>
-        </div>
         #end
         #if ($email == "true")
-        <div class="control-group form-group">
-            <label class="control-label col-md-3" for="nickName">Email</label>
+            <div class="control-group form-group">
+                <label class="control-label col-md-3" for="nickName">Email</label>
 
-            <div class="controls col-md-8">
-                <input type="text" id="email" name="email" required="true" class="required form-control" value="$!page.profile.email" />
+                <div class="controls col-md-8">
+                    <input type="text" id="email" name="email" required="true" class="required form-control" value="$!page.profile.email" />
+                </div>
             </div>
-        </div>
         #end
         #if ($firstName == "true")
-        <div class="control-group form-group">
-            <label class="control-label col-md-3" for="firstName">First name</label>
+            <div class="control-group form-group">
+                <label class="control-label col-md-3" for="firstName">First name</label>
 
-            <div class="controls col-md-8">
-                <input type="text" id="firstName" name="firstName" class="form-control" value="$!page.profile.firstName" />
+                <div class="controls col-md-8">
+                    <input type="text" id="firstName" name="firstName" class="form-control" value="$!page.profile.firstName" />
+                </div>
             </div>
-        </div>
         #end
         #if ($surName == "true")
-        <div class="control-group form-group">
-            <label class="control-label col-md-3" for="nickName">Surname</label>
+            <div class="control-group form-group">
+                <label class="control-label col-md-3" for="nickName">Surname</label>
 
-            <div class="controls col-md-8">
-                <input type="text" id="surName" name="surName" class=" form-control" value="$!page.profile.surName" />
+                <div class="controls col-md-8">
+                    <input type="text" id="surName" name="surName" class=" form-control" value="$!page.profile.surName" />
+                </div>
             </div>
-        </div>
         #end
         #if ($phone == "true")
-        <div class="control-group form-group">
-            <label class="control-label col-md-3" for="nickName">Phone</label>
+            <div class="control-group form-group">
+                <label class="control-label col-md-3" for="nickName">Phone</label>
 
-            <div class="controls col-md-8">
-                <input type="text" id="phone" name="phone" class=" form-control" value="$!page.profile.phone" />
+                <div class="controls col-md-8">
+                    <input type="text" id="phone" name="phone" class=" form-control" value="$!page.profile.phone" />
+                </div>
             </div>
-        </div>
         #end
         #set($fields = $page.extraFields)
         #foreach($field in $fields.keySet())
-        #if ($extraFields && $extraFields.contains($field.name))
-        #else
-        <div class="control-group form-group">
-            <label class="control-label col-md-3" for="field_${field.name}">$field.text</label>
+            #if ($extraFields && $extraFields.contains($field.name))
+            #else
+                <div class="control-group form-group">
+                    <label class="control-label col-md-3" for="field_${field.name}">$field.text</label>
 
-            <div class="controls col-md-8">
-                $field.html( $fields[$field] )
-            </div>
-        </div>
-        #end
+                    <div class="controls col-md-8">
+                        $field.html( $fields[$field] )
+                    </div>
+                </div>
+            #end
         #end
         <div class="control-group form-group">
             <div class="controls col-md-offset-3 col-md-8">
-                <button class="btn btn-success" type="submit">Save</button>
+                <button class="btn btn-success" type="submit">$btnText</button>
             </div>
         </div>
 
     </form>
 </div>
 #if ($page)
-#portlets("profilePrimary")
+    #portlets("profilePrimary")
 <script>
-    $(function(){
+    $(function () {
         initProfile();
     })
 </script>

@@ -24,7 +24,7 @@
                     <ul class="dropdown-menu pull-right">
                         #foreach($entry in $page.availableWebsites.entrySet())
                         #foreach($wb in $entry.value)
-                        <li><a href="?goto=${entry.key.name}-${wb.name}" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
+                        <li><a href="?goto=${entry.key.name}&version=${wb.name}" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
                         #end
                         #end
                     </ul>
@@ -41,7 +41,7 @@
                     <ul class="dropdown-menu pull-right">
                         #foreach($entry in $page.availableWebsites.entrySet())
                         #foreach($wb in $entry.value)
-                        <li><a href="?goto=${entry.key.name}-${wb.name}&pdf" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
+                        <li><a href="?goto=${entry.key.name}&version=${wb.name}&pdf" target="_blank">$formatter.firstNotNull($entry.key.title, $entry.key.name) ($formatter.firstNotNull($wb.title, $wb.name))</a></li>
                         #end
                         #end
                     </ul>

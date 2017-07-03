@@ -164,3 +164,8 @@ table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:af
     color: white;
     background-color: #ee145b;
 }
+
+.change-lead-avatar > img {
+    width: 128px;
+    height: 128px;
+}
