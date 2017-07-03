@@ -14,6 +14,7 @@ function initManageScheduledEmail(allGroups) {
     initEnableSwitcher();
     initTitleEditor();
     initFrequencyGroup();
+    initSendTest();
     
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
@@ -63,12 +64,6 @@ function initManageScheduledEmail(allGroups) {
                 }
             });
         }
-    });
-    
-    $('body').on('click', '.test', function (e) {
-        e.preventDefault();
-        
-        sendTest();
     });
     
     $('body').on('change', '[name=periodMultiples]', function (e) {
@@ -653,7 +648,7 @@ function sendTest() {
             type: 'POST',
             url: window.location.href,
             data: {
-                test: true,
+                test: true       
             },
             success: function (data) {
                 Msg.success("Test sent");
@@ -666,4 +661,38 @@ function sendTest() {
     } catch (e) {
         flog("exception in createJob", e);
     }
+}
+
+function initSendTest(){
+    $(".btn-sent-test-choose").click(function (e) {
+        e.preventDefault();
+        $("#modal-send-test").modal();
+    });
+    
+    $('body').on('click', '.test', function (e) {
+        e.preventDefault();
+        flog("sendTest");
+        var data = {test: true};
+        var recipient = $("#recipient").val();
+
+        if(recipient !== undefined && recipient !== ""){
+            data.recipient = recipient;        
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: data,
+            success: function (data) {
+                Msg.success("Test sent");
+                $("#modal-send-test").modal('hide');
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error("Failed to send test message");
+                $("#modal-send-test").modal('hide');
+            }
+        });
+    });
+
 }

@@ -4,7 +4,7 @@
         <link href="manageScheduledEmails.css" rel="stylesheet" type="text/css" />
         <script src="/static/x-editable/1.5.1/dist/bootstrap3-editable/js/bootstrap-editable.min.js">//</script>
         <link rel="stylesheet" href="/static/x-editable/1.5.1/dist/bootstrap3-editable/css/bootstrap-editable.css" />
-        <script type="text/javascript" src="manageScheduledEmails.js?v=8.0.9">//</script>
+        <script type="text/javascript" src="manageScheduledEmails.js?v=8.1.6">//</script>
     </head>
     <body>
         <section id="manageEmail" class="MainContent">
@@ -33,7 +33,18 @@
                             <div class="clearfix">
                                 <div class="btn-group pull-right" style="z-index: 2;">
                                     <button type="submit" class="btn btn-sm btn-success Draft"><i class="fa fa-floppy-o"></i> Save</button>
-                                    <button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Send Test</button>
+                                    <!--<button type="button" class="btn btn-sm btn-success test" name="test" value="test"><i class="fa fa-send"></i> Send Test</button>-->
+                                        <button type="button" class="btn btn-sm btn-info test" name="test">
+                                            <span class="glyphicon glyphicon-send"></span>
+                                            Test
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li><a href="#" class="btn-sent-test-choose">Enter recipient address</a></li>
+                                        </ul>
                                 </div>
                             </div>
                             <hr />
@@ -267,6 +278,40 @@
                             </tr>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="modal-send-test" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Send test</h4>
+                    </div>
+                    <form method="POST" action="$page.path" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="name">Recipient</label>
+                                <div class="col-md-8">
+                                    <input type="text" id="recipient" name="recipient" value="" placeholder="Email addresses separated by comma" class="required form-control" />
+                                    <p>A single email will be sent to these addresses</p>
+                                </div>
+                            </div>
+<!--                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="name">Target</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
+                                    <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-success test" type="button"><i class="glyphicon glyphicon-send"></i> Send</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
