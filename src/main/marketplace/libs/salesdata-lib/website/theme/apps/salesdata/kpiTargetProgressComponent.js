@@ -15,7 +15,7 @@
             $.getScriptOnce('/static/nvd3/1.8.2/d3.min.js', function () {
                 $.getScriptOnce('/static/nvd3/1.8.2/nv.d3.min.js', function () {
                     $.getScriptOnce('/theme/apps/salesdata/jquery.kpiVis.js', function () {
-                        self.initKpiVis();
+                        self.initKpiProgress();
                     });
                 });
             });
@@ -32,8 +32,8 @@
 
         settingTitle: 'KPI Visualisation Settings',
 
-        initKpiVis: function () {
-            flog('initKpiVis');
+        initKpiProgress: function () {
+            flog('initKpiProgress');
 
             $('.kpiVis').each(function () {
                 var kpiVis = $(this);
@@ -65,7 +65,7 @@
                         if (selectedKpi) {
                             component.attr('data-href', selectedKpi);
                             keditor.initDynamicContent(dynamicElement).done(function () {
-                                self.initKpiVis();
+                                self.initKpiProgress();
                             });
                         } else {
                             dynamicElement.html('<p>Please select KPI</p>');
@@ -78,7 +78,7 @@
 
                         component.attr('data-visualisation', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initKpiVis();
+                            self.initKpiProgress();
                         });
                     });
 
@@ -95,7 +95,29 @@
 
                         component.attr('data-height', number);
                         keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initKpiVis();
+                            self.initKpiProgress();
+                        });
+                    });
+
+                    form.find('.kpi-achivement-label').on('change', function () {
+                        var label = this.value;
+
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-achivement-label', label);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiProgress();
+                        });
+                    });
+
+                    form.find('.select-level').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-level', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiProgress();
                         });
                     });
                 }
@@ -108,6 +130,8 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
+            form.find('.kpi-achivement-labe').val(dataAttributes['data-achivement-labe']);
+            form.find('.select-level').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
         }
     };
