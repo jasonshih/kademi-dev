@@ -1,4 +1,4 @@
-(function(){
+(function($){
 
     function initMyLearning() {
         flog("initMyLearning");
@@ -142,7 +142,7 @@
 
     $(document).ready(function(){
 
-        if($('.dashboard-modules-page').length > 0) {
+        if($('.dashboard-modules-page').length > 0 || $('.learning-portlet').length > 0) {
             scrollProgress();
             initDotDotDot();
         }
