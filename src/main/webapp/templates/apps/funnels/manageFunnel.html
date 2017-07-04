@@ -155,7 +155,9 @@
                                 <script type="text/html" id="template-stage">
                                     <div class="form-group stage">
                                         <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
+                                            <div class="input-group input-group-sm input-group-stage">
+                                                <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: ">&nbsp;&nbsp;</span>
+                                                <input type="hidden" class="form-control" name="stageColour" />
                                                 <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" />
                                                 <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" />
                                                 <span class="input-group-btn">
@@ -166,6 +168,112 @@
                                         </div>
                                     </div>
                                 </script>
+                                <script type="text/html" id="template-stage-colors">
+                                    <div class="dropdown-menu dropdown-menu-se label-colors">
+                                        <ul class="color-chooser">
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-b60205"
+                                                        style="background-color: #b60205 !important;"
+                                                        data-hex-color="b60205">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-d93f0b"
+                                                        style="background-color: #d93f0b !important;"
+                                                        data-hex-color="d93f0b">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-fbca04"
+                                                        style="background-color: #fbca04 !important;"
+                                                        data-hex-color="fbca04">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-0e8a16"
+                                                        style="background-color: #0e8a16 !important;"
+                                                        data-hex-color="0e8a16">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-006b75"
+                                                        style="background-color: #006b75 !important;"
+                                                        data-hex-color="006b75">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-1d76db"
+                                                        style="background-color: #1d76db !important;"
+                                                        data-hex-color="1d76db">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-0052cc"
+                                                        style="background-color: #0052cc !important;"
+                                                        data-hex-color="0052cc">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-5319e7"
+                                                        style="background-color: #5319e7 !important;"
+                                                        data-hex-color="5319e7">
+                                                  </span>
+                                            </li>
+                                        </ul>
+
+                                        <ul class="color-chooser">
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-e99695"
+                                                        style="background-color: #e99695 !important;"
+                                                        data-hex-color="e99695" data-selected="">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-f9d0c4"
+                                                        style="background-color: #f9d0c4 !important;"
+                                                        data-hex-color="f9d0c4">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-fef2c0"
+                                                        style="background-color: #fef2c0 !important;"
+                                                        data-hex-color="fef2c0">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-c2e0c6"
+                                                        style="background-color: #c2e0c6 !important;"
+                                                        data-hex-color="c2e0c6">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-bfdadc"
+                                                        style="background-color: #bfdadc !important;"
+                                                        data-hex-color="bfdadc">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-c5def5"
+                                                        style="background-color: #c5def5 !important;"
+                                                        data-hex-color="c5def5">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-bfd4f2"
+                                                        style="background-color: #bfd4f2 !important;"
+                                                        data-hex-color="bfd4f2">
+                                                  </span>
+                                            </li>
+                                            <li>
+                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-d4c5f9"
+                                                        style="background-color: #d4c5f9 !important;"
+                                                        data-hex-color="d4c5f9">
+                                                  </span>
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                </script>
                                 <p>
                                     <button type="button" class="btn btn-sm btn-success btn-add-stage"><i class="fa fa-plus"></i> Add Stage</button>
                                 </p>
@@ -173,7 +281,9 @@
                                     #foreach ($s in $page.funnel.stages)
                                         <div class="form-group stage">
                                             <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
+                                                <div class="input-group input-group-sm input-group-stage">
+                                                    <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: $!s.colour">&nbsp;&nbsp;</span>
+                                                    <input type="hidden" class="form-control" name="stageColour" value="$!s.colour" />
                                                     <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
                                                     <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
                                                     <span class="input-group-btn">
@@ -715,13 +825,13 @@
             </div>
         </div>
 
-        <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=28072016">
+        <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
         <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
         <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
         <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
         <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
-        <script src="/theme/apps/funnels/manageFunnel.js" type="text/javascript">//</script>
+        <script src="/theme/apps/funnels/manageFunnel.js?v=3" type="text/javascript">//</script>
 
         <script type="text/javascript">
             $(function () {
