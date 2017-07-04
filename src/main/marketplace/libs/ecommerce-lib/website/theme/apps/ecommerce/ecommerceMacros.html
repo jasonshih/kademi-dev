@@ -5,54 +5,6 @@
     </head>
     <body>
         #macro(rightSidebar $store)
-            #script()
-                <script>
-                    if(page) {
-                        var shopStore = page.find(templatingContext.store.href);
-                        if(shopStore) {
-                            var productsSearch = shopStore.searchProducts(null, null, 0, 100, 'product', false);
-                            var lastViewedCookie = http.request.getCookie('viewed-products');
-                            if (lastViewedCookie) {
-                                lastViewedCookie = decodeURIComponent(lastViewedCookie.value);
-                            }
-                            lastViewedCookie = ',' + lastViewedCookie + ',';
-                            var recentlyAdded = [];
-                            var lastViewed = [];
-
-                            for (var i = 0; i < productsSearch.hits.hits.length; i++) {
-                                var product = productsSearch.hits.hits[i];
-                                var productId = ',' + product.fields.product.value + ',';
-
-                                if (i < 2) {
-                                    recentlyAdded.push(product);
-                                }
-
-                                if (lastViewedCookie.indexOf(productId) !== -1 && lastViewed.length <= 2) {
-                                    lastViewed.push(product);
-                                }
-                            }
-
-                            if (lastViewed.length > 0) {
-                                lastViewed.sort(function (a, b) {
-                                    var productAId = ',' + a.fields.product.value + ',';
-                                    var productBId = ',' + b.fields.product.value + ',';
-
-                                    return lastViewedCookie.indexOf(productAId) - lastViewedCookie.indexOf(productBId);
-                                });
-                            }
-
-                            templatingContext.lastViewed = lastViewed;
-                            templatingContext.recentlyAdded = recentlyAdded;
-                        } else {
-                            templatingContext.lastViewed = [];
-                            templatingContext.recentlyAdded = [];
-                        }
-                    }
-
-
-                </script>
-            #end
-
 
             <div class="list-group list-group-root ecomStoreCategoriesList">
                 <span href="#" class="list-group-item heading-item">Browse by category</span>
@@ -97,64 +49,6 @@
 
                 #end
             </div>
-
-
-
-##            <div id="recently-added">
-##                <h4><b>Recently Added</b></h4>
-##                #foreach($p in $recentlyAdded)
-##                    #set($bg = "/static/images/photo_holder.png")
-##                    #if( $p.fields.primaryImageHref.value )
-##                        #set($bg = $p.fields.primaryImageHref.value )
-##                    #end
-##                    <div class="media">
-##                        <div class="media-left">
-##                            <a href="$p.fields.path.value">
-##                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
-##                            </a>
-##                        </div>
-##                        <div class="media-body">
-##                            <p class="product-title">$!p.fields.title.value</p>
-##                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
-##                        </div>
-##                    </div>
-##                #end
-##            </div>
-##
-##            <div id="last-viewed">
-##                <h4><b>Last Viewed</b></h4>
-##                #foreach($p in $lastViewed)
-##                    #set($bg = "/static/images/photo_holder.png")
-##                    #if( $p.fields.primaryImageHref.value )
-##                        #set($bg = $p.fields.primaryImageHref.value )
-##                    #end
-##                    <div class="media">
-##                        <div class="media-left">
-##                            <a href="$p.fields.path.value">
-##                                <img class="media-object" src="/static/images/blank.gif" style="background-image: url($bg)" />
-##                            </a>
-##                        </div>
-##                        <div class="media-body">
-##                            <p class="product-title">$!p.fields.title.value</p>
-##                            <p class="lead"><b class="text-primary">$$p.fields.finalCost.value</b></p>
-##                        </div>
-##                    </div>
-##                #end
-##            </div>
-##
-##            <script type="text/javascript">
-##                $(function () {
-##                    onWindowStopResize(function () {
-##                        $('#recently-added .product-title').dotdotdot({
-##                            height: 20
-##                        });
-##
-##                        $('#last-viewed .product-title').dotdotdot({
-##                            height: 20
-##                        });
-##                    });
-##                });
-##            </script>
         #end
 
         #macro (renderProductItem $p $store $isRelated)
