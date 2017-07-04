@@ -1,0 +1,19 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+<div class="panel panel-default panel-kpi-target-progress">
+    <div class="panel-heading">
+        <i class="fa fa-pie-chart"></i> 
+        #set( $kpiTitle = $rootFolder.find($href).title )
+        #if( $kpiTitle )
+        <a href="$href">$kpiTitle Target</a>
+        #else
+        Please select a KPI
+        #end
+    </div>
+    <div class="panel-body">
+        <div style="height: $!{height}px" data-href="$href" data-visualisation="$visualisation" class="kpiTargetProgress">
+            <svg></svg>
+        </div>
+    </div>
+</div>
