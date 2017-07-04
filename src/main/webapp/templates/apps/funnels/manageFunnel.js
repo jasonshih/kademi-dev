@@ -3,6 +3,7 @@ function initManageFunnel() {
 
     initTabLead();
     initPropertiesTab();
+    initStageColor();
     $('.timeago').timeago();
 }
 
@@ -83,7 +84,8 @@ function initPropertiesForm() {
 
                 stages.push({
                     name: stage.find('[name=stageName]').val().trim(),
-                    desc: stage.find('[name=stageDesc]').val().trim()
+                    desc: stage.find('[name=stageDesc]').val().trim(),
+                    colour: stage.find('[name=stageColour]').val().trim()
                 });
             });
 
@@ -151,6 +153,36 @@ function initPropertiesForm() {
 
                 $('#builder .panel-setting .stageName').html(stagesOptionStr);
             });
+        }
+    });
+}
+
+function initStageColor() {
+    $(document).on('click', '.stageColorPicker', function () {
+        var parent = $(this).parent();
+        var colorPaletes = parent.find('.label-colors');
+        if (colorPaletes.length){
+            colorPaletes.show();
+        } else {
+            colorPaletes = $($('#template-stage-colors').html()).appendTo(parent);
+            colorPaletes.show();
+        }
+    });
+
+    $(document).on('click', '.js-color-chooser-color', function () {
+        var hex = $(this).attr('data-hex-color');
+        hex = '#'+hex;
+        var parent = $(this).parents('.input-group-stage');
+        var addon = parent.find('.stageColorPicker');
+        addon.css('background', hex);
+        parent.find('input[name=stageColour]').val(hex);
+        $('.label-colors').hide();
+    });
+
+    $(document).on('mouseup', function(e){
+        var container = $('.label-colors');
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide();
         }
     });
 }
