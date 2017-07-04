@@ -57,7 +57,7 @@ function initRemoveOAuthCred() {
                     } else {
                         Msg.error('Oh No! Something went wrong! ' + data.messages);
                     }
-
+                    
                 },
                 error: function (resp) {
                     Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
@@ -74,14 +74,14 @@ function initUploadUsers() {
     //
     //    modalUploadCsv.modal('show');
     //});
-
+    
     var modalMatchOrgsCsv = $('#modal-match-orgs-csv');
     $('.btn-match-orgs').click(function (e) {
         e.preventDefault();
-
+        
         modalMatchOrgsCsv.modal('show');
     });
-
+    
     var resultUploadCsv = modalUploadCsv.find('.upload-results');
     modalUploadCsv.find('#do-upload-csv').mupload({
         buttonText: '<i class=\'clip-folder\'></i> Upload spreadsheet',
@@ -97,7 +97,7 @@ function initUploadUsers() {
             Msg.success('Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members');
         }
     });
-
+    
     var formUploadCsv = modalUploadCsv.find('form');
     $('#allow-inserts').click(function (e) {
         flog('click', e.target);
@@ -116,26 +116,26 @@ function initUploadUsersFile() {
     var userFileModal = $('#modal-upload-userFile');
     $('.btn-upload-users-csv').click(function (e) {
         e.preventDefault();
-
+        
         userFileModal.modal('show');
     });
-
+    
     var wizardContent = $('#wizard');
     wizardContent.smartWizard({
         selected: 0,
         keyNavigation: false
     });
-
+    
     wizardContent.find(".next-step").on('click', function (e) {
         e.preventDefault();
         wizardContent.smartWizard("goForward");
     });
-
+    
     wizardContent.find(".back-step").on('click', function (e) {
         e.preventDefault();
         wizardContent.smartWizard("goBackward");
     });
-
+    
     userFileModal.find('#do-upload-file').mupload({
         buttonText: '<i class=\'clip-folder\'></i> Upload spreadsheet',
         url: 'userFile',
@@ -147,7 +147,7 @@ function initUploadUsersFile() {
             wizardContent.smartWizard("goForward");
         }
     });
-
+    
     Handlebars.registerHelper('equal', function (lvalue, rvalue, options) {
         if (arguments.length < 3)
             throw new Error("Handlebars Helper equal needs 2 parameters");
@@ -157,7 +157,7 @@ function initUploadUsersFile() {
             return options.fn(this);
         }
     });
-
+    
     Handlebars.registerHelper('startsWith', function (lvalue, rvalue, options) {
         if (arguments.length < 3)
             throw new Error("Handlebars Helper equal needs 2 parameters");
@@ -171,19 +171,19 @@ function initUploadUsersFile() {
 
 function populateFileColumns(modal, data) {
     var columnSel = modal.find('.column-selector');
-
+    
     var d = {
         fields: availableProfileFields,
         columns: data.fileLines[0]
     }
-
+    
     var streamItemTemplateSource = $("#column-sel-template").html();
     var streamItemTemplate = Handlebars.compile(streamItemTemplateSource);
-
+    
     var html = streamItemTemplate(d);
-
+    
     flog('new HTML', html);
-
+    
     columnSel.html(html);
 }
 
@@ -209,11 +209,11 @@ function initSearchUser() {
             doSearch();
         }, 500);
     });
-
+    
     $('#search-group').change(function () {
         doSearch();
     });
-
+    
     $('.btn-group-user-states .btn-link input[type=radio]').on('change', function () {
         doSearch();
     });
@@ -223,38 +223,38 @@ function doSearch() {
     var query = $('#user-query').val();
     var groupName = $('#search-group').val();
     var isEnabled = $('.btn-enable-user').is(':checked');
-
+    
     flog('doSearch.1', query, groupName);
-
+    
     var uri = URI(window.location);
-
+    
     uri.setSearch('q', query);
     uri.setSearch('g', groupName);
     uri.setSearch('enabled', isEnabled);
-
+    
     flog('doSearch.2', uri.toString());
-
+    
     var newHref = uri.toString();
-
+    
     window.history.pushState('', newHref, newHref);
     Msg.info('Searching...', 50000);
-
+    
     $.ajax({
         type: 'GET',
         url: newHref,
         success: function (data) {
             Msg.info('Search complete', 5000);
-
+            
             var table = $('#table-users');
             flog('doSearch.3', table);
-
+            
             var newDom = $(data);
-
+            
             var $fragment = newDom.find('#table-users');
-
+            
             table.replaceWith($fragment);
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
-
+            
             initSort();
             initLoginAs();
         },
@@ -279,7 +279,7 @@ function doUpdateUserId(newUserId) {
             } else {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
-
+            
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
@@ -302,7 +302,7 @@ function doRemoveCreds() {
             } else {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
-
+            
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
@@ -316,7 +316,7 @@ function initSettingPanel() {
     var userSetting = $.cookie('user-setting');
     var checkboxes = settingContent.find('input[type=checkbox]');
     var remember = $('#remember');
-
+    
     if (userSetting) {
         remember.attr('checked', true);
         checkboxes.not(remember).attr('checked', false);
@@ -326,28 +326,28 @@ function initSettingPanel() {
             checkboxes.filter('#' + setting).check(true);
         }
     }
-
+    
     // Event for save change button
     $('#saveChange').bind('click', function (e) {
         if (remember.is(':checked')) {
             var setting = [];
             setting.push(settingContent.find('select').val());
-
+            
             checkboxes.not(remember).each(function () {
                 var self = $(this);
-
+                
                 if (self.is(':checked')) {
                     setting.push(self.val());
                 }
             });
-
+            
             $.cookie('user-setting', setting.join('#'), {
                 expires: 999
             });
         } else {
             $.cookie('user-setting', null);
         }
-
+        
         settingContent.addClass('Hidden');
         e.preventDefault();
     });
@@ -357,13 +357,13 @@ function initSearchBusiness() {
     var container = $('#pullDown');
     var content = container.find('table.Summary tbody');
     var input = container.find('input[type=text]');
-
+    
     container.find('a.ClearText').unbind('click').bind('click', function (e) {
         input.val('');
         content.html('');
         e.preventDefault();
     });
-
+    
     input.bind('input', function () {
         var keyword = input.val().toLowerCase();
         var urlRequest = '/users/_DAV/PROPFIND?fields=name,clyde:title,clyde:templateName,clyde:suburb,clyde:postcode,clyde:address,clyde:state&depth=5';
@@ -373,7 +373,7 @@ function initSearchBusiness() {
                 $(datas).each(function () {
                     var data = $(this);
                     var title = data.attr('title').toLowerCase();
-
+                    
                     if (data.is('[state]') && title.indexOf(keyword) != -1) {
                         result += '<tr>';
                         result += '<td>' + data.attr('title') + '</td>';
@@ -393,7 +393,7 @@ function initSearchBusiness() {
 }
 
 function initRemoveUsers() {
-    $("body").on("click", ".btn-remove-users", function(e) {
+    $("body").on("click", ".btn-remove-users", function (e) {
         e.preventDefault();
         var node = $(e.target);
         flog('removeUsers', node, node.is(':checked'));
@@ -409,7 +409,7 @@ function initRemoveUsers() {
 }
 
 function initUnsubscribeUsers() {
-    $("body").on("click", ".btn-unsubscribe-users", function(e) {
+    $("body").on("click", ".btn-unsubscribe-users", function (e) {
         e.preventDefault();
         var node = $(e.target);
         flog('unsubscribeUsers', node, node.is(':checked'));
@@ -426,7 +426,7 @@ function initUnsubscribeUsers() {
 
 function initAddToGroup() {
     var modal = $('#modal-add-to-group');
-
+    
     $('.btn-add-to-group').click(function (e) {
         var node = $(e.target);
         flog('addToGroup', node, node.is(':checked'));
@@ -437,12 +437,12 @@ function initAddToGroup() {
             modal.modal('show');
         }
     });
-
+    
     modal.find('.groups-wrapper a').click(function (e) {
         e.preventDefault();
         $(this).toggleClass('active');
     });
-
+    
     modal.find('.btnSaveGroup').on('click', function (e) {
         var checkBoxes = $('#table-users').find('tbody input[name=toRemoveId]').filter(':checked');
         var selectedGroups = modal.find('.groups-wrapper a.active');
@@ -455,7 +455,7 @@ function initAddToGroup() {
             Msg.error('Please select group(s) to add users to');
         }
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         modal.find('.groups-wrapper a').removeClass('active');
     })
@@ -485,11 +485,11 @@ function doAddUsersToGroup(data) {
 
 function doRemoveUsers(checkBoxes, action) {
     var ids = [];
-
+    
     checkBoxes.each(function (a, item) {
         ids.push($(item).val());
     });
-
+    
     $.ajax({
         type: 'POST',
         data: {
@@ -502,7 +502,7 @@ function doRemoveUsers(checkBoxes, action) {
             flog('success', data);
             if (data.status) {
                 doSearch();
-                if (action == "remove") { 
+                if (action == "remove") {
                     Msg.success('Removed users ok');
                 } else {
                     Msg.success('Unsubscribe users ok');
@@ -537,7 +537,7 @@ function initAggregations() {
     var body = $('body');
     body.on('click', '.aggClearer', function (e) {
         e.preventDefault();
-
+        
         var input = $($(this).data('target'));
         flog('aggs clearer click', input);
         input.val('');
@@ -546,11 +546,11 @@ function initAggregations() {
         var uri = URI(window.location);
         uri.removeSearch('filter-'.concat(name));
         history.pushState(null, null, uri.toString());
-
+        
         $('#aggregationsContainer').reloadFragment({
             url: window.location
         });
-
+        
     });
     body.on('change', '.agg-filter', function (e) {
         var input = $(e.target);
@@ -570,9 +570,9 @@ function aggSearch(input) {
     flog('initAggregations: do agg search', 'name=', name, 'value=', value);
     var uri = URI(window.location);
     uri.setSearch('filter-'.concat(name), value);
-
+    
     history.pushState(null, null, uri.toString());
-
+    
     $('#aggregationsContainer').reloadFragment({
         url: window.location
     });
@@ -585,7 +585,7 @@ function initSort() {
         var a = $(e.target);
         var uri = URI(window.location);
         var field = a.attr('id');
-
+        
         var dir = 'asc';
         if (field == getSearchValue(window.location.search, 'sortfield')
             && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
@@ -593,34 +593,34 @@ function initSort() {
         }
         uri.setSearch('sortfield', field);
         uri.setSearch('sortdir', dir);
-
+        
         $.ajax({
             type: 'GET',
             url: uri.toString(),
             success: function (data) {
                 flog('success', data);
                 window.history.pushState('', document.title, uri.toString());
-
+                
                 var newDom = $(data);
-
+                
                 var $fragment = newDom.find('#table-users');
-
+                
                 flog('replace', $('#se'));
                 flog('frag', $fragment);
-
+                
                 var $tableContent = newDom.find('#table-users-body');
                 $('#table-users-body').replaceWith($tableContent);
-
+                
                 var $footer = newDom.find('#pointsFooter');
                 $('#pointsFooter').replaceWith($footer);
-
+                
                 initLoginAs();
             },
             error: function (resp) {
                 Msg.error('err');
             }
         });
-
+        
     });
 }
 
