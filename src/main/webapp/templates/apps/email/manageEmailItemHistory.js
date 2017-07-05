@@ -54,6 +54,7 @@ function doSearch(startDate, endDate) {
     $('#downloadCsv').attr('href', 'emailItems.csv?' + $.param(data));
 
     $('#email-table').reloadFragment({
+        url: window.location.pathname + '?' + $.param(data),
         whenComplete: function () {
             $('abbr.timeago').timeago();
         }
