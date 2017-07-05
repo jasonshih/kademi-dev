@@ -69,13 +69,31 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/learner/moduleList.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/learner/competition.js"
             }
         },
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/learner/myRewards.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/jquery.module/1.0.0/jquery.module-1.0.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.js"
             }
         },
         {
