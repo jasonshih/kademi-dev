@@ -7,6 +7,19 @@
     };
     
     $(document).on("pageDateChanged", function() {
+        var uri = URI(window.location.href);
+        var filters = uri.query(true).filters;
+        var stage = uri.query(true).stage;
+        if (filters){
+            searchOptions.filters = filters;
+            var arr = filters.split('=');
+            if (arr.length>1){
+                searchOptions.aggr = arr[0];
+            }
+        }
+        if (stage){
+            searchOptions.stage = stage;
+        }
         loadFunnel();
     });
 
@@ -28,6 +41,7 @@
                 initHistogram(resp);
                 initPies(resp);
                 initFunnelSource( t('#kfvWrapper'));
+                initSourceFilters();
             },
             onBubbleClick: function (data, stage) {
                 flog("onBubbleClick", data, stage.name);
@@ -147,6 +161,11 @@
             var btn = $(this);
             var title = btn.html();
             searchOptions.aggr = btn.attr('href');
+            searchOptions.filters = '';
+            var uri = URI(window.location.pathname);
+            uri.setSearch("filters", '');
+            uri.setSearch("stage", '');
+            history.pushState(null, null, uri.toString());
             btn.closest('div').find('.aggr-title').html(title);
             $('#funnel-wrap').attr('aggr-title', title);
             loadFunnel();
@@ -234,13 +253,37 @@
     function initFunnelSource(div){
         var fnSource = t('.funnel-source').clone().removeClass('hide');
         div.find('.funnel-labels').prepend(fnSource);
-        fnSource.find('.aggr-title').text($('#funnel-wrap').attr('aggr-title'));
+        var text = fnSource.find('.btn-select-aggr[href="'+searchOptions.aggr+'"]').text();
+        fnSource.find('.aggr-title').text(text);
+    }
+    
+    function initSourceFilters() {
+        var uri = URI(window.location.href);
+        var filters = uri.query(true).filters;
+        var arr = filters && filters.split('=');
+        if (arr && arr.length > 1 && arr[1]){
+            $('#funnelStages').append('<a href="#" class="btnClearFilters"><i class="fa fa-filter"></i> Clear all filters</a>');
+        } else {
+            $('#funnelStages').find('.btnClearFilters').remove();
+        }
+    }
+
+    function initClearFilters() {
+        $(document).on('click', '.btnClearFilters', function (e) {
+            e.preventDefault();
+            searchOptions.filters = '';
+            var uri = URI(window.location.pathname);
+            uri.setSearch("filters", '');
+            uri.setSearch("stage", searchOptions.stage);
+            history.pushState(null, null, uri.toString());
+            loadFunnel();
+        });
     }
 
     w.initLeadManAnalytics = function () {
-        loadFunnel();
         initAggrSelect();
         initDataTable();
+        initClearFilters();
         $(w).bind('popstate', function (event) {
             var uri = new URI(w.location.pathname + w.location.search);
             uri.addQuery('asJson');

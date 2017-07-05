@@ -17,3 +17,13 @@
 #funnel-lead-query{
     margin-bottom: 22px;
 }
+
+#funnelStages{
+    position: relative;
+    margin-bottom: 20px;
+}
+.btnClearFilters{
+    position: absolute;
+    bottom: -10px;
+    left:0;
+}
