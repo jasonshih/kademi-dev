@@ -1,5 +1,5 @@
 <script src="/theme/apps/rewardstore/managePointsBucketTab.js">//</script>
-
+<link rel="stylesheet" href="/theme/apps/rewardstore/managePointsBucketTab.css"/>
 #set($pEndDate = $formatter.addDays($formatter.now, 180))
 
 
@@ -38,15 +38,16 @@
             #end
         </h2>
 
-        <table class="table table-striped">
-            <colgroup>
-                <col width="200px" />
-                <col />
-                <col />
-                <col width="100px" />
-                <col width="100px" />
-            </colgroup>
-            <thead>
+        <div class="table-wrap">
+            <table class="table table-striped">
+                <colgroup>
+                    <col width="200px" />
+                    <col width="700px"/>
+                    <col />
+                    <col width="100px" />
+                    <col width="100px" />
+                </colgroup>
+                <thead>
                 <tr>
                     <th>Date</th>
                     <th>Tag/Code</th>
@@ -54,18 +55,18 @@
                     <th>Credits</th>
                     <th>Expiry</th>
                 </tr>
-            </thead>
-            <tbody id="transactions-${participant.id}-${reward.id}">
-                #set( $txs = $formatter.newList() )
-                #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
-                #if( $txs.isEmpty() )
+                </thead>
+                <tbody id="transactions-${participant.id}-${reward.id}">
+                    #set( $txs = $formatter.newList() )
+                    #set( $txs = $applications.rewardStore.transactions($participant, $reward ) )
+                    #if( $txs.isEmpty() )
                     <tr>
                         <td colspan="4">
                             <i>No transactions in date range</i>
                         </td>
                     </tr>
-                #else
-                    #foreach($p in $txs)
+                    #else
+                        #foreach($p in $txs)
                         <tr>
                             <td>$formatter.formatDateTime($p.date, $page.organisation.timezone)</td>
                             <td>$!p.code</td>
@@ -94,8 +95,8 @@
                                 #end
                             </td>
                         </tr>
+                        #end
                     #end
-                #end
                 <tr>
                     <td></td>
                     <td class="text-right">
@@ -106,9 +107,9 @@
                     </td>
                     <td></td>
                 </tr>
-                #set( $avail = 0 )
-                #set( $avail = $applications.rewardStore.availableBalance($participant, $reward) )
-                #if($current != $avail)
+                    #set( $avail = 0 )
+                    #set( $avail = $applications.rewardStore.availableBalance($participant, $reward) )
+                    #if($current != $avail)
                     <tr>
                         <td></td>
                         <td class="text-right">
@@ -119,9 +120,11 @@
                         </td>
                         <td></td>
                     </tr>
-                #end
-            </tbody>
-        </table>
+                    #end
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
         #set( $points = $applications.rewardStore.findExpiring($reward.name, $participant, $pEndDate ) )
