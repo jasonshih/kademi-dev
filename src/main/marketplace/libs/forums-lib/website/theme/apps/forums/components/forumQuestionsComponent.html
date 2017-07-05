@@ -1,4 +1,4 @@
-#if ($page)
+#if ($page && "$!page.class.simpleName" != "ThemeCheckerPage")
 <div class="text-right">
     #if( $user )
     <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post a
@@ -72,15 +72,15 @@
     </div>
 </div>
 #else
-<div>
-    <div class="text-right">
-        <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post
-            a question</a>
-        <p>&nbsp;</p>
+    <div>
+        <div class="text-right">
+            <a href="#postForumQuestion" data-toggle="modal" class="btn btn-primary"><i class="fa fa-plus"><!----></i> Post
+                a question</a>
+            <p>&nbsp;</p>
+        </div>
+        <div class="well">
+            <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a>
+            </p>
+        </div>
     </div>
-    <div class="well">
-        <p>No one has posted any questions yet, <a href="#postForumQuestion" data-toggle="modal">be the first to ask</a>
-        </p>
-    </div>
-</div>
 #end
