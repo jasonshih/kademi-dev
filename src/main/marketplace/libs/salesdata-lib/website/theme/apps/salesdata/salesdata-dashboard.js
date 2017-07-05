@@ -1,6 +1,7 @@
 $(function () {
     //flog("init kpis", $(".kpiVis"));
     $(".kpiVis").kpiVis(); // initialise kpi visualisation components
+    $(".kpiTargetProgress").kpiTargetProgress(); // initialise kpi target progress components
     $(".salesVis").seriesVis(); // initialise kpi visualisation components
     $(".kpi-circle").each(function (i, n) {
         var div = $(n);

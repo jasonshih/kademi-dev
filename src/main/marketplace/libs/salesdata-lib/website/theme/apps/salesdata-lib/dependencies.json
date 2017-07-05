@@ -29,6 +29,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/salesdata/jquery.kpiTargetProgress.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/salesdata/jquery.seriesVis.js"
             }
         },
