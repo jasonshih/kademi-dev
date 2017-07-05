@@ -81,6 +81,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/learner/profileAdminPortlet.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/learner/myRewards.js"
             }
         },
