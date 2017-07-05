@@ -300,12 +300,11 @@
                     ].join('');
                     $('#funnelStages').append(svgElem);
                     var svgStage = d3.select('#' + svgElemId).attr('width', 120).attr('height', 30);
-
+                    svgStage.attr("style", "cursor: pointer");
                     // Stage label
                     var svgStageText = svgStage.append("text")
                         .style("fill", "black")
-                        .attr("x", 40)
-                        // .attr("y", (counter + 1) * 50 + 4 + 240)
+                        .attr("x", 30)
                         .attr("y", 20)
                         .attr("font-size", setting.legendNameFontSize)
                         .attr("font-family", setting.legendNameFontFamily)
@@ -316,21 +315,21 @@
 
                     // Stage color ellipse
                     svgStage.append("rect")
-                        .attr("x", 15)
+                        .attr("x", 0)
                         .attr("y", 7.5)
                         .attr("width", 15)
                         .attr("height", 15)
                         .attr("fill", stringToColorCode(value))
                         .attr("stroke", stringToColorCode(value))
-                        .data([{"id": id_codes[value]}])
-                        //.enter()
-                        .on('click', function (d) {
-                            if (typeof setting.onGroupClick === 'function') {
-                                var id = id_codes[value];
-                                //flog("onGroupClick1", value, id, id_codes);
-                                setting.onGroupClick.call(this, {id: id, name: value});
-                            }
-                        });
+                        .data([{"id": id_codes[value]}]);
+
+                    svgStage.on('click', function (d) {
+                        if (typeof setting.onGroupClick === 'function') {
+                            var id = id_codes[value];
+                            //flog("onGroupClick1", value, id, id_codes);
+                            setting.onGroupClick.call(this, {id: id, name: value});
+                        }
+                    });
                     counter++;
                 });
 
