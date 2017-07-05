@@ -1083,7 +1083,7 @@
                             templates_files: [templatesPath],
                             templates_replaceContent: false,
                             toolbarGroups: toolbarSets['Default'],
-                            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal',
+                            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal,btbutton,fontawesome,btgrid',
                             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
                             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
                             enterMode: 'P',

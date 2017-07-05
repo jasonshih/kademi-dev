@@ -22,10 +22,10 @@
                 #foreach($app in $membershipApplications)
                     <tbody>
                         <tr>
-                            <td>$app.member.nickName</td>
-                            <td>$app.groupEntity.name</td>
-                            <td>$app.member.email</td>
-                            <td>$app.withinOrg.titleOrId</td>
+                            <td>$!app.member.nickName</td>
+                            <td>$!app.groupEntity.name</td>
+                            <td>$!app.member.email</td>
+                            <td>$!app.withinOrg.titleOrId</td>
                             <td><abbr title="$formatter.formatDateISO8601($app.createdDate)" class="timeago">$app.createdDate</abbr></td>
                             <td>
                                 <input type="hidden" name="appId" value="$app.id" />
