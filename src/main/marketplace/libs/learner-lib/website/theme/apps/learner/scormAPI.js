@@ -213,3 +213,22 @@ function isNull(s) {
 function isNotNull(s) {
     return s !== null && typeof (s) !== 'undefined';
 }
+
+function resizeIframe(obj) {
+    obj.style.height = '750px';
+    if (obj.contentWindow.document.body.scrollHeight > 500) {
+        obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+    }
+    obj.style.width = obj.contentWindow.document.body.scrollWidth + 'px';
+}
+
+(function($){
+    $(document).ready(function(){
+        if($('.scormpage').length > 0) {
+            $(window).on('resize', function () {
+                flog('ON resize');
+                $('#iframe-container').css('top', $('#maincontentContainer').offset().top);
+            }).trigger('resize');
+        }
+    });
+})(jQuery);
