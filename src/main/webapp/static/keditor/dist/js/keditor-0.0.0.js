@@ -6,6 +6,13 @@
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
 /**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
+/**!
  * Configuration:
  * @option {Boolean} niceScrollEnabled Enable niceScroll or not
  * @option {String} btnMoveContainerText Text content for move button of container
@@ -221,6 +228,7 @@
             if (options.iframeMode) {
                 target = self.initFrame(target);
             } else {
+                self.window = window;
                 self.body = $(document.body);
                 
                 if (target.is('textarea')) {
@@ -232,7 +240,7 @@
                     keditorWrapper.attr({
                         class: 'keditor-ui keditor-wrapper'
                     });
-    
+                    
                     var keditorWrapperId = keditorWrapper.attr('id');
                     if (!keditorWrapperId) {
                         keditorWrapperId = self.generateId('wrapper');
@@ -320,6 +328,7 @@
             iframeDoc.get(0).open();
             iframeDoc.get(0).close();
             // ======================================================
+            self.window = iframe[0].contentWindow ? iframe[0].contentWindow : iframe[0].contentDocument.defaultView;
             var iframeHead = self.iframeHead = iframeDoc.find('head');
             var iframeBody = self.iframeBody = iframeDoc.find('body');
             

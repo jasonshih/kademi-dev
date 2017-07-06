@@ -10,12 +10,15 @@
     #set ($usernamePlaceholder = "Enter your email address or username")
 #end
 
+
 <div class="panel panel-default panel-user-login">
     <div class="panel-body">
         #if ($page)
             #if( $userResource )
+                #if( $templateName == "/theme/apps/login/login.html" )
                 <h1>Sorry, you don't have permission to view this page</h1>
-                <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>
+                #end
+                <h4>You're currently logged in as <b>$userResource.title</b> with email <b>$userResource.email</b></h4>                                
             #else
                 #renderLoginForm($layout)
             #end
@@ -35,6 +38,7 @@
                 });
             </script>
         #else
+        
             #renderLoginForm($layout)
         #end
     </div>
