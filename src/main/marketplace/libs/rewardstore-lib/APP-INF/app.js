@@ -79,7 +79,7 @@ function findProducts(query, category, rewardStoreId, from, max, priceStart, pri
     searchConfig.sort[sort] = asc;
 
     if (query !== null && typeof query !== 'undefined' && query.trim().length > 0) {
-        var searchFields = ["title", "content"];
+        var searchFields = ["title.text", "content.text"];
         for (var i in searchFields) {
             var q = '{'
                     + '    "prefix": {'

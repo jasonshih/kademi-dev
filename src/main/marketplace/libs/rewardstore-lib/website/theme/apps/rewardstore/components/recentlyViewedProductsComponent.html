@@ -7,7 +7,6 @@
 <ul class="recentlyViewedRewardProducts">
     #set ($app = $applications.get("rewardstore-lib"))
     #set ($recentlyViewedRewardProducts = $app.call("getRecentlyViewedRewardProducts", $page, $number))
-    $$recentlyViewedRewardProducts
     #if("$!recentlyViewedRewardProducts" == "" || $recentlyViewedRewardProducts.size() == 0)
     <li>You have no recently viewed items</li>
     #else
