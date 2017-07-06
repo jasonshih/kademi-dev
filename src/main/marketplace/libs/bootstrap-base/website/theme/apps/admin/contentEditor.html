@@ -76,6 +76,10 @@
         #set($useHash = $params.useHash)
 
         <nav class="content-editor-nav">
+            <a href="" class="content-editor-toggle" title="Close navbar">
+                <i class="fa fa-angle-double-up"></i>
+                <i class="fa fa-angle-double-down"></i>
+            </a>
             <span class="content-editor-file" id="file-title">
                 #if( $file.title )
                     $file.title
