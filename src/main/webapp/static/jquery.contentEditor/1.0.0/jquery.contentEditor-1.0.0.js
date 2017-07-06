@@ -99,7 +99,7 @@
         var options = keditor.options;
         var allGroups = options.allGroups;
         
-        $.ajax({
+        return $.ajax({
             url: '/static/jquery.contentEditor/1.0.0/jquery.contentEditorContainerSettings-1.0.0.html',
             type: 'get',
             success: function (resp) {
@@ -241,7 +241,17 @@
                     containerBg[this.checked ? 'addClass' : 'removeClass']('container-inverse');
                 });
                 
-                form.find('.txt-height').on('change', function () {
+                var win = $(keditor.window);
+                var winTimer;
+                win.on('resize', function () {
+                    clearTimeout(winTimer);
+                    winTimer = setTimeout(function () {
+                        keditor.body.find('.container-full-height').css('min-height', win.height());
+                    }, 250);
+                }).trigger('resize');
+                
+                var txtHeight = form.find('.txt-height');
+                txtHeight.on('change', function () {
                     var height = this.value || '';
                     if (isNaN(height)) {
                         height = '';
@@ -251,6 +261,13 @@
                     var containerBg = container.find('.container-bg');
                     
                     containerBg.css('height', height);
+                });
+                form.find('.chk-full-height').on('click', function () {
+                    var container = keditor.getSettingContainer();
+                    var containerBg = container.find('.container-bg');
+                    
+                    txtHeight.prop('disabled', this.checked).val('');
+                    containerBg[this.checked ? 'addClass' : 'removeClass']('container-full-height').css('min-height', this.checked ? win.height() : '');
                 });
                 
                 form.find('.txt-padding').each(function () {
@@ -480,7 +497,15 @@
             txt.val((containerBg.get(0).style[styleName] || '').replace('px', ''));
         });
         
-        form.find('.txt-height').val(containerBg.get(0).style.height || '');
+        var txtHeight = form.find('.txt-height');
+        var chkFullHeight = form.find('.chk-full-height');
+        if (containerBg.hasClass('container-full-height')) {
+            txtHeight.prop('disabled', true).val('');
+            chkFullHeight.prop('checked', true);
+        } else {
+            txtHeight.prop('disabled', false).val(containerBg.get(0).style.height || '');
+            chkFullHeight.prop('checked', false);
+        }
         
         var selectGroups = form.find('.select-groups');
         var selectGroupsItems = selectGroups.find('input[type=checkbox]');
@@ -1083,7 +1108,7 @@
                             templates_files: [templatesPath],
                             templates_replaceContent: false,
                             toolbarGroups: toolbarSets['Default'],
-                            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal,btbutton,fontawesome,btgrid',
+                            extraPlugins: 'embed_video,fuse-image,sourcedialog,modal',
                             removePlugins: standardRemovePlugins + ',autogrow,magicline,showblocks',
                             removeButtons: 'Find,Replace,SelectAll,Scayt,FontSize,Font',
                             enterMode: 'P',
