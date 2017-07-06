@@ -16,8 +16,10 @@
             #if( $userResource )
                 #if ($autoRedirect && $redirectUrl && $redirectUrl != "" && $redirectUrl != "null")
                     <script type="text/javascript">
-                        document.title = 'Redirecting...';
-                        window.location.href = '$redirectUrl';
+                        if (!window.contentEditor) {
+                            document.title = 'Redirecting...';
+                            window.location.href = '$redirectUrl';
+                        }
                     </script>
                 #else
                     <h1>Sorry, you don't have permission to view this page</h1>

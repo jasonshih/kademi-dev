@@ -1,4 +1,5 @@
 var win = $(window);
+var contentEditor = true;
 
 function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
