@@ -4,7 +4,16 @@
 
 
 $(function () {
-    flog("init: bootstrap335/js/theme.js")
+    flog("init: bootstrap-base/js/theme.js");
+    
+    var win = $(window);
+    var winTimer;
+    win.on('resize', function () {
+        clearTimeout(winTimer);
+        winTimer = setTimeout(function () {
+            $('.container-full-height').css('min-height', win.height());
+        }, 250);
+    }).trigger('resize');
     
     $(document.body).on({
         'hide.bs.collapse': function () {
@@ -154,7 +163,7 @@ function closeMyPrompt() {
 }
 
 function myPrompt(id, url, title, instructions, caption, buttonName, buttonText, inputClass, inputPlaceholder, callback) {
-    flog("myPrompt: bootstrap335", id, url);
+    flog("myPrompt: bootstrap-base", id, url);
     var body = $("body")
     var modal = body.find("div.myprompt");
     if (modal.length === 0) {

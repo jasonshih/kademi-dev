@@ -1,4 +1,5 @@
 var win = $(window);
+var contentEditor = true;
 
 function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
@@ -6,6 +7,7 @@ function initContentEditorPage(options) {
     initKEditor(options);
     initSaving(options.fileName);
     initPropertiesModal();
+    initNavbar();
     
     // Confirm before closed tab or window
     window.onbeforeunload = function (e) {
@@ -13,6 +15,17 @@ function initContentEditorPage(options) {
             e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
         }
     };
+}
+
+function initNavbar() {
+    var nav = $('.content-editor-nav');
+    
+    $('.content-editor-toggle').on('click', function (e) {
+        e.preventDefault();
+        
+        nav.toggleClass('closed');
+        this.setAttribute('title', nav.hasClass('closed') ? 'Open navbar' : 'Close navbar');
+    });
 }
 
 function initPropertiesModal() {

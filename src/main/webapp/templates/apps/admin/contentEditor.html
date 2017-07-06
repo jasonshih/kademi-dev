@@ -27,19 +27,26 @@
         #set($file = $folder.child($fname))
         #set($useHash = $params.useHash)
 
-
-        <nav class="navbar navbar-default navbar-inverse navbar-fixed-top">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand">$params.fileName</a>
-                </div>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
-                    <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
-                    <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
-                    <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
-                </ul>
-            </div>
+        <nav class="content-editor-nav">
+            <a href="" class="content-editor-toggle" title="Close navbar">
+                <i class="fa fa-angle-double-up"></i>
+                <i class="fa fa-angle-double-down"></i>
+            </a>
+            <span class="content-editor-file" id="file-title">
+                #if( $file.title )
+                    $file.title
+                    <small class="text-muted">
+                        - $file.name
+                    </small>
+                #else
+                    $file.fileName
+                #end</span>
+            <ul class="content-editor-navbar">
+                <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
+                <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
+            </ul>
         </nav>
 
         <div id="content-area">$!file.body</div>
@@ -99,7 +106,8 @@
                                             </p>
                                             <div class="param-wrapper">
                                                 #foreach($paramName in $file.paramNames)
-                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName != 'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
+                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
+                                                        'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
                                                         <div class="input-group param">
                                                             <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
                                                             <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
