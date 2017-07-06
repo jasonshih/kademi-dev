@@ -36,6 +36,13 @@
     <div class="form-group">
         <label class="col-sm-12">Redirection after succesful login</label>
         <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-auto-redirect" name="redirect" value="" /> Redirect if already logged in
+                </label>
+            </div>
+            <small class="help-block">It will direct to the redirection you choose in below section</small>
+            <hr />
             <div class="radio">
                 <label>
                     <input type="radio" class="rdb-redirect" name="redirect" value="null" /> Current page
@@ -53,7 +60,8 @@
             </div>
             <div class="radio">
                 <label>
-                    <input type="radio" class="rdb-redirect" name="redirect" value="" /> <input type="text" class="form-control txt-direct-custom input-sm" value="" placeholder="Other" />
+                    <input type="radio" class="rdb-redirect" name="redirect" value="" />
+                    <input type="text" class="form-control txt-direct-custom input-sm" value="" placeholder="Other" />
                 </label>
             </div>
         </div>
