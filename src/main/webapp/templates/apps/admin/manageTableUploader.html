@@ -19,7 +19,7 @@
                                 <span class="chevron"></span>
                             </li>
                             #set($nextStep = 2)
-                            #if($page.customFormSupported)
+                            #if($page.customFormSupported || $page.hasDateField)
                             <li data-step="$nextStep">
                                 <span class="badge">$nextStep</span>Options
                                 <span class="chevron"></span>
@@ -76,14 +76,31 @@
                                 <div class="clearfix"></div>
                             </div>
                             #set($nextStep = 2)
-                            #if($page.customFormSupported)
+                            #if($page.customFormSupported || $page.hasDateField)
                             <div class="step-pane alert customForm" data-step="$nextStep">
                                 <div class="row">
                                     <div class="col-sm-6">
+                                        #if($page.hasDateField)
+                                        <div class="form-horizontal text-left">
+                                            <div class="form-group" >
+                                                <label class="control-label col-md-2" for="dateFormat">Date Format: </label>
+                                                <div class="col-md-10">
+                                                    <select id="dateFormat" name="dateFormat" class="form-control">
+                                                        <option value="">[No Date Format]</option>
+                                                        #foreach($e in $page.supportedDateFormats.entrySet())
+                                                        <option value="$e.key">$e.value</option>
+                                                        #end
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        #end
 
+                                        #if($page.customFormSupported)
                                         <div class="form-horizontal text-left">
                                             $!page.customForm
                                         </div>
+                                        #end
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +133,7 @@
                                 <hr>
                                 <p class="lead">Please select which destination field each column should be imported into:</p>
 
-                                <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
+                                <div class="" style="max-height: 300px; overflow-y: auto">
                                     <table class="table table-bordered table-striped" id="importerTable" >
                                         <thead>
                                             <tr id="importerHead">
@@ -170,7 +187,7 @@
                                     </table>
 
                                     <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                    <div class="table-responsive" style="max-height: 300px">
+                                    <div class="" style="max-height: 300px">
                                         <table class="table table-bordered table-striped">
                                             <tbody class="beforeImportInvalidRows">
 
