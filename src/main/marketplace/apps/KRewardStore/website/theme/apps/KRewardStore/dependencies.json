@@ -22,7 +22,7 @@
         },
         {
             "appId": "search-lib",
-            "branch" : "1.0.3"
+            "branch" : "1.0.4"
         }
   ]
 }

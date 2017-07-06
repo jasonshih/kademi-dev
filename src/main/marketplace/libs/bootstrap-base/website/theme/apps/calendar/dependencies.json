@@ -2,11 +2,7 @@
     "appDependencies": [
         {
             "appId": "calendar-lib",
-            "branch": "1.0.0"
-        },
-        {
-            "appId": "moment-lib",
-            "branch": "2.18.2"
+            "branch": "1.0.7"
         }
     ],
     "dependencies": [
