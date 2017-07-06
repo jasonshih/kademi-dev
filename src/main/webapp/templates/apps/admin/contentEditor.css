@@ -1,74 +1,73 @@
-﻿body {
+﻿body.content-editor-page {
     padding-top: 50px !important;
 }
 
-#keditor-sidebar {
-    top: 50px !important;
+/* ================================================================== */
+/* Keditor
+/* ================================================================== */
+.content-editor-page #keditor-sidebar {
+    top: 50px;
 }
 
-/* Embedded iframe */
-.embedded-iframe {
-    padding: 0 !important;
-}
-
-.embedded-iframe .navbar-fixed-top {
-    display: none;
-}
-
-.embedded-iframe #keditor-sidebar {
+/* ================================================================== */
+/* Content editor nav */
+/* ================================================================== */
+.content-editor-nav {
+    position: fixed;
+    background: #222;
+    z-index: 1032;
     top: 0;
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    color: #fff;
+    font-family: Arial, Helvetica, san-serif;
+    line-height: 26px;
+    height: 50px;
 }
 
-/* Navbar style */
-.content-editor-page > .navbar-fixed-top {
-    background: #222 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
+.content-editor-nav a {
+    color: #fff;
+    text-decoration: none;
 }
 
-.content-editor-page > .navbar-fixed-top .navbar-header,
-.content-editor-page > .navbar-fixed-top .navbar-brand {
-    height: 50px !important;
-    line-height: 50px !important;
-    padding: 0 !important;
-    border: 0 !important;
-    margin: 0 !important;
+.content-editor-nav .content-editor-file {
+    float: left;
 }
 
-.content-editor-page > .navbar-fixed-top a {
-    height: 50px !important;
-    line-height: 50px !important;
-    color: #999 !important;
-    background-color: transparent !important;
-    padding: 0 15px !important;
-    margin: 0 !important;
-    border: 0 !important;
+.content-editor-nav .content-editor-file,
+.content-editor-nav .content-editor-navbar li a {
+    display: block;
+    padding: 12px 20px;
 }
 
-.content-editor-page > .navbar-fixed-top .navbar-nav {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
+.content-editor-nav .content-editor-navbar {
+    float: right;
+    margin: 0;
+    padding: 0;
 }
 
-.content-editor-page > .navbar-fixed-top .navbar-nav > li {
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
+.content-editor-nav .content-editor-navbar li {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-.content-editor-page > .navbar-fixed-top .navbar-nav > li > a:hover {
-    color: #fff !important;
-    background-color: #080808 !important;
-    border: 0 !important;
+.content-editor-nav .content-editor-navbar li a {
+    color: #ccc;
 }
 
-.content-editor-page > .navbar-fixed-top .fa {
+.content-editor-nav .content-editor-navbar li a:hover,
+.content-editor-nav .content-editor-navbar li a:focus,
+.content-editor-nav .content-editor-navbar li a:active {
+    background: #000;
+    color: #fff;
+}
+
+.content-editor-nav .content-editor-navbar li a .fa {
     font-size: 20px !important;
-    line-height: 50px !important;
+    line-height: 1 !important;
 }
 
 /* ================================================================== */
