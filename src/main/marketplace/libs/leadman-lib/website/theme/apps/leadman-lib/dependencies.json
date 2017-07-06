@@ -2,15 +2,15 @@
     "appDependencies": [
         {
             "appId": "moment-lib",
-            "branch": "2.18.2"
+            "branch": "2.18.3"
         },
         {
             "appId": "dropzone-lib",
-            "branch": "4.3.0.1"
+            "branch": "4.3.0.2"
         },
         {
             "appId": "nvd3-lib",
-            "branch": "1.8.2"
+            "branch": "1.8.3"
         },
         {
             "appId": "datetimepicker-lib",
@@ -22,7 +22,7 @@
         },
         {
             "appId": "bootstrap-tagsinput-lib",
-            "branch": "0.6.1"
+            "branch": "0.6.2"
         }  
     ],
 
