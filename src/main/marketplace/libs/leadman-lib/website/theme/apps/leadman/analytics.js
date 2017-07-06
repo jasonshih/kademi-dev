@@ -140,7 +140,7 @@
                 return d3.time.format('%x')(new Date(d))
             });
 
-            chart.yAxis.tickFormat(d3.format(',.2f'));
+            chart.yAxis.tickFormat(d3.format(','));
 
 
             d3.select('#histo svg')
@@ -204,6 +204,7 @@
                     .y(function (d) {
                         return d.doc_count
                     })
+                    .valueFormat(d3.format(','))
                     .donut(true)
                     .color(colors)
                     .showLabels(false);                
@@ -221,6 +222,7 @@
                     .y(function (d) {
                         return d.doc_count;
                     })
+                    .valueFormat(d3.format(','))
                     .donut(true)
                     .color(colors)
                     .showLabels(false);   
@@ -237,6 +239,7 @@
                     .y(function (d) {
                         return d.doc_count;
                     })
+                    .valueFormat(d3.format(','))
                     .donut(true)
                     .color(colors)
                     .showLabels(false);   

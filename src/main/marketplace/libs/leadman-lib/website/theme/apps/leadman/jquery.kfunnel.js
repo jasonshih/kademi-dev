@@ -220,11 +220,11 @@
                 });
 
                 /* Svg Lead */
-                var svgLead = d3.select('#funnelLead').attr('width', 220).attr('height', 80);
+                var svgLead = d3.select('#funnelLead').attr('width', 250).attr('height', 80);
                 svgLead.append("rect")
                     .attr("x", 0)
                     .attr("y", 0)
-                    .attr("width", 220)
+                    .attr("width", 250)
                     .attr("height", 80)
                     .attr("fill", setting.funnelBackgroundColor)
                     .attr("stroke", "gray")
@@ -246,11 +246,11 @@
                     .text(totalLeads);
 
                 /* Svg Deal */
-                var svgDeal = d3.select('#funnelDealTotal').attr('width', 220).attr('height', 80);
+                var svgDeal = d3.select('#funnelDealTotal').attr('width', 250).attr('height', 80);
                 svgDeal.append("rect")
                     .attr("x", 0)
                     .attr("y", 0)
-                    .attr("width", 220)
+                    .attr("width", 250)
                     .attr("height", 80)
                     .attr("fill", setting.funnelBackgroundColor)
                     .attr("stroke", "gray")
