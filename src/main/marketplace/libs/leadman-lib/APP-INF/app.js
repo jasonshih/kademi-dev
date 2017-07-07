@@ -27,6 +27,7 @@ controllerMappings.addComponent("leadman/components", "leadTasksNav", "html", "D
 controllerMappings.addComponent("leadman/components", "leadTasksTable", "html", "Display tasks list on lead tasks page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadTeam", "html", "Display team list on lead team page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "cancelLead", "html", "Display cancel form of a lead", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadTeamMap", "html", "Display team map", "Leadman App component");
 
 // ============================================================================
 // Portlet
