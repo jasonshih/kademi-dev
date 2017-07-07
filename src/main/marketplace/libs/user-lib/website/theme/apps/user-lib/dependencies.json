@@ -1,29 +1,35 @@
 {
-  "dependencies": [
-    {
-      "less": {
-        "lessMedia": "all",
-        "path": "/theme/apps/user/profile.less"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/theme/apps/user/changeOrg.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/theme/apps/user/profile.js"
-      }
-    }
-  ]
+    "dependencies": [
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/user/profile.less"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/changeOrg.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/profile.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/loginForm.js"
+            }
+        }
+    ]
 }
 
