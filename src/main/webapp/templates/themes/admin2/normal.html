@@ -78,7 +78,8 @@
         <script type="text/javascript" src="/static/js/morris.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/keymap.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/js/init-theme.js?v=7.3.7" bottom="true">//</script>
-        $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
+        <script type="text/javascript" src="/static/js/init-theme.js?v=7.3.7" bottom="true">//</script>
+        
         <script type="text/javascript" src="/static/nicescroll/3.6.8/jquery.nicescroll.min.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.min.js">//</script>
         <!-- End Fuse specific scripts -->
@@ -109,6 +110,9 @@
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
     </head>
     <body>
+        
+        $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
+        
         <script type="text/javascript">
             $(function () {
                 Main.init('$page.organisation.id');
