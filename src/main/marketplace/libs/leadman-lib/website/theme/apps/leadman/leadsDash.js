@@ -38,11 +38,9 @@
 
     $(document).ready(function(){
         if($('.lead-dash-page').length > 0) {
-            var mainContainer = $('#maincontentContainer');
-            var divs = mainContainer.find('>div').detach();
-            mainContainer.append('<div class="row"></div>');
-            mainContainer.find('>.row').append(divs);
-            initDonuts();
+            $(document.body).on('onGoogleMapReady', function () {
+                initDonuts();
+            });
 
             var primaryColor = $('.dashboardPieColor').first().css('background-color');
 

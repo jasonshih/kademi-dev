@@ -1,5 +1,5 @@
 controllerMappings.addComponent("leadman/components", "leadCompanies", "html", "Show list of companies in table format", "Leadman App component");
-controllerMappings.addComponent("leadman", "taskList", "html", "Display a list of task for the current user", "Leadman App component 1");
+controllerMappings.addComponent("leadman", "taskList", "html", "Display a list of task for the current user", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadsPageFilter", "html", "Display top filter on leads page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadsPageTable", "html", "Display leads table on leads page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadCover", "lead", "Display lead cover section in lead page", "Leadman App component");
@@ -27,7 +27,7 @@ controllerMappings.addComponent("leadman/components", "leadTasksNav", "html", "D
 controllerMappings.addComponent("leadman/components", "leadTasksTable", "html", "Display tasks list on lead tasks page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadTeam", "html", "Display team list on lead team page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "cancelLead", "html", "Display cancel form of a lead", "Leadman App component");
-controllerMappings.addComponent("leadman/components", "leadTeamMap", "html", "Display team map", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadsGeoLocation", "html", "Display leads in a map canvas", "Leadman App component");
 
 // ============================================================================
 // Portlet
