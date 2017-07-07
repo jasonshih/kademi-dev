@@ -22,8 +22,12 @@
         },
         {
             "appId": "bootstrap-tagsinput-lib",
-            "branch": "0.6.2"
-        }  
+            "branch": "0.6.1"
+        },
+        {
+            "appId": "googlemap-lib",
+            "branch": "1.0.1"
+        }
     ],
 
     "dependencies": [
@@ -258,6 +262,11 @@
         {
             "less": {
                 "path": "/theme/apps/leadman/leadman-typeahead.less"
+            }
+        },
+        {
+            "less": {
+                "path": "/theme/apps/leadman/leadsDash.less"
             }
         }
     ]
