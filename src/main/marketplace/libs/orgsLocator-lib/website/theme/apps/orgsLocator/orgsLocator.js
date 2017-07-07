@@ -3,7 +3,6 @@ $(function () {
 
     $('#org-map').orgFinder({
         searchUrl: '/orgsLocator/',
-        googleAPIKey: 'AIzaSyDS53FPtVGJPvZvrzh2sLcfPUQYS3gsh0c',
         initLatLng: [-33.867, 151.195],
         initZoomLevel: 15,
         orgTypes: orgTypes,

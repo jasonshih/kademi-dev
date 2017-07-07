@@ -1,20 +1,19 @@
-<div id="org-map"></div>
+<div id="org-map" style="height: 400px"></div>
 
 <script type="text/javascript">
     var orgTypes = [];
-            #foreach($orgType in $page.find("/").orgTypes)
-            orgTypes.push({
-                    title: "$orgType.displayName",
-                    value: '$orgType.name'
-            });
-            #end
+    #foreach($orgType in $page.find("/").orgTypes)
+        orgTypes.push({
+                title: "$orgType.displayName",
+                value: '$orgType.name'
+        });
+    #end
 
-            var allowedCountries = [];
-            #foreach($cc in $formatter.countryCodes.list)
-            allowedCountries.push({
-                    value: '$cc.alpha2Code',
-                    title: "$cc.englishShortName"
-            });
-            #end
+    var allowedCountries = [];
+    #foreach($cc in $formatter.countryCodes.list)
+        allowedCountries.push({
+                value: '$cc.alpha2Code',
+                title: "$cc.englishShortName"
+        });
+    #end
 </script>
-<script type="text/javascript" src="/theme/apps/orgsLocator/orgsLocator.js">//</script>
