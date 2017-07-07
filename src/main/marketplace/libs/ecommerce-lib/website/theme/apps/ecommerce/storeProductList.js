@@ -10,7 +10,7 @@
                 win.on('resize', function () {
                     clearTimeout(timer);
                     timer = setTimeout(function () {
-                        var brieves = $('#products-list-${prodsListId}').find('.product-brief');
+                        var brieves = $('.products-list').find('.product-brief');
                         brieves.css('height', '');
 
                         if (win.width() > 767) {
