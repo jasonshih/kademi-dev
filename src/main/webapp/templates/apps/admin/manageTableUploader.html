@@ -283,7 +283,8 @@
         <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js">//</script>
         <script type="text/javascript">
             $(function () {
-                initManageTableUploader($page.customFormSupported);
+                #set($hcf = $page.customFormSupported || $page.hasDateField)
+                initManageTableUploader($hcf);
             });
         </script>
     </body>
