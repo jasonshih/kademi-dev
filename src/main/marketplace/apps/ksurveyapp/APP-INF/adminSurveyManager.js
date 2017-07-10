@@ -374,14 +374,6 @@ function findQuestionBySurvey(page, surveyId){
         'sort': {
             'createdDate':'asc'
         },
-        'stored_fields': [
-            'body',
-            'surveyId',
-            'questionId',
-            'title',
-            'type',
-            'answerLayout'
-        ],
         'size': 1000,
         'aggs': {
             "group_by_question": {
@@ -450,10 +442,6 @@ function clearResult(page, params){
     var surveyId = params.surveyId;
 
     var queryJson = {
-        'stored_fields': [
-            'userId',
-            'surveyId'
-        ],
         'size': 10000,
         'query': {
             'bool': {
@@ -466,10 +454,6 @@ function clearResult(page, params){
     };
 
     var queryJson2 = {
-        'stored_fields': [
-            'userId',
-            'surveyId'
-        ],
         'size': 10000,
         'query': {
             'bool': {
@@ -511,15 +495,6 @@ function clearResult(page, params){
 function getSurveyStatistic(page, surveyId){
     log.info('getSurveyStatistic {}');
     var queryJson = {
-        "stored_fields": [
-            'surveyId',
-            'questionId',
-            'answerId',
-            'userId',
-            'fromAddress',
-            'answerBody',
-            'createdDate'
-        ],
         'size': 0,
         'query': {
             'bool': {
@@ -580,11 +555,7 @@ function getSurveyStatistic(page, surveyId){
 
 
     var queryJson1 = {
-        'stored_fields': [
-            'surveyId',
-            'userId',
-            'createdDate'
-        ],
+
         'size': 10000,
         'query': {
             'bool': {
@@ -682,16 +653,6 @@ function getSurveyStatistic(page, surveyId){
 function getPlainAnswers(page, questionId, surveyId){
     log.info('getPlainAnswers {} questionId {} surveyId {}', page, questionId, surveyId);
     var queryJson = {
-        'stored_fields': [
-            'surveyId',
-            'questionId',
-            'answerId',
-            'userId',
-            'fromAddress',
-            'userAgentHeader',
-            'answerBody',
-            'createdDate'
-        ],
         'size': 10000,
         'query': {
             'bool': {
