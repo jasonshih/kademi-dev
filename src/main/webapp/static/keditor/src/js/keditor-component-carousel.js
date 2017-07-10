@@ -122,7 +122,8 @@
                     ).appendTo(document.body);
                     
                     var ckeditorOptions = keditor.options.ckeditorOptions;
-                    ckeditorOptions.removePlugins = ckeditorOptions.removePlugins.replace('autogrow,', '');
+                    ckeditorOptions.removePlugins = ckeditorOptions.removePlugins.replace(',autogrow', '');
+                    ckeditorOptions.extraPlugins = ckeditorOptions.extraPlugins + ',autogrow';
                     var editor = $('#modal-carousel-content-body').ckeditor(ckeditorOptions).editor;
                     
                     form.find('.carouselAddImage').on('click', function (e) {
