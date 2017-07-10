@@ -1,0 +1,16 @@
+<div class="form-group" >
+    <label class="control-label col-md-2" for="defaultCalendars">Calendar: </label>
+    <div class="col-md-10">
+        <select id="calendar" name="calendar" class="form-control">
+            <option value="">[No Calendar Selected]</option>
+            #foreach($cal in $rootFolder.find("/Calendars/").children)
+                #if ($cal.title)
+                #set ($calName = $cal.title)                                            
+                #else
+                #set ($calName = $cal.name)
+                #end
+                $formatter.option($cal.name, $calName, $request.params.calendar)
+            #end
+        </select>
+    </div>
+</div>
