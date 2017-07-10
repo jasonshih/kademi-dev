@@ -29,6 +29,7 @@ $(function(){
         modalQuestion.find('[name=questionType]').trigger('change');
         modalQuestion.find('form').trigger('reset');
         modalQuestion.find('[name=questionType]').removeAttr('disabled');
+        modalQuestion.find('iframe').contents().find('body').empty();
         openFuseModal(modalQuestion);
 	});
     

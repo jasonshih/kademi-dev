@@ -374,7 +374,7 @@ function findQuestionBySurvey(page, surveyId){
         'sort': {
             'createdDate':'asc'
         },
-        'fields': [
+        'stored_fields': [
             'body',
             'surveyId',
             'questionId',
@@ -450,7 +450,7 @@ function clearResult(page, params){
     var surveyId = params.surveyId;
 
     var queryJson = {
-        'fields': [
+        'stored_fields': [
             'userId',
             'surveyId'
         ],
@@ -466,7 +466,7 @@ function clearResult(page, params){
     };
 
     var queryJson2 = {
-        'fields': [
+        'stored_fields': [
             'userId',
             'surveyId'
         ],
@@ -511,7 +511,7 @@ function clearResult(page, params){
 function getSurveyStatistic(page, surveyId){
     log.info('getSurveyStatistic {}');
     var queryJson = {
-        'fields': [
+        "stored_fields": [
             'surveyId',
             'questionId',
             'answerId',
@@ -525,7 +525,7 @@ function getSurveyStatistic(page, surveyId){
             'bool': {
                 'must': [
                     { 'type': { 'value': RECORD_TYPES.RESULT } },
-                    { 'term': { 'surveyId': surveyId } },
+                    { 'term': { 'surveyId': surveyId } }
                 ]
             }
         },
@@ -580,7 +580,7 @@ function getSurveyStatistic(page, surveyId){
 
 
     var queryJson1 = {
-        'fields': [
+        'stored_fields': [
             'surveyId',
             'userId',
             'createdDate'
@@ -682,7 +682,7 @@ function getSurveyStatistic(page, surveyId){
 function getPlainAnswers(page, questionId, surveyId){
     log.info('getPlainAnswers {} questionId {} surveyId {}', page, questionId, surveyId);
     var queryJson = {
-        'fields': [
+        'stored_fields': [
             'surveyId',
             'questionId',
             'answerId',

@@ -22,11 +22,11 @@
                                             </label>
                                             <label class="btn btn-success $formatter.ifEqual('active', '', $state, 'Accepted')">
                                                 <input type="radio" name="quoteStatus" id="Accepted" autocomplete="off" $formatter.ifEqual(
-                                                       'checked="checked"', '', $state, 'Accepted') /> <span id="acceptedQuotesTotal">$acceptedQuotes.size()</span> Accepted
+                                                    'checked="checked"', '', $state, 'Accepted') /> <span id="acceptedQuotesTotal">$acceptedQuotes.size()</span> Accepted
                                             </label>
                                             <label class="btn btn-warning $formatter.ifEqual('active', '', $state, 'Invoiced')">
                                                 <input type="radio" name="quoteStatus" id="Invoiced" autocomplete="off" $formatter.ifEqual(
-                                                       'checked="checked"', '', $state, 'Invoiced') /> <span id="invoicedQuotesTotal">$invoicedQuotes.size()</span> Invoiced
+                                                    'checked="checked"', '', $state, 'Invoiced') /> <span id="invoicedQuotesTotal">$invoicedQuotes.size()</span> Invoiced
                                             </label>
                                         </div>
                                     </div>
@@ -76,44 +76,44 @@
 
                                                         <tbody id="quoteTableBody">
                                                             #if ($state == 'New')
-                                                            #set( $proposals = $newQuotes )
+                                                                #set( $proposals = $newQuotes )
                                                             #elseif ($state == 'Accepted')
-                                                            #set( $proposals = $acceptedQuotes )
+                                                                #set( $proposals = $acceptedQuotes )
                                                             #elseif ($state == 'Invoiced')
-                                                            #set( $proposals = $invoicedQuotes )
+                                                                #set( $proposals = $invoicedQuotes )
                                                             #end
 
                                                             #foreach($v in $proposals)
-                                                            <tr>
-                                                                <td style="text-align: center;"><input name="quote-for-proposal" value="$v.name" type="checkbox" /></td>
-                                                                <td title="$v.quoteState" class="text-center lead">
-                                                                    #if($v.quoteState == "New")
-                                                                    <i class="fa fa-pencil-square-o text-muted"></i>
-                                                                    #elseif($v.quoteState == "Accepted")
-                                                                    <i class="fa fa-check-circle text-success"></i>
-                                                                    #elseif($v.quoteState == "Invoiced")
-                                                                    <i class="fa fa-check-circle text-success"></i>
+                                                                <tr>
+                                                                    <td style="text-align: center;"><input name="quote-for-proposal" value="$v.name" type="checkbox" /></td>
+                                                                    <td title="$v.quoteState" class="text-center lead">
+                                                                        #if($v.quoteState == "New")
+                                                                            <i class="fa fa-pencil-square-o text-muted"></i>
+                                                                        #elseif($v.quoteState == "Accepted")
+                                                                            <i class="fa fa-check-circle text-success"></i>
+                                                                        #elseif($v.quoteState == "Invoiced")
+                                                                            <i class="fa fa-check-circle text-success"></i>
+                                                                        #else
+                                                                            <i class="fa fa-exclamation-circle text-danger"></i>
+                                                                        #end
+                                                                    </td>
+                                                                    <td><a href="#">$v.name</a></td>
+                                                                    <td>$v.title</td>
+                                                                    <td>$formatter.ifNull($v.vendor.formattedName, '-')</td>
+                                                                    <td>$formatter.ifNull($v.customer.formattedName, '-')</td>
+                                                                    <td>$v.subTotal</td>
+                                                                    <td>$v.tax</td>
+                                                                    <td>$v.total</td>
+                                                                    <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$v.issuedDate</abbr></td>
+                                                                    #if ($v.expiryDate)
+                                                                        <td><abbr title="$formatter.formatDateISO8601($v.expiryDate)" class="timeago">$v.expiryDate</abbr></td>
                                                                     #else
-                                                                    <i class="fa fa-exclamation-circle text-danger"></i>
+                                                                        <td>-</td>
                                                                     #end
-                                                                </td>
-                                                                <td><a href="#">$v.name</a></td>
-                                                                <td>$v.title</td>
-                                                                <td>$formatter.ifNull($v.vendor.formattedName, '-')</td>
-                                                                <td>$formatter.ifNull($v.customer.formattedName, '-')</td>
-                                                                <td>$v.subTotal</td>
-                                                                <td>$v.tax</td>
-                                                                <td>$v.total</td>
-                                                                <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$v.issuedDate</abbr></td>
-                                                                #if ($v.expiryDate)
-                                                                <td><abbr title="$formatter.formatDateISO8601($v.expiryDate)" class="timeago">$v.expiryDate</abbr></td>
-                                                                #else
-                                                                <td>-</td>
-                                                                #end
-                                                                <td class="action">
-                                                                    <div class="btn-group btn-group-sm">
-                                                                        <a href="$v.href" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
-                                                                        <!--<button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                                    <td class="action">
+                                                                        <div class="btn-group btn-group-sm">
+                                                                            <a href="$v.href" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i> Edit</a>
+                                                                            <!--<button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                                                         <span class="caret"></span>
                                                                         <span class="sr-only">Toggle Dropdown</span>
                                                                     </button>
@@ -121,9 +121,9 @@
                                                                         <li><a class="XQuote" href="$v.name"><i class="fa fa-send"></i> Mark as Accepted</a></li>
                                                                         <li><a class="XQuote" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
                                                                     </ul>-->
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
                                                             #end
                                                         </tbody>
                                                     </table>
@@ -190,25 +190,25 @@
                             </thead>
                             <tbody>
                                 #foreach($prop in $page.find("/proposals").proposals)
-                                #if ($prop.quotes.size() > 0)
-                                #foreach ($quote in $prop.quotes)
-                                <tr>
-                                    <td>
-                                        #if ($foreach.index == 0)
+                                    #if ($prop.quotes.size() > 0)
+                                        #foreach ($quote in $prop.quotes)
+                                            <tr>
+                                                <td>
+                                                    #if ($foreach.index == 0)
                                         $prop.id
                                         #end
-                                    </td>
-                                    <td>$quote.vendor.name</td>
-                                    <td>$quote.customer.name</td>
-                                </tr>
-                                #end
-                                #else
-                                <tr>
-                                    <td>$prop.id</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                #end
+                                                </td>
+                                                <td>$quote.vendor.name</td>
+                                                <td>$quote.customer.name</td>
+                                            </tr>
+                                        #end
+                                    #else
+                                        <tr>
+                                            <td>$prop.id</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    #end
                                 #end
                             </tbody>
                         </table>
