@@ -105,6 +105,22 @@
                         component.attr('data-facebook-url', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+                    
+                    form.find('.youtube[type=text]').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-youtube-url', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('.instagram[type=text]').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-instagram-url', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -119,10 +135,14 @@
             form.find('.twitter[type=checkbox]').prop('checked', dataAttributes['data-twitter'] != 'false');
             form.find('.google[type=checkbox]').prop('checked', dataAttributes['data-google'] != 'false');
             form.find('.linkedin[type=checkbox]').prop('checked', dataAttributes['data-linkedin'] != 'false');
+            form.find('.youtube[type=checkbox]').prop('checked', dataAttributes['data-youtube'] != 'false');
+            form.find('.instagram[type=checkbox]').prop('checked', dataAttributes['data-instagram'] != 'false');
             form.find('.facebook[type=text]').val(dataAttributes['data-facebook-url']);
             form.find('.twitter[type=text]').val(dataAttributes['data-twitter-url']);
             form.find('.google[type=text]').val(dataAttributes['data-google-url']);
             form.find('.linkedin[type=text]').val(dataAttributes['data-linkedin-url']);
+            form.find('.youtube[type=text]').val(dataAttributes['data-youtube-url']);
+            form.find('.instagram[type=text]').val(dataAttributes['data-instagram-url']);
         }
     };
 

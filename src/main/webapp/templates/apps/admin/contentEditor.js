@@ -1,6 +1,19 @@
 var win = $(window);
 var contentEditor = true;
 
+$(document).on({
+    'show.bs.modal': function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    },
+    'hidden.bs.modal': function () {
+        $('.modal:visible').length && $(document.body).addClass('modal-open');
+    }
+}, '.modal');
+
 function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
     
@@ -142,7 +155,7 @@ function initKEditor(options) {
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         var a = $(this);
         
-        if (a.is('[data-slide]')) {
+        if (a.is('[data-slide]') || a.is('[data-slide-to]')) {
         
         } else {
             e.preventDefault();
