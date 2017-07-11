@@ -17,15 +17,15 @@ $(function () {
             window.location.reload();
         });
 
-        var dropdownMenuOrgSelector = $('#dropdownMenuOrgSelector');
-
         $('.orgSelectorWrap').on('click', '.btn-select-org-selector', function (e) {
+            var btn = $(this);
+
+            var dropdownMenuOrgSelector = btn.next('.dropdownMenuOrgSelector');
+
             if (!dropdownMenuOrgSelector.data('loaded')) {
                 dropdownMenuOrgSelector.data('loaded', true);
 
-                dropdownMenuOrgSelector.reloadFragment({
-                    url: window.location.pathname + (window.location.search || '?') + '&loadOrgSelector'
-                });
+                dropdownMenuOrgSelector.load('/queries?browseOrgs');
             }
         });
     }
