@@ -201,8 +201,8 @@
 
                 #foreach( $outcome in $page.outcomes ) 
                 <div id="outcome-options-$outcome.id" class="row outcome-options" style="display: none;">
-                    #if( $outcome.formPath )
-                    #parse( $outcome.formPath )
+                    #if( !$formatter.isNull($outcome.formPath) )
+                        #parse( $outcome.formPath )
                     #else
                     #foreach( $field in $outcome.fields)
                     <div style="margin-bottom: 15px;" class="container col-md-12">
@@ -329,8 +329,8 @@
 
                 #foreach( $outcome in $page.outcomes ) 
                 <div id="outcome-options-$outcome.id" class="row outcome-options" style="display: none;">
-                    #if( $outcome.formPath )
-                    #parse( $outcome.formPath )
+                    #if( !$formatter.isNull($outcome.formPath) )
+                        #parse( $outcome.formPath )
                     #else
                     #foreach( $field in $outcome.fields)
                     <div style="margin-bottom: 15px;" class="container col-md-12">

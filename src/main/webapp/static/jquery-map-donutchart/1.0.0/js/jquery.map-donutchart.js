@@ -30,14 +30,16 @@ $.fn.mapDonutChart = function (options) {
         });
         
         var latlngbounds = new google.maps.LatLngBounds();
+        var reg = /^-?([1-8]?[1-9]|[1-9]0)\.{1}\d{1,6}/;
         for (var i = 0; i < opts.data.length; i++) {
             flog("extend", opts.data[i].location);
-            var loc = {
-                lat : function() { return opts.data[i].location.lat  },
-                lng : function() { return opts.data[i].location.lng  }
-            };
-            latlngbounds.extend(loc);
-        }        
+            if (!reg.test(opts.data[i].location.lat) || !reg.test(opts.data[i].location.lng)){
+                var loc = new google.maps.LatLng(opts.data[i].location.lat, opts.data[i].location.lng);
+                latlngbounds.extend(loc);
+            } else {
+                flog('lat or lng is not valid', opts.data[i].location);
+            }
+        }
         map.fitBounds(latlngbounds);
 
         var overlay = new google.maps.OverlayView();

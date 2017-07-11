@@ -161,7 +161,9 @@ JBNodes['taskGoal'] = {
 
                 for (var i = 0; i < JBApp.currentSettingNode.taskOutcomes.length; i++) {
                     var outcomesDev = $('#' + JBApp.currentSettingNode.taskOutcomes[i].id);
-                    JBApp.currentSettingNode.taskOutcomes[i].title = outcomesDev.find('input:text').val().trim();
+                    JBApp.currentSettingNode.taskOutcomes[i].title = outcomesDev.find('.field-title').val().trim();
+                    JBApp.currentSettingNode.taskOutcomes[i].formPath = outcomesDev.find('.field-form-path').val().trim();
+                    JBApp.currentSettingNode.taskOutcomes[i].validationMVEL = outcomesDev.find('.field-validation-mvel').val().trim();
                     JBApp.currentSettingNode.taskOutcomes[i].fields = outcomesDev.find('select').val() || null;
                 }
                 
@@ -223,7 +225,9 @@ JBNodes['taskGoal'] = {
             outcomesStr += '<div class="outcome" id="' + outcome.id + '">';
             outcomesStr += '     <p><strong>To:</strong> ' + toText + '</p>';
             outcomesStr += '     <p><strong>Title</strong></p>';
-            outcomesStr += '     <p><input type="text" class="form-control required" value="' + (outcome.title || '') + '" /></p>';
+            outcomesStr += '     <p><input type="text" class="field-title form-control required" value="' + (outcome.title || '') + '" /></p>';
+            outcomesStr += '     <p><strong>Form Path</strong></p>';
+            outcomesStr += '     <p><input type="text" class="field-form-path form-control" value="' + (outcome.formPath || '') + '" /></p>';
             outcomesStr += '     <p><strong>Fields</strong></p>';
             outcomesStr += '     <p><select class="form-control" multiple>';
             if (JBApp.funnel.extraFields && $.isArray(JBApp.funnel.extraFields)) {
@@ -235,6 +239,8 @@ JBNodes['taskGoal'] = {
                 }
             }
             outcomesStr += '     </select></p>';
+            outcomesStr += '     <p><strong>Validation MVEL</strong></p>';
+            outcomesStr += '     <p><textarea class="field-validation-mvel form-control">' + (outcome.validationMVEL || '') + '</textarea></p>';
             outcomesStr += '</div>';
             outcomesStr += '<hr />';
         }

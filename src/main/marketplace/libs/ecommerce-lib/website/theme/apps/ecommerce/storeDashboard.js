@@ -88,7 +88,13 @@ $(function () {
                 $(".breadcrumb").replaceWith(breadcrumb);
 
                 var fragment = $(data).find(".products-list");
-                $(".products-list").replaceWith(fragment);
+                if (fragment.length > 0) {
+                    $(".products-list").replaceWith(fragment);
+                } else {
+                    $(".products-list").empty();
+                    $(".products-list").append("<p>Sorry, we couldnt find any products for you</p>");
+                }
+
                 $('.product-title').dotdotdot({
                     height: 55
                 });

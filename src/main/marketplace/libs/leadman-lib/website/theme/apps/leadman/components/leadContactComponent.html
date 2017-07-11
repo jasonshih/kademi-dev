@@ -48,6 +48,19 @@
                             </div>
                         </div>
 
+                        <div class="control-group form-group">
+                            #set($fields = $page.profileExtraFields)
+                            #foreach($field in $fields.keySet())
+                            #if ($extraFields && $extraFields.contains($field.name))
+                            #else
+                            <label class="control-label col-md-2" for="field_${field.name}">$field.text</label>
+
+                            <div class="controls col-md-4">
+                                $field.html( $fields[$field] )
+                            </div>
+                            #end
+                            #end
+                        </div>
 
                         #if( $page.completed)
                         #else

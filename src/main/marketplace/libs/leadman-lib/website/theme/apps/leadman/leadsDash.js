@@ -1,5 +1,4 @@
 (function($){
-
     function initDonuts() {
         flog("initDonuts");
         $.ajax({
@@ -7,8 +6,8 @@
             dataType: 'json',
             success: function (resp, textStatus, jqXHR) {
                 if (resp.status) {
+                    $('.lead-dash-page .map-donutchart').show();
                     showDonuts(resp.data);
-                    $('.map-donutchart').show();
                 } else {
                     flog("Not showing donuts because of bad response", resp);
                 }
@@ -23,7 +22,7 @@
     function showDonuts(donutData) {
         flog("showDonuts", donutData);
 
-        $('.map-donutchart').mapDonutChart({
+        $('.lead-dash-page .map-donutchart').mapDonutChart({
             max: 40,
             textLabel: false,
             hoverAction: true,
@@ -39,11 +38,9 @@
 
     $(document).ready(function(){
         if($('.lead-dash-page').length > 0) {
-            var mainContainer = $('#maincontentContainer');
-            var divs = mainContainer.find('>div').detach();
-            mainContainer.append('<div class="row"></div>');
-            mainContainer.find('>.row').append(divs);
-            //initDonuts();
+            $(document.body).on('onGoogleMapReady', function () {
+                initDonuts();
+            });
 
             var primaryColor = $('.dashboardPieColor').first().css('background-color');
 

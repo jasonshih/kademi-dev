@@ -54,30 +54,30 @@
 /* ===========================================================================
    Carousel components
    =========================================================================== */
-.carouselImageWrap {
+.carouselItemsWrap {
     max-height: 400px;
     overflow-y: auto;
     overflow-x: hidden;
     direction: rtl;
 }
 
-.carouselImageItem {
+.carouselItem {
     position: relative;
     padding: 5px;
     border: 1px solid #eee8d5;
     background: #fff;
 }
 
-.carouselImageItem + .carouselImageItem {
+.carouselItem + .carouselItem {
     margin-top: 5px;
 }
 
-.carouselImageItem img {
+.carouselItem img {
     width: 100%;
     height: auto;
 }
 
-.carouselImageItem .btn-group {
+.carouselItem .btn-group {
     position: absolute;
     bottom: 5px;
     right: 5px;

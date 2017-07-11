@@ -112,26 +112,33 @@
                         <a href="#" class="btn btn-primary btn-sm pull-right btn-add-question" data-survey="$survey.name"><i class="fa fa-plus-square"></i> Add new question</a>
                     </div>
                     <hr>
+
+                    <!-- tan1111 $page.attributes.questionResult -->
+
+
                     #set($questions = $page.attributes.questionResult.hits.hits)
+
                     #set($answers = $page.attributes.answerResult.hits.hits)
                     #if($page.attributes.questionResult.hits.totalHits > 0)
                         #foreach($question in $questions)
-                            <div class="panel panel-default" data-questionId="$question.id">
-                                <div class="panel-heading"><h3 class="panel-title"><span>$question.fields.title.value</span> <a class="btn btn-link btn-xs btn-delete-question pull-right" href="#"><i class="fa fa-trash"></i></a><a class="btn btn-link btn-xs btn-edit-question pull-right" href="#"><i class="fa fa-edit"></i></a> </h3></div>
-                                <div class="panel-body">
-                                    <div class="question-body">$!question.fields.body.value</div>
 
-                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.fields.type.value)</span></p>
-                                    #if($question.fields.type.value!='1')
+                            <div class="panel panel-default" data-questionId="$question.id">
+                                <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span> <a class="btn btn-link btn-xs btn-delete-question pull-right" href="#"><i class="fa fa-trash"></i></a><a class="btn btn-link btn-xs btn-edit-question pull-right" href="#"><i class="fa fa-edit"></i></a> </h3></div>
+                                <div class="panel-body">
+                                    <div class="question-body">$!question.source.body</div>
+                                    <!-- tan $question  $question.fields $question.source.type -->
+                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span></p>
+                                    <!-- tan $question  $question.fields $question.source.type -->
+                                    #if($question.source.type != '1')
                                     <p class="clearfix"><strong>Answers List</strong> </p>
                                     <!-- List group -->
                                     <ul class="list-group">
                                         #if($page.attributes.answerResult.hits.totalHits > 0)
                                             #foreach($answer in $answers)
-                                                #if($answer.fields.questionId.value == $question.id)
+                                                #if($answer.source.questionId == $question.id)
                                                 <li class="list-group-item answer-item" data-answer="$answer.id">
-                                                <span>$answer.fields.body.value</span>
-                                                #if($question.fields.type.value!='2')
+                                                <span>$answer.source.body</span>
+                                                #if($question.source.type!='2')
                                                 <a href="#" class="btn btn-link btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a>
                                                 #end
                                                 <a href="#" class="btn btn-link btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>
@@ -140,8 +147,8 @@
                                         #end
                                     </ul>
                                     #end
-                                    #if($question.fields.type.value!='1')
-                                    <form class="answer-form #if($question.fields.type.value=='2') hide #end" autocomplete="off">
+                                    #if($question.source.type!='1')
+                                    <form class="answer-form #if($question.source.type=='2') hide #end" autocomplete="off">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <input type="hidden" name="userId" value="$user.name" />
@@ -283,28 +290,28 @@
                     #if($page.attributes.questionResult.hits.totalHits > 0 && $surveyResult.entrySet().size()>0 )
                          #foreach($question in $questions)
                             <div class="panel panel-default" data-questionId="$question.id">
-                                <div class="panel-heading"><h3 class="panel-title"><span>$question.fields.title.value</span> </h3></div>
+                                <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span> </h3></div>
                                 <div class="panel-body">
-                                    <div class="question-body">$!question.fields.body.value</div>
+                                    <div class="question-body">$!question.source.body</div>
 
-                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.fields.type.value)</span></p>
-                                    #if($question.fields.type.value!='1')
+                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span></p>
+                                    #if($question.source.type!='1')
                                     <p class="clearfix"><strong>Answers Result</strong> </p>
                                     <!-- List group -->
                                     <div class="list-group">
                                         #if($page.attributes.answerResult.hits.totalHits > 0)
                                             #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
                                             #foreach($answer in $answers)
-                                                #if($answer.fields.questionId.value == $question.id)
+                                                #if($answer.source.questionId == $question.id)
                                                 #set($totalAnswerSubmits = 0)
                                                 #if($surveyResult.get($question.id).get('answers').get($answer.id))
                                                     #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get($answer.id))
                                                 #end
                                                 #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                                #set($surveyCSV = "$surveyCSV$survey.name,$totalSubmits,$question.id,$question.fields.title.value,$answer.id,$answer.fields.body.value,$totalAnswerSubmits,$progress$linebreaker")
+                                                #set($surveyCSV = "$surveyCSV$survey.name,$totalSubmits,$question.id,$question.source.title,$answer.id,$answer.source.body,$totalAnswerSubmits,$progress$linebreaker")
                                                 <div class="progress">
                                                   <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace('%','')" aria-valuemin="0" aria-valuemax="100" style="text-align: left;">
-                                                        <div style="padding-left: 10px">$answer.fields.body.value ($progress - $totalAnswerSubmits votes)</div>
+                                                        <div style="padding-left: 10px">$answer.source.body ($progress - $totalAnswerSubmits votes)</div>
                                                   </div>
                                                 </div>
                                                 #end
@@ -318,7 +325,7 @@
                                             #set ($plainAnswers = $page.controllerMappings.call('getPlainAnswers', $page, $question.id, $survey.name))
                                             #if($plainAnswers.hits.totalHits > 0)
                                                 #foreach($plainAnswer in $plainAnswers.hits.hits)
-                                                <li>$plainAnswer.fields.answerBody.value - <a href="#">$plainAnswer.fields.userId.value</a></li>
+                                                <li>$plainAnswer.source.answerBody - <a href="#">$plainAnswer.source.userId</a></li>
                                                 #end
                                             #end
                                         </ul>
