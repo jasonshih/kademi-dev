@@ -68,11 +68,11 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3" id="aggregations">
+                        <div class="col-lg-3" id="aggregations">                          
                             #if( $page.report.aggregations )
                                 <table class="table">
-                                    #foreach($agg in $page.report.aggregations )
-                                #showAggregation($agg)
+                                #foreach($agg in $page.report.aggregations )
+                                    #showAggregation($agg)
                                 #end
                                 </table>
                             #end
