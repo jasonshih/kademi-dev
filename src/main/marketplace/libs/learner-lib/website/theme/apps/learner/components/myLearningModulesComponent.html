@@ -1,21 +1,21 @@
-
 #if($page)
-    #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
-    <div class="my-learning-container my-learning-modules">
-        <div class="btn-group program-course-module-mix" style="z-index: 2">
-            #set($programs = $page.find("/programs"))
-            #if($page.is("course"))
-            #set($curCourse = $page)
+    #set($programs = $page.find("/programs"))
+    #if($page.is("course"))
+        #set($curCourse = $page)
+        #set($curProgram = $curCourse.parent)
+    #else
+        #set($curCourse = $programs.bestCourse)
+        #if( $curCourse )
             #set($curProgram = $curCourse.parent)
-            #else
-            #set($curCourse = $programs.bestCourse)
-            #if( $curCourse )
-            #set($curProgram = $curCourse.parent)
-            #else
+        #else
             #set($curProgram = $programs.bestProgram)
             #set($curCourse = $curProgram.children.ofType.course.first)
-            #end
-            #end
+        #end
+    #end
+
+    #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
+    <div class="my-learning-container my-learning-modules" data-course-href="$!curCourse.href">
+        <div class="btn-group program-course-module-mix" style="z-index: 2">
 
             <button class="btn btn-primary btn-lg course-selector btn-show-mix dropdown-toggle">
                 <span class="current-module">$curProgram.title / $curCourse.title modules </span>
@@ -27,7 +27,7 @@
                         <p>Programs</p>
                         <div class="programs-list">
                             #foreach($program in $programs.availPrograms)
-                            <a class="program ${formatter.ifEqual('active','', $curProgram.href, $program.href)}" href="$program.href" >$program.title</a>
+                                <a class="program ${formatter.ifEqual('active','', $curProgram.href, $program.href)}" href="$program.href">$program.title</a>
                             #end
                         </div>
                     </li>
@@ -35,7 +35,7 @@
                         <p>Courses</p>
                         <div class="courses-list">
                             #foreach($course in $curProgram.availCourses)
-                            <a class="course ${formatter.ifEqual('active','', $curCourse.href, $course.href)}" href="$course.href" class="">$course.title</a>
+                                <a class="course ${formatter.ifEqual('active','', $curCourse.href, $course.href)}" href="$course.href" class="">$course.title</a>
                             #end
                         </div>
                     </li>
@@ -44,14 +44,14 @@
         </div>
 
         #if ($formatter.toBool($showCourseBody))
-        <hr/>
+            <hr />
 
-        <div class="lead">
-            $!curCourse.body
-            #if (!$curCourse.body)
-            <p>No description for current course</p>
-            #end
-        </div>
+            <div class="lead">
+                $!curCourse.body
+                #if (!$curCourse.body)
+                    <p>No description for current course</p>
+                #end
+            </div>
         #end
 
         <div class="" id="myLearningDiv">
@@ -60,17 +60,11 @@
             </div>
         </div>
     </div> <!-- end container-fluid -->
-
-    <script type="text/javascript">
-        var courseHref = "$curCourse.href";
-
-    </script>
-
     #else
-    #fakeUI()
+        #fakeUI()
     #end
 #else
-#fakeUI()
+    #fakeUI()
 #end
 
 #macro(fakeUI)
