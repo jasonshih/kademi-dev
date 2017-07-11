@@ -1,4 +1,4 @@
-$(function () {
+(function () {
     var win = $(window);
     if ($('.orgs-locator-component').length > 0) {
         $('#org-map').orgFinder({
