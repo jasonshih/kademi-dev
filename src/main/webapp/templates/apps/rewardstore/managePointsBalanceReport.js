@@ -4,7 +4,7 @@
             url: '/reporting/_pointsBalanceQuery' + window.location.search,
             dataType: 'json',
             success: function (resp) {
-                fog("Response _pointsBalanceQuery");
+                flog("Response _pointsBalanceQuery");
                 flog(resp);
                 if (resp.status) {
                     $('.no-data').hide();
