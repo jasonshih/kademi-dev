@@ -4,6 +4,7 @@
             url: '/reporting/_pointsBalanceQuery' + window.location.search,
             dataType: 'json',
             success: function (resp) {
+                flog("Response _pointsBalanceQuery");
                 flog(resp);
                 if (resp.status) {
                     $('.no-data').hide();
@@ -21,52 +22,7 @@
 
     function handleData(data) {
         generateItems(data.hits.hits);
-        generateAggregatoins(data.aggregations);
         generateHistogram(data.aggregations);
-    }
-
-    function generateAggregatoins(aggs) {
-        var facets = [];
-
-        var rangeData = {
-            name: 'range',
-            title: 'Range',
-            values: []
-        };
-        facets.push(rangeData);
-
-        for (var i in aggs) {
-            if (i.startsWith('range_')) {
-                var pb = aggs[i];
-                for (var a in pb.buckets) {
-                    var b = pb.buckets[a];
-                    var termName = b.from + '-' + b.to;
-                    var found = false
-                    for (var v in rangeData.values) {
-                        var value = rangeData.values[v];
-                        if (value.termName == termName) {
-                            value.buckets += b.doc_count;
-                            found = true;
-                        }
-                    }
-
-                    if (!found) {
-                        rangeData.values.push(
-                                {
-                                    aggName: 'range',
-                                    termName: b.from + '-' + b.to,
-                                    termTitle: b.key,
-                                    buckets: b.doc_count
-                                }
-                        );
-                    }
-                }
-
-
-            }
-        }
-
-        flog(facets);
     }
 
     function generateItems(hits) {

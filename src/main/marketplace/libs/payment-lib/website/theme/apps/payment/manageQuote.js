@@ -288,10 +288,20 @@ Number.prototype.formatMoney = function (c, d, t) {
         });
     }
 
-    w.initializeQuoteComponent = function (quoteId, quoteLevel) {
+    initializeQuoteComponent = function (quoteId, quoteLevel) {
         currentQuoteId = quoteId; 
         initEditQuote(quoteLevel === "New" || quoteLevel === "Assigned");
         initModalForm();
     };
+
+    $(document).ready(function(){
+        var editQuote = $('.edit-quote-component');
+        if(editQuote.length > 0) {
+            var quoteId = editQuote.data('page-name');
+            var state = editQuote.data('quote-state');
+
+            initializeQuoteComponent(quoteId, state);
+        }
+    });
 
 })(this);
