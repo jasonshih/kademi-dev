@@ -39,6 +39,7 @@
                     edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                         var buttonWrapper = keditor.getSettingComponent().find('.button-wrapper');
                         buttonWrapper.attr('bgcolor', color);
+                        edmEditor.setStyles('background-color', color, buttonWrapper);
                     });
     
                     var txtBorderRadius = form.find('#button-border-radius');
@@ -69,6 +70,15 @@
                         href = href.trim();
         
                         keditor.getSettingComponent().find('.button-wrapper a').attr("href", href);
+                    });
+                    
+                    form.find('.btn-browse-file').mselect({
+                        mselectAll: true,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
+                        onSelectFile: function (url, relativeUrl, fileType, hash) {
+                            txtLink.val('http://' + window.location.host + '/_hashes/files/' + hash).trigger('change');
+                        }
                     });
     
                     var buttonTextColorPicker = form.find('.button-color-text-picker');
