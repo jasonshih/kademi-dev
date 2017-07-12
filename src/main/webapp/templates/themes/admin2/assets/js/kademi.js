@@ -714,11 +714,15 @@ function initPageDatePicker() {
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
         var position = range.attr('data-position') || 'right';
-        
-        range.pageDatePicker({
+        var timeZone = window.KademiTimeZone;
+        var options = {
             extraClass: extraClass,
             position: position
-        });
+        };
+        if (timeZone){
+            options.timeZone = timeZone;
+        }
+        range.pageDatePicker(options);
     }
 }
 
