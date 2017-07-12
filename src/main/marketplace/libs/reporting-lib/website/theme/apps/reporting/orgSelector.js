@@ -25,7 +25,8 @@ $(function () {
             if (!dropdownMenuOrgSelector.data('loaded')) {
                 dropdownMenuOrgSelector.data('loaded', true);
 
-                dropdownMenuOrgSelector.load('/queries?browseOrgs');
+                var groupNames = dropdownMenuOrgSelector.data('groupnames');
+                dropdownMenuOrgSelector.load('/queries?browseOrgs&groupNames=' + encodeURIComponent(groupNames));
             }
         });
     }

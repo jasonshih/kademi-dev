@@ -2,8 +2,6 @@
 #set ($groups = '')
 #end
 
-#set ($groups = $formatter.fromCsv($groups))
-
 #set($selectedOrgId = "")
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
@@ -35,7 +33,7 @@
                     Select
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector">
+                <ul data-groupnames="$!groups" class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector">
                     <li><i class="fa fa-spinner fa-spin"></i> Loading</li>
                 </ul>
             </div><!-- /btn-group -->

@@ -1,8 +1,10 @@
-#if (!$groups)
+#if ($request.params.groupNames)
+#set ($groups = $request.params.groupNames)
+#else
 #set ($groups = '')
 #end
 
-#set ($groups = $formatter.fromCsv($groups))
+#set ($groups = $formatter.split($groups))
 
 #set($selectedOrgId = "")
 
@@ -17,7 +19,7 @@
 #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
-#set($beans = $applications.Reporting.getSelectedUserOrgs(20, $rootFolder.orgData, true))
+#set($beans = $applications.Reporting.getSelectedUserOrgs(20, $rootFolder.orgData, true, $groups))
 #if($beans.empty)
 <li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
 #else
