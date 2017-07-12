@@ -70,7 +70,7 @@
         <script type="text/javascript" src="/static/js/jquery.pjax.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.timeago.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.ba-hashchange.min.js">//</script>
-        <script type="text/javascript" src="/templates/themes/admin2/setup.js" bottom="true">//</script>
+        <script type="text/javascript" src="/templates/themes/admin2/setup.js?v=1" bottom="true">//</script>
         <script type="text/javascript" src="/templates/themes/admin2/prompt.js" bottom="true">//</script>
         <script type="text/javascript" src="/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
@@ -88,6 +88,7 @@
         <script type="text/javascript" src="/static/perfect-scrollbar/0.6.7/js/min/perfect-scrollbar.jquery.min.js">//</script>
         <script type="text/javascript" src="/static/jquery.cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
         <script type="text/javascript" src="/static/moment/2.18.1/moment-with-locales.js">//</script>
+        <script type="text/javascript" src="/static/moment-timezone/0.5.13-2017b/moment-timezone-with-data.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-datetimepicker/4.17.37/bootstrap-datetimepicker.js">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-fileupload/bootstrap-fileupload.min.js">//</script>
         <script type="text/javascript" src="/theme/assets/plugins/bootstrap-switch/3.3.3/dist/js/bootstrap-switch.min.js">//</script>
@@ -101,13 +102,16 @@
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/jquery.entityFinder/1.0.0/jquery.entityFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/main.js">//</script>
-        <script type="text/javascript" src="/theme/assets/js/kademi.js">//</script>
+        <script type="text/javascript" src="/theme/assets/js/kademi.js?v=1">//</script>
 
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
         <!-- end: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
     </head>
     <body>
+        <script>
+            var KademiTimeZone = '$page.find('/').orgData.timezone';
+        </script>
         $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
         
         <script type="text/javascript">
