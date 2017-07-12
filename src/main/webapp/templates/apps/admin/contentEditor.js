@@ -1,4 +1,18 @@
 var win = $(window);
+var contentEditor = true;
+
+$(document).on({
+    'show.bs.modal': function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    },
+    'hidden.bs.modal': function () {
+        $('.modal:visible').length && $(document.body).addClass('modal-open');
+    }
+}, '.modal');
 
 function initContentEditorPage(options) {
     flog('initContentEditorPage fileName=' + options.fileName);
@@ -6,6 +20,7 @@ function initContentEditorPage(options) {
     initKEditor(options);
     initSaving(options.fileName);
     initPropertiesModal();
+    initNavbar();
     
     // Confirm before closed tab or window
     window.onbeforeunload = function (e) {
@@ -13,6 +28,17 @@ function initContentEditorPage(options) {
             e.returnValue = 'Are you sure you would like to leave the editor? You will lose any unsaved changes';
         }
     };
+}
+
+function initNavbar() {
+    var nav = $('.content-editor-nav');
+    
+    $('.content-editor-toggle').on('click', function (e) {
+        e.preventDefault();
+        
+        nav.toggleClass('closed');
+        this.setAttribute('title', nav.hasClass('closed') ? 'Open navbar' : 'Close navbar');
+    });
 }
 
 function initPropertiesModal() {
@@ -129,7 +155,7 @@ function initKEditor(options) {
     $(document.body).on('click', '.keditor-component-content a', function (e) {
         var a = $(this);
         
-        if (a.is('[data-slide]')) {
+        if (a.is('[data-slide]') || a.is('[data-slide-to]')) {
         
         } else {
             e.preventDefault();
