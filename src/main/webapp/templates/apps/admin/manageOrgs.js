@@ -225,6 +225,7 @@
         initSort();
         initMerge();
         initMove();
+        initAssignToOrgType();
     };
 
 })(jQuery, window, document);
@@ -245,7 +246,7 @@ function initMove() {
             }
         }
     });
-
+    
     $("body").on("click", ".btn-orgs-move", function(e) {
         flog("move..");
         e.preventDefault();
@@ -288,6 +289,64 @@ function initMove() {
             opt.text(orgid + " - " + title);
             destSelect.append(opt);
         });
+        modal.find("textarea").val(moveIds);
+
+        modal.modal("show");
+    });
+}
+
+function initAssignToOrgType() {
+    var modal = $("#modal-assign-orgtype");
+    modal.find("form").forms({
+        callback : function(resp){
+            if( resp.status) {
+                Msg.info("Type Assignment complete");
+                modal.modal("hide");
+                window.location.reload();
+            } else {
+                Msg.warning("Move failed. " + resp.messages);
+            }
+        }
+    });
+    
+    $("body").on("click", ".btn-orgs-assign-orgtype", function(e) {
+        flog("assign..");
+        e.preventDefault();
+        var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the organisations you want to assign by clicking the checkboxs to the right");
+            return;
+        }
+
+        var tbody = modal.find(".assignOrgTypeTableBody");
+        
+        tbody.html("");
+        var moveIds = "";
+        checkBoxes.each(function(i, n) {
+            var tr = $("<tr>");
+            var chk = $(n);
+            var selected = chk.closest("tr");
+            var orgid = selected.find(".org-orgid").text();
+            var title =  selected.find(".org-title").text();
+            var orgType =  selected.find(".org-type").text() === "" ? "-" : selected.find(".org-type").text();
+            var internalId = selected.data("id");
+            moveIds += internalId + ",";
+
+            var td = $("<td>");
+            td.text(orgid);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(title);
+            tr.append(td);
+
+            td = $("<td>");
+            td.text(orgType);
+            tr.append(td);
+
+            tbody.append(tr);
+        });
+        
         modal.find("textarea").val(moveIds);
 
         modal.modal("show");
