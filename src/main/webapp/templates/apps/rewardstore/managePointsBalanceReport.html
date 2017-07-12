@@ -19,7 +19,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="clearfix">
-                        <div class="pull-right">
+<!--                        <div class="pull-right">
                             <div class="dropdown">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
                                     Report entity: rootorg
@@ -45,7 +45,7 @@
                                     #end
                                 </ul>
                             </div>
-                        </div>
+                        </div>-->
 
                         <p class="btn-group pull-left">
                             <a class="btn btn-orange dated" href="pointsBalance.csv">Export as CSV</a>
@@ -68,11 +68,11 @@
                             </div>
                         </div>
 
-                        <div class="col-lg-3" id="aggregations">
+                        <div class="col-lg-3" id="aggregations">                          
                             #if( $page.report.aggregations )
                                 <table class="table">
-                                    #foreach($agg in $page.report.aggregations )
-                                #showAggregation($agg)
+                                #foreach($agg in $page.report.aggregations )
+                                    #showAggregation($agg)
                                 #end
                                 </table>
                             #end

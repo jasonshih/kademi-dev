@@ -1,7 +1,16 @@
 #set( $selectedOrgs = $queryManager.selectedOrgs )
+#if (!$enableLink)
+    #set ($enableLink = false)
+#end
 
 #if( $selectedOrgs.size() == "1" )
     <div>
-        <h3>$selectedOrgs[0].title</h3>
+        <h3>
+            #if ($enableLink == "true")
+                <a href="/companies/$selectedOrgs[0].id">$selectedOrgs[0].title</a>
+            #else
+                $selectedOrgs[0].title
+            #end
+        </h3>
     </div>
 #end

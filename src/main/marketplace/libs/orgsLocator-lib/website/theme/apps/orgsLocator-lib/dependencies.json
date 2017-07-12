@@ -27,6 +27,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/orgsLocator/orgsLocator.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"
             }
         },

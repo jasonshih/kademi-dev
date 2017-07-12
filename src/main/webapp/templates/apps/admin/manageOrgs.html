@@ -9,7 +9,7 @@
     <body class="manage-business-unit">
         <div id="manage-business-unit">
             <div class="btn-group">
-                <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new business units</a>
+                <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new organisations</a>
                 <a class="btn btn-sm btn-warning btn-add-account" data-toggle="modal" data-target="#modal-create-account" data- href="#" title="Create a new Kademi account">
                     <i class="fa fa-plus"></i> Create account
                 </a>
@@ -33,7 +33,7 @@
             <br />
 
             <div class="panel panel-default">
-                <div class="panel-heading"><i class="clip-folder"></i> Business Units</div>
+                <div class="panel-heading"><i class="clip-folder"></i> Organisations</div>
                 <div class="panel-body">
                     <div class="form-horizontal">
                         <div class="search-user row">
@@ -180,7 +180,7 @@
                                     <b>which allows you to update the spreadsheet</b>. If you dont provide a unique ID one will be assigned
                                 </li>
                                 <li>The second column is the type, which must be one of those defined in the <a href="orgTypes">Manage Organisation Types</a> page. Optional</li>
-                                <li>The third column is the path, which is useful if your organisational structure is a hierarchy. Only use this column if you need to delegate permissions to business units.</li>
+                                <li>The third column is the path, which is useful if your organisational structure is a hierarchy. Only use this column if you need to delegate permissions to organisations.</li>
                                 <li>By default only rows which an existing organisation on unique ID will be processed, these will be updated in the database from the spreadsheet</li>
                                 <li>
                                     <b>We recommend you always do a first run with "allow inserts" OFF</b>. You will be shown how many matches were made or not, then you can decide if you want to allow inserts.
