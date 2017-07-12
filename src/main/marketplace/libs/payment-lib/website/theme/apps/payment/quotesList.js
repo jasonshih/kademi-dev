@@ -8,7 +8,7 @@
                 alert("yo");
             }
         });
-    }
+    };
 
     function initDataTable(hits) {
         if (dataTable !== null) {
@@ -24,7 +24,7 @@
             info: false,
             select: true
         });
-    }
+    };
 
     function reloadQuoteTable() {
         var href = window.location.pathname;
@@ -36,7 +36,7 @@
                 initQuoteTable();
             }
         });
-    }
+    };
 
     function initDateTimePicker() {
         var date = new Date();
@@ -72,7 +72,7 @@
                 });
             }
         });
-    }
+    };
 
     function initModalForm() {
         var modal = $("#addQuoteModal");
@@ -86,7 +86,7 @@
                 reloadQuoteTable();
             }
         });
-    }
+    };
 
     function initQuoteStatusSelect() {
         $('body').on('change', 'input[name=quoteStatus]', function (e) {
@@ -95,7 +95,8 @@
 
             window.location = window.location.pathname + "?state=" + quoteStatus;
         });
-    }
+    };
+
     w.initQuotesListPage = function () {
         initDataTable();
         initModalForm();
@@ -137,5 +138,12 @@
            }
         });
     };
+
+    $(document).ready(function(){
+
+        if($('.quotes-list-component').length > 0) {
+            initQuotesListPage();
+        }
+    });
 
 })(this);
