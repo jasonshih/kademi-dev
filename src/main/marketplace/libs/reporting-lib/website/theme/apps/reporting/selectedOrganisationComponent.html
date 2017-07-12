@@ -6,7 +6,7 @@
 #if( $selectedOrgs.size() == "1" )
     <div>
         <h3>
-            #if ($enableLink)
+            #if ($enableLink == "true")
                 <a href="/companies/$selectedOrgs[0].id">$selectedOrgs[0].title</a>
             #else
                 $selectedOrgs[0].title
