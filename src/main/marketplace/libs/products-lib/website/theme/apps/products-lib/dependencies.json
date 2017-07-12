@@ -20,6 +20,12 @@
                 "group": "main",
                 "path": "/theme/apps/products/topPurchased.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/products/productDetails.js"
+            }
         }
     ]
 }
