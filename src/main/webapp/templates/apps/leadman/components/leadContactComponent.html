@@ -1,3 +1,4 @@
+
 <div class="panel panel-default">
     <div class="panel-body">
 
@@ -48,6 +49,30 @@
                             </div>
                         </div>
 
+                            #set($fields = $page.profileExtraFields)
+                            #set($counter = 0)
+                            #foreach($field in $fields.keySet())
+                            #if ($extraFields && $extraFields.contains($field.name))
+                            #else
+                            
+                            #if ($counter % 2 == 0)
+                            <div class="control-group form-group">
+                            #end
+                            
+                                <label class="control-label col-md-2" for="field_${field.name}">$field.text</label>
+    
+                                <div class="controls col-md-4">
+                                    $field.html( $fields[$field] )
+                                </div>
+                                
+                            #if (($counter + 1) % 2 == 0)
+                            </div>
+                            #end
+                            
+                            #set($counter = $counter + 1)
+                            
+                            #end
+                            #end
 
                         #if( $page.completed)
                         #else
