@@ -19,7 +19,7 @@
 #end
 
 <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
-<form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal" >
+<form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal register-form-component" >
     <div class="row">
         #if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
         <div class="col-md-8 col-md-offset-2">
@@ -163,10 +163,3 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript" src="/theme/apps/signup/register.js">//</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        initRegister("/dashboard");
-    });
-</script>
