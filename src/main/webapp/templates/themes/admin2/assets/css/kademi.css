@@ -30,6 +30,10 @@
     height: 100%;
 }
 
+.carousel-fixed-height .carousel-inner > .item .carousel-content {
+    background: no-repeat 50% 50% / cover;
+}
+
 /* ============================================================================
    Dropzone
    ============================================================================ */

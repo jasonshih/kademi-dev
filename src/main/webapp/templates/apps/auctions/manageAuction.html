@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Auction</title>
-        <script type="text/javascript" src="manageAuction.js">//</script>
+        <script type="text/javascript" src="manageAuction.js?v=1">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <style>
             .btn-upload-photo {
@@ -194,7 +194,8 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" placeholder="Start date" data-provide="datetimepicker" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control date-time" />
+                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" data-min-date="now" data-format="DD/MM/YYYY HH:mm" placeholder="Start date" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control" />
+                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -206,7 +207,8 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" data-provide="datetimepicker" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control date-time" />
+                                                    <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" data-format="DD/MM/YYYY HH:mm" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control" />
+                                                    <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
                                         </div>

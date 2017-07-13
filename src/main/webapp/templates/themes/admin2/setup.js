@@ -23,12 +23,14 @@ function initPlaceHolderForDateTime() {
     $('input.DateTime').each(function () {
         var input = $(this);
         var value = input.val();
-        var format = input.attr('data-format') || 'D/M/YYYY';
-        
+        var format = input.attr('data-format') || 'DD/MM/YYYY';
+
         flog('initPlaceHolderForDateTime', format, value, input);
-        
+
         input.datetimepicker({
-            format: format
+            format: format,
+            keepInvalid: true,
+            timeZone: window.KademiTimeZone
         });
     });
 }
