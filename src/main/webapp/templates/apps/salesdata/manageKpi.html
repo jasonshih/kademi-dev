@@ -78,7 +78,7 @@
                                     <table class="table table-bordered table-striped" id="kpiLeaderboard">
                                         <thead>
                                             <tr>
-                                                <th colspan="2">Leaderboard</th>
+                                                <th colspan="99">Leaderboard</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1102,9 +1102,11 @@
                 initSelectAll();
                 initLeaderboard();
                 initDelKpiResult();
-                initKpiSeriesGraphControls();
-                loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
-                loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});
+                initKpiSeriesGraphControls(function () {
+                    loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
+                    loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});
+                });
+
 
             });
 

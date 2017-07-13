@@ -265,18 +265,18 @@ function initDelKpiResult() {
     });
 }
 
-function initKpiSeriesGraphControls() {
+function initKpiSeriesGraphControls(fcb) {
     flog("initKpiSeriesGraphControls");
     function cb(start, end) {
         options.startDate = start
         options.endDate = end;
-        loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
+        fcb();
     }
 
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         cb(startDate, endDate);
 
-        if ($("#runLeaderboard:visible").length){
+        if ($("#leaderboardBody:visible").length){
             $("#runLeaderboard").trigger('click');
         }
     });
