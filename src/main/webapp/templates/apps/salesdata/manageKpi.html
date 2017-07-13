@@ -74,21 +74,11 @@
                             </div>
 
                             <div class="col-md-4">
-                                <div class="row p-b-20">
-                                    <div class="col-md-12">
-                                        <div class="input-group date-range">
-                                            <label for="analytics-range" class="input-group-addon">Date</label>
-                                            <input type="text" id="analytics-range" placeholder="Choose a date range" value="" class="form-control" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <br />
-
                                 <div>
                                     <table class="table table-bordered table-striped" id="kpiLeaderboard">
                                         <thead>
                                             <tr>
-                                                <th colspan="2">Leaderboard</th>
+                                                <th colspan="99">Leaderboard</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -824,7 +814,6 @@
                             #set( $startDate = $page.startDate )
                             #set( $endDate = $page.finishDate )
                             #set( $lb = $page.getLeaderboard($startDate, $endDate))
-                            from: $startDate, to: $endDate
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
@@ -988,10 +977,6 @@
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
-            var startDate = null;
-            var endDate = null;
-            var searchQ = null;
-
             $(function () {
                 var pageName = getFileName(window.location.pathname);
                 setRecentItem(document.title + " (" + pageName + ")", window.location.pathname);
@@ -1117,9 +1102,11 @@
                 initSelectAll();
                 initLeaderboard();
                 initDelKpiResult();
-                initKpiSeriesGraphControls();
-                loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
-                loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});
+                initKpiSeriesGraphControls(function () {
+                    loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
+                    loadKpiSeriesGraphData(window.location.pathname, options, $("#kpiLeaderboard"), "kpiLeaderboard", {});
+                });
+
 
             });
 
