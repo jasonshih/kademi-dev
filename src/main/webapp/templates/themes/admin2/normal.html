@@ -110,10 +110,10 @@
     </head>
     <body>
         <script>
-            var KademiTimeZone = "$page.find('/').orgData.timezone";
+            var KademiTimeZone = "$!page.find('/').orgData.timezone" || null;
         </script>
         $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
-        
+
         <script type="text/javascript">
             $(function () {
                 Main.init('$page.organisation.id');
