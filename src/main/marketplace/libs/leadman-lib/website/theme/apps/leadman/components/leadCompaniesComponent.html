@@ -1,3 +1,18 @@
+<div class="row">
+    <div class="col-md-5 right">
+        <div class="input-group">
+            <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+            <span class="input-group-btn">
+                <button class="btn btn-default clear" type="button" >
+                    <i class="fa fa-times"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+
 <table class="table table-bordered table-striped table-hover">
     <thead>
         <tr>
@@ -9,7 +24,7 @@
             <th width="120"></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="searchResults">
         #foreach($com in $page.paginator.records)
         <tr>
             <td>$com.title</td>
@@ -31,3 +46,42 @@
         </tr>
     </tfoot>
 </table>
+<script>
+    $("#org-query").on({
+        keyup: function () {
+            typewatch(function () {
+                flog("initSearchOrg: do search");
+                doSearch();
+            }, 500);
+        },
+        change: function () {
+            flog("do search");
+            doSearch();
+        }
+    });
+    
+    $(".clear").on("click", function(){
+        $("#org-query").val("");
+        doSearch();
+    });
+    
+    function doSearch() {
+        flog("doSearch");
+        var newUrl = window.location.pathname + "?q=" + $("#org-query").val();
+        $.ajax({
+            type: 'GET',
+            url: newUrl,
+            success: function (data) {
+                flog("success", data);
+                window.history.pushState("", document.title, newUrl);
+                var $fragment = $(data).find("#searchResults");
+                flog("replace", $("#se"));
+                flog("frag", $fragment);
+                $("#searchResults").replaceWith($fragment);
+            },
+            error: function (resp) {
+                Msg.error("err");
+            }
+        });
+    }
+</script>
