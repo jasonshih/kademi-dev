@@ -93,8 +93,8 @@
                             <colgroup>
                                 <col style="width: 150px" />
                                 <col />
-                                <col style="width: 10%" />
-                                <col style="width: 10%" />
+                                <col style="" />
+                                <col style="" />
                                 <col style="width: 10%" />
                                 <col style="width: 15%" />
                                 <col style="width: 120px" />
@@ -124,7 +124,7 @@
                                         <span class="fa fa-star"></span>
                                         #end
                                     </td>
-                                    <td>$org.orgTypeDisplayNames</td>
+                                    <td class="org-type">$org.orgTypeDisplayNames</td>
                                     <td>$org.parentPath</td>
                                     <td>$!org.phone</td>
                                     <td>$!org.address</td>
@@ -491,10 +491,68 @@
                 </div>
             </div>
 
+            <div id="modal-assign-orgtype" tabindex="-1" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Assign Org Type</h4>
+                        </div>
+                        <form method="post" action="" class="form-horizontal">
+                            <div class="modal-body">
+                                <p>The organisations will be moved into the one selected here. This will move user memberships to the merge destination organisation, and the other organisations will be deleted</p>
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <div class="form-group">
+                                    <label for="destOrgId" class="control-label col-md-3">Assign to</label>
 
+                                    <div class="col-md-9">
+                                        <select name="operation" id="operation" class="form-control">
+                                            <option value="ADD">Add Org type</option>
+                                            <option value="REMOVE">Remove Org type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="destOrgId" class="control-label col-md-3">Assign to</label>
 
+                                    <div class="col-md-9">
+                                        <select name="destOrgType" id="searchOrgType" class="form-control">
+                                            <option value="">[Select a type]</option>
+                                            <option value="NONE">[No type]</option>
+                                            #foreach($orgType in $rootFolder.orgTypes)
+                                            <option value="$orgType.name">$orgType.displayName</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
 
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>OrgID</th>
+                                            <th>Title</th>
+                                            <th>Current Org Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="assignOrgTypeTableBody">
+                                        <tr>
+                                            <td colspan="2">Please wait..</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
+                                <i>Internal ID's to assign</i>
+                                <textarea name="mergeIds" class="form-control required"></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-primary" type="submit">Assign</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <script type="text/javascript">
                 $(function () {
