@@ -1,4 +1,4 @@
-<div class="lead-contacts-wrap" id="searchResults">
+<div class="lead-contacts-wrap lead-profiles-table-component" id="searchResults">
     #set($paginator = $formatter.paginator().skipToStart(false))
     #set($searchResults = $page.getSearchResults($paginator.start, $paginator.pageSize))
     #set($paginator = $paginator.totalRecords($page.totalProfiles))
