@@ -1,0 +1,39 @@
+.btn-near-me {
+    text-decoration: none;
+}
+
+@media (max-width: 767px) {
+    .org-finder-search .input-group {
+        display: block;
+        width: 100%;
+        position: relative;
+    }
+
+    .org-finder-search .input-group-btn {
+        display: block;
+        width: 100%;
+        position: static;
+    }
+
+    .org-finder-search .input-group-btn > *,
+    .org-finder-search .input-group-btn > .bootstrap-select {
+        display: block;
+        width: 100% !important;
+        margin: 0 !important;
+        float: none !important;
+        z-index: auto !important;
+    }
+
+    .org-finder-search .btn-clear-query {
+        position: absolute !important;
+        top: 0;
+        right: 0;
+        z-index: 2 !important;
+        width: auto !important;
+    }
+
+    .org-finder-search .input-group-btn > .bootstrap-select.open {
+        z-index: 3 !important;
+    }
+
+}

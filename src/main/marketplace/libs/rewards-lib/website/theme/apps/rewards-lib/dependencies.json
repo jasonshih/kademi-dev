@@ -1,5 +1,9 @@
 {
     "appDependencies": [
+        {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3"
+        }
     ],
     "dependencies": [
         {
@@ -17,12 +21,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
@@ -30,6 +28,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/rewards-lib/competitionPage.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/rewards-lib/myRewardsComponent.js"
             }
         },
         {

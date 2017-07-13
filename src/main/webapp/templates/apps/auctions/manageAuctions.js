@@ -42,48 +42,35 @@ function initModalForm() {
             reloadAuctionTable();
         }
     });
+
+    modal.on('show.bs.modal', function () {
+        initDateTimePicker()
+    });
+
+    modal.on('hidden.bs.modal', function () {
+        destroyDateTimePicker()
+    });
+}
+
+function destroyDateTimePicker() {
+    $('#auctionStartDate').data("DateTimePicker").destroy();
+    $('#auctionEndDate').data("DateTimePicker").destroy();
 }
 
 function initDateTimePicker() {
-    var date = new Date();
-    date.setDate(date.getDate() - 1);
-    $('body').css('position', 'relative');
     var opts = {
-        widgetParent: 'body',
         format: "DD/MM/YYYY HH:mm",
-        minDate: moment()
+        minDate: moment().tz(window.KademiTimeZone),
+        timeZone: window.KademiTimeZone
     };
     $('#auctionStartDate').datetimepicker(opts).on('dp.change', function (e) {
-        var d = $('#auctionEndDate').data("DateTimePicker").date();
-        if (!d || d.isBefore(e.date, 'day')) {
-            var n = e.date.add(1, 'd');
-            $('#auctionEndDate').data("DateTimePicker").date(n);
-        }
+        setTimeout(function () {
+            var d = $('#auctionStartDate').data("DateTimePicker").date();
+            var c = moment(d).add(1, 'h');
+            $('#auctionEndDate').data("DateTimePicker").minDate(d).date(c);
+        },0)
     });
     $('#auctionEndDate').datetimepicker(opts);
-
-    $('#auctionStartDate, #auctionEndDate').on('dp.show', function () {
-        var datepicker = $('body').find('.bootstrap-datetimepicker-widget:last');
-        if (datepicker.hasClass('bottom')) {
-            var top = $(this).offset().top - $(this).outerHeight();
-            var left = $(this).offset().left;
-            datepicker.css({
-                'top': top + 'px',
-                'bottom': 'auto',
-                'left': left + 'px',
-                'z-index': 9999
-            });
-        } else if (datepicker.hasClass('top')) {
-            var top = $(this).offset().top - datepicker.outerHeight() - 40;
-            var left = $(this).offset().left;
-            datepicker.css({
-                'top': top + 'px',
-                'bottom': 'auto',
-                'left': left + 'px',
-                'z-index': 9999
-            });
-        }
-    });
 }
 
 function initAuctionDelete() {

@@ -1,13 +1,12 @@
 {
-    "appDependencies": [
-
-    ],
     "dependencies": [
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/referral/referralFormComponent.js"
+                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js",
+                "position" : 0
             }
         }
     ]
 }
+

@@ -1,5 +1,9 @@
-<div class="lead-contacts-wrap lead-profiles-table-component" id="searchResults" data-task-name="$page.taskName">
-    #set($searchResults = $page.searchResults)
+<div class="lead-contacts-wrap" id="searchResults">
+    #set($paginator = $formatter.paginator().skipToStart(false))
+    #set($searchResults = $page.getSearchResults($paginator.start, $paginator.pageSize))
+    #set($paginator = $paginator.totalRecords($page.totalProfiles))
+
+    $!paginator.setRecords($searchResults)
     #if( $searchResults.isEmpty() )
     <p class="lead">No results matched the search</p>
     #else
@@ -69,6 +73,7 @@
             </div>
         </li>
         #end
+        $paginator.html(null)
     </ul>
     #end
 </div> <!-- End results table -->
