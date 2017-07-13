@@ -7,28 +7,8 @@ var options = {
 
 
 function initLeaderboard() {
-    var leaderboardRange = $('#leaderboardDateRange');
-    flog("initLeaderboard", leaderboardRange);
-    leaderboardRange.daterangepicker(
-            {
-                format: 'DD/MM/YYYY', // YYYY-MM-DD
-                ranges: {
-                    'Last 7 Days': [moment().subtract('days', 6), moment()],
-                    'Last 30 Days': [moment().subtract('days', 29), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                    'This Year': [moment().startOf('year'), moment()],
-                },
-            },
-            function (start, end) {
-                flog('onChange', start, end);
-                startDate = start;
-                endDate = end;
-            }
-    );
+    flog("initLeaderboard");
 
-    var drp = leaderboardRange.data('daterangepicker');
-    flog("drp", drp);
     $("#runLeaderboard").click(function (e) {
         e.preventDefault();
         var url = window.location.pathname + "?leaderboard=true";
@@ -56,46 +36,21 @@ function initQuery() {
     $('body').on('change', '#data-query', function (e) {
         e.preventDefault();
         var inp = $(this);
-        searchQ = inp.val();
+        var searchQ = inp.val();
         flog(searchQ);
-        doQuery();
-    });
-
-    var reportRange = $('#report-range');
-
-    reportRange.exist(function () {
-        flog("init report range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY', // YYYY-MM-DD
-            ranges: {
-                'Last 7 Days': [moment().subtract('days', 6), moment()],
-                'Last 30 Days': [moment().subtract('days', 29), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')],
-                'This Year': [moment().startOf('year'), moment()],
-            },
-        },
-                function (start, end) {
-                    flog('onChange', start, end);
-                    startDate = start;
-                    endDate = end;
-                    doQuery();
-                }
-        );
+        doQuery(searchQ);
     });
 }
 
-function doQuery() {
-    flog('doHistorySearch', startDate, endDate, searchQ);
+function doQuery(searchQ) {
+    flog('doHistorySearch', searchQ);
     Msg.info("Doing search...", 2000);
 
     var data = {
         dataQuery: searchQ
     };
-    flog("data", data);
 
     var target = $("#queryResults");
-    //                target.load();
 
     $.ajax({
         type: "GET",
@@ -312,42 +267,17 @@ function initDelKpiResult() {
 
 function initKpiSeriesGraphControls() {
     flog("initKpiSeriesGraphControls");
-    var reportRange = $('#analytics-range');
-
     function cb(start, end) {
-        options.startDate = start.format('DD/MM/YYYY');
-        options.endDate = end.format('DD/MM/YYYY');
+        options.startDate = start
+        options.endDate = end;
         loadKpiSeriesGraphData(window.location.pathname, options, $("#seriesHistogram"), "dateHistogram", {});
     }
 
-    reportRange.exist(function () {
-        flog("init analytics range");
-        reportRange.daterangepicker({
-            format: 'DD/MM/YYYY',
-            startDate: moment().subtract('days', 6),
-            endDate: moment(),
-            ranges: {
-                'Today': [
-                    moment().toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 7 Days': [
-                    moment().subtract('days', 6).toISOString(),
-                    moment().toISOString()
-                ],
-                'Last 30 Days': [
-                    moment().subtract('days', 29).toISOString(),
-                    moment().toISOString()],
-                'This Month': [
-                    moment().startOf('month').toISOString(),
-                    moment().endOf('month').toISOString()],
-                'Last Month': [
-                    moment().subtract('month', 1).startOf('month').toISOString(),
-                    moment().subtract('month', 1).endOf('month').toISOString()],
-                'This Year': [
-                    moment().startOf('year').toISOString(),
-                    moment().toISOString()],
-            },
-        }, cb);
+    $(document).on('pageDateChanged', function (e, startDate, endDate) {
+        cb(startDate, endDate);
+
+        if ($("#runLeaderboard:visible").length){
+            $("#runLeaderboard").trigger('click');
+        }
     });
 }
