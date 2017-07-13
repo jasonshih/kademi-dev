@@ -27,6 +27,18 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/user/passwordDoResetComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/passwordResetComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/user/loginForm.js"
             }
         }
