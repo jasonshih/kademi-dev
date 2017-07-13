@@ -91,7 +91,7 @@
                                             $formatter.htmlEncode($org.title)
 
                                             #if( $org.org.adminDomain )
-                                                <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
                                             #end
                                         </td>
                                         <td>$org.orgTypeDisplayNames</td>
@@ -195,6 +195,338 @@
         #end
         #end
 
+
+        <!-- MODALS -->
+        <div id="modal-upload-csv" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Instructions for uploading organisations</p>
+                        <ol>
+                            <li>Always <a href="orgs.csv">download the spreadsheet</a> and keep it as a backup before making changes</li>
+                            <li>The upload can process about <b>1000 rows per minute</b>, so it can take a while for larger databases</li>
+                            <li>This process <b>never deletes</b> anything</li>
+                            <li>If this is your firt upload use that spreadsheet as a template</li>
+                            <li>Update the spreadsheet. The first column is a unique identifier
+                                <b>which allows you to update the spreadsheet</b>. If you dont provide a unique ID one will be assigned
+                            </li>
+                            <li>The second column is the type, which must be one of those defined in the <a href="orgTypes">Manage Organisation Types</a> page. Optional</li>
+                            <li>The third column is the path, which is useful if your organisational structure is a hierarchy. Only use this column if you need to delegate permissions to organisations.</li>
+                            <li>By default only rows which an existing organisation on unique ID will be processed, these will be updated in the database from the spreadsheet</li>
+                            <li>
+                                <b>We recommend you always do a first run with "allow inserts" OFF</b>. You will be shown how many matches were made or not, then you can decide if you want to allow inserts.
+                            </li>
+                            <li>If you click "allow inserts" then any organisations in the spreadsheet which do not match existing orgs in the database will be inserted</li>
+                        </ol>
+                        <div class="upload">
+                            <form method="post" enctype="multipart/form-data" action="orgs.csv" id="orgs-upload-form" role="form" class="well">
+                                <div class="form-group">
+                                    <label for="file">Select your CSV file to upload</label>
+                                    <input type="file" id="file" name="file" />
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="insertMode" value="true" /> Allow inserts
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-warning">Upload Organisations CSV</button>
+                            </form>
+                        </div>
+                        <br />
+
+                        <div class="upload-results">
+                            <p>
+                                <strong>No. updated:</strong> <span class="badge badge-success num-updated">-</span>
+                                <strong>Unmatched:</strong> <span class="badge badge-danger num-unmatched">-</span>
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-upload-orgid-csv" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Upload Organisation IDs CSV</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Instructions for updating Org IDs</p>
+                        <ol>
+                            <li>Always <a href="orgIds.csv">download the spreadsheet</a> and keep it as a backup before making changes</li>
+                            <li>Update the 'New OrgId' column in the downloaded spreadsheet</li>
+                            <li>Do not change the first column</li>
+                            <li>The organisation title is not updated when uploading</li>
+                            <li>Rows with a blank new OrgId are ignored</li>
+                            <li>Nothing is ever deleted, so you can choose to only upload changed rows</li>
+                            <li>OrgID's <b>must be unique</b> within your account. Any duplicates will be flagged as errors</li>
+                            <li>If any invalid data is found you will be informed, then just correct your spreadsheet and try again</li>
+                            <li>The server processes about 1000 rows per minute, so larger databases can take a while</li>
+                        </ol>
+                        <div class="upload">
+                            <div class="" id='do-upload-orgid-csv'></div>
+                        </div>
+                        <br />
+
+                        <div class="upload-results">
+                            <p>
+                                <strong>No. updated:</strong> <span class="badge badge-success num-updated">-</span>
+                                <strong>Invalid rows:</strong> <span class="badge badge-danger num-errors">-</span>
+                            </p>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-edit-org" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit Organisation</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="orgId2" class="control-label col-md-3">ID</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control required simpleChars" name="orgId" id="orgId2" placeholder="A unique id. To enabled updating from spreadsheet" />
+                                    <span class="help-block">
+                                        <small>Simple characters only, no punctuation, dots, etc, all lower case</small>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgTitle" class="control-label col-md-3">Name</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control required" name="title" id="orgTitle" placeholder="User friendly name for the organisation" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="parentOrgId" class="control-label col-md-3">Parent organisation</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="parentOrgId" placeholder="Indentifier of the new organisation's parent" />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="orgTypeName" class="control-label col-md-3">Type</label>
+
+                                <div class="col-md-4">
+                                    <select name="orgTypeName" class="form-control" id="orgTypeName">
+                                        <option value="">[None]</option>
+                                        #foreach($orgType in $page.orgTypes)
+                                        $formatter.option($orgType.name, $orgType.displayName, "")
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgPhone" class="control-label col-md-3">Phone</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="phone" id="orgPhone" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgAddress" class="control-label col-md-3">Address</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="address" id="orgAddress" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgAddress2" class="control-label col-md-3">Address Line2</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="addressLine2" id="orgAddress2" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgState" class="control-label col-md-3">State</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="addressState" id="orgState" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="orgPostcode" class="control-label col-md-3">Postcode</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="postcode" id="orgPostcode" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-edit-parent" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Edit parent</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="parentOrgId" class="control-label col-md-3">Parent organisation</label>
+
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="destOrgId" placeholder="Indentifier of the new organisation's parent" />
+                                    <input type="hidden" name="mergeIds" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-merge-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Merge Organisations</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <p>The organisations will be merged into the one selected here. This will move user memberships to the merge destination organisation, and the other organisations will be deleted</p>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="mergeDest" class="control-label col-md-3">Merge to</label>
+
+                                <div class="col-md-9">
+                                    <select name="mergeDest" class="form-control required">
+                                        <option value="">[None]</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>OrgID</th>
+                                        <th>Title</th>
+                                        <th># members</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="orgsMergeTableBody">
+                                    <tr>
+                                        <td colspan="2">Please wait..</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <i>Internal ID's to merge</i>
+                            <textarea name="mergeIds" class="form-control required"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Merge</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-move-orgs" tabindex="-1" class="modal fade" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Move Organisations</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <p>The organisations will be moved into the one selected here. This will move user memberships to the merge destination organisation, and the other organisations will be deleted</p>
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label for="destOrgId" class="control-label col-md-3">Move to</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="destOrgId" class="form-control" placeholder="Destination orgid" />
+                                </div>
+                            </div>
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>OrgID</th>
+                                        <th>Title</th>
+                                        <th># members</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="orgsMoveTableBody">
+                                    <tr>
+                                        <td colspan="2">Please wait..</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <i>Internal ID's to move</i>
+                            <textarea name="mergeIds" class="form-control required"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Move</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- MODALS -->
+        
         <script type="text/javascript">
             $(function () {
                 initManageOrgs();
