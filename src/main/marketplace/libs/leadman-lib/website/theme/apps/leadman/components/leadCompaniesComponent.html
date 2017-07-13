@@ -10,17 +10,24 @@
         </tr>
     </thead>
     <tbody>
-        #foreach($com in $page.organisation.childOrgs)
-            <tr>
-                <td>$com.title</td>
-                <td>$!com.email</td>
-                <td>$!com.phone</td>
-                <td>
-                    $!com.address<br />$!com.addressLine2
-                </td>
-                <td>$com.members.size()</td>
-                <td><a href="./$com.id"><i class="fa fa-eye"></i> View details</a></td>
-            </tr>
+        #foreach($com in $page.paginator.records)
+        <tr>
+            <td>$com.title</td>
+            <td>$!com.email</td>
+            <td>$!com.phone</td>
+            <td>
+                $!com.address<br />$!com.addressLine2
+            </td>
+            <td>$com.members.size()</td>
+            <td><a href="./$com.id"><i class="fa fa-eye"></i> View details</a></td>
+        </tr>
         #end
     </tbody>
+    <tfoot id="pointsFooter">
+        <tr>
+            <td colspan="6">
+                $!page.paginator.html
+            </td>
+        </tr>
+    </tfoot>
 </table>
