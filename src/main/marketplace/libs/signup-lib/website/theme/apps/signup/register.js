@@ -104,7 +104,6 @@
 
     $(document).ready(function(){
         if($('.register-form-component').length > 0) {
-            debugger;
             initRegister("/dashboard");
         }
     });
