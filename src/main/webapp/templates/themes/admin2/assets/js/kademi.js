@@ -606,22 +606,36 @@ function formatDateTime(l) {
     }
 }
 
+function runPageInitFunctions() {
+    flog('runPageInitFunctions');
+    
+    $.each(window.pageInitFunctions, function (i) {
+        log('runPageInitFunctions | Run function #' + i);
+        pageInitFunctions[i]();
+        log('runPageInitFunctions | Done in run function #', i);
+    });
+}
+
 function initAjaxStatus() {
     var depth = 0;
     $(document).ajaxStart(function () {
         depth++;
-        flog("ajax start", depth);
-        $("#mainSpinner").show();
+        flog('Ajax started', depth);
+        $('#mainSpinner').show();
     });
+    
     $(document).ajaxComplete(function () {
         depth--;
-        flog("ajax stop", depth);
+        flog('Ajax stopped', depth);
         if (depth < 0) {
             depth = 0;
         }
         if (depth == 0) {
-            $("#mainSpinner").hide();
+            $('#mainSpinner').hide();
         }
+        
+        // Init time ago after Ajax is completed
+        initTimeago();
     });
 }
 
@@ -700,17 +714,21 @@ function initPageDatePicker() {
     if (range.length > 0) {
         var extraClass = range.attr('data-class') || '';
         var position = range.attr('data-position') || 'right';
-        
-        range.pageDatePicker({
+        var timeZone = window.KademiTimeZone;
+        var options = {
             extraClass: extraClass,
             position: position
-        });
+        };
+        if (timeZone){
+            options.timeZone = timeZone;
+        }
+        range.pageDatePicker(options);
     }
 }
 
 function initTimeago() {
-    if (jQuery.timeago) {
-        jQuery.timeago.settings.allowFuture = true;
+    if ($.timeago) {
+        $.timeago.settings.allowFuture = true;
         $(".timeago").timeago();
     }
 }
@@ -1152,8 +1170,6 @@ function checkBackgroundJobStatus(href, div, template, options) {
                     options.onError.call(this, resp);
                 }
             }
-            
-            div.find('.timeago').timeago();
         },
         error: function (jqXHR) {
             // probably a 404, which is fine, show the template with no data so it can render a run form
@@ -1163,7 +1179,6 @@ function checkBackgroundJobStatus(href, div, template, options) {
             flog('Background task status HTML:', htmlStr);
             div.html(htmlStr);
             div.show(400);
-            div.find('.timeago').timeago();
             
             if (typeof options.onError === 'function') {
                 options.onError.call(this, jqXHR);
