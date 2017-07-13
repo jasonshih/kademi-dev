@@ -1,12 +1,8 @@
 {
     "appDependencies": [
         {
-            "appId": "nvd3-lib",
-            "branch": "1.8.3"
-        },
-        {
             "appId": "leadman-lib",
-            "branch": "1.2.0"
+            "branch": "1.2.1"
         }
     ],
     "dependencies": [

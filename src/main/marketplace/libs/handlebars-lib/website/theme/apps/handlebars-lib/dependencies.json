@@ -1,0 +1,12 @@
+{
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js",
+                "position" : 0
+            }
+        }
+    ]
+}
+

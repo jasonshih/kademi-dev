@@ -5,6 +5,10 @@
             "branch": "2.18.3"
         },
         {
+            "appId": "handlebars-lib",
+            "branch": "3.0.3"
+        },
+        {
             "appId": "dropzone-lib",
             "branch": "4.3.0.2"
         },
@@ -47,12 +51,6 @@
             "js": {
                 "group": "main",
                 "path": "/static/uri/1.15.1/URI.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/handlebars/3.0.3/handlebars-v3.0.3.js"
             }
         },
         {
