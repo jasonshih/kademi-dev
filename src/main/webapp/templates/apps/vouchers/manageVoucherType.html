@@ -239,79 +239,6 @@
                     </div>
 
                     <hr/>
-
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-cog"></i> Search for vouchers
-                        </div>
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="input-group" id="voucher-query-container">
-                                        <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button">
-                                                <span class="glyphicon glyphicon-remove"></span>
-                                            </button>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-lg-offset-4 col-lg-2">
-                                    <button type="button" class="btn btn-danger btn-remove-vouchers pull-right"><i class="fa fa-trash"></i> Delete Vouchers</button>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive">
-                                <table id="vouchers-table" class="table table-striped table-hover" style="width: 100%">
-                                    <colgroup>
-                                        <col width="" />
-                                        <col width="" />
-                                        <col width="" />
-                                        <col width="" />
-                                        <col width="280px" />
-                                        <col width="10px" />
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Type</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>By</th>
-                                            <th><input class="selectAll" name="voucherSelect" type="checkbox"/></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="vouchers-table-body">
-                                        #if( $page.vouchers.empty )
-                                        <tr>
-                                            <td colspan="5">No vouchers</td>
-                                        </tr>
-                                        #else
-                                        #foreach($v in $page.vouchers)
-                                        <tr>
-                                            <td><a href='$v.href'>$v.name</a></td>
-                                            <td>$v.voucherTypeTitle</td>
-                                            <td>$!page.statusText($v.status)</td>
-                                            <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
-                                            <td>
-                                                #if( $v.changedBy )
-                                                <a href="/manageUsers/$v.changedBy.userId">$v.changedBy.name</a>
-                                                #end
-                                            </td>
-                                            <td><input data-vid="$v.id" name="voucherSelect" type="checkbox"/></td>
-                                        </tr>
-                                        #end
-                                        #end
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="clearfix"></div>
-                </div>
-            </div>
         </div>
 
         <div id="modalUploadCsv" class="modal fade modal-lg">
@@ -563,40 +490,6 @@
                 unmatchedTable.show();
             }
 
-            function initDeleteVouchers() {
-                $('body').on('click', '.btn-remove-vouchers', function (e) {
-                    e.preventDefault();
-                    var vouchers = $('#vouchers-table-body input[type=checkbox]:checked');
-                    var voucherIds = [];
-
-                    vouchers.each(function (i, item) {
-                        var v = $(item);
-                        voucherIds.push(v.data('vid'));
-                    });
-
-                    if (voucherIds.length > 0 && confirm('Are you sure you want to delete ' + voucherIds.length + ' vouchers?')) {
-                        $.ajax({
-                            url: window.location.pathname,
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                deleteVouchers: voucherIds.join(',')
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                if (data.status) {
-                                    Msg.success(data.messages);
-                                    reloadVouchers();
-                                } else {
-                                    Msg.warning(data.messages);
-                                }
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-
-                            }
-                        });
-                    }
-                });
-            }
             function initOrgFinder() {
                 $('input#redeemingOrgId').entityFinder({
                     useActualId: true,
