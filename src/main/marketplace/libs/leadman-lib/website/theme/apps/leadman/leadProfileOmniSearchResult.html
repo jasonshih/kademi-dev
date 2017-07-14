@@ -1,19 +1,19 @@
-<li class="search-suggestion" >
+<li class="search-suggestion">
     #if( $searchResult.type == "profile" )
-    <a href="/custs/$!searchResult.userId">
-        <span>$!searchResult.source.nickName</span> 
-        &ndash; 
-        <span class="text-info">$!searchResult.source.email</span>
-        <br/>
-        <small class="text-muted">$!searchResult.source.firstName $!searchResult.source.surName</small>
-    </a>
+        <a href="/custs/$!searchResult.userId">
+            <span>$!searchResult.source.nickName</span>
+            &ndash;
+            <span class="text-info">$!searchResult.source.email</span>
+            <br />
+            <small class="text-muted">$!searchResult.source.firstName $!searchResult.source.surName</small>
+        </a>
     #else
-    <a href="/leads/$!searchResult.source.leadId">
-        <span>$!searchResult.source.profile.nickName</span> 
-        &ndash;
-        <span class="text-info">$!searchResult.source.profile.email</span>
-        <br/>
-        <small class="text-muted">$!searchResult.source.profile.firstName $!searchResult.source.profile.surName</small>
-    </a>    
+        <a href="/leads/$!searchResult.source.leadId">
+            <span>$!searchResult.source.profile.nickName</span>
+            &ndash;
+            <span class="text-info">$!searchResult.source.profile.email</span>
+            <br />
+            <small class="text-muted">$!searchResult.source.profile.firstName $!searchResult.source.profile.surName</small>
+        </a>
     #end
 </li>
