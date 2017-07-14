@@ -45,6 +45,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/user/public.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/user/loginForm.js"
             }
         }
