@@ -1,5 +1,6 @@
 <li class="search-suggestion">
     #if( $searchResult.type == "profile" )
+        profile
         <a href="/manageUsers/$!searchResult.source.userId">
             <span>$!searchResult.source.nickName</span>
             &ndash;
@@ -16,15 +17,13 @@
                 <br />
                 <small class="text-muted">$!searchResult.source.profile.firstName $!searchResult.source.profile.surName</small>
             </a>
-        #else
-            $!searchResult.source
-            <a href="/organisations/$!searchResult.source.leadId/viewDetails">
-                <span>$!searchResult.source.profile.nickName</span>
-                &ndash;
-                <span class="text-info">$!searchResult.source.profile.email</span>
+        #elseif ($searchResult.source.assignedToProfile)
+            <a href="/leads/$!searchResult.source.leadId">
+                Lead assigned to: <span>$!searchResult.source.assignedToProfile.nickName</span> (<span class="text-info">$!searchResult.source.assignedToProfile.email</span>)
                 <br />
-                <small class="text-muted">$!searchResult.source.profile.firstName $!searchResult.source.profile.surName</small>
+                <small class="text-muted">$!searchResult.source.description</small>
             </a>
+        #else
         #end
     #end
 </li>
