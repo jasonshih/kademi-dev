@@ -1,10 +1,9 @@
-
 var importTotalCount = 0;
 importWizardStarted = false;
 
 function initUploads() {
     var form = $("#importerWizard form");
-
+    
     $('#myWizard').wizard();
     $('#importerWizard').on('show.bs.collapse', function () {
         var curStep = $('#myWizard').wizard('selectedItem');
@@ -19,7 +18,7 @@ function initUploads() {
         $('#myWizard').find('form').trigger('reset');
         form.find("input[name=fileHash]").val('')
     });
-
+    
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
         if (data.step === 1) {
             // IE 11 fix
@@ -28,7 +27,7 @@ function initUploads() {
                 ul.css('margin-left', '0');
             }
         }
-
+        
         if (data.step === 3) {
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
@@ -45,7 +44,7 @@ function initUploads() {
             $('#toManyErrors').hide();
             
             form.find('.beforeImportInfo').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>');
-
+            
             $.ajax({
                 url: window.location.pathname,
                 data: formData,
@@ -60,10 +59,10 @@ function initUploads() {
                         }
                         
                         form.find(".beforeImportInfo").text(
-                                'Data status: New profiles found: ' + resp.data.newImportsCount
-                                + ', existing profiles found: ' + resp.data.existingImportsCount
-                                + ', invalid records: ' + invalidRows);
-
+                            'Data status: New profiles found: ' + resp.data.newImportsCount
+                            + ', existing profiles found: ' + resp.data.existingImportsCount
+                            + ', invalid records: ' + invalidRows);
+                        
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
                         if (resp.data.invalidRows) {
@@ -82,11 +81,11 @@ function initUploads() {
                         
                         importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount
                         
-                        $('#result').show(); 
+                        $('#result').show();
                         $('#processing').hide();
-                        if ( importTotalCount == 0 || resp.data.toManyErrors) {
+                        if (importTotalCount == 0 || resp.data.toManyErrors) {
                             form.find('[type=submit]').attr('disabled', true);
-
+                            
                             if (resp.data.toManyErrors) {
                                 $('#toManyErrors').show();
                             } else {
@@ -106,7 +105,7 @@ function initUploads() {
             });
         }
     });
-
+    
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         if (data.step === 1 && $('#importerWizard').attr('aria-expanded') == 'true') {
             if (form.find("input[name=fileHash]").val() == "") {
@@ -118,7 +117,7 @@ function initUploads() {
                 evt.preventDefault();
             }
         }
-
+        
         if (data.step === 2) {
             var startRow = $('#startRow').val();
             if (!startRow) {
@@ -129,7 +128,7 @@ function initUploads() {
             } else {
                 $('#startRow').parents('.form-group').removeClass('has-error');
             }
-
+            
             var importerHead = $('#importerHead');
             var selectedCols = [];
             importerHead.find('select').each(function () {
@@ -137,7 +136,7 @@ function initUploads() {
                     selectedCols.push(this.value);
                 }
             });
-
+            
             if (selectedCols.length < 1) {
                 alert('Please select column data that contains email to continue');
                 importerHead.find('select').first().trigger('focus');
@@ -145,7 +144,7 @@ function initUploads() {
             }
         }
     });
-
+    
     flog("Init importer form", form);
     form.forms({
         validate: function () {
@@ -153,19 +152,19 @@ function initUploads() {
                 $('#myWizard').wizard("next");
                 
                 var resultCustomValidate = {
-                    error : 1,
-                    errorMessages : [" That task is already in progress. Please cancel it or wait until it finishes"]
+                    error: 1,
+                    errorMessages: [" That task is already in progress. Please cancel it or wait until it finishes"]
                 };
-
+                
                 return resultCustomValidate;
-            }  
+            }
         },
         onError: function (resp, form, config) {
             Msg.error(resp.messages[0]);
             doCheckProcessStatus();
             $('#myWizard').wizard("next");
         },
-        beforePostForm: function(form, config, data){
+        beforePostForm: function (form, config, data) {
             importWizardStarted = true;
             return data;
         },
@@ -174,14 +173,14 @@ function initUploads() {
             doCheckProcessStatus();
         }
     });
-
+    
     $('#btn-upload').mupload({
         url: window.location.pathname,
         useJsonPut: false,
         buttonText: '<i class="clip-folder"></i> Upload CSV',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
-
+            
             var data = resp.result.data;
             flog("got data", data);
             var table = data.table;
@@ -196,15 +195,15 @@ function initUploads() {
                 thead.append(td);
                 var select = $("<select class='form-control' name='col" + col + "'>");
                 select.append("<option value=''>[Do not import]</option>");
-
+                
                 for (var field in fields) {
                     select.append("<option value='" + field + "'>" + fields[field] + "</option>");
                 }
-
+                
                 td.append(select);
             }
             flog("done head", thead);
-
+            
             var tbody = $("#importerBody");
             tbody.html("");
             var numRows = 0;
@@ -222,14 +221,14 @@ function initUploads() {
                     });
                 }
             });
-
+            
             $('#myWizard').wizard("next");
         }
     });
-
+    
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-
+        
         $.ajax({
             type: 'post',
             url: '/custs',
@@ -238,7 +237,7 @@ function initUploads() {
                 Msg.success('Import task cancelled');
             },
             error: function () {
-
+            
             }
         });
     });
@@ -247,15 +246,15 @@ function initUploads() {
 function initDelContacts() {
     $('body').on('click', '.btn-del-contacts', function (e) {
         e.preventDefault();
-
+        
         var ids = [];
         var checkBoxes = $('[name=select-contact]:checked');
-
+        
         checkBoxes.each(function (i, item) {
             var chk = $(item);
             ids.push(chk.data('userid'));
         });
-
+        
         if (ids.length >= 1) {
             if (confirm('Are you sure you want to delete ' + ids.length + ' contacts and all the leads associated with each contact?')) {
                 $.ajax({
@@ -275,7 +274,7 @@ function initDelContacts() {
         } else {
             Msg.info('Please select at least 1 contact to delete.');
         }
-
+        
     });
 }
 
@@ -327,6 +326,10 @@ function doLeadSearch(forceSearch) {
     });
 }
 
+function doCheckProcessStatus() {
+    checkProcessStatus();
+}
+
 function checkProcessStatus() {
     flog("checkProcessStatus");
     var jobTitle = $(".job-title");
@@ -342,12 +345,12 @@ function checkProcessStatus() {
                 if (result.data) {
                     var state = result.data.state;
                     flog("state", state);
-
+                    
                     if (result.data.statusInfo.complete) {
                         var dt = result.data.statusInfo.completedDate;
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
-
+                        
                         doLeadSearch(true);
                         if (typeof state.updatedProfiles !== 'undefined') {
                             $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
@@ -359,39 +362,39 @@ function checkProcessStatus() {
                             $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
                         }
                         flog("finished state", state, state.resultHash);
-                        if (typeof state.resultHash !== 'undefined' &&  state.resultHash != null ) {
+                        if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
                             var href = "/_hashes/files/" + state.resultHash + ".csv";
                             $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
-                        }else{
+                        } else {
                             $('#myWizard').find('.errorRows').closest("a").hide();
                         }
                         
                         importWizardStarted = false;
                         
                         $('#myWizard').wizard("next");
-
+                        
                         return; // dont poll again
                     } else {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
                         
-                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount  * 100;
-                        if (isNaN(percentComplete)){
+                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
+                        if (isNaN(percentComplete)) {
                             percentComplete = 0;
                         }
                         percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
-                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width',percentComplete+'%');
+                        $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
                         
                         jobTitle.text("Process running...");
                     }
-
+                    
                 } else {
                     // waiting to start
                     jobTitle.text("Waiting for process job to start ...");
                 }
                 window.setTimeout(doCheckProcessStatus, 2500);
-
+                
             } else {
                 flog("No task");
             }
