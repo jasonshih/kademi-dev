@@ -454,7 +454,7 @@
             if (!self.isCompletable) {
                 // For a non-completable enrolement we allow users to view any page in any order
                 nextEnabled = true;
-            } else if (!modStatusComplete && (!isBeyondCurrent || (isBeyondCurrent && !modStatusComplete)) && (quiz.length > 0 || isLastPage)) {
+            } else if (!options.isCompleted && (!isBeyondCurrent || (isBeyondCurrent && !modStatusComplete)) && (quiz.length > 0 || isLastPage)) {
                 $('a.nextBtn').addClass('quizSubmit').find('span').text('Submit');
                 nextEnabled = true;
             } else {
