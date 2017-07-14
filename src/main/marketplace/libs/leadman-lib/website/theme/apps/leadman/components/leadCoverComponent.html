@@ -1,75 +1,68 @@
-<div id="lead-cover" class="">
-    <div class="">
-        <div class="row">
-            <div class="col-md-6 col-sm-6">
-                <div class="media mt-lg">
-                    #set ($ava = "/theme/apps/leadman/user-placeholder.png")
-                    #set ($bgsize = "background-size: 100%;")
-                    #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
+<div id="lead-cover">
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <div class="media mt-lg">
+                #set ($ava = "/theme/apps/leadman/user-placeholder.png")
+                #set ($bgsize = "background-size: 100%;")
+                #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
                     #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
-                    #end
-                    <div class="media-left media-middle"><a class="change-lead-avatar" href="#"><img src="$ava" class="profile-avatar-img media-object thumb96 img-circle"></a></div>
-                    <div class="media-body">
-                        <h2 class="mv-lg media-heading">
-                            #if($page.leadOrg)
+                #end
+                <div class="media-left media-middle"><a class="change-lead-avatar" href="#"><img src="$ava" class="profile-avatar-img media-object thumb96 img-circle"></a></div>
+                <div class="media-body">
+                    <h2 class="mv-lg media-heading">
+                        #if($page.leadOrg)
                             #if($page.profile)
-                            <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</a>
-                            #if( $page.profile.phone )
-                            <span class="text-white">$page.profile.phone</span>
-                            #end
+                                <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription ($page.leadOrg.formattedName)</a>
+                                #if( $page.profile.phone )
+                                    <span class="text-white">$page.profile.phone</span>
+                                #end
                             #else
-                            <span style="color: white">$page.leadOrg.formattedName</span>
+                                <span style="color: white">$page.leadOrg.formattedName</span>
                             #end
-                            #elseif( $page.profile )
+                        #elseif( $page.profile )
                             <a href="/custs/$page.profile.name" style="color: white">$page.customerDescription</a>
                             #if( $page.profile.phone )
-                            <small class="text-white">$page.profile.phone</small>
+                                <small class="text-white">$page.profile.phone</small>
                             #end
 
-                            #else
+                        #else
                             <p style="color: white">$page.customerDescription</p>
-                            #end
-                        </h2>
-                        <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px;'>
-                            Capture -
-                            <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
-                            |
-                            #if( $page.profile.email)
+                        #end
+                    </h2>
+                    <div style='background-color: rgba(255, 255, 255, 0.7); padding: 5px; border-radius: 5px;'>
+                        Capture -
+                        <a href="mailto:from-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> From</a>
+                        |
+                        #if( $page.profile.email)
                             <a href="mailto:$page.profile.email?bcc=to-lead-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> To</a>
                             |
                             <a href="mailto:forward-to-$page.leadId@${page.find('/').domainName}"> <em class="fa fa-envelope fa-fw"></em> Forward</a>
-                            #end
-                            <!--
-                            <button type="button" class="btn btn-info btn-xs mr-sm"> <em class="fa fa-twitter fa-fw"></em></button>
-                            <button type="button" class="btn btn-primary btn-xs mr-sm"> <em class="fa fa-facebook fa-fw"></em></button>
-                            <button type="button" class="btn btn-danger btn-xs"> <em class="fa fa-google-plus fa-fw"></em></button>
-                            -->
-                        </div>
+                        #end
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-12 text-right">
-                #if( $page.completed)
+        </div>
+        <div class="col-md-6 col-sm-12 text-right">
+            #if( $page.completed)
                 #if( $page.cancelled)
-                <div class="alert alert-warning">
-                    <p class="lead">
-                        <span class="fa fa-remove"></span>
-                        Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                    </p>
-                </div>
+                    <div class="alert alert-warning">
+                        <p class="lead">
+                            <span class="fa fa-remove"></span>
+                            Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        </p>
+                    </div>
                 #else
-                <div class="alert alert-success">
-                    <p class="lead">
-                        <span class="fa fa-check"></span>
-                        Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                    </p>
-                </div>
+                    <div class="alert alert-success">
+                        <p class="lead">
+                            <span class="fa fa-check"></span>
+                            Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        </p>
+                    </div>
                 #end
                 <div class="btn-group">
                     <button class="btn btn-success btn-reopen" type="button"><i class="fa fa-check"></i> Reopen</button>
                 </div>
-                #else
-
+            #else
                 <div class="btn-group">
                     <button class="btn btn-primary" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
                     <a class="btn btn-success createNote" href="$page.href">
@@ -84,12 +77,12 @@
                         <span class="fa fa-dollar"></span>
                         Close deal
                     </button>
-                </div>h
+                </div>
 
                 <p></p>
 
                 <div class="btn-group dropdown">
-                    <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" >
+                    <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
                         <span>
                             #if( $page.assignedTo )
                                 Assigned to: $!page.assignedTo.thisUser.formattedName
@@ -103,19 +96,18 @@
                         <li><a href="$user.name">Assign to me</a></li>
                         <li><a href="">Clear</a></li>
                         #if ($page.find("/leads").teamMembers.size() > 0)
-                        <li role="separator" class="divider"></li>
+                            <li role="separator" class="divider"></li>
                         #end
                         #foreach($user in $page.find("/leads").teamMembers)
-                        <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
+                            <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
                         #end
                     </ul>
                 </div>
-                #end
-            </div>
+            #end
         </div>
-
     </div>
 </div>
+
 #if($page.profile)
 <div class="memberships-wrapper" id="membershipsContainer">
     <div class="dropdown">
@@ -123,7 +115,7 @@
             <i class="fa fa-plus-circle"></i> Tags
         </a>
         <ul class="dropdown-menu">
-            <a href="#" class="createTagModal" >
+            <a href="#" class="createTagModal">
                 <li style="padding: 3px 15px">
                     <strong>Create and add tag</strong>
                 </li>
@@ -132,11 +124,11 @@
                 <strong>Quick add</strong>
             </li>
             #foreach($group in $page.tags)
-            <li class="addTag">
-                <a href="$group.name">
-                    <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
-                </a>
-            </li>
+                <li class="addTag">
+                    <a href="$group.name">
+                        <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                    </a>
+                </li>
             #end
         </ul>
     </div>
@@ -151,34 +143,6 @@
     #set( $selectedTags = $selectedTags + ']' )
     
     <input type="text" id="view-lead-tags" placeholder="Type to Add Tags" value="$selectedTags" />
-
-    <!--<div class="dropdown">
-        <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
-            <i class="fa fa-plus-circle"></i> Tags
-        </a>
-        <ul class="dropdown-menu">
-            <a href="#" class="createTagModal" >
-                <li style="padding: 3px 15px">
-                    <strong>Create and add tag</strong>
-                </li>
-            </a>
-            <li style="padding: 3px 15px">
-                <strong>Quick add</strong>
-            </li>
-            #foreach($group in $page.tags)
-            <li class="addTag">
-                <a href="$group.name">
-                    <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
-                </a>
-            </li>
-            #end
-        </ul>
-    </div>
-    <div id="user-membership" class="blocks-wrapper memberships-list membershipsDiv">
-        #foreach($m in $page.assignedTags)
-        #showGroupTag( $m )
-        #end
-    </div>-->
 </div>
 <br>
 #end
@@ -217,9 +181,9 @@
                         <div class="col-md-9">
                             <div class="input-group">
                                 <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
-                                            <span class="input-group-addon">
-                                                <span class="fa fa-calendar"></span>
-                                            </span>
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -250,7 +214,7 @@
                 <h4 class="modal-title">Upload Files</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
-                <input type="hidden" name="uploadFiles" value="uploadFiles"/>
+                <input type="hidden" name="uploadFiles" value="uploadFiles" />
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="col-md-9">
@@ -278,8 +242,8 @@
                 <h4 class="modal-title">Assign new profile</h4>
             </div>
             <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
-                <input type="hidden" name="assignNewProfile" value="assignNewProfile"/>
-                <input type="hidden" name="userId"/>
+                <input type="hidden" name="assignNewProfile" value="assignNewProfile" />
+                <input type="hidden" name="userId" />
                 <div class="modal-body">
                     <div class="form-group hide">
                         <label class="control-label col-md-2" for="nickName">Nick Name</label>
@@ -360,11 +324,11 @@
 </div>
 
 #macro( showGroupTag $g )
-    <span class="membership alert alert-info">
-        <i class="fa fa-tag"></i>
-        <span class="block-name" title="$g.title">
-            $g.title
-        </span>
-        &nbsp;<a href="$m.name" class="close btn-delete-tag" title="Delete tag">&times;</a>
+<span class="membership alert alert-info">
+    <i class="fa fa-tag"></i>
+    <span class="block-name" title="$g.title">
+        $g.title
     </span>
+    &nbsp;<a href="$m.name" class="close btn-delete-tag" title="Delete tag">&times;</a>
+</span>
 #end
