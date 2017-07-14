@@ -122,7 +122,7 @@
                     ).appendTo(document.body);
                     
                     var ckeditorOptions = keditor.options.ckeditorOptions;
-                    ckeditorOptions.removePlugins = ckeditorOptions.removePlugins.replace(',autogrow', '');
+                    ckeditorOptions.removePlugins = ckeditorOptions.removePlugins.replace(',autogrow', '') + ',sourcedialog';
                     ckeditorOptions.extraPlugins = ckeditorOptions.extraPlugins + ',autogrow';
                     var editor = $('#modal-carousel-content-body').ckeditor(ckeditorOptions).editor;
                     

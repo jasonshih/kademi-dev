@@ -115,23 +115,23 @@ function initPie(id, aggr) {
     $('#' + id + ' svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.pieChart()
-            .x(function (d) {
-                return d.key
-            })
-            .y(function (d) {
-                return d.doc_count
-            })
-            .donut(true)
-            .donutRatio(0.35)
-            .showLabels(true)
-            .showLegend(false)
-            .labelType("percent");
+                .x(function (d) {
+                    return d.key
+                })
+                .y(function (d) {
+                    return d.doc_count
+                })
+                .donut(true)
+                .donutRatio(0.35)
+                .showLabels(true)
+                .showLegend(false)
+                .labelType("percent");
 
 
         d3.select("#" + id + " svg")
-            .datum(aggr.buckets)
-            .transition().duration(350)
-            .call(chart);
+                .datum(aggr.buckets)
+                .transition().duration(350)
+                .call(chart);
 
         return chart;
     });
@@ -141,26 +141,26 @@ function initHistogram(aggr) {
     $('#chart_histogram svg').empty();
     nv.addGraph(function () {
         var chart = nv.models.multiBarChart()
-            .options({
-                showLegend: true,
-                showControls: false,
-                noData: "No Data available for histogram",
-                margin: {
-                    left: 40,
-                    bottom: 60
-                }
-            });
+                .options({
+                    showLegend: true,
+                    showControls: false,
+                    noData: "No Data available for histogram",
+                    margin: {
+                        left: 40,
+                        bottom: 60
+                    }
+                });
 
         chart.xAxis
-            .axisLabel("Date")
-            .rotateLabels(-45)
-            .tickFormat(function (d) {
-                return moment(d).format("DD MMM");
-            });
+                .axisLabel("Date")
+                .rotateLabels(-45)
+                .tickFormat(function (d) {
+                    return moment(d).format("DD MMM");
+                });
 
         chart.yAxis
-            .axisLabel("Triggered")
-            .tickFormat(d3.format('d'));
+                .axisLabel("Triggered")
+                .tickFormat(d3.format('d'));
 
         var myData = [];
         var conditionsTrue = {
@@ -195,25 +195,25 @@ function initHistogram(aggr) {
         for (var i = 0; i < trueHits.length; i++) {
             var bucket = trueHits[i];
             conditionsTrue.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < falseHits.length; i++) {
             var bucket = falseHits[i];
             conditionsFalse.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         for (var i = 0; i < delayedHits.length; i++) {
             var bucket = delayedHits[i];
             delayedTriggers.values.push(
-                {x: bucket.key, y: bucket.doc_count});
+                    {x: bucket.key, y: bucket.doc_count});
         }
 
         d3.select('#chart_histogram svg')
-            .datum(myData)
-            .transition().duration(500)
-            .call(chart);
+                .datum(myData)
+                .transition().duration(500)
+                .call(chart);
 
         nv.utils.windowResize(chart.update);
 
