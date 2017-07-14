@@ -28,6 +28,7 @@
                     <a href="emailItems.csv" id="downloadCsv" class="btn btn-info">Export CSV</a>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-4">
                     <div id="chart_histogram">
@@ -57,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-2 pull-right">
                     <div class="btn-group btn-group-sm">
@@ -93,7 +95,7 @@
                         <tr>
                             <td colspan="6">
                                 <i>Loading, please wait..</i>
-                            </td>                            
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -107,21 +109,21 @@
             <td colspan='5'>Displaying {{hits.hits.length}} of {{hits.total}} emails</td>
             </tr>
             {{#each hits.hits}}
-                        <tr>
-                            <td>
-                            <a href='/manageUsers/{{fields.recipient_id}}'><i class='fa fa-user'></i> {{fields.recipientAddress}}</a>                            
-                            </td>
-                            <td>
-                            <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
-                            {{fields.subject}}
-                            </td>
-                            <td><abbr title='{{dateFromLong fields.createdDate}}' class='timeago'>{{dateFromLong fields.createdDate}}</abbr></td>
-                            <td></td>
-                            <td><input data-edmid="{{fields.id}}" type="checkbox" name="markIgnored"/></td>
-                        </tr>                
+            <tr>
+            <td>
+            <a href='/manageUsers/{{fields.recipient_id}}'><i class='fa fa-user'></i> {{fields.recipientAddress}}</a>
+            </td>
+            <td>
+            <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
+            {{fields.subject}}
+            </td>
+            <td><abbr title='{{dateFromLong fields.createdDate}}' class='timeago'>{{dateFromLong fields.createdDate}}</abbr></td>
+            <td></td>
+            <td><input data-edmid="{{fields.id}}" type="checkbox" name="markIgnored"/></td>
+            </tr>
             {{/each}}
         </script>
-            
+
         <script type="text/javascript" src="/theme/apps/email/manageEmailItemHistory.js">//</script>
         <script type="text/javascript">
             $(function () {
