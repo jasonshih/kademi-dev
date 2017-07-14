@@ -6,17 +6,17 @@
             </h4>
             <div class="row">
                 <form method="post" action="$page.href" class="form-horizontal" id="leadDetails">
-                    <input type="hidden" name="saveDetails" value="saveDetails"/>
+                    <input type="hidden" name="saveDetails" value="saveDetails" />
                     <div class="modal-body" id="profile-body">
                         #set( $p = $page.leadProfile )
                         #set( $profile = $page.profile )
                         #if (!$page.href.contains("cust"))
-                        <div class="form-group">
-                            <label class="control-label col-md-2" for="jobTitle">Job Title</label>
-                            <div class="col-md-6">
-                                <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="jobTitle">Job Title</label>
+                                <div class="col-md-6">
+                                    <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                                </div>
                             </div>
-                        </div>
                         #end
                         <div class="form-group">
                             <label class="control-label col-md-2" for="nickName">Customer</label>
@@ -48,32 +48,40 @@
                             </div>
                         </div>
 
-                        <div class="control-group form-group">
-                            #set($fields = $page.profileExtraFields)
-                            #foreach($field in $fields.keySet())
-                            #if ($extraFields && $extraFields.contains($field.name))
-                            #else
-                            <label class="control-label col-md-2" for="field_${field.name}">$field.text</label>
-
-                            <div class="controls col-md-4">
-                                $field.html( $fields[$field] )
+                        <div class="clearfix extra-fields">
+                            <div class="row">
+                                #set($fields = $page.profileExtraFields)
+                                #foreach($field in $fields.keySet())
+                                    #if ($extraFields && $extraFields.contains($field.name))
+                                    #else
+                                        #if ($foreach.index % 2 == 0)
+                                            <div class="clearfix"></div>
+                                        #end
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="field_${field.name}">$field.text</label>
+                                                <div class="controls col-md-8">
+                                                    $field.html( $fields[$field] )
+                                                </div>
+                                            </div>
+                                        </div>
+                                    #end
+                                #end
                             </div>
-                            #end
-                            #end
                         </div>
 
                         #if( $page.completed)
                         #else
-                        <div class="form-group">
-                            <div class="col-md-10 col-md-offset-2">
-                                <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
 
-                                <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
-                                #if(!$page.href.contains("cust") && $page.leadProfile)
-                                <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
-                                #end
+                                    <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                    #if(!$page.href.contains("cust") && $page.leadProfile)
+                                        <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                    #end
+                                </div>
                             </div>
-                        </div>
                         #end
                     </div>
                 </form>
