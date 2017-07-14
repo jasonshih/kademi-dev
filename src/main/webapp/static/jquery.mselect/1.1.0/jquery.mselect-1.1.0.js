@@ -22,7 +22,7 @@
         excludedEndPaths: ['.mil/'],
         basePath: '/',
         pagePath: window.location.pathname,
-        zIndex: 10012,
+        zIndex: null,
         showModal: function (modal) {
             modal.modal('show');
         },
@@ -63,7 +63,7 @@
                         var modal = getModal(config);
                         config.showModal(modal);
                         if (config.zIndex) {
-                            modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').css('z-index', config.zIndex);
+                            modal.css('z-index', config.zIndex + 1).siblings('.modal-backdrop').last().css('z-index', config.zIndex);
                         }
                     });
                 } else {

@@ -643,15 +643,7 @@ function initAdminTopNavSearch() {
     flog('initAdminTopNavSearch');
     
     var txt = $('#top-nav-search-input');
-    txt.entityFinder({
-        onSelectSuggestion: function (suggestion, id, actualId, type) {
-            if (type === 'user') {
-                window.location.href = '/manageUsers/' + actualId;
-            } else {
-                window.location.href = '/organisations/' + actualId + '/edit';
-            }
-        }
-    });
+    txt.omniSearch();
 }
 
 function drawPieChart(chart, options, padding, isFirstTime) {

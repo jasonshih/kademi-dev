@@ -101,6 +101,7 @@
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/jquery.entityFinder/1.0.0/jquery.entityFinder-1.0.0.js">//</script>
+        <script type="text/javascript" src="/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/main.js">//</script>
         <script type="text/javascript" src="/theme/assets/js/kademi.js?v=1">//</script>
 
@@ -110,10 +111,10 @@
     </head>
     <body>
         <script>
-            var KademiTimeZone = "$page.find('/').orgData.timezone";
+            var KademiTimeZone = "$!page.find('/').orgData.timezone" || null;
         </script>
         $templater.pushJs("/static/handlebars/3.0.3/handlebars-v3.0.3.js")
-        
+
         <script type="text/javascript">
             $(function () {
                 Main.init('$page.organisation.id');
