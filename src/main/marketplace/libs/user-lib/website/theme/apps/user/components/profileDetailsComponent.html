@@ -30,7 +30,7 @@
     #set ($btnText = 'Save')
 #end
 
-<div class="details well">
+<div class="details well profile-details-component">
     <form action="$request.absolutePath" method="POST" enctype="multipart/form-data" class="profile form-horizontal form-horizontal-narrow" role="form">
         <h4>$title</h4>
 
@@ -104,9 +104,4 @@
 </div>
 #if ($page)
     #portlets("profilePrimary")
-    <script>
-        $(function () {
-            initProfile();
-        })
-    </script>
 #end
