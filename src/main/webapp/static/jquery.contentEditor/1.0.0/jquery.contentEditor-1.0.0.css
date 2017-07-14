@@ -181,3 +181,43 @@ ol.menuTree li.placeholder:before {
 .border-style-double {
     border-bottom-style: double;
 }
+
+/* ===========================================================================
+   Container background images
+   =========================================================================== */
+
+.bgImagesPreview{
+    position: relative;
+    min-height: 100px;
+}
+
+.bgImagesPreview .btn-nav{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    display: block;
+    text-align: center;
+    border-radius: 2px;
+}
+
+.bgImagesPreview .btn-nav.btn-nav-left{
+    left: 5px;
+}
+
+.bgImagesPreview .btn-nav.btn-nav-right{
+    right: 5px;
+}
+
+.bgImagesPreview .btn-nav.btn-edit-image{
+    right: 35px;
+    top: 15px;
+}
+
+.bgImagesPreview .btn-nav.btn-delete-image{
+    right: 10px;
+    top: 15px;
+}

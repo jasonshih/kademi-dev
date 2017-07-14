@@ -111,6 +111,38 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-sm-12">Multiple background images</label>
+
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="multiple-background" />
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group multiple-background-settings hide">
+        <label class="col-sm-12">Transition time (seconds)</label>
+
+        <div class="col-sm-12">
+            <input type="number" value="" class="txt-transition form-control" />
+        </div>
+    </div>
+    <div class="form-group multiple-background-settings hide">
+        <div class="col-sm-12">
+            <label>Background Images</label>
+            <input type="hidden" name="currentMselect" class="currentMselect">
+            <div class="bgImagesPreview">
+                <a class="btn-nav btn-nav-left" href="javascript:void(0)"><i class="fa fa-arrow-left"></i></a>
+                <a class="btn-nav btn-nav-right" href="javascript:void(0)"><i class="fa fa-arrow-right"></i></a>
+                <a title="Change image" class="btn-nav btn-edit-image" href="javascript:void(0)"><i class="fa fa-edit"></i></a>
+                <a title="Delete image" class="btn-nav btn-delete-image" href="javascript:void(0)"><i class="fa fa-trash"></i></a>
+                <p data-images="/static/images/photo_holder.png"><img src="/static/images/photo_holder.png" class="img-responsive img-thumbnail" /></p>
+            </div>
+            <button type="button" class="btn btn-block btn-primary" id="btnAddImagesBGs">Add images</button>
+        </div>
+    </div>
+    <div class="form-group single-background-settings">
         <div class="col-sm-12">
             <label>Background Image</label>
 
