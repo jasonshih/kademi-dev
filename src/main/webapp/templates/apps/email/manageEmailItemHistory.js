@@ -49,12 +49,12 @@ function initMarkIgnored() {
                     $('.selectAll').prop('checked', false);
                     if (resp.status) {
                         Msg.success(resp.messages);
-                        
+
                         checkBoxes.each(function (i, item) {
                             var a = $(item);
                             a.closest("tr").remove();
                         });
-                        
+
                     } else {
                         Msg.warning(resp.messages);
                     }
@@ -137,7 +137,7 @@ function initRowTemplate() {
         } else {
             return "";
         }
-    });        
+    });
 }
 
 function renderRows(json) {
