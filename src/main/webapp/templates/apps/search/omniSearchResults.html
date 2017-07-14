@@ -1,9 +1,8 @@
 #set( $results = false)
-#set( $results = $applications.search.omniSearch($request.params.omni, 100, 0))
+#set( $results = $applications.search.omniSearch($request.params.omni, 5, 0))
 #if( $results )
     $results
 #else
-<p>No results found</p>
-    $results
+<li class="no-result text-muted">No results found</li>
 #end
 

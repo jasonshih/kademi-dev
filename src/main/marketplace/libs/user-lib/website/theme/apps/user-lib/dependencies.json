@@ -33,7 +33,19 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/user/profileDetailsComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/user/passwordResetComponent.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/public.js"
             }
         },
         {

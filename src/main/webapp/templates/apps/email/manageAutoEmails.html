@@ -14,12 +14,6 @@
         <!-- Start Analytics -->
         <div id="analytics" class="tab-pane active">
             <div class="row">
-                <!--<div class="col-md-3">-->
-                    <!--<div class="input-group date-range">-->
-                        <!--<label for="report-range" class="input-group-addon">Date</label>-->
-                        <!--<input type="text" id="report-range" placeholder="Choose a date range" value="" class="form-control" />-->
-                    <!--</div>-->
-                <!--</div>-->
                 <div class="col-md-12">
                     <div class="btn-group">
                         <div class="btn-group" role="group" aria-label="...">
@@ -59,12 +53,11 @@
                 </div>
             </div>
         </div>
+        <hr/>
         <!-- End Analytics -->
 
         <!-- Start General -->
         <div id="general" class="">
-
-            <hr/>
 
             <p class="clearFix">
                 <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-trigger"><i class="fa fa-plus"></i> Create a trigger</a>
@@ -178,10 +171,10 @@
                     <h4 class="modal-title">Create trigger</h4>
                 </div>
                 <form method="POST" action="." class="form-horizontal">
-                <div class="modal-body">
-                    <p>Enter a name for your new auto-trigger and select the type of event to do some action on. You can
-                        then choose additional options on the edit screen.</p>
-                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                    <div class="modal-body">
+                        <p>Enter a name for your new auto-trigger and select the type of event to do some action on. You can
+                            then choose additional options on the edit screen.</p>
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="name">Trigger name</label>
                             <div class="col-md-8">
@@ -201,11 +194,11 @@
                                 #end
                             </div>
                         </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Save</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                        <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-plus"></i> Save</button>
+                    </div>
                 </form>
             </div>
         </div>

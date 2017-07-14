@@ -1,31 +1,28 @@
-#parse("/theme/masterTemplate.html")
-#@render()
 <html>
-    <head>
-       <title>Auction Detail</title>
-    </head>
-    <body>
-        <section>
-            <div class="container-bg background-for">
-                <div class="container-layout container">
-                    <div class="container-content-wrapper">
-                    <div class="row">
-                        <div class="col-sm-8" data-type="container-content">
-                            <section data-type="component-auctionDetail">
-                                <div data-dynamic-href="_components/auctionDetail"></div>
-                            </section>
-                        </div>
-
-                        <div class="col-sm-4" data-type="container-content">
-                            <section data-type="component-auctionBidInfo">
-                                <div data-dynamic-href="_components/auctionBidInfo"></div>
-                            </section>
-                        </div>
+<head>
+    <title>Auction Detail - $title</title>
+</head>
+<body>
+<section>
+    <div class="container-bg background-for">
+        <div class="container-layout container">
+            <div class="container-content-wrapper">
+                <div class="row">
+                    <div class="col-sm-8" data-type="container-content">
+                        <section data-type="component-auctionDetail">
+                            <div data-dynamic-href="_components/auctionDetail"></div>
+                        </section>
                     </div>
+
+                    <div class="col-sm-4" data-type="container-content">
+                        <section data-type="component-auctionBidInfo">
+                            <div data-dynamic-href="_components/auctionBidInfo"></div>
+                        </section>
                     </div>
                 </div>
             </div>
-        </section>
-    </body>
+        </div>
+    </div>
+</section>
+</body>
 </html>
-#end

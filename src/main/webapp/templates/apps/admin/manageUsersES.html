@@ -54,16 +54,16 @@
                         </p>
                         #set ($showEnabledUsers = true)
                         #if ($params.enabled)
-                        #set ($showEnabledUsers = $params.enabled)
+                            #set ($showEnabledUsers = $params.enabled)
                         #end
                         <div class="btn-group btn-group-sm btn-group-user-states" style="margin-bottom: 5px;" data-toggle="buttons">
                             <label class="btn btn-link #if ($showEnabledUsers == true) active #end">
                                 <input type="radio" #if ($showEnabledUsers == true) checked="checked" #end name="enabled" value="true" class="btn-enable-user" autocomplete="off" />
-                                       <i class="fa fa-check"></i> Enabled Users
+                                <i class="fa fa-check"></i> Enabled Users
                             </label>
                             <label class="btn btn-link #if ($showEnabledUsers == false) active #end">
                                 <input type="radio" #if ($showEnabledUsers == false) checked="checked" #end name="enabled" value="false" class="btn-disable-user" autocomplete="off" />
-                                       <i class="fa fa-times"></i> Disabled Users
+                                <i class="fa fa-times"></i> Disabled Users
                             </label>
                         </div>
                         <div class="btn-group btn-group-sm" style="margin-bottom: 5px;">
@@ -161,55 +161,55 @@
                                 </thead>
                                 <tbody id="table-users-body" class="pagination-results">
                                     #if( $page.paginator.isEmpty() )
-                                    <tr>
-                                        <td colspan="6">No profiles found</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="6">No profiles found</td>
+                                        </tr>
                                     #else
-                                    #foreach($p in $page.paginator.records)
-                                    <tr>
-                                        <td class="text">
-                                            <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)">
-                                                $formatter.htmlEncode($p.firstName)
+                                        #foreach($p in $page.paginator.records)
+                                            <tr>
+                                                <td class="text">
+                                                    <span title="$formatter.htmlEncode($p.firstName) $formatter.htmlEncode($p.surName)">
+                                                        $formatter.htmlEncode($p.firstName)
                                                 $formatter.htmlEncode($p.surName)
-                                            </span>
-                                        </td>
-                                        <td class="text">
-                                            #if( $p.email )
-                                            <a href="mailto:$p.email">$p.email</a>
-                                            #end
-                                        </td>
-                                        <td class="text">$!p.phone</td>
-                                        <td class="group-names">
-                                            #set( $groups = $page.primaryGroups( $p.membershipsGroup ) )
-                                            #foreach( $group in $groups )
-                                            <div class="label label-info" style="margin-right: 5px;">
-                                                <a title="$group.name" href="/groups/$group.name/" style="color: white">
-                                                    #if( $group.title)
+                                                    </span>
+                                                </td>
+                                                <td class="text">
+                                                    #if( $p.email )
+                                                        <a href="mailto:$p.email">$p.email</a>
+                                                    #end
+                                                </td>
+                                                <td class="text">$!p.phone</td>
+                                                <td class="group-names">
+                                                    #set( $groups = $page.primaryGroups( $p.membershipsGroup ) )
+                                                    #foreach( $group in $groups )
+                                                        <div class="label label-info" style="margin-right: 5px;">
+                                                            <a title="$group.name" href="/groups/$group.name/" style="color: white">
+                                                                #if( $group.title)
                                                     $group.title
                                                     #else
-                                                    $group.name
+                                                                    $group.name
+                                                                #end
+                                                            </a>
+                                                        </div>
                                                     #end
-                                                </a>
-                                            </div>
-                                            #end
-                                        </td>
-                                        <td class="action">
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="$p.userId" class="btn btn-sm btn-primary btn-sm">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu pull-right" role="menu">
-                                                    <li><a href="$p.userId"><i class="fa fa-edit"></i> User details</a></li>
-                                                    <li><a href="$p.userId" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><input type="checkbox" name="toRemoveId" value="$p.userId" /></td>
-                                    </tr>
-                                    #end
+                                                </td>
+                                                <td class="action">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="$p.userId" class="btn btn-sm btn-primary btn-sm">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        <button class="btn btn-sm btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                            <span class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu pull-right" role="menu">
+                                                            <li><a href="$p.userId"><i class="fa fa-edit"></i> User details</a></li>
+                                                            <li><a href="$p.userId" class="btn-login-as"><i class="clip-user"></i> Login as this user</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td><input type="checkbox" name="toRemoveId" value="$p.userId" /></td>
+                                            </tr>
+                                        #end
                                     #end
                                 </tbody>
                                 <tfoot id="pointsFooter">
@@ -227,11 +227,11 @@
             </div>
             <div class="col-lg-3" id="aggregationsContainer">
                 #if( $page.aggregations )
-                <table class="table">
-                    #foreach($agg in $page.aggregations )
+                    <table class="table">
+                        #foreach($agg in $page.aggregations )
                     #showAggregation($agg)
                     #end
-                </table>
+                    </table>
                 #end
             </div>
             <!-- end aggregations -->
@@ -413,11 +413,11 @@
                             titles in your users spreadsheet. Upload your users spreadsheet and
                             the system will attempt to locate existing organisations, and return
                             an updated spreadsheet. <b>This will not make any change your
-                                server data.</b>
+                            server data.</b>
                         </p>
 
                         <form method="POST" action="matchOrgs.csv"
-                              enctype="multipart/form-data">
+                                enctype="multipart/form-data">
                             <div data-provides="fileupload" class="fileupload fileupload-new">
                                 <div class="input-group input-group-sm">
                                     <div class="form-control uneditable-input">
@@ -478,7 +478,7 @@
                         <div class="groups-wrapper">
                             <ul class="groups-list row" style="margin-left: 20px;">
                                 #foreach($group in $page.groups)
-                                <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
+                                    <li class="col-md-6 group"><a href="$group.name">$group.name</a></li>
                                 #end
                             </ul>
                         </div>
@@ -492,50 +492,50 @@
         </div>
 
         #macro( showAggregation $agg )
-        #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
-        <tbody id="agg-$agg.name">
-            <tr>
-                <td colspan="2">
-                    $agg.title&nbsp;
-                    #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
-                    <span style="float: right; width: 50%">
-                        #if ( $agg.name != "action" )
-                        <span class="input-group input-group-sm">
-                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
-                            </span>
-                        </span>
-                        #end
-                    </span>
+            #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
+                <tbody id="agg-$agg.name">
+                    <tr>
+                        <td colspan="2">
+                            $agg.title&nbsp;
+                            #if (! $agg.noFilter && ($agg.buckets.size() > 4 || $!params.get("filter-$agg.name")))
+                                <span style="float: right; width: 50%">
+                                    #if ( $agg.name != "action" )
+                                        <span class="input-group input-group-sm">
+                                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
+                                            </span>
+                                        </span>
+                                    #end
+                                </span>
+                            #end
+                        </td>
+                    </tr>
+                    #foreach($b in $agg.buckets )
+                        #showFacetBucket($b, 0)
                     #end
-                </td>
-            </tr>
-            #foreach($b in $agg.buckets )
-            #showFacetBucket($b, 0)
+                </tbody>
             #end
-        </tbody>
-        #end
         #end
 
         #macro( showFacetBucket $b $indent )
-        #set($termParamName = "term-" + $b.aggName)
-        #if( $b.count > 0 )
-        <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
-            <td>
-                <div class="col-md-offset-$indent">
-                    #if( $b.termTitle )
-                    <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
-                    #end
-                </div>
-            </td>
-            <td align="right">$b.count</td>
-        </tr>
-        #end
+            #set($termParamName = "term-" + $b.aggName)
+            #if( $b.count > 0 )
+                <tr class="agg-row $formatter.paramSelected($termParamName, $b.termName, 'success')">
+                    <td>
+                        <div class="col-md-offset-$indent">
+                            #if( $b.termTitle )
+                                <a href="$page.href?$formatter.toggleParamVal( $termParamName, $b.termName )" class="dated term-select">$b.termTitle</a>
+                            #end
+                        </div>
+                    </td>
+                    <td align="right">$b.count</td>
+                </tr>
+            #end
 
-        #foreach($sub in $b.buckets)
-        #showFacetBucket($sub, $formatter.addNum($indent, 1) )
-        #end
+            #foreach($sub in $b.buckets)
+                #showFacetBucket($sub, $formatter.addNum($indent, 1) )
+            #end
         #end
 
         <script id="column-sel-template" type="text/html">
