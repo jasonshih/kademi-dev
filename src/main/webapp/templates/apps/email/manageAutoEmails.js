@@ -229,7 +229,7 @@ function initModalAddEmailTrigger() {
             flog('manageEmail.js: check radio', form);
             return checkRadio('eventId', form);
         },
-        callback: function (data) {
+        onSuccess: function (data) {
             flog('saved ok', data);
             modal.modal('hide');
             Msg.success($('#name').val() + ' is created!');

@@ -7,7 +7,7 @@ $(function () {
     var createTimersModal = $("#createTimersModal");
     var createTimersForm= createTimersModal.find("form");
     createTimersForm.forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             createTimersModal.modal('hide');
             Msg.success("Created timers");
             $('#triggers-body').reloadFragment();
@@ -17,7 +17,7 @@ $(function () {
     var modal = $('#modal-add-trigger-manual');
     flog("initModalAddEmail", modal);
     modal.find('form').forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             flog('saved ok', data);
             modal.modal('hide');
             Msg.success("Manual trigger created");
@@ -32,7 +32,7 @@ $(function () {
                 return false;
             }
         },
-        callback: function () {
+        onSuccess: function () {
             Msg.info("Deleted delayed triggers");
             $('#triggers-body').reloadFragment({
                 whenComplete: function () {

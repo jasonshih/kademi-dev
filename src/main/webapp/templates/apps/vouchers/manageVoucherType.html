@@ -384,9 +384,9 @@
                 $('abbr.timeago').timeago();
 
                 $("#voucherDetails").forms({
-                    callback: function (resp, form) {
+                    onSuccess: function (resp, form) {
                         Msg.info("Saved ok");
-                        flog("callback", resp);
+                        flog("onSuccess", resp);
                         var newName = $("input[name=name]").val();
                         flog("check names", oldName, newName);
                         if (oldName != newName) {
@@ -398,7 +398,7 @@
                 });
                 var oldName = $("input[name=name]").val();
                 $("#createVouchersForm").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         Msg.info("Created vouchers");
                         $("#createVouchersModal").modal('hide');
                         $("#vouchers-table-body").reloadFragment({

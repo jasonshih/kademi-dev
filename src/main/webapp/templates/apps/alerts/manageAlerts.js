@@ -2,7 +2,7 @@ function initManageDashboardMessage() {
 	initHtmlEditors(jQuery('#message-template'), getStandardEditorHeight() - 100, null);
 
 	$('#frm-message').forms({
-		callback: function(resp) {
+        onSuccess: function(resp) {
 			log('done save', resp);
 			Msg.success('Saved');
 		}

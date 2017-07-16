@@ -29,7 +29,7 @@ function initForms() {
             }
             return valid;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             Msg.success(resp.messages[0]);
             if (resp.nextHref && resp.nextHref !== window.location.pathname) {
@@ -254,7 +254,7 @@ function initManageAuctionImage() {
     var imageContainer = $('#product-images');
     var addImageModal = $('#modal-add-image');
     addImageModal.find('form.form-horizontal').forms({
-        callback: function () {
+        onSuccess: function () {
             imageContainer.reloadFragment();
             $(".modal").modal("hide");
         }

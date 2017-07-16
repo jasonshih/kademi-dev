@@ -69,7 +69,7 @@ function initAppBuilder() {
     var form = modal.find("form");
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             modal.modal('hide');
             Msg.success(form.find('[name=newAppName]').val() + ' is created!');
@@ -136,7 +136,7 @@ function initAppSearchers() {
 function initSettingsForms() {
     $("td.CheckBoxWrapper input:checked").closest("tr").addClass("enabled");
     $(".settings form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done save", resp);
             $('.modal').modal('hide');
             //initSettingsForms();

@@ -21,7 +21,7 @@
     });
 
     $("#modalBulkDelete form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Done", resp);
             if (resp.status) {
                 if (resp.data.numDeleted > 0) {
@@ -39,7 +39,7 @@
     });
 
     jQuery("form.createProduct").forms({
-        callback: function () {
+        onSuccess: function () {
             $.ajax({
                 type: 'GET',
                 url: window.location.href,

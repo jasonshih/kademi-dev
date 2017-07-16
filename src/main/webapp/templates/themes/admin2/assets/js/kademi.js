@@ -468,7 +468,7 @@ function initNewUserForm() {
                 return false;
             }
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done new user', resp);
             
             switch (nextAction) {
@@ -1047,7 +1047,7 @@ function getRecentItems() {
 function initCreateAccount() {
     var modal = $("#modal-create-account");
     modal.find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info("Created account");
                 var nextHref = "/organisations/?gotoDomain=" + resp.nextHref;
@@ -1067,7 +1067,7 @@ function initAddWebsite() {
         var form = modal.find("form");
         
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 flog("done", resp);
                 modal.modal('hide');
                 Msg.success(form.find('[name=newName]').val() + ' has been created, going to the website manager...');

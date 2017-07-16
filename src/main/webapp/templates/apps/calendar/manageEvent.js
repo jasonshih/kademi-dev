@@ -125,7 +125,7 @@ function initEventForm() {
                 tr.find('textarea.html').attr('name', 'reminder.' + i + '.html');
             });
         },
-        callback: function () {
+        onSuccess: function () {
             Msg.info('Saved!');
             form.removeClass('dirty');
         }

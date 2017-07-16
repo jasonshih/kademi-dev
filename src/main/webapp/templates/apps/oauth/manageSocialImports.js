@@ -2,7 +2,7 @@
     var initImportButton = function () {
         var form = $("#importForm");
         form.forms({
-            callback: function () {
+            onSuccess: function () {
                 form.find('button').prop('disabled', false);
                 form.find('button .icn').removeClass('fa-spin');
                 Msg.info("Completed import");

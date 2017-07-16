@@ -10,7 +10,7 @@ function initManageSalesData() {
     
     var addRecordModal = $("#addRecordModal");
     addRecordModal.find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info("Created record");
                 $("#history-table-body").reloadFragment();
@@ -31,7 +31,7 @@ function initManageSalesData() {
     });
     
     $("form.series-form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.info("Saved ok");
                 if (resp.nextHref) {
@@ -50,7 +50,7 @@ function initManageSalesData() {
     initUploads();
     
     $("#addKpiModal").find("form").forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             flog("form", form);
             form.find("input").val("");
             reloadKpiFragment();
@@ -59,14 +59,14 @@ function initManageSalesData() {
     });
     
     $("#addSourceModal").find("form").forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             form.find("input, select").val("");
             $("#sources-table-body").reloadFragment();
             $("#addSourceModal").modal("hide");
         }
     });
     $("#createTestDataModal form").forms({
-        callback: function () {
+        onSuccess: function () {
             $("#history-table-body").reloadFragment();
             Msg.info("Created test data");
         }

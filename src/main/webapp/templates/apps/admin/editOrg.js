@@ -1,7 +1,7 @@
 function initEditOrg() {
     var oldId = $("#orgId").val();
     $(".org-details").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("saved", resp);
             Msg.info("Saved OK");
             var newId = $("#orgId").val();

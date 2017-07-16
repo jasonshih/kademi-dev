@@ -121,13 +121,13 @@ function initRsvpForm() {
             });
             return true;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             // only called when resp.status = true
             rsvpStatus = $("form.rsvp input[name=rsvp]:checked").val();
             showRsvpPanel();
             $('#attendeesWrap').length && $('#attendeesWrap').reloadFragment();
         },
-        errorHandler: function (response, form, valiationMessageSelector, errorCallback) {
+        onError: function (response, form) {
             if (response.fieldMessages.length > 0 && response.fieldMessages[0].field === "userData") {
                 // show modal prompting for name details
                 jQuery.ajax({
@@ -144,7 +144,7 @@ function initRsvpForm() {
                         form.find("button").hide();
                         form.attr("action", "/profile/");
                         form.forms({
-                            callback: function (resp) {
+                            onSuccess: function (resp) {
                                 if (resp.status) {
                                     closeModals();
                                     rsvpForm.submit();
@@ -179,10 +179,6 @@ function initRsvpForm() {
                 ajaxLoadingOff();
                 alert("Sorry, for some reason we couldnt register your attendance. Maybe you could try again, or contact the site administrator for help");
             }
-        },
-        error: function () {
-            //var alert = $("<div class='alert alert-danger'><a class='close' data-dismiss='alert' href='#' aria-hidden='true'>&times;</a>Sorry, there was an error submitting your request. Please try again and contact the administrator if you still have problems.</div>");
-            //rsvpForm.prepend(alert)
         }
     });
 }

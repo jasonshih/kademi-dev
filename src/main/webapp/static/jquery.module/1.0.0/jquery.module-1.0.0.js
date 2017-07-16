@@ -880,7 +880,7 @@
                     form.find('button').hide();
                     form.attr('action', '/profile/');
                     form.forms({
-                        callback: function (resp) {
+                        onSuccess: function (resp) {
                             if (resp.status) {
                                 closeModals();
                                 self.setStatusComplete();

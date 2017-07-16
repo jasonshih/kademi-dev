@@ -87,7 +87,7 @@
                     window.location = window.location.pathname + "?create=form";
                 });
                 $(".Details").forms({
-                    callback: function(resp) {
+                    onSuccess: function(resp) {
                         flog("resp", resp);
                     }
                 });

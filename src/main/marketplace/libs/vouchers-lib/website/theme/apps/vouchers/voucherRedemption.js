@@ -7,7 +7,7 @@ $(function () {
 
     var redeemVoucherModal = $("#redeemVoucherModal");
     redeemVoucherModal.find("form").forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.info("Redeemed ok");
             redeemVoucherModal.modal('hide');
             reloadVouchers();
@@ -22,7 +22,7 @@ $(function () {
 
     var pendingVoucherModal = $("#pendingVoucherModal");
     pendingVoucherModal.find("form").forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.info("Set pending ok");
             pendingVoucherModal.modal('hide');
             reloadVouchers();

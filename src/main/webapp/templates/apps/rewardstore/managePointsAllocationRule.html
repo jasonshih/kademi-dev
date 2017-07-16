@@ -141,7 +141,7 @@
                             $('#reasonMvel').val(reasonMvelVal);
                             return true;
                         },
-                        callback: function (resp) {
+                        onSuccess: function (resp) {
                             if (resp.status) {
                                 Msg.success(resp.messages[0]);
                                 var originalName = $('#originalName').val();

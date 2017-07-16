@@ -2,7 +2,7 @@
     $(document).ready(function(){
         if($('.password-do-reset-component').length > 0) {
             $("#passwordResetForm").forms({
-                callback: function (resp) {
+                onSuccess: function (resp) {
                     log("done", resp);
                     $(".presend").fhide();
                     $(".postsend").fshow();

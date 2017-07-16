@@ -7,7 +7,7 @@ function init() {
     
     var modal = $("#addPointsStatementModal");
     modal.find("form").forms({
-        callback: function() {
+        onSuccess: function() {
             modal.modal("hide");
             Msg.info("Completed");
         }

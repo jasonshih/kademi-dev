@@ -14,7 +14,7 @@ function initNewProfileLeadForm() {
     });
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done new user', resp);
             if (resp.nextHref) {
                 window.location.href = resp.nextHref;

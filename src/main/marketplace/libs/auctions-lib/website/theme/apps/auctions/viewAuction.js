@@ -49,7 +49,7 @@ function processReceivedBid(c) {
 
 function bidForm() {
     $("#bidForm").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             console.log(resp);
             if (!window.WebSocket) {
@@ -61,10 +61,6 @@ function bidForm() {
                 });
             }
             Msg.success('Bid Placed');
-        },
-        error: function (resp) {
-            flog("error", resp);
-            //Msg.error("Incorrect Value");
         }
     });
 }

@@ -138,7 +138,7 @@ function initQuoteItems() {
 
 function initInvoiceDetailsForm() {
     $('#invoice-details-form').forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.success('done!');
         }
     });

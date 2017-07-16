@@ -147,7 +147,7 @@
         flog("wrapped", div);
 
         addProviderModal.find('form').forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 if (resp.status) {
                     $('#oauthproviders').reloadFragment();
                     addProviderModal.modal('hide');

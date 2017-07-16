@@ -101,7 +101,7 @@ function initPollModal() {
                 return false;
             }
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             Msg.success('New poll is created!');
             modal.modal('hide');
             window.location.href = '/kpoll/managePolls/' + resp.data.pollId;

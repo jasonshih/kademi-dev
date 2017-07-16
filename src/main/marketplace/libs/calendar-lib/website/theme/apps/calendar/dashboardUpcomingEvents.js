@@ -7,7 +7,7 @@
         });
 
         $("#event-range-form").forms({
-            callback: function () {
+            onSuccess: function () {
                 Msg.info("Range set successfully");
 
                 $("#dashboard-upcoming-events").reloadFragment({

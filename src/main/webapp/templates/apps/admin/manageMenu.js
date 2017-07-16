@@ -71,7 +71,7 @@ function initMenuModal() {
     var form = modal.find('form');
 
     form.forms({
-        doPostForm: false,
+        allowPostForm: false,
         onValid: function() {
             var isEdit = modal.hasClass('edit');
 

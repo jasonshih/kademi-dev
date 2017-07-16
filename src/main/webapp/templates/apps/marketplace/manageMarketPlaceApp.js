@@ -34,7 +34,7 @@ function initSubmitReview() {
     var openReviewBtn = $('#open-review-box');
     var closeReviewBtn = $('#close-review-box');
     reviewForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Callback: resp", resp);
             addReview(resp.data);
             closeReviewBtn.click(function (e) {

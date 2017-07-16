@@ -160,7 +160,7 @@ Number.prototype.formatMoney = function (c, d, t) {
     
     function initInvoiceDetailsForm() {
         $('#invoice-details-form').forms({
-            callback: function () {
+            onSuccess: function () {
                 Msg.success('done!');
             }
         });
@@ -254,7 +254,7 @@ Number.prototype.formatMoney = function (c, d, t) {
         var form = modal.find(" form");
 
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 if (resp.nextHref) {
                     window.location.href = "/quotes/" + resp.nextHref;
                 }
@@ -280,7 +280,7 @@ Number.prototype.formatMoney = function (c, d, t) {
         });
 
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Files Uploaded');
                 reloadFileList();
                 modal.modal('hide');

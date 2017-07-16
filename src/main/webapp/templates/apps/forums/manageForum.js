@@ -38,7 +38,7 @@ function initForumModal() {
 	var modal = $('#modal-forum');
 
 	modal.find('form').forms({
-		callback: function() {
+        onSuccess: function() {
             modal.modal('hide');
             Msg.success($('#title').val() + ' is saved!');
             $('#forum-wrapper').reloadFragment();
