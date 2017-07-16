@@ -7,7 +7,7 @@ function initOrgFinder() {
 
 function initCreateSubscription(){
     jQuery("form.createSubscription").forms({
-        callback: function () {
+        onSuccess: function () {
             $.ajax({
                 type: 'GET',
                 url: window.location.href,

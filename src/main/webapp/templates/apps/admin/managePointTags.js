@@ -8,7 +8,7 @@ function initManagePointTags() {
 function initForms() {
     var modal = $("#modal-new-tag");
     $('#new-tag-form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done new tag", resp);
             if (resp.nextHref) {
                 window.location.href = resp.nextHref;

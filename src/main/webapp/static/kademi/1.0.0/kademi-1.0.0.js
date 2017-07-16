@@ -1,5 +1,5 @@
 // ================================================================
-// Utilities
+// Log function
 // ================================================================
 /**
  * Fuse Log - renamed from 'log' to avoid name clash with less.js
@@ -33,6 +33,9 @@ function log() {
     flog('"log" function is deprecated');
 }
 
+// ================================================================
+// Utilities
+// ================================================================
 function endsWith(str, suffix) {
     return str.match(suffix + "$") == suffix;
 }
@@ -47,13 +50,6 @@ var typewatch = (function () {
         timer = setTimeout(callback, ms);
     }
 })();
-
-function ensureObject(target) {
-    if (typeof target == "string") {
-        target = $("#" + target);
-    }
-    return target;
-}
 
 function pad2(i) {
     var j = i - 0; // force to be a number
@@ -301,23 +297,17 @@ function round(value, decimals) {
     return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals);
 }
 
-/**
- *  jqExtras.js - this is for functions which work with jquery. Generally should be loaded
- *  after jquery
- */
-
-
 function initEdify() {
-    if (!$("body").hasClass("edifyIsEditMode")) {
-        $("body").addClass("edifyIsViewMode");
+    if (!$(document.body).hasClass('edifyIsEditMode')) {
+        $(document.body).addClass('edifyIsViewMode');
     }
-    $("body").on("click", ".edifyDelete", function() {
+    $(document.body).on('click', '.edifyDelete', function() {
         var href = window.location.href;
         var name = getFileName(href);
         confirmDelete(href, name, function() {
-            alert("Page deleted");
+            alert('Page deleted');
             var folderHref = getFolderPath(href);
-            log("load", folderHref);
+            log('load', folderHref);
             window.location = folderHref + '/';
         });
     });
@@ -360,9 +350,9 @@ function clearForm(form) {
 }
 
 function edify(container, callback, validateCallback) {
-    log("edify", container, callback);
-    $("body").removeClass("edifyIsViewMode");
-    $("body").addClass("edifyIsEditMode");
+    log('edify', container, callback);
+    $(document.body).removeClass('edifyIsViewMode');
+    $(document.body).addClass('edifyIsEditMode');
     
     if (!callback) {
         callback = function(resp) {
@@ -400,7 +390,6 @@ function edify(container, callback, validateCallback) {
         }, 500);
     });
 }
-
 
 function confirmDelete(href, name, callback) {
     if (confirm("Are you sure you want to delete " + name + "?")) {
@@ -501,7 +490,7 @@ function createFolder(name, parentHref, callback) {
             name: encodedName
         },
         success: function(resp) {
-            $("body").trigger("ajaxLoading", {
+            $(document.body).trigger("ajaxLoading", {
                 loading: false
             });
             if (callback) {
@@ -510,7 +499,7 @@ function createFolder(name, parentHref, callback) {
         },
         error: function(resp) {
             log("error", resp);
-            $("body").trigger("ajaxLoading", {
+            $(document.body).trigger("ajaxLoading", {
                 loading: false
             });
             if (resp.status == 200) {
@@ -558,7 +547,7 @@ function move(sourceHref, destHref, callback) {
         url = s + url;
     }
     log("move", sourceHref, destHref, "url=", url);
-    $("body").trigger("ajaxLoading", {
+    $(document.body).trigger("ajaxLoading", {
         loading: true
     });
     $.ajax({
@@ -569,7 +558,7 @@ function move(sourceHref, destHref, callback) {
         },
         dataType: "json",
         success: function(resp) {
-            $("body").trigger("ajaxLoading", {
+            $(document.body).trigger("ajaxLoading", {
                 loading: false
             });
             if (callback) {
@@ -577,7 +566,7 @@ function move(sourceHref, destHref, callback) {
             }
         },
         error: function() {
-            $("body").trigger("ajaxLoading", {
+            $(document.body).trigger("ajaxLoading", {
                 loading: false
             });
             alert('There was a problem creating the folder');

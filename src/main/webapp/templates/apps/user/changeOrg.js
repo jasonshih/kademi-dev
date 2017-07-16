@@ -25,7 +25,7 @@ function initChangeOrgModal() {
     flog("initChangeOrgModal", form );
     
     $("#changeMemberOrgForm").forms({
-        callback: function(resp, form) {
+        onSuccess: function(resp, form) {
             window.location.reload();
         }
     });

@@ -46,7 +46,7 @@ function initModalCertificate() {
     });
     
     modal.find('form').forms({
-        callback: function(resp) {
+        onSuccess: function(resp) {
             flog('done');
             var nextHref = resp.nextHref;
             if (!nextHref.endsWith('/?useHash=true')){

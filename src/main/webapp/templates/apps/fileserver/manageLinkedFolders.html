@@ -175,7 +175,7 @@
             $(function () {
                 var modal = $("#modal-new-link");
                 modal.find("form").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         $("#links-wrapper").reloadFragment();
                         $("#modal-new-link").modal("hide");
                     }

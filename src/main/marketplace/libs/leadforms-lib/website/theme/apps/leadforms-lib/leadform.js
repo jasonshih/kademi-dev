@@ -28,7 +28,7 @@ function initAndPopulateLeadForm(editable, saveOnly) {
         $(":input").prop("disabled", true);
     } else {
         $("form").forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 flog("done", resp);
 
                 if (saveOnly) {
@@ -36,11 +36,6 @@ function initAndPopulateLeadForm(editable, saveOnly) {
                 } else {
                     $("#container-content").html("<h1>Thank you!</h1><p style=\"margin-top: 30px;\">We have received your feedback, we will get to you shortly!</p>");
                 }
-            },
-            error: function (resp) {
-                flog("error", resp);
-
-                Msg.error("Error While Submitting Form");
             }
         });
     }

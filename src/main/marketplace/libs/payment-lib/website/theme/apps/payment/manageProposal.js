@@ -9,7 +9,7 @@ function initProposalDetailsForm() {
         var form = modal.find("form");
 
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 flog("done", resp);
                 modal.modal('hide');
                 Msg.success('Quote is created!');

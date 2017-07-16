@@ -1,6 +1,6 @@
 function initManageBlog() {
     $('#addArticleModal form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 flog('created  blog', resp);
                 window.location = resp.nextHref;
@@ -11,7 +11,7 @@ function initManageBlog() {
         }
     });
     $('#addTagModal form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 $('#tags-container').reloadFragment();
                 $('#addTagModal').modal('hide');
@@ -23,7 +23,7 @@ function initManageBlog() {
     });
 
     $('#addCategoryModal form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 $('#categories-container').reloadFragment();
                 $('#addCategoryModal').modal('hide');

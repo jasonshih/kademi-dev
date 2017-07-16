@@ -56,7 +56,7 @@ function initManageScheduledEmail(allGroups) {
             flog(edmEditor.edmEditor('getContent'));
             edmEditor.val(edmEditor.edmEditor('getContent'));
         },
-        callback: function () {
+        onSuccess: function () {
             $('#textual-description').reloadFragment({
                 whenComplete: function () {
                     flog("Saved Ok!");
@@ -253,7 +253,7 @@ function initAddJob() {
     flog("initAddJob", $("#moduleCreateJob form"));
     var modalCreateJob = $("#modalCreateJob");
     $("#modalCreateJob form").forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             flog("saved ok", data);
             window.location.href = data.nextHref;
         }

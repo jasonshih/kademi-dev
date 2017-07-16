@@ -130,7 +130,7 @@
     $(function () {
         var form = $("#leadDetails");
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Saved');
             }
         });

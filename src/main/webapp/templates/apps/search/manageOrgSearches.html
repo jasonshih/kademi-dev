@@ -224,7 +224,7 @@
                 };
 
                 $(".reindexForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         $("#btn-cancel").removeClass("hide");
                         Msg.success("Reindex submitted");
                         flog("The contents of current repository have been re-indexed", resp);

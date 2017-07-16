@@ -62,7 +62,7 @@ function initEventForm() {
     });
 
     form.forms({
-        callback: function () {
+        onSuccess: function () {
             var editorFrame = $('#editor-frame');
             var pageName = getFileName(window.location.pathname);
             var postData = {

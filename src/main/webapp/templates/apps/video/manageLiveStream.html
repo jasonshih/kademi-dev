@@ -64,13 +64,13 @@
         <script type="text/javascript" >
             $(function () {
                 $(".video-start").forms({
-                    callback: function(resp) {
+                    onSuccess: function(resp) {
                         log("resp", resp);
                         window.location.reload();
                     }
                 });
                 $(".video-stop").forms({
-                    callback: function(resp) {
+                    onSuccess: function(resp) {
                         log("resp", resp);
                         window.location.reload();
                     }

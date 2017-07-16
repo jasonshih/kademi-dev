@@ -15,7 +15,7 @@ function initManageWebsite() {
     initAppsFinder();
 
     $("form.details").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Saved Ok!");
             Msg.info("Saved");
         }
@@ -86,7 +86,7 @@ function initPKHttps() {
     var updatePKForm = updatePKModal.find(" form");
 
     updatePKForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             updatePKModal.modal('hide');
             Msg.success(resp.messages, 6000);
@@ -102,7 +102,7 @@ function initCertHttps() {
     var addCertModalForm = addCertModal.find(" form");
 
     addCertModalForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             addCertModal.modal('hide');
             Msg.success(addCertModalForm.find('[name=title]').val() + ' has been created!');
@@ -115,7 +115,7 @@ function initCertHttps() {
     var updateCertForm = updateCertModal.find(" form");
 
     updateCertForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             updateCertModal.modal('hide');
             Msg.success(resp.messages, 6000);
@@ -135,7 +135,7 @@ function initCertHttps() {
 
     var createRootCertModal = $('#modalUpdateRootCert');
     createRootCertModal.find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             createRootCertModal.modal('hide');
             Msg.success(resp.messages, 6000);
@@ -183,7 +183,7 @@ function initCSRHttps() {
             Msg.info("Sending CSR Request...");
             return true;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Saved Ok!");
             Msg.info(resp.messages[0]);
             var csrGroup = $("#csrTextGroup");
@@ -254,7 +254,7 @@ function initEmailServerTab() {
                 return true;
             }
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Sent DKIM Test", resp);
             sendTestDkimModal.modal("hide");
             Msg.info("DKIM Successfully generated");
@@ -266,7 +266,7 @@ function initEmailServerTab() {
     var genDkimForm = genDkimModal.find(" form");
 
     genDkimForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             genDkimModal.modal('hide');
             Msg.success(resp.messages, 6000);
@@ -278,7 +278,7 @@ function initEmailServerTab() {
     var uploadDkimKeyForm = uploadDkimKeyModal.find('form');
 
     uploadDkimKeyForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
             uploadDkimKeyModal.modal('hide');
             Msg.success(resp.messages, 6000);

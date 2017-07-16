@@ -52,7 +52,7 @@ function showReportModal(container, target, config) {
         form.prepend( $("<div class='pageMessage'>") );
         form.find("input[value=ABUSIVE]").attr("checked", "true");
         form.forms({
-            callback: function() {
+            onSuccess: function() {
                 reportDiv.hide();
                 alert("Thank you for your report.");
                 form.find(".alert").remove();

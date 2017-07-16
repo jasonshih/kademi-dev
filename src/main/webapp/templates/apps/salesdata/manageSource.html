@@ -137,7 +137,7 @@
         <script type="text/javascript">
             $(function () {
                 $("form.kpi-form").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         if (resp.status) {
                             Msg.info("Saved ok");
                         } else {

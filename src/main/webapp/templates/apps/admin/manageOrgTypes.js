@@ -61,7 +61,7 @@ var ModalAddOrgType = {
         self.$input = self.$form.find('input');
 
         self.$form.forms({
-            callback: function(resp) {
+            onSuccess: function(resp) {
                 log('done new org type', resp);
                 self.hide();
                 Msg.success(self.$modal.find('[name=displayName]').val() + ' is created!');
@@ -126,7 +126,7 @@ var ModalEditOrgType = {
     
         formContent.load(href + ' #modal-edit-orgtype', function () {
             formContent.find('form').forms({
-                callback: function(resp) {
+                onSuccess: function(resp) {
                     log('done', resp);
                     self.hide();
                     Msg.success(formContent.find('[name=displayName]').val() + ' is saved!');

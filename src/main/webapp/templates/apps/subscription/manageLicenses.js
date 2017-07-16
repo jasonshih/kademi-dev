@@ -15,7 +15,7 @@ function initUpdateSubscription(){
 
 function initCreateLicense(){
     jQuery("form.createLicense").forms({
-        callback: function () {
+        onSuccess: function () {
             $.ajax({
                 type: 'GET',
                 url: window.location.href,

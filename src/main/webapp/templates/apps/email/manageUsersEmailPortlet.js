@@ -5,7 +5,7 @@ function initManagerUserEmailPortlet() {
     initHtmlEditors(modal.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow');
     
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             modal.modal('hide');
             $('#emailHistoryBody').reloadFragment();
         }

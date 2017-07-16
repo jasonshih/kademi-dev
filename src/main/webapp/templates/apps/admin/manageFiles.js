@@ -112,7 +112,7 @@ function initImport() {
     });
     
     modal.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('resp', resp);
             Msg.info('The importer is running')
         }

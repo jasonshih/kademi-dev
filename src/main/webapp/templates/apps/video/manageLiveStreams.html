@@ -52,7 +52,7 @@
                     showModal($(".newLiveStream"));
                 });
                 $(".newLiveStreamForm").forms({
-                    callback: function(resp) {
+                    onSuccess: function(resp) {
                         log("resp", resp);
                         window.location.reload();
                     }

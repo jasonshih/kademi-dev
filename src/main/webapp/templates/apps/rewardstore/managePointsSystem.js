@@ -99,7 +99,7 @@ function initFormPointsSystem() {
     flog('initFormPointsSystem');
 
     $("form.managePointsSystem").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done");
             if (resp.status) {
                 Msg.info("Saved");

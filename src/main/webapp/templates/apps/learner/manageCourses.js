@@ -285,7 +285,7 @@ function initModuleEditing(courseUrl) {
     var moduleWrapper = $('div.modules-wrapper');
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done save module', resp);
             var href = resp.nextHref;
             var oldCode = form.find('input[name=originalModuleName]').val();
@@ -462,7 +462,7 @@ function initCourseEditing(programUrl) {
     var coursesList = $('#courses-list');
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done save course', resp);
             var href = resp.nextHref;
             var oldCode = form.find('input[name=originalCourseName]').val();
@@ -612,7 +612,7 @@ function initProgramEditing(programsUrl) {
 
     form.attr('action', programsUrl);
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done save program', resp);
             var href = resp.nextHref;
             var oldCode = form.find('input[name=originalProgramName]').val();
