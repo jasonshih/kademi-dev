@@ -5,7 +5,7 @@ function initManagePointsSystems() {
         showAddReward(this);
     });
     $("#manageReward form.addReward").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done");
             window.location.href = resp.nextHref;
         }

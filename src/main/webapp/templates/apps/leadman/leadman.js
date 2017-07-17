@@ -97,7 +97,7 @@ function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
     closeDealModal.on('shown.bs.modal', function () {
         closeDealModal.find("form").forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Deal marked as closed');
                 if ($('#lead-cover').length) {
                     $('#maincontentContainer').reloadFragment({
@@ -125,7 +125,7 @@ function initCancelLeadModal() {
 
     cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Lead cancelled');
                 reloadTasks();
                 if ($('#lead-cover').length) {
@@ -152,7 +152,7 @@ function initCancelLeadModal() {
 function initCancelTaskModal() {
     var cancelTaskModal = $("#cancelTaskModal");
     cancelTaskModal.find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             Msg.info('Task cancelled');
             reloadTasks();
             cancelTaskModal.modal("hide");
@@ -648,7 +648,7 @@ function initNewContactForm() {
     });
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             var btn = form.find('.clicked');
             if (!btn.hasClass('btnCreateClose')) {
                 if (resp.nextHref) {
@@ -837,7 +837,7 @@ function initNewNoteForm() {
     });
 
     editForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.nextHref) {
                 window.location.href = resp.nextHref;
             }

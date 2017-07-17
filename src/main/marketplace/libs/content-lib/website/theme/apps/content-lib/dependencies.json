@@ -7,6 +7,12 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/content/container.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/toggleMenu.js"
@@ -28,6 +34,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/page.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/container.js"
             }
         }
     ]

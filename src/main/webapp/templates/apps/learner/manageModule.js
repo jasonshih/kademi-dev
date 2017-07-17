@@ -47,7 +47,7 @@ function initCalendarStuff() {
     var modal = $("#modal-add-event");
     var form = modal.find('form');
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('Module details saved', resp);
             Msg.info("Saved");
             modal.modal("hide");
@@ -635,7 +635,7 @@ function initFormDetails() {
         validate: function (form) {
             return checkEditListsValid();
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('Module details saved', resp);
             Msg.info("Saved");
             if (resp.nextHref && resp.nextHref !== decodeURIComponent(window.location.pathname)) {

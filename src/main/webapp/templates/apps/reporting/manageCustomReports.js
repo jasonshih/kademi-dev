@@ -3,7 +3,7 @@ function initManageCustomReports() {
         showAddReport(this);
     });
     $("#manageCustomReports form.addReward").forms({
-        callback: function(resp) {
+        onSuccess: function(resp) {
             log("done");
             window.location.href = resp.nextHref;
         }

@@ -196,7 +196,7 @@
                 $('abbr.timeago').timeago();
                 var redeemModal = $("#redeemVoucherModal");
                 $("#redeemVoucherForm").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Redeemed ok");
                         reloadVouchers();
                         closeFuseModal(redeemModal);
@@ -205,7 +205,7 @@
 
                 var allocateVoucherModal = $("#allocateVoucherModal");
                 allocateVoucherModal.find("form").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Allocated ok");
                         reloadVouchers();
                         closeFuseModal(allocateVoucherModal);
@@ -214,7 +214,7 @@
 
                 var changeStatusModal = $("#changeStatusModal");
                 changeStatusModal.find("form").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Changed ok");
                         reloadVouchers();
                         closeFuseModal(changeStatusModal);

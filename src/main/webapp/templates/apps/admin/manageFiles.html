@@ -133,7 +133,7 @@
                                     <td class="action"></td>
                                 </tr>
                             #end
-                            #foreach($f in $page.subFolders)
+                            #foreach($f in $formatter.sortByProperty( $page.subFolders, "name" ))
                                 <tr class="folder">
                                     <td class="icon">
                                         <a href="$f.href#files-tab" class="pjax"><i class="clip-folder"></i></a>
@@ -163,7 +163,7 @@
                                 </tr>
                             #end
 
-                            #foreach($f in $page.files)
+                            #foreach($f in $formatter.sortByProperty( $page.files, "name" ))
                                 #set($isImage = $f.is("image"))
                                 #set($type = $formatter.ifTrue($f.is("image"), "image", "file"))
                                 #set($imgClass = $formatter.ifTrue($f.is("image"), "fa fa-picture-o", "clip-file"))

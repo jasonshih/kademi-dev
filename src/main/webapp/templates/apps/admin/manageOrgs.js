@@ -52,7 +52,7 @@
             });
 
             self.$form.forms({
-                callback: function (resp) {
+                onSuccess: function (resp) {
                     log('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
                     $('#search-results').reloadFragment();
@@ -236,7 +236,7 @@
 function initMove() {
     var modal = $("#modal-move-orgs");
     modal.find("form").forms({
-        callback : function(resp){
+        onSuccess : function(resp){
             if( resp.status) {
                 Msg.info("Move complete");
                 modal.modal("hide");
@@ -298,7 +298,7 @@ function initMove() {
 function initAssignToOrgType() {
     var modal = $("#modal-assign-orgtype");
     modal.find("form").forms({
-        callback : function(resp){
+        onSuccess : function(resp){
             if( resp.status) {
                 Msg.info("Type Assignment complete");
                 modal.modal("hide");
@@ -357,7 +357,7 @@ function initMerge() {
     var modal = $("#modal-merge-orgs");
 
     modal.find("form").forms({
-        callback : function(resp){
+        onSuccess : function(resp){
             if( resp.status) {
                 Msg.info("Merge complete");
                 modal.modal("hide");

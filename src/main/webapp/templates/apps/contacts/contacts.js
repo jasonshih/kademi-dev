@@ -19,7 +19,7 @@ jQuery(document).ready(function() {
         showNewContact();
     });
     $("#editContact form").forms({
-        callback: function(resp) {
+        onSuccess: function(resp) {
             log("saved", resp);
             closeModals();
             reloadContacts();

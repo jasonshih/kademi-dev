@@ -24,7 +24,7 @@ function initSendTest() {
     });
     flog("send test", $(".btn-sent-test-choose"));
     $("#modal-send-test").find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("resp", resp);
             onTestMultipleResponse(resp);
         }
@@ -155,7 +155,7 @@ function initModalAddEmail() {
     var modal = $('#modal-add-email');
 
     modal.find('form').forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             flog('saved ok', data);
             modal.modal('hide');
             Msg.success($('#name').val() + ' is created!');
@@ -406,7 +406,7 @@ function initFormDetailEmail() {
                 return false;
             }
         },
-        callback: function () {
+        onSuccess: function () {
             $('body').removeClass('dirty');
             Msg.success('Saved');
             $('#descriptionDiv').reloadFragment();

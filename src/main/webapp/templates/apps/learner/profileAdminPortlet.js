@@ -15,7 +15,7 @@ function initAdminProfile() {
         if (!modalForm.hasClass("initDone")) {
             modalForm.addClass("initDone");
             modalForm.forms({
-                callback: function (resp, form) {
+                onSuccess: function (resp, form) {
                     Msg.info("Done");
                     modal.modal('hide');
                     reloadModuleStatus();

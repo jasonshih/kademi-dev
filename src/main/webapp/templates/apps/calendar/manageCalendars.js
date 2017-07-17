@@ -20,7 +20,7 @@ function initManageCalendars() {
     });
 
     formAdd.forms({
-        callback: function () {
+        onSuccess: function () {
             modalAdd.modal('hide');
             Msg.success(formAdd.find('input[name=name]').val() + ' is created!');
             formAdd.trigger('reset');
@@ -126,7 +126,7 @@ function initEditModal() {
         var formEdit = modalEdit.find('form');
 
         formEdit.forms({
-            callback: function () {
+            onSuccess: function () {
                 modalEdit.modal('hide');
                 Msg.info('Updated calendar');
                 wrapper.reloadFragment({
@@ -151,7 +151,7 @@ function initManageCalendar() {
     var form = modal.find('form');
 
     form.forms({
-        callback: function () {
+        onSuccess: function () {
             modal.modal('hide');
             form.trigger('reset');
             Msg.success('Event is created!');

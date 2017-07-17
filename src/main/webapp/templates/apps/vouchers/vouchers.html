@@ -6,6 +6,7 @@
     <body>
         <div class="row">
             <button type="button" class="btn btn-danger btn-remove-vouchers pull-right"><i class="fa fa-trash"></i> Delete Vouchers</button>
+            <a href="vouchers.csv" class="btn btn-default pull-right download-csv"><i class="glyphicon glyphicon-download"></i> Export CSV</a>
             <br/><br/>
         </div>
         <div class="panel panel-default">
@@ -33,7 +34,7 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="input-group" id="voucher-query-container">
-                            <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
+                            <input type="text" id="voucher-query" name="q" value="$!request.params.q" class="form-control" placeholder="Search for a voucher" />
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -50,7 +51,7 @@
                             <col width="" />
                             <col width="" />
                             <col width="" />
-                            <col width="280px" />
+                            <col width="100px" />
                             <col width="280px" />
                             <col width="10px" />
                         </colgroup>
@@ -68,7 +69,7 @@
                         <tbody id="vouchers-table-body">
                             #if( $page.paginator.isEmpty() )
                             <tr>
-                                <td colspan="5">No vouchers</td>
+                                <td colspan="7">No vouchers</td>
                             </tr>
                             #else
                             #foreach($v in $page.paginator.records)
@@ -107,6 +108,7 @@
         <script>
             initSearchVoucher();
             initDeleteVouchers();
+            initDownloadCSV();
         </script>
     </body>
 </html>

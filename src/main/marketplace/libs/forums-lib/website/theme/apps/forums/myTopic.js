@@ -3,7 +3,7 @@
     function initMyTopic() {
         flog("initMyTopic", $("#postForumQuestion form"));
         $("#postForumQuestion form").forms({
-            callback: function(resp) {
+            onSuccess: function(resp) {
                 log("done post", resp);
                 window.location = resp.nextHref;
             }

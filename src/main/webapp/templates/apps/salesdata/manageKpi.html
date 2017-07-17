@@ -1004,7 +1004,7 @@
                         }
                         return true;
                     },
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         if (resp.status) {
                             Msg.info("Saved ok");
                             if (kpiForm.find("#name").val() != kpiName) {
@@ -1050,7 +1050,7 @@
                 $(document).on('loaded.bs.modal', ".level-modal", function (e) {
                     flog("loaded");
                     editLevelModal.find("form").forms({
-                        callback: function (resp) {
+                        onSuccess: function (resp) {
                             if (resp.status) {
                                 Msg.info("Saved level");
                                 $("#levels-table-body").reloadFragment();
@@ -1090,7 +1090,7 @@
                 });
 
                 $('#modal-reprocess').find('form').forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         Msg.info(resp.messages[0]);
                         $('#modal-reprocess').modal('hide');
                     }

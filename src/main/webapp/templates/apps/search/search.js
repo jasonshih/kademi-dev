@@ -48,7 +48,7 @@ function prettyPrintJson() {
 function initReindexForms() {
     $(".manage-search form").forms({
         confirmMessage: "Processing, Please Wait...",
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("The contents of current repository have been re-indexed", resp);
             // Should be disabled the Re-index button while processing, just enable after re-index thread was started
             $(".btn-reindex").prop('disabled', true);

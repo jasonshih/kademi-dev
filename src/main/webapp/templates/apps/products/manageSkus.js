@@ -280,7 +280,7 @@
         });
         
         $('#modal-option-img').find('form').forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 $('#modal-option-img').modal('hide');
                 reloadSkuTable();
             }

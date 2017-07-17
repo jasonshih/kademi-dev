@@ -11,7 +11,7 @@ function initCreateModal() {
     var createForm = createModal.find('form');
 
     createForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.success(resp.messages[0]);
                 createModal.modal('hide');

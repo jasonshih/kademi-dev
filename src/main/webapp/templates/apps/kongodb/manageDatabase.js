@@ -45,7 +45,7 @@ function initDetailsForm() {
     flog('initDetailsForm');
 
     $(".database-form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 if (resp.nextHref !== getFileName(window.location.pathname)) {
                     Msg.info("Renamed db, redirecting..");
@@ -76,7 +76,7 @@ function initRecordsTab(body) {
     });
 
     $('#addRecordForm').forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.info('Done');
             $('#records-body').reloadFragment();
         }
@@ -137,7 +137,7 @@ function initMappingsTab() {
     });
 
     $('#addMappingForm').forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.info('Done');
             
             $('#mappings').reloadFragment({

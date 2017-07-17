@@ -332,13 +332,13 @@
                 initManageBlog();
 
                 $(".templates").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         Msg.info("Saved templates");
                     }
                 });
 
                 $(".item-type-form").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         Msg.info("Saved OK");
                     }
                 });

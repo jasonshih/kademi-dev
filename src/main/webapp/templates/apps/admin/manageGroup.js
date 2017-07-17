@@ -248,7 +248,7 @@ function initGroupModal() {
     var modal = $('#modal-group');
 
     modal.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             reloadGroupFolders();
             Msg.success(resp.messages[0]);
             resetModalControl();
@@ -321,7 +321,7 @@ function initCopyMembers() {
     });
 
     modal.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done', resp);
             modal.modal('hide');
             Msg.success('Copied members');
@@ -385,7 +385,7 @@ function initGroupFolder() {
     });
 
     addGroupToFolder.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done', resp);
             addGroupToFolder.modal('hide');
             Msg.success('Copied members');

@@ -184,7 +184,6 @@ function initExtraFieldModal() {
     var txtValue = form.find('input[name=addFieldValue]');
 
     form.forms({
-        confirmMessage: null,
         validate: function(form, config){
             var builtinFields = ['firstname', 'surname', 'email', 'phone', 'nickname', 'birthdate'];
             if (txtName.val() && builtinFields.indexOf(txtName.val().toLowerCase())!== -1){
@@ -231,7 +230,7 @@ function initExtraFieldModal() {
 
             txtValue.val(valueString);
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 var isEdit = modal.hasClass('edit');
                 var key = txtName.val();

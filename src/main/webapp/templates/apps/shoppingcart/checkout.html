@@ -173,7 +173,7 @@
                 function initCheckout() {
                     var form = $("#checkout-panels form");
                     form.forms({
-                        callback: function (resp, form) {
+                        onSuccess: function (resp, form) {
                             if (resp.status) {
                                 Msg.info("Your order has been placed");
                                 $("#checkout-panels").reloadFragment({

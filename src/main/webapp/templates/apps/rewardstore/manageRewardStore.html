@@ -258,7 +258,7 @@
         <script type="text/javascript">
             $(function () {
                 $(".rewardStoreForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         if (resp.status) {
                             Msg.info("Saved ok");
                         } else {
@@ -281,7 +281,7 @@
                     loadProductInReward(target.prop("href"), productInRewardModal);
                 });
                 productInRewardModal.find("form").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         Msg.info("Saved");
                         productInRewardModal.modal("hide");
                     }

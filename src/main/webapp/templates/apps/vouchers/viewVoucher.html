@@ -158,7 +158,7 @@
 
                 var redeemModal = $("#redeemVoucherModal");
                 $("#redeemVoucherForm").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Redeemed ok");
                         $("#voucherContent").reloadFragment({
                             whenComplete: function() {
@@ -171,7 +171,7 @@
 
                 var allocateVoucherModal = $("#allocateVoucherModal");
                 allocateVoucherModal.find("form").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Allocated ok");
                         $("#voucherContent").reloadFragment({
                             whenComplete: function() {
@@ -184,7 +184,7 @@
 
                 var changeStatusModal = $("#changeStatusModal");
                 changeStatusModal.find("form").forms({
-                    callback: function (e) {
+                    onSuccess: function (e) {
                         Msg.info("Changed ok");
                         $("#voucherContent").reloadFragment({
                             whenComplete: function() {

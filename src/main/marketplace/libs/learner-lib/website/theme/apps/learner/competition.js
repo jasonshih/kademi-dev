@@ -14,7 +14,7 @@
 
         if($('.competition-page').length > 0) {
             $("form.entryForm").forms({
-                callback: function() {
+                onSuccess: function() {
                     window.location.reload();
                 }
             });

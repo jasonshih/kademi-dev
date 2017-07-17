@@ -38,7 +38,7 @@
         <script type="text/javascript">
             $(function () {
                 $("form.maintForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         flog("resp", resp);
                         $("span.now").text(resp.data);
                         Msg.success("Done");
@@ -46,7 +46,7 @@
                 });
 
                 $("form.runTasksForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         flog("resp", resp);
                         Msg.info("Scheduled tasks are now running");
                         window.location.reload();
@@ -54,7 +54,7 @@
                 });
 
                 $("form.clearLocksForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         flog("resp", resp);
                         Msg.success("Locks have been deleted");
                         window.location.reload();
@@ -62,7 +62,7 @@
                 });
 
                 $("form.restoreRepoForm").forms({
-                    callback: function (resp) {
+                    onSuccess: function (resp) {
                         flog("resp", resp);
                         Msg.success("Repository restored");
                         window.location.reload();

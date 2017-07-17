@@ -101,7 +101,7 @@ function initDetailForm(form) {
                 return false;
             }
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp && resp.status) {
                 Msg.success('Poll detail is saved!');
             } else {

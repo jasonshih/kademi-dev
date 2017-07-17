@@ -16,7 +16,7 @@
             // set initial state
             initBindOrdersInitialState(container, config);
             container.find("form").forms({
-                callback: function() {
+                onSuccess: function() {
                     Msg.success("done!");
                 }
             });

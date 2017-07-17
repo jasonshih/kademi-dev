@@ -168,7 +168,7 @@ function initRegoMode() {
 
     initOptInGroups();
     $('form.general').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done', resp);
             $('#groups-folders').reloadFragment();
             Msg.info("Saved");
@@ -211,7 +211,7 @@ function initGroupPasswordPolicy() {
 
             return true;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 modal.modal('hide');
                 modalForm.trigger('reset');
