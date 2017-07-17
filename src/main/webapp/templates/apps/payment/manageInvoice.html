@@ -251,7 +251,7 @@ active
         refreshTotals();
 
         $("#invoice-details-form").forms({
-            callback: function () {
+            onSuccess: function () {
                 Msg.success("done!");
             }
         });

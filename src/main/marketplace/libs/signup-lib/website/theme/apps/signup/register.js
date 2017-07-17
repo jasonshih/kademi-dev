@@ -31,8 +31,8 @@
         var isOauth = params.hasOwnProperty('oauth');
 
         registerForm.forms({
-            validationFailedMessage: 'Please enter your details below.',
-            callback: function (resp, form) {
+            requiredErrorMessage: 'Please enter your details below.',
+            onSuccess: function (resp, form) {
                 if (resp.messages && resp.messages[0] == 'pending') {
                     showPendingMessage();
                 } else {

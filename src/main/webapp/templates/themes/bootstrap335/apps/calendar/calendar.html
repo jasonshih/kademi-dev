@@ -138,7 +138,7 @@
                 initCalendar();
 
                 $("#new-event").forms({
-                    callback: function () {
+                    onSuccess: function () {
                         window.location.reload();
                     }
                 });

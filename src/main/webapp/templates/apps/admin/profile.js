@@ -5,14 +5,14 @@ function initProfile() {
     initEnableDisable();
     initTabLazyLoading();
     $(".initProfileForm").forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             Msg.info("Done");
             $('#pwdState').reloadFragment();
         }
     });
     
     $(".secondFactorForm").forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             Msg.info("Done");
             $('#secondFactorQR').reloadFragment();
         }
@@ -51,7 +51,7 @@ function initProfile() {
     });
     
     $(".form-unsubscribe").forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             Msg.info("Unsubscribed. Now going to manage users page");
             window.location = "/manageUsers";
         },
@@ -218,7 +218,7 @@ function initNewMembershipForm() {
     });
     
     $("#modal-membership").find("form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done new membership", resp);
             $("#modal-membership").modal('hide');
             reloadMemberships();

@@ -1,7 +1,7 @@
 function initProfile() {
     flog("initProfile - boostrap320");
     $("#maincontentContainer form").not(".form-unsubscribe").forms({
-        callback: function(resp, form) {
+        onSuccess: function(resp, form) {
             flog("done");
             Msg.info("Saved ok");
         }
@@ -11,7 +11,7 @@ function initProfile() {
         validate: function() {
             return confirm("Are you sure you want to unsubscribe? You will no longer be able to access this site");
         },
-        callback: function(resp, form) {
+        onSuccess: function(resp, form) {
             flog("done, now logout");
             doLogout();
         },

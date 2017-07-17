@@ -3,7 +3,7 @@
         if($('.lead-profile-cover-component').length > 0) {
             var form = $("#leadDetails");
             form.forms({
-                callback: function (resp) {
+                onSuccess: function (resp) {
                     Msg.info('Saved');
                 }
             });

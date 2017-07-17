@@ -42,7 +42,7 @@ function initManageBlogArticle() {
                 contentEditor.val(contentEditor.contentEditor('getContent'));
             }
         },
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             flog('Done', form, resp);
             if (resp.nextHref) {
                 window.location = resp.nextHref;
@@ -68,7 +68,7 @@ function initPublish() {
         rejectModal.modal('show');
     });
     rejectModal.find('form').forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             Msg.info('Rejected/un-published');
             window.location.reload();
         }
@@ -95,7 +95,7 @@ function initPublish() {
     });
     
     publishModal.find('form').forms({
-        callback: function (data) {
+        onSuccess: function (data) {
             Msg.info('Published');
             flog('done publish', data);
             window.location.reload();
@@ -257,7 +257,7 @@ function initManageArticleFiles() {
                 .css('width', percentComplete + '%');
             $('.progressContainer').show();
         },
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             filesContainer.reloadFragment();
         }
     });
@@ -276,7 +276,7 @@ function initManageArticleImage() {
     var imageContainer = $('#images-container');
     var addImageModal = $('#modal-add-image');
     addImageModal.find('form.form-horizontal').forms({
-        callback: function () {
+        onSuccess: function () {
             imageContainer.reloadFragment();
             $(".modal").modal("hide");
         }
@@ -429,7 +429,7 @@ function initManageArticleGallery() {
     var galleryContainer = $('#images-container');
     var addGalleryModal = $('#modal-add-gallery');
     addGalleryModal.find('form.form-horizontal').forms({
-        callback: function () {
+        onSuccess: function () {
             galleryContainer.reloadFragment();
             addGalleryModal.modal("hide");
         }

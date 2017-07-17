@@ -113,7 +113,7 @@
         });
 
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Files Uploaded');
                 reloadFileList();
                 modal.modal('hide');
@@ -156,7 +156,7 @@
         var modal = $("#newTaskModal");
         var form = modal.find("form");
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Created new task');
                 reloadTasks();
                 modal.modal("hide");
@@ -322,7 +322,7 @@
         var form = $("#leadDetails");
         var body = $('body.leadsPage');
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 Msg.info('Saved');
                 // reloadTable();
             }
@@ -380,7 +380,7 @@
 
         var leadOrgDetailsForm = $('#leadOrgDetails');
         leadOrgDetailsForm.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 var btnSaveCompany = $('.btn-save-company');
 
                 $('#leadOrgDetailsPreview, #btn-company-details-wrapper').reloadFragment({
@@ -451,7 +451,7 @@
         });
 
         form.forms({
-            callback: function (resp) {
+            onSuccess: function (resp) {
                 var btn = form.find('.clicked');
 
                 if (resp.nextHref) {

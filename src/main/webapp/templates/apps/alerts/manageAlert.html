@@ -126,7 +126,7 @@
 	        $(function () {
                 initHtmlEditors();
 		        $(".alert-form").forms({
-                    callback: function(resp) {
+                    onSuccess: function(resp) {
                         flog("Saved ok", resp);
                         Msg.info("Saved alert");
                         if( resp.nextHref ) {

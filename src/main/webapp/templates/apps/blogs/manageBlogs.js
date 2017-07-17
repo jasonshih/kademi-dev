@@ -8,7 +8,7 @@ function initCRUDBlog() {
     var modalAddBlog = $('#modal-blog');
 
     modalAddBlog.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('created  blog', resp);
             modalAddBlog.modal('hide');
             blogContainer.reloadFragment();
@@ -47,7 +47,7 @@ function initCRUDBlog() {
     });
 
     copyBlogModal.find('form').forms({
-        callback: function () {
+        onSuccess: function () {
             Msg.info('Copied blog');
             blogContainer.reloadFragment();
             copyBlogModal.modal('hide');
@@ -55,7 +55,7 @@ function initCRUDBlog() {
     });
 }
 
-function promptRename(sourceHref, name, callback) {
+function promptRename(sourceHref, name, onSuccess) {
     log("promptRename", sourceHref);
     var currentName = getFileName(sourceHref);
     var newName = prompt("Please enter a new name for " + name, name);
@@ -68,7 +68,7 @@ function promptRename(sourceHref, name, callback) {
                 dest += "/";
             }
             dest += newName;
-            move(sourceHref, dest, callback);
+            move(sourceHref, dest, onSuccess);
         }
     }
 }
@@ -88,7 +88,7 @@ function initCRUDArticle() {
     });
 
     newArticleModal.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog('done', resp);
             newArticleModal.modal('hide');
             Msg.info('Created article, now redirecting to the edit page');

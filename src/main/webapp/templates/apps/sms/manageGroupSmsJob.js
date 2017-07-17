@@ -77,12 +77,12 @@ function initSmsField() {
 
 function initFormDetails() {
     $('form[name=frmDetails]').forms({
-        valiationMessageSelector: ".page-validation",
-        callback: function () {
+        validationMessageSelector: ".page-validation",
+        onSuccess: function () {
             $('body').removeClass('dirty');
             Msg.success('Saved');
         },
-        error: function () {
+        onError: function () {
             Msg.error("Some information is not valid. Please check the details");
         }
     });
@@ -112,7 +112,7 @@ function initSendTest() {
     var testForm = testModal.find('form');
 
     testForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.success('Saved');
             } else {

@@ -6,7 +6,7 @@ function initManagePoints() {
     var editModal = $("#modalEditPoints");
     var modalForm = editModal.find("form");
     modalForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
                     Msg.success("Points record updated ok");
@@ -62,7 +62,7 @@ function initManagePoints() {
     });
 
     $("#new-debit-points-form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
                     Msg.info("Points debit OK");
@@ -75,7 +75,7 @@ function initManagePoints() {
     });
 
     $("#new-points-form").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
                     Msg.info("Assigned points OK");
@@ -108,7 +108,7 @@ function initManagePoints() {
     var debitModalForm = debitModal.find('form');
 
     debitModalForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 reloadFragmentPoints(function () {
                     debitModal.modal('hide');
@@ -259,9 +259,9 @@ function updateRefreshPBStatus() {
     });
 }
 
-function reloadFragmentPoints(callback) {
+function reloadFragmentPoints(onSuccess) {
     $('#pointsBody, #pointsFooter').reloadFragment({
-        whenComplete: callback
+        whenComplete: onSuccess
     });
 }
 
@@ -291,7 +291,7 @@ function initEditReward() {
             entryFormInput.val(config);
             return true;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done", resp);
 
             var editorFrame = $('#editor-frame');
@@ -307,7 +307,7 @@ function initEditReward() {
 
             Msg.success("Saved ok");
         },
-        error: function () {
+        onError: function () {
             Msg.error("Some information is not valid. Please check the reward details");
         }
     });
@@ -513,7 +513,7 @@ function initManageReward() {
         showAddReward(this);
     });
     $("#manageReward form.addReward").forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("done");
             window.location.href = resp.nextHref;
         }

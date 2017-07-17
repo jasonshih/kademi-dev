@@ -8,7 +8,7 @@ function initKpollForm() {
 
     // Handler for form submit event
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp && resp.status) {
                 showKpollResult();
             } else {

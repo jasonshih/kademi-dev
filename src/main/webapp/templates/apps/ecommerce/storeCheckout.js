@@ -13,7 +13,7 @@ function initCartForm() {
             $('#cart-form').find('button[type=submit] i').show();
             return true;
         },
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 $('#cart-form').reloadFragment({
                     whenComplete: function () {
@@ -27,7 +27,7 @@ function initCartForm() {
             }
             $('#cart-form').find('button[type=submit] i').hide();
         },
-        error: function () {
+        onError: function () {
             $('#cart-form').find('button[type=submit] i').hide();
         }
     });

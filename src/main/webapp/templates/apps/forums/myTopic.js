@@ -1,7 +1,7 @@
 function initMyTopic() {
     flog("initMyTopic", $("#postQuestion form"));
     $("#postQuestion form").forms({
-        callback: function(resp) {
+        onSuccess: function(resp) {
             log("done post", resp);
             window.location = resp.nextHref;
         }
@@ -13,7 +13,7 @@ function initMyQuestion() {
 
     flog("initMyQuestion");
     $("#postComment form").forms({
-        callback: function(resp) {
+        onSuccess: function(resp) {
             log("done post", resp);
             closeModals();
             addReply($("#postComment form textarea").val());

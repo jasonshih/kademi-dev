@@ -77,7 +77,7 @@ function initProductContentsTab(editorType, allGroups) {
 
 function initProductDetailsForm() {
     $('form.updateProduct').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog(resp)
             $('#relatedAppWrap').reloadFragment({
                 whenComplete: function (dom) {
@@ -100,7 +100,7 @@ function initProductDetailsForm() {
 function initProductVariants() {
     var modal = $('#modal-product-option');
     modal.find('form').forms({
-        callback: function (resp, form) {
+        onSuccess: function (resp, form) {
             flog('done', resp, form);
             if (resp.status) {
                 Msg.info('Saved');
@@ -245,7 +245,7 @@ function initProductVariantImgSelector() {
     });
     
     modal.find('form').forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             modal.modal('hide');
             reloadVariantList();
         }

@@ -25,7 +25,7 @@ function initManageRepos() {
     addEventToUpdate(modal);
     
     modal.find('form').forms({
-    	callback: function(resp) {
+        onSuccess: function(resp) {
     		if ($('#updateRepo').val() == '') {
     			Msg.success($('#newName').val() + ' is created!');
     		} else {

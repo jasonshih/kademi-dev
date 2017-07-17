@@ -43,16 +43,13 @@ function initForm() {
     var form = $('#details').find('form');
 
     form.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.success("Successfully saved.");
                 setUrl();
             } else {
                 Msg.warning("Oh No! Something went wrong!")
             }
-        },
-        error: function () {
-            flog("Error");
         }
     });
 }
@@ -61,7 +58,7 @@ function initMarketForm() {
     var marketForm = $('#market').find('form');
 
     marketForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             if (resp.status) {
                 Msg.success("Saved");
             }
@@ -291,7 +288,7 @@ var initCreateMarketItem = function () {
     var marketItemForm = marketItemModal.find('form');
 
     marketItemForm.forms({
-        callback: function (resp) {
+        onSuccess: function (resp) {
             flog("Callback ", resp);
             if (resp.status) {
                 marketItemModal.modal('hide');
