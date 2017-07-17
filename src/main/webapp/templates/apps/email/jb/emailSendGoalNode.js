@@ -13,6 +13,11 @@ JBNodes['emailSendGoal'] = {
             label: 'then',
             title: 'when email sent',
             maxConnections: 1
+        },
+        pastTimeNode: {
+            label: 'past time',
+            title: 'When entered while timeout has passed',
+            maxConnections: 1
         }
     },
 

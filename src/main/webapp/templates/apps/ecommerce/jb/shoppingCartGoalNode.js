@@ -23,6 +23,11 @@ JBNodes['shoppingCartGoal'] = {
             label: 'payment pending',
             title: 'When payment pending',
             maxConnections: 1
+        },
+        pastTimeNode: {
+            label: 'past time',
+            title: 'When entered while timeout has passed',
+            maxConnections: 1
         }
     },
 

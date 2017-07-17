@@ -13,6 +13,11 @@ JBNodes['acceptQuoteGoal'] = {
             label: 'then',
             title: 'When accepted',
             maxConnections: 1
+        },
+        pastTimeNode: {
+            label: 'past time',
+            title: 'When entered while timeout has passed',
+            maxConnections: 1
         }
     },
 
