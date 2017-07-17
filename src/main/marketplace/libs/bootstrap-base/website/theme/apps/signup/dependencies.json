@@ -6,7 +6,7 @@
         },
         {
             "appId": "user-lib",
-            "branch": "1.0.5"
+            "branch": "1.0.6"
         }
     ],
     "dependencies": [
