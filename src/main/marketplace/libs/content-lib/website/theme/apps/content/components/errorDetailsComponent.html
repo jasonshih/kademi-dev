@@ -1,0 +1,64 @@
+#if (!$successMessage)
+    #set ($successMessage = "Thank you! Those details have been sent")
+#end
+
+#if (!$failMessage)
+    #set ($failMessage =  "Sorry, we weren't able to send the details automatically.")
+#end
+
+<div class="error-details">
+    <h1>Sorry! ${errorTitle}</h1>
+    <p>If you're interested in the details, this is a "${errorCode} error", which usually means that ${errorDescription}</p>
+    <p>This might be a bug, or maybe you just ended up somewhere you werent supposed to.</p>
+    <p>Maybe you could just go back and try another link? Or try from <a href="/">the home page</a></p>
+
+    <h2>Would you like to tell us about it? That would really help us fix it.</h2>
+    <p>If you click this button the page will try to send the information you see here to our administrator.</p>
+    <button class="btn btn-primary btn-send-error">Tell us about it</button>
+
+    <hr />
+
+    <h3>Some details, these might help us fix this problem</h3>
+    <p>What you asked the page to do is called (in techie terms) a <b>${request.method}</b> method</p>
+    <p>The address of this page is: <b>${request.absoluteUrl}</b></p>
+    <p>You got here from: <b>$formatter.ifNull($request.refererHeader, "N/A")</b></p>
+    <p>You're logged in as: <b>$formatter.ifNull($user.name, "N/A")</b></p>
+
+    <h3>and even more techie stuff...</h3>
+    <p>Your web browser is: <b>$request.userAgentHeader</b></p>
+    <p>Parameters: <b>$formatter.ifNull($page.requestParams, "N/A")</b></p>
+    <p>Is javascript enabled: <b style="color: red;" class="isjs">NO</b></p>
+    <p>Cookies enabled: <b style="color: red" class="cookies">NO</b></p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+    <p>&nbsp;</p>
+</div>
+<script type="text/javascript">
+    $(function () {
+        document.title = '${errorCode} | Error page';
+
+        $('.isjs').css('color', 'green').text('YES!');
+
+        $.cookie('testCookie', 'YES!');
+        var testCookie = $.cookie('testCookie');
+        $('.cookies').text(testCookie).css('color', testCookie === 'YES!' ? 'green' : 'red');
+
+        $('.btn-send-error').click(function () {
+            $.ajax({
+                type: 'POST',
+                url: '/contactus',
+                data: {
+                    email: 'unknown@user.com',
+                    message: $('.error-details').html()
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    alert("$successMessage");
+                },
+                error: function (resp) {
+                    alert("$failMessage");
+                }
+            });
+        });
+    });
+</script>

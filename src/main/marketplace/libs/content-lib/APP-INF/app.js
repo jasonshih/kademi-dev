@@ -8,3 +8,4 @@ controllerMappings.addComponent("content/components", "directoryIndex", "html", 
 controllerMappings.addComponent("content/components", "pageTitle", "html", "Displays the page title in a template", "Content App component");
 controllerMappings.addComponent("content/components", "breadcrumb", "html", "Displays the page breadcrumb", "Content App component;Bootstrap component");
 controllerMappings.addComponent("content/components", "socialLinks", "html", "Displays the social links", "Content App component");
+controllerMappings.addComponent("content/components", "errorDetails", "html", "Displays detailed error page", "Content App component");
