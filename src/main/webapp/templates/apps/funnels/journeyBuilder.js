@@ -419,6 +419,13 @@ var JBApp = {
     '        <input type="number" class="form-control time" value="" />' +
     '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to execute at a particular time, as well as after the specified delay.</em>' +
     '    </div>' +
+    '</div>' +
+    '<div class="form-group">' +
+    '    <div class="col-md-12">' +
+    '        <label>Timeout Relative to Date</label>' +
+    '        <input class="form-control timeoutRelativeDateMVEL datetime" value="" />' +
+    '        <em class="small help-block text-muted">(Optional) If set this will cause a timer to calculate execution time relative to this date.</em>' +
+    '    </div>' +
     '</div>',
     initStandardGoalSettingControls: function (form) {
         form.find('.timeout-units-selector li').on('click', function (e) {
@@ -440,6 +447,7 @@ var JBApp = {
         var cost = form.find('.cost').val();
         var probability = form.find('.probability').val();
         var time = form.find('.time').val();
+        var timeoutRelativeDateMVEL = form.find('.timeoutRelativeDateMVEL').val();
         
         JBApp.currentSettingNode.timeoutUnits = timeoutUnits || null;
         JBApp.currentSettingNode.timeoutMultiples = timeoutMultiples || null;
@@ -448,6 +456,7 @@ var JBApp = {
         JBApp.currentSettingNode.cost = cost || null;
         JBApp.currentSettingNode.probability = probability || null;
         JBApp.currentSettingNode.timerTime = time || null;
+        JBApp.currentSettingNode.timeoutRelativeDateMVEL = timeoutRelativeDateMVEL || null;
     },
     showStandardGoalSettingControls: function (form, node) {
         if (node.timeoutUnits !== null) {
@@ -477,6 +486,7 @@ var JBApp = {
         form.find('.cost').val(node.cost !== null ? node.cost : '');
         form.find('.probability').val(node.probability !== null ? node.probability : '');
         form.find('.time').val(node.timerTime !== null ? node.timerTime : '');
+        form.find('.timeoutRelativeDateMVEL').val(node.timeoutRelativeDateMVEL !== null ? node.timeoutRelativeDateMVEL : '');
     },
     uuid: function () {
         return ('xxxxxx'.replace(/[xy]/g, function (c) {

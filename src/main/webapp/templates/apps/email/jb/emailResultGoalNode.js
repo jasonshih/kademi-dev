@@ -28,6 +28,11 @@ JBNodes['emailResultGoal'] = {
             label: 'converted',
             title: 'When converted',
             maxConnections: 1
+        },
+        pastTimeNode: {
+            label: 'past time',
+            title: 'When entered while timeout has passed',
+            maxConnections: 1
         }
     },
 
