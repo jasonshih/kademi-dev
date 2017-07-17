@@ -1,3 +1,10 @@
+if (console && console.log) {
+    console.log(
+        '%cHey! jqBootstrapValidation.js is DEPRECATED and will be removed in bootstrap-base lib version 1.5. And Kademi did not use this js file anymore. Please use jquery.forms plugin instead. \n%cMessage from duc@kademi.co',
+        'font-size: 24px; color: blue;',
+        'font-size: 11px; color: #aaa;');
+}
+
 /* jqBootstrapValidation
  * A plugin for automating validation on Twitter Bootstrap formatted forms.
  *

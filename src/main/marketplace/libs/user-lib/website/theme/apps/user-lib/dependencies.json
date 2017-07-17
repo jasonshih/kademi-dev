@@ -27,19 +27,19 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/user/passwordDoResetComponent.js"
+                "path": "/theme/apps/user/passwordDoReset.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/user/profileDetailsComponent.js"
+                "path": "/theme/apps/user/profileDetails.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/user/passwordResetComponent.js"
+                "path": "/theme/apps/user/passwordReset.js"
             }
         },
         {
