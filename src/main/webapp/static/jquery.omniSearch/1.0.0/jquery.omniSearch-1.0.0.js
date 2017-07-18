@@ -101,9 +101,6 @@
                 setTimeout(function () {
                     self.suggestionsList.css('display', 'none');
                 }, 250);
-            },
-            focus: function () {
-                self.search(self.input.val());
             }
         });
         
