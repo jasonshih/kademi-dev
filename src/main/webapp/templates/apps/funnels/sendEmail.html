@@ -6,11 +6,11 @@
                 height: 220px;
             }
 
-            #modalEditMessage .modal-body {
+            #modalEditMessage .modal-body, #modalEditMessageHTML .modal-body{
                 padding: 0;
             }
 
-            #modalEditMessage iframe {
+            #modalEditMessage iframe, #modalEditMessageHTML iframe {
                 width: 100%;
                 height: 100%;
                 border: 0;
@@ -197,7 +197,16 @@
 
                         <!-- Start content of Message tab -->
                         <div id="message" class="tab-pane">
-                            <a href="#modalEditMessage" data-toggle="modal" class="btn btn-sm btn-warning">Edit Message</a>
+                            <!--<a href="#modalEditMessage" data-toggle="modal" class="btn btn-sm btn-warning">Edit Message</a>-->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Edit Message <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#modalEditMessage" data-toggle="modal">EDM Editor</a></li>
+                                    <li><a href="#modalEditMessageHTML" data-toggle="modal">Text editor</a></li>
+                                </ul>
+                            </div>
                             <hr />
                             <iframe width="100%" height="500" src="$contentFileName"></iframe>
                         </div>
@@ -229,53 +238,79 @@
                 </div>
             </form>
 
-            <div id="modal-send-test" class="modal modal-sm fade" aria-hidden="true" tabindex="-1">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Send test</h4>
+            <div id="modal-send-test" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Send test</h4>
+                        </div>
+                        <form method="POST" action="$page.path" class="form-horizontal">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+                                <input type="hidden" name="sendTest" value="true" />
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="name">Recipient</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
+                                        <p>A single email will be sent to this address</p>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-3 control-label" for="name">Target</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
+                                        <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <form method="POST" action="$page.path" class="form-horizontal">
-                    <div class="modal-body">
-                        <div class="form-message alert alert-danger" style="display: none;"></div>
-                        <input type="hidden" name="sendTest" value="true" />
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" for="name">Recipient</label>
-                            <div class="col-md-8">
-                                <input type="text" name="recipient" value="" placeholder="An email address" class="required email form-control" />
-                                <p>A single email will be sent to this address</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" for="name">Target</label>
-                            <div class="col-md-8">
-                                <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
-                                <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-success" type="submit"><i class="glyphicon glyphicon-send"></i> Send</button>
-                    </div>
-                </form>
             </div>
 
-            <div id="modal-send-test-progress" class="modal modal-lg fade" aria-hidden="true" tabindex="-1">
-                <div class="modal-header">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                    <h4 class="modal-title">Test send progress</h4>
-                </div>
-                <div class="modal-body" id="send-test-body">
+            <div id="modal-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                            <h4 class="modal-title">Test send progress</h4>
+                        </div>
+                        <div class="modal-body" id="send-test-body">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="modalEditMessage" class="modal modal-full fade" tabindex="-1">
-                <div class="modal-body">
-                    <iframe src="" data-src="edmeditor?fileName=$contentFileName&useHash=true&iframe=true"></iframe>
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <iframe src="" data-src="edmeditor?fileName=$contentFileName&useHash=true&iframe=true"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-sm btn-info">Close</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-sm btn-default">Close</button>
+            </div>
+
+            <div id="modalEditMessageHTML" class="modal modal-full fade" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <iframe src="" data-src="htmleditor?fileName=$contentFileName&useHash=true&iframe=true"></iframe>
+                        </div>
+                        <div class="modal-footer">
+                            <button data-dismiss="modal" class="btn btn-sm btn-info">Close</button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
             <script id="email-template" type="text/html">
@@ -319,7 +354,7 @@
 
                     var iframe = $('#message iframe').get(0);
 
-                    $('#modalEditMessage').on({
+                    $('#modalEditMessage, #modalEditMessageHTML').on({
                         'shown.bs.modal': function () {
                             var modalIframe = $(this).find('iframe');
 
