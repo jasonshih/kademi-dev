@@ -491,11 +491,8 @@ function initNewLeadForm() {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
                 if ($('#all_contacts').length) {
-                    $('#all_contacts').reloadFragment({
-                        whenComplete: function () {
-                            $('abbr.timeago').timeago();
-                        }
-                    });
+                    $('#all_contacts').html('');
+                    initLeadsDashLoading();
                 }
                 var leadContacts = $('.lead-contacts-wrap');
                 if (leadContacts.length) {
