@@ -36,6 +36,11 @@ JBNodes['branchGoal'] = {
                 }                
 
             }
+        },
+        pastTimeNode: {
+            label: 'past time',
+            title: 'When entered while timeout has passed',
+            maxConnections: 1
         }        
     },
 

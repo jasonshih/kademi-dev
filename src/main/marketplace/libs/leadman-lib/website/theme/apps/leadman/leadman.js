@@ -462,6 +462,13 @@ function initNewLeadForm() {
         $('#newLeadStage').reloadFragment({
             url: window.location.pathname + '?leadName=' + s.val(),
         });
+        
+        $('#lead-fields-tab').reloadFragment({
+            url: window.location.pathname + '?leadName=' + s.val(),
+            whenComplete: function () {
+
+            }
+        });
     });
 
     $('#source-frm', form).select2({
