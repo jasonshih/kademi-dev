@@ -20,10 +20,7 @@
             var btn = $(this);
             var href = btn.attr('href');
             
-            Konfirm.error({
-                message: 'Your will not be able to recover this api app!',
-                confirmText: 'Yes, delete it!'
-            }, function () {
+            Konfirm.confirm('Your will not be able to recover this api app!', 'Yes, delete it!', function () {
                 $.ajax({
                     type: 'DELETE',
                     url: href,
