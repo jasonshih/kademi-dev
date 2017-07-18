@@ -711,7 +711,7 @@ function initPageDatePicker() {
             extraClass: extraClass,
             position: position
         };
-        if (timeZone){
+        if (timeZone) {
             options.timeZone = timeZone;
         }
         range.pageDatePicker(options);
@@ -1222,18 +1222,42 @@ function initColorPicker(target, onChangeHandle) {
 
 var Kalert = {};
 Kalert.alert = function (title, message, type) {
-    swal(title, message, type);
+    swal({
+        title: title,
+        text: message,
+        type: type,
+        showCancelButton: false,
+        confirmButtonClass: 'btn-primary',
+        confirmButtonText: 'Ok',
+        closeOnConfirm: true
+    });
 };
 Kalert.info = function (title, message) {
+    if (message === undefined) {
+        message = title;
+        title = 'Info'
+    }
     Kalert.alert(title, message, 'info');
 };
 Kalert.success = function (title, message) {
+    if (message === undefined) {
+        message = title;
+        title = 'Success!'
+    }
     Kalert.alert(title, message, 'success');
 };
 Kalert.warning = function (title, message) {
+    if (message === undefined) {
+        message = title;
+        title = 'Warning!'
+    }
     Kalert.alert(title, message, 'warning');
 };
 Kalert.error = function (title, message) {
+    if (message === undefined) {
+        message = title;
+        title = 'Error!'
+    }
     Kalert.alert(title, message, 'error');
 };
 

@@ -517,7 +517,7 @@ function initManageWebsiteImage() {
                     }
                 },
                 error: function () {
-                    alert('Sorry, we couldn\'t save your profile image.');
+                    Kalert.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
         }
