@@ -1275,22 +1275,22 @@ Konfirm.show = function (title, message, type, btnClass, btnText, callback) {
     }, callback);
 };
 Konfirm.confirm = function (message, btnText, callback) {
-    if (callback === undefined) {
+    if (typeof btnText === 'function') {
         callback = btnText;
         btnText = 'Ok';
     }
     Konfirm.show('Are you sure?', message, 'warning', 'btn-danger', btnText, callback);
 };
-Konfirm.info = function (title, message, btnClass, btnText, callback) {
+Konfirm.info = function (title, message, btnText, callback) {
     Konfirm.show(title, message, 'info', 'btn-info', btnText, callback);
 };
-Konfirm.success = function (title, message, btnClass, btnText, callback) {
+Konfirm.success = function (title, message, btnText, callback) {
     Konfirm.show(title, message, 'success', 'btn-success', btnText, callback);
 };
-Konfirm.warning = function (title, message, btnClass, btnText, callback) {
+Konfirm.warning = function (title, message, btnText, callback) {
     Konfirm.show(title, message, 'warning', 'btn-warning', btnText, callback);
 };
-Konfirm.error = function (title, message, btnClass, btnText, callback) {
+Konfirm.error = function (title, message, btnText, callback) {
     Konfirm.show(title, message, 'error', 'btn-danger', btnText, callback);
 };
 Konfirm.close = function () {
