@@ -6,11 +6,11 @@ $(function () {
 
         flog("click");
 
-        $(".outcome-options").slideUp(300).find(".required:input").each(function () {
+        $(".outcome-options").slideUp(300).find(":input").prop("disabled", true).end().find(".required:input").each(function () {
             $(this).data("required", true).removeClass("required");
         });
 
-        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").each(function () {
+        $("#outcome-options-" + $(this).data("outcome-id")).slideDown(300).find(":input").prop("disabled", false).each(function () {
             if ($(this).data("required") === true) {
                 $(this).addClass("required");
             }

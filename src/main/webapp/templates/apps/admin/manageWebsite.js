@@ -148,9 +148,11 @@ function initCertHttps() {
         var href = $(this).attr("href");
         var certId = $(this).data("certid");
         flog("rootCertId", href, "certId", certId);
-        if (confirm("Are you sure you want to delete this certificate?")) {
+        
+        
+        Konfirm.confirm("Are you sure you want to delete this certificate?", function () {
             deleteRootCert(certId, href, $(this).closest("tr"));
-        }
+        });
     });
 
 
@@ -170,12 +172,14 @@ function initCSRHttps() {
 
     body.on('click', '.btn-gen-new-csr', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to create a new CSR? Please note this will also replace the current Private Key")) {
+        
+        Konfirm.confirm("Are you sure you want to create a new CSR? Please note this will also replace the current Private Key", function () {
             $("#csrTextGroup").hide();
             genCSRModal.find('.viewCsr').hide();
             genCSRModal.find('.csrForm').show();
             genCSRModal.find('.btn-create').show("fade");
-        }
+            Konfirm.close();
+        });
     });
 
     genCSRModal.find("form").forms({
@@ -288,8 +292,8 @@ function initEmailServerTab() {
 
     $('body').on('click', '.btn-delete-dkim', function (e) {
         e.preventDefault();
-
-        if (confirm('Are you sure you want to clear the DKIM Key?')) {
+        
+        Konfirm.confirm('Are you sure you want to clear the DKIM Key?', function () {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
@@ -305,7 +309,7 @@ function initEmailServerTab() {
                     Msg.error("An error occured viewing the certificate");
                 }
             });
-        }
+        });
     });
 }
 
@@ -447,9 +451,11 @@ function deleteRootCert(certId, rootCertid, tr) {
                         + '<td colspan="3">You have no root/intermediate certificates</td>'
                         + '</tr>');
             }
+            Konfirm.close();
         },
         error: function (resp) {
             Msg.error("An error occured deleting the certificate");
+            Konfirm.close();
         }
     });
 }
@@ -517,7 +523,7 @@ function initManageWebsiteImage() {
                     }
                 },
                 error: function () {
-                    Kalert.error('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
         }

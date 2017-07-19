@@ -10,9 +10,9 @@ var reviewRow = 3;
 function initManageTableUploader(hcf) {
     initUploads();
     initSaveMappings();
-
+    
     hasCustomForm = hcf;
-
+    
     if (hasCustomForm) {
         optionsRow = 2;
         mapColumnsRow++;
@@ -23,19 +23,19 @@ function initManageTableUploader(hcf) {
 function initSaveMappings() {
     var modal = $('#modal-tableUploader-saveMapping');
     var form = modal.find('form');
-
+    
     var importerHead = $('#importerHead');
-
+    
     form.forms({
         onValid: function (form, config) {
             var selectedCols = [];
-
+            
             importerHead.find('select').each(function () {
                 if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
-
+            
             if (!selectedCols.length) {
                 Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
@@ -44,12 +44,12 @@ function initSaveMappings() {
         },
         beforePostForm: function (form, config, data) {
             var fields = $("#importerWizard .customForm :input").serializeArray();
-
+            
             for (var i in fields) {
                 var f = fields[i];
                 f.name = 'options-' + f.name;
             }
-
+            
             return data + '&' + importerHead.find(':input').serialize() + '&' + $.param(fields);
         },
         onSuccess: function (resp) {
@@ -57,13 +57,13 @@ function initSaveMappings() {
             Msg.success(resp.messages);
             $('#savedMappings').reloadFragment();
         }
-
+        
     });
 }
 
 function initUploads() {
     var form = $("#importerWizard form");
-
+    
     $('#myWizard').wizard();
     $('#importerWizard').on('show.bs.collapse', function () {
         var curStep = $('#myWizard').wizard('selectedItem');
@@ -82,7 +82,7 @@ function initUploads() {
         var resultStatus = $('#job-status');
         resultStatus.text('');
     });
-
+    
     $('#myWizard').on('changed.fu.wizard', function (evt, data) {
         if (data.step === 1) {
             // IE 11 fix
@@ -92,7 +92,7 @@ function initUploads() {
             }
         }
     });
-
+    
     $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
         if (data.step === 1) {
             if (form.find("input[name=fileHash]").val() == "") {
@@ -102,20 +102,20 @@ function initUploads() {
                 evt.preventDefault();
             }
         }
-
+        
         if (hasCustomForm && data.step === optionsRow) {
             var fileHash = form.find('[name=fileHash]').val();
             var formData = {fetchTableHeaders: 'fetchTableHeaders', fileHash: fileHash};
-
+            
             var fields = $("#importerWizard .customForm :input").serializeArray();
-
+            
             for (var i in fields) {
                 var f = fields[i];
                 formData[f.name] = f.value;
             }
-
+            
             flog('Data', formData);
-
+            
             $.ajax({
                 url: importUrl,
                 data: formData,
@@ -124,20 +124,20 @@ function initUploads() {
                 success: function (resp, textStatus, jqXHR) {
                     if (resp.status && resp.data) {
                         populateImportTable($('#importerWizard'), resp.data);
-
+                        
                         updateSelectedConfig(false);
-
+                        
                         $('#myWizard').wizard('selectedItem', {step: mapColumnsRow});
                     } else {
                         Msg.error(resp.messages);
                     }
                 }
             });
-
+            
             evt.preventDefault();
             return false;
         }
-
+        
         if (data.step === mapColumnsRow) {
             var startRow = $('#startRow').val();
             if (!startRow) {
@@ -148,23 +148,23 @@ function initUploads() {
             } else {
                 $('#startRow').parents('.form-group').removeClass('has-error');
             }
-
+            
             var importerHead = $('#importerHead');
             var selectedCols = [];
-
+            
             importerHead.find('select').each(function () {
                 if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
-
+            
             if (!selectedCols.length) {
                 Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
                 return false;
             }
-
+            
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
             var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
@@ -175,10 +175,10 @@ function initUploads() {
             });
             form.find('#noValidRow').addClass('hide');
             form.find('[type=submit]').addClass('hide');
-
+            
             $('#processing').show();
             $('#result').hide();
-
+            
             $.ajax({
                 url: importUrl,
                 data: formData,
@@ -195,7 +195,7 @@ function initUploads() {
                             invalidRows--;
                         }
                         form.find(".beforeImportNumInvalid").text(invalidRows);
-
+                        
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
                         if (resp.data.invalidRows) {
@@ -210,14 +210,14 @@ function initUploads() {
                                 invalidRowsBody.append(tr);
                             }
                         }
-
+                        
                         importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
-
+                        
                         $('#result').show();
                         $('#processing').hide();
                         if (importTotalCount == 0 || resp.data.toManyErrors) {
                             form.find('[type=submit]').attr('disabled', true);
-
+                            
                             if (resp.data.toManyErrors) {
                                 $('#toManyErrors').show();
                             } else {
@@ -244,11 +244,11 @@ function initUploads() {
                     form.find(".beforeImportInfo").text('Cannot verify data to import');
                 }
             });
-
+            
             evt.preventDefault();
             return false;
         }
-
+        
         if (data.step === reviewRow) {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
@@ -257,19 +257,19 @@ function initUploads() {
             }
         }
     });
-
+    
     flog("Init importer form", form);
     form.forms({
         postUrl: importUrl,
         validate: function () {
             if (importWizardStarted) {
                 $('#myWizard').wizard("next");
-
+                
                 var resultCustomValidate = {
                     error: 1,
                     errorMessages: [" That task is already in progress. Please cancel it or wait until it finishes"]
                 };
-
+                
                 return resultCustomValidate;
             }
         },
@@ -287,7 +287,7 @@ function initUploads() {
             checkProcessStatus();
         }
     });
-
+    
     $('#btn-upload').mupload({
         url: importUrl,
         useJsonPut: false,
@@ -295,27 +295,27 @@ function initUploads() {
         acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
-
+            
             populateImportTable(form, resp.result.data);
-
+            
             updateSelectedConfig(true);
-
+            
             $('#myWizard').wizard("next");
         }
     });
-
+    
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
-        Konfirm.warning({title: 'Are you sure you want to cancel this process?'}, function () {
+        Konfirm.confirm('Are you sure you want to cancel this process?', function () {
             $.ajax({
                 type: 'post',
                 url: importUrl,
                 data: {cancel: 'cancel'},
                 success: function (data) {
-                    Kalert.success('Import task cancelled');
+                    Msg.success('Import task cancelled');
                 },
                 error: function () {
-                    Kalert.error('Oh No! Something went wrong!');
+                    Msg.error('Oh No! Something went wrong!');
                 }
             });
         });
@@ -338,15 +338,15 @@ function populateImportTable(form, data) {
         thead.append(td);
         var select = $("<select class='form-control' name='col" + col + "'>");
         select.append("<option value=''>[Do not import]</option>");
-
+        
         for (var field in fields) {
             select.append("<option value='" + field + "'>" + fields[field] + "</option>");
         }
-
+        
         td.append(select);
     }
     flog("done head", thead);
-
+    
     var tbody = $("#importerBody");
     tbody.html("");
     var numRows = 0;
@@ -368,13 +368,13 @@ function populateImportTable(form, data) {
 
 function updateSelectedConfig(loadOptions) {
     var importerHead = $('#importerHead');
-
+    
     var opt = $('#savedMappings');
     var val = opt.val();
-
+    
     if (val !== '[NONE]') {
         var json = JSON.parse(val);
-
+        
         var mappings = json.mappings;
         for (var i in mappings) {
             var cols = mappings[i];
@@ -382,12 +382,12 @@ function updateSelectedConfig(loadOptions) {
                 importerHead.find('[name=col' + cols[o] + ']').val(i).change();
             }
         }
-
+        
         if (loadOptions) {
             var options = json.options;
             if (options !== null && typeof options !== 'undefined') {
                 var inputs = $("#importerWizard .customForm");
-
+                
                 for (var o in options) {
                     inputs.find('[name=' + o + ']').val(options[o]);
                 }
@@ -411,12 +411,12 @@ function checkProcessStatus() {
                 if (result.data) {
                     var state = result.data.state;
                     flog("state", state);
-
+                    
                     if (result.data.statusInfo.complete) {
                         var dt = result.data.statusInfo.completedDate;
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
-
+                        
                         if (typeof state.updatedCount !== 'undefined') {
                             $('#myWizard').find('.updatedCount').text(state.updatedCount)
                         }
@@ -436,7 +436,7 @@ function checkProcessStatus() {
                         } else {
                             $('#myWizard').find('.errorRows').closest("a").hide();
                         }
-
+                        
                         $('#myWizard').wizard("next");
                         $('#table-Orgs-body').reloadFragment({url: '/organisations/'});
                         $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
@@ -461,7 +461,7 @@ function checkProcessStatus() {
                     jobTitle.text("Waiting for process job to start ...");
                 }
                 window.setTimeout(checkProcessStatus, 2500);
-
+                
             } else {
                 flog("No task");
             }
@@ -476,14 +476,14 @@ function sortObjectByValue(obj) {
     var sorted = {};
     var prop;
     var arr = [];
-
+    
     for (prop in obj) {
         if (obj.hasOwnProperty(prop)) {
             var o = {key: prop, value: obj[prop]};
             arr.push(o);
         }
     }
-
+    
     arr.sort(function (a, b) {
         if (a.value > b.value)
             return 1;
@@ -491,10 +491,10 @@ function sortObjectByValue(obj) {
             return -1;
         return 0;
     });
-
+    
     for (i = 0; i < arr.length; i++) {
         sorted[arr[i].key] = arr[i].value;
     }
-
+    
     return sorted;
 }
