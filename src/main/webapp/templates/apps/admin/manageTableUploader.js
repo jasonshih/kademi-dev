@@ -312,10 +312,10 @@ function initUploads() {
                 url: importUrl,
                 data: {cancel: 'cancel'},
                 success: function (data) {
-                    Kalert.success('Import task cancelled');
+                    Msg.success('Import task cancelled');
                 },
                 error: function () {
-                    Kalert.error('Oh No! Something went wrong!');
+                    Msg.error('Oh No! Something went wrong!');
                 }
             });
         });

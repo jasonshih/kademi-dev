@@ -284,9 +284,9 @@ function addGroupFolder(name, url, data, callback) {
                 loading: false
             });
             if (resp.status === 400) {
-                Kalert.error('Sorry, the folder could not be created. Please check if a folder with that name already exists');
+                Msg.error('Sorry, the folder could not be created. Please check if a folder with that name already exists');
             } else {
-                Kalert.error('There was a problem creating the folder');
+                Msg.error('There was a problem creating the folder');
             }
         }
     });
