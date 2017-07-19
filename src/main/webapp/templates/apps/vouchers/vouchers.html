@@ -74,7 +74,7 @@
                             #else
                             #foreach($v in $page.paginator.records)
                             <tr>
-                                <td><a href='../voucher-type/$v.voucherTypeTitle/$v.name'>$v.name</a></td>
+                                <td><a href='../voucher-type/$v.voucherTypeName/$v.name'>$v.name</a></td>
                                 <td>$v.voucherTypeTitle</td>
                                 <td>$!page.statusText($v.status)</td>
                                 <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
