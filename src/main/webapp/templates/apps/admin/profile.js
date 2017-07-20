@@ -81,11 +81,11 @@ function initProfile() {
                         $(".profile-photo img").attr("src", resp.nextHref);
                         $(".main-profile-photo img").attr("src", resp.nextHref);
                     } else {
-                        Kalert.error("Sorry, an error occured updating your profile image");
+                        Msg.error("Sorry, an error occured updating your profile image");
                     }
                 },
                 error: function () {
-                    Kalert.error('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
         }
@@ -107,11 +107,11 @@ function initProfile() {
                         $(".profile-photo img").attr("src", "pic");
                         $(".main-profile-photo img").attr("src", "pic");
                     } else {
-                        Kalert.error("Sorry, an error occured updating your profile image");
+                        Msg.error("Sorry, an error occured updating your profile image");
                     }
                 },
                 error: function () {
-                    Kalert.error('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
         }

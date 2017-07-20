@@ -55,6 +55,7 @@ $(function () {
     });
     $('abbr.timeago').timeago();
 });
+
 function initSearchVoucher() {
     $("#voucher-query").keyup(function () {
         typewatch(function () {
@@ -63,11 +64,12 @@ function initSearchVoucher() {
         }, 500);
     });
 }
+
 function doSearch() {
     var query = $("#voucher-query").val();
     flog("doSearch", query);
     var uri = URI(window.location);
-    if (query){
+    if (query) {
         uri.setSearch('voucher-query', query);
     } else {
         uri.removeSearch('voucher-query');
@@ -76,6 +78,7 @@ function doSearch() {
     history.pushState(null, null, uri.toString());
     reloadVouchers();
 }
+
 function reloadVouchers() {
     $("#vouchers-table-body").reloadFragment({
         url: window.location.href,
