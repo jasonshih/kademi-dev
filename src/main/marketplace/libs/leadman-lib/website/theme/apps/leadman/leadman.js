@@ -171,12 +171,9 @@ function initCloseDealModal() {
                         }
                     });
                 }
-                if ($('#dashLeadsList').length) {
-                    $('#dashLeadsList').reloadFragment({
-                        whenComplete: function () {
-                            $('abbr.timeago').timeago();
-                        }
-                    });
+                if ($('#all_contacts').length) {
+                    $('#all_contacts').html('');
+                    initLeadsDashLoading();
                 }
                 closeDealModal.modal('hide');
             }
@@ -186,12 +183,15 @@ function initCloseDealModal() {
 
 function initCancelLeadModal() {
     var cancelLeadModal = $("#modalCancelLead");
-
     cancelLeadModal.on('shown.bs.modal', function () {
         cancelLeadModal.find("form").forms({
             onSuccess: function (resp) {
                 Msg.info('Lead cancelled');
                 reloadTasks();
+                if ($('#all_contacts').length) {
+                    $('#all_contacts').html('');
+                    initLeadsDashLoading();
+                }
                 if ($('#lead-cover').length) {
                     $('#maincontentContainer').reloadFragment({
                         whenComplete: function () {
