@@ -45,9 +45,9 @@ function initRemoveTags() {
         if (checkBoxes.length == 0) {
             Msg.error("Please select the tags you want to remove by clicking the checkboxs to the right");
         } else {
-            if (confirm("Are you sure you want to remove " + checkBoxes.length + " points tags?")) {
+            Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " points tags?", function () {
                 doRemovePoints(checkBoxes);
-            }
+            });
         }
     });
 }
@@ -66,9 +66,11 @@ function doRemovePoints(checkBoxes) {
             } else {
                 Msg.error("There was a problem removing points tags. Please try again and contact the administrator if you still have problems");
             }
+            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occurred removing tags. You might not have permission to do this");
+            Kalert.close();
         }
     });
 }

@@ -20,7 +20,7 @@
             var btn = $(this);
             var href = btn.attr('href');
             
-            Konfirm.confirm('Your will not be able to recover this api app!', 'Yes, delete it!', function () {
+            Kalert.confirm('Your will not be able to recover this api app!', 'Yes, delete it!', function () {
                 return $.ajax({
                     type: 'DELETE',
                     url: href,
@@ -28,11 +28,11 @@
                     success: function () {
                         refreshTable();
                         Msg.success('Deleted!', 'Your API App has been deleted');
-                        Konfirm.close();
+                        Kalert.close();
                     },
                     error: function () {
                         Msg.error('Oh No!', 'Sorry, an error occured deleting ' + href + '. Please check your internet connection');
-                        Konfirm.close();
+                        Kalert.close();
                     }
                 });
             });

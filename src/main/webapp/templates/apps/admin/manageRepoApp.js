@@ -14,7 +14,7 @@ function initManageRepoApp() {
     initDeleteLogo();
     initScreenshotDelete();
     PagesGallery.init();
-
+    
     $('abbr.timeago').timeago();
 }
 
@@ -41,7 +41,7 @@ function initForPublished() {
 
 function initForm() {
     var form = $('#details').find('form');
-
+    
     form.forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -56,7 +56,7 @@ function initForm() {
 
 function initMarketForm() {
     var marketForm = $('#market').find('form');
-
+    
     marketForm.forms({
         onSuccess: function (resp) {
             if (resp.status) {
@@ -69,7 +69,8 @@ function initMarketForm() {
 function initPublishApp() {
     $('body').on('click', '.publishApp', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to publish this app?")) {
+        
+        Kalert.confirm("Are you sure you want to publish this app?", function () {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname,
@@ -77,20 +78,22 @@ function initPublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
+                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                    Kalert.close();
                 }
             });
-        }
+        });
     });
 }
 
 function initRePublishApp() {
     $('body').on('click', '.rePublishApp', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to re-publish this app?")) {
+        Kalert.confirm("Are you sure you want to re-publish this app?", function () {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname,
@@ -98,20 +101,22 @@ function initRePublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
+                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                    Kalert.close();
                 }
             });
-        }
+        });
     });
 }
 
 function initUnPublishApp() {
     $('body').on('click', '.unPublishApp', function (e) {
         e.preventDefault();
-        if (confirm("Are you sure you want to un publish this app?")) {
+        Kalert.confirm("Are you sure you want to un publish this app?", function () {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname,
@@ -119,19 +124,21 @@ function initUnPublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
+                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
+                    Kalert.close();
                 }
             });
-        }
+        });
     });
 }
 
 function setUrl() {
     var appName = $("#appName");
-
+    
     history.pushState(null, null, "/manageApps/" + appName.val() + '/');
 }
 
@@ -152,7 +159,7 @@ function initUpload() {
     dz.on("error", function (file, errorMessage) {
         Msg.error("An error occured uploading: " + file.name + " because: " + errorMessage);
     });
-
+    
     $('body').on('hidden.bs.modal', '#modal-image-upload', function () {
         dz.removeAllFiles();
         //$('#screenshot-div').reloadFragment();
@@ -183,7 +190,7 @@ function initDeleteBanner() {
         e.preventDefault();
         var btn = $(this);
         var href = btn.attr('href');
-
+        
         confirmDelete(href, "the banner", function (resp) {
             updateImageHref(bannerImage, '/theme/apps/marketplace/no_banner.png', 'noBanner', true);
         });
@@ -216,7 +223,7 @@ function initDeleteLogo() {
         e.preventDefault();
         var btn = $(this);
         var href = btn.attr('href');
-
+        
         confirmDelete(href, "the logo", function (resp) {
             updateImageHref(logoImage, '/theme/apps/marketplace/no_logo.png', 'noLogo', true);
         });
@@ -255,7 +262,7 @@ function initScreenshotDelete() {
 
 function addScreenshot(file) {
     var screenshots = $('#screenshots');
-
+    
     var newDiv = $(
         '<div class="col-md-3 col-sm-4 gallery-img" style="display:none;">\n' +
         '    <div class="wrap-image" data-href="' + 'SCREENSHOT_' + file.name + '">\n' +
@@ -270,7 +277,7 @@ function addScreenshot(file) {
         '    </div>\n' +
         '</div>'
     );
-
+    
     newDiv.find(".group1").colorbox({
         rel: 'group1',
         transition: "none",
@@ -279,14 +286,14 @@ function addScreenshot(file) {
         retinaImage: true
     });
     screenshots.append(newDiv);
-
+    
     newDiv.show("slow");
 }
 
 var initCreateMarketItem = function () {
     var marketItemModal = $('#makeMarketItem');
     var marketItemForm = marketItemModal.find('form');
-
+    
     marketItemForm.forms({
         onSuccess: function (resp) {
             flog("Callback ", resp);

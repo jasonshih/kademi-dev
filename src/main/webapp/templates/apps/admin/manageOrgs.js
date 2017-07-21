@@ -1,42 +1,42 @@
 (function ($, win, doc, undefined) {
     function showErrors($result, errors) {
         var $table = $result.find('table'),
-                $tbody = $table.find('tbody');
-
+            $tbody = $table.find('tbody');
+        
         $tbody.html('');
-
+        
         $.each(errors, function (i, row) {
             log('error:', row);
-
+            
             var $tr = $('<tr>');
-
+            
             $tr.append('<td>' + row + '</td>');
             $tbody.append($tr);
         });
-
+        
         $result.show();
     }
-
+    
     function showUnmatched($result, unmatched) {
         var $table = $result.find('table');
         var $tbody = $table.find('tbody');
-
+        
         $tbody.html('');
-
+        
         $.each(unmatched, function (i, row) {
             log('unmatched', row);
-
+            
             var $tr = $('<tr>');
-
+            
             $.each(row, function (ii, field) {
                 $tr.append('<td>' + field + '</td>');
             });
             $tbody.append($tr);
         });
-
+        
         $result.show();
     }
-
+    
     var ModalEditOrg = {
         init: function () {
             var self = this;
@@ -46,11 +46,11 @@
             self.$form = self.$modal.find('form');
             self.$inputs = self.$form.find('input');
             self.$selects = self.$form.find('select');
-
+            
             self.$inputs.filter('[name=parentOrgId]').entityFinder({
                 type: 'organisation'
             });
-
+            
             self.$form.forms({
                 onSuccess: function (resp) {
                     log('done', resp);
@@ -59,27 +59,27 @@
                     self.hide();
                 }
             });
-
+            
             self.$modal.find('')
         },
         show: function (href) {
             var self = this,
-                    $modal = self.$modal,
-                    $form = self.$form,
-                    $inputs = self.$inputs,
-                    $selectes = self.$selects;
-
+                $modal = self.$modal,
+                $form = self.$form,
+                $inputs = self.$inputs,
+                $selectes = self.$selects;
+            
             if (href) {
                 $form.attr('action', href);
             } else {
                 $form.attr('action', win.location.pathname + '?newOrg');
             }
-
+            
             $inputs.val('');
             $selectes.val('');
             log('select', $selectes.val());
             resetValidation($modal);
-
+            
             if (href) {
                 $.ajax({
                     type: 'GET',
@@ -104,7 +104,7 @@
             this.$modal.modal('hide');
         }
     };
-
+    
     var initUploadCsv = function () {
         // Upload CSV
         var modalUploadCsv = $('#modal-upload-csv');
@@ -136,7 +136,7 @@
                 }
             });
         });
-
+        
         $('#do-upload-csv').mupload({
             buttonText: '<i class="clip-folder"></i> Upload spreadsheet',
             url: 'orgs.csv',
@@ -163,7 +163,7 @@
             }
         });
     };
-
+    
     var initUploadOrgIdCsv = function () {
         // Upload OrgId CSV
         var $modalUploadOrgidCsv = $('#modal-upload-orgid-csv');
@@ -185,15 +185,15 @@
             }
         });
     };
-
+    
     var initCRUDOrg = function () {
         var $body = $(doc.body);
-
+        
         $body.on('click', '.btn-delete-org', function (e) {
             e.preventDefault();
-
+            
             var href = $(this).attr('href');
-
+            
             confirmDelete(href, getFileName(href), function () {
                 win.location.reload();
             });
@@ -204,14 +204,14 @@
 //
 //            ModalEditOrg.show($(this).attr('href'));
 //        });
-
+        
         $('.btn-add-org').on('click', function (e) {
             e.preventDefault();
-
+            
             ModalEditOrg.show(null);
         });
     };
-
+    
     win.initManageOrgs = function () {
         ModalEditOrg.init();
         initUploadCsv();
@@ -227,17 +227,15 @@
         initMove();
         initAssignToOrgType();
     };
-
+    
 })(jQuery, window, document);
-
-
 
 
 function initMove() {
     var modal = $("#modal-move-orgs");
     modal.find("form").forms({
-        onSuccess : function(resp){
-            if( resp.status) {
+        onSuccess: function (resp) {
+            if (resp.status) {
                 Msg.info("Move complete");
                 modal.modal("hide");
                 window.location.reload();
@@ -247,7 +245,7 @@ function initMove() {
         }
     });
     
-    $("body").on("click", ".btn-orgs-move", function(e) {
+    $("body").on("click", ".btn-orgs-move", function (e) {
         flog("move..");
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
@@ -255,42 +253,42 @@ function initMove() {
             Msg.error("Please select the organisations you want to move by clicking the checkboxs to the right");
             return;
         }
-
+        
         var tbody = modal.find(".orgsMoveTableBody");
         var destSelect = modal.find("select[name=moveDest]");
         tbody.html("");
         var moveIds = "";
-        checkBoxes.each(function(i, n) {
+        checkBoxes.each(function (i, n) {
             var tr = $("<tr>");
             var chk = $(n);
             var selected = chk.closest("tr");
             var orgid = selected.find(".org-orgid").text();
-            var title =  selected.find(".org-title").text();
-            var numMembers =  selected.find(".org-members").text();
+            var title = selected.find(".org-title").text();
+            var numMembers = selected.find(".org-members").text();
             var internalId = selected.data("id");
             moveIds += internalId + ",";
-
+            
             var td = $("<td>");
             td.text(orgid);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(title);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(numMembers + "");
             tr.append(td);
-
+            
             tbody.append(tr);
-
+            
             var opt = $("<option>");
             opt.attr("value", internalId);
             opt.text(orgid + " - " + title);
             destSelect.append(opt);
         });
         modal.find("textarea").val(moveIds);
-
+        
         modal.modal("show");
     });
 }
@@ -298,8 +296,8 @@ function initMove() {
 function initAssignToOrgType() {
     var modal = $("#modal-assign-orgtype");
     modal.find("form").forms({
-        onSuccess : function(resp){
-            if( resp.status) {
+        onSuccess: function (resp) {
+            if (resp.status) {
                 Msg.info("Type Assignment complete");
                 modal.modal("hide");
                 window.location.reload();
@@ -309,7 +307,7 @@ function initAssignToOrgType() {
         }
     });
     
-    $("body").on("click", ".btn-orgs-assign-orgtype", function(e) {
+    $("body").on("click", ".btn-orgs-assign-orgtype", function (e) {
         flog("assign..");
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
@@ -317,48 +315,48 @@ function initAssignToOrgType() {
             Msg.error("Please select the organisations you want to assign by clicking the checkboxs to the right");
             return;
         }
-
+        
         var tbody = modal.find(".assignOrgTypeTableBody");
         
         tbody.html("");
         var moveIds = "";
-        checkBoxes.each(function(i, n) {
+        checkBoxes.each(function (i, n) {
             var tr = $("<tr>");
             var chk = $(n);
             var selected = chk.closest("tr");
             var orgid = selected.find(".org-orgid").text();
-            var title =  selected.find(".org-title").text();
-            var orgType =  selected.find(".org-type").text() === "" ? "-" : selected.find(".org-type").text();
+            var title = selected.find(".org-title").text();
+            var orgType = selected.find(".org-type").text() === "" ? "-" : selected.find(".org-type").text();
             var internalId = selected.data("id");
             moveIds += internalId + ",";
-
+            
             var td = $("<td>");
             td.text(orgid);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(title);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(orgType);
             tr.append(td);
-
+            
             tbody.append(tr);
         });
         
         modal.find("textarea").val(moveIds);
-
+        
         modal.modal("show");
     });
 }
 
 function initMerge() {
     var modal = $("#modal-merge-orgs");
-
+    
     modal.find("form").forms({
-        onSuccess : function(resp){
-            if( resp.status) {
+        onSuccess: function (resp) {
+            if (resp.status) {
                 Msg.info("Merge complete");
                 modal.modal("hide");
                 window.location.reload();
@@ -367,68 +365,68 @@ function initMerge() {
             }
         }
     });
-
-    $("body").on("click", ".btn-orgs-merge", function(e) {
+    
+    $("body").on("click", ".btn-orgs-merge", function (e) {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
             Msg.error("Please select the organisations you want to merge by clicking the checkboxs to the right");
         }
-
+        
         var tbody = modal.find(".orgsMergeTableBody");
         var destSelect = modal.find("select[name=mergeDest]");
         tbody.html("");
         var mergeIds = "";
-        checkBoxes.each(function(i, n) {
+        checkBoxes.each(function (i, n) {
             var tr = $("<tr>");
             var chk = $(n);
             var selected = chk.closest("tr");
             var orgid = selected.find(".org-orgid").text();
-            var title =  selected.find(".org-title").text();
-            var numMembers =  selected.find(".org-members").text();
+            var title = selected.find(".org-title").text();
+            var numMembers = selected.find(".org-members").text();
             var internalId = selected.data("id");
             mergeIds += internalId + ",";
-
+            
             var td = $("<td>");
             td.text(orgid);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(title);
             tr.append(td);
-
+            
             td = $("<td>");
             td.text(numMembers + "");
             tr.append(td);
-
+            
             tbody.append(tr);
-
+            
             var opt = $("<option>");
             opt.attr("value", internalId);
             opt.text(orgid + " - " + title);
             destSelect.append(opt);
         });
         modal.find("textarea").val(mergeIds);
-
+        
         modal.modal("show");
     });
 }
 
 function initSort() {
-	flog('initSort()');
-	$('.sort-field').on('click', function (e) {
+    flog('initSort()');
+    $('.sort-field').on('click', function (e) {
         e.preventDefault();
         var a = $(e.target);
         var search = window.location.search;
-    	flog(search);
+        flog(search);
         var field = a.attr('id');
         var dir = 'asc';
         if (field == getSearchValue(search, 'sortfield')) {
-        	if (getSearchValue(search, 'sortdir') == 'asc') {
-        		dir = 'desc';
-        	} else {
-        		dir = 'asc'
-        	}
+            if (getSearchValue(search, 'sortdir') == 'asc') {
+                dir = 'desc';
+            } else {
+                dir = 'asc'
+            }
         }
         doSearchAndSort(field, dir);
     });
@@ -436,19 +434,19 @@ function initSort() {
 
 
 function getSearchValue(search, key) {
-	if (search.charAt(0) == '?') {
-		search = search.substr(1);
-	}
-	parts = search.split('&');
-	if (parts) {
-		for (var i = 0; i < parts.length; i++) {
-			entry = parts[i].split('=');
-			if (entry && key == entry[0]) {
-				return entry[1];
-			}
-		}
-	}
-	return '';
+    if (search.charAt(0) == '?') {
+        search = search.substr(1);
+    }
+    parts = search.split('&');
+    if (parts) {
+        for (var i = 0; i < parts.length; i++) {
+            entry = parts[i].split('=');
+            if (entry && key == entry[0]) {
+                return entry[1];
+            }
+        }
+    }
+    return '';
 }
 
 
@@ -518,26 +516,26 @@ function initRemoveOrgs() {
         if (checkBoxes.length === 0) {
             Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right");
         } else {
-            if (confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?")) {
+            Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?", function () {
                 doRemoveOrgs(checkBoxes);
-            }
+            });
         }
     });
 }
 
 function initSortById() {
-	$(".btn-orgs-sort-all-asc").click(function (e) {
-		doSearchAndSort('id', 'asc');
-	});
-	$(".btn-orgs-sort-all-desc").click(function (e) {
-		doSearchAndSort('id', 'desc');
-	});
+    $(".btn-orgs-sort-all-asc").click(function (e) {
+        doSearchAndSort('id', 'asc');
+    });
+    $(".btn-orgs-sort-all-desc").click(function (e) {
+        doSearchAndSort('id', 'desc');
+    });
 }
 
 function doRemoveOrgs(checkBoxes) {
-	var search = window.location.search;
-	var field = getSearchValue(search, 'sortfield');
-	var dir = getSearchValue(search, 'sortdir');
+    var search = window.location.search;
+    var field = getSearchValue(search, 'sortfield');
+    var dir = getSearchValue(search, 'sortdir');
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -546,14 +544,16 @@ function doRemoveOrgs(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-            	doSearchAndSort(field, dir);
+                doSearchAndSort(field, dir);
                 Msg.success("Removed organisations ok");
             } else {
                 Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
             }
+            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occurred removing organisations. You might not have permission to do this");
+            Kalert.close();
         }
     });
 }
@@ -576,27 +576,27 @@ function initEditParent() {
     var modal = $('#modal-edit-parent');
     var txtParent = modal.find('[name=destOrgId]');
     var txtOrgId = modal.find('[name=mergeIds]');
-
+    
     txtParent.entityFinder({
         type: 'organisation'
     });
     var txtParentTitle = modal.find('.search-input');
-
+    
     $(document.body).on('click', '.btn-edit-parent', function (e) {
         e.preventDefault();
-
+        
         var btn = $(this);
         var parent = btn.attr("data-parent");
         var parentTitle = btn.attr("data-parent-title");
         var orgId = btn.attr("data-orgid");
-
+        
         txtParent.val(parent);
         txtParentTitle.val(parentTitle);
         txtOrgId.val(orgId);
-
+        
         modal.modal('show');
     });
-
+    
     modal.find('form').forms({
         onSuccess: function () {
             doSearch();
@@ -604,7 +604,7 @@ function initEditParent() {
             modal.modal('hide');
         }
     });
-
+    
     modal.on('hidden.bs.modal', function () {
         txtParent.val('');
         txtOrgId.val('');

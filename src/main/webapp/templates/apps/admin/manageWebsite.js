@@ -150,7 +150,7 @@ function initCertHttps() {
         flog("rootCertId", href, "certId", certId);
         
         
-        Konfirm.confirm("Are you sure you want to delete this certificate?", function () {
+        Kalert.confirm("Are you sure you want to delete this certificate?", function () {
             deleteRootCert(certId, href, $(this).closest("tr"));
         });
     });
@@ -173,12 +173,12 @@ function initCSRHttps() {
     body.on('click', '.btn-gen-new-csr', function (e) {
         e.preventDefault();
         
-        Konfirm.confirm("Are you sure you want to create a new CSR? Please note this will also replace the current Private Key", function () {
+        Kalert.confirm("Are you sure you want to create a new CSR? Please note this will also replace the current Private Key", function () {
             $("#csrTextGroup").hide();
             genCSRModal.find('.viewCsr').hide();
             genCSRModal.find('.csrForm').show();
             genCSRModal.find('.btn-create').show("fade");
-            Konfirm.close();
+            Kalert.close();
         });
     });
 
@@ -293,7 +293,7 @@ function initEmailServerTab() {
     $('body').on('click', '.btn-delete-dkim', function (e) {
         e.preventDefault();
         
-        Konfirm.confirm('Are you sure you want to clear the DKIM Key?', function () {
+        Kalert.confirm('Are you sure you want to clear the DKIM Key?', function () {
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
@@ -451,11 +451,11 @@ function deleteRootCert(certId, rootCertid, tr) {
                         + '<td colspan="3">You have no root/intermediate certificates</td>'
                         + '</tr>');
             }
-            Konfirm.close();
+            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occured deleting the certificate");
-            Konfirm.close();
+            Kalert.close();
         }
     });
 }

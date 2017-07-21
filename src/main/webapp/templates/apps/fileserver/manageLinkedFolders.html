@@ -185,7 +185,7 @@
                     var link = $(this);
                     var href = link.attr("href");
 
-                    Konfirm.confirm('Are you sure you want to delete this link?', function () {
+                    Kalert.confirm('Are you sure you want to delete this link?', function () {
                         $.ajax({
                             type: 'POST',
                             url: window.location.pathname,
@@ -195,7 +195,7 @@
                             dataType: "json",
                             success: function (resp) {
                                 link.closest('tr').remove();
-                                Konfirm.close();
+                                Kalert.close();
                             },
                             error: function (resp) {
                                 log("failed", resp);

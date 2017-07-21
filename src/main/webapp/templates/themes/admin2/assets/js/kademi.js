@@ -1260,39 +1260,53 @@ Kalert.error = function (title, message) {
     }
     Kalert.show(title, message, 'error');
 };
-
-var Konfirm = {};
-Konfirm.show = function (title, message, type, btnClass, btnText, callback) {
+Kalert.confirm = function (title, message, type, btnClass, btnText, callback) {
+    var option = {};
+    
+    if (arguments.length > 3) {
+        option = {
+            title: title,
+            message: message,
+            type: type,
+            btnClass: btnClass,
+            btnText: btnText,
+            callback: callback
+        };
+    } else if (arguments.length === 3) {
+        // Arguments are message, btnText, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: message,
+            callback: type
+        };
+    } else if (arguments.length === 2) {
+        // Arguments are message, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: 'Ok',
+            callback: message
+        };
+    } else {
+        return;
+    }
+    
     swal({
-        title: title || 'Are you sure?',
-        text: message,
-        type: type || 'warning',
+        title: option.title || 'Are you sure?',
+        text: option.message,
+        type: option.type || 'warning',
         showCancelButton: true,
-        confirmButtonClass: btnClass,
-        confirmButtonText: btnText,
+        confirmButtonClass: option.btnClass,
+        confirmButtonText: option.btnText,
         closeOnConfirm: false,
         showLoaderOnConfirm: true
-    }, callback);
+    }, typeof option.callback === 'function' ? option.callback : null);
 };
-Konfirm.confirm = function (message, btnText, callback) {
-    if (typeof btnText === 'function') {
-        callback = btnText;
-        btnText = 'Ok';
-    }
-    Konfirm.show('Are you sure?', message, 'warning', 'btn-danger', btnText, callback);
-};
-Konfirm.info = function (title, message, btnText, callback) {
-    Konfirm.show(title, message, 'info', 'btn-info', btnText, callback);
-};
-Konfirm.success = function (title, message, btnText, callback) {
-    Konfirm.show(title, message, 'success', 'btn-success', btnText, callback);
-};
-Konfirm.warning = function (title, message, btnText, callback) {
-    Konfirm.show(title, message, 'warning', 'btn-warning', btnText, callback);
-};
-Konfirm.error = function (title, message, btnText, callback) {
-    Konfirm.show(title, message, 'error', 'btn-danger', btnText, callback);
-};
-Konfirm.close = function () {
+Kalert.close = function () {
     swal.close();
 };

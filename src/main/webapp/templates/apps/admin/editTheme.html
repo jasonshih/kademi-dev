@@ -85,13 +85,13 @@
                             }
                             theme.removeClass('ajax-loading');
                             themesWrapper.removeClass('ajax-loading');
-                            Konfirm.close();
+                            Kalert.close();
                         },
                         error: function (resp) {
                             theme.removeClass('ajax-loading');
                             themesWrapper.removeClass('ajax-loading');
                             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
-                            Konfirm.close();
+                            Kalert.close();
                         }
                     });
                 };
@@ -108,7 +108,7 @@
                     }
 
                     if (isLive && first) {
-                        Konfirm.confirm('Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.', function () {
+                        Kalert.confirm('Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.', function () {
                             changeTheme(themeName, theme);
                         });
                     } else {

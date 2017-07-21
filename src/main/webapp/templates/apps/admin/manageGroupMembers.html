@@ -224,7 +224,7 @@
                     if (checkBoxes.length == 0) {
                         Msg.error("Please select the users you want to remove by clicking the checkboxs to the right");
                     } else {
-                        Konfirm.confirm("Are you sure you want to remove " + checkBoxes.length + " users?" , function () {
+                        Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " users?" , function () {
                             $.ajax({
                                 type: 'POST',
                                 data: checkBoxes,
@@ -238,11 +238,11 @@
                                     } else {
                                         Msg.error("There was a problem removing users. Please try again and contact the administrator if you still have problems");
                                     }
-                                    Konfirm.close();
+                                    Kalert.close();
                                 },
                                 error: function (resp) {
                                     Msg.error("err");
-                                    Konfirm.close();
+                                    Kalert.close();
                                 }
                             });
                         });

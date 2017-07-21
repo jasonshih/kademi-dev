@@ -19,21 +19,21 @@ function initChangeUserId() {
     $('.change-userid').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (confirm('Changing the userID will invalidate the user\'s password. They will need to reset their password. Are you sure you want to continue?')) {
+        Kalert.confirm('Changing the userID will invalidate the user\'s password. They will need to reset their password. Are you sure you want to continue?', function () {
             var newId = prompt('Please enter a new UserID. This must be unique across all users in this system');
             if (newId) {
                 doUpdateUserId(newId);
             }
-        }
+        });
     });
 }
 
 function initRemoveCreds() {
     $('body').on('click', '.btn-remove-creds', function (e) {
         e.preventDefault();
-        if (confirm('Are you sure you want to remove this users password and credentials? They will not be able to login.')) {
+        Kalert.confirm('Are you sure you want to remove this users password and credentials? They will not be able to login.', function () {
             doRemoveCreds();
-        }
+        });
     });
 }
 
@@ -42,7 +42,7 @@ function initRemoveOAuthCred() {
         e.preventDefault();
         var btn = $(this);
         var provider = btn.data('provider');
-        if (confirm('Are you sure you want to disconnect this user from ' + provider + '?')) {
+        Kalert.confirm('Are you sure you want to disconnect this user from ' + provider + '?', function () {
             $.ajax({
                 type: 'POST',
                 url: window.location.pathname,
@@ -57,13 +57,14 @@ function initRemoveOAuthCred() {
                     } else {
                         Msg.error('Oh No! Something went wrong! ' + data.messages);
                     }
-                    
+                    Kalert.close();
                 },
                 error: function (resp) {
                     Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
+                    Kalert.close();
                 }
             });
-        }
+        });
     });
 }
 
@@ -280,9 +281,11 @@ function doUpdateUserId(newUserId) {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
             
+            Kalert.close();
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
+            Kalert.close();
         }
     });
 }
@@ -302,10 +305,11 @@ function doRemoveCreds() {
             } else {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
-            
+            Kalert.close();
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
+            Kalert.close();
         }
     });
 }
