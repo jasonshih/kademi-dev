@@ -299,17 +299,15 @@ function initUploads() {
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
         
-        Konfirm.confirm('Are you sure you want to cancel this process?', function () {
+        Kalert.confirm('Are you sure you want to cancel this process?', function () {
             $.ajax({
                 type: 'post',
                 url: usersImportUrl,
                 data: {cancel: 'cancel'},
                 success: function (data) {
                     Msg.success('Import task cancelled');
-                    Konfirm.close();
                 },
                 error: function () {
-                    Konfirm.close();
                 }
             });
         });

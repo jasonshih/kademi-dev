@@ -360,13 +360,12 @@ function initGroupFolder() {
         //modal.find('span.group-name').text(href);
         href = '.';
         /*name, url, data, callback*/
-        var r = confirm("Are you sure you want to delete " + folderName);
-        if (r) {
+        Kalert.confirm("Are you sure you want to delete " + folderName, function () {
             addGroupFolder(folderName, href, "deleteFolder=deleteFolder&folderName=" + $.URLEncode(folderName), function () {
                 Msg.success(folderName + ' has been deleted');
                 $('#groups-folders').reloadFragment();
             });
-        }
+        });
     });
 
     var addGroupToFolder = $('#modal-addGroupToFolder');

@@ -323,9 +323,11 @@ var Main = function () {
     
     var runMenuSearch = function () {
         var navMenu = $('#main-navigation-menu');
-        navMenu.find('.search-menu input').domFinder({
+        var searcher = $('.navigation-searcher');
+        
+        searcher.find('input').domFinder({
             container: navMenu,
-            items: '> li:not(.search-menu)',
+            items: '> li',
             showItems: function (items, query) {
                 query = query.toLowerCase();
                 
@@ -364,6 +366,15 @@ var Main = function () {
             },
             onSearched: function () {
                 updatePerfectScrollbar(navMenu);
+            }
+        }).on({
+            focus: function () {
+                searcher.addClass('focus');
+            },
+            blur: function () {
+                setTimeout(function () {
+                    searcher.removeClass('focus');
+                }, 250);
             }
         });
     }

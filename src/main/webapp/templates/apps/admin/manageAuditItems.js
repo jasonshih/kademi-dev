@@ -7,8 +7,8 @@ function initAuditItems(canUndoCount) {
     initRestoreAudit();
     initUndo(canUndoCount);
     initRestorePoint();
-
-    $(document.body).on('pageDateChanged',function (e, startDate, endDate) {
+    
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         options.startDate = startDate;
         options.endDate = endDate;
         doSearch();
@@ -18,12 +18,12 @@ function initAuditItems(canUndoCount) {
 function initRestoreAudit() {
     $('body').on('click', '.btn-restore-audit', function (e) {
         e.preventDefault();
-
+        
         var btn = $(this);
         var auditId = btn.data('aid');
         var title = btn.data('title');
-
-        if (confirm('Are you sure you want to restore ' + title + '?')) {
+        
+        Kalert.confirm('Are you sure you want to restore ' + title + '?', function () {
             $.ajax({
                 type: "POST",
                 data: {
@@ -40,7 +40,7 @@ function initRestoreAudit() {
                     }
                 }
             });
-        }
+        });
     });
 }
 
@@ -54,7 +54,7 @@ function initUndo(canUndoCount) {
     var totalCount = canUndoCount;
     $('body').on('click', '.btn-undo', function (e) {
         e.preventDefault();
-
+        
         var tbody = $('#audit-items-table tbody');
         flog('totalCount', totalCount);
         if (options.startDate === null || options.endDate === null) {
@@ -64,7 +64,7 @@ function initUndo(canUndoCount) {
         } else {
             var sd = moment(options.startDate);
             var ed = moment(options.endDate);
-            if (confirm('Are you sure you want to undo from "' + sd.format("DD/MM/YYYY HH:mm") + '" to "' + ed.format("DD/MM/YYYY HH:mm") + '" with a total of ' + totalCount + ' records?')) {
+            Kalert.confirm('Are you sure you want to undo from "' + sd.format("DD/MM/YYYY HH:mm") + '" to "' + ed.format("DD/MM/YYYY HH:mm") + '" with a total of ' + totalCount + ' records?', function () {
                 flog(options);
                 $.ajax({
                     type: "POST",
@@ -84,7 +84,7 @@ function initUndo(canUndoCount) {
                         }
                     }
                 });
-            }
+            });
         }
     });
 }
@@ -92,7 +92,7 @@ function initUndo(canUndoCount) {
 function initRestorePoint() {
     $('body').on('click', '.btn-crt-rstp', function (e) {
         e.preventDefault();
-
+        
         $.ajax({
             type: "POST",
             data: {
@@ -110,15 +110,15 @@ function initRestorePoint() {
             }
         });
     });
-
+    
     $('body').on('click', '.btn-revert-rstp', function (e) {
         e.preventDefault();
-
+        
         var btn = $(this);
         var date = btn.data('rpd');
         var rpid = btn.data('rpid');
-
-        if (confirm('Are you sure you want to revert all changes after ' + date + '?')) {
+        
+        Kalert.confirm('Are you sure you want to revert all changes after ' + date + '?', function () {
             $.ajax({
                 type: "POST",
                 data: {
@@ -136,6 +136,6 @@ function initRestorePoint() {
                     }
                 }
             });
-        }
+        });
     });
 }

@@ -45,9 +45,9 @@ function initRemoveTags() {
         if (checkBoxes.length == 0) {
             Msg.error("Please select the tags you want to remove by clicking the checkboxs to the right");
         } else {
-            if (confirm("Are you sure you want to remove " + checkBoxes.length + " points tags?")) {
+            Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " points tags?", function () {
                 doRemovePoints(checkBoxes);
-            }
+            });
         }
     });
 }
