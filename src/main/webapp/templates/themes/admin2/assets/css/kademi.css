@@ -8,10 +8,17 @@
 .pageDatePicker-dropdown {
     width: 522px;
     top: 33px;
-    right: -45px;
+    right: -15px;
     border-radius: 0 0 0 4px;
     border: solid #dfeaf1;
     border-width: 1px 0 1px 1px;
+}
+
+@media (max-width: 979px) {
+    .pageDatePicker-dropdown {
+        right: -11px;
+        top: 27px;
+    }
 }
 
 /* ============================================================================
@@ -52,13 +59,6 @@
 /* ============================================================================
    Main left menu search box
    ============================================================================ */
-#kademi-container .main-container .main-navigation .main-navigation-menu .search-menu input {
-    display: block;
-    width: 100%;
-    background-color: #252836;
-    border: none;
-    padding: 12px 8px;
-}
 
 /* ============================================================================
    Articles list

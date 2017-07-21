@@ -21,6 +21,16 @@
         width: 50px !important;
     }
 
+    .navigation-searcher {
+        &.focus {
+            width: 239px;
+        }
+
+        input {
+            padding: 12px 8px;
+        }
+    }
+
     ul.main-navigation-menu {
         & > li {
             &:first-child {
@@ -180,6 +190,16 @@
         bottom: auto;
         max-height: calc(100% - 99px) !important;
         min-height: 0 !important;
+    }
+
+    .navigation-searcher {
+        &.focus {
+            width: 239px;
+        }
+
+        input {
+            padding: 12px 8px;
+        }
     }
 
     .main-navigation-menu {

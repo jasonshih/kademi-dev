@@ -27,7 +27,7 @@ ul.main-navigation-menu {
     list-style: none;
     margin: 0;
     padding: 0;
-    height: calc(100% - 43px);
+    height: calc(100% - 51px - 30px);
 
     & > li {
         border: 0 none;
@@ -209,25 +209,41 @@ ul.main-navigation-menu {
 /*navigation toggler*/
 .navigation-toggler {
     cursor: pointer;
-    height: 32px;
+    height: 100%;
     //margin-left: 175px;
     //margin-top: 10px;
     //margin-bottom: 10px;
     width: 14px;
-    line-height: 32px;
+    line-height: 50px;
     text-align: center;
-    border-radius: 0 3px 3px 0;
-    background: $navigation-bg;
+    border-radius: 0;
+    background: $navigation-border-color;
     color: #fff;
     position: absolute;
-    left: 100%;
-    top: 9px;
+    right: 0;
+    z-index: 3;
+    top: 0;
     //margin-top: -16px;
-    padding: 0 2px;
+    padding: 0 3px;
     text-align: left;
 
     .collapsed {
         display: none;
+    }
+}
+
+.navigation-searcher {
+    position: relative;
+    border-bottom: 1px solid $navigation-border-color;
+
+    input {
+        display: block;
+        width: 100%;
+        background-color: $brand-primary;
+        border: none;
+        padding: 17px 8px;
+        position: relative;
+        z-index: 2;
     }
 }
 
