@@ -33,9 +33,9 @@
 
 #if( $articles && $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
-#if ($numberOfArticles > 0)
-#set ($articles = $articles.truncate($numberOfArticles))
-#end
+    #if ($numberOfArticles > 0 && $articles.size() > $numberOfArticles)
+    #set ($articles = $articles.truncate($numberOfArticles))
+    #end
 
     #if ($layout == "grid")
         #set ($clsName = "col-sm-4")
