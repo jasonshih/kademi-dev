@@ -372,7 +372,9 @@ var Main = function () {
                 searcher.addClass('focus');
             },
             blur: function () {
-                searcher.removeClass('focus');
+                setTimeout(function () {
+                    searcher.removeClass('focus');
+                }, 250);
             }
         });
     }
