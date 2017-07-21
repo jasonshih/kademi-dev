@@ -1,5 +1,5 @@
 function initSearchSignups() {
-    initTableMembers();    
+    initTableMembers();
     initSelectAll();
     initAddUsersToGroup();
 }
@@ -9,25 +9,25 @@ function initTableMembers() {
     var trs = table.find('tbody tr');
     var counter = $('span.count');
     
-    $('#show-user-select').val('').change(function() {
+    $('#show-user-select').val('').change(function () {
         var type = $(this).val();
         if (type.length > 0) {
             trs.hide();
             trs.filter('.' + type).show();
         } else {
             trs.show();
-
+            
         }
         counter.text(trs.filter(':visible').length);
     });
     
-    trs.filter('.membership').click(function(e) {
+    trs.filter('.membership').click(function (e) {
         $(this).next().toggle(300);
     });
 };
 
 function initAddUsersToGroup() {
-    $('.btn-add-group').click(function(e) {
+    $('.btn-add-group').click(function (e) {
         var node = $(e.target);
         log('btn-add-group', node, node.is(':checked'));
         var checkBoxes = $('#table-members').find('tbody td input[name=toAddId]:checked');
@@ -35,9 +35,9 @@ function initAddUsersToGroup() {
             Msg.error('Please select the users you want to remove by clicking the checkboxs to the right');
         } else {
             var groupName = $('#groupSelect').val();
-            if (confirm('Are you sure you want to add ' + checkBoxes.length + ' users to group ' + groupName + '?')) {
+            Kalert.confirm('Are you sure you want to add ' + checkBoxes.length + ' users to group ' + groupName + '?', function () {
                 doAddUsers(checkBoxes, groupName);
-            }
+            });
         }
     });
 }
@@ -48,7 +48,7 @@ function doAddUsers(checkBoxes, groupName) {
         data: checkBoxes,
         dataType: 'json',
         url: '?group=' + groupName,
-        success: function(data) {
+        success: function (data) {
             log('success', data);
             if (data.status) {
                 Msg.success('Added members ok');
@@ -57,7 +57,7 @@ function doAddUsers(checkBoxes, groupName) {
                 Msg.error('There was a problem adding users. Please try again and contact the administrator if you still have problems');
             }
         },
-        error: function(resp) {
+        error: function (resp) {
             Msg.error('An error occured. Please try again');
         }
     });

@@ -33,7 +33,6 @@ function initCRUDRole() {
             var href = btn.attr('href');
             deleteFile(href, function () {
                 btn.closest('span.role').remove();
-                Kalert.close();
             });
         });
     });

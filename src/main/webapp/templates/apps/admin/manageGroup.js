@@ -364,7 +364,6 @@ function initGroupFolder() {
             addGroupFolder(folderName, href, "deleteFolder=deleteFolder&folderName=" + $.URLEncode(folderName), function () {
                 Msg.success(folderName + ' has been deleted');
                 $('#groups-folders').reloadFragment();
-                Kalert.close();
             });
         });
     });

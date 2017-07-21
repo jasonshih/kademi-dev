@@ -44,7 +44,6 @@ function initManageOrgTypeModal() {
         
         Kalert.confirm('Do you want to delete "' + $btnDelete.attr('href') + '"', function () {
             $btnDelete.parents('.form-group').remove();
-            Kalert.close();
         });
     });
 }

@@ -306,10 +306,8 @@ function initUploads() {
                 data: {cancel: 'cancel'},
                 success: function (data) {
                     Msg.success('Import task cancelled');
-                    Kalert.close();
                 },
                 error: function () {
-                    Kalert.close();
                 }
             });
         });

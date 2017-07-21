@@ -28,11 +28,9 @@
                     success: function () {
                         refreshTable();
                         Msg.success('Deleted!', 'Your API App has been deleted');
-                        Kalert.close();
                     },
                     error: function () {
                         Msg.error('Oh No!', 'Sorry, an error occured deleting ' + href + '. Please check your internet connection');
-                        Kalert.close();
                     }
                 });
             });

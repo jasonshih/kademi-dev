@@ -178,7 +178,6 @@ function initCSRHttps() {
             genCSRModal.find('.viewCsr').hide();
             genCSRModal.find('.csrForm').show();
             genCSRModal.find('.btn-create').show("fade");
-            Kalert.close();
         });
     });
 
@@ -356,9 +355,9 @@ function initCerts() {
     $("#certificate-types-table").on("click", ".cert-delete", function (e) {
         e.preventDefault();
         var id = $(e.target).closest("a").attr("href");
-        if (confirm("Are you sure you want to delete this certificate?")) {
+        Kalert.confirm("Are you sure you want to delete this certificate?", function () {
             deleteCert(id, $(e.target).closest("tr"));
-        }
+        });
     });
     $("#certificate-types-table").on("click", ".cert-activate", function (e) {
         e.preventDefault();
@@ -451,11 +450,9 @@ function deleteRootCert(certId, rootCertid, tr) {
                         + '<td colspan="3">You have no root/intermediate certificates</td>'
                         + '</tr>');
             }
-            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occured deleting the certificate");
-            Kalert.close();
         }
     });
 }

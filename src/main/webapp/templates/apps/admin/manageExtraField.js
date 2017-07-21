@@ -63,17 +63,14 @@ function initCRUDExtraField() {
                     success: function (data) {
                         flog('saved ok', data);
                         fieldWrapper.remove();
-                        Kalert.close();
                     },
                     error: function (resp) {
                         flog('error', resp);
                         Msg.error('There was an error removing the field. Please check your internet connection');
-                        Kalert.close();
                     }
                 });
             } catch (e) {
                 flog('exception in removeField', e);
-                Kalert.close();
             }
         });
     });

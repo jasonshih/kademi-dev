@@ -66,11 +66,9 @@ function doRemovePoints(checkBoxes) {
             } else {
                 Msg.error("There was a problem removing points tags. Please try again and contact the administrator if you still have problems");
             }
-            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occurred removing tags. You might not have permission to do this");
-            Kalert.close();
         }
     });
 }

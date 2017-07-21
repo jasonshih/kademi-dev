@@ -78,12 +78,10 @@ function initPublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
-                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
-                    Kalert.close();
                 }
             });
         });
@@ -101,12 +99,10 @@ function initRePublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
-                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
-                    Kalert.close();
                 }
             });
         });
@@ -124,12 +120,10 @@ function initUnPublishApp() {
                 dataType: 'json',
                 success: function (data) {
                     flog("success", data);
-                    Kalert.close();
                     window.location.reload();
                 },
                 error: function (resp) {
                     Msg.error("An error occured doing the publish. Please check your internet connection and try again");
-                    Kalert.close();
                 }
             });
         });

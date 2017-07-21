@@ -549,11 +549,9 @@ function doRemoveOrgs(checkBoxes) {
             } else {
                 Msg.error("There was a problem removing organisations. Please try again and contact the administrator if you still have problems");
             }
-            Kalert.close();
         },
         error: function (resp) {
             Msg.error("An error occurred removing organisations. You might not have permission to do this");
-            Kalert.close();
         }
     });
 }

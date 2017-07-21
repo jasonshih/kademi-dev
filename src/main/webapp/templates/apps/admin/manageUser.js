@@ -57,11 +57,9 @@ function initRemoveOAuthCred() {
                     } else {
                         Msg.error('Oh No! Something went wrong! ' + data.messages);
                     }
-                    Kalert.close();
                 },
                 error: function (resp) {
                     Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
-                    Kalert.close();
                 }
             });
         });
@@ -280,12 +278,9 @@ function doUpdateUserId(newUserId) {
             } else {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
-            
-            Kalert.close();
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
-            Kalert.close();
         }
     });
 }
@@ -305,11 +300,9 @@ function doRemoveCreds() {
             } else {
                 Msg.error('Could not change the user\'s ID: ' + data.messages);
             }
-            Kalert.close();
         },
         error: function (resp) {
             Msg.error('An error occured attempting to update the userID. Please check your internet connection');
-            Kalert.close();
         }
     });
 }
@@ -405,9 +398,9 @@ function initRemoveUsers() {
         if (checkBoxes.length == 0) {
             Msg.error('Please select the users you want to remove by clicking the checkboxs to the right');
         } else {
-            if (confirm('Are you sure you want to remove ' + checkBoxes.length + ' users?')) {
+            Kalert.confirm('Are you sure you want to remove ' + checkBoxes.length + ' users?', function () {
                 doRemoveUsers(checkBoxes, "remove");
-            }
+            });
         }
     });
 }
@@ -421,9 +414,9 @@ function initUnsubscribeUsers() {
         if (checkBoxes.length == 0) {
             Msg.error('Please select the users you want to unsubscribe by clicking the checkboxs to the right');
         } else {
-            if (confirm('Are you sure you want to unsubscribe ' + checkBoxes.length + ' users?')) {
+            Kalert.confirm('Are you sure you want to unsubscribe ' + checkBoxes.length + ' users?', function () {
                 doRemoveUsers(checkBoxes, "unsubscribe");
-            }
+            });
         }
     });
 }

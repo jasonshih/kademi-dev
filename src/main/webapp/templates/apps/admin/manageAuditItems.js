@@ -38,8 +38,6 @@ function initRestoreAudit() {
                     } else {
                         Msg.warning(result.messages);
                     }
-                    
-                    Kalert.close();
                 }
             });
         });
@@ -84,7 +82,6 @@ function initUndo(canUndoCount) {
                         } else {
                             Msg.warning(result.messages);
                         }
-                        Kalert.close();
                     }
                 });
             });
@@ -137,7 +134,6 @@ function initRestorePoint() {
                     } else {
                         Msg.warning(result.messages);
                     }
-                    Kalert.close();
                 }
             });
         });

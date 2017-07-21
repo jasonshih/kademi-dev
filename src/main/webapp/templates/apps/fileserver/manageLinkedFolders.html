@@ -195,11 +195,10 @@
                             dataType: "json",
                             success: function (resp) {
                                 link.closest('tr').remove();
-                                Kalert.close();
                             },
                             error: function (resp) {
                                 log("failed", resp);
-                                alert("Sorry, an error occured deleting " + href + ". Please check your internet connection");
+                                Msg.error("Sorry, an error occured deleting " + href + ". Please check your internet connection");
                             }
                         });
                     });

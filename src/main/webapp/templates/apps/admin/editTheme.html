@@ -85,13 +85,11 @@
                             }
                             theme.removeClass('ajax-loading');
                             themesWrapper.removeClass('ajax-loading');
-                            Kalert.close();
                         },
                         error: function (resp) {
                             theme.removeClass('ajax-loading');
                             themesWrapper.removeClass('ajax-loading');
                             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
-                            Kalert.close();
                         }
                     });
                 };
