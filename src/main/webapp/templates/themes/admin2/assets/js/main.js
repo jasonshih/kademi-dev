@@ -53,11 +53,13 @@ var Main = function () {
     
     var initPerfectScrollbar = function (target) {
         if (target.length > 0 && typeof $.fn.perfectScrollbar === 'function') {
-            target.perfectScrollbar({
-                wheelSpeed: 1,
-                minScrollbarLength: 20,
-                suppressScrollX: true
-            });
+            setTimeout(function(){
+                target.perfectScrollbar({
+                    wheelSpeed: 1,
+                    minScrollbarLength: 20
+                    // suppressScrollX: true
+                });
+            }, 0);
         }
     };
     
