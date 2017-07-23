@@ -60,6 +60,15 @@ function initExpireFields() {
 function initExpireAllPoints() {
     $(document.body).on('click', '.btnExpireAll', function (e) {
         e.preventDefault();
+        var dataQuery = $('#data-query').val();
+
+        var uri = URI(location.search);
+        uri.setSearch('startDate', searchOptions.startDate);
+        uri.setSearch('finishDate', searchOptions.endDate);
+        uri.setSearch('dataQuery', dataQuery);
+        uri.setSearch('startPos', 0);
+
+
         if (confirm("Are you sure you want to expire all records? This can not be undone! All points records in this points system will be marked as expired and not available for redemptions.")) {
             $.ajax({
                 type: 'POST',
@@ -67,7 +76,7 @@ function initExpireAllPoints() {
                     expireAll: true
                 },
                 dataType: "json",
-                url: "",
+                url: uri,
                 success: function (data) {
                     flog("success", data);
                     if (data.status) {
@@ -274,6 +283,14 @@ function initClearAllPoints() {
     // btn-clear-history
     $(document.body).on('click', '.btn-clear-history', function (e) {
         e.preventDefault();
+        var dataQuery = $('#data-query').val();
+
+        var uri = URI(location.search);
+        uri.setSearch('startDate', searchOptions.startDate);
+        uri.setSearch('finishDate', searchOptions.endDate);
+        uri.setSearch('dataQuery', dataQuery);
+        uri.setSearch('startPos', 0);
+        
         if (confirm("Are you sure you want to clear all records? This can not be undone!")) {
             $.ajax({
                 type: 'POST',
@@ -281,7 +298,7 @@ function initClearAllPoints() {
                     clearHistory: true
                 },
                 dataType: "json",
-                url: "",
+                url: uri,
                 success: function (data) {
                     flog("success", data);
                     if (data.status) {
