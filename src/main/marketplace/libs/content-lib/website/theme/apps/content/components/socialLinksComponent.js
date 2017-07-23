@@ -73,6 +73,21 @@
                         component.attr('data-linkedin', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
+                    form.find('.youtube[type=checkbox]').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-youtube', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    form.find('.instagram[type=checkbox]').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-instagram', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
 
                     form.find('.linkedin[type=text]').on('change', function () {
                         var component = keditor.getSettingComponent();
