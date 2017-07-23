@@ -185,10 +185,7 @@
                     var link = $(this);
                     var href = link.attr("href");
 
-                    Konfirm.error({
-                        title: 'Are you sure you want to delete this link?'
-                    }, function () {
-
+                    Kalert.confirm('Are you sure you want to delete this link?', function () {
                         $.ajax({
                             type: 'POST',
                             url: window.location.pathname,
@@ -198,11 +195,10 @@
                             dataType: "json",
                             success: function (resp) {
                                 link.closest('tr').remove();
-                                Konfirm.close();
                             },
                             error: function (resp) {
                                 log("failed", resp);
-                                alert("Sorry, an error occured deleting " + href + ". Please check your internet connection");
+                                Msg.error("Sorry, an error occured deleting " + href + ". Please check your internet connection");
                             }
                         });
                     });

@@ -284,9 +284,9 @@ function addGroupFolder(name, url, data, callback) {
                 loading: false
             });
             if (resp.status === 400) {
-                Kalert.error('Sorry, the folder could not be created. Please check if a folder with that name already exists');
+                Msg.error('Sorry, the folder could not be created. Please check if a folder with that name already exists');
             } else {
-                Kalert.error('There was a problem creating the folder');
+                Msg.error('There was a problem creating the folder');
             }
         }
     });
@@ -360,13 +360,12 @@ function initGroupFolder() {
         //modal.find('span.group-name').text(href);
         href = '.';
         /*name, url, data, callback*/
-        var r = confirm("Are you sure you want to delete " + folderName);
-        if (r) {
+        Kalert.confirm("Are you sure you want to delete " + folderName, function () {
             addGroupFolder(folderName, href, "deleteFolder=deleteFolder&folderName=" + $.URLEncode(folderName), function () {
                 Msg.success(folderName + ' has been deleted');
                 $('#groups-folders').reloadFragment();
             });
-        }
+        });
     });
 
     var addGroupToFolder = $('#modal-addGroupToFolder');

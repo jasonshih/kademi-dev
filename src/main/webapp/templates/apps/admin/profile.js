@@ -23,14 +23,14 @@ function initProfile() {
         flog("click", this);
         e.preventDefault();
         e.stopPropagation();
-        if (confirm("Are you sure you want to delete this group membership?")) {
+        Kalert.confirm("Are you sure you want to delete this group membership?", function () {
             var a = $(this);
             var href = a.attr("href");
             deleteFile(href, function () {
                 reloadMemberships();
                 $('#modal-edit-membership').modal('hide');
             });
-        }
+        });
     });
     
     $(".memberships-wrapper").on("click", ".addGroup a", function (e) {
@@ -44,10 +44,9 @@ function initProfile() {
     
     $(".form-unsubscribe button").on('click', function (e) {
         e.preventDefault();
-        var c = confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site");
-        if (c) {
+        Kalert.confirm("Are you sure you want to unsubscribe this user? They will no longer be able to access this site", function () {
             $(".form-unsubscribe").trigger('submit');
-        }
+        });
     });
     
     $(".form-unsubscribe").forms({
@@ -81,11 +80,11 @@ function initProfile() {
                         $(".profile-photo img").attr("src", resp.nextHref);
                         $(".main-profile-photo img").attr("src", resp.nextHref);
                     } else {
-                        Kalert.error("Sorry, an error occured updating your profile image");
+                        Msg.error("Sorry, an error occured updating your profile image");
                     }
                 },
                 error: function () {
-                    Kalert.error('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
         }
@@ -94,7 +93,7 @@ function initProfile() {
     $('body').on('click', '#btn-remove-ava', function (e) {
         e.preventDefault();
         
-        if (confirm('Are you sure you want to clear the avatar?')) {
+        Kalert.confirm('Are you sure you want to clear the avatar?', function () {
             $.ajax({
                 url: window.location.pathname,
                 type: 'POST',
@@ -107,14 +106,14 @@ function initProfile() {
                         $(".profile-photo img").attr("src", "pic");
                         $(".main-profile-photo img").attr("src", "pic");
                     } else {
-                        Kalert.error("Sorry, an error occured updating your profile image");
+                        Msg.error("Sorry, an error occured updating your profile image");
                     }
                 },
                 error: function () {
-                    Kalert.error('Sorry, we couldn\'t save your profile image.');
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
                 }
             });
-        }
+        });
     });
 }
 
@@ -175,16 +174,16 @@ function initEnableDisable() {
     $("body").on("click", ".profileDisable", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (confirm("Are you sure you want to disable this profile? This will remove the profile from user lists, but it can be re-enabled later")) {
+        Kalert.confirm("Are you sure you want to disable this profile? This will remove the profile from user lists, but it can be re-enabled later", function () {
             setProfileEnabled(window.location.href, false);
-        }
+        });
     });
     $("body").on("click", ".profileEnable", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (confirm("Are you sure you want to enable this profile? This will include the profile in user lists")) {
+        Kalert.confirm("Are you sure you want to enable this profile? This will include the profile in user lists", function () {
             setProfileEnabled(window.location.href, true);
-        }
+        });
     });
     
 }

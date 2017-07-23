@@ -261,9 +261,7 @@
                 $("#btn-cancel").click(function (e) {
                     e.preventDefault();
 
-                    Konfirm.error({
-                        title: 'Are you sure you want to cancel this process?'
-                    }, function () {
+                    Kalert.confirm('Are you sure you want to cancel this process?', function () {
                         $.ajax({
                             type: 'post',
                             url: '/manageSearch',
@@ -272,7 +270,6 @@
                                 var jsonRes = JSON.parse(data);
                                 $("#btn-cancel").addClass("hide");
                                 Msg.success(jsonRes.messages[0]);
-                                Konfirm.close();
                             },
                             error: function () {
 

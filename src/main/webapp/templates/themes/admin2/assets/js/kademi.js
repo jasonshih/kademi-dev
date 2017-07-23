@@ -1221,7 +1221,7 @@ function initColorPicker(target, onChangeHandle) {
 }
 
 var Kalert = {};
-Kalert.alert = function (title, message, type) {
+Kalert.show = function (title, message, type) {
     swal({
         title: title,
         text: message,
@@ -1237,67 +1237,76 @@ Kalert.info = function (title, message) {
         message = title;
         title = 'Info'
     }
-    Kalert.alert(title, message, 'info');
+    Kalert.show(title, message, 'info');
 };
 Kalert.success = function (title, message) {
     if (message === undefined) {
         message = title;
         title = 'Success!'
     }
-    Kalert.alert(title, message, 'success');
+    Kalert.show(title, message, 'success');
 };
 Kalert.warning = function (title, message) {
     if (message === undefined) {
         message = title;
         title = 'Warning!'
     }
-    Kalert.alert(title, message, 'warning');
+    Kalert.show(title, message, 'warning');
 };
 Kalert.error = function (title, message) {
     if (message === undefined) {
         message = title;
         title = 'Error!'
     }
-    Kalert.alert(title, message, 'error');
+    Kalert.show(title, message, 'error');
 };
-
-var Konfirm = {};
-Konfirm.confirm = function (options, callback) {
+Kalert.confirm = function (title, message, type, btnClass, btnText, callback) {
+    var option = {};
+    
+    if (arguments.length > 3) {
+        option = {
+            title: title,
+            message: message,
+            type: type,
+            btnClass: btnClass,
+            btnText: btnText,
+            callback: callback
+        };
+    } else if (arguments.length === 3) {
+        // Arguments are message, btnText, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: message,
+            callback: type
+        };
+    } else if (arguments.length === 2) {
+        // Arguments are message, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: 'Ok',
+            callback: message
+        };
+    } else {
+        return;
+    }
+    
     swal({
-        title: options.title || 'Are you sure?',
-        text: options.message,
-        type: options.type || 'warning',
+        title: option.title || 'Are you sure?',
+        text: option.message,
+        type: option.type || 'warning',
         showCancelButton: true,
-        confirmButtonClass: options.confirmClass,
-        confirmButtonText: options.confirmText,
+        confirmButtonClass: option.btnClass,
+        confirmButtonText: option.btnText,
         closeOnConfirm: false,
-        showLoaderOnConfirm: true
-    }, callback);
+        showLoaderOnConfirm: false
+    }, typeof option.callback === 'function' ? option.callback : null);
 };
-Konfirm.info = function (options, callback) {
-    if (!options.confirmClass) {
-        options.confirmClass = 'btn-info';
-    }
-    Konfirm.confirm(options, callback);
-};
-Konfirm.success = function (options, callback) {
-    if (!options.confirmClass) {
-        options.confirmClass = 'btn-success';
-    }
-    Konfirm.confirm(options, callback);
-};
-Konfirm.warning = function (options, callback) {
-    if (!options.confirmClass) {
-        options.confirmClass = 'btn-warning';
-    }
-    Konfirm.confirm(options, callback);
-};
-Konfirm.error = function (options, callback) {
-    if (!options.confirmClass) {
-        options.confirmClass = 'btn-danger';
-    }
-    Konfirm.confirm(options, callback);
-};
-Konfirm.close = function () {
+Kalert.close = function () {
     swal.close();
 };

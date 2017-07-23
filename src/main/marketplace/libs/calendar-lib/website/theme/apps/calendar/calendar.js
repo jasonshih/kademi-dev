@@ -1,4 +1,6 @@
-$(function () {
-    initCalendar();
-    initEvents();
-});
+(function ($) {
+    $(function () {
+        initCalendar();
+        initEvents();
+    })
+})(jQuery);

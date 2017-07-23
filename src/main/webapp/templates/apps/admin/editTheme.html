@@ -55,24 +55,7 @@
                 var themesWrapper = $('.themes-wrapper');
                 var themes = themesWrapper.find('.theme');
 
-                $('.btn-select-theme').click(function (e) {
-                    e.preventDefault();
-
-                    var btn = $(this);
-                    var themeName = btn.attr('href');
-                    var theme = btn.closest('.theme');
-
-                    if (themesWrapper.hasClass('ajax-loading')) {
-                        return;
-                    }
-
-                    if (isLive && first) {
-                        if (!confirm('Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.')) {
-                            return;
-                        }
-                    }
-                    first = false;
-
+                var changeTheme = function (themeName, theme) {
                     themesWrapper.addClass('ajax-loading');
                     theme.addClass('ajax-loading');
 
@@ -109,6 +92,28 @@
                             Msg.error('An error occured doing the user search. Please check your internet connection and try again');
                         }
                     });
+                };
+
+                $('.btn-select-theme').click(function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var themeName = btn.attr('href');
+                    var theme = btn.closest('.theme');
+
+                    if (themesWrapper.hasClass('ajax-loading')) {
+                        return;
+                    }
+
+                    if (isLive && first) {
+                        Kalert.confirm('Warning: You are editing the live version of this website and changes are immediate. If you want to update the live site now press OK. Otherwise press Cancel, then create a new version from Manage Websites and then change the theme.', function () {
+                            changeTheme(themeName, theme);
+                        });
+                    } else {
+                        changeTheme(themeName, theme);
+                    }
+
+                    first = false;
                 });
             });
 

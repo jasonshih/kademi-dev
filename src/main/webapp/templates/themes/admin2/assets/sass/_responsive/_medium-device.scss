@@ -81,6 +81,12 @@
             margin-left: 50px !important;
         }
 
+        .navigation-searcher {
+            &.focus {
+                width: 239px;
+            }
+        }
+
         .main-navigation {
             width: 50px !important;
             //z-index: 1000;

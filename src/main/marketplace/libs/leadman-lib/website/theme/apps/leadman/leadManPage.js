@@ -10,7 +10,7 @@
     };
 
     var dataTable = null;
-    editor = null;
+    var editor = null;
     var stages = [];
 
     function initDataTable(hits) {

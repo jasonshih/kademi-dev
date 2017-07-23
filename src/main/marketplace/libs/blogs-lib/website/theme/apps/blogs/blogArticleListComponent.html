@@ -33,7 +33,7 @@
 
 #if( $articles && $articles.size() > 0 )
     #set ($numberOfArticles = $formatter.toInteger($numberOfArticles))
-    #if ($numberOfArticles > 0)
+    #if ($numberOfArticles > 0 && $articles.size() > $numberOfArticles )
         #set ($articles = $articles.subList(0, $numberOfArticles))
     #end
 
