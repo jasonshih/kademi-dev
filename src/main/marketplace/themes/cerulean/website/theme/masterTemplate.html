@@ -43,11 +43,12 @@
         <script type="text/javascript" src="/static/js/jquery.autogrow-textarea-1.0.0.js" >//</script>
         <script type="text/javascript" src="/static/bootstrap-msg/0.3/bootstrap-msg.min.js">//</script>
 
-        $templater.pushLess("/theme/less/bootstrap.less", "all", 0)
+        $templater.pushLess("/theme/less/bootswatch.less", "all")
+        $templater.pushLess("/theme/less/theme-variables.less", "all")
         $templater.pushLess("/theme/theme-params.less", "all")
 
         $!bodyContent
-
+        <link href="/theme/less/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
