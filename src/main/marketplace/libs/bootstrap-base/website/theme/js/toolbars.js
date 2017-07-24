@@ -1,10 +1,3 @@
-if (console && console.log) {
-    console.log(
-        '%cHey! We moved "toolbars.js" to "js" folder. Please use "/theme/js/toolbars.js" instead of "/theme/toolbars.js". This file is DEPRECATED and will be removed in bootstrap-base lib version 1.5 \n%cMessage from duc@kademi.co',
-        'font-size: 24px; color: blue;',
-        'font-size: 11px; color: #aaa;');
-}
-
 // Editor Skin
 var editorSkin = "bootstrapck";
 

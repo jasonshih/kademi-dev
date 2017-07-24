@@ -1,6 +1,6 @@
 if (console && console.log) {
     console.log(
-        '%cHey! init-theme.js is DEPRECATED and will be removed in bootstrap-base lib version 1.5. Please use following js files as replacement: \n%c- /static/kademi/1.0.0/kademi-1.0.0.js \n- /static/kademi/1.0.0/kademi.jquery-1.0.0.js \n- /static/kademi/1.0.0/kademi.theme-1.0.0.js \n%cMessage from duc@kademi.co',
+        '%cHey! init-theme.js is DEPRECATED and will be removed in bootstrap-base lib version 1.5. Please use following js files as replacement: \n%c- /theme/js/kademi.js \n- /theme/js/kademi.jquery.js \n- /theme/js/kademi.theme.js \n%cMessage from duc@kademi.co',
         'font-size: 24px; color: blue;',
         'font-size: 16px; color: #000;',
         'font-size: 11px; color: #aaa;');
