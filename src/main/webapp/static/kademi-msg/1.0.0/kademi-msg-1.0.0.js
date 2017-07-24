@@ -354,68 +354,116 @@
 // Kademi Msg stuffs
 // =====================================================================
 (function ($, win) {
-    var Msg = win.Msg = {
-        iconMode: 'fa',
-        icon: {
-            fa: {
-                info: 'fa fa-info-circle',
-                success: 'fa fa-check-circle',
-                warning: 'fa fa-exclamation-triangle',
-                danger: 'fa fa-times-circle'
+    var Msg = win.Msg = function (message, type, timeout) {
+        this.message = message;
+        this.type = type;
+        this.timeout = timeout;
+        this.notify = $.notify({
+            icon: Msg.icon[Msg.iconMode][type],
+            message: message
+        }, {
+            delay: timeout || Msg.timeout[type],
+            timer: 1000,
+            element: 'body',
+            position: 'fixed',
+            type: type,
+            allow_dismiss: true,
+            newest_on_top: true,
+            showProgressbar: true,
+            mouse_over: 'pause',
+            placement: {
+                from: 'top',
+                align: 'center'
             },
-            gp: {
-                info: 'glyphicon glyphicon-info-sign',
-                success: 'glyphicon glyphicon-ok-sign',
-                warning: 'glyphicon glyphicon-warning-sign',
-                danger: 'glyphicon glyphicon-remove-sign'
+            icon_type: 'class',
+            offset: {
+                x: 0,
+                y: 60
+            }
+        });
+    };
+    Msg.prototype = {
+        _updateTimeout: function (timeout) {
+            if (timeout < this.timeout) {
+                this.notify.update({'progress': ((this.timeout - timeout) / this.timeout) * 100});
+            } else {
+                this.notify.update({'progress': 0});
+            }
+            this.timeout = timeout;
+        },
+        update: function (message, type, timeout) {
+            if (message) {
+                this.notify.update('message', message);
+                this.message = message;
+            }
+            
+            if (type) {
+                if (typeof type === 'string') {
+                    this.notify.update('type', type);
+                    this.notify.update('icon', Msg.icon[Msg.iconMode][type]);
+                    this.type = type;
+                } else {
+                    this._updateTimeout(type);
+                }
+            }
+            
+            if (timeout) {
+                this._updateTimeout(timeout);
             }
         },
-        timeout: {
-            info: 3 * 1000,
-            success: 3 * 1000,
-            warning: 3 * 1000,
-            danger: 3 * 1000
-        },
-        info: function (message, timeout) {
-            return this.show(message, 'info', timeout);
-        },
-        success: function (message, timeout) {
-            return this.show(message, 'success', timeout);
-        },
-        warning: function (message, timeout) {
-            return this.show(message, 'warning', timeout);
-        },
-        danger: function (message, timeout) {
-            return this.show(message, 'danger', timeout);
-        },
-        error: function (message, timeout) {
-            return this.danger(message, timeout);
-        },
-        show: function (message, type, timeout) {
-            return $.notify({
-                icon: this.icon[this.iconMode][type],
-                message: message
-            }, {
-                delay: timeout || this.timeout[type],
-                timer: 1000,
-                element: 'body',
-                position: 'fixed',
-                type: type,
-                allow_dismiss: true,
-                newest_on_top: true,
-                showProgressbar: true,
-                mouse_over: 'pause',
-                placement: {
-                    from: 'top',
-                    align: 'center'
-                },
-                icon_type: 'class',
-                offset: {
-                    x: 0,
-                    y: 60
-                }
-            });
+        close: function () {
+            this.notify.close();
         }
+    };
+    
+    // Global settings
+    Msg.iconMode = 'fa';
+    Msg.icon = {
+        fa: {
+            info: 'fa fa-info-circle',
+            success: 'fa fa-check-circle',
+            warning: 'fa fa-exclamation-triangle',
+            danger: 'fa fa-times-circle'
+        },
+        gp: {
+            info: 'glyphicon glyphicon-info-sign',
+            success: 'glyphicon glyphicon-ok-sign',
+            warning: 'glyphicon glyphicon-warning-sign',
+            danger: 'glyphicon glyphicon-remove-sign'
+        }
+    };
+    Msg.timeout = {
+        info: 3 * 1000,
+        success: 3 * 1000,
+        warning: 3 * 1000,
+        danger: 3 * 1000
+    };
+    
+    // Main method
+    Msg.show = function (message, type, timeout) {
+        return new Msg(message, type, timeout);
+    };
+    
+    // Shortcut methods
+    Msg.info = function (message, timeout) {
+        return this.show(message, 'info', timeout);
+    };
+    Msg.success = function (message, timeout) {
+        return this.show(message, 'success', timeout);
+    };
+    Msg.warning = function (message, timeout) {
+        return this.show(message, 'warning', timeout);
+    };
+    Msg.danger = function (message, timeout) {
+        return this.show(message, 'danger', timeout);
+    };
+    Msg.error = function (message, timeout) {
+        return this.danger(message, timeout);
+    };
+    
+    // Close all messages
+    Msg.closeAll = function () {
+        $.notifyClose();
     };
     
 })(jQuery, window);
