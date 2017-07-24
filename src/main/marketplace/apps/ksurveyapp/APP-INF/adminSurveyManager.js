@@ -416,7 +416,7 @@ function getQuestionType(type){
 }
 
 function findSurvey(rf, groupName, groupVal, mapOfGroups) {
-    log.info('findSurvey > {} {} {} {}', rf, groupName, groupVal, mapOfGroups);
+    log.info('findSurvey > {} {} {} {}', [rf, groupName, groupVal, mapOfGroups]);
 
     var db = getDB(rf);
     var survey = db.child(groupVal);
