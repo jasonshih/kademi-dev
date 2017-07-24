@@ -27,10 +27,10 @@
                     dataType: 'json',
                     success: function () {
                         refreshTable();
-                        Msg.success('Deleted!', 'Your API App has been deleted');
+                        Msg.success('Your API App has been deleted');
                     },
                     error: function () {
-                        Msg.error('Oh No!', 'Sorry, an error occured deleting ' + href + '. Please check your internet connection');
+                        Msg.error('Sorry, an error occured deleting ' + href + '. Please check your internet connection');
                     }
                 });
             });
