@@ -236,14 +236,12 @@ function doSearch() {
     var newHref = uri.toString();
     
     window.history.pushState('', newHref, newHref);
-    Msg.info('Searching...', 50000);
+    var msg = Msg.info('Searching...', 50000);
     
     $.ajax({
         type: 'GET',
         url: newHref,
         success: function (data) {
-            Msg.info('Search complete', 5000);
-            
             var table = $('#table-users');
             flog('doSearch.3', table);
             
@@ -256,9 +254,11 @@ function doSearch() {
             
             initSort();
             initLoginAs();
+            
+            Msg.info('Search complete', 5000);
         },
         error: function (resp) {
-            Msg.error('An error occured doing the user search. Please check your internet connection and try again');
+            msg.update('An error occured doing the user search. Please check your internet connection and try again', 'danger', 5000);
         }
     });
 }

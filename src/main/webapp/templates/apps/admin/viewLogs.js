@@ -34,6 +34,7 @@
                 if (data.hits.hits.length > 0) {
                     filterOptions.since = data.hits.hits[0].fields.date[0];
                 }
+                
                 flog('lastLogDate', filterOptions);
                 $.each(data.hits.hits, function (i, n) {
                     processReceivedLog(n.fields);

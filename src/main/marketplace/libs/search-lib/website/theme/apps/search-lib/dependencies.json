@@ -2,6 +2,18 @@
     "appDependencies": [
     ],
     "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js"
+            }
+        }
     ]
 }
 

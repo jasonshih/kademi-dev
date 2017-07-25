@@ -203,7 +203,7 @@ function getKsurveyFields(profileId, questionId, surveyId, plainText) {
     }
 
     var queryJson = {
-        'fields': ['answerBody', 'answerId'],
+        'stored_fields': ['answerBody', 'answerId'],
         'query': {
             'bool': {
                 'must': [
@@ -257,7 +257,7 @@ function getAnswersByQuestion(questionId, surveyId) {
     }
 
     var queryJson = {
-        'fields': ['body'],
+        'stored_fields': ['body'],
         'query': {
             'bool': {
                 'must': [
