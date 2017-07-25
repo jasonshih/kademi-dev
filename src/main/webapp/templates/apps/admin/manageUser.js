@@ -242,8 +242,6 @@ function doSearch() {
         type: 'GET',
         url: newHref,
         success: function (data) {
-            msg.update('Search complete', 5000);
-            
             var table = $('#table-users');
             flog('doSearch.3', table);
             
@@ -256,9 +254,11 @@ function doSearch() {
             
             initSort();
             initLoginAs();
+            
+            Msg.info('Search complete', 5000);
         },
         error: function (resp) {
-            msg.update('An error occured doing the user search. Please check your internet connection and try again', 'danger');
+            msg.update('An error occured doing the user search. Please check your internet connection and try again', 'danger', 5000);
         }
     });
 }
