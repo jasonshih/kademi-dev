@@ -29,7 +29,7 @@
     };
     
     g.getGooglemapPortlet = function (page, params, context) {
-        log.info('getGooglemapPortlet > page={}, params={}, context={}', page, params, context);
+        log.info('getGooglemapPortlet > page={}, params={}, context={}', [page, params, context]);
         
         var appSettings = g.getAppSettings(page);
     

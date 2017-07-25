@@ -81,6 +81,7 @@ var JBApp = {
         var nodePorts = '';
         var divTypeClass = type;
         var nodeDef = JBNodes[type];
+        
         if (nodeDef == null) {
             nodeDef = JBNodes[node.nodeType];
             divTypeClass = node.nodeType;
@@ -109,7 +110,7 @@ var JBApp = {
         var nodeDiv = document.createElement('div');
         nodeDiv.className = 'node ' + divTypeClass;
         nodeDiv.id = node.nodeId;
-        nodeDiv.setAttribute('data-type', type);
+        nodeDiv.setAttribute('data-type', node.nodeType === undefined ? type : node.nodeType);
         nodeDiv.style.left = node.x + 'px';
         nodeDiv.style.top = node.y + 'px';
         
