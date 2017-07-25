@@ -1,38 +1,39 @@
+if (console && console.log) {
+    console.log(
+        '%cHey! We moved "toolbars.js" to "js" folder. Please use "/theme/js/toolbars.js" instead of "/theme/toolbars.js". This file is DEPRECATED and will be removed in bootstrap-base lib version 1.5 \n%cMessage from duc@kademi.co',
+        'font-size: 24px; color: blue;',
+        'font-size: 11px; color: #aaa;');
+}
+
+// Editor Skin
 var editorSkin = "bootstrapck";
 
-var toolbarSets = {};
-
+// Plugins
 var standardExtraPlugins = "autogrow,embed_video,embed_audio,fuse-image,modal,bspanel,forms,bslayout2col,bslayout3col";
 var standardRemovePlugins = "resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language"
-var templatesPath =  '/theme/editor-templates.js';
-var stylesPath = "/theme/styles.js";
 
+// Paths
+var templatesPath = '/theme/js/editor-templates.js';
+var stylesPath = "/theme/js/styles.js";
+
+// ================================================================
+// Toolbar sets
+// ================================================================
+var toolbarSets = {};
 toolbarSets["Full"] = [
-	{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
-	{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
-	{ name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ] },
-	{ name: 'forms' },
-	{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-	{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
-	{ name: 'links' },
-	{ name: 'insert' },
-	{ name: 'styles' },
-	{ name: 'colors' },
-	{ name: 'tools' },
-	{ name: 'layouts' },
-	{ name: 'about' }
-
-//    {name: 'clipboard', groups: ['clipboard', 'undo']},
-//    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
-//    {name: 'links'},
-//    {name: 'insert'},
-//    {name: 'forms'},
-//    {name: 'tools'},
-//    {name: 'document', groups: ['mode', 'document', 'doctools']},
-//    {name: 'others'},
-//    {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
-//    {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
-//    {name: 'styles'}
+    {name: 'document', groups: ['mode', 'document', 'doctools']},
+    {name: 'clipboard', groups: ['clipboard', 'undo']},
+    {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
+    {name: 'forms'},
+    {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
+    {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align', 'bidi']},
+    {name: 'links'},
+    {name: 'insert'},
+    {name: 'styles'},
+    {name: 'colors'},
+    {name: 'tools'},
+    {name: 'layouts'},
+    {name: 'about'}
 ];
 
 toolbarSets["Balanced"] = [
@@ -48,18 +49,8 @@ toolbarSets["Balanced"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    { name: 'layouts' }
+    {name: 'layouts'}
 ];
-
-//toolbarSets["Balanced"] = [
-//    ['Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellChecker'],
-//    ['Undo', 'Redo', '-', 'Find', 'Replace'],
-//    ['Bold', 'Italic', 'Underline', '-', 'Subscript', 'Superscript', 'RemoveFormat'],
-//    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
-//    ['FontFormat', 'FontSize'],
-//    ['Link', 'Image', 'Table', 'SpecialChar'] // No comma for the last row.
-//
-//];
 
 toolbarSets["Default"] = [
     {name: 'document', groups: ['mode', 'document', 'doctools']},
@@ -74,22 +65,8 @@ toolbarSets["Default"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
     {name: 'styles'},
-    { name: 'layouts' },
+    {name: 'layouts'},
 ];
-
-//toolbarSets["Default"] = [
-//    ['Source', '-'],
-//    ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Print', 'SpellCheckerer'],
-//    ['Undo', 'Redo', '-', 'Find', 'Replace', '-', 'SelectAll', 'RemoveFormat'],
-//    ['Video', 'Image2', 'Table', 'Rule', 'SpecialChar', 'PageBreak'],
-//    ['Bold', 'Italic', 'Underline', 'StrikeThrough', '-', 'Subscript', 'Superscript'],
-//    ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
-//    ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyFull'],
-//    ['Link', 'Unlink', 'Anchor'],
-//    ['Maximize', 'ShowBlocks', '-', 'Templates'], // No comma for the last row.
-//    ['Styles', 'Format']
-//];
-//
 
 toolbarSets["Lite"] = [
     {name: 'links'},
@@ -97,10 +74,6 @@ toolbarSets["Lite"] = [
     {name: 'basicstyles', groups: ['basicstyles', 'cleanup']},
     {name: 'paragraph', groups: ['list', 'indent', 'blocks', 'align']},
 ];
-
-//toolbarSets["Lite"] = [
-//    ['Bold', 'Italic', '-', 'Image', 'Link', 'Unlink']
-//];
 
 toolbarSets["BasicAndStyle"] = [
     {name: 'clipboard', groups: ['clipboard', 'undo']},
@@ -118,12 +91,6 @@ toolbarSets["BasicAndStyle"] = [
     {name: 'colors'}
 ];
 
-//toolbarSets["BasicAndStyle"] = [
-//    ['FontFormat'],
-//    '/',
-//    ['Bold', 'Italic', '-', 'NumberedList', 'BulletedList', '-', 'Image', 'Link', 'Unlink', '-', 'About']
-//];
-
 toolbarSets["Image"] = [
     {name: 'clipboard', groups: ['clipboard', 'undo']},
     {name: 'editing', groups: ['find', 'selection', 'spellchecker']},
@@ -139,11 +106,6 @@ toolbarSets["Image"] = [
     {name: 'styles'},
     {name: 'colors'}
 ];
-
-
-//toolbarSets["Image"] = [
-//    ['Bold', 'Italic', '-', 'Link', 'Unlink', '-', 'Image', 'Flash']
-//];
 
 toolbarSets["Logo"] = [
     {name: 'clipboard', groups: ['clipboard', 'undo']},
@@ -161,11 +123,7 @@ toolbarSets["Logo"] = [
     {name: 'colors'}
 ];
 
-//
-//toolbarSets["Logo"] = [
-//    ['Bold', 'Italic', '-', 'Image', '-', 'Source']
-//];
-$(function(){
+$(function () {
     // https://github.com/Kademi/kademi-dev/issues/1397
     CKEDITOR.timestamp = '141020161';
-})
+});

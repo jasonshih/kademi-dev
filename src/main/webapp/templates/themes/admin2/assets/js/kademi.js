@@ -1303,7 +1303,7 @@ Kalert.confirm = function (title, message, type, btnClass, btnText, callback) {
         showCancelButton: true,
         confirmButtonClass: option.btnClass,
         confirmButtonText: option.btnText,
-        closeOnConfirm: false,
+        closeOnConfirm: true,
         showLoaderOnConfirm: false
     }, typeof option.callback === 'function' ? option.callback : null);
 };
