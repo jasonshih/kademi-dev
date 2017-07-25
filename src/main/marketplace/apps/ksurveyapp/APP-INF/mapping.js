@@ -9,37 +9,91 @@ var RECORD_TYPES = {
 var surveyMapping = {
     "properties": {
         "name": {
-            "type": "string"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "description": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "status": {
+            "store": true,
             "type": "boolean"
         },
         "modifiedDate": {
+            "store": true,
             "type": "date"
         },
         "createdDate": {
+            "store": true,
             "type": "date"
         },
         "createdBy": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "modifiedBy": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "startTime": {
+            "store": true,
             "type": "date"
         },
         "endTime": {
+            "store": true,
             "type": "date"
         },
         "groups": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "websites": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         }
     }
 };
@@ -48,29 +102,79 @@ var surveyMapping = {
 var questionMapping = {
     "properties": {
         "title": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "body": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "answerLayout": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "surveyId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "modifiedDate": {
+            "store": true,
             "type": "date"
         },
         "createdDate": {
+            "store": true,
             "type": "date"
         },
         "createdBy": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "type": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         }
     }
 };
@@ -79,24 +183,58 @@ var questionMapping = {
 var answerMapping = {
     "properties": {
         "questionId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "body": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "surveyId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "modifiedDate": {
+            "store": true,
             "type": "date"
         },
         "createdDate": {
+            "store": true,
             "type": "date"
         },
         "createdBy": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         }
     }
 };
@@ -104,43 +242,124 @@ var answerMapping = {
 var surveySubmitsMapping = {
     "properties": {
         "surveyId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "userId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "createdDate": {
+            "store": true,
             "type": "date"
         },
         "fromAddress": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "browserName": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "browserVersion": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "osName": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "osVersion": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         },
         "deviceModel": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "deviceVendor": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "deviceType": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         }
     }
 };
@@ -148,26 +367,67 @@ var surveySubmitsMapping = {
 var resultMapping = {
     "properties": {
         "surveyId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "questionId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "answerId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "userId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "eager_global_ordinals": true,
+            "store": true,
+            "type": "keyword",
+            "fields": {
+                "text": {
+                    "fielddata": true,
+                    "store": true,
+                    "type": "text"
+                }
+            }
         },
         "createdDate": {
+            "store": true,
             "type": "date"
         },
         "answerBody": {
-            "type": "string"
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
         }
     }
 };
