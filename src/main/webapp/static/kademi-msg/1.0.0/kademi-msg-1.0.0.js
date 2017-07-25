@@ -381,6 +381,8 @@
                 y: 60
             }
         });
+        
+        Msg.instances[type] = this.notify;
     };
     Msg.prototype = {
         _updateTimeout: function (timeout) {
@@ -416,6 +418,14 @@
         }
     };
     
+    // Msg instances
+    Msg.instances = {
+        info: null,
+        success: null,
+        warning: null,
+        danger: null
+    };
+    
     // Global settings
     Msg.iconMode = 'fa';
     Msg.icon = {
@@ -441,6 +451,10 @@
     
     // Main method
     Msg.show = function (message, type, timeout) {
+        if (Msg.instances[type]) {
+            Msg.instances[type].close();
+        }
+        
         return new Msg(message, type, timeout);
     };
     
