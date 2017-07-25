@@ -48,6 +48,7 @@
         $templater.pushLess("/theme/theme-params.less", "all")
 
         $!bodyContent
+        <link href="/theme/less/bootswatch.less" rel="stylesheet" type="text/css" />
         <link href="/theme/less/bootstrap.min.css" rel="stylesheet" type="text/css" media="all" />
         #foreach( $lessSource in $templater.lessSources.entrySet())
             <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />

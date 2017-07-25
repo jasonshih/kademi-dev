@@ -20,15 +20,14 @@
     
     OmniSearch.DEFAULTS = {
         url: '/contentSearch',
-        maxResults: 5,
-        useActualId: false,
-        type: '',
         renderNoSuggestion: function () {
             return '<li class="no-result text-muted">No results found</li>';
         },
         onSelectSuggestion: function (suggestion) {
             flog(this, suggestion);
-        }
+        },
+        overrideEnterButton: true,
+        searchInFocus: false
     };
     
     OmniSearch.prototype.init = function () {
@@ -37,12 +36,12 @@
         var self = this;
         
         self.input.attr('autocomplete', 'off');
-        self.input.wrap('<div class="search-wrapper"></div>');
+        self.input.wrap('<div class="omni-search-wrapper"></div>');
         self.input.after(
-            '<ul class="dropdown-menu search-suggestions" style="display: none;" tabindex="-1"></ul>'
+            '<ul class="dropdown-menu omni-search-suggestions" style="display: none;" tabindex="-1"></ul>'
         );
-        self.input.attr('tabindex', '-1').addClass('search-input');
-        self.suggestionsList = self.input.siblings('.search-suggestions');
+        self.input.attr('tabindex', '-1').addClass('omni-search-input');
+        self.suggestionsList = self.input.siblings('.omni-search-suggestions');
         
         var timer;
         self.input.on({
@@ -62,7 +61,7 @@
                     case KEYMAP.DOWN:
                         e.preventDefault();
                         
-                        var suggestions = self.suggestionsList.find('.search-suggestion');
+                        var suggestions = self.suggestionsList.find('.omni-search-suggestion');
                         var suggestionsLength = suggestions.length;
                         var actived = suggestions.filter('.active');
                         var index;
@@ -83,12 +82,14 @@
                         break;
                     
                     case KEYMAP.ENTER:
-                        e.preventDefault();
-                        
-                        if (self.suggestionsList.is(':visible')) {
-                            self.suggestionsList.find('.search-suggestion.active').trigger('click');
-                        } else {
-                            self.search(self.input.val());
+                        if (self.options.overrideEnterButton) {
+                            e.preventDefault();
+                            
+                            if (self.suggestionsList.is(':visible')) {
+                                self.suggestionsList.find('.omni-search-suggestion.active').trigger('click');
+                            } else {
+                                self.search(self.input.val());
+                            }
                         }
                         
                         break;
@@ -104,9 +105,15 @@
             }
         });
         
-        this.suggestionsList.on({
+        if (self.options.searchInFocus) {
+            self.input.on('focus', function () {
+                self.search(self.input.val());
+            });
+        }
+        
+        self.suggestionsList.on({
             mouseenter: function () {
-                self.suggestionsList.find('.search-suggestion.active').removeClass('active');
+                self.suggestionsList.find('.omni-search-suggestion.active').removeClass('active');
                 $(this).addClass('active');
             },
             mouseleave: function () {
@@ -124,7 +131,7 @@
                 window.location.href = suggestion.find('a').attr('href');
                 self.suggestionsList.css('display', 'none');
             }
-        }, '.search-suggestion');
+        }, '.omni-search-suggestion');
         
         flog('[OmniSearch] Initialized');
     };
