@@ -1,4 +1,13 @@
-#set($cals = $rootFolder.find("/Calendars").children.ofType.calendar)
+#if( $page.is("calendarHome") )
+    #set ($calendars = $page)    
+#elseif( $page.is("calendar") )
+    #set ($calendars = $page.parent)    
+#else
+    #set ($calendars = $page.find('/Calendars/'))    
+#end
+    
+    
+#set($cals = $calendars.children.ofType.calendar)
 <!-- size1 $!cals -- $!cals.size()  -->
 #if(!$page and (!$cals || $cals.size() == 0) )
 <!--<p class="lead">No calendars are currently available</p>-->

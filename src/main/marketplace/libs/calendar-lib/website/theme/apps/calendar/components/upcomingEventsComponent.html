@@ -1,29 +1,25 @@
-#set ($calendars = $page.find('/Calendars/'))
-#set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
 
 #if($page)
+    
     <h3>Upcoming events</h3>
+    #if( $page.is("calendarHome") )
+        #set ($calendars = $page)    
+    #elseif( $page.is("calendar") )
+        #set ($calendars = $page.parent)    
+    #else
+        #set ($calendars = $page.find('/Calendars/'))    
+    #end
+    
+    #if( $calendar )
+        #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
+    #else
+        #set ($upcomingEvents = $calendars.upcomingEvents)
+    #end    
+    
+    
     <div class="calendar-events">
-        #if ($calendar)
-            #set ($calendars = $rootFolder.find('/Calendars/'))
-            #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
-            #foreach($event in $upcomingEvents )
-            #renderUpcoming($event)
-            #end
-        #else
-            #if ($page.upcomingEvents)
-                #set($upcoming = $page.upcomingEvents)
-                #foreach($event in $upcoming )
-                #renderUpcoming($event)
-                #end
-            #else
-                #foreach($cal in $page.children)
-                    #set($upcoming = $cal.upcomingEvents)
-                    #foreach($event in $upcoming )
-                        #renderUpcoming($event)
-                    #end
-                #end
-            #end
+        #foreach($event in $upcomingEvents )
+        #renderUpcoming($event)
         #end
     </div>
 #else
