@@ -1,6 +1,6 @@
 function initManageGroupRegoMode() {
     flog('initManageGroupRegoMode');
-    
+
     initGroupType();
     initCRUDRole();
     initGroupPasswordPolicy();
@@ -22,41 +22,40 @@ function initOptins() {
 function initCRUDRole() {
     var body = $(document.body);
     var modal = $('#modal-edit-roles');
-    
+
     body.on('click', '.btn-remove-role', function (e) {
-        flog('click', this);
         e.preventDefault();
-        
+
+        var btn = $(this);
+        var href = btn.attr('href');
+
         Kalert.confirm('Are you sure you want to remove this role?', function () {
-            var btn = $(this);
-            flog('do it', btn);
-            var href = btn.attr('href');
             deleteFile(href, function () {
                 btn.closest('span.role').remove();
             });
         });
     });
-    
+
     modal.on('click', 'input:radio', function (e) {
         var input = $(this);
         var appliesTo = input.closest('.applies-to');
         appliesTo.find('select').addClass('hide');
         appliesTo.find('input[type=radio]:checked').next().next().removeClass('hide');
     });
-    
+
     modal.on('click', '.btn-add-role', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var article = btn.closest('article');
         var appliesTo = $('div.applies-to');
         var appliesToType = appliesTo.find('input:checked');
-        
+
         if (!appliesToType[0]) {
             Msg.error('Please select what the role applies to');
             return;
         }
-        
+
         var appliesToTypeVal = appliesToType.val();
         var select = appliesToType.next().next();
         var appliesToVal = ''; // if need to select a target then this has its value
@@ -71,29 +70,29 @@ function initCRUDRole() {
         } else {
             appliesToText = 'their own organisation';
         }
-        
+
         flog('add role', appliesToTypeVal, appliesToVal);
-        
+
         var roleName = btn.closest('.article-action').prev().text().trim();
-        
+
         addRoleToGroup(roleName, appliesToTypeVal, appliesToVal, function (resp) {
             if (appliesToVal.length == 0) {
                 appliesToVal = 'their own organisation';
             }
-            
+
             $('.roles-wrapper').append(
-                '<span class="block role">' +
-                '   <span>' + roleName + ', on ' + appliesToText + '</span> ' +
-                '   <a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
-                '</span>'
-            );
+                    '<span class="block role">' +
+                    '   <span>' + roleName + ', on ' + appliesToText + '</span> ' +
+                    '   <a class="btn btn-xs btn-danger btn-remove-role" href="' + resp.nextHref + '" title="Remove this role"><i class="fa fa-times"></i></a>' +
+                    '</span>'
+                    );
         });
     });
 }
 
 function addRoleToGroup(roleName, appliesToType, appliesTo, callback) {
     flog('addRoleToGroup', roleName, appliesToType, appliesTo);
-    
+
     try {
         $.ajax({
             type: "POST",
@@ -133,7 +132,7 @@ function addRoleToGroup(roleName, appliesToType, appliesTo, callback) {
 
 function initGroupType() {
     flog('initGroupType');
-    
+
     $('input:radio[name=groupType]').click(function () {
         showHidePanels();
     });
@@ -142,11 +141,11 @@ function initGroupType() {
 function showHidePanels() {
     var panels = $('.panel-fields, .panel-optins, .panel-joinorgs, .panel-regomode');
     panels.addClass('hide');
-    
+
     // show only appropriate
     var type = $('input:radio[name=groupType]:checked').val();
     flog('showHidePanels:', type);
-    
+
     if (type == 'P') {
         // primary
         panels.removeClass('hide');
@@ -165,7 +164,7 @@ function showHidePanels() {
  */
 function initRegoMode() {
     flog('initRegoMode');
-    
+
     initOptInGroups();
     $('form.general').forms({
         onSuccess: function (resp) {
@@ -179,36 +178,36 @@ function initRegoMode() {
 function initGroupPasswordPolicy() {
     var modal = $('#modal-add-policy');
     var modalForm = modal.find('form');
-    
+
     modal.on('hidden', function (e) {
         var m = $(this);
         var groupName = m.data('groupname');
-        
+
         m.find('form').trigger('reset');
-        
+
         var a = m.find('input[name=updatePasswordPolicy]');
         a.attr('name', 'addPasswordPolicy');
         a.val(groupName);
-        
+
         m.find('.modal-title').text('Add new password policy for ' + groupName);
     });
-    
+
     modalForm.forms({
         validate: function (form) {
             var m = $(form);
-            
+
             if ((m.find('input[name=minLength]').val().length === 0 || m.find('input[name=minLength]').val() < 1)
-                & (m.find('input[name=minUpperCase]').val().length === 0 || m.find('input[name=minUpperCase]').val() < 1)
-                & (m.find('input[name=minLowerCase]').val().length === 0 || m.find('input[name=minLowerCase]').val() < 1)
-                & (m.find('input[name=minAlpha]').val().length === 0 || m.find('input[name=minAlpha]').val() < 1)
-                & (m.find('input[name=minNumeric]').val().length === 0 || m.find('input[name=minNumeric]').val() < 1)
-                & (m.find('input[name=maxRepeat]').val().length === 0 || m.find('input[name=maxRepeat]').val() < 1)
-                & m.find('input[name=badWords]').val().length === 0
-                & m.find('input[name=customRegex]').val().length === 0) {
+                    & (m.find('input[name=minUpperCase]').val().length === 0 || m.find('input[name=minUpperCase]').val() < 1)
+                    & (m.find('input[name=minLowerCase]').val().length === 0 || m.find('input[name=minLowerCase]').val() < 1)
+                    & (m.find('input[name=minAlpha]').val().length === 0 || m.find('input[name=minAlpha]').val() < 1)
+                    & (m.find('input[name=minNumeric]').val().length === 0 || m.find('input[name=minNumeric]').val() < 1)
+                    & (m.find('input[name=maxRepeat]').val().length === 0 || m.find('input[name=maxRepeat]').val() < 1)
+                    & m.find('input[name=badWords]').val().length === 0
+                    & m.find('input[name=customRegex]').val().length === 0) {
                 showValidation(null, "At least one field needs to be filled & greater than 1", form);
                 return false;
             }
-            
+
             return true;
         },
         onSuccess: function (resp) {
@@ -226,21 +225,21 @@ function initGroupPasswordPolicy() {
             }
         }
     });
-    
+
     $('body').on('click', '.btn-edit-policy', function (e) {
         e.preventDefault();
         var btn = $(this);
-        
+
         var article = btn.closest('article');
         var ppid = article.data('ppid');
         var current = article.data('current');
         var groupName = btn.closest('.policy-list').data('group');
-        
+
         var m = $('#modal-add-policy');
-        
+
         m.find('input[name=addPasswordPolicy]').attr('name', 'updatePasswordPolicy');
         m.find('input[name=updatePasswordPolicy]').val(ppid);
-        
+
         m.find('.modal-title').text('Edit password policy for ' + groupName);
         m.find('input[name=minLength]').val(current.minLength);
         m.find('input[name=minUpperCase]').val(current.minUpperCase);
@@ -250,18 +249,18 @@ function initGroupPasswordPolicy() {
         m.find('input[name=maxRepeat]').val(current.maxRepeat);
         m.find('input[name=badWords]').val(current.badWords);
         m.find('input[name=customRegex]').val(current.customRegex);
-        
+
         m.modal('show');
     });
-    
+
     $('body').on('click', '.btn-del-policy', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var article = btn.closest('article');
         var ppid = article.data('ppid');
         var groupName = article.data('groupname');
-        
+
         $.ajax({
             type: 'POST',
             url: window.location.pathname,
@@ -279,11 +278,11 @@ function initGroupPasswordPolicy() {
         });
     });
     initPPTemplates();
-    
+
     $('body').on('change', '.add-policy-modal .preset-select', function (e) {
         var select = $(this);
         var val = select.val();
-        
+
         var temp = null;
         for (var i = 0; i < ppTemplates.length; i++) {
             if (ppTemplates[i].name === val) {
@@ -291,9 +290,9 @@ function initGroupPasswordPolicy() {
                 break;
             }
         }
-        
+
         var m = select.closest('.add-policy-modal');
-        
+
         if (temp !== null) {
             m.find('input[name=minLength]').val(temp.minLength);
             m.find('input[name=minUpperCase]').val(temp.minUpperCase);
@@ -318,10 +317,10 @@ function initGroupPasswordPolicy() {
 
 function initPPTemplates() {
     var modals = $('.add-policy-modal');
-    
+
     var presetSelect = modals.find('.preset-select');
     presetSelect.empty();
-    
+
     presetSelect.append('<option value=""></option>');
     for (var i = 0; i < ppTemplates.length; i++) {
         presetSelect.append('<option value="' + ppTemplates[i].name + '">' + ppTemplates[i].title + '</option>');
