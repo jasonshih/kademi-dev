@@ -78,6 +78,7 @@ JBNodes['calendarEventAction'] = {
             dataType: 'json',
             success: function (resp) {
                 var optionsStr = '<option value="">[No calendar selected]</option>';
+                var optionsStr = '<option value="_default">Personal calendar</option>';
                 for (var i = 1; i < resp.length; i++) {
                     optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name + '</option>';
                 }
