@@ -23,9 +23,9 @@ function initProfile() {
         flog("click", this);
         e.preventDefault();
         e.stopPropagation();
+        var a = $(this);
+        var href = a.attr("href");
         Kalert.confirm("Are you sure you want to delete this group membership?", function () {
-            var a = $(this);
-            var href = a.attr("href");
             deleteFile(href, function () {
                 reloadMemberships();
                 $('#modal-edit-membership').modal('hide');
