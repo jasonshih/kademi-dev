@@ -236,7 +236,7 @@ function doSearch() {
     var newHref = uri.toString();
     
     window.history.pushState('', newHref, newHref);
-    var msg = Msg.info('Searching...', 50000);
+    Msg.info('Searching...', 'search', 60000);
     
     $.ajax({
         type: 'GET',
@@ -255,10 +255,10 @@ function doSearch() {
             initSort();
             initLoginAs();
             
-            Msg.info('Search complete', 5000);
+            Msg.success('Search complete', 'search');
         },
         error: function (resp) {
-            msg.update('An error occured doing the user search. Please check your internet connection and try again', 'danger', 5000);
+            Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
         }
     });
 }

@@ -354,15 +354,24 @@
 // Kademi Msg stuffs
 // =====================================================================
 (function ($, win) {
-    var Msg = win.Msg = function (message, type, timeout) {
+    var Msg = win.Msg = function (message, type, category, timeout) {
         this.message = message;
         this.type = type;
-        this.timeout = timeout;
+        
+        if (typeof category !== 'string') {
+            this.timeout = category;
+            category = null;
+        } else {
+            this.timeout = timeout;
+        }
+        this.timeout = this.timeout || Msg.timeout[this.type];
+        this.originTimeout = this.timeout;
+        
         this.notify = $.notify({
-            icon: Msg.icon[Msg.iconMode][type],
-            message: message
+            icon: Msg.icon[Msg.iconMode][this.type],
+            message: this.message
         }, {
-            delay: timeout || Msg.timeout[type],
+            delay: this.timeout,
             timer: 1000,
             element: 'body',
             position: 'fixed',
@@ -379,15 +388,22 @@
             offset: {
                 x: 0,
                 y: 60
+            },
+            onClosed: function () {
+                if (category) {
+                    Msg.instances[category] = null;
+                }
             }
         });
         
-        Msg.instances[type] = this.notify;
+        if (category) {
+            Msg.instances[category] = this;
+        }
     };
     Msg.prototype = {
         _updateTimeout: function (timeout) {
-            if (timeout < this.timeout) {
-                this.notify.update({'progress': ((this.timeout - timeout) / this.timeout) * 100});
+            if (timeout < this.originTimeout) {
+                this.notify.update({'progress': ((this.originTimeout - timeout) / this.originTimeout) * 100});
             } else {
                 this.notify.update({'progress': 0});
             }
@@ -419,12 +435,7 @@
     };
     
     // Msg instances
-    Msg.instances = {
-        info: null,
-        success: null,
-        warning: null,
-        danger: null
-    };
+    Msg.instances = {};
     
     // Global settings
     Msg.iconMode = 'fa';
@@ -448,31 +459,38 @@
         warning: 3 * 1000,
         danger: 3 * 1000
     };
+    Msg.singletonForCategory = false;
     
     // Main method
-    Msg.show = function (message, type, timeout) {
-        if (Msg.instances[type]) {
-            Msg.instances[type].close();
+    Msg.show = function (message, type, category, timeout) {
+        if (Msg.singletonForCategory && typeof category === 'string' && Msg.instances[category]) {
+            Msg.instances[category].update(message, type, timeout || Msg.timeout[type]);
+            
+            return Msg.instances[category];
+        } else {
+            if (Msg.instances[category]) {
+                Msg.instances[category].close();
+            }
+            
+            return new Msg(message, type, category, timeout);
         }
-        
-        return new Msg(message, type, timeout);
     };
     
     // Shortcut methods
-    Msg.info = function (message, timeout) {
-        return this.show(message, 'info', timeout);
+    Msg.info = function (message, category, timeout) {
+        return this.show(message, 'info', category, timeout);
     };
-    Msg.success = function (message, timeout) {
-        return this.show(message, 'success', timeout);
+    Msg.success = function (message, category, timeout) {
+        return this.show(message, 'success', category, timeout);
     };
-    Msg.warning = function (message, timeout) {
-        return this.show(message, 'warning', timeout);
+    Msg.warning = function (message, category, timeout) {
+        return this.show(message, 'warning', category, timeout);
     };
-    Msg.danger = function (message, timeout) {
-        return this.show(message, 'danger', timeout);
+    Msg.danger = function (message, category, timeout) {
+        return this.show(message, 'danger', category, timeout);
     };
-    Msg.error = function (message, timeout) {
-        return this.danger(message, timeout);
+    Msg.error = function (message, category, timeout) {
+        return this.danger(message, category, timeout);
     };
     
     // Close all messages
