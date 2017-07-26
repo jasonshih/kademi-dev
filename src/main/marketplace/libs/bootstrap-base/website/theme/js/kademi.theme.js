@@ -739,6 +739,7 @@ function myPrompt(id, url, title, instructions, caption, buttonName, buttonText,
         modal.on('hidden.bs.modal', function () {
             modal.find('[name=translated]').prop('disabled', true).removeClass('required').hide();
             modal.find('.htmleditor-wrapper').hide();
+            modal.find('.form-message').html('').hide();
             var ckeditor = CKEDITOR.instances[modal.find('.htmleditor').attr('id')];
             ckeditor.setReadOnly(true);
         });
