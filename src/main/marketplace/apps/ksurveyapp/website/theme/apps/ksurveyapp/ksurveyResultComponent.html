@@ -73,23 +73,23 @@
                             <div id="questions">
 
                                 <div class="question-item">
-                                    <h4>$question.fields.title.value</h4>
-                                    <div class="question-description">$question.fields.body.value</div>
-                                    #if($question.fields.type.value!='1')
+                                    <h4>$question.source.title</h4>
+                                    <div class="question-description">$question.source.body</div>
+                                    #if($question.source.type!='1')
                                         <div class="answers">
                                             #if($page.attributes.answerResult.hits.totalHits > 0)
                                                 #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
                                                 #foreach($answer in $answers)
-                                                    #if($answer.fields.questionId.value == $question.id)
+                                                    #if($answer.source.questionId == $question.id)
                                                         #set($totalAnswerSubmits = 0)
                                                         #if($surveyResult.get($question.id).get('answers').get($answer.id))
                                                             #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get($answer.id))
                                                         #end
                                                         #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                                        #set($surveyCSV = "$surveyCSV$survey.name,$totalSubmits,$question.id,$question.fields.title.value,$answer.id,$answer.fields.body.value,$totalAnswerSubmits,$progress$linebreaker")
+                                                        #set($surveyCSV = "$surveyCSV$survey.name,$totalSubmits,$question.id,$question.source.title,$answer.id,$answer.source.body,$totalAnswerSubmits,$progress$linebreaker")
                                                         <div class="row">
                                                             <div class="col-sm-6">
-                                                                <span class="glyphicon glyphicon-info-sign"></span> $answer.fields.body.value
+                                                                <span class="glyphicon glyphicon-info-sign"></span> $answer.source.body
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <div class="progress">
@@ -112,7 +112,7 @@
                                             #set ($plainAnswers = $controllers.call('getPlainAnswers', $page, $question.id, $survey.name))
                                             #if($plainAnswers.hits.totalHits > 0)
                                                 #foreach($plainAnswer in $plainAnswers.hits.hits)
-                                                    <li>$plainAnswer.fields.answerBody.value - <a href="#">$plainAnswer.fields.userId.value</a></li>
+                                                    <li>$plainAnswer.source.answerBody - <a href="#">$plainAnswer.source.userId</a></li>
                                                 #end
                                             #end
                                         </ul>
