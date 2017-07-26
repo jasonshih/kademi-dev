@@ -89,10 +89,10 @@
                 <div id="questions">
 
                     <div class="question-item">
-                        <h4>$question.fields.title.value</h4>
-                        <div class="question-description">$question.fields.body.value</div>
+                        <h4>$question.source.title</h4>
+                        <div class="question-description">$question.source.body</div>
                         <div class="answers">
-                            #if($question.fields.type.value==1)
+                            #if($question.source.type==1)
                             <!-- Plain text -->
                             <div class="form-group">
                                 <textarea required="required" name="$question.id" class="form-control required" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
@@ -101,34 +101,34 @@
 
                             #if($surveySearchResult.answerResult.hits.totalHits > 0)
                             #foreach($answer in $answers)
-                            #if($answer.fields.questionId.value == $question.id)
-                            #if($question.fields.type.value==0)
+                            #if($answer.source.questionId == $question.id)
+                            #if($question.source.type==0)
                             <!-- Multichoices -->
                             <div class="checkbox">
                                 <label>
-                                    <input name="$question.id" value="$answer.id" type="checkbox"> $answer.fields.body.value
+                                    <input name="$question.id" value="$answer.id" type="checkbox"> $answer.source.body
                                 </label>
                             </div>
-                            #elseif($question.fields.type.value==2)
+                            #elseif($question.source.type==2)
                             <!-- Yes/No question -->
                             <div class="radio">
                                 <label>
-                                    <input required="required" name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                                    <input required="required" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
-                            #elseif($question.fields.type.value==3)
+                            #elseif($question.source.type==3)
                             <!-- Single choice question -->
 
-                            #if($question.fields.answerLayout.value=="0")
+                            #if($question.source.answerLayout=="0")
                             <div class="radio">
                                 <label>
-                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #else
                             <div class="radio-inline">
                                 <label>
-                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.fields.body.value
+                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #end
@@ -136,7 +136,7 @@
                             #end
                             #end
                             #end
-                            #if($question.fields.type.value==0)
+                            #if($question.source.type==0)
                             <!-- Multichoices -->
                             <input required="required" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
                             #end
