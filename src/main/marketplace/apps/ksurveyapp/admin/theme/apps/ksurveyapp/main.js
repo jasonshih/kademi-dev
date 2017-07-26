@@ -359,7 +359,7 @@ $(function(){
                 success: function (resp) {
                     if (resp && resp.status && resp.data.status) {
                         $('#group-list').reloadFragment();
-                        $('#modal-groups').reloadFragment();
+                        // $('#modal-groups').reloadFragment();
                         Msg.success('Add/remove group is saved!');
                     } else {
                         flog('Error when adding/removing group', resp);
