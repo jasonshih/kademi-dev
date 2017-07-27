@@ -22,6 +22,8 @@ function initManageBlogArticle() {
                 '</div>'
             );
             
+            editor.closest('.editor-wrapper').css('height', getMainContainerContentHeight() - 38 - 32 - 2 - 15);
+            
             editor.before(loading);
             editor.hide();
             
@@ -31,6 +33,7 @@ function initManageBlogArticle() {
                 snippetsUrl: '_components/',
                 onReady: function () {
                     loading.remove();
+                    editor.next().css('height', getMainContainerContentHeight() - 38 - 32 - 2 - 15)
                 }
             });
         });
