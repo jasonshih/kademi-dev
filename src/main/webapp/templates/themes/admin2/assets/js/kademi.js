@@ -476,15 +476,17 @@ function initNewUserForm() {
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
-                    
+
                     modal.modal('hide');
                     break;
                 
                 case 'close':
+                    $('#table-users-body').reloadFragment();
                     modal.modal('hide');
                     break;
                 
                 case 'add':
+                    $('#table-users-body').reloadFragment();
                     $("#newUserEmail, #newUserSurName, #newUserFirstName, #newUserNickName").val("");
                     break;
             }
