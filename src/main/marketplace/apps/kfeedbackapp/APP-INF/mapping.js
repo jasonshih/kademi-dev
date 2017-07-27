@@ -13,17 +13,6 @@ var feedbackMapping = {
                 }
             }
         },
-        "createdBy": {
-            "fielddata": true,
-            "store": true,
-            "type": "text",
-            "fields": {
-                "keyword": {
-                    "store": true,
-                    "type": "keyword"
-                }
-            }
-        },
         "option_text": {
             "type": "text",
             "fields": {
