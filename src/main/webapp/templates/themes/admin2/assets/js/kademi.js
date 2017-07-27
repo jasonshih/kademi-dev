@@ -568,6 +568,14 @@ function getStandardModalHeight() {
     return getStandardModalEditorHeight();
 }
 
+function getMainContainerContentHeight() {
+    var container = $('.main-content > .container');
+    var breadcrumb = container.children('.breadcrumb');
+    var mainContentInner = container.find('.main-content-inner');
+    
+    return container.height() - breadcrumb.outerHeight() - +mainContentInner.css('padding-top').replace('px', '');
+}
+
 /**
  * Formats a numeric value as a date, or if already a string just returns it
  *
