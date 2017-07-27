@@ -1,58 +1,19 @@
-var resultMapping = {
+var feedbackMapping = {
     "properties": {
-        "surveyId": {
-            "eager_global_ordinals": true,
-            "store": true,
+        "created": {
             "type": "keyword",
+            "store": true
+        },
+        "option_slug": {
+            "type": "keyword",
+            "store": true,
             "fields": {
                 "text": {
-                    "fielddata": true,
-                    "store": true,
                     "type": "text"
                 }
             }
         },
-        "questionId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "answerId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "userId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "createdDate": {
-            "store": true,
-            "type": "date"
-        },
-        "answerBody": {
+        "createdBy": {
             "fielddata": true,
             "store": true,
             "type": "text",
@@ -60,6 +21,36 @@ var resultMapping = {
                 "keyword": {
                     "store": true,
                     "type": "keyword"
+                }
+            }
+        },
+        "option_text": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "processed": {
+            "type": "boolean"
+        },
+        "profileId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "website": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
                 }
             }
         }

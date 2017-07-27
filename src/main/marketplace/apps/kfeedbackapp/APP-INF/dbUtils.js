@@ -1,7 +1,7 @@
 var DB_NAME = 'kfeedback';
 var DB_TITLE = 'Kfeedback Db';
 var DB_MAPPINGS = {
-    result: resultMapping
+    feedback: feedbackMapping
 };
 
 function getDB(page) {
