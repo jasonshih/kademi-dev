@@ -98,7 +98,6 @@ var surveyMapping = {
     }
 };
 
-
 var questionMapping = {
     "properties": {
         "title": {
@@ -178,7 +177,6 @@ var questionMapping = {
         }
     }
 };
-
 
 var answerMapping = {
     "properties": {

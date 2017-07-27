@@ -23,7 +23,7 @@ function getDB(page) {
 }
 
 function saveMapping(db) {
-    log.info('saveMapping > db={}, typeName={}, mapping={}', db);
+    log.info('saveMapping kfeedbackup > db={}, typeName={}, mapping={}', db);
 
     var mapBuilder = formatter.newMapBuilder();
     for(var name in DB_MAPPINGS){
