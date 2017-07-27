@@ -303,10 +303,82 @@ $(function(){
             }
         });
     });
+
+
+    function createMappingForSurvey(name){
+        var defaultData = {
+            "properties": {
+                "created": {
+                    "type": "keyword",
+                    "store": true
+                },
+                "option_slug": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "option_text": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "processed": {
+                    "type": "boolean"
+                },
+                "profileId": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
+                },
+                "website": {
+                    "type": "keyword",
+                    "store": true,
+                    "fields": {
+                        "text": {
+                            "type": "text"
+                        }
+                    }
+                }
+            }
+        };
+
+
+        var data = {
+            mappingName: name,
+            json: JSON.stringify(defaultData)
+        };
+
+        $.ajax({
+            url: "/jsondb/surveyDB/",
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            // contentType: "application/json; charset=utf-8",
+            success: function(resp){
+                Msg.success('Survey updated successfully');
+            },
+            error: function(e){
+                Msg.error('System error! Please contact your system administrator for support.');
+            }
+        });
+    }
 	
     function saveSurvey(form){
         // var valid = this.checkValidity();
         // if(!valid) return;
+        var mappingName = form.find('[name=name]').val();
         var data = form.serialize();
         var surveyId = form.find('[name=surveyId]');
         $.ajax({
@@ -314,9 +386,11 @@ $(function(){
             type: 'post',
             data: data,
             dataType: 'json',
+
             success: function(resp){
                 if(resp && resp.status && resp.data.status){
                     Msg.success('Survey updated successfully');
+                    createMappingForSurvey(mappingName);
                     if(surveyId.length<1){
                         closeFuseModal(modalSurvey);
                         $("#survey-list").reloadFragment({
