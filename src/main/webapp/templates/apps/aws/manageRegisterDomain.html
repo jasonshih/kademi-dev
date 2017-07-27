@@ -1,0 +1,277 @@
+<html>
+    <head>
+        <title>Register Domain</title>
+        <link href="/static/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="/static/chosen/1.1.0/chosen.css" />
+        <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css" />
+        <style>
+            select option[disabled]{
+                color: #eee;
+            }
+
+            div.awsContactDetailsExtraFields {
+                border-left: 1px solid #ccc;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="row fuelux"  id="awsRegisterDomain" style="margin-bottom:30px">
+            <div class="col-lg-12">
+                <div class="wizard" id="awsRegisterDomainWizard">
+                    <div class="steps-container">
+                        <ul class="steps">
+                            <li data-step="1" data-name="search" class="active">
+                                <span class="badge">1</span>Search 
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-step="2" data-name="contactDetails">
+                                <span class="badge">2</span>Contact Details
+                                <span class="chevron"></span>
+                            </li>
+                            <li data-step="3" data-name="reviewDetails">
+                                <span class="badge">3</span>Review
+                                <span class="chevron"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn btn-default btn-prev">
+                            <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                        </button>
+                        <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                            <span class="glyphicon glyphicon-arrow-right"></span>
+                        </button>
+                    </div>
+                    <div class="step-content">
+                        <div class="step-pane active alert" data-step="1">
+                            <div class="col-md-6">
+                                <h4>Choose a domain name</h4>
+                                <form id="awsSearchDomain" class="form-inline">
+                                    <div class="form-group">
+                                        <input name="awsDomain" id="awsDomain" class="form-control required regex" data-regex="^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$" data-message="Domain names can contain letters, digits, hyphen, and can not be empty or longer than 63 characters."/>
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="awsTldSelect" id="awsTldSelect" class="form-control required chosen-select"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-info btn-aws-checkdomain"><i class="fa fa-search" aria-hidden="true"></i> Check</button>
+                                    </div>
+                                </form>
+
+                                <div id="awsDomainAvailability" class="padding-lg-top" style="display: none;">
+                                    <h4>Availability for '<span id="awsDomainAvailabilityName"></span>'</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Domain Name</th>
+                                                <th>Status</th>
+                                                <th>Price /1 Year</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="awsDomainAvailabilityTable">
+                                            <tr>
+                                                <th colspan="4">
+                                                    <i class="fa fa-refresh fa-spin"></i>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div id="awsDomainSuggestions" class="padding-lg-top" style="display: none;">
+                                    <h4>Suggestions</h4>
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Domain Name</th>
+                                                <th>Status</th>
+                                                <th>Price /1 Year</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="awsDomainSuggestionsTable">
+                                            <tr>
+                                                <th colspan="4">
+                                                    <i class="fa fa-refresh fa-spin"></i>
+                                                </th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane alert" data-step="2">
+                            <form id="awsContactDetails" class="form-horizontal">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">My Registrant, Administrative and Technical Contacts are all the same:
+                                        </label>
+                                        <div class="radio" data-initialize="radio">
+                                            <label class="radio-custom radio-inline" data-initialize="radio">
+                                                <input class="sr-only awsContactDetailsSame" checked="checked" name="awsContactDetailsSame" type="radio" value="yes"/> Yes
+                                            </label>
+                                            <label class="radio-custom radio-inline" data-initialize="radio">
+                                                <input class="sr-only awsContactDetailsSame" name="awsContactDetailsSame" type="radio" value="no"/> No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <h4 class="col-md-offset-3 col-md-10">Registrant Contact</h4>
+
+                                        #genContactDetails("Registrant")
+                                    </div>
+                                    <div class="col-md-4 awsContactDetailsExtraFields" style="display: none;">
+                                        <h4 class="col-md-offset-3 col-md-10">Admin Contact</h4>
+
+                                        #genContactDetails("Admin")
+                                    </div>
+                                    <div class="col-md-4 awsContactDetailsExtraFields" style="display: none;">
+                                        <h4 class="col-md-offset-3 col-md-10">Tech Contact</h4>
+
+                                        #genContactDetails("Tech")
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        #macro(genContactDetails $CONTACT_TYPE)
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_contactType" class="col-sm-3 control-label">Contact Type</label>
+            <div class="col-sm-8">
+                <select name="${CONTACT_TYPE}_contactType" class="form-control awsContactType" id="aws${CONTACT_TYPE}_contactType">
+                    <option value="PERSON">Person</option>
+                    <option selected="selected" value="COMPANY">Company</option>
+                    <option value="ASSOCIATION">Association</option>
+                    <option value="PUBLIC_BODY">Public Body</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_firstName" class="col-sm-3 control-label">First Name</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_firstName" class="form-control" id="aws${CONTACT_TYPE}_firstName" value="$!user.firstName"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_lastName" class="col-sm-3 control-label">Last Name</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_lastName" class="form-control" id="aws${CONTACT_TYPE}_lastName" value="$!user.surName"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_organizationName" class="col-sm-3 control-label">Organisation</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_organizationName" class="form-control" id="aws${CONTACT_TYPE}_organizationName" value="$!rootFolder.orgData.title"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_email" class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-8">
+                <input type="email" name="${CONTACT_TYPE}_email" class="form-control" id="aws${CONTACT_TYPE}_email" value="$!user.email"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_phoneNumber" class="col-sm-3 control-label">Phone</label>
+            <div class="col-sm-8">
+                <input type="phone" name="${CONTACT_TYPE}_phoneNumber" class="form-control col-md-2" id="aws${CONTACT_TYPE}_phoneNumber" value="$!user.phone"/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_addressLine1" class="col-sm-3 control-label">Address 1</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_addressLine1" class="form-control" id="aws${CONTACT_TYPE}_addressLine1" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_addressLine2" class="col-sm-3 control-label">Address 2</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_addressLine2" class="form-control" id="aws${CONTACT_TYPE}_addressLine2" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_countryCode" class="col-sm-3 control-label">Country</label>
+            <div class="col-sm-8">
+                <select name="${CONTACT_TYPE}_countryCode" class="form-control" id="aws${CONTACT_TYPE}_countryCode">
+                    #foreach($cc in $formatter.countryCodes.list)
+                    $formatter.option($cc.alpha2Code, $cc.englishShortName, $formatter.countryCodeOfOrg.alpha2Code)
+                    #end
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_state" class="col-sm-3 control-label">State</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_state" class="form-control" id="aws${CONTACT_TYPE}_state" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_city" class="col-sm-3 control-label">City</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_city" class="form-control" id="aws${CONTACT_TYPE}_city" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_zipCode" class="col-sm-3 control-label">Postal/Zip Code</label>
+            <div class="col-sm-8">
+                <input type="text" name="${CONTACT_TYPE}_zipCode" class="form-control" id="aws${CONTACT_TYPE}_zipCode" />
+            </div>
+        </div>
+
+        <div id="aws${CONTACT_TYPE}_extraParams">
+        </div>
+
+        <div class="form-group">
+            <label for="aws${CONTACT_TYPE}_privacyProtect" class="col-sm-3 control-label">Privacy Protection</label>
+            <div class="col-sm-8">
+                <div class="radio" data-initialize="radio">
+                    <label class="radio-custom radio-inline" data-initialize="radio">
+                        <input class="sr-only awsPrivacyProtectTrue" checked="checked" name="aws${CONTACT_TYPE}_privacyProtect" type="radio" value="true"/> Hide contact information if the TLD registry, and the registrar, allow it 
+                    </label>
+                    <label class="radio-custom radio-inline" data-initialize="radio">
+                        <input class="sr-only awsPrivacyProtectFalse" name="aws${CONTACT_TYPE}_privacyProtect" type="radio" value="false"/> Don't hide contact information
+                    </label>
+                </div>
+            </div>
+        </div>
+        #end
+
+        <script id="awsRegisterExtraFieldTemplate" type="text/html">
+            <div class="form-group">
+                <label for="aws{{CONTACT_TYPE}}_{{fieldName}}" class="col-sm-3 control-label">{{fieldTitle}}</label>
+                <div class="col-sm-8">
+                    {{\#if possibleValues}}
+                    <select name="{{CONTACT_TYPE}}_{{fieldName}}" class="form-control" id="aws{{CONTACT_TYPE}}_{{fieldName}}">
+                        {{#each possibleValues}}
+                        <option value="{{value}}">{{name}}</option>
+                        {{/each}}
+                    </select>
+                    {{else}}
+                    <input type="text" name="{{CONTACT_TYPE}}_{{fieldName}}" class="form-control" id="aws{{CONTACT_TYPE}}_{{fieldName}}" />
+                    {{/if}}
+                </div>
+            </div>
+        </script>
+
+        <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js" >//</script>
+        <script type="text/javascript" src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
+        <script type="text/javascript" src="/theme/apps/aws/manageRegisterDomain.js?v=$formatter.randomGuid">//</script>
+    </body>
+</html>

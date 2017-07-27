@@ -5,11 +5,15 @@ function initKChatAdmin() {
 }
 
 function initSidebarToggle() {
-    $('.navbar-tools .navbar-right').append(
-        '<li class="fuse-header-item">' +
-        '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
-        '</li>'
-    );
+    var navBar = $('.navbar-tools .navbar-right');
+    if (navBar.find('li.fuse-header-item a.sb-toggle').length === 0) {
+        navBar.append(
+            '<li class="fuse-header-item">' +
+            '    <a class="sb-toggle" href="#"><i class="fa fa-outdent"></i></a>' +
+            '</li>'
+        );
+    }
+
 }
 
 var initKChatWebsocket = function () {
