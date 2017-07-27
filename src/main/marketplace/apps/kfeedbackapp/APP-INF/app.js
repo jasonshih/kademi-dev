@@ -101,6 +101,7 @@ function initApp(orgRoot, webRoot, enabled){
 
         if (!db.allowAccess) {
             setAllowAccess(db, true);
+            saveMapping(db);
         }
     }
 }
