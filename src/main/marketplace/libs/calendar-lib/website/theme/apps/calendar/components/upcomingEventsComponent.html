@@ -1,7 +1,5 @@
-
+<h3>Upcoming events</h3>
 #if($page)
-    
-    <h3>Upcoming events</h3>
     #if( $page.is("calendarHome") )
         #set ($calendars = $page)    
     #elseif( $page.is("calendar") )
@@ -13,8 +11,9 @@
     #if( $calendar )
         #set ($upcomingEvents = $calendars.child($calendar).upcomingEvents)
     #else
-        #set ($upcomingEvents = $calendars.upcomingEvents)
+        #set ($upcomingEvents = $calendars.getUpcomingAfter(30))
     #end    
+    
     
     
     <div class="calendar-events">
@@ -23,7 +22,7 @@
         #end
     </div>
 #else
-<h3>Upcoming events</h3>
+
 <div class="calendar-events">
     <article class="calendar-events-item">
         <header class="calendar-events-header">
