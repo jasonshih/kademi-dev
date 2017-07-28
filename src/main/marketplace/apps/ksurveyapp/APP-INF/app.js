@@ -120,7 +120,7 @@ controllerMappings
     .build();
 
 function initApp(orgRoot, webRoot, enabled){
-    log.info("initApp: orgRoot={}", orgRoot);
+    log.info("initApp ksurveyapp: orgRoot={}", orgRoot);
 
     var dbs = orgRoot.find('jsondb');
     var db = dbs.child(DB_NAME);

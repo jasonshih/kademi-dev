@@ -85,7 +85,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
 }
 
 function initApp(orgRoot, webRoot, enabled){
-    log.info("initApp: orgRoot={}", orgRoot);
+    log.info("initApp Kfeedback: orgRoot={}", orgRoot);
 
     var dbs = orgRoot.find(JSON_DB);
     if (isNull(dbs)) {
@@ -96,13 +96,14 @@ function initApp(orgRoot, webRoot, enabled){
 
     if (isNull(db)) {
         log.info('{} does not exist!', dbTitle);
-
         db = dbs.createDb(dbName, dbTitle, dbName);
 
         if (!db.allowAccess) {
             setAllowAccess(db, true);
         }
     }
+
+    saveMapping(db);
 }
 
 function setAllowAccess(db, allowAccess) {
