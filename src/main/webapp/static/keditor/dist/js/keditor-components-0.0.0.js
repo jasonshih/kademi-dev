@@ -1165,7 +1165,7 @@
         settingTitle: 'Photo Settings',
         
         initSettingForm: function (form, keditor) {
-            flog('init "photo" settings', form);
+            flog('init "photo" settings', form, keditor);
             
             var self = this;
             var options = keditor.options;
