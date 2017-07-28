@@ -9,7 +9,7 @@
                 color: #eee;
             }
 
-            div.awsContactDetailsExtraFields {
+            div.awsContactDetailsExtraFields, div.awsReviewExtraFields {
                 border-left: 1px solid #ccc;
             }
         </style>
@@ -54,7 +54,7 @@
                                         <select name="awsTldSelect" id="awsTldSelect" class="form-control required chosen-select"></select>
                                     </div>
                                     <div class="form-group">
-                                        <button type="submit" class="btn btn-info btn-aws-checkdomain"><i class="fa fa-search" aria-hidden="true"></i> Check</button>
+                                        <button type="button" class="btn btn-info btn-aws-checkdomain"><i class="fa fa-search" aria-hidden="true"></i> Check</button>
                                     </div>
                                 </form>
 
@@ -136,6 +136,47 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="step-pane alert" data-step="3">
+                            <h3>Review details and complete your purchase</h3>
+                            <hr/>
+
+                            <p>When you complete your purchase, we&apos;ll assign the following contacts to the of the domain you have selected.</p>
+
+                            <div class="row padding-md-top">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <h4 class="col-md-offset-3 col-md-10">Registrant Contact</h4>
+
+                                        <div id="awsRegistrantReviewDetails"></div>
+                                    </div>
+                                    <div class="col-md-4 awsReviewExtraFields">
+                                        <h4 class="col-md-offset-3 col-md-10">Admin Contact</h4>
+
+                                        <div id="awsAdminReviewDetails"></div>
+                                    </div>
+                                    <div class="col-md-4 awsReviewExtraFields">
+                                        <h4 class="col-md-offset-3 col-md-10">Tech Contact</h4>
+
+                                        <div id="awsTechReviewDetails"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="padding-md-top">Terms and Conditions</h4>
+                            <p>
+                                Kademi enables you to register domain names using your Kademi account. 
+                                However, Kademi is not a domain name registrar, so we use registrar associates to perform registration and transfer services. 
+                                When you purchase domain names through Kademi, you are registering your domain with one of our registrar associates. 
+                                The registrar for your domain will periodically contact the registrant contact that you specified to verify the contact details and renew registration.
+                            </p>
+
+                            <div class="form-group">
+                                <label class="checkbox-custom checkbox-inline" data-initialize="checkbox" for="acceptTCS">
+                                    <input id="acceptTCS" type="checkbox" value="true"> <span class="checkbox-label">I have read and agree to the <a href="https://aws.amazon.com/route53/domain-registration-agreement/" target="_blank">AWS Domain Name Registration Agreement</a></span>
+                                </label>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -192,14 +233,14 @@
         <div class="form-group">
             <label for="aws${CONTACT_TYPE}_addressLine1" class="col-sm-3 control-label">Address 1</label>
             <div class="col-sm-8">
-                <input type="text" name="${CONTACT_TYPE}_addressLine1" class="form-control" id="aws${CONTACT_TYPE}_addressLine1" />
+                <input type="text" name="${CONTACT_TYPE}_addressLine1" class="form-control" id="aws${CONTACT_TYPE}_addressLine1" value="$!rootFolder.orgData.address"/>
             </div>
         </div>
 
         <div class="form-group">
             <label for="aws${CONTACT_TYPE}_addressLine2" class="col-sm-3 control-label">Address 2</label>
             <div class="col-sm-8">
-                <input type="text" name="${CONTACT_TYPE}_addressLine2" class="form-control" id="aws${CONTACT_TYPE}_addressLine2" />
+                <input type="text" name="${CONTACT_TYPE}_addressLine2" class="form-control" id="aws${CONTACT_TYPE}_addressLine2" value="$!rootFolder.orgData.addressLine2"/>
             </div>
         </div>
 
@@ -217,7 +258,7 @@
         <div class="form-group">
             <label for="aws${CONTACT_TYPE}_state" class="col-sm-3 control-label">State</label>
             <div class="col-sm-8">
-                <input type="text" name="${CONTACT_TYPE}_state" class="form-control" id="aws${CONTACT_TYPE}_state" />
+                <input type="text" name="${CONTACT_TYPE}_state" class="form-control" id="aws${CONTACT_TYPE}_state" value="$!rootFolder.orgData.addressState"/>
             </div>
         </div>
 
@@ -231,7 +272,7 @@
         <div class="form-group">
             <label for="aws${CONTACT_TYPE}_zipCode" class="col-sm-3 control-label">Postal/Zip Code</label>
             <div class="col-sm-8">
-                <input type="text" name="${CONTACT_TYPE}_zipCode" class="form-control" id="aws${CONTACT_TYPE}_zipCode" />
+                <input type="text" name="${CONTACT_TYPE}_zipCode" class="form-control" id="aws${CONTACT_TYPE}_zipCode" value="$!rootFolder.orgData.postcode"/>
             </div>
         </div>
 
@@ -243,12 +284,13 @@
             <div class="col-sm-8">
                 <div class="radio" data-initialize="radio">
                     <label class="radio-custom radio-inline" data-initialize="radio">
-                        <input class="sr-only awsPrivacyProtectTrue" checked="checked" name="aws${CONTACT_TYPE}_privacyProtect" type="radio" value="true"/> Hide contact information if the TLD registry, and the registrar, allow it 
+                        <input class="sr-only awsPrivacyProtectTrue" id="aws${CONTACT_TYPE}_privacyProtectTrue" checked="checked" name="${CONTACT_TYPE}_privacyProtect" type="radio" value="true"/> Hide contact information if the TLD registry, and the registrar, allow it 
                     </label>
                     <label class="radio-custom radio-inline" data-initialize="radio">
-                        <input class="sr-only awsPrivacyProtectFalse" name="aws${CONTACT_TYPE}_privacyProtect" type="radio" value="false"/> Don't hide contact information
+                        <input class="sr-only awsPrivacyProtectFalse" id="aws${CONTACT_TYPE}_privacyProtectFalse" name="${CONTACT_TYPE}_privacyProtect" type="radio" value="false"/> Don't hide contact information
                     </label>
                 </div>
+                <small id="aws${CONTACT_TYPE}RegisterDomainProtectionStatus"></small>
             </div>
         </div>
         #end
@@ -268,6 +310,30 @@
                     {{/if}}
                 </div>
             </div>
+        </script>
+
+        <script id="awsRegisterReviewDetailsTemplate" type="text/html">
+            {{firstName}} {{lastName}}
+            <br/>
+            {{organizationName}}
+            {{\#if organizationName}}<br/>{{/if}}
+            {{email}}
+            <br/>
+            {{phoneNumber}}
+            <br/>
+            {{addressLine1}} {{addressLine2}}
+            <br/>
+            {{state}}
+            <br/>
+            {{city}}
+            <br/>
+            {{zipCode}}
+            <br/>
+            {{\#if privacyProtect}}
+            Privacy protected
+            {{else}}
+            No privacy protection
+            {{/if}}
         </script>
 
         <script type="text/javascript" src="/static/chosen/1.1.0/chosen.jquery.js" >//</script>
