@@ -1,65 +1,45 @@
-var resultMapping = {
+var feedbackMapping = {
     "properties": {
-        "surveyId": {
-            "eager_global_ordinals": true,
-            "store": true,
+        "created": {
             "type": "keyword",
+            "store": true
+        },
+        "option_slug": {
+            "type": "keyword",
+            "store": true,
             "fields": {
                 "text": {
-                    "fielddata": true,
-                    "store": true,
                     "type": "text"
                 }
             }
         },
-        "questionId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "answerId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "userId": {
-            "eager_global_ordinals": true,
-            "store": true,
-            "type": "keyword",
-            "fields": {
-                "text": {
-                    "fielddata": true,
-                    "store": true,
-                    "type": "text"
-                }
-            }
-        },
-        "createdDate": {
-            "store": true,
-            "type": "date"
-        },
-        "answerBody": {
-            "fielddata": true,
-            "store": true,
+        "option_text": {
             "type": "text",
             "fields": {
                 "keyword": {
-                    "store": true,
-                    "type": "keyword"
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "processed": {
+            "type": "boolean"
+        },
+        "profileId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "website": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
                 }
             }
         }

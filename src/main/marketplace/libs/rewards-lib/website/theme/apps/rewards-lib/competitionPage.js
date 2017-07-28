@@ -23,7 +23,7 @@ $(function () {
                 divViewUploaded.empty();
                 divViewUploaded.append(img);
             }
-            img.attr("src", "uploads/" + name + "/alt-150-150.png");
+            img.attr("src", href + "/alt-150-150.png");
             pulseBorder(divViewUploaded);
         }
     });

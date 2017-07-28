@@ -83,7 +83,7 @@
                             <select name="searchReward" id="searchReward" class="form-control">
                                 <option value="">&nbsp;</option>
                                 #foreach($r in $page.rewards)
-                                    <option value="$r.name">$r.title</option>
+                                <option value="$r.name">$r.title</option>
                                 #end
                             </select>
                         </div>
@@ -94,7 +94,7 @@
                             <select name="tagId" id="tagId" class="form-control">
                                 <option value="">&nbsp;</option>
                                 #foreach($pointTag in $page.pointTags)
-                                    <option value="$pointTag.id">$pointTag.title</option>
+                                <option value="$pointTag.id">$pointTag.title</option>
                                 #end
                             </select>
                         </div>
@@ -105,7 +105,7 @@
                             <select name="reasonCode" id="reasonCode" class="form-control">
                                 <option value="">&nbsp;</option>
                                 #foreach($code in $page.reasonCodes)
-                                    <option value="$code">$code</option>
+                                <option value="$code">$code</option>
                                 #end
                             </select>
                         </div>
@@ -138,61 +138,61 @@
                         <tbody id="pointsBody" class="pagination-results">
 
                             #if( $page.paginator.isEmpty() )
-                                <tr>
-                                    <td colspan="7">There are no results matching the selected date range and criteria</td>
-                                </tr>
+                            <tr>
+                                <td colspan="7">There are no results matching the selected date range and criteria</td>
+                            </tr>
                             #else
-                                #foreach($p in $page.paginator.records)
-                                    #set($isDebit = false)
-                                    #if($p.class.simpleName == "PointsDebit")
-                                        #set($isDebit = true)
+                            #foreach($p in $page.paginator.records)
+                            #set($isDebit = false)
+                            #if($p.class.simpleName == "PointsDebit")
+                            #set($isDebit = true)
+                            #end
+                            <tr>
+                                <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
+                                <td>
+                                    #if( $p.issuedTo.asOrg() )
+                                    <a href="/organisations/$p.issuedTo.orgId/edit">$p.issuedTo.formattedName</a>
+                                    #else
+                                    <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
                                     #end
-                                    <tr>
-                                        <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
-                                        <td>
-                                            #if( $p.issuedTo.asOrg() )
-                                                <a href="/organisations/$p.issuedTo.orgId/edit">$p.issuedTo.formattedName</a>
-                                            #else
-                                                <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
-                                            #end
-                                        </td>
-                                        <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
-                                        <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
-                                        <td>
-                                            #if($isDebit)
-                                                <span class="label label-warning">-$p.numPoints</span>
-                                            #else
-                                                <span class="label label-success">$p.numPoints</span>
-                                            #end
-                                        </td>
-                                        <td>$!p.reason</td>
-                                        <td>
-                                            #if($isDebit)
+                                </td>
+                                <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
+                                <td>$!formatter.formatDateTime($p.expiryDate, $page.organisation.timezone)</td>
+                                <td>
+                                    #if($isDebit)
+                                    <span class="label label-warning">-$p.numPoints</span>
+                                    #else
+                                    <span class="label label-success">$p.numPoints</span>
+                                    #end
+                                </td>
+                                <td>$!p.reason</td>
+                                <td>
+                                    #if($isDebit)
                                     $!p.reasonCode
                                     #else
-                                                $!p.pointsTag.title
-                                            #end
-                                        </td>
-                                        <td class="center">
-                                            <div class="checkbox-table">
-                                                <label>
-                                                    #if($isDebit)
-                                                        <input type="checkbox" name="toRemoveId" value="D-$p.id" />
-                                                    #else
-                                                        <input type="checkbox" name="toRemoveId" value="C-$p.id" />
-                                                    #end
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <!--
-                                <td>
-                                    <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
-                                        <span class="glyphicon glyphicon-pencil"></span>
-                                    </a>
+                                    $!p.pointsTag.title
+                                    #end
                                 </td>
+                                <td class="center">
+                                    <div class="checkbox-table">
+                                        <label>
+                                            #if($isDebit)
+                                            <input type="checkbox" name="toRemoveId" value="D-$p.id" />
+                                            #else
+                                            <input type="checkbox" name="toRemoveId" value="C-$p.id" />
+                                            #end
+                                        </label>
+                                    </div>
+                                </td>
+                                <!--
+                        <td>
+                            <a href="$p.id" class="btn btn-primary btnEditPoints" title="Edit this credit record">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
                                 -->
-                                    </tr>
-                                #end
+                            </tr>
+                            #end
                             #end
                         </tbody>
                         <tfoot id="pointsFooter">
@@ -202,7 +202,7 @@
                                 </td>
                             </tr>
                         </tfoot>
-                        
+
                     </table>
                 </div>
             </div>
@@ -220,31 +220,31 @@
                             <div class="col-sm-12">
                                 <div class="uploadCsv" id="doUploadCsv"></div>
                                 <br>
-                                <div class="results" style="display: none">
-                                    <p>
-                                        <strong>Num inserted:</strong>
-                                        <span class="numInserted">-</span>
-                                        <strong>Num updated:</strong>
-                                        <span class="numUpdated">-</span>
-                                        <strong>Unmatched rows:</strong>
-                                        <span class="numUnmatched">-</span>
-                                    </p>
-                                    <br>
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover table-condensed">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="results" style="display: none">
+                                        <p>
+                                            <strong>Num inserted:</strong>
+                                            <span class="numInserted">-</span>
+                                            <strong>Num updated:</strong>
+                                            <span class="numUpdated">-</span>
+                                            <strong>Unmatched rows:</strong>
+                                            <span class="numUnmatched">-</span>
+                                        </p>
+                                        <br>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover table-condensed">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -288,7 +288,7 @@
                                 <div class="col-md-9">
                                     <select name="awardedReward" required="true" id="" class="form-control input-sm required">
                                         #foreach($reward in $page.rewards)
-                                            <option value="$reward.name">$reward.title</option>
+                                        <option value="$reward.name">$reward.title</option>
                                         #end
                                     </select>
                                 </div>
@@ -300,7 +300,7 @@
                                     <select name="awardPointsTag" class="form-control input-sm">
                                         <option value="">[None]</option>
                                         #foreach($pointTag in $page.pointTags)
-                                            <option value="$pointTag.name">$pointTag.title</option>
+                                        <option value="$pointTag.name">$pointTag.title</option>
                                         #end
                                     </select>
                                 </div>
@@ -310,6 +310,16 @@
                                 <label class="control-label col-md-3" for="reason">Reason</label>
                                 <div class="col-md-9">
                                     <input type="text" name="reason" class="form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="issuedDate">Issued Date</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" name="issuedDate" placeholder="Issued Date" data-format="DD/MM/YYYY" class="form-control DateTime" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -355,7 +365,7 @@
                                 <div class="col-md-9">
                                     <select name="awardedReward" required="true" id="" class="form-control input-sm required">
                                         #foreach($reward in $page.rewards)
-                                            <option value="$reward.name">$reward.title</option>
+                                        <option value="$reward.name">$reward.title</option>
                                         #end
                                     </select>
                                 </div>
@@ -381,7 +391,7 @@
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-right reason-codes">
                                                 #foreach( $reasonCodePair in $applications.rewardStore.reasonCodes.entrySet() )
-                                                    <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
+                                                <li><a href="$reasonCodePair.key">$reasonCodePair.value ($reasonCodePair.key)</a></li>
                                                 #end
                                             </ul>
                                         </div><!-- /btn-group -->
@@ -389,6 +399,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="issuedDate">Issued Date</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" name="issuedDate" placeholder="Issued Date" data-format="DD/MM/YYYY" class="form-control DateTime" />
+                                        <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>

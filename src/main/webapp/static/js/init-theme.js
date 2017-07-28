@@ -219,7 +219,7 @@ function initTabPanel() {
         log("initTabPanel:click1", this);
         var href = $(this).attr("href");
         $(this).addClass("Active").siblings().removeClass("Active");
-        $(".TabContent").hide().filter("[rel=" + href + "]").show();
+        $(".TabContent").hide().filter('[rel="' + href + '"]').show();
         
     });
     
@@ -228,7 +228,7 @@ function initTabPanel() {
     if (url.contains("#")) {
         var tabId = url.substring(url.indexOf("#"));
         log("tabId", tabId);
-        var selectedTab = tabLinks.filter("[href=" + tabId + "]");
+        var selectedTab = tabLinks.filter('[href="' + tabId + '"]');
         log("selectedTab", selectedTab);
         if (selectedTab.length > 0) {
             selectedTab.first().click();
