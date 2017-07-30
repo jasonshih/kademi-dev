@@ -82,19 +82,19 @@ function getAnswerByUser(page, pollId, user) {
         'query': {
             'bool': {
                 'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.ANSWERER
-                    }
-                }],
+                        'type': {
+                            'value': RECORD_TYPES.ANSWERER
+                        }
+                    }],
                 'filter': [{
-                    'term': {
-                        'pollId': pollId
-                    }
-                }, {
-                    'term': {
-                        'user': user
-                    }
-                }]
+                        'term': {
+                            'pollId': pollId
+                        }
+                    }, {
+                        'term': {
+                            'user': user
+                        }
+                    }]
             }
         }
     };
@@ -118,7 +118,7 @@ function getAnswers(page, pollId) {
         'sort': {
             'date': 'desc'
         },
-        'stored_fields': [
+        '_source': [
             'user',
             'answer',
             'date'
@@ -126,16 +126,18 @@ function getAnswers(page, pollId) {
         'size': 10000,
         'query': {
             'bool': {
-                'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.ANSWERER
+                'must': [
+                    {
+                        'type': {
+                            'value': RECORD_TYPES.ANSWERER
+                        }
+                    },
+                    {
+                        'term': {
+                            'pollId': pollId
+                        }
                     }
-                }],
-                'filter': [{
-                    'term': {
-                        'pollId': pollId
-                    }
-                }]
+                ],
             }
         },
         'aggregations': {

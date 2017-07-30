@@ -15,7 +15,7 @@
 
 #if ($user && $poll)
 #if (!$answer)
-<form method="post" action="/kpoll/${poll.name}/answer" id="form-kpoll">
+<form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
     <div class="kpoll">
         <div class="kpoll-question clearfix">
             $poll.jsonObject.question
@@ -80,7 +80,7 @@
 #end
 
 #else
-<form method="post" action="/kpoll/${poll.name}/answer" id="form-kpoll">
+<form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
     <div class="kpoll">
         <div class="kpoll-question clearfix">
             Example Poll
