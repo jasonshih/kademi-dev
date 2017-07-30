@@ -25,7 +25,11 @@
         <tr class="title">
             <td class="title"><a class="text1" href="$formatter.percentEncode($reward.name)">$reward.title</a></td>
             <td class="minor">
-                <abbr title="$!formatter.formatDateISO8601($reward.reward.endDate)" class="info timeago">$!reward.endDate</abbr>
+                <abbr title="$!formatter.formatDateISO8601($reward.reward.endDate)" class="info timeago">#if($reward.endDate)
+                $reward.endDate
+                #else
+                -No date specified-
+                #end</abbr>
             </td>
             <td class="">
                 <a class="button status $reward.statusClass" href="$formatter.percentEncode($reward.name)">$reward.statusClass</a>
