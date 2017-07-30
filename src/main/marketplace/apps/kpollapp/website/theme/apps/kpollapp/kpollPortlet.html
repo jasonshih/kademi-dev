@@ -33,7 +33,7 @@
                     <p class="alert alert-info lead"><i class="glyphicon glyphicon-info-sign"></i> You already answered this poll!</p>
                 #end
                 <div class="kpoll-question clearfix">
-                    $poll.source.question.value
+                    $poll.source.question
                 </div>
                 <hr />
                 <h3 class="kpoll-total-answer">Total answer: <span class="label label-success">$answers.total</span></h3>
@@ -42,7 +42,7 @@
                     <div class="answer">
                         <div class="row">
                             <div class="col-sm-4">
-                                #if ($answer && $answer.source.answer.value == $ans.answer)
+                                #if ($answer && $answer.source.answer == $ans.answer)
                                     <strong>$ans.answer (<em class="small">your answer</em>)</strong>
                                 #else
                                     $ans.answer
