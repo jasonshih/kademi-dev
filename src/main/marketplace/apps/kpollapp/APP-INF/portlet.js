@@ -32,31 +32,31 @@ function kpollPortlet(page, params, context) {
         'query': {
             'bool': {
                 'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.POLL
-                    }
-                }],
-                'filter':  [{
-                    'term': {
-                        'enable': true
-                    }
-                }, {
-                    'terms': {
-                        'groups': groups
-                    }
-                }, {
-                    'range': {
-                        'startTime': {
-                            'lte': 'now'
+                        'type': {
+                            'value': RECORD_TYPES.POLL
                         }
-                    }
-                }, {
-                    'range': {
-                        'endTime': {
-                            'gte': 'now'
+                    }],
+                'filter': [{
+                        'term': {
+                            'enable': true
                         }
-                    }
-                }]
+                    }, {
+                        'terms': {
+                            'groups': groups
+                        }
+                    }, {
+                        'range': {
+                            'startTime': {
+                                'lte': 'now'
+                            }
+                        }
+                    }, {
+                        'range': {
+                            'endTime': {
+                                'gte': 'now'
+                            }
+                        }
+                    }]
             }
         }
     };
@@ -141,6 +141,8 @@ function answerPoll(page, params, context) {
                 };
                 var id = generateAnswererId();
                 kpollDB.createNew(id, JSON.stringify(data), RECORD_TYPES.ANSWERER);
+
+                eventManager.goalAchieved("kpollAnsweredGoal", {"poll": pollId});
             } else {
                 log.warn('You already answered this poll! Answer id: {}', answer.id);
 

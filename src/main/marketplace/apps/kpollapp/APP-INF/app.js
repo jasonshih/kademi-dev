@@ -80,3 +80,5 @@ controllerMappings
     .build();
 
 controllerMappings.addComponent("kpollapp", "kpoll", "html", "Shows polls", "KPoll App component");
+
+controllerMappings.addNodeType("kpollAnsweredGoal", "kpollapp/kpollAnsweredGoalNode.js");
