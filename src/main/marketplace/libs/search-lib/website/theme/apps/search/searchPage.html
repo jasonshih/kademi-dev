@@ -1,34 +1,35 @@
 <html>
-<head>
-    <title>Search</title>
-</head>
-<body>
-    <section>
-        <div class="container-bg background-for">
-            <div class="container-layout container">
-                <div class="container-content-wrapper">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <section data-tag="h1" data-type="component-searchBox">
-                            <div data-dynamic-href="_components/searchBox"></div>
-                        </section>
+    <head>
+        <title>Search</title>
+    </head>
+    <body>
+        <section>
+            <div class="container-bg background-for">
+                <div class="container-layout container">
+                    <div class="container-content-wrapper">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <section data-tag="h1" data-type="component-searchBox">
+                                    <div data-dynamic-href="_components/searchBox"></div>
+                                </section>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" data-type="container-content">
+                                <section data-tag="h1" data-type="component-searchResult">
+                                    <div data-dynamic-href="_components/searchResult"></div>
+                                </section>
+                            </div>
+                            <!-- TODO: Will uncomment when OmniSearch support aggregations -->
+                            <!--<div class="col-sm-4" data-type="container-content">
+                                <section data-type="component-searchResultBucket">
+                                    <div data-dynamic-href="_components/searchResultBucket"></div>
+                                </section>
+                            </div>-->
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-8" data-type="container-content">
-                        <section data-tag="h1" data-type="component-searchResult">
-                            <div data-dynamic-href="_components/searchResult"></div>
-                        </section>
-                    </div>
-                    <div class="col-sm-4" data-type="container-content">
-                        <section data-type="component-searchResultBucket">
-                            <div data-dynamic-href="_components/searchResultBucket"></div>
-                        </section>
-                    </div>
-                </div>
                 </div>
             </div>
-        </div>
-    </section>
-</body>
+        </section>
+    </body>
 </html>

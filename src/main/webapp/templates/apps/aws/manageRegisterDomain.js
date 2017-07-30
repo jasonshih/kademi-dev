@@ -1,6 +1,19 @@
 (function ($) {
     var _tlds = {};
     var contactTypes = ['Registrant', 'Admin', 'Tech'];
+    var rowTemplate = Handlebars.compile('<tr>'
+            + '    <td>{{domainName}}</td>'
+            + '    <td>'
+            + '        <i class="fa fa-2x {{\#if available}}fa-check text-success{{else}}fa-times text-danger{{/if}}" data-toggle="tooltip" data-placement="top" title="{{hint}}"></i> {{status}}</td>'
+            + '    <td>{{\#if available}}US${{registerPrice}}{{/if}}</td>'
+            + '    <td>'
+            + '        {{\#if available}}'
+            + '        <button type="button" class="btn btn-info btn-aws-buydomain" data-tld="{{tld}}" data-domain="{{domainName}}">Buy Domain</button>'
+            + '        {{/if}}'
+            + '    </td>'
+            + '</tr>');
+    var extraFieldTemplate = Handlebars.compile($('#awsRegisterExtraFieldTemplate').html());
+    var reviewTemplate = Handlebars.compile($('#awsRegisterReviewDetailsTemplate').html());
 
     var _selectedDomain = null;
     var _selectedTld = null;
@@ -8,7 +21,7 @@
     // Init Wizard
     function initWizard() {
         var wizardDiv = $('#awsRegisterDomainWizard');
-        var extraFieldTemplate = Handlebars.compile($('#awsRegisterExtraFieldTemplate').html());
+        var awsContactDetailsForm = $('#awsContactDetails');
 
         wizardDiv.wizard();
 
@@ -23,7 +36,6 @@
         });
 
         wizardDiv.on('actionclicked.fu.wizard', function (e, data) {
-            flog(data);
             if (data.step === 1) {
                 if (_selectedTld == null || _selectedDomain == null) {
                     e.preventDefault();
@@ -48,14 +60,58 @@
                         }
                     }
 
-                    updateRequiredFields(true);
-                    updatePrivacyProtection(true);
+                    updateRequiredFields();
+                    updatePrivacyProtection();
+                    resetValidation(awsContactDetailsForm);
                 }
             } else if (data.step === 2) {
                 if (data.direction === 'previous') {
                     _selectedTld = null;
                     _selectedDomain = null;
                     $('#awsContactDetails .required').removeClass('required');
+                } else if (data.direction === 'next') {
+                    // Check fields first
+                    resetValidation(awsContactDetailsForm);
+
+                    if (validateFormFields(awsContactDetailsForm)) {
+                        // Populate review tab
+                        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
+                        var formData = $('#awsContactDetails').serializeArray();
+
+                        if (allTheSame) {
+                            var details = {};
+
+                            for (var i = 0; i < formData.length; i++) {
+                                var field = formData[i];
+
+                                if (field.name.startsWith('Registrant')) {
+                                    details[field.name.replace('Registrant_', '')] = field.value;
+                                }
+                            }
+
+                            var template = reviewTemplate(details);
+
+                            for (var i = 0; i < contactTypes.length; i++) {
+                                $('#aws' + contactTypes[i] + 'ReviewDetails').empty().append(template);
+                            }
+
+                            flog(details);
+                        } else {
+                            // reviewTemplate
+                        }
+                    } else {
+                        e.preventDefault();
+                    }
+                }
+            } else if (data.step === 3) {
+                if (data.direction === 'next') {
+                    var acceptedTcs = $('#acceptTCS').is(':checked');
+                    if (acceptedTcs) {
+                        
+                    } else {
+                        e.preventDefault();
+                        Kalert.warning('Please accept the Terms and Conditions', 'The Terms and Conditions must be accepted before continuing');
+                    }
                 }
             }
         });
@@ -73,25 +129,24 @@
             width: '100%'
         });
 
-        $('body').on('click', '.btn-aws-buydomain', function (e) {
+        $('body').on('click', '.btn-aws-checkdomain', function (e) {
             e.preventDefault();
 
-            var btn = $(this);
+            _selectedDomain = null;
+            _selectedTld = null;
 
-            _selectedDomain = btn.data('domain');
-            _selectedTld = btn.data('tld');
+            $('#awsDomainAvailabilityName').empty();
+            $('#awsDomainAvailabilityStatus').empty().html('<i class="fa fa-refresh fa-spin"></i>');
+            $('#awsDomainSuggestionsTable').empty().html('<i class="fa fa-refresh fa-spin"></i>');
+            $('#awsDomainAvailabilityTable').empty().append('<i class="fa fa-refresh fa-spin"></i>');
+            $('#awsDomainAvailability').hide();
+            $('#awsDomainSuggestions').hide();
 
-            $('#awsRegisterDomainWizard').wizard('next');
-        });
+            resetValidation(form);
 
-        form.forms({
-            allowPostForm: false,
-            onValid: function (form, config) {
+            if (validateFormFields(form)) {
                 var domainName = domainInp.val() + '.' + tldSelect.val();
                 $('#awsDomainAvailabilityName').empty().text(domainName);
-                $('#awsDomainAvailabilityStatus')
-                        .empty()
-                        .html('<i class="fa fa-refresh fa-spin"></i>');
                 $('#awsDomainAvailability').show();
                 $('#awsDomainSuggestions').show();
 
@@ -106,6 +161,8 @@
                             $('#awsDomainAvailabilityTable')
                                     .empty()
                                     .append(generateDomainRow(domainName, resp.data.status));
+                            $('[data-toggle="tooltip"]').tooltip('destroy');
+                            $('[data-toggle="tooltip"]').tooltip();
                         } else {
 
                         }
@@ -131,12 +188,25 @@
                             $('#awsDomainSuggestionsTable')
                                     .empty()
                                     .append(rows);
+                            $('[data-toggle="tooltip"]').tooltip('destroy');
+                            $('[data-toggle="tooltip"]').tooltip();
                         } else {
                             flog('Oh No!!');
                         }
                     }
                 });
             }
+        });
+
+        $('body').on('click', '.btn-aws-buydomain', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+
+            _selectedDomain = btn.data('domain');
+            _selectedTld = btn.data('tld');
+
+            $('#awsRegisterDomainWizard').wizard('next');
         });
 
         populateTLDs();
@@ -152,6 +222,9 @@
             } else {
                 $('.awsContactDetailsExtraFields').show(500);
             }
+
+            updateRequiredFields();
+            updatePrivacyProtection();
         });
 
         $('body').on('change', '.awsContactType', function (e) {
@@ -161,15 +234,14 @@
                 for (var i = 0; i < contactTypes.length; i++) {
                     $('#aws' + contactTypes[i] + '_organizationName').prop('disabled', true);
                 }
-                updateRequiredFields(false);
-                updatePrivacyProtection(false);
             } else {
                 for (var i = 0; i < contactTypes.length; i++) {
                     $('#aws' + contactTypes[i] + '_organizationName').prop('disabled', false);
                 }
-                updateRequiredFields(true);
-                updatePrivacyProtection(true);
             }
+
+            updateRequiredFields();
+            updatePrivacyProtection();
         });
     }
 
@@ -213,14 +285,14 @@
                 break;
         }
 
-        return '<tr>'
-                + ' <td>' + name + '</td>'
-                + ' <td>' + (avail ? '<i class="fa fa-check fa-2x text-success"></i> ' : '<i class="fa fa-times fa-2x text-danger"></i> ') + s + '</td>'
-                + ' <td>' + (avail ? 'US$' + _tlds[tld].registerPrice + '</td>' : '')
-                + ' <td>'
-                + (avail ? '<button type="button" class="btn btn-info btn-aws-buydomain" data-tld="' + tld + '" data-domain="' + name + '">Buy Domain</button>' : '')
-                + '</td>'
-                + '</tr>';
+        return rowTemplate({
+            domainName: name,
+            available: avail,
+            hint: hint,
+            status: s,
+            registerPrice: _tlds[tld].registerPrice,
+            tld: tld
+        });
     }
 
     function populateTLDs() {
@@ -250,55 +322,83 @@
         });
     }
 
-    function updateRequiredFields(isCompany) {
+    function updateRequiredFields() {
         $('#awsContactDetails .required').removeClass('required');
 
         var tld = _tlds[_selectedTld];
-        var ownerFields = (isCompany ? tld.ownerFieldsForNonIndividuals : tld.ownerFieldsForIndividuals);
 
-        if (ownerFields !== null && ownerFields.length > 0) {
-            for (var i = 0; i < ownerFields.length; i++) {
-                var fieldName = null;
-                var f = ownerFields[i];
-                switch (f) {
-                    case 'CONTACT_TYPE':
-                        fieldName = 'contactType';
-                        break;
-                    case 'FIRST_NAME':
-                        fieldName = 'firstName';
-                        break;
-                    case 'LAST_NAME':
-                        fieldName = 'lastName';
-                        break;
-                    case 'ORG':
-                        fieldName = 'organizationName';
-                        break;
-                    case 'EMAIL':
-                        fieldName = 'email';
-                        break;
-                    default:
-                        fieldName = f;
-                }
+        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
 
-                for (var b = 0; b < contactTypes.length; b++) {
-                    $('#aws' + contactTypes[b] + '_' + fieldName).addClass('required');
+        var cts = (allTheSame ? ['Registrant'] : contactTypes);
+
+        for (var b = 0; b < cts.length; b++) {
+            var type = cts[b];
+            var isCompany = $('aws' + type + '_contactType').val() != 'PERSON';
+
+            var ownerFields = (isCompany ? tld.ownerFieldsForNonIndividuals : tld.ownerFieldsForIndividuals);
+
+            if (ownerFields !== null && ownerFields.length > 0) {
+                for (var i = 0; i < ownerFields.length; i++) {
+                    var fieldName = null;
+                    var f = ownerFields[i];
+                    switch (f) {
+                        case 'CONTACT_TYPE':
+                            fieldName = 'contactType';
+                            break;
+                        case 'FIRST_NAME':
+                            fieldName = 'firstName';
+                            break;
+                        case 'LAST_NAME':
+                            fieldName = 'lastName';
+                            break;
+                        case 'ORG':
+                            fieldName = 'organizationName';
+                            break;
+                        case 'EMAIL':
+                            fieldName = 'email';
+                            break;
+                        default:
+                            fieldName = f;
+                    }
+
+                    $('#aws' + type + '_' + fieldName).addClass('required');
                 }
             }
         }
     }
 
-    function updatePrivacyProtection(isCompany) {
+    function updatePrivacyProtection() {
         var tld = _tlds[_selectedTld];
-        var privacyLevel = (isCompany ? tld.whoisPrivacyLevelForNonIndividuals : tld.whoisPrivacyLevelForIndividuals);
+        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
+        var cts = (allTheSame ? ['Registrant'] : contactTypes);
 
-        if (privacyLevel === 'NONE') {
-            $('.awsPrivacyProtectFalse').click();
-            $('.awsPrivacyProtectFalse').prop('disabled', true);
-            $('.awsPrivacyProtectTrue').prop('disabled', true);
-        } else if (privacyLevel === 'PARTIAL') {
-            $('.awsPrivacyProtectTrue').click();
-            $('.awsPrivacyProtectFalse').prop('disabled', false);
-            $('.awsPrivacyProtectTrue').prop('disabled', false);
+        for (var b = 0; b < cts.length; b++) {
+            var type = cts[b];
+            var isCompany = $('aws' + type + '_contactType').val() != 'PERSON';
+
+            var privacyLevel = (isCompany ? tld.whoisPrivacyLevelForNonIndividuals : tld.whoisPrivacyLevelForIndividuals);
+            $('#aws' + type + 'RegisterDomainProtectionStatus').empty();
+
+            var t = '#aws' + type + '_privacyProtectTrue';
+            var f = '#aws' + type + '_privacyProtectFalse';
+
+            if (privacyLevel === 'NONE') {
+                $(f).click();
+                $(f).prop('disabled', true);
+                $(t).prop('disabled', true);
+                $(f).closest('label').addClass('disabled');
+                $(t).closest('label').addClass('disabled');
+
+                $('.awsRegisterDomainProtectionStatus').text('Privacy protection is not available for .' + _selectedTld + ' domains.');
+            } else if (privacyLevel === 'PARTIAL') {
+                $(t).click();
+                $(f).prop('disabled', false);
+                $(t).prop('disabled', false);
+                $(f).closest('label').removeClass('disabled');
+                $(t).closest('label').removeClass('disabled');
+
+                $('#aws' + type + 'RegisterDomainProtectionStatus').text('Privacy protection hides some contact details for .' + _selectedTld + ' domains.');
+            }
         }
     }
 

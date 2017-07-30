@@ -1,7 +1,7 @@
 var iframeUrl;
 var win = $(window);
 
-function initManageBlogArticle() {
+function initManageBlogArticle(pagePath) {
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
     
@@ -31,6 +31,8 @@ function initManageBlogArticle() {
                 iframeMode: true,
                 allGroups: allGroups,
                 snippetsUrl: '_components/',
+                basePath: pagePath,
+                pagePath: pagePath,
                 onReady: function () {
                     loading.remove();
                     editor.next().css('height', getMainContainerContentHeight() - 38 - 32 - 2 - 15)

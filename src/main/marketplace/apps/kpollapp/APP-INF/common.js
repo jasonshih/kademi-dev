@@ -44,7 +44,7 @@ function getPolls(page) {
 }
 
 function getPollById(page, pollId) {
-    log.info('getPollById > page={}, pollId={}', page, pollId);
+    log.info('getPollById > page={}, pollId={}', [page, pollId]);
 
     var kpollDB = getKpollDB(page);
     var poll = kpollDB.child(pollId);
@@ -70,9 +70,9 @@ function doDBSearch(page, queryJson) {
 }
 
 function getAnswerByUser(page, pollId, user) {
-    log.info('getAnswerByUser > page={}, pollId={}, user={}', page, pollId, user);
+    log.info('getAnswerByUser > page={}, pollId={}, user={}', [page, pollId, user]);
     var queryJson = {
-        'fields': [
+        'stored_fields': [
             'user',
             'pollId',
             'answer',
@@ -111,14 +111,14 @@ function getAnswerByUser(page, pollId, user) {
 }
 
 function getAnswers(page, pollId) {
-    log.info('getAnswers > page={}, pollId={}', page, pollId);
+    log.info('getAnswers > page={}, pollId={}', [page, pollId]);
 
     var poll = getPollById(page, pollId);
     var queryJson = {
         'sort': {
             'date': 'desc'
         },
-        'fields': [
+        'stored_fields': [
             'user',
             'answer',
             'date'
@@ -232,7 +232,7 @@ function updateAnswerMapping(page) {
 }
 
 function checkPollId(rf, groupName, groupVal, mapOfGroups) {
-    log.info('checkPollId > {} {} {} {}', rf, groupName, groupVal, mapOfGroups);
+    log.info('checkPollId > {} {} {} {}', [rf, groupName, groupVal, mapOfGroups]);
 
     var poll = getPollById(rf, groupVal);
 

@@ -54,7 +54,7 @@
             <div class="answer">
                 <div class="row">
                     <div class="col-sm-4">
-                        #if ($answer && $answer.fields.answer.value == $ans.answer)
+                        #if ($answer && $answer.source.answer == $ans.answer)
                         <strong>$ans.answer (<em class="small">your answer</em>)</strong>
                         #else
                         $ans.answer

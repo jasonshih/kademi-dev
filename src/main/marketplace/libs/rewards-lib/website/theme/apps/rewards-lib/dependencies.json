@@ -21,6 +21,30 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/formBuilder/1.24.3/form-builder.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/formBuilder/1.24.3/form-render.js"
+            }
+        },
+        {
+            "css": {
+                "path": "/static/formBuilder/1.24.3/form-builder.css",
+                "cssMedia": "all"
+            }
+        },
+        {
+            "css": {
+                "path": "/static/formBuilder/1.24.3/form-render.css",
+                "cssMedia": "all"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
             }
         },
