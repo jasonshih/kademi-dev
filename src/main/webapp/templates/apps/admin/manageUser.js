@@ -236,7 +236,6 @@ function doSearch() {
     var newHref = uri.toString();
     
     window.history.pushState('', newHref, newHref);
-    Msg.info('Searching...', 'search', 60000);
     
     $.ajax({
         type: 'GET',
@@ -253,9 +252,7 @@ function doSearch() {
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
             
             initSort();
-            initLoginAs();
-            
-            Msg.success('Search complete', 'search');
+            initLoginAs();            
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
