@@ -68,7 +68,7 @@ function clearAnswerers(page, params) {
         'sort': {
             'date': 'desc'
         },
-        'fields': [
+        'stored_fields': [
             'user',
             'answer',
             'date'

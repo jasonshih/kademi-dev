@@ -23,7 +23,7 @@ function kpollPortlet(page, params, context) {
         'sort': {
             'created': 'desc'
         },
-        'fields': [
+        'stored_fields': [
             'name',
             'question',
             'answers'
@@ -86,7 +86,7 @@ function kpollPortlet(page, params, context) {
 }
 
 function answerPoll(page, params, context) {
-    log.info('answerPoll > {} {} {}', page, params, context);
+    log.info('answerPoll > {} {} {}', [page, params, context]);
 
     var pollId = page.attributes.pollId;
     var status = {
