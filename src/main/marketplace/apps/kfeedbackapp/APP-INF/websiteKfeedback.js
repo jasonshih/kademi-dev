@@ -88,8 +88,6 @@ function createFeedback(page, params) {
         profileId: params.profileId,
         processed: false
     };
-    
-    log.info('EEEEE {} - {} - {}', surveyId, survey, survey.jsonObject);
 
     securityManager.runAsUser(survey.jsonObject.profileId, function () {
         db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
