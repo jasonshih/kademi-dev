@@ -2,28 +2,29 @@
     $(function () {
         flog('Init dashboard-alert from "alerts-lib"');
         
-        $('.dashboard-alert').bind('closed.bs.alert', function (e) {
-            var href = $(this).closest("div").find("a.msg").attr("href");
+        $('.dashboard-alert').bind('closed.bs.alert', function () {
+            var id = $(this).closest('div').find('a.msg').attr('data-id');
             
-            if (href) {
-                ackAlert(href);
+            if (id) {
+                ackAlert(id);
             }
         })
     });
     
-    function ackAlert(href) {
+    function ackAlert(id) {
         $.ajax({
             type: 'POST',
-            url: href,
-            dataType: "json",
+            url: '/alert-ack/',
+            dataType: 'json',
             data: {
-                ack: true
+                ackId: id
             },
             success: function (data) {
-                flog("acked", data);
+                flog('Acked', data);
             },
             error: function (resp, textStatus, errorThrown) {
-                alert("Error querying the list of organisations");
+                flog('Error querying the list of organisations', resp, textStatus, errorThrown);
+                alert('Error querying the list of organisations');
             }
         });
     }
