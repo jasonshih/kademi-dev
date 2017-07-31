@@ -114,7 +114,7 @@ function doSendTest() {
         },
         success: function (resp) {
             Msg.success('A test has been sent to your email address');
-            onTestResponse(resp);
+            onTestMultipleResponse(resp);
         },
         error: function (resp) {
             Msg.error('Sorry, we couldnt send the test. Please contact the administator to help find the problem.');
