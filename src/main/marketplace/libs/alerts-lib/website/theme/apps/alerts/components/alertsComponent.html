@@ -1,12 +1,7 @@
 #if ($page)
-    #if ($alerts)
-    #else
-        #if ($position == "bottom")
-            #set ($alerts = $applications.alerts.getMessages($folder, $user, "bottom"))
-        #else
-            #set ($alerts = $applications.alerts.getMessages($folder, $user, "top"))
-        #end
-    #end
+
+    #set ($alerts = $applications.alerts.getMessages($rootFolder, $user, $position))
+        
     #foreach($msg in $alerts)
     <div class="dashboard-alert alert #if($msg.type == "primary") bg-primary #else alert-${msg.type} #end">
         #if( $msg.id )
