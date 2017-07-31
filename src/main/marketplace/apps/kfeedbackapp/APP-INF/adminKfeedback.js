@@ -52,7 +52,8 @@ function createSurvey(page, params) {
         question: params.question,
         created: params.created,
         website: params.website,
-        options: JSON.parse(op)
+        options: JSON.parse(op),
+        profileId: securityManager.currentUser.name
     };
 
     var exists = db.child(survey.id);
@@ -75,27 +76,48 @@ function getFeedbackBySurvey(page, params) {
     var jsonDB = page.find(JSON_DB);
     var db = jsonDB.child(dbName);
     var id = params.id;
-
     if (db === null || !id) {
         return views.textView(JSON.stringify([]));
     }
 
-    var ret = db.findByType(TYPE_FEEDBACK + '-' + id);
+
+    var queryJson = {
+        'query': {
+            'bool': {
+                'must': [
+                    { 'type': { 'value': TYPE_FEEDBACK } },
+                    { 'term': { 'survey_id': id } }
+                ]
+            }
+        }
+
+    };
+    var searchResult = doDBSearch(page, queryJson);
+
 
     var result = [];
-    for (var i in ret) {
-        var d = ret[i].jsonObject;
-        var obj = JSON.parse(d);
+    for (var i = 0; i < searchResult.hits.hits.length; i++) {
+        var javaObj = searchResult.hits.hits[i].source;
+        var obj = {
+            survey_id: javaObj.survey_id,
+            processed: javaObj.processed,
+            website: javaObj.website,
+            option_text: javaObj.option_text,
+            created: javaObj.created,
+            profileId: javaObj.profileId,
+            option_slug: javaObj.option_slug
+        };
+
         if (obj.profileId !== null && obj.profileId !== undefined){
             var user = applications.userApp.findUserResourceById(formatter.toString(obj.profileId));
             if (user !== null) {
                 obj.name = user.firstName + ' ' + user.surName;
             }
         }
-        obj.id = ret[i].name;
+        obj.id = obj.name;
+
         result.push(obj);
     }
-
 
 
     return views.textView(JSON.stringify(result));

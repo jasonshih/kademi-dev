@@ -61,7 +61,7 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
         return null;
     }
     var queryJson = {
-        'fields': ['option_slug'],
+        '_source': ['option_slug'],
         'query': {
             'bool': {
                 'must': {

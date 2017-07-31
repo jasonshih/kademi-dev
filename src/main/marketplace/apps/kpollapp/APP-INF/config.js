@@ -13,46 +13,82 @@ var pollMappings = {
             "store": true
         },
         "question": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "answers": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "enable": {
-            "type": "boolean"
+            "type": "boolean",
+            "store": true
         },
         "created": {
-            "type": "date"
+            "type": "date",
+            "store": true
         },
         "createdBy": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "groups": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "modified": {
-            "type": "date"
+            "type": "date",
+            "store": true
         },
         "modifiedBy": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "startTime": {
-            "type": "date"
+            "type": "date",
+            "store": true
         },
         "endTime": {
-            "type": "date"
+            "type": "date",
+            "store": true
         },
         "point": {
-            "type": "integer"
+            "type": "integer",
+            "store": true
         },
         "pointSystem": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         }
     }
 };
@@ -60,19 +96,35 @@ var pollMappings = {
 var answererMappings = {
     "properties": {
         "user": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "pollId": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "answer": {
-            "type": "string",
-            "index": "not_analyzed"
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
         },
         "date": {
-            "type": "date"
+            "type": "date",
+            "store": true
         }
     }
 };
