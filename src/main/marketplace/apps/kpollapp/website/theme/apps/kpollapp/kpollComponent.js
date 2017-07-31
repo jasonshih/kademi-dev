@@ -23,6 +23,7 @@
 
                         component.attr('data-poll-name', surveyName);
                         keditor.initDynamicContent(dynamicElement);
+                        flog(component, surveyName);
                     });
                 }
             });
@@ -31,11 +32,7 @@
             flog('showSettingForm "kpoll" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-survey').val(dataAttributes['data-surveyname']);
-            form.find('.select-website').val(dataAttributes['data-websitename']);
-            form.find('.invitation').val(dataAttributes['data-invitation']);
-            form.find('.buttonStyle').val(dataAttributes['data-style']);
-            form.find('.align').val(dataAttributes['data-align']);
+            form.find('.select-survey').val(dataAttributes['data-poll-name']);
         }
     };
 

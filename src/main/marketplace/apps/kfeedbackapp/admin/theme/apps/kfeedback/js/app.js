@@ -52,8 +52,8 @@ App.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
             },
             resolve: {
                 surveys: ['Surveys', function (Surveys) {
-                    return Surveys.getAll(true);
-                }],
+                        return Surveys.getAll(true);
+                    }],
             }
         },
         'surveys': {
@@ -63,40 +63,41 @@ App.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
             url: '/list',
             resolve: {
                 surveys: ['Surveys', function (Surveys) {
-                    return Surveys.getAll(true);
-                }],
+                        return Surveys.getAll(true);
+                    }],
             }
         },
         'surveys.detail': {
             url: '/detail/?id',
             resolve: {
                 survey: ['Surveys', '$stateParams', function (Surveys, $stateParams) {
-                    if (!$stateParams.id || $stateParams.id == '') return null;
+                        if (!$stateParams.id || $stateParams.id == '')
+                            return null;
 
-                    return Surveys.get($stateParams.id);
-                }]
+                        return Surveys.get($stateParams.id);
+                    }]
             },
         },
         'surveys.view': {
             url: '/:id',
             resolve: {
                 survey: ['Surveys', '$stateParams', function (Surveys, $stateParams) {
-                    return Surveys.get($stateParams.id);
-                }],
+                        return Surveys.get($stateParams.id);
+                    }],
                 feedbacks: ['Feedbacks', '$stateParams', function (Feedbacks, $stateParams) {
-                    return Feedbacks.getBySurvey($stateParams.id);
-                }]
+                        return Feedbacks.getBySurvey($stateParams.id);
+                    }]
             }
         },
         'surveys.report': {
             url: '/:id/report',
             resolve: {
                 survey: ['Surveys', '$stateParams', function (Surveys, $stateParams) {
-                    return Surveys.get($stateParams.id);
-                }],
+                        return Surveys.get($stateParams.id);
+                    }],
                 feedbacks: ['Feedbacks', '$stateParams', function (Feedbacks, $stateParams) {
-                    return Feedbacks.getBySurvey($stateParams.id);
-                }]
+                        return Feedbacks.getBySurvey($stateParams.id);
+                    }]
             }
         }
     });
@@ -114,8 +115,8 @@ App.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     function lazyRouteParser(routes) {
         angular.forEach(routes, function (stateConfig, state) {
             var parentState = state.replace(/(^|\.)[^.]+$/, '')
-                , templateUrl = $rootApp + 'views/' + state + '.html?v=334'
-                , controller = state.replace(/(^|\.|-)(.)/g, function () {
+                    , templateUrl = $rootApp + 'views/' + state + '.html?v=334'
+                    , controller = state.replace(/(^|\.|-)(.)/g, function () {
                         return arguments[2].toUpperCase()
                     }) + 'Ctrl';
 
@@ -133,12 +134,12 @@ App.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
                 controllerAs: controller
             };
             defaultStateConfig['title'] = state
-                .replace(/\b(out|in|single)\b|\.|-/g, ' ') // Stripping stop words
-                .replace(/^\s+|\s+$/g, '') // Trim, ofcourse
-                .replace(/\b(.)/g, function () {
-                    return arguments[0].toUpperCase();
-                })
-                .toUpperCase();
+                    .replace(/\b(out|in|single)\b|\.|-/g, ' ') // Stripping stop words
+                    .replace(/^\s+|\s+$/g, '') // Trim, ofcourse
+                    .replace(/\b(.)/g, function () {
+                        return arguments[0].toUpperCase();
+                    })
+                    .toUpperCase();
 
             // A single state require an :id suffix in URL,
             //   and doesn't extend from its parent view
@@ -151,15 +152,15 @@ App.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
             }
 
             $stateProvider.state(
-                state,
-                angular.copy(
-                    angular.extend(
-                        defaultStateConfig,
-                        stateConfig
-                    ),
-                    stateConfig
-                )
-            );
+                    state,
+                    angular.copy(
+                            angular.extend(
+                                    defaultStateConfig,
+                                    stateConfig
+                                    ),
+                            stateConfig
+                            )
+                    );
 
             return null;
         });
@@ -197,6 +198,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
     if (survey != null) {
         $scope.edit = true;
         $scope.survey = survey;
+        $scope.survey.profileId= userName;
     } else {
         $scope.survey = {
             id: '',
@@ -204,6 +206,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
             name: '',
             question: '',
             redirect_link: '',
+            profileId: userName,
             options: [
                 {
                     title: 'Happy',
@@ -233,17 +236,18 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
     }
 
     $scope.$watch('survey.name', function () {
-        if ($scope.edit) return;
+        if ($scope.edit)
+            return;
         $scope.survey.slug = $scope.survey.name.toLowerCase()
-            .replace(/[^\w ]+/g, '')
-            .replace(/ +/g, '-')
-        ;
+                .replace(/[^\w ]+/g, '')
+                .replace(/ +/g, '-')
+                ;
     });
 
     $scope.save = function () {
         if ($scope.survey.name != ''
-            && $scope.survey.question != ''
-            && $scope.survey.options.length > 0) {
+                && $scope.survey.question != ''
+                && $scope.survey.options.length > 0) {
             var valid = true;
             for (var i = 0; i < $scope.survey.options.length; i++) {
                 if (!$scope.survey.options[i].redirectLink) {
@@ -284,7 +288,7 @@ App.controller('SurveysDetailCtrl', function ($scope, $state, Surveys, $statePar
             $scope.survey.options[key].slug = key + '-' + $scope.survey.options[key].title.toLowerCase()
                     .replace(/[^\w ]+/g, '')
                     .replace(/ +/g, '-')
-            ;
+                    ;
         });
     }
 });
@@ -316,7 +320,7 @@ App.controller('SurveysListCtrl', function ($scope, $state, $stateParams, Survey
     $scope.delete = function (row) {
         var c = confirm('Are you sure you want to delete this survey?');
         if (c) {
-            Surveys.delete(row, function(){
+            Surveys.delete(row, function () {
                 $state.go($state.current, {}, {reload: true}); //second parameter is for $stateParams
             });
         }
@@ -342,38 +346,38 @@ App.controller('SurveysViewCtrl', function ($scope, $state, Surveys, $stateParam
         $scope.chartOption.series = series;
     });
 
-    $scope.$watch('[website]', function(){
+    $scope.$watch('[website]', function () {
         $scope.htmlcode = Surveys.getEmailTemplate($scope.survey.website, $scope.kApp, $scope.survey);
     });
 
     var clipboard = new Clipboard('.btn-copy-template');
 
-    clipboard.on('success', function(e) {
+    clipboard.on('success', function (e) {
         Msg.info('Copied to clipboard');
         e.clearSelection();
     });
 
-    clipboard.on('error', function(e) {
+    clipboard.on('error', function (e) {
         document.getElementById("htmlcode").select();
         Msg.error('Could not copy to clipboard. Press Ctrl + C (Cmd + C) to copy manually');
     });
 
     var clipboard1 = new Clipboard('.btn-copy');
 
-    clipboard1.on('success', function(e) {
+    clipboard1.on('success', function (e) {
 
         Msg.info('Copied to clipboard');
         e.clearSelection();
     });
 
-    clipboard1.on('error', function(e) {
+    clipboard1.on('error', function (e) {
         clipboard1.clipboardAction.trigger.siblings('input').select();
         Msg.error('Could not copy to clipboard. Press Ctrl + C (Cmd + C) to copy manually');
     });
 });
 
 App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks, $stateParams, survey, feedbacks) {
-    feedbacks.sort(function(a,b){
+    feedbacks.sort(function (a, b) {
         if (a.created > b.created)
             return -1;
         if (a.created < b.created)
@@ -382,10 +386,10 @@ App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks
     });
     $scope.survey = survey;
     $scope.feedbacks = feedbacks;
-    $scope.$watch('filterBox', function(e){
+    $scope.$watch('filterBox', function (e) {
         filter()
     });
-    $scope.markAsDone = function(row){
+    $scope.markAsDone = function (row) {
         row.processed = !row.processed;
         Feedbacks.update(row, survey.id);
         Msg.info('State changed');
@@ -395,20 +399,20 @@ App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks
         startDate: moment().subtract(2, "weeks"),
         endDate: moment()
     };
-    $scope.$watch('date', function(e){
+    $scope.$watch('date', function (e) {
         filter();
     });
 
-    function filter(){
+    function filter() {
         if ($scope.date.endDate && $scope.date.startDate) {
-            $scope.feedbacks = feedbacks.filter(function(a){
+            $scope.feedbacks = feedbacks.filter(function (a) {
                 var m = moment(a.created);
                 var start = $scope.date.startDate.format('YYYY-MM-DD');
                 var end = $scope.date.endDate.format('YYYY-MM-DD');
                 var cur = m.format('YYYY-MM-DD');
                 var cond1;
                 var cond2;
-                if (moment(cur).isSame(start) || moment(cur).isSame(end)){
+                if (moment(cur).isSame(start) || moment(cur).isSame(end)) {
                     cond1 = true;
                 } else {
                     cond1 = moment(cur).isBetween(start, end);
@@ -423,8 +427,8 @@ App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks
                 return cond1 && cond2;
             });
         } else {
-            if ($scope.filterBox){
-                $scope.feedbacks = feedbacks.filter(function(a){
+            if ($scope.filterBox) {
+                $scope.feedbacks = feedbacks.filter(function (a) {
                     return a.option_slug == $scope.filterBox;
                 });
             } else {
@@ -433,7 +437,7 @@ App.controller('SurveysReportCtrl', function ($scope, $state, Surveys, Feedbacks
         }
     }
 
-    $scope.clearFilter = function(){
+    $scope.clearFilter = function () {
         $scope.date = {startDate: null, endDate: null};
     }
 });
@@ -477,8 +481,8 @@ App.service('Chart', function ($q, Feedbacks) {
                 },
             },
             series: [{
-                data: []
-            }],
+                    data: []
+                }],
             title: {
                 text: survey.name
             },

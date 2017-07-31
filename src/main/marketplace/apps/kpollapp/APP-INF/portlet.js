@@ -23,7 +23,7 @@ function kpollPortlet(page, params, context) {
         'sort': {
             'created': 'desc'
         },
-        'fields': [
+        'stored_fields': [
             'name',
             'question',
             'answers'
@@ -32,31 +32,31 @@ function kpollPortlet(page, params, context) {
         'query': {
             'bool': {
                 'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.POLL
-                    }
-                }],
-                'filter':  [{
-                    'term': {
-                        'enable': true
-                    }
-                }, {
-                    'terms': {
-                        'groups': groups
-                    }
-                }, {
-                    'range': {
-                        'startTime': {
-                            'lte': 'now'
+                        'type': {
+                            'value': RECORD_TYPES.POLL
                         }
-                    }
-                }, {
-                    'range': {
-                        'endTime': {
-                            'gte': 'now'
+                    }],
+                'filter': [{
+                        'term': {
+                            'enable': true
                         }
-                    }
-                }]
+                    }, {
+                        'terms': {
+                            'groups': groups
+                        }
+                    }, {
+                        'range': {
+                            'startTime': {
+                                'lte': 'now'
+                            }
+                        }
+                    }, {
+                        'range': {
+                            'endTime': {
+                                'gte': 'now'
+                            }
+                        }
+                    }]
             }
         }
     };
@@ -86,7 +86,7 @@ function kpollPortlet(page, params, context) {
 }
 
 function answerPoll(page, params, context) {
-    log.info('answerPoll > {} {} {}', page, params, context);
+    log.info('answerPoll > {} {} {}', [page, params, context]);
 
     var pollId = page.attributes.pollId;
     var status = {
@@ -141,6 +141,8 @@ function answerPoll(page, params, context) {
                 };
                 var id = generateAnswererId();
                 kpollDB.createNew(id, JSON.stringify(data), RECORD_TYPES.ANSWERER);
+
+                eventManager.goalAchieved("kpollAnsweredGoal", {"poll": pollId});
             } else {
                 log.warn('You already answered this poll! Answer id: {}', answer.id);
 

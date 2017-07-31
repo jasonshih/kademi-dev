@@ -15,7 +15,7 @@
 
 #if ($user && $poll)
 #if (!$answer)
-<form method="post" action="/kpoll/${poll.name}/answer" id="form-kpoll">
+<form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
     <div class="kpoll">
         <div class="kpoll-question clearfix">
             $poll.jsonObject.question
@@ -54,7 +54,7 @@
             <div class="answer">
                 <div class="row">
                     <div class="col-sm-4">
-                        #if ($answer && $answer.fields.answer.value == $ans.answer)
+                        #if ($answer && $answer.source.answer == $ans.answer)
                         <strong>$ans.answer (<em class="small">your answer</em>)</strong>
                         #else
                         $ans.answer
@@ -80,7 +80,7 @@
 #end
 
 #else
-<form method="post" action="/kpoll/${poll.name}/answer" id="form-kpoll">
+<form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
     <div class="kpoll">
         <div class="kpoll-question clearfix">
             Example Poll

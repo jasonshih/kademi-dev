@@ -1,7 +1,7 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-
+    
     KEditor.components['alerts'] = {
         settingEnabled: true,
         settingTitle: 'Alerts Settings',
@@ -13,14 +13,23 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
+                    
+                    form.find('.select-position').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-position', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "alerts" component');
-
-            var self = this;
+            
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.select-position').val(dataAttributes['data-position'] || 'top');
         }
     };
-
+    
 })(jQuery);

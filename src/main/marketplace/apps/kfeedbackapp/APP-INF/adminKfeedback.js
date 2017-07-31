@@ -52,7 +52,8 @@ function createSurvey(page, params) {
         question: params.question,
         created: params.created,
         website: params.website,
-        options: JSON.parse(op)
+        options: JSON.parse(op),
+        profileId: securityManager.currentUser.name
     };
 
     var exists = db.child(survey.id);

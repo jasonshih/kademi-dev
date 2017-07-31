@@ -181,11 +181,11 @@
                             #foreach($ans in $searchResult.hits.hits)
                                 <tr>
                                     <td>
-                                        #set ($answeror = $users.find($ans.fields.user.value))
+                                        #set ($answeror = $users.find($ans.source.user))
                                         <a href="/manageUsers/$answeror.userId" target="_blank">$answeror.name</a>
                                     </td>
-                                    <td>$ans.fields.answer.value</td>
-                                    <td><abbr class="timeago" title="$ans.fields.date.value">$ans.fields.date.value</abbr></td>
+                                    <td>$ans.source.answer</td>
+                                    <td><abbr class="timeago" title="$ans.source.date.value">$ans.source.date</abbr></td>
                                 </tr>
                             #end
                         #else
