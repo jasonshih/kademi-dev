@@ -2,9 +2,9 @@
     #if ($alerts)
     #else
         #if ($position == "bottom")
-            #set ($alerts = $applications.alerts.bottomMessages)
+            #set ($alerts = $applications.alerts.getMessages($folder, $user, "bottom"))
         #else
-            #set ($alerts = $applications.alerts.topMessages)
+            #set ($alerts = $applications.alerts.getMessages($folder, $user, "top"))
         #end
     #end
     #foreach($msg in $alerts)
