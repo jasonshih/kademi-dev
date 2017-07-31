@@ -80,6 +80,7 @@ function createFeedback(page, params) {
     }
 
     var feedback = {
+        survey_id: surveyId,
         option_slug: params.option_slug,
         option_text: params.option_text,
         website: params.website,
@@ -91,7 +92,7 @@ function createFeedback(page, params) {
     log.info('EEEEE {} - {} - {}', surveyId, survey, survey.jsonObject);
 
     securityManager.runAsUser(survey.jsonObject.profileId, function () {
-        db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK + '-' + surveyId);
+        db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
     });
 
     if (params.miltonUserUrl) {
