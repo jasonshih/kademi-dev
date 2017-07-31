@@ -93,7 +93,6 @@ function getFeedbackBySurvey(page, params) {
 
     };
     var searchResult = doDBSearch(page, queryJson);
-    log.info('searchResult: {}', searchResult);
 
 
     var result = [];
