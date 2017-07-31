@@ -1,5 +1,15 @@
 var feedbackMapping = {
     "properties": {
+        "survey_id": {
+            "type": "text",
+            "store": true,
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "store": true
+                }
+            }
+        },
         "created": {
             "type": "keyword",
             "store": true
@@ -15,15 +25,17 @@ var feedbackMapping = {
         },
         "option_text": {
             "type": "text",
+            "store": true,
             "fields": {
                 "keyword": {
                     "type": "keyword",
-                    "ignore_above": 256
+                    "store": true
                 }
             }
         },
         "processed": {
-            "type": "boolean"
+            "type": "boolean",
+            "store": true
         },
         "profileId": {
             "type": "keyword",

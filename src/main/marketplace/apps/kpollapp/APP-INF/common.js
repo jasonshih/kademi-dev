@@ -44,7 +44,7 @@ function getPolls(page) {
 }
 
 function getPollById(page, pollId) {
-    log.info('getPollById > page={}, pollId={}', page, pollId);
+    log.info('getPollById > page={}, pollId={}', [page, pollId]);
 
     var kpollDB = getKpollDB(page);
     var poll = kpollDB.child(pollId);
@@ -70,9 +70,9 @@ function doDBSearch(page, queryJson) {
 }
 
 function getAnswerByUser(page, pollId, user) {
-    log.info('getAnswerByUser > page={}, pollId={}, user={}', page, pollId, user);
+    log.info('getAnswerByUser > page={}, pollId={}, user={}', [page, pollId, user]);
     var queryJson = {
-        'fields': [
+        'stored_fields': [
             'user',
             'pollId',
             'answer',
@@ -82,19 +82,19 @@ function getAnswerByUser(page, pollId, user) {
         'query': {
             'bool': {
                 'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.ANSWERER
-                    }
-                }],
+                        'type': {
+                            'value': RECORD_TYPES.ANSWERER
+                        }
+                    }],
                 'filter': [{
-                    'term': {
-                        'pollId': pollId
-                    }
-                }, {
-                    'term': {
-                        'user': user
-                    }
-                }]
+                        'term': {
+                            'pollId': pollId
+                        }
+                    }, {
+                        'term': {
+                            'user': user
+                        }
+                    }]
             }
         }
     };
@@ -111,14 +111,14 @@ function getAnswerByUser(page, pollId, user) {
 }
 
 function getAnswers(page, pollId) {
-    log.info('getAnswers > page={}, pollId={}', page, pollId);
+    log.info('getAnswers > page={}, pollId={}', [page, pollId]);
 
     var poll = getPollById(page, pollId);
     var queryJson = {
         'sort': {
             'date': 'desc'
         },
-        'fields': [
+        '_source': [
             'user',
             'answer',
             'date'
@@ -126,16 +126,18 @@ function getAnswers(page, pollId) {
         'size': 10000,
         'query': {
             'bool': {
-                'must': [{
-                    'type': {
-                        'value': RECORD_TYPES.ANSWERER
+                'must': [
+                    {
+                        'type': {
+                            'value': RECORD_TYPES.ANSWERER
+                        }
+                    },
+                    {
+                        'term': {
+                            'pollId': pollId
+                        }
                     }
-                }],
-                'filter': [{
-                    'term': {
-                        'pollId': pollId
-                    }
-                }]
+                ],
             }
         },
         'aggregations': {
@@ -232,7 +234,7 @@ function updateAnswerMapping(page) {
 }
 
 function checkPollId(rf, groupName, groupVal, mapOfGroups) {
-    log.info('checkPollId > {} {} {} {}', rf, groupName, groupVal, mapOfGroups);
+    log.info('checkPollId > {} {} {} {}', [rf, groupName, groupVal, mapOfGroups]);
 
     var poll = getPollById(rf, groupVal);
 

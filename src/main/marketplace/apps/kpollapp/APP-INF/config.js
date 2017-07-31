@@ -2,77 +2,129 @@ var DB_NAME = 'kpollDB';
 var DB_TITLE = 'Kademi Poll DB';
 
 var RECORD_TYPES = {
-	POLL: 'poll',
-	ANSWERER: 'answerer'
+    POLL: 'poll',
+    ANSWERER: 'answerer'
 };
 
 var pollMappings = {
-	"properties": {
-		"name": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"question": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"answers": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"enable": {
-			"type": "boolean"
-		},
-		"created": {
-			"type": "date"
-		},
-		"createdBy": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"groups": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"modified": {
-			"type": "date"
-		},
-		"modifiedBy": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"startTime": {
-			"type": "date"
-		},
-		"endTime": {
-			"type": "date"
-		},
-		"point": {
-			"type": "integer"
-		},
-		"pointSystem": {
-			"type": "string",
-			"index": "not_analyzed"
-		}
-	}
+    "properties": {
+        "name": {
+            "type": "text",
+            "store": true
+        },
+        "question": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "answers": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "enable": {
+            "type": "boolean",
+            "store": true
+        },
+        "created": {
+            "type": "date",
+            "store": true
+        },
+        "createdBy": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "groups": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "modified": {
+            "type": "date",
+            "store": true
+        },
+        "modifiedBy": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "startTime": {
+            "type": "date",
+            "store": true
+        },
+        "endTime": {
+            "type": "date",
+            "store": true
+        },
+        "point": {
+            "type": "integer",
+            "store": true
+        },
+        "pointSystem": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        }
+    }
 };
 
 var answererMappings = {
-	"properties": {
-		"user": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"pollId": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"answer": {
-			"type": "string",
-			"index": "not_analyzed"
-		},
-		"date": {
-			"type": "date"
-		}
-	}
+    "properties": {
+        "user": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "pollId": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "answer": {
+            "type": "keyword",
+            "store": true,
+            "fields": {
+                "text": {
+                    "type": "text"
+                }
+            }
+        },
+        "date": {
+            "type": "date",
+            "store": true
+        }
+    }
 };

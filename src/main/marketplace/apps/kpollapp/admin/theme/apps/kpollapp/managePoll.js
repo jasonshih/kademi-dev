@@ -19,7 +19,9 @@ function initDateRange() {
 
     inputPlaceholder.val(availableTime).attr('data-date', availableTime).daterangepicker({
         autoUpdateInput: true,
-        format: 'DD/MM/YYYY',
+        locale: {
+            format: 'DD/MM/YYYY'
+        },
         ranges: {
             'In 7 Days': [moment(), moment().add('days', 6)],
             'In 15 Days': [moment(), moment().add('days', 14)],
@@ -39,7 +41,7 @@ function initDateRange() {
         }
     });
 
-    inputPlaceholder.on('change', function () {
+    /*inputPlaceholder.on('change', function () {
         var daterangepicker = inputPlaceholder.data('daterangepicker');
         var value = inputPlaceholder.val().trim();
 
@@ -49,7 +51,7 @@ function initDateRange() {
             inputStartTime.val('');
             inputEndTime.val('');
         }
-    });
+    });*/
 }
 
 function initDetailForm(form) {
