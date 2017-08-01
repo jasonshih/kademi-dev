@@ -97,7 +97,7 @@ function createFeedback(page, params) {
         var userResource = page.find(params.miltonUserUrl);
         if (userResource) {
             var profileBean = userResource.profile;
-            eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean);
+            eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean, {feedback: surveyId});
         }
     } else {
         eventManager.goalAchieved("kfeedbackSubmittedGoal", {feedback: surveyId});
