@@ -75,7 +75,7 @@
 
                     if (validateFormFields(awsContactDetailsForm)) {
                         // Populate review tab
-                        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
+                        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'true';
                         var formData = $('#awsContactDetails').serializeArray();
 
                         if (allTheSame) {
@@ -94,11 +94,28 @@
                             for (var i = 0; i < contactTypes.length; i++) {
                                 $('#aws' + contactTypes[i] + 'ReviewDetails').empty().append(template);
                             }
-
-                            flog(details);
                         } else {
                             // reviewTemplate
+
+                            for (var i = 0; i < contactTypes.length; i++) {
+                                var ct = contactTypes[i];
+                                var details = {};
+
+                                for (var b = 0; b < formData.length; b++) {
+                                    var field = formData[b];
+
+                                    if (field.name.startsWith(ct)) {
+                                        details[field.name.replace(ct + '_', '')] = field.value;
+                                    }
+                                }
+
+                                var template = reviewTemplate(details);
+
+                                $('#aws' + ct + 'ReviewDetails').empty().append(template);
+                            }
                         }
+
+                        $('#awsReviewSelectedDomain').text(_selectedDomain);
                     } else {
                         e.preventDefault();
                     }
@@ -107,7 +124,27 @@
                 if (data.direction === 'next') {
                     var acceptedTcs = $('#acceptTCS').is(':checked');
                     if (acceptedTcs) {
-                        
+                        var detailsFormData = awsContactDetailsForm.serializeWithFiles();
+                        detailsFormData.append('acceptedTCS', acceptedTcs);
+                        detailsFormData.append('selectedDomain', _selectedDomain);
+                        detailsFormData.append('selectedTld', _selectedTld);
+                        detailsFormData.append('purchaseDomain', true);
+
+                        flog('Data', detailsFormData);
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'json',
+                            data: detailsFormData,
+                            processData: false,
+                            contentType: false,
+                            success: function (data) {
+                                window.location = '/hostedZones/';
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                Kalert.error('Oh No! Something went wrong with your request!');
+                            }
+                        });
                     } else {
                         e.preventDefault();
                         Kalert.warning('Please accept the Terms and Conditions', 'The Terms and Conditions must be accepted before continuing');
@@ -217,10 +254,12 @@
         $('body').on('change', '.awsContactDetailsSame', function (e) {
             var rad = $(this);
 
-            if (rad.val() == 'yes') {
+            if (rad.val() == 'true') {
                 $('.awsContactDetailsExtraFields').hide(500);
+                $('.awsContactDetailsExtraFields').find('input, select, textarea').prop('disabled', true);
             } else {
                 $('.awsContactDetailsExtraFields').show(500);
+                $('.awsContactDetailsExtraFields').find('input, select, textarea').prop('disabled', false);
             }
 
             updateRequiredFields();
@@ -327,7 +366,7 @@
 
         var tld = _tlds[_selectedTld];
 
-        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
+        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'true';
 
         var cts = (allTheSame ? ['Registrant'] : contactTypes);
 
@@ -369,7 +408,7 @@
 
     function updatePrivacyProtection() {
         var tld = _tlds[_selectedTld];
-        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'yes';
+        var allTheSame = $('.awsContactDetailsSame:checked').val() === 'true';
         var cts = (allTheSame ? ['Registrant'] : contactTypes);
 
         for (var b = 0; b < cts.length; b++) {

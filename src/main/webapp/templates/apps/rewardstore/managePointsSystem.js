@@ -5,7 +5,7 @@ var searchOptions = {
 
 function initManagePointsSystem() {
     flog("initManagePointsSystem");
-
+    
     showHidePointsOrgType();
     initGroupEditing();
     initFormPointsSystem();
@@ -18,11 +18,11 @@ function initManagePointsSystem() {
     initDebitsPjax();
     initExpireFields();
     initReconcile();
-
+    
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
     });
-
+    
     $(document.body).on('click', '.btn-remove-group', function (e) {
         e.preventDefault();
         var btn = $(this);
@@ -31,18 +31,18 @@ function initManagePointsSystem() {
         btn.closest('span').remove();
         $("#modalGroup input[name=" + name + "]").check(false);
     });
-
+    
     $(document.body).on('keypress', '#data-query', function (e) {
         typewatch(function () {
             flog('initSearchPoints: do search');
             doHistorySearch();
         }, 500);
     });
-
+    
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
-
+        
         doHistorySearch();
         doLeaderboardSearch();
     });
@@ -61,14 +61,14 @@ function initExpireAllPoints() {
     $(document.body).on('click', '.btnExpireAll', function (e) {
         e.preventDefault();
         var dataQuery = $('#data-query').val();
-
+        
         var uri = URI(location.search);
         uri.setSearch('startDate', searchOptions.startDate);
         uri.setSearch('finishDate', searchOptions.endDate);
         uri.setSearch('dataQuery', dataQuery);
         uri.setSearch('startPos', 0);
-
-
+        
+        
         if (confirm("Are you sure you want to expire all records? This can not be undone! All points records in this points system will be marked as expired and not available for redemptions.")) {
             $.ajax({
                 type: 'POST',
@@ -106,7 +106,7 @@ function initGroupEditing() {
 
 function initFormPointsSystem() {
     flog('initFormPointsSystem');
-
+    
     $("form.managePointsSystem").forms({
         onSuccess: function (resp) {
             flog("done");
@@ -115,7 +115,7 @@ function initFormPointsSystem() {
             } else {
                 Msg.error("Sorry, couldnt save");
             }
-
+            
         }
     });
 }
@@ -148,7 +148,7 @@ function initReconcile() {
             });
         }
     });
-
+    
     updateReconcileStatus();
 }
 
@@ -158,9 +158,9 @@ function updateReconcileStatus() {
         clearTimeout(reconcileCheckTimer);
         reconcileCheckTimer = null;
     }
-
+    
     var btn = $('.btnReconcile');
-
+    
     $.ajax({
         type: 'GET',
         url: window.location.pathname + "?pointsReconcileProcessor",
@@ -217,10 +217,10 @@ function setGroupRecipient(name, groupType, isRecip) {
                             groupIcon = "fa fa-envelope";
                         }
                         var newBtn = $('<span id="group_' + name + '" class="group-list ' + groupClass + '">'
-                                + '<i class="' + groupIcon + '"></i>'
-                                + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
-                                + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
-                                + '</span>');
+                            + '<i class="' + groupIcon + '"></i>'
+                            + '<span class="block-name" title="' + name + '"> ' + name + '</span>'
+                            + ' <a href="' + name + '" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group ' + name + '"><i class="fa fa-times"></i></a>'
+                            + '</span>');
                         $(".GroupList").append(newBtn);
                         flog("appended to", $(".GroupList"));
                     } else {
@@ -284,7 +284,7 @@ function initClearAllPoints() {
     $(document.body).on('click', '.btn-clear-history', function (e) {
         e.preventDefault();
         var dataQuery = $('#data-query').val();
-
+        
         var uri = URI(location.search);
         uri.setSearch('startDate', searchOptions.startDate);
         uri.setSearch('finishDate', searchOptions.endDate);
@@ -341,27 +341,27 @@ function doRemovePoints(checkBoxes) {
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search...", 2000);
-
+    Msg.info("Doing search debits...", 'searchHistory', 2000);
+    
     var dataQuery = $('#data-query').val();
-
+    
     var uri = URI(location.search);
     uri.setSearch('startDate', searchOptions.startDate);
     uri.setSearch('finishDate', searchOptions.endDate);
     uri.setSearch('dataQuery', dataQuery);
     uri.setSearch('startPos', 0);
-
+    
     var target = $("#tablePointsBody");
     var pointsFooter = $("#pointsFooter");
     target.load();
-
+    
     $.ajax({
         type: "GET",
         url: window.location.pathname + uri.search(),
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search complete", 2000);
+            Msg.success("Search debits complete", 'searchHistory', 2000);
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
             history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
@@ -394,7 +394,7 @@ function initDeleteDebits() {
 }
 
 function doRemoveDebits(checkBoxes) {
-    Msg.info("Deleting...", 2000);
+    Msg.info("Deleting...", 'removeDebits', 2000);
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -402,14 +402,14 @@ function doRemoveDebits(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                Msg.success("Removed debits ok");
+                Msg.success("Removed debits ok", 'removeDebits');
                 $("#table-debits").reloadFragment();
             } else {
-                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", 'removeDebits');
             }
         },
         error: function (resp) {
-            Msg.error("An error occurred removing debits. You might not have permission to do this");
+            Msg.error("An error occurred removing debits. You might not have permission to do this", 'removeDebits');
         }
     });
 }
@@ -449,39 +449,39 @@ function initLeaderboardSearch() {
         var code = e.keyCode || e.which;
         if (code === 13) {
             e.preventDefault();
-
+            
             doLeaderboardSearch();
-
+            
             return false;
         }
     });
-
+    
     $(document.body).on('change', '#leaderboard-limit', function (e) {
         e.preventDefault();
-
+        
         doLeaderboardSearch();
     });
 }
 
 function doLeaderboardSearch() {
-    flog('doHistorySearch');
-    Msg.info("Doing search...", 2000);
-
+    flog('doLeaderboardSearch');
+    Msg.info("Doing search leaderboard...", 'leaderboardSearch', 2000);
+    
     var leaderboardLimit = parseInt($('#leaderboard-limit').val(), 10);
     if (Number.isNaN(leaderboardLimit)) {
         leaderboardLimit = 20;
     }
-
+    
     var data = {
         lbStartDate: searchOptions.startDate,
         lbFinishDate: searchOptions.endDate,
         lbLimit: leaderboardLimit
     };
     flog("data", data);
-
+    
     var target = $("#table-leaderboard");
     target.load();
-
+    
     $.ajax({
         type: "GET",
         url: window.location.pathname,
@@ -489,7 +489,7 @@ function doLeaderboardSearch() {
         data: data,
         success: function (content) {
             flog('response', content);
-            Msg.success("Search complete", 2000);
+            Msg.success("Search leaderboard complete", 'leaderboardSearch', 2000);
             var newBody = $(content).find("#table-leaderboard");
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();

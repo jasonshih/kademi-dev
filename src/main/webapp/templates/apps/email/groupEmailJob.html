@@ -83,10 +83,21 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="fromAddress">Email from address</label>
                             <div class="col-md-8">
-                                <input type="text" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="form-control" />
-                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank but
-                                    <b>Reply to address</b> will be required!
-                                </small>
+                                <div class="input-group">
+                                    <input type="text" id="fromAddress" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="form-control" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Select
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right selectEmail">
+                                            #foreach($website in $page.websites)
+                                            <li><a href="#">noreply@$formatter.getDomainName($website, false)</a></li>
+                                            #end
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                </div><!-- /input-group -->
+                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank.</small>                                                                
                             </div>
                         </div>
                         <div class="form-group">
@@ -162,12 +173,12 @@
                                 <hr class="hr-sm" />
                                 <div class="blocks-wrapper recipient">
                                     #foreach($g in $page.groupRecipients)
-                                        <span class="block $g.name">
-                                            <span class="block-name">$g.name</span>
-                                            #if( $page.status == "Draft" )
-                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                            #end
-                                        </span>
+                                    <span class="block $g.name">
+                                        <span class="block-name">$g.name</span>
+                                        #if( $page.status == "Draft" )
+                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                        #end
+                                    </span>
                                     #end
                                 </div>
                                 <p>&nbsp;</p>
@@ -177,12 +188,12 @@
                                 <hr class="hr-sm" />
                                 <div class="blocks-wrapper excluded">
                                     #foreach($g in $page.excludedGroups)
-                                        <span class="block $g.name">
-                                            <span class="block-name">$g.name</span>
-                                            #if( $page.status == "Draft" )
-                                                <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
-                                            #end
-                                        </span>
+                                    <span class="block $g.name">
+                                        <span class="block-name">$g.name</span>
+                                        #if( $page.status == "Draft" )
+                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$g.name" title="Remove this role"><i class="clip-minus-circle "></i></a>
+                                        #end
+                                    </span>
                                     #end
                                 </div>
                                 <p>&nbsp;</p>
@@ -251,17 +262,17 @@
                                                     </ul>
                                                 </li>
                                                 #foreach( $app in $applicationManager.getPropertyProviderApps($rootFolder) )
-                                                    <li>
-                                                        <h6>$app.instanceId</h6>
-                                                        <ul>
-                                                            #foreach( $expr in $app.allProperties )
-                                                                <li>
-                                                                    <b>$expr.name</b>:
-                                                                    $expr.description
-                                                                </li>
-                                                            #end
-                                                        </ul>
-                                                    </li>
+                                                <li>
+                                                    <h6>$app.instanceId</h6>
+                                                    <ul>
+                                                        #foreach( $expr in $app.allProperties )
+                                                        <li>
+                                                            <b>$expr.name</b>:
+                                                            $expr.description
+                                                        </li>
+                                                        #end
+                                                    </ul>
+                                                </li>
                                                 #end
                                             </ul>
                                         </div>
@@ -277,14 +288,14 @@
                                 <div class="add-attachment btn-upload"></div>
                                 <div class="article-wrapper article-sm showed-action attachments-list">
                                     #foreach($att in $page.attachments)
-                                        <article>
-                                            <span class="article-name">
-                                                <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
-                                            </span>
-                                            <aside class="article-action">
-                                                <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
-                                            </aside>
-                                        </article>
+                                    <article>
+                                        <span class="article-name">
+                                            <a target="_blank" href="/_hashes/files/$att.attachmentHash">$att.attachmentFilename</a>
+                                        </span>
+                                        <aside class="article-action">
+                                            <a class="btn btn-sm btn-xs btn-danger btn-delete-attachment" href="$att.attachmentFilename" title="Remove"><i class="clip-minus-circle"></i></a>
+                                        </aside>
+                                    </article>
                                     #end
                                 </div>
                             </div>
@@ -320,36 +331,36 @@
                     <!-- Start content of Send tab -->
                     <div id="send" class="tab-pane">
                         #if( $page.status == "Draft" )
-                            <div class="sent" style="display: none;">
-                                <p>&nbsp;</p>
-                                <h4>Email has been sent, or is sending</h4>
-                                <p>&nbsp;</p>
-                            </div>
-                            <div>
-                                <h3>Before you send:</h3>
-                                <p><span class="label label-info">PREVIEW</span> Preview the email using the 'Send test' button above</p>
-                                <p><span class="label label-info">CHECK</span> Use the 'Show Recipients' button on the
-                                    <a href='#recipients'>recipients</a> tab to check who the email will be sent to</p>
-                                <p>&nbsp;</p>
-                                <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.
-                                </p>
-                                <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
-                                <p>
-                                    <button class="btn btn-lg btn-danger btn-send-email" type="button">
-                                        <span class='fa fa-envelope'></span>
-                                        SEND NOW
-                                    </button>
-                                </p>
-                            </div>
+                        <div class="sent" style="display: none;">
+                            <p>&nbsp;</p>
+                            <h4>Email has been sent, or is sending</h4>
+                            <p>&nbsp;</p>
+                        </div>
+                        <div>
+                            <h3>Before you send:</h3>
+                            <p><span class="label label-info">PREVIEW</span> Preview the email using the 'Send test' button above</p>
+                            <p><span class="label label-info">CHECK</span> Use the 'Show Recipients' button on the
+                                <a href='#recipients'>recipients</a> tab to check who the email will be sent to</p>
+                            <p>&nbsp;</p>
+                            <p>When you are ready click the 'Send Now' button below and the system will start to send out your email.<br />Once the send process starts you can navigate away from this page without affecting your send.
+                            </p>
+                            <p>If you choose to navigate away from this page you can still view the send results by click on the<br />info button from the email list page.</p>
+                            <p>
+                                <button class="btn btn-lg btn-danger btn-send-email" type="button">
+                                    <span class='fa fa-envelope'></span>
+                                    SEND NOW
+                                </button>
+                            </p>
+                        </div>
                         #else
-                            <p>&nbsp;</p>
-                            #if( $page.status == "Cancelled" )
-                                <h4>Email sending was cancelled</h4>
-                            #else
-                                <h4>Email has been sent, or is sending</h4>
+                        <p>&nbsp;</p>
+                        #if( $page.status == "Cancelled" )
+                        <h4>Email sending was cancelled</h4>
+                        #else
+                        <h4>Email has been sent, or is sending</h4>
 
-                            #end
-                            <p>&nbsp;</p>
+                        #end
+                        <p>&nbsp;</p>
                         #end
                     </div>
                     <!-- Start content of Send tab -->
@@ -430,26 +441,26 @@
                                     </thead>
                                     <tbody>
                                         #foreach($g in $page.allGroups)
-                                            <tr>
-                                                <td>$g.name</td>
+                                        <tr>
+                                            <td>$g.name</td>
 
-                                                #set($name = $g.name)
-                                                <td>
-                                                    #set($id = $name + "-recip")
-                                                    $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
-                                                    <label for="$id">Included</label>
-                                                </td>
-                                                <td>
-                                                    #set($id = $name + "-excluded")
-                                                    $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
-                                                    <label for="$id">Excluded</label>
-                                                </td>
-                                                <td>
-                                                    #set($id = $name + "-none")
-                                                    $formatter.radio($id, $name, false, "none" )
-                                                    <label for="$id">Neither</label>
-                                                </td>
-                                            </tr>
+                                            #set($name = $g.name)
+                                            <td>
+                                                #set($id = $name + "-recip")
+                                                $formatter.radio($id, $name, $page.isSelected($g), "recipient" )
+                                                <label for="$id">Included</label>
+                                            </td>
+                                            <td>
+                                                #set($id = $name + "-excluded")
+                                                $formatter.radio($id, $name, $page.isExcluded($g), "excluded" )
+                                                <label for="$id">Excluded</label>
+                                            </td>
+                                            <td>
+                                                #set($id = $name + "-none")
+                                                $formatter.radio($id, $name, false, "none" )
+                                                <label for="$id">Neither</label>
+                                            </td>
+                                        </tr>
                                         #end
                                     </tbody>
                                 </table>
@@ -511,15 +522,15 @@
             </div>
         </div>
 
-        
+
         <script id="row-email-template" type="text/x-handlebars-template">
             <tr class="tr-{{id}}">
-                <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td> 
-                <td>{{from}}</td> 
-                <td>{{to}}</td>
-                <td>{{subject}}</td>
-                <td>{{attempts}}</td>
-                <td><a class="btn btn-info" href="/emails/{{id}}" target="_blank">Open<span class="glyphicon glyphicon-arrow-right"></span></a></td>
+            <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td> 
+            <td>{{from}}</td> 
+            <td>{{to}}</td>
+            <td>{{subject}}</td>
+            <td>{{attempts}}</td>
+            <td><a class="btn btn-info" href="/emails/{{id}}" target="_blank">Open<span class="glyphicon glyphicon-arrow-right"></span></a></td>
             </tr>
         </script>
         <div id="modal-multiple-send-test-progress" class="modal fade" aria-hidden="true" tabindex="-1">
@@ -532,17 +543,17 @@
                     <div class="modal-body" id="send-test-body">
                         <table class="table table-striped" style="margin-bottom: 0;">
                             <thead>
-                            <tr>
-                              <th>Status</th>
-                              <th>From</th> 
-                              <th>To</th>
-                              <th>Subject</th>
-                              <th>Attempts</th>
-                              <th></th>
-                            </tr>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>From</th> 
+                                    <th>To</th>
+                                    <th>Subject</th>
+                                    <th>Attempts</th>
+                                    <th></th>
+                                </tr>
                             </thead>
                             <tbody><tr><td colspan="6">Loading ...</td></tbody>
-                          </table>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -555,11 +566,11 @@
                 //initEditEmailPage();
                 var domains = {};
                 #foreach($website in $rootFolder.child("websites").children)
-                    #if ($website.domainName && $website.name)
-                        domains['$website.name'] = '$website.domainName';
-                    #end
-                #end
-                $("#availableDomains").val(JSON.stringify( domains ));
+                        #if ($website.domainName && $website.name)
+                domains['$website.name'] = '$website.domainName';
+                        #end
+                        #end
+                $("#availableDomains").val(JSON.stringify(domains));
             });
         </script>
     </body>

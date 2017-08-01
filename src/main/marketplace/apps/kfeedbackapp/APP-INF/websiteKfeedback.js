@@ -88,8 +88,6 @@ function createFeedback(page, params) {
         profileId: params.profileId,
         processed: false
     };
-    
-    log.info('EEEEE {} - {} - {}', surveyId, survey, survey.jsonObject);
 
     securityManager.runAsUser(survey.jsonObject.profileId, function () {
         db.createNew(cur, JSON.stringify(feedback), TYPE_FEEDBACK);
@@ -99,10 +97,10 @@ function createFeedback(page, params) {
         var userResource = page.find(params.miltonUserUrl);
         if (userResource) {
             var profileBean = userResource.profile;
-            eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean);
+            eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean, {feedback: surveyId});
         }
     } else {
-        eventManager.goalAchieved("kfeedbackSubmittedGoal");
+        eventManager.goalAchieved("kfeedbackSubmittedGoal", {feedback: surveyId});
     }
 
     return views.jsonObjectView(JSON.stringify({

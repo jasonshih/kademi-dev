@@ -27,27 +27,24 @@
                             <i class="clip-question"></i> What will this group be used for?
                         </div>
                         <div class="panel-body">
-                            <div class="form-group col-sm-12">
-                                <div class="clearfix">
-                                    <label class="control-label radio-inline" for="groupTypePrimary">
-                                        $formatter.radioEq("groupTypePrimary", "groupType", $page.group.groupType, "P")
-                                        Primary group, representing the type of the user.
-                                    </label>
-                                </div>
-                                <div class="clearfix">
-                                    <label class="control-label radio-inline" for="groupTypeSubscription">
-                                        $formatter.radioEq("groupTypeSubscription", "groupType", $page.group.groupType, "S")
-                                        Mailing list, which can have additional custom fields <br /><i>Formerly called 'Subscription group'</i>
-                                    </label>
-                                </div>
-                                <div class="clearfix">
-                                    <label class="control-label radio-inline" for="groupTypeMailing">
-                                        $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
-                                        User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage
-                                        <br /><i>Formerly called a 'mailing list' group</i>
-                                    </label>
-                                </div>
-
+                            <div class="radio">
+                                <label for="groupTypePrimary">
+                                    $formatter.radioEq("groupTypePrimary", "groupType", $page.group.groupType, "P")
+                                    Primary group, representing the type of the user.
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label for="groupTypeSubscription">
+                                    $formatter.radioEq("groupTypeSubscription", "groupType", $page.group.groupType, "S")
+                                    Mailing list, which can have additional custom fields <br /><i>Formerly called 'Subscription group'</i>
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label for="groupTypeMailing">
+                                    $formatter.radioEq("groupTypeMailing", "groupType", $page.group.groupType, "M")
+                                    User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage
+                                    <br /><i>Formerly called a 'mailing list' group</i>
+                                </label>
                             </div>
                         </div>
                     </div>
