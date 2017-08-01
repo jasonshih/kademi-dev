@@ -341,7 +341,7 @@ function doRemovePoints(checkBoxes) {
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search history...", 'searchHistory', 2000);
+    Msg.info("Doing search debits...", 'searchHistory', 2000);
     
     var dataQuery = $('#data-query').val();
     
@@ -361,7 +361,7 @@ function doHistorySearch() {
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search history complete", 'searchHistory', 2000);
+            Msg.success("Search debits complete", 'searchHistory', 2000);
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
             history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
