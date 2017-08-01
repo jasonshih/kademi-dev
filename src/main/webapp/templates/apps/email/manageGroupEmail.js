@@ -16,6 +16,15 @@ function initManageGroupEmail() {
             doControl("stop");
         }
     });
+    
+    $("body").on("click", ".selectEmail", function(e) {
+        e.preventDefault();
+        var li = $(e.target).closest("li");
+        var email = li.text();
+        var inp = li.closest(".input-group").find("input");
+        flog("clicked", li, email, inp);
+        inp.val(email);
+    });
 }
 
 function initResetPasswordLinkText() {
@@ -181,19 +190,12 @@ function validateEmail() {
         return false;
     }
 
-    // Check from address
-    var fromAddress = $('input[name=fromAddress]').val();
-    if (fromAddress == null || fromAddress.length == 0) {
-        Msg.error('Please enter a from address for the email');
-        return false;
-    }
-
     // Check that if doing password reset then a theme is selected
     var sel = $('select[name=themeSiteId]');
     flog('check reset', $('#passwordReset:checked'), sel);
     if ($('#passwordReset:checked').length > 0) {
         if (sel.val() == '') {
-            Msg.error('A theme is required for a password reset email. Please choose a theme on the Message tab');
+            Msg.error('A website is required for a password reset email. Please choose a theme on the Message tab');
             return false;
         }
     }
