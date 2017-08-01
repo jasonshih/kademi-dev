@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <title>$page.title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-globe"></i>
+                        <span class="panel-title">
+                            Domain
+                        </span>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Domain</strong>
+                            </h5>
+                            <h5 class="col-md-8">$page.domainDetails.domainName</h5>
+                        </div>
+
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Registered On</strong>
+                            </h5>
+                            <h5 class="col-md-8">$!formatter.formatDate($page.domainDetails.creationDate)</h5>
+                        </div>
+
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Expires On</strong>
+                            </h5>
+                            <h5 class="col-md-8">
+                                $!formatter.formatDate($page.domainDetails.expirationDate)
+                            </h5>
+                        </div>
+
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Auto renew</strong>
+                            </h5>
+                            <h5 class="col-md-8 lbl-aws-autorenew" data-autorenew="$page.domainDetails.autoRenew">
+                                #if($page.domainDetails.autoRenew)
+                                Enabled (<a href="#" class="btn-aws-toggle-autorenew">disable</a>)
+                                #else
+                                Disabled (<a href="#" class="btn-aws-toggle-autorenew">enable</a>)
+                                #end
+                            </h5>
+                        </div>
+
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Transfer lock</strong>
+                            </h5>
+                            <h5 class="col-md-8">
+                                #if($page.domainDetails.statusList.contains("clientTransferProhibited"))
+                                Enabled
+                                #else
+                                Disabled 
+                                #end
+
+                                #if($page.tld.lockSupported)
+
+                                #if($page.domainDetails.statusList.contains("clientTransferProhibited"))
+                                ##(<a href="#" class="btn-toogle-autorenew">disable</a>)
+                                #else
+                                ##(<a href="#" class="btn-toogle-autorenew">enable</a>)
+                                #end
+
+                                #end
+                            </h5>
+                        </div>
+
+                        <div class="row">
+                            <h5 class="col-md-4">
+                                <strong>Authorization code</strong>
+                            </h5>
+                            <h5 class="col-md-8">
+                                <i class="fa fa-refresh fa-spin aws-auth-loading" style="display: none;"></i>
+                                <a href="#" class="btn-aws-genauthcode">Generate</a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-globe"></i>
+                        <span class="panel-title">
+                            Name servers
+                        </span>
+                    </div>
+
+                    <div class="panel-body">
+                        <h5 class="col-md-4">
+                            <strong>Name servers</strong>
+                        </h5>
+                        <h5 class="col-md-8">
+                            #foreach($ns in $page.domainDetails.nameservers)
+                            $ns.name <br/>
+                            #if($foreach.last)
+                            <br/>
+                            ##<a href="#" class="btn-aws-edit-ns">Add or edit name servers</a>
+                            #end
+                            #end
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-address-card"></i>
+                <span class="panel-title">
+                    Contact Details
+                </span>
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h4>Registrant Contact</h4>
+
+                        #genDetails($page.domainDetails.registrantContact)
+                        #if($page.domainDetails.registrantPrivacy)
+                        Privacy protected
+                        #else
+                        No privacy protection
+                        #end
+                    </div>
+
+                    <div class="col-md-4">
+                        <h4>Admin Contact</h4>
+
+                        #genDetails($page.domainDetails.adminContact)
+                        #if($page.domainDetails.adminPrivacy)
+                        Privacy protected
+                        #else
+                        No privacy protection
+                        #end
+                    </div>
+
+                    <div class="col-md-4">
+                        <h4>Tech Contact</h4>
+
+                        #genDetails($page.domainDetails.techContact)
+                        #if($page.domainDetails.techPrivacy)
+                        Privacy protected
+                        #else
+                        No privacy protection
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        #macro(genDetails $c)
+        $!c.firstName $!c.lastName
+        <br/>
+        #if($c.organizationName)
+        $corganizationName
+        <br/>
+        #end
+        $!c.email
+        <br/>
+        $!c.phoneNumber
+        <br/>
+        $!c.addressLine1 $!c.addressLine2
+        <br/>
+        #if($c.state)$c.state
+        <br/>#end
+        $!c.city
+        <br/>
+        $!c.zipCode
+        <br/>
+        #end
+
+        <div id="awsEditNameServers" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Edit Name Servers</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Name Servers</label>
+                                <div class="col-sm-8 awsEditNameServersList">
+                                    #foreach($ns in $page.domainDetails.nameservers)
+                                    <input name="nameserver.$foreach.count" type="text" class="form-control" value="$formatter.firstNotNull($ns.name, $formatter.toCsv($ns.glueIps))"/>
+                                    #if(!$foreach.last)
+                                    <br/>
+                                    #end
+                                    #end
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Update</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+        <script  type="text/javascript" src="/theme/apps/aws/manageRegisteredDomain.js">//</script>
+    </body>
+</html>

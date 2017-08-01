@@ -108,7 +108,7 @@
                                         details[field.name.replace(ct + '_', '')] = field.value;
                                     }
                                 }
-                                
+
                                 var template = reviewTemplate(details);
 
                                 $('#aws' + ct + 'ReviewDetails').empty().append(template);
@@ -139,10 +139,10 @@
                             processData: false,
                             contentType: false,
                             success: function (data) {
-
+                                window.location = '/hostedZones/';
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
-
+                                Kalert.error('Oh No! Something went wrong with your request!');
                             }
                         });
                     } else {
