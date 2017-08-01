@@ -100,7 +100,7 @@ function createFeedback(page, params) {
             eventManager.goalAchieved("kfeedbackSubmittedGoal", profileBean);
         }
     } else {
-        eventManager.goalAchieved("kfeedbackSubmittedGoal");
+        eventManager.goalAchieved("kfeedbackSubmittedGoal", {feedback: surveyId});
     }
 
     return views.jsonObjectView(JSON.stringify({
