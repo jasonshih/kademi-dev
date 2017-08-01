@@ -1,18 +1,17 @@
 var feedbackMapping = {
     "properties": {
         "survey_id": {
-            "type": "text",
+            "type": "keyword",
             "store": true,
             "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "store": true
+                "text": {
+                    "type": "text"
                 }
             }
         },
         "created": {
-            "type": "keyword",
-            "store": true
+            "store": true,
+            "type": "date"
         },
         "option_slug": {
             "type": "keyword",
