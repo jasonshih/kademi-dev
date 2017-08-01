@@ -142,7 +142,12 @@ function answerPoll(page, params, context) {
                 var id = generateAnswererId();
                 kpollDB.createNew(id, JSON.stringify(data), RECORD_TYPES.ANSWERER);
 
-                eventManager.goalAchieved("kpollAnsweredGoal", {"poll": pollId});
+                try {
+                    eventManager.goalAchieved("kpollAnsweredGoal", {"poll": pollId});
+                } catch (e) {
+                    log.error("Error with eventManager.goalAchieved {}", e);
+                }
+
             } else {
                 log.warn('You already answered this poll! Answer id: {}', answer.id);
 
