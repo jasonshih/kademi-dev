@@ -31,6 +31,7 @@
             #set($currentBranch = $page.closest("branch"))
 
             #parse("/theme/apps/admin/versionController.html")
+            #renderVersionController()
 
             #if($page.closest("repository").name)
                 <div class="dropdown pull-left">

@@ -11,6 +11,7 @@
         #set($currentBranch = $page.closest("branch"))
 
         #parse("/theme/apps/admin/versionController.html")
+        #renderVersionController("manageCourses")
 
         <div class="btn-group" #if (!$page.externalUrl) title="Please add at least 1 course to View website" #end>
             #if ($page.externalUrl)

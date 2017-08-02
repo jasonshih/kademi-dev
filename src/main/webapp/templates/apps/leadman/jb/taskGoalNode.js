@@ -104,6 +104,13 @@ JBNodes['taskGoal'] = {
             '</div>' +
             '<div class="form-group">' +
             '    <div class="col-md-12">' +
+            '        <label>Assign to Profile</label>' +
+            '        <input type="text" class="form-control assignToProfileRule" value="" />' +
+            '        <small class="text-muted help-block">Can use MVEL syntax</small>' +
+            '    </div>' +
+            '</div>' +
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
             '        <label>Assign to org</label>' +
             '        <input type="text" class="form-control assignToOrgRule" value="" />' +
             '        <small class="text-muted help-block">Can use MVEL syntax</small>' +
@@ -145,6 +152,7 @@ JBNodes['taskGoal'] = {
                 var periodMultiples = form.find('.periodMultiples').val();
                 var runHour = form.find('.runHour').val();
                 var taskName = form.find('.taskName').val();
+                var assignToProfileRule = form.find('.assignToProfileRule').val();
                 var assignToOrgRule = form.find('.assignToOrgRule').val();
                 var assignToGroupRule = form.find('.assignToGroupRule').val();
                 var titleMvel = form.find('.titleMvel').val();
@@ -154,6 +162,7 @@ JBNodes['taskGoal'] = {
                 JBApp.currentSettingNode.periodMultiples = periodMultiples || null;
                 JBApp.currentSettingNode.runHour = runHour || null;
                 JBApp.currentSettingNode.taskName = taskName || null;
+                JBApp.currentSettingNode.assignToProfileRule = assignToProfileRule || null;
                 JBApp.currentSettingNode.assignToOrgRule = assignToOrgRule || null;
                 JBApp.currentSettingNode.assignToGroupRule = assignToGroupRule || null;
                 JBApp.currentSettingNode.titleMvel = titleMvel || null;
@@ -188,6 +197,7 @@ JBNodes['taskGoal'] = {
         form.find('.periodMultiples').val(node.periodMultiples !== null ? node.periodMultiples : '');
         form.find('.runHour').val(node.runHour !== null ? node.runHour : '');
         form.find('.taskName').val(node.taskName !== null ? node.taskName : '');
+        form.find('.assignToProfileRule').val(node.assignToProfileRule !== null ? node.assignToProfileRule : '');
         form.find('.assignToOrgRule').val(node.assignToOrgRule !== null ? node.assignToOrgRule : '');
         form.find('.assignToGroupRule').val(node.assignToGroupRule !== null ? node.assignToGroupRule : '');
         form.find('.titleMvel').val(node.titleMvel !== null ? node.titleMvel : '');

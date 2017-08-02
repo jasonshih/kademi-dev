@@ -2,20 +2,30 @@
 #set( $kfeedbackDb = $jsonDatabases.child("kfeedback") )
 #set( $survey = $kfeedbackDb.child($surveyname) )
 #set( $website = $rootFolder )
+#if (!$display)
+    #set ($display = "icon")
+#end
 
 #if( $survey )
-<table width="160" border="0" cellspacing="20" cellpadding="0" bgcolor="#fff">
-    <tr>
-    #foreach( $option in $survey.jsonObject.options )
-        <td align="center" >
-            <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug">
-                <img src="${website.externalUrl}$option.emoji" width="40" height="40" alt="$option.title" />
-            </a>
-        </td>
-    #end
-    </tr>
-</table>
-    
+    #set ($width = 60 * $survey.jsonObject.options.size())
+    <table width="$width" border="0" cellspacing="20" cellpadding="0" bgcolor="#fff">
+        <tr>
+            #foreach( $option in $survey.jsonObject.options )
+                #set ($emoLength = $option.emoji.length())
+                #set ($emoLink = $option.emoji.substring(1, $emoLength))
+                <td align="center">
+                    <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug">
+                        #if ($display == "text-icon" || $display == "icon")
+                            <img src="${website.externalUrl}${emoLink}" width="40" height="40" alt="$option.title" style="display: block; border: 0;" />
+                        #end
+                        #if ($display == "text-icon" || $display == "text")
+                            $option.title
+                        #end
+                    </a>
+                </td>
+            #end
+        </tr>
+    </table>
 #else
-<p>No survey selected, or it has been removed</p>
+    <p>No survey selected, or it has been removed</p>
 #end
