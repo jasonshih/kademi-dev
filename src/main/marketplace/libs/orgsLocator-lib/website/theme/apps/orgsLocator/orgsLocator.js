@@ -1,9 +1,18 @@
 (function ($) {
     var win = $(window);
-    if ($('.orgs-locator-component').length > 0) {
+    flog("init orgFinder.1");
+    
+    var comps = $('.orgs-locator-component');
+    
+    flog("init orgFinder.xx", $(".main-content"), win );
+    
+    flog("init orgFinder.2",comps.length, comps);
+    if ( comps.length > 0) {        
+        flog("init orgFinder.3");
+        flog("init orgFinder.4 api=", googleMapsApiKey);
         $('#org-map').orgFinder({
             searchUrl: '/orgsLocator/',
-            googleAPIKey: 'AIzaSyDS53FPtVGJPvZvrzh2sLcfPUQYS3gsh0c',
+            googleAPIKey: googleMapsApiKey, // injected by googlemapPortlet.html
             initLatLng: [-33.867, 151.195],
             initZoomLevel: 15,
             orgTypes: orgTypes,
