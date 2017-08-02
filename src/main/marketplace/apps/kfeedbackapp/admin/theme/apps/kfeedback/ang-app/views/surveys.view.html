@@ -1,34 +1,86 @@
-<h3 class="fb-title"><a class="pull-left btn-go-back" ui-sref="surveys.list" title="Back to surveys list"><i
-        class="fa fa-arrow-left"></i></a>Analytic</h3>
-<highchart id="chart-{{survey.slug}}" config="chartOption"></highchart>
-
-<h3 class="mt3x fb-title">{{survey.name}}</h3>
-<p><strong>Survey question</strong></p>
-<p>{{survey.question}}</p>
-<div class="mt3x"></div>
-<div class="form-group">
-    <label for="" class="control-label"><strong>Website url:</strong><code>{{survey.website}}</code></label>
-    <input type="text" ng-model="website" class="form-control hide"/>
-</div>
-<div class="row mt" ng-repeat="option in survey.options">
-    <div class="col-md-3">
-        <img ng-src="{{option.emoji}}" width="40" alt="{{option.title}}"/>
-        <span>{{option.title}}</span>
+<div class="row feedback-title">
+    <div class="col-xs-8">
+        <h3>
+            {{survey.name}}
+        </h3>
     </div>
-    <div class="col-md-9">
-        <div class="input-group">
-            <input id="option-{{option.slug}}" type="text" class="form-control form-copied" value="{{survey.website}}{{kApp}}{{option.slug}}" />
-            <span class="input-group-addon btn-copy" data-clipboard-target="#option-{{option.slug}}"><i class="fa fa-clipboard"></i></span>
+    <p class="col-xs-4 text-right">
+        <a ui-sref="surveys.list" class="btn btn-primary btn-sm" title="Back to surveys list">Back to list</a>
+    </p>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-line-chart"></i>
+        Analytic
+    </div>
+    <div class="panel-body">
+        <highchart id="chart-{{survey.slug}}" config="chartOption"></highchart>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-file-text-o"></i>
+                Details
+            </div>
+            <div class="panel-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Question</label>
+
+                        <div class="col-md-10">
+                            <p class="form-control-static">{{survey.question}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Website url</label>
+
+                        <div class="col-md-10">
+                            <p class="form-control-static"><code>{{survey.website}}</code></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">Options</label>
+
+                        <div class="col-md-10">
+                            <div class="row" ng-repeat="option in survey.options">
+                                <div class="col-md-3">
+                                    <img ng-src="{{option.emoji}}" width="40" alt="{{option.title}}" />
+                                    <span>{{option.title}}</span>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input id="option-{{option.slug}}" type="text" class="form-control form-copied" readonly="readonly" value="{{survey.website}}{{kApp}}{{option.slug}}" />
+                                        <a class="input-group-addon" href="#" data-clipboard-target="#option-{{option.slug}}"><i class="fa fa-clipboard"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <p>&nbsp;</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-5">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-code"></i>
+                HTML template
+            </div>
+            <div class="panel-body">
+                <p>
+                    <textarea rows="10" class="form-control" id="htmlcode" readonly="readonly">{{htmlcode}}</textarea>
+                </p>
+                <p class="text-center">
+                    <a class="btn btn-lg btn-danger" data-clipboard-target="#htmlcode" href="javascript:;"><i class="fa fa-clipboard"></i> Copy Survey to Email</a>
+                </p>
+            </div>
         </div>
     </div>
 </div>
-<br> <br>
-<div class="row mt3x">
-    <div class="col-md-12 text-center">
-        <h3>HTML template</h3>
-        <textarea rows="5" class="form-control" id="htmlcode">{{htmlcode}}</textarea>
-        <br>
-        <a class="btn btn-large btn-primary btn-copy-template" data-clipboard-target="#htmlcode" href="javascript:;" ><i class="fa fa-clipboard"></i> Copy Survey to Email</a>
-    </div>
-</div>
-<div class="mt3x"></div>

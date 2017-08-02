@@ -1,37 +1,48 @@
-<h3>Report</h3>
-<div class="row">
-    <div class="col-sm-4">
-        <select class="form-control" ng-model="filterBox" id="">
-            <option value="">No filter</option>
-            <option value="{{row.slug}}" ng-repeat="row in survey.options track by $index">{{row.title}}</option>
+<p class="text-right feedback-title">
+    <a ui-sref="surveys.list" class="btn btn-primary btn-sm" title="Back to surveys list">Back to list</a>
+</p>
 
-        </select>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-line-chart"></i>
+        Reports
     </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <select class="form-control" ng-model="filterBox" id="">
+                    <option value="">No filter</option>
+                    <option value="{{row.slug}}" ng-repeat="row in survey.options track by $index">{{row.title}}</option>
 
-    <div class="col-sm-4">
-        <div class="input-group">
-            <input date-range-picker options="{locale: {format: 'DD/MM/YYYY'}}" class="form-control date-picker" type="text" ng-model="date" />
-            <span class="input-group-addon" style="cursor: pointer" ng-click="clearFilter()">Clear filter</span>
+                </select>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="input-group">
+                    <input date-range-picker options="{locale: {format: 'DD/MM/YYYY'}}" class="form-control date-picker" type="text" ng-model="date" />
+                    <span class="input-group-addon" style="cursor: pointer" ng-click="clearFilter()">Clear filter</span>
+                </div>
+            </div>
+        </div>
+        <p>&nbsp;</p>
+
+        <div class="table-responsive">
+            <table class="table table-condensed table-stripped">
+                <thead>
+                    <th>User</th>
+                    <th>Mood</th>
+                    <th>Datetime</th>
+                    <th>Processed?</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in feedbacks track by $index">
+                        <td><a target="_blank" href="/manageUsers/{{row.profileId}}">{{row.name}}</a></td>
+                        <td>{{row.option_text}}</td>
+                        <td>{{row.created | amDateFormat:'DD/MM/YYYY h:mm A'}}</td>
+                        <td><input type="checkbox" ng-checked="{{row.processed}}" ng-click="markAsDone(row)"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
-<hr>
-
-<div class="table-responsive">
-    <table class="table table-condensed table-stripped">
-        <thead>
-            <th>User</th>
-            <th>Mood</th>
-            <th>Datetime</th>
-            <th>Processed?</th>
-        </thead>
-        <tbody >
-            <tr ng-repeat="row in feedbacks track by $index">
-                <td><a target="_blank" href="/manageUsers/{{row.profileId}}">{{row.name}}</a></td>
-                <td>{{row.option_text}}</td>
-                <td>{{row.created | amDateFormat:'DD/MM/YYYY h:mm A'}}</td>
-                <td><input type="checkbox" ng-checked="{{row.processed}}" ng-click="markAsDone(row)"></td>
-            </tr>
-        </tbody>
-    </table>
 </div>
