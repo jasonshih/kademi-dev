@@ -24,6 +24,7 @@
         #set($currentBranch = $page.closest("branch"))
 
         #parse("/theme/apps/admin/versionController.html")
+        #renderVersionController("manageModules")
 
         <div class="btn-group">
             <a target="_blank" href="$page.href?goto" class="btn btn-sm btn-success">
