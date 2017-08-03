@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "googlemap-lib",
-            "branch": "1.0.1"
+            "branch": "1.0.2"
         }
     ],
     "dependencies": [
@@ -27,19 +27,13 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/orgsLocator/orgsLocator.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/bootstrap-select/1.10.0/dist/js/bootstrap-select.min.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/orgsLocator/orgsLocator.js"
+                "path": "/theme/apps/orgsLocator/orgsLocator.js?v=1.0.4"
             }
         }
     ]

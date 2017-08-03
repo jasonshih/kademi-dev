@@ -195,12 +195,12 @@
                     options.onReady.call(self, self.formSearch, self.itemsWrapper, self.mapDiv);
                 }
             };
-
+            
             var that = this;
             $(document.body).on('onGoogleMapReady', function () {
                 $.fn.orgFinder[functionName].call(that);
             });
-
+            
             if (window.google && window.google.maps) {
                 flog('[jquery.orgFinder] Google Map Api is already in documentation');
                 $.fn.orgFinder[functionName].call(this);
@@ -295,7 +295,7 @@
                 } else {
                     if (forceSearch) {
                         flog('[jquery.orgFinder] Force search without selected place');
-
+                        
                         self.clear();
                         self.doSearch('');
                     } else {
@@ -596,11 +596,16 @@
     var methods = {
         init: function (options) {
             options = $.extend({}, $.fn.orgFinder.DEFAULT, options);
-
-            // AN: apps should depend on googlemap-lib
-            // if (options.googleAPIKey === null || options.googleAPIKey === undefined || options.googleAPIKey.trim() === '') {
-            //     $.error('[jquery.orgFinder] Google API Key is empty!');
-            // }
+            
+            if (window.google && window.google.maps) {
+                flog('[jquery.orgFinder] Google Map Api is already in documentation');
+            } else {
+                flog('[jquery.orgFinder] Google Map Api is not in documentation');
+                
+                if (options.googleAPIKey === null || options.googleAPIKey === undefined || options.googleAPIKey.trim() === '') {
+                    $.error('[jquery.orgFinder] Google API Key is empty!');
+                }
+            }
             
             $(this).each(function () {
                 var container = $(this);
