@@ -1,0 +1,14 @@
+#set( $funnels = $applications.leadMan.funnels )
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Funnel</label>
+        <div class="col-sm-12">
+            <select class="form-control" name="funnelName">
+                <option>[None]</option>
+                #foreach($f in $funnels.values())
+                <option value="$f.name">$formatter.firstNotNull($f.title, $f.name)</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>
