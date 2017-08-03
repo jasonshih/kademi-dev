@@ -28,7 +28,7 @@ controllerMappings.addComponent("leadman/components", "leadTasksTable", "html", 
 controllerMappings.addComponent("leadman/components", "leadTeam", "html", "Display team list on lead team page", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "cancelLead", "html", "Display cancel form of a lead", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "leadsGeoLocation", "html", "Display leads in a map canvas", "Leadman App component");
-controllerMappings.addComponent("leadman/components", "leadsStatsSummary", "html", "Display stats for a funnel", "Leadman App component");
+controllerMappings.addComponent("leadman/components", "leadStatsSummary", "html", "Display stats for a funnel", "Leadman App component");
 
 // ============================================================================
 // Portlet
