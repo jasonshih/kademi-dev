@@ -32,6 +32,14 @@
                         component.attr('data-display', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('.select-question-tag').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-question-tag', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                 }
             });
         },
@@ -41,6 +49,7 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-survey').val(dataAttributes['data-surveyname']);
             form.find('.select-display').val(dataAttributes['data-display'] || 'icon');
+            form.find('.select-question-tag').val(dataAttributes['data-question-tag'] || '');
         }
     };
 

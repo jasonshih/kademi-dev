@@ -1,3 +1,5 @@
+#set ($baseStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${textColor};")
+#set ($linkStyles = "font-family: ${fontFamily}; font-size: ${fontSize}px; line-height: ${lineHeight}px; color: ${linkColor}; text-decoration: none;")
 #set( $jsonDatabases = $rootFolder.find("/jsondb/") )
 #set( $kfeedbackDb = $jsonDatabases.child("kfeedback") )
 #set( $survey = $kfeedbackDb.child($surveyname) )
@@ -7,14 +9,31 @@
 #end
 
 #if( $survey )
-    #set ($width = 60 * $survey.jsonObject.options.size())
-    <table width="$width" border="0" cellspacing="20" cellpadding="0" bgcolor="#fff">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td class="wrapper" style="$baseStyles">
+                #if (!$questionTag || $questionTag == "")
+                    $survey.question
+                #else
+                    #set ($fontSizeName = "$" + "fontSize" + $questionTag.toUpperCase())
+                    #set ($lineHeightName = "$" + "lineHeight" + $questionTag.toUpperCase())
+                    <$questionTag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
+                    $survey.question
+                </$questionTag>
+                #end
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size: 0; line-height: 0;" height="10">&nbsp;</td>
+        </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             #foreach( $option in $survey.jsonObject.options )
                 #set ($emoLength = $option.emoji.length())
                 #set ($emoLink = $option.emoji.substring(1, $emoLength))
-                <td align="center">
-                    <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug">
+                <td align="center" class="wrapper" style="$baseStyles" width="60">
+                    <a href="${website.externalUrl}send-feedback/?survey=$surveyname&option=$option.slug" style="$linkStyles">
                         #if ($display == "text-icon" || $display == "icon")
                             <img src="${website.externalUrl}${emoLink}" width="40" height="40" alt="$option.title" style="display: block; border: 0;" />
                         #end
