@@ -1,19 +1,21 @@
-<div id="org-map" class="orgs-locator-component"></div>
+#set ($orgsLocatorId = "orgs-location-" + $formatter.randomGuid)
+<div class="orgs-locator-component" id="${orgsLocatorId}"></div>
 
 <script type="text/javascript">
-    var orgTypes = [];
-            #foreach($orgType in $page.find("/").orgTypes)
-            orgTypes.push({
-                    title: "$orgType.displayName",
-                    value: '$orgType.name'
-            });
-            #end
+    window['$orgsLocatorId' + '-orgTypes'] = [];
 
-            var allowedCountries = [];
-            #foreach($cc in $formatter.countryCodes.list)
-            allowedCountries.push({
-                    value: '$cc.alpha2Code',
-                    title: "$cc.englishShortName"
-            });
-            #end
+    #foreach($orgType in $page.find("/").orgTypes)
+        window['$orgsLocatorId' + '-orgTypes'].push({
+            title: "$orgType.displayName",
+            value: '$orgType.name'
+        });
+    #end
+
+    window['$orgsLocatorId' + '-allowedCountries'] = [];
+    #foreach($cc in $formatter.countryCodes.list)
+        window['$orgsLocatorId' + '-allowedCountries'].push({
+            value: '$cc.alpha2Code',
+            title: "$cc.englishShortName"
+        });
+    #end
 </script>

@@ -34,7 +34,6 @@
         var appSettings = g.getAppSettings(page);
     
         context.put('appSettings', appSettings);
-        context.put('appSettings2', appSettings);
     }
     
 })(this);
