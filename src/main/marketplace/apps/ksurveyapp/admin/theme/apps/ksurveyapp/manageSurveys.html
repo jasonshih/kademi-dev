@@ -4,7 +4,11 @@
 		<title>KSurvey</title>
 	</head>
 	<body>
-		<h4><span>KSurvey</span> <a href="#" class="btn btn-primary btn-sm pull-right btn-add-survey"><i class="fa fa-plus-square"></i> Add new survey</a></h4>
+		<h4><span>KSurvey</span>
+			<a href="#" class="btn btn-primary btn-sm pull-right btn-add-survey"><i class="fa fa-plus-square"></i> Add new survey</a>
+			<a style="margin-right: 5px" href="#" class="btn btn-info btn-sm pull-right btn-migration"><i class="fa fa-refresh"></i> Migration</a>
+		</h4>
+
 		<hr>
 		
 		<div class="row">
@@ -136,7 +140,23 @@
 	            <button type="button" class="btn btn-primary btn-popup-save">Save</button>
 	        </div>
 	    </div>
-		<script src="/theme/apps/ksurveyapp/main.js"></script>
+		<div id="modalMigration" class="modal fade modal-md">
+			<div class="modal-header">
+				<h4>Migration</h4>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-info">
+					After upgrading Kademi Survey from version 1.1.0 and before, please migrate data to continue using the app.
+				</div>
+
+				<form action="/ksurvey/migrate/" method="post" id="formMigrate">
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary">Start migrating</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script src="/theme/apps/ksurveyapp/main.js?v=1"></script>
 	</body>
 </html>
 

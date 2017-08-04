@@ -548,10 +548,25 @@ $(function(){
         });
     }
 
+    function initMigration() {
+        $(document).on('click', '.btn-migration', function () {
+            $('#modalMigration').modal();
+        });
+        $('#formMigrate').forms({
+            onSuccess: function (resp) {
+                if (resp.status){
+                    Msg.success("Migrated");
+                    $('#modalMigration').modal('hide');
+                }
+            }
+        })
+    }
+
     initGroupModal();
     initDateRange();
     initProgressBar();
     initTimeago();
     initHistogram();
     initClearResult();
+    initMigration();
 });

@@ -6,7 +6,7 @@
         <script src="/theme/apps/ksurveyapp/morris.min.js">//</script>
         <script src="/static/d3/d3.v3.js">//</script>
         <script src="/static/nvd3/nv.d3.js">//</script>
-        <script bottom="true" src="/theme/apps/ksurveyapp/main.js">//</script>
+        <script bottom="true" src="/theme/apps/ksurveyapp/main.js?v=1">//</script>
     </head>
     <body>
         #set($survey = $page.attributes.survey)
@@ -17,7 +17,6 @@
                     <li role="presentation"><a href="#questions" aria-controls="questions" role="tab" data-toggle="tab"><i class="fa fa-list"></i> Questions</a></li>
                     <li class="" role="presentation"><a href="#groups" aria-controls="groups" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Group Access</a></li>
                     <li role="presentation"><a href="#statistic" aria-controls="statistic" role="tab" data-toggle="tab"><i class="fa fa-area-chart"></i> Statistic</a></li>
-                    <li class="hide" role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab"><i class="fa fa-clock-o"></i> History</a></li>
                 </ul>
                 <div id="preview-area" class="btn-group pull-right">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -352,10 +351,6 @@
                         }
                     </script>
 
-                </div>
-
-                <div role="tabpanel" class="tab-pane hide" id="history">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut iure, repellat impedit eos sint at libero aliquid tempora velit recusandae! Debitis iure soluta suscipit a magnam modi fuga! Consectetur, non.
                 </div>
             </div>
         </div>

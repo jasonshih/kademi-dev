@@ -67,6 +67,13 @@ controllerMappings
     .addMethod('POST','saveQuestion')
     .build();
 
+controllerMappings
+    .adminController()
+    .path('/ksurvey/migrate/')
+    .enabled(true)
+    .addMethod('POST','migrateDB')
+    .build();
+
 // website controllers
 controllerMappings
     .websiteController()
