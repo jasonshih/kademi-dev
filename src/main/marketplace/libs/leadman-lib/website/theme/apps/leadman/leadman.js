@@ -1680,6 +1680,10 @@ function initSearchFilter() {
     });
 }
 
+$(document).on('pageDateChanged', function (e, startDate, endDate) {
+    initStatsSummaryComponents();
+});
+
 function initStatsSummaryComponents() {
     flog('initStatsSummaryComponents Count', $('.leadMan-statsSummaryComponent').length);
 
@@ -1699,7 +1703,7 @@ function initStatsSummaryComponents() {
             url: '/_leadManStatsSummary?funnelName=' + funnelName,
             dataType: 'JSON',
             success: function (resp) {
-                flog('initStatsSummaryComponents Resp', resp, );
+                flog('initStatsSummaryComponents Resp', resp );
 
                 if (resp.status) {
                     var completedTasksCount = (resp.data.tasks != null ? resp.data.tasks.completedTasks.doc_count : 0) || 0;
