@@ -46,6 +46,11 @@ img {
         width: 100% !important;
     }
 
+    td.col {
+        display: block !important;
+        width: 100% !important;
+    }
+
     #edm-container {
         width: 100% !important;
     }
