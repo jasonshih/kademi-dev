@@ -79,7 +79,7 @@
             form.find('.select-question-tag').val(dataAttributes['data-question-tag'] || '');
             form.find('.txt-icon-width').val(dataAttributes['data-icon-width'] || '40');
             form.find('.select-items-per-row-wrapper').css('display', dataAttributes['data-display'] === 'text' ? 'none' : 'block');
-            form.find('.icon-width-wrapper').css('display', dataAttributes['data-display'] === 'text' ? 'none' : 'block');
+            form.find('.txt-icon-width-wrapper').css('display', dataAttributes['data-display'] === 'text' ? 'none' : 'block');
         }
     };
     
