@@ -10,15 +10,20 @@
 
 #if ($page && !$formatter.isNull($survey))
 #set($cApp = $applications.ksurveyapp)
-<div class="container">
+<div class="container ksurvey">
     #if ($userResource)
-    #set($accessGroups = $survey.jsonObject.groups.split(','))
-    #set($canAccessSurvey = false)
-    #foreach($groupName in $accessGroups)
-    #if(!$canAccessSurvey)
-    #set($canAccessSurvey = $userResource.isInGroup($groupName, $page.organisation.orgId))
+    #if ($survey.jsonObject.groups)
+        #set($accessGroups = $survey.jsonObject.groups.split(','))
+        #set($canAccessSurvey = false)
+        #foreach($groupName in $accessGroups)
+        #if(!$canAccessSurvey)
+        #set($canAccessSurvey = $userResource.isInGroup($groupName))
+        #end
+        #end
+    #else
+        #set($canAccessSurvey = true) ## Groups restrict null so every user can access
     #end
-    #end
+
     #set ($taken = $cApp.call('getSurveyResultByUser', $page, $user.name, $survey.name))
     #if($survey.jsonObject.endTime && $survey.jsonObject.startTime)
     #set($expired = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.endTime)))
@@ -68,7 +73,7 @@
     <div class="row">
         <div class="col-sm-12" id="ksurvey-wrap">
 
-            <h3>$survey.jsonObject.name</h3>
+            <h3>$survey.jsonObject.title</h3>
 
             #if($survey.jsonObject.startTime)
             <div><i class="fa fa-clock-o"></i> <span class="surveytime">$survey.jsonObject.startTime</span> - <span class="surveytime">$survey.jsonObject.endTime</span></div>
@@ -205,33 +210,4 @@
         </div>
     </div>
 </div>
-#end
-
-#if ($page)
-<script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
-<script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
-<script src="/static/moment/2.17.1/moment.js">//</script>
-<script src="/theme/apps/ksurveyapp/countdown.min.js">//</script>
-<style type="text/css">
-    #ksurvey-wrap{
-        padding-bottom: 20px;
-    }
-    .question-item{
-        margin-bottom: 30px;
-    }
-</style>
-<script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
-<script type="text/javascript" src="/theme/apps/ksurveyapp/ksurvey.js">//</script>
-<script type="text/javascript">
-    $(function(){
-        var countdownT = setInterval(function(){
-            if(!$('#cowndowntime').length){
-                clearInterval(countdownT);
-                return;
-            }
-            var startTime = $('#cowndowntime').attr('data-startTime');
-            $('#cowndowntime').text(countdown(new Date(startTime)).toString());
-        },1000)
-    })
-</script>
 #end

@@ -20,6 +20,17 @@ var surveyMapping = {
                 }
             }
         },
+        "title": {
+            "fielddata": true,
+            "store": true,
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "store": true,
+                    "type": "keyword"
+                }
+            }
+        },
         "description": {
             "fielddata": true,
             "store": true,

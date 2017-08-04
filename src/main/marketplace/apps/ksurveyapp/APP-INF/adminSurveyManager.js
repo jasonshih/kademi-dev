@@ -77,6 +77,7 @@ function saveSurvey (page, params) {
     log.info('saveSurvey >', params.saveSurvey);
     var surveyId = params.surveyId;
     var name = params.name;
+    var title = params.title;
     var description = params.description;
     var user = params.user;
     var status = safeBoolean(params.status);
@@ -86,7 +87,7 @@ function saveSurvey (page, params) {
     var db = getDB(page);
     var errors = [];
     var returnObj;
-    if(!name || !description){
+    if(!name || !title){
         errors.push('There was an error when creating/updating survey. Please try again!');
     }else{
         if(surveyId){
@@ -95,6 +96,7 @@ function saveSurvey (page, params) {
             if(surveyRes !== null){
                 var survey = JSON.parse(surveyRes.json);
                 survey.name = name;
+                survey.title = title;
                 survey.description = description;
                 survey.status = status;
                 survey.modifiedDate = new Date();
@@ -117,6 +119,7 @@ function saveSurvey (page, params) {
             newId = RECORD_TYPES.SURVEY + '-' + formatter.randomGuid;
             var surveyJson = {
                 name: name,
+                title: title,
                 description: description,
                 status: status,
                 modifiedDate: new Date(),

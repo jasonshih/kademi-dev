@@ -1,15 +1,19 @@
 #if ($page)
 #set($cApp = $applications.ksurveyapp)
-<div class="container">
+<div class="container ksurvey ksurveyResult">
     #set($survey = $page.attributes.survey)
 
     #if("$!survey" != "")
-        #set($accessGroups = $survey.jsonObject.groups.split(','))
-        #set($canAccessSurvey = false)
-        #foreach($groupName in $accessGroups)
-            #if(!$canAccessSurvey)
-                #set($canAccessSurvey = $userResource.isInGroup($groupName, $page.organisation.orgId))
+        #if ($survey.jsonObject.groups)
+            #set($accessGroups = $survey.jsonObject.groups.split(','))
+            #set($canAccessSurvey = false)
+            #foreach($groupName in $accessGroups)
+                #if(!$canAccessSurvey)
+                    #set($canAccessSurvey = $userResource.isInGroup($groupName))
+                #end
             #end
+        #else
+            #set($canAccessSurvey = true) ## Groups restrict null so every user can access
         #end
 
         #set ($taken = $cApp.call('getSurveyResultByUser', $page, $user.name, $survey.name))
@@ -54,7 +58,7 @@
             <div class="row">
                 <div class="col-sm-12" id="ksurvey-wrap">
 
-                    <h3>$survey.jsonObject.name</h3>
+                    <h3>$survey.jsonObject.title</h3>
 
                     #if($survey.jsonObject.startTime)
                         <div><i class="fa fa-clock-o"></i> <span class="surveytime">$survey.jsonObject.startTime</span> - <span class="surveytime">$survey.jsonObject.endTime</span></div>
@@ -128,86 +132,7 @@
             </div>
         #end
     #end
-
-
-
 </div>
-<div class="container">
-    <div class='row'>
-        <div style="margin: auto" class='col-lg-12 blog-comments'> <!-- start comments -->
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>Questions and answers</h4>
-                </div>
-                <div class="panel-body">
-                    <div class="commentArea edifyViewMode">
-                        <div id="comments">
-                            <div class="comments-stream">
-                                <img src="/static/common/ajax-loader.gif" />
-                            </div>
-
-                            <div class="clr"></div>
-
-                            <form action="#" method="post" id="postComment">
-                                <div class="commentContainer">
-
-                                    <textarea id="postQuestion" class="form-control col-md-12" rows="1" placeholder="Ask a question, or offer an answer"></textarea>
-                                    <div class="commentControls">
-                                        <button class="btn #if(!$page.allowAnonComments)requiresUser#end btn-primary" type="submit">Post</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-
-                        <br/><br/>
-                    </div>
-
-                </div>
-            </div>
-        </div> <!-- end comments -->
-    </div>
-</div>
-<script src="/static/reload-fragment/1.0.1/jquery.reload-fragment-1.0.1.js" >//</script>
-<script type="text/javascript" src="/static/uri/1.15.1/URI.js">//</script>
-<script src="/static/moment/2.17.1/moment.js">//</script>
-<script src="/theme/apps/ksurveyapp/countdown.min.js">//</script>
-<style type="text/css">
-    #ksurvey-wrap{
-        padding-bottom: 20px;
-    }
-    .question-item{
-        margin-bottom: 30px;
-    }
-</style>
-<script type="text/javascript" src="/static/jquery.forms/1.1.0/jquery.forms-1.1.0.js">//</script>
-<script type="text/javascript" src="/theme/apps/ksurveyapp/ksurvey.js">//</script>
-<script type="text/javascript">
-    $(function(){
-        var countdownT = setInterval(function(){
-            if(!$('#cowndowntime').length){
-                clearInterval(countdownT);
-                return;
-            }
-            var startTime = $('#cowndowntime').attr('data-startTime');
-            $('#cowndowntime').text(countdown(new Date(startTime)).toString());
-        },1000);
-
-        function initProgressBar(){
-            $('.progress-bar').each(function(){
-                $(this).css('width',this.getAttribute('aria-valuenow')+'%');
-                if(this.getAttribute('aria-valuenow')<1){
-                    $(this).css('color','#333');
-                    var div = $(this).children();
-                    div.detach().insertBefore($(this));
-                }
-            });
-        }
-
-        initProgressBar();
-        initComments(window.location.pathname);
-    });
-
-</script>
 #else
 <div class="container">
 

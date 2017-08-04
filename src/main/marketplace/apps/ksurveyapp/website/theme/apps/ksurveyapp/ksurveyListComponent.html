@@ -10,8 +10,9 @@
                 #if ($surveys.size() > 0)
                 #foreach ($survey in $surveys)
                 #set($status = $survey.jsonObject.status)
-                #set($websiteAllowed =  $survey.jsonObject.websites != "null" && $survey.jsonObject.websites.contains($website.websiteName))
-                #if($status && $survey.jsonObject.websites && $websiteAllowed)
+
+                #set($websiteAllowed =  $survey.jsonObject.websites != "null")
+                #if($status && $survey.jsonObject.websites && $websiteAllowed && $survey.jsonObject.websites.contains($rootFolder.websiteName))
                 <div class="survey-item">
                     #set ($taken = $cApp.call('getSurveyResultByUser', $page, $user.name, $survey.name))
                     #if($survey.jsonObject.endTime && $survey.jsonObject.startTime)
