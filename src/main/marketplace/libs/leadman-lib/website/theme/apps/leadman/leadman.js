@@ -1711,10 +1711,11 @@ function initStatsSummaryComponents() {
 
                     var completedTasksPerc = Math.round(completedTasksCount / dueTasksCount * 100) || 0;
                     var closedLeadsPerc = Math.round(closedLeads / createdLeads * 100) || 0;
+                    var acqRate = Math.round(createdLeads / newContacts * 100) || 0;
 
                     comp.find('.leadMan-statsSummaryComponent-completedTasks').text(completedTasksPerc + '%');
                     comp.find('.leadMan-statsSummaryComponent-closedLeads').text(closedLeadsPerc + '%');
-                    comp.find('.leadMan-statsSummaryComponent-newLeads').text(newContacts);
+                    comp.find('.leadMan-statsSummaryComponent-newLeads').text(acqRate + '%');
                     comp.find('.leadMan-statsSummaryComponent-totalClosedSales').text('$' + salesAmount);
                 }
             }
