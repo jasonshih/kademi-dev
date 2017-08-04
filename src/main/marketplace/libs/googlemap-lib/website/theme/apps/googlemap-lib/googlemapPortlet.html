@@ -1,2 +1,4 @@
 #set( $googleMapsApiKey = $appSettings.apiKey )
+#if( $googleMapsApiKey )
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=${googleMapsApiKey}&libraries=places&callback=onGoogleMapReady">//</script>
+#end
