@@ -2,7 +2,16 @@
     <i class="clip-cart fa-4x"></i>
 </div>
 <div class="col-xs-9 text-right">
-    <div class="huge">$eComCartCount</div>
+    #if( $eComCartCount )
+    <div class="huge">        
+        $eComCartCount
+    </div>
     <div>$fulfilledCount Fulfilled</div>
     <div>$unfulfilledCount Not fulfilled</div>
+    #else
+    <div class="huge">        
+        Dang it
+    </div>
+    <div>No orders</div>
+    #end    
 </div>
