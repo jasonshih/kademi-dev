@@ -8,14 +8,14 @@ function initEditOrg() {
 //            if (oldId !== newId) {
 //                window.location = "../" + newId + "/edit";
 //            } else {
-                $("#form-body").reloadFragment({
-                    whenComplete: function () {
-                        $(".chosen-select").chosen({
-                            search_contains: true
-                        });
-                        initMap();
-                    }
-                });
+            $("#form-body").reloadFragment({
+                whenComplete: function () {
+                    $(".chosen-select").chosen({
+                        search_contains: true
+                    });
+                    initMap();
+                }
+            });
 //            }
         }
     });
@@ -30,13 +30,71 @@ function initEditOrg() {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         var name = getFileName(href);
-        addOrgType(name,e);
+        addOrgType(name, e);
     });
     $("body").on("click", ".removeOrgType", function (e) {
         e.preventDefault();
         var href = $(e.target).closest("a").attr("href");
         var name = getFileName(href);
-        removeOrgType(name,e);
+        removeOrgType(name, e);
+    });
+
+    $('#btn-change-ava').upcropImage({
+        buttonContinueText: 'Save',
+        url: window.location.pathname, // this is actually the default value anyway
+        onCropComplete: function (resp) {
+            flog("onCropComplete:", resp, resp.nextHref);
+            $(".profile-photo img").attr("src", resp.nextHref);
+        },
+        onContinue: function (resp) {
+            flog("onContinue:", resp, resp.result.nextHref);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    uploadedHref: resp.result.nextHref,
+                    applyImage: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img").attr("src", resp.nextHref);
+                        $(".main-profile-photo img").attr("src", resp.nextHref);
+                    } else {
+                        Msg.error("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        }
+    });
+
+    $('body').on('click', '#btn-remove-ava', function (e) {
+        e.preventDefault();
+
+        Kalert.confirm('Are you sure you want to clear the avatar?', function () {
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    clearAvatar: true
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        $(".profile-photo img").attr("src", "pic");
+                        $(".main-profile-photo img").attr("src", "pic");
+                    } else {
+                        Msg.error("Sorry, an error occured updating your profile image");
+                    }
+                },
+                error: function () {
+                    Msg.error('Sorry, we couldn\'t save your profile image.');
+                }
+            });
+        });
     });
 
 }
@@ -124,7 +182,7 @@ function addOrgType(name) {
     })
 }
 
-function removeOrgType(name,event) {
+function removeOrgType(name, event) {
     $.ajax({
         url: window.location.pathname,
         type: 'POST',
