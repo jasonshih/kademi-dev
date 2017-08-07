@@ -42,18 +42,13 @@
         
         var component = orgsLocator.closest('[data-type="component-orgsLocator"]');
         var searchWhenInit = component.attr('data-search-when-init') === 'true';
-        var queryName = component.attr('data-query-name');
-        var latName = component.attr('data-lat-name');
-        var lngName = component.attr('data-lng-name');
-        
-        flog('Init orgsLocator', queryName, latName, lngName);
         
         if (searchWhenInit) {
             options.searchWhenInit = searchWhenInit;
             options.initSearchOptions = {
-                query: params[queryName],
-                lat: +params[latName],
-                lng: +params[lngName]
+                query: params.query,
+                lat: +params.lat,
+                lng: +params.lng
             };
         }
         
