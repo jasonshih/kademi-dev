@@ -5,10 +5,16 @@
         $('.orgs-locator-component').each(function () {
             var orgsLocator = $(this);
             var id = orgsLocator.attr('id');
+            var initLat = orgsLocator.attr('data-lat');
+            initLat = +initLat || -33.867;
+            var initLng = orgsLocator.attr('data-lng');
+            initLng = +initLng || 151.195;
+            
+            flog('Init orgsLocator with default lat: "' + initLat + '" and lng: "' + initLng + '"');
             
             orgsLocator.orgFinder({
                 searchUrl: '/orgsLocator/',
-                initLatLng: [-33.867, 151.195],
+                initLatLng: [initLat, initLng],
                 initZoomLevel: 15,
                 orgTypes: window[id + '-orgTypes'],
                 allowedCountries: window[id + '-allowedCountriess'],

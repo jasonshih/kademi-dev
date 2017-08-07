@@ -1,5 +1,6 @@
 #set ($orgsLocatorId = "orgs-location-" + $formatter.randomGuid)
-<div class="orgs-locator-component" id="${orgsLocatorId}"></div>
+
+<div class="orgs-locator-component" id="${orgsLocatorId}" data-lat="$!page.organisation.lat" data-lng="$!page.organisation.lng"></div>
 
 <script type="text/javascript">
     window['$orgsLocatorId' + '-orgTypes'] = [];

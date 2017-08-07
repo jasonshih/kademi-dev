@@ -1,7 +1,7 @@
 /**
  *
  * jquery.orgFinder.js
- * @version: 1.0.1
+ * @version: 1.0.2
  * @require: bootstrap-select, jquery.scrollTo
  *
  * Configuration:
@@ -36,7 +36,7 @@
     };
     
     // Version for jquery.orgFinder
-    $.fn.orgFinder.version = '1.0.1';
+    $.fn.orgFinder.version = '1.0.2';
     
     // Default configuration
     $.fn.orgFinder.DEFAULT = {
