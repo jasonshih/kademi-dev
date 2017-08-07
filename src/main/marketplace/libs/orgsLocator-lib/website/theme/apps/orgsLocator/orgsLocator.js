@@ -10,6 +10,8 @@
             var initLng = orgsLocator.attr('data-lng');
             initLng = +initLng || 151.195;
             
+            flog('Init orgsLocator with default lat: "' + initLat + '" and lng: "' + initLng + '"');
+            
             orgsLocator.orgFinder({
                 searchUrl: '/orgsLocator/',
                 initLatLng: [initLat, initLng],
