@@ -8,8 +8,8 @@ function generateWebsiteTitle(page) {
 // POST /ksurvey/surveyId
 function submitSurvey(page, params) {
     log.info('submitSurvey >', params.submitSurvey);
-
-
+    
+    
     log.info('params {}', params);
     var surveyId = params['temp-surveyId'];
     var userId = params['temp-user'];
@@ -67,7 +67,7 @@ function submitSurvey(page, params) {
             }
         }
     }
-
+    
     var db = getDB(page);
     var result = {
         status: true,
@@ -82,7 +82,7 @@ function submitSurvey(page, params) {
             newId = RECORD_TYPES.RESULT + '-' + formatter.randomGuid;
             var obj = {
                 surveyId: surveyId,
-
+                
                 userId: userId,
                 answerBody: answerBody,
                 createdDate: new Date()
@@ -92,7 +92,7 @@ function submitSurvey(page, params) {
             obj.answerBody = surveyResult[i].answerBody;
             db.createNew(newId, JSON.stringify(obj), RECORD_TYPES.RESULT);
         }
-
+        
         newSurveySubmitId = RECORD_TYPES.SUBMIT + '-' + formatter.randomGuid;
         var submitObj = {
             fromAddress: fromAddress,
@@ -113,7 +113,7 @@ function submitSurvey(page, params) {
         
         log.info('saveResult done {}', JSON.stringify(surveyResult));
     }
-
+    
     return views.jsonObjectView(JSON.stringify(result)).wrapJsonResult();
 }
 

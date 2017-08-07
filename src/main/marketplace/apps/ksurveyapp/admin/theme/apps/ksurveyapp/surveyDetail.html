@@ -27,22 +27,22 @@
                         #set($hasWebsite = false)
                         #set ($curProfile = $userResource.thisProfile)
                         #foreach($w in $wm.websites)
-                        #if ($survey.jsonObject.websites.contains($w.name))
-                        #set($hasWebsite = true)
-                        #set ($wp = '/websites/'+ $w.name)
-                        #set ($loginToken = $page.find($wp).current.getLoginToken($curProfile))
-                        #set ($url = "http://${formatter.getDomainName($w)}/ksurvey/${survey.name}/?$loginToken")
-                        <li><a target="_blank" href="$url"><i class="fa fa-link"></i> $w.name</a></li>
-                        #end
+                            #if ($survey.jsonObject.websites.contains($w.name))
+                                #set($hasWebsite = true)
+                                #set ($wp = '/websites/'+ $w.name)
+                                #set ($loginToken = $page.find($wp).current.getLoginToken($curProfile))
+                                #set ($url = "http://${formatter.getDomainName($w)}/ksurvey/${survey.name}/?$loginToken")
+                                <li><a target="_blank" href="$url"><i class="fa fa-link"></i> $w.name</a></li>
+                            #end
                         #end
 
                         #if(!$hasWebsite)
-                        <li style="padding: 3px 6px">No website</li>
+                            <li style="padding: 3px 6px">No website</li>
                         #end
                     </ul>
                 </div>
             </div>
-            <div  class="tab-content">
+            <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="detail">
                     <form class="form-horizontal" action="" id="survey-form">
                         <input type="hidden" name="user" value="$user.name" />
@@ -64,7 +64,7 @@
                         <div class="form-group">
                             <label class="control-label col-md-2" for="description">Description</label>
                             <div class="col-md-4">
-                                <textarea rows="8" class="form-control required" name="description" required="required" value="" >$!survey.jsonObject.description</textarea>
+                                <textarea rows="8" class="form-control required" name="description" required="required" value="">$!survey.jsonObject.description</textarea>
                             </div>
                         </div>
                         <div class="form-group">
@@ -86,12 +86,12 @@
                             <div class="col-md-4">
                                 #set ($wm = $page.find('/websites'))
                                 #foreach($w in $wm.websites)
-                                <div class="checkbox">
-                                    <label>
-                                        <input #if ($survey.jsonObject.websites.contains($w.name)) checked #end onclick="if(this.checked) document.getElementById('temp-websites').value = this.value" type="checkbox" name="websites" value="$w.name" />
-                                        <a href="http://${wm.websiteAddress($w)}${formatter.portString}" target="_blank">$w.name</a>
-                                    </label>
-                                </div>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input #if ($survey.jsonObject.websites.contains($w.name)) checked #end onclick="if(this.checked) document.getElementById('temp-websites').value = this.value" type="checkbox" name="websites" value="$w.name" />
+                                            <a href="http://${wm.websiteAddress($w)}${formatter.portString}" target="_blank">$w.name</a>
+                                        </label>
+                                    </div>
                                 #end
                                 <input required="required" type="text" style="width:1px; height: 1px;opacity:0.01" id="temp-websites" name="temp-websites" value="$survey.jsonObject.websites">
                             </div>
@@ -113,66 +113,69 @@
                     </form>
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="questions" >
+                <div role="tabpanel" class="tab-pane" id="questions">
                     <div class="clearfix">
                         <a href="#" class="btn btn-primary btn-sm pull-right btn-add-question" data-survey="$survey.name"><i class="fa fa-plus-square"></i> Add new question</a>
                     </div>
                     <hr>
 
-                    <!-- tan1111 $page.attributes.questionResult -->
+                    <div id="questions-list" data-survey-id="$survey.name">
+                        #set($questions = $page.attributes.questionResult.hits.hits)
 
-
-                    #set($questions = $page.attributes.questionResult.hits.hits)
-
-                    #set($answers = $page.attributes.answerResult.hits.hits)
-                    #if($page.attributes.questionResult.hits.totalHits > 0)
-                        #foreach($question in $questions)
-
-                            <div class="panel panel-default" data-questionId="$question.id">
-                                <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span> <a class="btn btn-link btn-xs btn-delete-question pull-right" href="#"><i class="fa fa-trash"></i></a><a class="btn btn-link btn-xs btn-edit-question pull-right" href="#"><i class="fa fa-edit"></i></a> </h3></div>
-                                <div class="panel-body">
-                                    <div class="question-body">$!question.source.body</div>
-                                    <!-- tan $question  $question.fields $question.source.type -->
-                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span></p>
-                                    <!-- tan $question  $question.fields $question.source.type -->
-                                    #if($question.source.type != '1')
-                                    <p class="clearfix"><strong>Answers List</strong> </p>
-                                    <!-- List group -->
-                                    <ul class="list-group">
-                                        #if($page.attributes.answerResult.hits.totalHits > 0)
-                                            #foreach($answer in $answers)
-                                                #if($answer.source.questionId == $question.id)
-                                                <li class="list-group-item answer-item" data-answer="$answer.id">
-                                                <span>$answer.source.body</span>
-                                                #if($question.source.type!='2')
-                                                <a href="#" class="btn btn-link btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a>
+                        #set($answers = $page.attributes.answerResult.hits.hits)
+                        #if($page.attributes.questionResult.hits.totalHits > 0)
+                            #foreach($question in $questions)
+                                <div class="panel panel-default panel-question" data-question-id="$question.id">
+                                    <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span>
+                                        <a class="btn btn-link btn-xs btn-delete-question pull-right" href="#"><i class="fa fa-trash"></i></a>
+                                        <a class="btn btn-link btn-xs btn-edit-question pull-right" href="#"><i class="fa fa-edit"></i></a>
+                                        <a class="btn btn-link btn-xs btn-reorder-question pull-right" href="#" title="Re-order question"><i class="fa fa-sort"></i></a>
+                                    </h3></div>
+                                    <div class="panel-body">
+                                        <div class="question-body">$!question.source.body</div>
+                                        <!-- tan $question  $question.fields $question.source.type -->
+                                        <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
+                                        </p>
+                                        <!-- tan $question  $question.fields $question.source.type -->
+                                        #if($question.source.type != '1')
+                                            <p class="clearfix"><strong>Answers List</strong></p>
+                                            <!-- List group -->
+                                            <ul class="list-group">
+                                                #if($page.attributes.answerResult.hits.totalHits > 0)
+                                                    #foreach($answer in $answers)
+                                                        #if($answer.source.questionId == $question.id)
+                                                            <li class="list-group-item answer-item" data-answer="$answer.id">
+                                                                <span>$answer.source.body</span>
+                                                                #if($question.source.type!='2')
+                                                                    <a href="#" class="btn btn-link btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a>
+                                                                #end
+                                                                <a href="#" class="btn btn-link btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>
+                                                        #end
+                                                    #end
                                                 #end
-                                                <a href="#" class="btn btn-link btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>
-                                                #end
-                                            #end
+                                            </ul>
                                         #end
-                                    </ul>
-                                    #end
-                                    #if($question.source.type!='1')
-                                    <form class="answer-form #if($question.source.type=='2') hide #end" autocomplete="off">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <input type="hidden" name="userId" value="$user.name" />
-                                                <input type="hidden" name="questionId" value="$question.id" />
-                                                <input type="hidden" name="surveyId" value="$survey.name" />
-                                                <input type="text" class="form-control required answer-input" placeholder="Type new answer and press enter" name="answerBody" required="required" value="" />
-                                            </div>
-                                        </div>
-                                    </form>
-                                    #end
-                                </div>
+                                        #if($question.source.type!='1')
+                                            <form class="answer-form #if($question.source.type=='2') hide #end" autocomplete="off">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <input type="hidden" name="userId" value="$user.name" />
+                                                        <input type="hidden" name="questionId" value="$question.id" />
+                                                        <input type="hidden" name="surveyId" value="$survey.name" />
+                                                        <input type="text" class="form-control required answer-input" placeholder="Type new answer and press enter" name="answerBody" required="required" value="" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        #end
+                                    </div>
 
-                            </div>
-                         #end
-                    #else
-                        <p>No question found</p>
-                    #end
-                    <hr>
+                                </div>
+                            #end
+                        #else
+                            <p>No question found</p>
+                        #end
+                    </div>
+                    <hr />
                     <div class="clearfix">
                         <a href="#" class="btn btn-primary btn-sm pull-right btn-add-question" data-survey="$survey.name"><i class="fa fa-plus-square"></i> Add new question</a>
                     </div>
@@ -180,7 +183,7 @@
 
                 <div role="tabpanel" class="tab-pane group-access" id="groups">
                     <p>
-                        <a href="#modal-groups" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Add/remove groups</a>                        
+                        <a href="#modal-groups" data-toggle="modal" class="btn btn-default btn-sm"><i class="fa fa-plus"></i> Add/remove groups</a>
                     </p>
                     <hr />
                     <div id="group-list" class="clearfix">
@@ -190,34 +193,34 @@
                         #foreach($groupName in $currentGroups)
                             #set ($g = $groups.child($groupName))
                             #if($g)
-                            <div class="alert alert-info">
-                                <span class="fa fa-users"></span>
-                                <a href="/groups/$g.name/members">$g.name</a>
-                                #if( $g.groupType == "P" )
-                                    - Primary group
-                                #elseif( $g.groupType == "M" )
-                                    - Mailing list
-                                #elseif( $g.groupType == "S" )
-                                    - Subscription
-                                #end
-                                -
-                                #if( $g.registrationMode == "o" )
-                                    Open group
-                                #elseif( $g.registrationMode == "c" )
-                                    Closed group
-                                #elseif( $g.registrationMode == "a" )
-                                    Administrator approval group
-                                #else
-                                    No registration mode has been set
-                                #end
-                            </div>
+                                <div class="alert alert-info">
+                                    <span class="fa fa-users"></span>
+                                    <a href="/groups/$g.name/members">$g.name</a>
+                                    #if( $g.groupType == "P" )
+                                        - Primary group
+                                    #elseif( $g.groupType == "M" )
+                                        - Mailing list
+                                    #elseif( $g.groupType == "S" )
+                                        - Subscription
+                                    #end
+                                    -
+                                    #if( $g.registrationMode == "o" )
+                                        Open group
+                                    #elseif( $g.registrationMode == "c" )
+                                        Closed group
+                                    #elseif( $g.registrationMode == "a" )
+                                        Administrator approval group
+                                    #else
+                                        No registration mode has been set
+                                    #end
+                                </div>
                             #end
                         #end
 
                     </div>
                 </div>
                 
-                <div role="tabpanel" class="tab-pane" id="statistic" >
+                <div role="tabpanel" class="tab-pane" id="statistic">
                     #set($linebreaker ="\n")
                     #set ($surveyCSV = "Survey,Total_Submissions,Question_Title,Question_Type,Answer,Votes,Percentage,Submitted_By$linebreaker")
                     #set ($surveyStatistic = $page.controllerMappings.call('getSurveyStatistic', $page, $survey.name))
@@ -231,35 +234,34 @@
                     <div class="survey-summary clearfix">
                         <div class="row">
                             #if($surveyResult.entrySet().size()>0)
-                            <div class="col-sm-9">
-                                #if($histogram.entrySet().size()>0)
-                                <svg id="histogram" width="100%" height="300"></svg>
-                                <script type="text/javascript">
-                                    var histogramData = [
-                                        #foreach ($b in $histogram.entrySet())
-                                        {label: '$b.key', value: $b.value},
-                                        #end
-                                    ];
-                                </script>
-                                #end
-                            </div>
-
-                            <div class="col-sm-3">
-                                <h3 style="padding-top: 60px">Total Submissions: $totalSubmits</h3>
-                                <a id="csvDownload" download="data.csv" class="btn btn-primary">Download CSV</a>
-                                <div class="dropdown" style="margin-top: 10px">
-                                    <button class="btn btn-danger" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Clear Results
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dLabel">
-                                        <li><a data-surveyId="$survey.name" class="clearUserResult" href="#">Clear result for specific user</a></li>
-                                        <li><a data-surveyId="$survey.name" class="clearAllResult" href="#">Clear all result</a></li>
-                                    </ul>
+                                <div class="col-sm-9">
+                                    #if($histogram.entrySet().size()>0)
+                                        <svg id="histogram" width="100%" height="300"></svg>
+                                        <script type="text/javascript">
+                                            var histogramData = [
+                                                #foreach ($b in $histogram.entrySet())
+                                                    {label: '$b.key', value: $b.value},
+                                                #end];
+                                        </script>
+                                    #end
                                 </div>
-                            </div>
+
+                                <div class="col-sm-3">
+                                    <h3 style="padding-top: 60px">Total Submissions: $totalSubmits</h3>
+                                    <a id="csvDownload" download="data.csv" class="btn btn-primary">Download CSV</a>
+                                    <div class="dropdown" style="margin-top: 10px">
+                                        <button class="btn btn-danger" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Clear Results
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                            <li><a data-survey-id="$survey.name" class="clearUserResult" href="#">Clear result for specific user</a></li>
+                                            <li><a data-survey-id="$survey.name" class="clearAllResult" href="#">Clear all result</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
                             #else
-                            <div class="col-sm-12"><p class="text-center">No submits found</p></div>
+                                <div class="col-sm-12"><p class="text-center">No submits found</p></div>
                             #end
                         </div>
                         <div class="row">
@@ -269,9 +271,8 @@
                                     <script type="text/javascript">
                                         var browserStats = [
                                             #foreach ($b in $userAgentResult.get('browser').entrySet())
-                                            {label: '$b.key', value: $b.value},
-                                            #end
-                                        ];
+                                                {label: '$b.key', value: $b.value},
+                                            #end];
                                     </script>
                                 #end
                             </div>
@@ -281,9 +282,8 @@
                                     <script type="text/javascript">
                                         var osStats = [
                                             #foreach ($b in $userAgentResult.get('os').entrySet())
-                                            {label: '$b.key', value: $b.value},
-                                            #end
-                                        ];
+                                                {label: '$b.key', value: $b.value},
+                                            #end];
                                     </script>
                                 #end
                             </div>
@@ -293,64 +293,72 @@
                         </div>
                     </div>
                     <div id="stats-questions">
-                    #if($page.attributes.questionResult.hits.totalHits > 0 && $surveyResult.entrySet().size()>0 )
-                         #foreach($question in $questions)
-                            <div class="panel panel-default" data-questionId="$question.id">
-                                <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span> </h3></div>
-                                <div class="panel-body">
-                                    <div class="question-body">$!question.source.body</div>
+                        #if($page.attributes.questionResult.hits.totalHits > 0 && $surveyResult.entrySet().size()>0 )
+                            #foreach($question in $questions)
+                                <div class="panel panel-default" data-question-id="$question.id">
+                                    <div class="panel-heading"><h3 class="panel-title"><span>$question.source.title</span></h3></div>
+                                    <div class="panel-body">
+                                        <div class="question-body">$!question.source.body</div>
 
-                                    <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span></p>
-                                    #if($question.source.type!='1')
-                                    <p class="clearfix"><strong>Answers Result</strong> </p>
-                                    <!-- List group -->
-                                    <div class="list-group">
-                                        #if($page.attributes.answerResult.hits.totalHits > 0)
+                                        <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
+                                        </p>
+                                        #if($question.source.type!='1')
+                                            <p class="clearfix"><strong>Answers Result</strong></p>
+                                            <!-- List group -->
+                                            <div class="list-group">
+                                                #if($page.attributes.answerResult.hits.totalHits > 0)
+                                                    #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
+                                                    #foreach($answer in $answers)
+                                                        #if($answer.source.questionId == $question.id)
+                                                            #set($totalAnswerSubmits = 0)
+                                                            #if($surveyResult.get($question.id).get('answers').get($answer.id))
+                                                                #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get($answer.id))
+                                                            #end
+                                                            #set ($userRes = $applications.userApp.findUserResource($answer.source.userId))
+                                                            #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
+                                                            #set($surveyCSV =
+                                                                "$surveyCSV$survey.jsonObject.name,$totalAnswerSubmits,$question.source.title,$page.controllerMappings.call(
+                                                                    'getQuestionType',$question.source.type),$answer.source.body,$totalAnswerSubmits,$progress,$linebreaker")
+                                                            <div class="progress">
+                                                                <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace(
+                                                                    '%','')" aria-valuemin="0" aria-valuemax="100" style="text-align: left;">
+                                                                    <div style="padding-left: 10px">$answer.source.body ($progress - $totalAnswerSubmits votes)</div>
+                                                                </div>
+                                                            </div>
+                                                        #end
+                                                    #end
+                                                #end
+                                            </div>
+                                        #else
                                             #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
-                                            #foreach($answer in $answers)
-                                                #if($answer.source.questionId == $question.id)
-                                                #set($totalAnswerSubmits = 0)
-                                                #if($surveyResult.get($question.id).get('answers').get($answer.id))
-                                                    #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get($answer.id))
+                                            #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get('PLAIN_TEXT_ANSWER'))
+                                            #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
+                                            <p><strong>Total answers: $totalAnswerSubmits </strong>
+                                                <a data-question-id="$question.id" data-survey-id="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all
+                                                    <i class="fa fa-arrow-down"></i></a></p>
+                                            <ul class="plain-answers list-group">
+                                                #set ($plainAnswers = $page.controllerMappings.call('getPlainAnswers', $page, $question.id, $survey.name))
+                                                #if($plainAnswers.hits.totalHits > 0)
+                                                    #foreach($plainAnswer in $plainAnswers.hits.hits)
+                                                        #set ($userRes = $applications.userApp.findUserResource($plainAnswer.source.userId))
+                                                        #set($surveyCSV ="$surveyCSV$survey.jsonObject.name,$totalSubmits,$question.source.title,$page.controllerMappings.call(
+                                                            'getQuestionType',$question.source.type),$plainAnswer.source.answerBody,,,$!userRes.firstName $!userRes.surName$linebreaker")
+                                                        <li class="list-group-item">$plainAnswer.source.answerBody -
+                                                            <a href="/manageUsers/${userRes.thisProfile.id}"><b>$!userRes.firstName $!userRes.surName</b></a></li>
+                                                    #end
                                                 #end
-                                                #set ($userRes = $applications.userApp.findUserResource($answer.source.userId))
-                                                #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.name,$totalAnswerSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$answer.source.body,$totalAnswerSubmits,$progress,$linebreaker")
-                                                <div class="progress">
-                                                  <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace('%','')" aria-valuemin="0" aria-valuemax="100" style="text-align: left;">
-                                                        <div style="padding-left: 10px">$answer.source.body ($progress - $totalAnswerSubmits votes)</div>
-                                                  </div>
-                                                </div>
-                                                #end
-                                            #end
+                                            </ul>
                                         #end
                                     </div>
-                                    #else
-                                        #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
-                                        #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get('PLAIN_TEXT_ANSWER'))
-                                        #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                        <p><strong>Total answers: $totalAnswerSubmits </strong> <a data-questionId="$question.id" data-surveyId="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all <i class="fa fa-arrow-down"></i></a></p>
-                                        <ul class="plain-answers list-group">
-                                            #set ($plainAnswers = $page.controllerMappings.call('getPlainAnswers', $page, $question.id, $survey.name))
-                                            #if($plainAnswers.hits.totalHits > 0)
-                                                #foreach($plainAnswer in $plainAnswers.hits.hits)
-                                                #set ($userRes = $applications.userApp.findUserResource($plainAnswer.source.userId))
-                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.name,$totalSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$plainAnswer.source.answerBody,,,$!userRes.firstName $!userRes.surName$linebreaker")
-                                                <li class="list-group-item">$plainAnswer.source.answerBody - <a href="/manageUsers/${userRes.thisProfile.id}"><b>$!userRes.firstName $!userRes.surName</b></a></li>
-                                                #end
-                                            #end
-                                        </ul>
-                                    #end
                                 </div>
-                            </div>
-                         #end
-                    #end
+                            #end
+                        #end
                     </div>
                     <script>
                         var surveyCSV = "data:text/csv;charset=utf-8,$surveyCSV";
                         var encodedUri = encodeURI(surveyCSV);
                         var link = document.getElementById("csvDownload");
-                        if(link){
+                        if (link) {
                             link.setAttribute("href", encodedUri);
                             link.setAttribute("download", "my_data.csv");
                         }
@@ -360,77 +368,86 @@
             </div>
         </div>
         
-        <div id="modal-question" class="modal fade modal-md modal-fuse-editor">
-	        <div class="modal-header">
-	            <a href="#" data-dismiss="modal" class="close">&times;</a>
-	            <h4 class="modal-title">Add/Edit question</h4>
-	        </div>
-	        <div class="modal-body">
-                <div class="alert alert-danger alert-dismissible hide" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
-	            <form class="form-horizontal">
-                    <input type="hidden" name="createdBy" value="anhnt" />
-                    <input type="hidden" name="questionId" value="" />
-				    <input type="hidden" name="surveyId" value="$survey.name" />
-				    <div class="form-group">
-				        <label class="control-label col-md-2" for="title">Title</label>
-				        <div class="col-md-10">
-				            <input type="text" class="form-control required" name="questionTitle" required="required" value="" />
-				        </div>
-				    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2" for="questionType">Question type</label>
-                        <div class="col-md-10">
-                            <select name="questionType" class="form-control required" id="">
-                                <option value="0">Multiple Choices</option>
-                                <option value="1">Plain Text</option>
-                                <option value="2">Yes/No Question</option>
-                                <option value="3">Single Choice</option>
-                            </select>
+        <div id="modal-question" class="modal fade">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="#" data-dismiss="modal" class="close">&times;</a>
+                        <h4 class="modal-title">Add/Edit question</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger alert-dismissible hide" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
-                    </div>
-                    <div class="form-group answerLayout hide">
-                        <label class="control-label col-md-2" for="title">Answers layout</label>
-                        <div class="col-md-10">
-                            <select name="answerLayout" class="form-control required" id="">
-                                <option selected value="0">Vertical (Default)</option>
-                                <option value="1">Horizontal</option>
-                            </select>
-                        </div>
-                    </div>
-				    <div class="form-group">
-				        <label class="control-label col-md-2">Body</label>
-				        <div class="col-md-10">
-				            <textarea rows="3" class="form-control htmleditor required" id="question-body" name="questionBody" required="required"></textarea>
-				        </div>
-				    </div>
-                    <button type="submit" style="visibility: hidden; height: 1px"></button>
-				</form>
-	        </div>
-	        <div class="modal-footer">
-	            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	            <button type="button" class="btn btn-primary btn-popup-save">Save</button>
-	        </div>
-	    </div>
+                        <form class="form-horizontal">
+                            <input type="hidden" name="createdBy" value="anhnt" />
+                            <input type="hidden" name="questionId" value="" />
+                            <input type="hidden" name="surveyId" value="$survey.name" />
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="title">Title</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control required" name="questionTitle" required="required" value="" />
+                                </div>
+                            </div>
 
-        <div id="modal-groups" class="modal fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Choose groups</h4>
-            </div>
-            <div class="modal-body" data-surveyId="$survey.name">
-                #foreach($g in $page.find('/groups').children)
-                    <div class="checkbox">
-                        <label>
-                            #set ($isChecked = $survey.jsonObject.groups && $survey.jsonObject.groups.indexOf($g.name) != -1)
-                            $formatter.checkbox($g.name, $isChecked) $g.name
-                        </label>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="questionType">Question type</label>
+                                <div class="col-md-10">
+                                    <select name="questionType" class="form-control required" id="">
+                                        <option value="0">Multiple Choices</option>
+                                        <option value="1">Plain Text</option>
+                                        <option value="2">Yes/No Question</option>
+                                        <option value="3">Single Choice</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group answerLayout hide">
+                                <label class="control-label col-md-2" for="title">Answers layout</label>
+                                <div class="col-md-10">
+                                    <select name="answerLayout" class="form-control required" id="">
+                                        <option selected value="0">Vertical (Default)</option>
+                                        <option value="1">Horizontal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Body</label>
+                                <div class="col-md-10">
+                                    <textarea rows="3" class="form-control htmleditor required" id="question-body" name="questionBody" required="required"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" style="visibility: hidden; height: 1px"></button>
+                        </form>
                     </div>
-                #end
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-popup-save">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
-        
 
-        
+        <div id="modal-groups" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose groups</h4>
+                    </div>
+                    <div class="modal-body" data-survey-id="$survey.name">
+                        #foreach($g in $page.find('/groups').children)
+                            <div class="checkbox">
+                                <label>
+                                    #set ($isChecked = $survey.jsonObject.groups && $survey.jsonObject.groups.indexOf($g.name) != -1)
+                            $formatter.checkbox($g.name, $isChecked) $g.name
+                                </label>
+                            </div>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </body>
 </html>

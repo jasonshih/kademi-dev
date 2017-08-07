@@ -15,30 +15,30 @@ JBNodes['ksurveySubmittedGoal'] = {
             maxConnections: 1
         }
     },
-
+    
     nodeTypeClass: 'customGoal',
-
+    
     settingEnabled: true,
-
+    
     initSettingForm: function (form) {
         form.append(JBApp.standardGoalSettingControls);
-
+        
         JBApp.initStandardGoalSettingControls(form);
-
+        
         form.forms({
             allowPostForm: false,
             onValid: function () {
                 JBApp.saveStandardGoalSetting(form);
-
+                
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
         });
     },
-
+    
     showSettingForm: function (form, node) {
         JBApp.showStandardGoalSettingControls(form, node);
-
+        
         JBApp.showSettingPanel(node);
     }
 };

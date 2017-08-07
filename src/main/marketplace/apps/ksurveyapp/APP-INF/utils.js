@@ -19,11 +19,11 @@ function safeSplit(val) {
 function toJsArray(data) {
     if (isNotNull(data)) {
         var array = [];
-
+        
         for (var key in data) {
             array[key] = data[key];
         }
-
+        
         return array;
     } else {
         return [];
@@ -38,7 +38,7 @@ function toJsArray(data) {
  */
 function joinArray(arr, p) {
     var a = '';
-
+    
     for (var s in arr) {
         if (a === '') {
             a = a + arr[s];
@@ -46,7 +46,7 @@ function joinArray(arr, p) {
             a = a + p + arr[s];
         }
     }
-
+    
     return a;
 }
 
@@ -63,7 +63,7 @@ function removeAt(arr, at) {
             a.push(arr[i]);
         }
     }
-
+    
     return a;
 }
 
@@ -79,7 +79,7 @@ var merge = function (a, b) {
             a[key] = b[key];
         }
     }
-
+    
     return a;
 };
 
@@ -127,12 +127,12 @@ function isNotNull(val) {
 function trimToNull(val) {
     if (val !== null) {
         val = val.toString().trim();
-
+        
         if (val.length === 0) {
             return null;
         }
     }
-
+    
     return val;
 }
 
@@ -144,15 +144,15 @@ function trimToNull(val) {
 function replaceYuckyChars(s) {
     s = s.toLowerCase().replace('/', '');
     s = s.replace(/[^A-Za-z0-9]/g, '-');
-
+    
     while (s.contains('--')) {
         s = s.replace('--', '-');
     }
-
+    
     if (s.endsWith('-')) {
         s = s.substring(0, s.length - 1);
     }
-
+    
     return s;
 }
 
@@ -165,7 +165,7 @@ function safeString(val) {
     if (isNull(val)) {
         return '';
     }
-
+    
     return formatter.format(val);
 }
 
@@ -178,7 +178,7 @@ function safeInt(val) {
     if (isNull(val)) {
         return 0;
     }
-
+    
     return parseInt(val, 10);
 }
 
@@ -191,12 +191,12 @@ function safeBoolean(val) {
     if (isNull(val)) {
         return false;
     }
-
+    
     var b = formatter.toBool(val);
     if (b === null) {
         return false;
     }
-
+    
     return b.booleanValue();
 }
 
@@ -210,11 +210,11 @@ function safeArray(val, p) {
     if (isNull(val)) {
         return [];
     }
-
+    
     if (isNull(p)) {
         p = ',';
     }
-
+    
     return val.split(p);
 }
 
@@ -236,15 +236,15 @@ function escapeHtml(string) {
 function splitToCleanArray(val, p) {
     var arr = safeArray(val, p);
     var cleanArr = [];
-
+    
     for (var i = 0; i < arr.length; i++) {
         var item = arr[i].trim();
-
+        
         if (isNotBlank(item) && cleanArr.indexOf(item) === -1) {
             cleanArr.push(item);
         }
     }
-
+    
     return cleanArr;
 }
 
@@ -255,13 +255,13 @@ function splitToCleanArray(val, p) {
  */
 function objectToParam(obj) {
     var arr = [];
-
+    
     for (var prop in obj) {
         if (obj.hasOwnProperty(prop)) {
             arr.push(encodeURIComponent(prop) + '=' + encodeURIComponent(obj[prop]));
         }
     }
-
+    
     return arr.join('&');
 }
 
@@ -274,18 +274,18 @@ function sortObjectByKey(obj) {
     var sorted = {};
     var prop;
     var arr = [];
-
+    
     for (prop in obj) {
         if (obj.hasOwnProperty(prop)) {
             arr.push(prop);
         }
     }
-
+    
     arr.sort();
-
+    
     for (prop = 0; prop < arr.length; prop++) {
         sorted[arr[prop]] = obj[arr[prop]];
     }
-
+    
     return sorted;
 }
