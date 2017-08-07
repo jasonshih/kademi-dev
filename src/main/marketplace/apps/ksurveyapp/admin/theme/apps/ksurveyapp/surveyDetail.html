@@ -315,7 +315,7 @@
                                                 #end
                                                 #set ($userRes = $applications.userApp.findUserResource($answer.source.userId))
                                                 #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
-                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.title,$totalAnswerSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$answer.source.body,$totalAnswerSubmits,$progress,$linebreaker")
+                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.name,$totalAnswerSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$answer.source.body,$totalAnswerSubmits,$progress,$linebreaker")
                                                 <div class="progress">
                                                   <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace('%','')" aria-valuemin="0" aria-valuemax="100" style="text-align: left;">
                                                         <div style="padding-left: 10px">$answer.source.body ($progress - $totalAnswerSubmits votes)</div>
@@ -330,13 +330,13 @@
                                         #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get('PLAIN_TEXT_ANSWER'))
                                         #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
                                         <p><strong>Total answers: $totalAnswerSubmits </strong> <a data-questionId="$question.id" data-surveyId="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all <i class="fa fa-arrow-down"></i></a></p>
-                                        <ul class="plain-answers">
+                                        <ul class="plain-answers list-group">
                                             #set ($plainAnswers = $page.controllerMappings.call('getPlainAnswers', $page, $question.id, $survey.name))
                                             #if($plainAnswers.hits.totalHits > 0)
                                                 #foreach($plainAnswer in $plainAnswers.hits.hits)
                                                 #set ($userRes = $applications.userApp.findUserResource($plainAnswer.source.userId))
-                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.title,$totalSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$plainAnswer.source.answerBody,,,$!userRes.firstName $!userRes.surName$linebreaker")
-                                                <li>$plainAnswer.source.answerBody - <a href="/manageUsers/${userRes.thisProfile.id}">$!userRes.firstName $!userRes.surName</a></li>
+                                                #set($surveyCSV = "$surveyCSV$survey.jsonObject.name,$totalSubmits,$question.source.title,$page.controllerMappings.call('getQuestionType',$question.source.type),$plainAnswer.source.answerBody,,,$!userRes.firstName $!userRes.surName$linebreaker")
+                                                <li class="list-group-item">$plainAnswer.source.answerBody - <a href="/manageUsers/${userRes.thisProfile.id}"><b>$!userRes.firstName $!userRes.surName</b></a></li>
                                                 #end
                                             #end
                                         </ul>
