@@ -6,7 +6,7 @@
                 <h1>Good Work!</h1>
                 <p>Your submission has been received.</p>
                 #if( !$page.onePerRecipient )
-                <button class="go-again btn btn-lg btn-primary">Submit another</button>
+                    <button class="go-again btn btn-lg btn-primary">Submit another</button>
                 #end
             </div>
             #if( !$page.onePerRecipient || $page.entriesForUser.size() == 0 )
@@ -20,19 +20,23 @@
 
                         <div class="form-group">
                             <label class="control-label" for="firstName">First name</label>
-                            <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
+                            <input type="text" name="firstName" id="firstName" class="required form-control"
+                                   placeholder="Enter your first name" value="$!user.firstName"/>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="surName">Surname</label>
-                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
+                            <input type="text" name="surName" id="surName" class="form-control"
+                                   placeholder="Enter your surname" value="$!user.surName"/>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="email">Email</label>
-                            <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
+                            <input type="text" name="email" id="email" class="required form-control"
+                                   placeholder="Enter your email address" value="$!user.email"/>
                         </div>
                         <div class="form-group">
                             <label class="control-label" for="phone">Phone</label>
-                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
+                            <input type="text" name="phone" id="phone" class="form-control"
+                                   placeholder="Enter your best contact number" value="$!user.phone"/>
                         </div>
 
 
@@ -42,7 +46,8 @@
                                     <div class="checkbox">
                                         #foreach($optin in $contactPage.optins)
                                             <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
-                                                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                                                <input type="checkbox" name="optins" value="$optin.optinGroup.name"
+                                                       id="optins_${optin.optinGroup.name}"/>
                                                 $optin.message
                                             </label>
                                         #end
@@ -61,19 +66,22 @@
                     #end
 
                     #if( $page.selectOrg )
-                    <div class="form-group">
-                        <label class="control-label" for="phone">Your Organisation</label>
-                        <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your organisation" value="" />
-                        <input type="hidden" name="relatedOrg"/>
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label" for="phone">Your Organisation</label>
+                            <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required"
+                                   placeholder="Enter your organisation" value=""/>
+                            <input type="hidden" name="relatedOrg"/>
+                        </div>
                     #end
 
                     #if( $page.selectProduct )
-                    <div class="form-group">
-                        <label class="control-label" for="phone">Product</label>
-                        <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required reset-on-resubmit" placeholder="Enter the product code" value="" />
-                        <input type="hidden" class="reset-on-resubmit" name="relatedProductSku">
-                    </div>
+                        <div class="form-group">
+                            <label class="control-label" for="phone">Product</label>
+                            <input type="text" name="relatedProductSkuTitle"
+                                   class="relatedProductSkuTitlePromo form-control required reset-on-resubmit"
+                                   placeholder="Enter the product code" value=""/>
+                            <input type="hidden" class="reset-on-resubmit" name="relatedProductSku">
+                        </div>
                     #end
 
 
@@ -84,17 +92,19 @@
                                 <li class="first">
                                     <div class="viewUploaded">
                                         #if( $page.userAttachmentHash )
-                                            <img src="uploads/$page.userAttachmentHash/alt-150-150.png" />
+                                            <img src="uploads/$page.userAttachmentHash/alt-150-150.png"/>
                                         #else
                                             Your photo
                                         #end
                                     </div>
 
                                     <div class="input" id='myUploaded'></div>
-                                    <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash"/>
+                                    <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash"
+                                           value="$!page.userAttachmentHash"/>
                                 </li>
                                 #foreach($entry in $page.child("uploads").children)
-                                    <li><a href="uploads/$entry.name/alt-600-400.png"><img src="uploads/$entry.name/alt-150-150.png"/></a></li>
+                                    <li><a href="uploads/$entry.name/alt-600-400.png"><img
+                                            src="uploads/$entry.name/alt-150-150.png"/></a></li>
                                 #end
                             </ul>
                             <div style="clear: both"></div>
@@ -116,7 +126,9 @@
                             </div>
                         #end
                         <div class="text-right">
-                            <button class="enter btn btn-primary" type="submit"><i class="fa fa-check"></i> Submit your entry</button>
+                            <button class="enter btn btn-primary" type="submit"><i class="fa fa-check"></i> Submit your
+                                entry
+                            </button>
                         </div>
                     #else
                         <i>Not enterable</i>
@@ -132,7 +144,7 @@
                                 <li class="first">
                                     <div class="viewUploaded">
                                         #if( $page.userAttachmentHash )
-                                            <img src="uploads/$page.userAttachmentHash/alt-150-150.png" />
+                                            <img src="uploads/$page.userAttachmentHash/alt-150-150.png"/>
                                         #end
                                     </div>
                                     <strong>My photo</strong>
@@ -140,7 +152,8 @@
                                 #foreach($entry in $page.child("uploads").children)
                                     <li>
                                         #if( $entry.rewardEntry.awardedTo != $user.thisUser )
-                                            <a href="uploads/$entry.name/alt-600-400.png"><img src="uploads/$entry.name/alt-150-150.png"/></a>
+                                            <a href="uploads/$entry.name/alt-600-400.png"><img
+                                                    src="uploads/$entry.name/alt-150-150.png"/></a>
                                         #end
                                     </li>
                                 #end
