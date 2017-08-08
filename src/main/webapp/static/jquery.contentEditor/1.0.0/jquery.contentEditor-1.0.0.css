@@ -55,10 +55,6 @@
    Carousel components
    =========================================================================== */
 .carouselItemsWrap {
-    max-height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    direction: rtl;
 }
 
 .carouselItem {
@@ -79,8 +75,12 @@
 
 .carouselItem .btn-group {
     position: absolute;
-    bottom: 5px;
-    right: 5px;
+    bottom: 0;
+    right: 0;
+}
+
+.carouselItem .btn-group .btn {
+    border-radius: 0 !important;
 }
 
 /* ===========================================================================
@@ -185,7 +185,6 @@ ol.menuTree li.placeholder:before {
 /* ===========================================================================
    Container background images
    =========================================================================== */
-
 .bgImagesPreview{
     position: relative;
     min-height: 100px;

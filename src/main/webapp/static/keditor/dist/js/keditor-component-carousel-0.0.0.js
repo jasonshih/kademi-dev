@@ -87,7 +87,8 @@
                             flog('Keditor carousel selected a file', url, hash);
                             self.addItemToList(form, {
                                 src: url,
-                                hash: hash
+                                hash: hash,
+                                caption: ''
                             });
                             
                             self.refreshCarousel(keditor.getSettingComponent(), form);
@@ -108,30 +109,13 @@
                         }
                     });
                     
-                    var contentModal = $(
-                        '<div class="modal fade" tabindex="-1" id="modal-carousel-content">' +
-                        '    <div class="modal-dialog modal-lg">' +
-                        '        <div class="modal-content">' +
-                        '            <div class="modal-header">' +
-                        '                <button type="button" class="close" data-dismiss="modal">&times;</button>' +
-                        '                <h4 class="modal-title">Edit your content</h4>' +
-                        '            </div>' +
-                        '            <div class="modal-body">' +
-                        '                <textarea id="modal-carousel-content-body" class="form-control" rows="12"></textarea>' +
-                        '            </div>' +
-                        '            <div class="modal-footer">' +
-                        '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-                        '                <button type="button" class="btn btn-primary btn-carousel-save-content">Save</button>' +
-                        '            </div>' +
-                        '        </div>' +
-                        '    </div>' +
-                        '</div>'
-                    ).appendTo(document.body);
+                    // Content modal
+                    var editorContent = self.initModalContent(form, keditor)
+                    var modalContent = $('#modal-carousel-content');
                     
-                    var ckeditorOptions = keditor.options.ckeditorOptions;
-                    ckeditorOptions.removePlugins = ckeditorOptions.removePlugins.replace(',autogrow', '') + ',sourcedialog';
-                    ckeditorOptions.extraPlugins = ckeditorOptions.extraPlugins + ',autogrow';
-                    var editor = $('#modal-carousel-content-body').ckeditor(ckeditorOptions).editor;
+                    // Caption modal
+                    var editorCaption = self.initModalCaption(form, keditor)
+                    var modalCaption = $('#modal-carousel-caption');
                     
                     form.find('.carouselAddImage').on('click', function (e) {
                         e.preventDefault();
@@ -139,26 +123,7 @@
                     
                     form.find('.carouselAddContent').on('click', function (e) {
                         e.preventDefault();
-                        contentModal.modal('show');
-                    });
-                    
-                    contentModal.on('hidden.bs.modal', function () {
-                        editor.setData('');
-                        self.editingItemId = '';
-                    });
-                    
-                    contentModal.find('.btn-carousel-save-content').on('click', function (e) {
-                        e.preventDefault();
-                        
-                        flog('Keditor carousel add content');
-                        
-                        var carouselContent = editor.getData() || '';
-                        self.addItemToList(form, {
-                            content: carouselContent
-                        });
-                        
-                        self.refreshCarousel(keditor.getSettingComponent(), form);
-                        contentModal.modal('hide');
+                        modalContent.modal('show');
                     });
                     
                     $(document.body).on('click', '.carouselItem a.btn-remove-item', function (e) {
@@ -178,13 +143,26 @@
                         
                         var carouselItem = $(this).closest('.carouselItem');
                         self.editingItemId = carouselItem.attr('id');
+                        var txtCarouselContent = carouselItem.find('.txt-carousel-content');
                         
-                        if (carouselItem.find('textarea').length > 0) {
-                            editor.setData(carouselItem.find('textarea').val() || '');
+                        if (txtCarouselContent.length > 0) {
+                            editorContent.setData(txtCarouselContent.val() || '');
                             form.find('.carouselAddContent').trigger('click');
                         } else {
                             form.find('.carouselAddImage').trigger('click');
                         }
+                    });
+                    
+                    
+                    $(document.body).on('click', '.carouselItem a.btn-edit-caption-item', function (e) {
+                        e.preventDefault();
+                        
+                        var carouselItem = $(this).closest('.carouselItem');
+                        self.editingItemId = carouselItem.attr('id');
+                        var txtCarouselCaption = carouselItem.find('.txt-carousel-caption');
+                        
+                        editorCaption.setData(txtCarouselCaption.val() || '');
+                        modalCaption.modal('show');
                     });
                     
                     form.find('.carouselHeight').on('change', function (e) {
@@ -224,6 +202,110 @@
             });
         },
         
+        initModalContent: function (form, keditor) {
+            var self = this;
+            
+            var modalContent = $(
+                '<div class="modal fade" tabindex="-1" id="modal-carousel-content">' +
+                '    <div class="modal-dialog modal-lg">' +
+                '        <div class="modal-content">' +
+                '            <div class="modal-header">' +
+                '                <button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                '                <h4 class="modal-title">Edit content</h4>' +
+                '            </div>' +
+                '            <div class="modal-body">' +
+                '                <textarea id="modal-carousel-content-body" class="form-control" rows="12"></textarea>' +
+                '            </div>' +
+                '            <div class="modal-footer">' +
+                '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+                '                <button type="button" class="btn btn-primary btn-carousel-save-content">Save</button>' +
+                '            </div>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>'
+            ).appendTo(document.body);
+            
+            var contentOptions = $.extend({}, keditor.options.ckeditorOptions);
+            contentOptions.removePlugins = contentOptions.removePlugins.replace(',autogrow', '') + ',sourcedialog';
+            contentOptions.extraPlugins = contentOptions.extraPlugins + ',autogrow';
+            var editorContent = $('#modal-carousel-content-body').ckeditor(contentOptions).editor;
+            
+            modalContent.on('hidden.bs.modal', function () {
+                editorContent.setData('');
+                self.editingItemId = '';
+            });
+            
+            modalContent.find('.btn-carousel-save-content').on('click', function (e) {
+                e.preventDefault();
+                
+                flog('Keditor carousel add content');
+                
+                var carouselContent = editorContent.getData() || '';
+                self.addItemToList(form, {
+                    content: carouselContent
+                });
+                
+                self.refreshCarousel(keditor.getSettingComponent(), form);
+                modalContent.modal('hide');
+            });
+            
+            return editorContent;
+        },
+        
+        initModalCaption: function (form, keditor) {
+            var self = this;
+            
+            var modalCaption = $(
+                '<div class="modal fade" tabindex="-1" id="modal-carousel-caption">' +
+                '    <div class="modal-dialog modal-lg">' +
+                '        <div class="modal-content">' +
+                '            <div class="modal-header">' +
+                '                <button type="button" class="close" data-dismiss="modal">&times;</button>' +
+                '                <h4 class="modal-title">Edit caption</h4>' +
+                '            </div>' +
+                '            <div class="modal-body">' +
+                '                <textarea id="modal-carousel-caption-body" class="form-control" rows="12"></textarea>' +
+                '            </div>' +
+                '            <div class="modal-footer">' +
+                '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+                '                <button type="button" class="btn btn-primary btn-carousel-save-caption">Save</button>' +
+                '            </div>' +
+                '        </div>' +
+                '    </div>' +
+                '</div>'
+            ).appendTo(document.body);
+            
+            var captionOptions = $.extend({}, keditor.options.ckeditorOptions);
+            captionOptions.removePlugins = captionOptions.removePlugins.replace(',autogrow', '') + ',sourcedialog';
+            captionOptions.extraPlugins = captionOptions.extraPlugins + ',autogrow';
+            captionOptions.toolbarGroups = toolbarSets['Lite'];
+            var editorCaption = $('#modal-carousel-caption-body').ckeditor(captionOptions).editor;
+            
+            modalCaption.on('hidden.bs.modal', function () {
+                editorCaption.setData('');
+                self.editingItemId = '';
+            });
+            
+            modalCaption.find('.btn-carousel-save-caption').on('click', function (e) {
+                e.preventDefault();
+                
+                flog('Keditor carousel add content');
+                
+                var carouselCaption = editorCaption.getData() || '';
+                var item = form.find('#' + self.editingItemId).find('.img-responsive');
+                self.addItemToList(form, {
+                    src: item.attr('src'),
+                    hash: item.attr('data-hash'),
+                    caption: carouselCaption
+                });
+                
+                self.refreshCarousel(keditor.getSettingComponent(), form);
+                modalCaption.modal('hide');
+            });
+            
+            return editorCaption;
+        },
+        
         showSettingForm: function (form, component, keditor) {
             var self = this;
             self.editingItemId = '';
@@ -241,10 +323,12 @@
                     var url = carouselImg.css('background-image');
                     url = url.slice(4, -1).replace(/['"]/g, '');
                     var hash = $(item).attr('data-hash');
+                    var caption = item.find('.carousel-caption');
                     
                     self.addItemToList(form, {
                         src: url,
-                        hash: hash
+                        hash: hash,
+                        caption: caption.html() || ''
                     });
                 }
             });
@@ -282,7 +366,7 @@
             } else {
                 itemStr += '<div data-hash="' + data.hash + '" class="item ' + cls + '">';
                 itemStr += '   <div class="carousel-img" style="' + backgroundUrl + '"></div>';
-                itemStr += '   <div class="carousel-caption"></div>';
+                itemStr += '   <div class="carousel-caption">' + data.caption + '</div>';
                 itemStr += '</div>';
             }
             
@@ -292,17 +376,22 @@
         addItemToList: function (form, data) {
             flog('addItemToList', form, data);
             
+            var editCaption = '';
+            
             var itemStr = '';
             if (data.content) {
                 itemStr += '<img class="img-responsive" src="/static/keditor/componentCarouselContent.png" />';
-                itemStr += '<textarea style="display: none">' + data.content + '</textarea>';
+                itemStr += '<textarea style="display: none" class="txt-carousel-content">' + data.content + '</textarea>';
             } else {
-                itemStr = '<img class="img-responsive" src="' + data.src + '" data-hash="' + data.hash + '" />';
+                itemStr += '<img class="img-responsive" src="' + data.src + '" data-hash="' + data.hash + '" />';
+                itemStr += '<textarea style="display: none" class="txt-carousel-caption">' + data.caption + '</textarea>';
+                editCaption = '<a title="Edit caption" class="btn btn-success btn-edit-caption-item" href="#"><i class="fa fa-file"></i></a>';
             }
-            itemStr += '   <div class="btn-group btn-group-sm">';
-            itemStr += '       <a class="btn btn-info btn-sort-item" href="#"><i class="fa fa-sort"></i></a>';
-            itemStr += '       <a class="btn btn-success btn-edit-item" href="#"><i class="fa fa-edit"></i></a>';
-            itemStr += '       <a title="Delete this image" class="btn btn-danger btn-remove-item" href="#"><i class="fa fa-trash"></i></a>';
+            
+            itemStr += '   <div class="btn-group btn-group-xs">';
+            itemStr += '       <a title="Reorder item" class="btn btn-info btn-sort-item" href="#"><i class="fa fa-sort"></i></a>';
+            itemStr += '       <a title="Edit item" class="btn btn-primary btn-edit-item" href="#"><i class="fa fa-edit"></i></a>' + editCaption;
+            itemStr += '       <a title="Delete item" class="btn btn-danger btn-remove-item" href="#"><i class="fa fa-trash"></i></a>';
             itemStr += '   </div>';
             
             if (this.editingItemId) {
@@ -323,17 +412,19 @@
             
             form.find('.carouselItemsWrap').find('.carouselItem').each(function () {
                 var carouselItem = $(this);
-                var textarea = carouselItem.find('textarea')
+                var txtContent = carouselItem.find('.txt-carousel-content');
+                var txtCaption = carouselItem.find('.txt-carousel-caption');
                 var img = carouselItem.find('img');
                 
-                if (textarea.length === 0) {
+                if (txtContent.length === 0) {
                     self.addItemToCarousel(component, {
                         src: img.attr('src'),
-                        hash: img.attr('data-hash')
+                        hash: img.attr('data-hash'),
+                        caption: txtCaption.val()
                     });
                 } else {
                     self.addItemToCarousel(component, {
-                        content: textarea.val()
+                        content: txtContent.val()
                     });
                 }
             });
