@@ -3,7 +3,6 @@
 #set( $jsonDatabases = $rootFolder.find("/jsondb/") )
 #set( $kfeedbackDb = $jsonDatabases.child("kfeedback") )
 #set( $survey = $kfeedbackDb.child($surveyname) )
-#set( $hideQuestion = $formatter.ifNull($hideQuestion, false) )
 #set( $website = $rootFolder )
 
 #if (!$display)
@@ -23,27 +22,27 @@
 #end
 
 #if( $survey )
-    #if (!$hideQuestion)
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td class="wrapper" style="$baseStyles">
-                #if (!$questionTag || $questionTag == "")
-                    $survey.question
-                #else
-                    #set ($fontSizeName = "$" + "fontSize" + $questionTag.toUpperCase())
-                    #set ($lineHeightName = "$" + "lineHeight" + $questionTag.toUpperCase())
-                    <$questionTag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
-                    $survey.question
-                </$questionTag>
-                #end
-            </td>
-        </tr>
-        <tr>
-            <td style="font-size: 0; line-height: 0;" height="10">&nbsp;</td>
-        </tr>
-    </table>
+    #if ($showQuestion == "true")
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="wrapper" style="$baseStyles">
+                    #if (!$questionTag || $questionTag == "")
+                        $survey.question
+                    #else
+                        #set ($fontSizeName = "$" + "fontSize" + $questionTag.toUpperCase())
+                        #set ($lineHeightName = "$" + "lineHeight" + $questionTag.toUpperCase())
+                        <$questionTag style="font-size: #evaluate($fontSizeName)px; line-height: #evaluate($lineHeightName)px;margin-top:0;margin-bottom: 0;">
+                        $survey.question
+                    </$questionTag>
+                    #end
+                </td>
+            </tr>
+            <tr>
+                <td style="font-size: 0; line-height: 0;" height="10">&nbsp;</td>
+            </tr>
+        </table>
     #end
-    
+
     #if ($display == "text")
         <table border="0" cellspacing="0" cellpadding="0">
             <tr>
