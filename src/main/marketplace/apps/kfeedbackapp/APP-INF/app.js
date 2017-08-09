@@ -86,8 +86,8 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
     log.info('search hit {}', searchResult.hits.totalHits);
     if (searchResult.hits.totalHits > 0) {
         var hit = searchResult.hits.hits[0];
-        log.info('option slug return {}', hit.fields.option_slug.value);
-        return hit.fields.option_slug.value;
+        log.info('option slug return {}', hit.source.option_slug);
+        return hit.source.option_slug;
     }
 }
 
