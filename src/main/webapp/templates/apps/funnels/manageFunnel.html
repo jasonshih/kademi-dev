@@ -703,6 +703,7 @@
                                     <th>Cancelled</th>
                                     <th>Source Lead Id</th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="lead-tbody">
@@ -711,7 +712,7 @@
                                         <td>$!lead.trackingId</td>
                                         <td>
                                             #if( $lead.profile )
-                                                <a href="/manageUsers/$lead.profile.id">$lead.profile.email</a>
+                                                <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
                                             #end
                                         </td>
                                         <td>
@@ -739,6 +740,11 @@
                                         <td>$!lead.sourceLead.id</td>
                                         <td>
                                             <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
+                                        </td>
+                                        <td>
+                                            <a href="/leads/$lead.id" class="btn btn-info">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
                                         </td>
                                     </tr>
                                     #if( $lead.processingStartedAt )
