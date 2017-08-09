@@ -56,7 +56,7 @@ controllerMappings.addTextJourneyField("kfeedback-result", "KFeedback result", "
 
 
 function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
-    log.info('getLastFeedbackResult lead={} node={} funnel={} vars={}', lead, exitingNode, funnel, vars);
+    log.info('getLastFeedbackResult lead={} node={} funnel={} vars={}', [lead, exitingNode, funnel, vars]);
     var profileId = lead.profile.id;
     log.info("getLastFeedbackResult: profileid={}", profileId);
     var jsonDB = applications.KongoDB.findDatabase(dbName);
