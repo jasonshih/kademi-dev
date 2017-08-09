@@ -1,132 +1,114 @@
-$(function(){
-    
-    var QUESTION_TYPES = ['Multiple Choices','Plain Text', 'Yes/No question', 'Single Choice'];
+$(function () {
+    var QUESTION_TYPES = ['Multiple Choices', 'Plain Text', 'Yes/No question', 'Single Choice'];
     var modalQuestion = $('#modal-question');
     var modalSurvey = $('#modal-survey');
     
-    modalQuestion.find('.btn-popup-save').on('click', function(e){
+    modalQuestion.find('.btn-popup-save').on('click', function (e) {
         e.preventDefault();
         modalQuestion.find('form button[type=submit]').trigger('click');
     });
-    modalSurvey.find('.btn-popup-save').on('click', function(e){
+    modalSurvey.find('.btn-popup-save').on('click', function (e) {
         e.preventDefault();
         modalSurvey.find('form button[type=submit]').trigger('click');
     });
-    initFuseModal(modalQuestion, function () {
-        initHtmlEditors(modalQuestion.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
-    });
-
-    $('.btn-add-survey').on('click', function(e){
+    
+    initHtmlEditors(modalQuestion.find('.htmleditor'), getStandardEditorHeight(), null, null, standardRemovePlugins + ',autogrow'); // disable autogrow
+    
+    $('.btn-add-survey').on('click', function (e) {
         e.preventDefault();
         modalSurvey.find('form').trigger('reset');
         modalSurvey.find('form input[type=hidden].available-datetime').val('');
-        openFuseModal(modalSurvey);
+        modalSurvey.modal('show');
     });
-
-	$(document).on('click','.btn-add-question', function(e){
-		e.preventDefault();
+    
+    $(document).on('click', '.btn-add-question', function (e) {
+        e.preventDefault();
         var modalQuestion = $('#modal-question');
         modalQuestion.find('[name=questionType]').trigger('change');
         modalQuestion.find('form').trigger('reset');
         modalQuestion.find('[name=questionType]').removeAttr('disabled');
         modalQuestion.find('iframe').contents().find('body').empty();
-        openFuseModal(modalQuestion);
-	});
+        modalQuestion.modal('show');
+    });
     
-    $(document).on('change', '[name=questionType]', function(){
-        if(this.value ==='3'){
+    $(document).on('change', '[name=questionType]', function () {
+        if (this.value === '3') {
             $('.answerLayout').removeClass('hide');
-        }else{
+        } else {
             $('.answerLayout').addClass('hide');
         }
     });
-
-    $(document).on('click','.btn-edit-question', function(e){
+    
+    $(document).on('click', '.btn-edit-question', function (e) {
         e.preventDefault();
-        var questionId = $(this).parents('.panel').attr('data-questionId');
-        openFuseModal(modalQuestion);
+        var questionId = $(this).parents('.panel').attr('data-question-id');
+        
+        modalQuestion.modal('show');
+        
         $.ajax({
             url: '/ksurvey/question/',
             type: 'get',
-            data: {questionId: questionId, getQuestion:'getQuestion'},
-            dataType: 'json',   
-            success: function(resp){
-                if(resp && resp.status){
-                    if(resp.data.status){
+            data: {questionId: questionId, getQuestion: 'getQuestion'},
+            dataType: 'json',
+            success: function (resp) {
+                if (resp && resp.status) {
+                    if (resp.data.status) {
                         var question = resp.data.data;
                         var modalQuestion = $('#modal-question');
-
+                        
                         modalQuestion.find('[name=questionId]').val(question.questionId);
                         modalQuestion.find('[name=surveyId]').val(question.surveyId);
                         modalQuestion.find('[name=createdBy]').val(question.createdBy);
                         modalQuestion.find('[name=questionTitle]').val(question.title);
-                        modalQuestion.find('[name=questionType]').val(question.type).attr('disabled','disabled');
+                        modalQuestion.find('[name=questionType]').val(question.type).attr('disabled', 'disabled');
                         modalQuestion.find('[name=questionBody]').val(question.body);
                         modalQuestion.find('[name=answerLayout]').val(question.answerLayout);
-                        if(question.type=="3"){
+                        if (question.type == "3") {
                             modalQuestion.find('.answerLayout').removeClass('hide');
-                        }else{
+                        } else {
                             modalQuestion.find('.answerLayout').addClass('hide');
                         }
-
-                    }else{
+                        
+                    } else {
                         alert(resp.messages.join('\n'));
                     }
-                }else{
+                } else {
                     alert(resp.messages.join('\n'));
                 }
             }
         });
     });
-
-	$(document).on('click', '.btn-delete-question', function(e){
+    
+    $(document).on('click', '.btn-delete-question', function (e) {
         e.preventDefault();
         
-        var questionId = $(this).parents('.panel').attr('data-questionId');
+        var questionId = $(this).parents('.panel').attr('data-question-id');
         var c = confirm('Are you sure to delete this question?');
-        if(c){
+        if (c) {
             $.ajax({
                 url: '/ksurvey/question/',
                 type: 'get',
-                data: {questionId: questionId, deleteQuestion:'deleteQuestion'},
+                data: {
+                    questionId: questionId,
+                    deleteQuestion: 'deleteQuestion'
+                },
                 dataType: 'json',
-                success: function(resp){
-                    if(resp && resp.status && resp.data.status){
-                        $('#questions').find('.panel[data-questionId="'+questionId+'"]').remove();
+                success: function (resp) {
+                    if (resp && resp.status && resp.data.status) {
+                        $('#questions-list').find('.panel[data-question-id="' + questionId + '"]').remove();
                         Msg.info('Question was deleted', 1000);
-                    }else{
+                    } else {
                         Msg.error(resp.messages.join('\n'));
                     }
                 }
             });
         }
     });
-
-    // $(document).on('click', '.btn-view-plain-answer', function(e){
-    //     e.preventDefault();
-        
-    //     var questionId = $(this).attr('data-questionId');
-    //     var surveyId = $(this).attr('data-surveyId');
-    //     $.ajax({
-    //         url: '/ksurvey/answer',
-    //         type: 'get',
-    //         data: {questionId: questionId, surveyId: surveyId, getPlainAnswers:'getPlainAnswers'},
-    //         dataType: 'json',
-    //         success: function(resp){
-    //             if(resp && resp.status && resp.data.status){
-    //                 $('#questions').find('.panel[data-questionId="'+questionId+'"]').remove();
-    //                 Msg.info('Question was deleted', 1000);
-    //             }else{
-    //                 Msg.error(resp.messages.join('\n'));
-    //             }
-    //         }
-    //     });
-    // });
-
+    
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var currentTab = $(e.target).attr('href');
         var hash = window.location.hash;
-        if(currentTab==='#statistic' && hash.indexOf('#statistic')!==-1 && window.browserStats && window.osStats){
+        if (currentTab === '#statistic' && hash.indexOf('#statistic') !== -1 && window.browserStats && window.osStats) {
             Morris.Donut({
                 element: 'browserStats',
                 data: browserStats
@@ -135,140 +117,144 @@ $(function(){
                 element: 'osStats',
                 data: osStats
             });
-            if(window.histogramChart){
+            if (window.histogramChart) {
                 window.histogramChart.update();
             }
         }
     }).trigger('shown.bs.tab');
-
-    $(document).on('click', '.btn-delete-survey', function(e){
+    
+    $(document).on('click', '.btn-delete-survey', function (e) {
         e.preventDefault();
         
         var surveyId = $(this).attr('data-id');
         var c = confirm('Are you sure to delete this survey?');
-        if(c){
+        if (c) {
             $.ajax({
                 url: '/ksurvey/',
                 type: 'post',
-                data: {surveyId: surveyId, deleteSurvey:'deleteSurvey'},
+                data: {
+                    surveyId: surveyId,
+                    deleteSurvey: 'deleteSurvey'
+                },
                 dataType: 'json',
-                success: function(resp){
-                    if(resp && resp.status && resp.data.status){
-                        $('#survey-list').find('tr[data-id="'+surveyId+'"]').remove();
+                success: function (resp) {
+                    if (resp && resp.status && resp.data.status) {
+                        $('#survey-list').find('tr[data-id="' + surveyId + '"]').remove();
                         Msg.info('Survey was deleted');
-                    }else{
+                    } else {
                         Msg.error(resp.messages.join('\n'));
                     }
                 }
             });
         }
     });
-
-	$(document).on('submit','.answer-form', function(e){
-		e.preventDefault();
-		var form = $(this);
-		var data = form.serialize();
-		var answerId = form.find('[name=answerId]');
-		var oldAnswer;
-		if(answerId.length){
-		    // update answer
-		    var liParent = form.parent();
-		    oldAnswer = liParent.find('span').text();
-		    liParent.find('span').text(form.find('[name=answerBody]').val()).removeClass('hide');
-		    liParent.find('.btn-edit-answer, .btn-delete-answer').removeClass('hide');
-		    form.addClass('hide');
-		} else{
-		    var list = form.siblings('.list-group');
-    		list.append('<li class="list-group-item"><span>'+form.find('[name=answerBody]').val()+'</span><a href="#" class="btn btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a> <a href="#" class="btn btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>');
-    		form.find('[name=answerBody]').attr('readonly','readonly').val('');    
-		}
+    
+    $(document).on('submit', '.answer-form', function (e) {
+        e.preventDefault();
+        var form = $(this);
+        var data = form.serialize();
+        var answerId = form.find('[name=answerId]');
+        var oldAnswer;
+        if (answerId.length) {
+            // update answer
+            var liParent = form.parent();
+            oldAnswer = liParent.find('span').text();
+            liParent.find('span').text(form.find('[name=answerBody]').val()).removeClass('hide');
+            liParent.find('.btn-edit-answer, .btn-delete-answer').removeClass('hide');
+            form.addClass('hide');
+        } else {
+            var list = form.siblings('.list-group');
+            list.append('<li class="list-group-item"><span>' + form.find('[name=answerBody]').val() + '</span><a href="#" class="btn btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a> <a href="#" class="btn btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>');
+            form.find('[name=answerBody]').attr('readonly', 'readonly').val('');
+        }
         $.ajax({
             url: '/ksurvey/answer/',
             type: 'post',
             data: data,
             dataType: 'json',
-            success: function(resp){
-                if(resp && resp.status){
-                    if(answerId.length){
+            success: function (resp) {
+                if (resp && resp.status) {
+                    if (answerId.length) {
                         form.remove();
-                    }else{
-                        list.find('li:last-child').attr('data-answer',resp.data.data.answerId);
-                        form.find('[name=answerBody]').removeAttr('readonly');    
+                    } else {
+                        list.find('li:last-child').attr('data-answer', resp.data.data.answerId);
+                        form.find('[name=answerBody]').removeAttr('readonly');
                     }
                     $('#stats-questions').reloadFragment({
                         whenComplete: function () {
                             initProgressBar();
                         }
                     });
-                }else{
+                } else {
                     alert(resp.messages.join('\n'));
-                    if(answerId.length){
+                    if (answerId.length) {
                         form.siblings('span').text(oldAnswer);
                         form.remove();
-                    }else{
-                        list.find('li:last-child').remove();    
+                    } else {
+                        list.find('li:last-child').remove();
                     }
                 }
             }
         });
-	});
-	
-	
-	$(document).on('click', '.btn-delete-answer', function(e){
-	    e.preventDefault();
-	    var list = $(this).parents('.list-group');
-	    var answerId = $(this).parent().attr('data-answer');
-	    var c = confirm('Are you sure to delete this answer?');
-	    if(c){
-	        $.ajax({
+    });
+    
+    $(document).on('click', '.btn-delete-answer', function (e) {
+        e.preventDefault();
+        var list = $(this).parents('.list-group');
+        var answerId = $(this).parent().attr('data-answer');
+        var c = confirm('Are you sure to delete this answer?');
+        if (c) {
+            $.ajax({
                 url: '/ksurvey/answer/',
                 type: 'get',
-                data: {answerId: answerId, deleteAnswer: 'deleteAnswer'},
+                data: {
+                    answerId: answerId,
+                    deleteAnswer: 'deleteAnswer'
+                },
                 dataType: 'json',
-                success: function(resp){
-                    if(resp && resp.status){
-                        list.find('li[data-answer='+answerId+']').remove();
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        list.find('li[data-answer=' + answerId + ']').remove();
                         $('#stats-questions').reloadFragment({
                             whenComplete: function () {
                                 initProgressBar()
                             }
                         });
-                    }else{
+                    } else {
                         alert(resp.messages.join('\n'));
                     }
                 }
             });
-	    }
-	});
-	
-	
-	$(document).on('click', '.btn-edit-answer', function(e){
-	    e.preventDefault();
-	    var span = $(this).siblings('span').addClass('hide');
-	    $(this).addClass('hide').siblings('.btn-delete-answer').addClass('hide');
-	    var answerId = $(this).parent().attr('data-answer');
-	    var form = $(this).parents('.list-group').siblings('.answer-form').clone();
-	    form.find('[name=answerBody]').val(span.text());
-	    form.append('<input type="hidden" name="answerId" value="'+answerId+'" />');
+        }
+    });
+    
+    $(document).on('click', '.btn-edit-answer', function (e) {
+        e.preventDefault();
+        var span = $(this).siblings('span').addClass('hide');
+        $(this).addClass('hide').siblings('.btn-delete-answer').addClass('hide');
+        var answerId = $(this).parent().attr('data-answer');
+        var form = $(this).parents('.list-group').siblings('.answer-form').clone();
+        form.find('[name=answerBody]').val(span.text());
+        form.append('<input type="hidden" name="answerId" value="' + answerId + '" />');
         form.removeClass('hide');
-	    form.insertBefore(span);
-	});
-	
-    $('#survey-form').on('submit', function(e){
+        form.insertBefore(span);
+    });
+    
+    $('#survey-form').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
         saveSurvey(form);
     });
-	
-	$('#modal-question').find('form').on('submit', function(e){
+    
+    $('#modal-question').find('form').on('submit', function (e) {
         e.preventDefault();
-
+        
         var form = $(this);
-
+        
         var modalQuestion = $('#modal-question');
         var data = form.serialize();
-        if(modalQuestion.find('[name=questionId]').val()){
-            data+='&questionType='+modalQuestion.find('[name=questionType]').val();
+        if (modalQuestion.find('[name=questionId]').val()) {
+            data += '&questionType=' + modalQuestion.find('[name=questionType]').val();
         }
         var questionId = form.find('[name=questionId]').val();
         
@@ -277,14 +263,16 @@ $(function(){
             type: 'post',
             data: data,
             dataType: 'json',
-            success: function(resp){
-                if(resp && resp.status && resp.data.status){
+            success: function (resp) {
+                if (resp && resp.status && resp.data.status) {
                     var returnObj = resp.data.data;
-                    $('#questions').reloadFragment({
-                        whenComplete: function(){
+                    $('#questions-list').reloadFragment({
+                        whenComplete: function () {
                             Msg.success('Question created/updated successfully');
-                            closeFuseModal(modalQuestion);
-                            $('html,body').animate({scrollTop: $('#questions').find('[data-questionId="'+returnObj.questionId+'"]').offset().top-50}, 500);
+                            modalQuestion.modal('hide');
+                            $('html,body').animate({
+                                scrollTop: $('#questions-list').find('[data-question-id="' + returnObj.questionId + '"]').offset().top - 50
+                            }, 500);
                             form.trigger('reset');
                         }
                     });
@@ -294,17 +282,17 @@ $(function(){
                             initHistogram();
                         }
                     });
-                }else{
+                } else {
                     Msg.error(resp.data.messages.join('<br />'));
                 }
             },
-            error: function(e){
+            error: function (e) {
                 Msg.error('System error! Please contact your system administrator for support.');
             }
         });
     });
-
-    function saveSurvey(form){
+    
+    function saveSurvey(form) {
         // var valid = this.checkValidity();
         // if(!valid) return;
         var data = form.serialize();
@@ -314,39 +302,37 @@ $(function(){
             type: 'post',
             data: data,
             dataType: 'json',
-            success: function(resp){
-                if(resp && resp.status && resp.data.status){
+            success: function (resp) {
+                if (resp && resp.status && resp.data.status) {
                     Msg.success('Survey updated successfully');
-                    if(surveyId.length<1){
-                        closeFuseModal(modalSurvey);
+                    if (surveyId.length < 1) {
+                        modalSurvey.modal('hide');
                         $("#survey-list").reloadFragment({
-                            whenComplete: function(){
+                            whenComplete: function () {
                                 initTimeago();
                             }
                         });
-                    }else{
-                        $('#preview-area').reloadFragment({
-
-                        });
+                    } else {
+                        $('#preview-area').reloadFragment();
                     }
-                }else{
+                } else {
                     Msg.error(resp.data.messages.join('<br />'));
                 }
             },
-            error: function(e){
+            error: function (e) {
                 Msg.error('System error! Please contact your system administrator for support.');
             }
         });
     }
-
-	function initGroupModal() {
-        flog('initGroupModal');
     
-        $(document).on('click','#modal-groups input:checkbox', function (e) {
+    function initGroupModal() {
+        flog('initGroupModal');
+        
+        $(document).on('click', '#modal-groups input:checkbox', function (e) {
             var input = $(this);
             var isChecked = input.is(':checked');
             var name = input.attr('name');
-            var surveyId = input.parents('.modal-body').attr('data-surveyId');
+            var surveyId = input.parents('.modal-body').attr('data-survey-id');
             $.ajax({
                 url: '/ksurvey/saveGroupAccess/',
                 data: {
@@ -375,50 +361,48 @@ $(function(){
             });
         });
     }
-
     
-
+    
     function initDateRange() {
         flog('initDateRange');
-
+        
         var inputStartTime = $('[name=startTime');
         var inputEndTime = $('[name=endTime]');
         var inputPlaceholder = $('#availableFromTo');
         var startTime = inputStartTime.val();
         var endTime = inputEndTime.val();
-
+        
         if (startTime && endTime) {
             startTime = moment(startTime).format('DD/MM/YYYY');
             endTime = moment(endTime).format('DD/MM/YYYY');
-
+            
             inputPlaceholder.val(startTime + ' - ' + endTime);
         } else {
             inputPlaceholder.val('');
         }
-
+        
         inputPlaceholder.daterangepicker({
             format: 'DD/MM/YYYY',
             ranges: {
                 'In 7 Days': [moment(), moment().add(6, 'days')],
                 'In 15 Days': [moment(), moment().add(14, 'days')],
-                'In 30 Days': [moment(), moment().add( 29, 'days')]
+                'In 30 Days': [moment(), moment().add(29, 'days')]
             },
             locale: {
                 format: 'DD/MM/YYYY'
             }
-        },
-        function (start, end) {
+        }, function (start, end) {
             flog('onChange', start, end);
-
+            
             inputStartTime.val(start.toISOString());
             inputEndTime.val(end.toISOString());
         });
-
+        
         inputPlaceholder.on('change', function (e) {
             var daterangepicker = inputPlaceholder.data('daterangepicker');
-
+            
             var value = inputPlaceholder.val().trim();
-
+            
             if (value) {
                 //daterangepicker.notify();
             } else {
@@ -427,51 +411,51 @@ $(function(){
             }
         });
     }
-
-    function initProgressBar(){
-        $('.list-group .progress-bar').each(function(){
-            $(this).css('width',this.getAttribute('aria-valuenow')+'%');
-            if(this.getAttribute('aria-valuenow')<1){
-                $(this).css('color','#333');
+    
+    function initProgressBar() {
+        $('.list-group .progress-bar').each(function () {
+            $(this).css('width', this.getAttribute('aria-valuenow') + '%');
+            if (this.getAttribute('aria-valuenow') < 1) {
+                $(this).css('color', '#333');
                 var div = $(this).children();
                 div.detach().insertBefore($(this));
             }
         });
     }
-
-    function initTimeago(){
+    
+    function initTimeago() {
         $('.timeago').timeago();
-        $('.surveytime').each(function(){
+        $('.surveytime').each(function () {
             var txt = $(this).text();
-
+            
             txt && $(this).text(moment(txt).format('DD/MM/YYYY hh:mm:ss'));
         })
     }
-
+    
     function initHistogram() {
-        if(!window.histogramData) return;
+        if (!window.histogramData) return;
         nv.addGraph(function () {
             var chart = nv.models.multiBarChart()
                 .showControls(false)
                 .showLegend(false)
                 .showYAxis(true)
-                .showXAxis(true)
-                ;
-            if(!window.histogramChart){
+                .showXAxis(true);
+            
+            if (!window.histogramChart) {
                 window.histogramChart = chart;
             }
             chart.xAxis     //Chart x-axis settings
                 .axisLabel('Date');
-
+            
             chart.yAxis     //Chart y-axis settings
                 .tickFormat(d3.format("d"))
                 .axisLabel('Submissions');
-
+            
             // chart.xAxis
             //     .tickFormat(function (d) {
             //         return d3.time.format('%x')(new Date(d))
             //     });
-
+            
             var myData = [];
             var series = {
                 values: [],
@@ -483,14 +467,14 @@ $(function(){
                 var bucket = histogramData[i];
                 series.values.push({x: moment(bucket.label).format('DD/MM/YYYY'), y: bucket.value});
             }
-
-
+            
+            
             flog("mydate", myData);
-
+            
             d3.select('#histogram')    //Select the <svg> element you want to render the chart in.
-                    .datum(myData)         //Populate the <svg> element with chart data...
-                    .call(chart);          //Finally, render the chart!
-
+                .datum(myData)         //Populate the <svg> element with chart data...
+                .call(chart);          //Finally, render the chart!
+            
             //Update the chart when window resizes.
             nv.utils.windowResize(function () {
                 chart.update()
@@ -498,41 +482,44 @@ $(function(){
             return chart;
         });
     }
-
-    function initClearResult(){
-        $(document).on('click', '.clearUserResult', function(e){
+    
+    function initClearResult() {
+        $(document).on('click', '.clearUserResult', function (e) {
             e.preventDefault();
-
+            
             var userId = prompt('You are about to delete user result. Please enter userId to continue:');
-            var surveyId = $(this).attr('data-surveyId');
-            if(userId){
+            var surveyId = $(this).attr('data-survey-id');
+            if (userId) {
                 clearResult(surveyId, userId);
             } else {
                 alert('Please enter username');
             }
         });
-
-        $(document).on('click', '.clearAllResult', function(e){
+        
+        $(document).on('click', '.clearAllResult', function (e) {
             e.preventDefault();
-
+            
             var yes = confirm('Are you sure you want to delete all result? This data will not be able to restore.');
-            if(yes){
-               var surveyId = $(this).attr('data-surveyId');
-               clearResult(surveyId);
+            if (yes) {
+                var surveyId = $(this).attr('data-survey-id');
+                clearResult(surveyId);
             }
         });
     }
-
-    function clearResult(surveyId, userId){
-        if(!userId){
+    
+    function clearResult(surveyId, userId) {
+        if (!userId) {
             userId = '';
         }
         $.ajax({
             url: '/ksurvey/clearResult/',
             type: 'post',
-            data: {userId: userId, surveyId: surveyId},
-            success: function(resp){
-                if(resp && resp.status){
+            data: {
+                userId: userId,
+                surveyId: surveyId
+            },
+            success: function (resp) {
+                if (resp && resp.status) {
                     Msg.info('Result has been cleared');
                     $('#statistic').reloadFragment({
                         whenComplete: function () {
@@ -542,26 +529,66 @@ $(function(){
                     });
                 }
             },
-            error: function(err){
+            error: function (err) {
                 Msg.error('Could not clear result. Please contact administrator for detail');
             }
         });
     }
-
+    
     function initMigration() {
         $(document).on('click', '.btn-migration', function () {
             $('#modalMigration').modal();
         });
         $('#formMigrate').forms({
             onSuccess: function (resp) {
-                if (resp.status){
+                if (resp.status) {
                     Msg.success("Migrated");
                     $('#modalMigration').modal('hide');
                 }
             }
         })
     }
-
+    
+    function initSortableQuestions() {
+        var questionsList = $('#questions-list');
+        if (questionsList.length > 0) {
+            flog('initSortableQuestions');
+            
+            questionsList.sortable({
+                handle: '.btn-reorder-question',
+                items: '> .panel-question',
+                axis: 'y',
+                tolerance: 'pointer',
+                update: function () {
+                    var questionsIds = [];
+                    questionsList.find('.panel-question').each(function () {
+                        questionsIds.push($(this).attr('data-question-id'));
+                    });
+                    questionsIds = questionsIds.join(',');
+                    
+                    flog('Reordered questions list IDs: ' + questionsIds);
+                    
+                    $.ajax({
+                        url: '/ksurvey/question/',
+                        type: 'get',
+                        data: {
+                            questionsIds: questionsIds,
+                            reorderQuestions: 'reorderQuestions'
+                        },
+                        dataType: 'json',
+                        success: function (resp) {
+                            if (resp && resp.status && resp.data.status) {
+                                Msg.info('Questions was re-ordered', 1000);
+                            } else {
+                                Msg.error(resp.messages.join('\n'));
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    }
+    
     initGroupModal();
     initDateRange();
     initProgressBar();
@@ -569,4 +596,5 @@ $(function(){
     initHistogram();
     initClearResult();
     initMigration();
+    initSortableQuestions();
 });

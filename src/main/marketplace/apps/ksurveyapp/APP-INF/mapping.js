@@ -185,6 +185,10 @@ var questionMapping = {
                     "type": "keyword"
                 }
             }
+        },
+        "order": {
+            "store": true,
+            "type": "long"
         }
     }
 };

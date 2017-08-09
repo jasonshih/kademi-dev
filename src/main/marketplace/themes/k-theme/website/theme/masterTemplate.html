@@ -21,15 +21,7 @@
 
         <script type="text/javascript">
             // Templates should push page init function into this array. It will then be run after outer template init functions.
-            var pageInitFunctions = new Array();
-            var params = {
-                #foreach($key in $params.keySet())
-                    "$key": "$params.get("$key")"
-                    #if ($foreach.count != $params.size())
-                        ,
-                    #end
-                #end
-            };
+            var pageInitFunctions = [];
         </script>
 
         <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>

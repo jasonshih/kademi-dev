@@ -1,24 +1,24 @@
 // private functions
 function getSurveysList(page) {
     log.info('getSurveys > page={} ', page);
-
+    
     var db = getDB(page);
     var surveys = db.findByType(RECORD_TYPES.SURVEY);
-
+    
     log.info('Found {} surveys(s)', surveys.length);
-
+    
     return surveys;
 }
 
 // GET /ksurvey/getSurveys
 function getSurveys(page, params) {
-	var surveys = getSurveysList(page);
+    var surveys = getSurveysList(page);
     page.attributes.surveys = surveys;
     log.info('Display {} surveys(s)', page.attributes.surveys.length);
 }
 
 // GET /ksurvey/getSurvey
-function getSurvey(page, params){
+function getSurvey(page, params) {
     log.info('getSurvey > params ', page, params.getSurvey);
     // Get query strings
     var survey = page.attributes.surveyId;
@@ -28,41 +28,41 @@ function getSurvey(page, params){
     page.attributes.answerResult = searchResult.answerResult;
 }
 
-function saveGroupAccess(page, params){
+function saveGroupAccess(page, params) {
     log.info('saveGroupAccess >', params);
     var surveyId = params.surveyId;
     var groupName = params.group;
     var isAdd = safeBoolean(params.isAdd);
     var errors = [];
-    if(surveyId && groupName){
+    if (surveyId && groupName) {
         var db = getDB(page);
         var surveyRes = db.child(surveyId);
-        log.info('Survey found {}',surveyRes);
-        if(surveyRes){
+        log.info('Survey found {}', surveyRes);
+        if (surveyRes) {
             var survey = JSON.parse(surveyRes.json);
             var groups = survey.groups;
             var arr = splitToCleanArray(groups, ',');
-            if(isAdd && arr.indexOf(groupName)===-1){
+            if (isAdd && arr.indexOf(groupName) === -1) {
                 arr.push(groupName);
-            }else{
+            } else {
                 var index = arr.indexOf(groupName);
-                if(index>-1) arr.splice(index, 1);
+                if (index > -1) arr.splice(index, 1);
             }
             survey.groups = arr.join(',');
             surveyRes.update(JSON.stringify(survey), RECORD_TYPES.SURVEY);
             log.info('updated survey {}', survey);
         }
-    }else{
+    } else {
         errors.push('System error! Please contact to administrator for more information.');
     }
     
     var result;
-    if(errors.length>0){
+    if (errors.length > 0) {
         result = {
             status: false,
             messages: errors
-        };    
-    }else{
+        };
+    } else {
         result = {
             status: true,
             messages: ['Successfully add/update survey']
@@ -73,7 +73,7 @@ function saveGroupAccess(page, params){
 }
 
 // POST /ksurvey
-function saveSurvey (page, params) {
+function saveSurvey(page, params) {
     log.info('saveSurvey >', params.saveSurvey);
     var surveyId = params.surveyId;
     var name = params.name;
@@ -87,13 +87,13 @@ function saveSurvey (page, params) {
     var db = getDB(page);
     var errors = [];
     var returnObj;
-    if(!name || !title){
+    if (!name || !title) {
         errors.push('There was an error when creating/updating survey. Please try again!');
-    }else{
-        if(surveyId){
+    } else {
+        if (surveyId) {
             // Update
             var surveyRes = db.child(surveyId);
-            if(surveyRes !== null){
+            if (surveyRes !== null) {
                 var survey = JSON.parse(surveyRes.json);
                 survey.name = name;
                 survey.title = title;
@@ -103,7 +103,7 @@ function saveSurvey (page, params) {
                 survey.createdBy = user;
                 survey.modifiedBy = user;
                 survey.websites = websites;
-                if(startTime && endTime){
+                if (startTime && endTime) {
                     survey.startTime = startTime;
                     survey.endTime = endTime;
                 }
@@ -111,10 +111,10 @@ function saveSurvey (page, params) {
                 returnObj.surveyId = surveyId;
                 surveyRes.update(JSON.stringify(survey), RECORD_TYPES.SURVEY);
                 log.info('updated survey {}', survey);
-            }else{
+            } else {
                 errors.push('There was an error when updating survey. Please try again!')
             }
-        }else{
+        } else {
             // Create new answer
             newId = RECORD_TYPES.SURVEY + '-' + formatter.randomGuid;
             var surveyJson = {
@@ -128,7 +128,7 @@ function saveSurvey (page, params) {
                 modifiedBy: user,
                 websites: websites
             };
-            if(startTime && endTime){
+            if (startTime && endTime) {
                 surveyJson.startTime = startTime;
                 surveyJson.endTime = endTime;
             }
@@ -138,14 +138,14 @@ function saveSurvey (page, params) {
             log.info('Added new survey {}', surveyJson);
         }
     }
-
+    
     var result;
-    if(errors.length>0){
+    if (errors.length > 0) {
         result = {
             status: false,
             messages: errors
-        };    
-    }else{
+        };
+    } else {
         result = {
             status: true,
             messages: ['Successfully add/update survey'],
@@ -157,22 +157,22 @@ function saveSurvey (page, params) {
 }
 
 // GET /ksurvey/deleteAnswer
-function deleteAnswer(page, params){
+function deleteAnswer(page, params) {
     var answerId = params.answerId;
-    if(answerId){
+    if (answerId) {
         var db = getDB(page);
         var answerRes = db.child(answerId);
-        if(answerRes !== null){
+        if (answerRes !== null) {
             var result = answerRes.delete();
             return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
         }
-    } else{
+    } else {
         return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when deleting this answer. Please try again']})).wrapJsonResult();
     }
 }
 
 // POST /ksurvey/saveAnswer
-function saveAnswer(page, params){
+function saveAnswer(page, params) {
     var questionId = params.questionId;
     var surveyId = params.surveyId;
     var answerId = params.answerId;
@@ -180,19 +180,19 @@ function saveAnswer(page, params){
     var db = getDB(page);
     var errors = [];
     var newId;
-    if(surveyId === null || questionId === null || answerBody === null){
+    if (surveyId === null || questionId === null || answerBody === null) {
         errors.push('There was an error when creating/updating answer. Please try again!');
     } else {
-        if(answerId !== null) {
+        if (answerId !== null) {
             log.info('update answer');
             // Update answer
             var answerRes = db.child(answerId);
-            if(answerRes !== null){
+            if (answerRes !== null) {
                 var answer = JSON.parse(answerRes.json);
                 answer.body = answerBody;
                 answer.modifiedDate = new Date();
                 var updateStatus = answerRes.update(JSON.stringify(answer), RECORD_TYPES.ANSWER);
-            }else{
+            } else {
                 errors.push('There was an error when updating answer. Please try again!')
             }
             
@@ -212,13 +212,13 @@ function saveAnswer(page, params){
     }
     
     var status;
-    if(errors.length>0){
+    if (errors.length > 0) {
         status = {
             status: false,
             messages: errors
-        };    
-    }else{
-        var returnId = answerId? answerId: newId;
+        };
+    } else {
+        var returnId = answerId ? answerId : newId;
         status = {
             status: true,
             messages: ['Successfully add/update answer'],
@@ -230,24 +230,24 @@ function saveAnswer(page, params){
 }
 
 // GET /ksurvey/getQuestion
-function getQuestion (page, params) {
+function getQuestion(page, params) {
     log.info('getQuestion {}', params.getQuestion);
     var questionId = params.questionId;
     var result;
     var db = getDB(page);
-    if(!questionId){
+    if (!questionId) {
         result = {
             status: false,
             messages: ['There was an error when getting question.']
         };
-    }else{
+    } else {
         var questionRes = db.child(questionId);
-        if(!questionRes){
+        if (!questionRes) {
             result = {
                 status: false,
                 messages: ['Question not found']
             };
-        }else{
+        } else {
             result = {
                 status: true,
                 data: questionRes.json,
@@ -258,7 +258,7 @@ function getQuestion (page, params) {
 }
 
 // POST /ksurvey/saveQuestion
-function saveQuestion(page, params){
+function saveQuestion(page, params) {
     var questionId = params.questionId;
     var surveyId = params.surveyId;
     var questionTitle = params.questionTitle;
@@ -269,14 +269,14 @@ function saveQuestion(page, params){
     var db = getDB(page);
     var errors = [];
     var returnObj;
-    if(!surveyId || !questionTitle ){
+    if (!surveyId || !questionTitle) {
         errors.push('There was an error when creating/updating question. Please try again!');
     } else {
-        if(questionId) {
+        if (questionId) {
             log.info('update question {}', questionId);
             // Update answer
             var questionRes = db.child(questionId);
-            if(questionRes !== null){
+            if (questionRes !== null) {
                 var question = JSON.parse(questionRes.json);
                 question.title = questionTitle;
                 question.type = questionType;
@@ -286,7 +286,7 @@ function saveQuestion(page, params){
                 returnObj = question;
                 returnObj.questionId = questionId;
                 questionRes.update(JSON.stringify(question), RECORD_TYPES.QUESTION);
-            }else{
+            } else {
                 errors.push('There was an error when updating question. Please try again!')
             }
             
@@ -306,12 +306,12 @@ function saveQuestion(page, params){
             returnObj = questionJson;
             returnObj.questionId = newId;
             db.createNew(newId, JSON.stringify(questionJson), RECORD_TYPES.QUESTION);
-            if(questionType==2){
+            if (questionType == 2) {
                 var answers = [
                     {questionId: newId, surveyId: surveyId, body: 'Yes', modifiedDate: new Date(), createdDate: new Date()},
                     {questionId: newId, surveyId: surveyId, body: 'No', modifiedDate: new Date(), createdDate: new Date()}
                 ];
-                for(var i = 0; i < answers.length; i++){
+                for (var i = 0; i < answers.length; i++) {
                     newAnswerId = RECORD_TYPES.ANSWER + '-' + formatter.randomGuid;
                     db.createNew(newAnswerId, JSON.stringify(answers[i]), RECORD_TYPES.ANSWER);
                     log.info('Added new answer {}', answers[i]);
@@ -322,12 +322,12 @@ function saveQuestion(page, params){
     }
     
     var status;
-    if(errors.length>0){
+    if (errors.length > 0) {
         status = {
             status: false,
             messages: errors
-        };    
-    }else{
+        };
+    } else {
         status = {
             status: true,
             messages: ['Successfully add/update question'],
@@ -339,43 +339,79 @@ function saveQuestion(page, params){
 }
 
 // GET /ksurvey/deleteQuestion
-function deleteQuestion(page, params){
+function deleteQuestion(page, params) {
     log.info('delete question {}', params.deleteQuestion);
     var questionId = params.questionId;
-    if(questionId){
+    if (questionId) {
         var db = getDB(page);
         var questionRes = db.child(questionId);
-        if(questionRes !== null){
+        if (questionRes !== null) {
             var result = questionRes.delete();
             return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
         }
-    } else{
+    } else {
         return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when deleting this question. Please try again']})).wrapJsonResult();
+    }
+}
+
+// GET /ksurvey/reorderQuestions
+function reorderQuestions(page, params) {
+    log.info('reorderQuestions > page={}, params={}', page, params);
+    
+    var questionsIds = (params.questionsIds || '').trim();
+    var questionsIdsArr = questionsIds.split(',');
+    
+    if (questionsIds && questionsIdsArr.length > 0) {
+        var db = getDB(page);
+        var errorIds = [];
+        
+        for (var i = 0; i < questionsIdsArr.length; i++) {
+            (function (index) {
+                var questionRes = db.child(questionsIdsArr[index]);
+                if (questionRes !== null) {
+                    var question = JSON.parse(questionRes.json);
+                    question.order = index;
+                    questionRes.update(JSON.stringify(question), RECORD_TYPES.QUESTION);
+                    
+                    return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
+                } else {
+                    errorIds.push(questionsIdsArr[index]);
+                }
+            })(i);
+        }
+        
+        if (errorIds.length === 0) {
+            return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
+        } else {
+            return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when re-ordering questions: ' + errorIds.join(', ')]})).wrapJsonResult();
+        }
+    } else {
+        return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when re-ordering questions. Please try again']})).wrapJsonResult();
     }
 }
 
 // GET /ksurvey
-function deleteSurvey(page, params){
+function deleteSurvey(page, params) {
     log.info('delete survey {}', params.deleteSurvey);
     var surveyId = params.surveyId;
-    if(surveyId){
+    if (surveyId) {
         var db = getDB(page);
         var surveyRes = db.child(surveyId);
-        if(surveyRes !== null){
+        if (surveyRes !== null) {
             var result = surveyRes.delete();
             return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
         }
-    } else{
+    } else {
         return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when deleting this question. Please try again']})).wrapJsonResult();
     }
 }
 
-function findQuestionBySurvey(page, surveyId){
+function findQuestionBySurvey(page, surveyId) {
     log.info('findQuestionBySurvey > page={}, surveyId={}', page, surveyId);
-
+    
     var queryJson = {
         'sort': {
-            'createdDate':'asc'
+            'order': 'asc'
         },
         'size': 1000,
         'aggs': {
@@ -388,20 +424,20 @@ function findQuestionBySurvey(page, surveyId){
         'query': {
             'bool': {
                 'must': [
-                    {'type': { 'value': RECORD_TYPES.QUESTION } },
-                    { 'term': { 'surveyId': surveyId } }
+                    {'type': {'value': RECORD_TYPES.QUESTION}},
+                    {'term': {'surveyId': surveyId}}
                 ]
             }
         }
     };
-
-
+    
+    
     var questionResult = doDBSearch(page, queryJson);
     queryJson.query = {
         'bool': {
             'must': [
-                {'type': { 'value': RECORD_TYPES.ANSWER } },
-                { 'term': { 'surveyId': surveyId } }
+                {'type': {'value': RECORD_TYPES.ANSWER}},
+                {'term': {'surveyId': surveyId}}
             ]
         }
     };
@@ -413,56 +449,56 @@ function findQuestionBySurvey(page, surveyId){
 }
 
 // this function would be invoked in view
-function getQuestionType(type){
-    var QUESTION_TYPES = ['Multiple Choices','Plain Text', 'Yes/No question', 'Single Choice'];
+function getQuestionType(type) {
+    var QUESTION_TYPES = ['Multiple Choices', 'Plain Text', 'Yes/No question', 'Single Choice'];
     return QUESTION_TYPES[type];
 }
 
 function findSurvey(rf, groupName, groupVal, mapOfGroups) {
     log.info('findSurvey > {} {} {} {}', [rf, groupName, groupVal, mapOfGroups]);
-
+    
     var db = getDB(rf);
     var survey = db.child(groupVal);
-    log.info('Survey found {}',survey);
+    log.info('Survey found {}', survey);
     if (isNull(survey)) {
         return null;
     }
-
+    
     return survey;
 }
 
-function generateTitle(page){
+function generateTitle(page) {
     log.info('generateTitle > page={}', page);
     var title = 'Manage Survey | ' + page.attributes.surveyId.jsonObject.name;
     return title;
 }
 
-function clearResult(page, params){
+function clearResult(page, params) {
     log.info('findSubmissions {}', page);
-
+    
     var db = getDB(page);
     var userId = params.userId;
     var surveyId = params.surveyId;
-
+    
     var queryJson = {
         'size': 10000,
         'query': {
             'bool': {
                 'must': [
-                    {'type': { 'value': RECORD_TYPES.SUBMIT } },
-                    { 'term': { 'surveyId': surveyId } }
+                    {'type': {'value': RECORD_TYPES.SUBMIT}},
+                    {'term': {'surveyId': surveyId}}
                 ]
             }
         }
     };
-
+    
     var queryJson2 = {
         'size': 10000,
         'query': {
             'bool': {
                 'must': [
-                    {'type': { 'value': RECORD_TYPES.RESULT } },
-                    { 'term': { 'surveyId': surveyId } }
+                    {'type': {'value': RECORD_TYPES.RESULT}},
+                    {'term': {'surveyId': surveyId}}
                 ]
             }
         }
@@ -470,40 +506,40 @@ function clearResult(page, params){
     if (userId) {
         queryJson.query.bool.must.push({'term': {'userId': userId}});
     }
-
-
+    
+    
     var searchResult = doDBSearch(page, queryJson);
     if (searchResult.hits.totalHits > 0) {
         var hits = searchResult.hits.hits;
-        for(var i = 0; i< hits.length; i++){
+        for (var i = 0; i < hits.length; i++) {
             log.info('hit item {}, id {}', hits[i], hits[i].id);
             var submitRes = db.child(hits[i].id);
-            if(submitRes) submitRes.delete();
+            if (submitRes) submitRes.delete();
         }
     }
-
+    
     var searchResult2 = doDBSearch(page, queryJson2);
     if (searchResult2.hits.totalHits > 0) {
         var hits = searchResult2.hits.hits;
-        for(var i = 0; i< hits.length; i++){
+        for (var i = 0; i < hits.length; i++) {
             log.info('hit item {}, id {}', hits[i], hits[i].id);
             var resultRes = db.child(hits[i].id);
-            if(resultRes) resultRes.delete();
+            if (resultRes) resultRes.delete();
         }
     }
-
+    
     return views.jsonObjectView(JSON.stringify({status: true}))
 }
 
-function getSurveyStatistic(page, surveyId){
+function getSurveyStatistic(page, surveyId) {
     log.info('getSurveyStatistic {}');
     var queryJson = {
         'size': 0,
         'query': {
             'bool': {
                 'must': [
-                    { 'type': { 'value': RECORD_TYPES.RESULT } },
-                    { 'term': { 'surveyId': surveyId } }
+                    {'type': {'value': RECORD_TYPES.RESULT}},
+                    {'term': {'surveyId': surveyId}}
                 ]
             }
         },
@@ -526,7 +562,7 @@ function getSurveyStatistic(page, surveyId){
     };
     var searchResult = doDBSearch(page, queryJson);
     var surveyResult = {};
-
+    
     if (searchResult.hits.totalHits > 0) {
         var buckets = [];
         if (searchResult.aggregations && searchResult.aggregations.get('by_question') && searchResult.aggregations.get('by_question').buckets) {
@@ -534,37 +570,37 @@ function getSurveyStatistic(page, surveyId){
         }
         for (var i = 0; i < buckets.length; i++) {
             var question = buckets[i];
-
+            
             surveyResult[question.key] = {
                 docCount: question.docCount,
                 answers: {}
             };
-
+            
             var answerBuckets = [];
-            if(question.aggregations && question.aggregations.get('by_answer') && question.aggregations.get('by_answer').buckets){
+            if (question.aggregations && question.aggregations.get('by_answer') && question.aggregations.get('by_answer').buckets) {
                 answerBuckets = question.aggregations.get('by_answer').buckets;
             }
-
+            
             for (var j = 0; j < answerBuckets.length; j++) {
                 var ans = answerBuckets[j];
                 log.info('answer key {}', ans.key);
                 surveyResult[question.key].answers[ans.key] = ans.docCount;
             }
         }
-
+        
         log.info('surveyResult {}', JSON.stringify(surveyResult));
-
+        
     }
-
-
+    
+    
     var queryJson1 = {
-
+        
         'size': 10000,
         'query': {
             'bool': {
                 'must': [
-                    { 'type': { 'value': RECORD_TYPES.SUBMIT } },
-                    { 'term': { 'surveyId': surveyId } },
+                    {'type': {'value': RECORD_TYPES.SUBMIT}},
+                    {'term': {'surveyId': surveyId}},
                 ]
             }
         },
@@ -589,13 +625,13 @@ function getSurveyStatistic(page, surveyId){
             },
             'by_createdDate': {
                 'date_histogram': {
-                    "field" : "createdDate",
-                    "interval" : "day"
+                    "field": "createdDate",
+                    "interval": "day"
                 }
             }
         }
     };
-
+    
     var searchResult1 = doDBSearch(page, queryJson1);
     var userAgentResult = {
         browser: {},
@@ -603,8 +639,8 @@ function getSurveyStatistic(page, surveyId){
         device: {}
     };
     var histogram = {};
-
-    if(searchResult1.hits.totalHits>0){
+    
+    if (searchResult1.hits.totalHits > 0) {
         // Browsers
         var browserBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_browser') && searchResult1.aggregations.get('by_browser').buckets) {
@@ -612,9 +648,9 @@ function getSurveyStatistic(page, surveyId){
         }
         for (var i = 0; i < browserBuckets.length; i++) {
             var browserBucket = browserBuckets[i];
-            userAgentResult.browser[browserBucket.key]=browserBucket.docCount;
+            userAgentResult.browser[browserBucket.key] = browserBucket.docCount;
         }
-
+        
         // OS
         var osBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_os') && searchResult1.aggregations.get('by_os').buckets) {
@@ -622,9 +658,9 @@ function getSurveyStatistic(page, surveyId){
         }
         for (var i = 0; i < osBuckets.length; i++) {
             var osBucket = osBuckets[i];
-            userAgentResult.os[osBucket.key]=osBucket.docCount;
+            userAgentResult.os[osBucket.key] = osBucket.docCount;
         }
-
+        
         // Devices
         var deviceBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_os') && searchResult1.aggregations.get('by_os').buckets) {
@@ -632,9 +668,9 @@ function getSurveyStatistic(page, surveyId){
         }
         for (var i = 0; i < deviceBuckets.length; i++) {
             var deviceBucket = deviceBuckets[i];
-            userAgentResult.device[deviceBucket.key]=deviceBucket.docCount;
+            userAgentResult.device[deviceBucket.key] = deviceBucket.docCount;
         }
-
+        
         // by_createdDate
         var createdDateBuckets = [];
         if (searchResult1.aggregations && searchResult1.aggregations.get('by_createdDate') && searchResult1.aggregations.get('by_createdDate').buckets) {
@@ -642,7 +678,7 @@ function getSurveyStatistic(page, surveyId){
         }
         for (var i = 0; i < createdDateBuckets.length; i++) {
             var createdDateBucket = createdDateBuckets[i];
-            histogram[createdDateBucket.keyAsString]=createdDateBucket.docCount;
+            histogram[createdDateBucket.keyAsString] = createdDateBucket.docCount;
         }
     }
     return {
@@ -653,16 +689,16 @@ function getSurveyStatistic(page, surveyId){
     };
 }
 
-function getPlainAnswers(page, questionId, surveyId){
+function getPlainAnswers(page, questionId, surveyId) {
     log.info('getPlainAnswers {} questionId {} surveyId {}', page, questionId, surveyId);
     var queryJson = {
         'size': 10000,
         'query': {
             'bool': {
                 'must': [
-                    { 'type': { 'value': RECORD_TYPES.RESULT } },
-                    { 'term': { 'surveyId': surveyId } },
-                    { 'term': { 'questionId': questionId } },
+                    {'type': {'value': RECORD_TYPES.RESULT}},
+                    {'term': {'surveyId': surveyId}},
+                    {'term': {'questionId': questionId}},
                 ]
             }
         }
@@ -676,14 +712,13 @@ function migrateDB(page, params) {
     var db = getDB(page);
     saveMapping(db);
     var surveys = db.findByType(RECORD_TYPES.SURVEY);
-    for (var i in surveys){
+    for (var i in surveys) {
         var s = surveys[i];
-        if (s){
+        if (s) {
             s.jsonObject.title = s.jsonObject.name;
             s.save();
         }
     }
-
-
+    
     return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
 }

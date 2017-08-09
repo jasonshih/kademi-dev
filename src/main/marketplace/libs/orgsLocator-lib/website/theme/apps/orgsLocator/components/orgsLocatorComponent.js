@@ -1,41 +1,47 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-    var win = $(this);
     
     KEditor.components['orgsLocator'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "orgsLocator" component', component);
-    
+            
             var orgsLocator = component.find('.orgs-locator-component');
-            var id = orgsLocator.attr('id');
-    
-            orgsLocator.orgFinder({
-                searchUrl: '/orgsLocator/',
-                initLatLng: [-33.867, 151.195],
-                initZoomLevel: 15,
-                orgTypes: window[id + '-orgTypes'],
-                allowedCountries: window[id + '-allowedCountriess'],
-                onReady: function (formSearch, itemsWrapper, mapDiv) {
-                    win.on('resize', function () {
-                        var mapWrapper = mapDiv.parent();
-                        var winWidth = win.width();
+            window.initOrgsLocator(orgsLocator);
+        },
+        
+        settingEnabled: true,
+        
+        settingTitle: 'Orgs Locator Settings',
+        
+        initSettingForm: function (form, keditor) {
+            flog('initSettingForm "orgsLocator" component');
+            
+            return $.ajax({
+                url: '_components/orgsLocator?settings',
+                type: 'get',
+                dataType: 'HTML',
+                success: function (resp) {
+                    form.html(resp);
+                    
+                    form.find('.chk-search-when-init').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        itemsWrapper.css('height', '');
-                        itemsWrapper.css('max-height', '');
-                        mapWrapper.css('padding-bottom', '');
-                        
-                        if (winWidth < 768) {
-                            mapWrapper.css('padding-bottom', '120%');
-                            itemsWrapper.css('max-height', 200);
-                        } else if (winWidth < 992) {
-                            itemsWrapper.css('max-height', 300);
-                        } else {
-                            itemsWrapper.css('height', mapWrapper.innerHeight() - 39);
-                        }
-                    }).trigger('resize');
+                        component.attr('data-search-when-init', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            window.initOrgsLocator(component.find('.orgs-locator-component'));
+                        });
+                    });
                 }
             });
+        },
+        
+        showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "orgsLocator" component');
+            
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            form.find('.chk-search-when-init').prop('checked', dataAttributes['data-search-when-init'] === 'true');
         }
     };
     

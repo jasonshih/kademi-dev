@@ -13,6 +13,18 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.orgFinder/1.0.3/jquery.orgFinder-1.0.3.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/uri/1.15.1/URI.js"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/static/jquery.scrollTo/2.1.2/jquery.scrollTo.min.js"
@@ -21,7 +33,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/static/jquery.orgFinder/1.0.2/jquery.orgFinder-1.0.2.js"
+                "path": "/static/jquery.orgFinder/1.0.3/jquery.orgFinder-1.0.3.js"
             }
         },
         {

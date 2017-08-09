@@ -111,7 +111,7 @@
                                         </div>
                                     #else
                                         #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get('PLAIN_TEXT_ANSWER'))
-                                        <p><strong>Total answers: $totalAnswerSubmits </strong> <a data-questionId="$question.id" data-surveyId="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all <i class="fa fa-arrow-down"></i></a></p>
+                                        <p><strong>Total answers: $totalAnswerSubmits </strong> <a data-question-id="$question.id" data-survey-id="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all <i class="fa fa-arrow-down"></i></a></p>
                                         <ul class="plain-answers">
                                             #set ($plainAnswers = $controllers.call('getPlainAnswers', $page, $question.id, $survey.name))
                                             #if($plainAnswers.hits.totalHits > 0)
