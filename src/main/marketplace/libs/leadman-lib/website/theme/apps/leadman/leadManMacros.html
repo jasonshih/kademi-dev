@@ -74,10 +74,18 @@
                 #set ($leadPage = $page.find($leadUri))
                 #set ($notes = $leadPage.notes)
                 #if ($notes.size() > 0)
-                    <strong>Summary: </strong>$formatter.textToHtml($notes[0].summary)
-                    <strong>Notes: </strong>$formatter.textToHtml($notes[0].notes)
+                    <p><strong>Summary: </strong></p>
+                    <div class="clearfix">
+                        $formatter.textToHtml($notes[0].summary)
+                    </div>
+                    <p><strong>Notes: </strong></p>
+                    <div class="clearfix lead-notes">
+                        $formatter.textToHtml($notes[0].notes)
+                    </div>
                 #else
-                    $formatter.textToHtml($lead.description)
+                    <div class="clearfix">
+                        $formatter.textToHtml($lead.description)
+                    </div>
                 #end
             </div>
         </div>
