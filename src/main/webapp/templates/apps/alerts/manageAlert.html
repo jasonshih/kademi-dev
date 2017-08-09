@@ -1,21 +1,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Dashboard Messages</title>
-	    <script type="text/javascript" src="manageAlerts.js">//</script>
+        <script type="text/javascript" src="manageAlerts.js">//</script>
     </head>
     <body class="manageModulePages">
         <div class='well'>
             <p>Dashboard alerts appear on a users dashboard so are very visible. They're a great
                 way to get information out to your users without flooding their inbox.</p>
             <p>Alerts are targeted at user groups and they can have a start and end date. They can be activated by either of two means, a) they are always active (ie displayed)
-            or b) only activated by specific events for specific users. If you choose the second option you need to configure triggers</p>
+                or b) only activated by specific events for specific users. If you choose the second option you need to configure triggers</p>
         </div>
         <form action="$page.href" method="POST" class="form-horizontal alert-form" role="form">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
                         <button class="btn btn-sm btn-primary" type="submit">Save changes</button>
-<!--                         <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button> -->
+                        <!--                         <button class="btn btn-sm btn-default Cancel" type="button">Cancel</button> -->
                     </div>
                     <ul class="TabNav nav nav-tabs tab-bricky pull-left">
                         <li class=""><a href="#details" data-toggle="tab">Details</a></li>
@@ -30,7 +30,13 @@
                                 <input type="text" name="title" value="$page.title" class="form-control required" />
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="type">Organisation</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control required" name="targetOrg" id="orgId" autocomplete="on" value="$page.targetOrg" data-text="$page.targetOrgName" />
+                                <i>Select the organisation you want to see this alert</i>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="control-label col-md-3" for="type">Group</label>
                             <div class="col-md-8">
@@ -43,7 +49,6 @@
                                 <i>Select the user group you want to see this alert</i>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label class="control-label col-md-3" for="type">Type</label>
                             <div class="col-md-8">
@@ -54,7 +59,7 @@
                                     #end
                                 </select>
                                 <i>Select the type which will give the alert the appropriate style, ie 'success' for positive alerts,
-                                danger or warn to indicate something bad might happen, etc.</i>
+                                    danger or warn to indicate something bad might happen, etc.</i>
                             </div>
                         </div>
 
@@ -81,7 +86,7 @@
                                     #end
                                 </select>
                                 <i>Make the alert enabled to is immediately visible to members of the group, or you can select 'event' so the
-                                alert is only activated for specific users on certain selected events. Or you can make the alert disable so its never displayed.</i>
+                                    alert is only activated for specific users on certain selected events. Or you can make the alert disable so its never displayed.</i>
                             </div>
                         </div>
 
@@ -90,12 +95,12 @@
                             <label class="control-label col-md-3" for="startDate">Start Date</label>
                             <div class="col-sm-5">
                                 <div class='input-group'>
-                                <input type="text" id="articleDate" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.startDate" class="form-control date-picker" />
-                                <span class="input-group-addon">
-                                    <a href="#startDate" data-role="date-picker-trigger">
-                                        <i class="fa fa-calendar"></i>
-                                    </a>
-                                </span>
+                                    <input type="text" id="articleDate" name="startDate" placeholder="Start date" data-format="DD/MM/YYYY" value="$!page.startDate" class="form-control date-picker" />
+                                    <span class="input-group-addon">
+                                        <a href="#startDate" data-role="date-picker-trigger">
+                                            <i class="fa fa-calendar"></i>
+                                        </a>
+                                    </span>
                                 </div>
                                 <i>You may choose an optional start date. If selected the alert will not be displayed before this date</i>
                             </div>
@@ -123,18 +128,18 @@
             </div>
         </form>
         <script type="text/javascript" >
-	        $(function () {
+            $(function () {
                 initHtmlEditors();
-		        $(".alert-form").forms({
-                    onSuccess: function(resp) {
+                $(".alert-form").forms({
+                    onSuccess: function (resp) {
                         flog("Saved ok", resp);
                         Msg.info("Saved alert");
-                        if( resp.nextHref ) {
+                        if (resp.nextHref) {
                             window.location = resp.nextHref;
                         }
                     }
                 });
-	        });
+            });
         </script>
     </body>
 </html>
