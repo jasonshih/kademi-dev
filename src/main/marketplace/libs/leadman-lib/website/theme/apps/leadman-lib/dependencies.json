@@ -152,7 +152,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadProfilesTableComponent.js"
+                "path": "/theme/apps/leadman/leadProfilesTable.js"
             }
         },
         {
@@ -164,13 +164,13 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadsPageTableComponent.js"
+                "path": "/theme/apps/leadman/leadsPageTable.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadTaskModalContentComponent.js"
+                "path": "/theme/apps/leadman/leadTaskModalContent.js"
             }
         },
         {
