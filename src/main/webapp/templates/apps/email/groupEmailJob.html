@@ -164,13 +164,39 @@
                     <div id="recipients" class="tab-pane">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Select which groups to send to and/or exclude
+                                Select which organisations and groups to send to and/or exclude
                             </div>
                             <div class="panel-body">
-                                <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-orgs">
+                                <button class="btn btn-sm btn-success btn-add-orgs" data-toggle="modal" data-target="#modal-choose-orgs">
                                     <i class="fa fa-plus"></i> Add recipient Organisations
                                 </button>
                                 <hr class="hr-sm" />
+                                <div class="blocks-wrapper recipient">
+                                    #foreach($o in $page.organisationRecipients)
+                                    <span class="block $o.orgId">
+                                        <span class="block-name">$o.formattedName</span>
+                                        #if( $page.status == "Draft" )
+                                        <a class="btn btn-xs btn-danger btn-remove-org" href="$o.orgId" title="Remove this org"><i class="clip-minus-circle "></i></a>
+                                        #end
+                                    </span>
+                                    #end
+                                </div>
+                                <p>&nbsp;</p>
+                                <button class="btn btn-sm btn-success btn-add-orgs" data-toggle="modal" data-target="#modal-choose-orgs">
+                                    <i class="fa fa-plus"></i> Add excluded Organisations
+                                </button>
+                                <hr class="hr-sm" />
+                                <div class="blocks-wrapper excluded">
+                                    #foreach($g in $page.excludedOrganisations)
+                                    <span class="block $g.orgId">
+                                        <span class="block-name">$g.formattedName</span>
+                                        #if( $page.status == "Draft" )
+                                        <a class="btn btn-xs btn-danger btn-remove-org" href="$g.orgId" title="Remove this org"><i class="clip-minus-circle "></i></a>
+                                        #end
+                                    </span>
+                                    #end
+                                </div>
+                                <p>&nbsp;</p>
 
                                 <button class="btn btn-sm btn-success btn-add-group" data-toggle="modal" data-target="#modal-choose-group">
                                     <i class="fa fa-plus"></i> Add recipient groups
@@ -498,7 +524,7 @@
                                             <th>Organisation</th>
                                             <th>Recipient</th>
                                             <th>Exclude</th>
-                                            <th>Remove group</th>
+                                            <th>Remove Org</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -514,7 +540,7 @@
                                             </td>
                                             <td>
                                                 #set($id = $name + "-excluded")
-                                                $formatter.radio($id, $name, $page.isOrgSelected($o), "excluded" )
+                                                $formatter.radio($id, $name, $page.isOrgExcluded($o), "excluded" )
                                                 <label for="$id">Excluded</label>
                                             </td>
                                             <td>

@@ -204,7 +204,7 @@ function initChooseOrganisationModal() {
 }
 
 function initRemoveRecipientOrganisation() {
-    var blockWrapper = $('#orgRecipients');
+    var blockWrapper = $('#recipients');
     flog('initRemoveRecipientOrganisation');
 
     blockWrapper.on('click', '.btn-remove-org', function (e) {
@@ -343,6 +343,28 @@ function initRemoveRecipientGroup() {
         e.stopPropagation();
 
         if (confirm('Are you sure you want to remove this group?')) {
+            var btn = $(this);
+            flog('do it', btn);
+
+            var href = btn.attr('href');
+            deleteFile(href, function () {
+                btn.closest('span.block').remove();
+                $('#modal-choose-group').find('input:radio').filter('[name=' + href + ']').removeAttr('checked');
+            });
+        }
+    });
+}
+
+function initRemoveRecipientOrganisation() {
+    var blockWrapper = $('#recipients');
+    flog('initRemoveRecipientOrganisation');
+
+    blockWrapper.on('click', '.btn-remove-org', function (e) {
+        flog('click', this);
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (confirm('Are you sure you want to remove this organisation?')) {
             var btn = $(this);
             flog('do it', btn);
 
