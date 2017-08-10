@@ -273,7 +273,7 @@
             form.find('.txt-height').val((target.style.height || '').replace('px', ''));
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
-            form.find('.txt-maxWith').val((target.style.maxWidth || '').replace('px', ''));
+            form.find('.txt-max-width').val((target.style.maxWidth || '').replace('px', ''));
         }
     };
     
