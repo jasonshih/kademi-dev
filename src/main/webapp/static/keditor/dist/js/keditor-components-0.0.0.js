@@ -1542,13 +1542,15 @@
         settingTitle: 'Text Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "text" component1');
+            flog('initSettingForm "text" component');
+
             return $.ajax({
                 url: '/static/keditor/componentTextSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
+
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
@@ -1687,18 +1689,6 @@
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('max-width', maxWidth + 'px');
                     });
-
-
-                    // =================================================================================
-                    // Rotate
-                    // =================================================================================
-
-                    form.find('input[name=rotateDeg]').on('change', function () {
-                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
-                        var value = 'rotate(' + this.value + 'deg)';
-                        target.css('transform', value);
-                    });
-
                 }
             });
         },
@@ -1730,18 +1720,11 @@
 
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
-            var rotateValue = target.style.transform;
-            if (rotateValue && rotateValue.length > 0) {
-                var numbers = rotateValue.match(/\d/g);
-                rotateValue = numbers.join('');
-            }
 
             form.find('.txt-height').val((target.style.height || '').replace('px', ''));
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
-            form.find('.txt-max-width').val((target.style.maxWidth || '').replace('px', ''));
-            form.find('input[name=rotateDeg]').val(rotateValue);
-
+            form.find('.txt-maxWith').val((target.style.maxWidth || '').replace('px', ''));
         }
     };
 
