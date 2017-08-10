@@ -22,9 +22,6 @@ function initChooseGroupModal() {
 
     modal.find('input:radio').on('click', function () {
         var radioBtn = $(this);
-
-        flog('a');
-
         flog("radiobutton click", radioBtn, radioBtn.is(":checked"));
         setGroupRecipient(radioBtn.attr('name'), radioBtn.val());
     });

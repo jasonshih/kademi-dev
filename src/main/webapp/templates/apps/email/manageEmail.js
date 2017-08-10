@@ -34,18 +34,18 @@ function initSendTest() {
 function onTestMultipleResponse(resp) {
     flog("onTestMultipleResponse", resp);
     if (resp.status) {
-        if(resp.messages.length == 1){
+        if (resp.messages.length == 1) {
             var modal = $("#modal-send-test-progress");
             modal.modal();
             var target = modal.find(".modal-body");
-            loadEmailItemContent(target, "/emails/"+resp.messages[0]);
-        }else{
+            loadEmailItemContent(target, "/emails/" + resp.messages[0]);
+        } else {
             var modal = $("#modal-multiple-send-test-progress");
             modal.modal();
             var target = modal.find(".modal-body");
-            loadMultipleEmailItemContent(target, resp.messages);    
+            loadMultipleEmailItemContent(target, resp.messages);
         }
-        
+
     } else {
         Msg.info("Couldnt not send test email: " + resp.messages);
     }
@@ -56,36 +56,36 @@ function loadMultipleEmailItemContent(target, ids) {
     setInterval(function () {
 
         var tbody = document.createElement("tbody");
-        for (i = 0; i < ids.length; i++) { 
+        for (i = 0; i < ids.length; i++) {
             var id = ids[i];
-            $(tbody).append(loadEmailItemDetails(target, id));    
+            $(tbody).append(loadEmailItemDetails(target, id));
         }
         $(target).find("tbody").replaceWith(tbody);
 
-   }, 3000);
+    }, 3000);
 }
 
-function loadEmailItemDetails(target, id){
+function loadEmailItemDetails(target, id) {
     flog("loadEmailItemDetails", id);
     var template = $("#row-email-template").html();
     var emailRow = Handlebars.compile(template);
 
-    Handlebars.registerHelper("debug", function(optionalValue) {
+    Handlebars.registerHelper("debug", function (optionalValue) {
         flog("Current Context");
         flog("====================");
         flog(this);
 
         if (optionalValue) {
-          flog("Value");
-          flog("====================");
-          flog(optionalValue);
+            flog("Value");
+            flog("====================");
+            flog(optionalValue);
         }
     });
     var myRow;
-    
+
     $.ajax({
         type: 'GET',
-        url: "/emails/"+id,
+        url: "/emails/" + id,
         datatype: 'json',
         async: false,
         data: {
@@ -95,11 +95,11 @@ function loadEmailItemDetails(target, id){
         },
         success: function (resp) {
             var json = JSON.parse(resp);
-             row = emailRow(json);
+            row = emailRow(json);
             myRow = row;
         }
     });
-    
+
     return myRow;
 }
 
@@ -186,6 +186,75 @@ function initDeleteEmail() {
 function initChooseGroup() {
     initChooseGroupModal();
     initRemoveRecipientGroup();
+}
+
+function initChooseOrganisation() {
+    initChooseOrganisationModal();
+    initRemoveRecipientOrganisation();
+}
+
+function initChooseOrganisationModal() {
+    var modal = $('#modal-choose-orgs');
+
+    modal.find('input:radio').on('click', function () {
+        var radioBtn = $(this);
+        flog("radiobutton click", radioBtn, radioBtn.is(":checked"));
+        setOrganisationRecipient(radioBtn.attr('name'), radioBtn.val());
+    });
+}
+
+function initRemoveRecipientOrganisation() {
+    var blockWrapper = $('#orgRecipients');
+    flog('initRemoveRecipientOrganisation');
+
+    blockWrapper.on('click', '.btn-remove-org', function (e) {
+        flog('click', this);
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (confirm('Are you sure you want to remove this organisation?')) {
+            var btn = $(this);
+            flog('do it', btn);
+
+            var href = btn.attr('href');
+            setOrganisationRecipient(href, "none");
+            $('#modal-choose-orgs').find('input:radio').filter('[name=' + href + ']').removeAttr('checked');
+        }
+    });
+}
+
+function setOrganisationRecipient(name, orgType) {
+    flog("setOrganisationRecipient", name, orgType);
+    try {
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: {
+                organisation: name,
+                organisationType: orgType
+            },
+            success: function (data) {
+                flog("saved ok", name);
+
+                var blockWrapper = $('#orgsRecipients').find('.blocks-wrapper');
+                blockWrapper.find('.block.' + name).remove();
+
+                flog("add to list");
+                blockWrapper.filter('.' + orgType).append(
+                        '<span class="block ' + name + '">' +
+                        '<span class="block-name">' + name + '</span>' +
+                        '<a class="btn btn-xs btn-danger btn-remove-org" href="' + name + '" title="Remove this org"><i class="clip-minus-circle "></i></a>' +
+                        '</span>'
+                        );
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error('err');
+            }
+        });
+    } catch (e) {
+        flog("exception in createJob", e);
+    }
 }
 
 function initChooseGroupModal() {
@@ -302,8 +371,8 @@ function getValidEmail(emailAddress) {
         return emailAddress;
     } else {
         emailAddress = emailAddress.replace(/^.*\<(.*)\>$/, "$1");
-        if (pattern.test(emailAddress)){
-            return emailAddress;    
+        if (pattern.test(emailAddress)) {
+            return emailAddress;
         }
     }
     return false;
@@ -327,7 +396,7 @@ function initFormDetailEmail() {
             var availableDomains = JSON.parse(availableDomainsStr.val().trim());
             var emailToCheck;
             var errorField;
-            
+
             flog('manageEmail.js: isEmailEnabled: ' + isEmailEnabled);
 
             if (isEmailEnabled) {
@@ -346,11 +415,11 @@ function initFormDetailEmail() {
                     if (errorEmail > 0) {
                         error++;
                         showMessage('Email address is invalid!', form);
-                    }else{
+                    } else {
                         emailToCheck = getValidEmail(fromAddressStr);
                         errorField = fromAddress;
                     }
-                    
+
                 } else {
                     if (replyToAddressStr != "") {
                         if (!/@{.*}/.test(replyToAddressStr) && !validateFuseEmail(replyToAddressStr)) {
@@ -368,30 +437,30 @@ function initFormDetailEmail() {
                     showErrorField(subject);
                     showMessage('Subject should not contain newline', form);
                 }
-                
+
                 flog("validating email: ", emailToCheck, " against domains: ", availableDomains);
-                if(emailToCheck !== false && validateFuseEmail(emailToCheck)){
+                if (emailToCheck !== false && validateFuseEmail(emailToCheck)) {
                     var emailDomain = emailToCheck.replace(/.*@/, "");
                     var valid = false;
                     flog(availableDomains.length);
-                    for(var prop in availableDomains){
+                    for (var prop in availableDomains) {
                         var rootDomain = availableDomains[prop];
-                        flog("Email Domain: ", emailDomain , " Root Domain: ", rootDomain );
-                        if(emailDomain === rootDomain){
+                        flog("Email Domain: ", emailDomain, " Root Domain: ", rootDomain);
+                        if (emailDomain === rootDomain) {
                             valid = true;
                             break;
-                        }                        
+                        }
                     }
-                    if(!valid){
+                    if (!valid) {
                         error++;
                         showErrorField(errorField);
-                        showMessage('The email address must have a domain name the same as the domain on the website selected.', form);   
-                    }                  
+                        showMessage('The email address must have a domain name the same as the domain on the website selected.', form);
+                    }
 
                 }
             }
-           
-            
+
+
 
             if ($('#timerExpressionEditor').length > 0) {
                 var editorVal = ace.edit('timerExpressionEditor').getValue();

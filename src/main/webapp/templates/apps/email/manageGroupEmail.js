@@ -1,6 +1,7 @@
 function initManageGroupEmail() {
     initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
     initChooseGroup();
+    initChooseOrganisation();
     initAdvanceRecipients();
     initFormDetailEmail();
     initShowRecipients();
@@ -16,8 +17,8 @@ function initManageGroupEmail() {
             doControl("stop");
         }
     });
-    
-    $("body").on("click", ".selectEmail", function(e) {
+
+    $("body").on("click", ".selectEmail", function (e) {
         e.preventDefault();
         var li = $(e.target).closest("li");
         var email = li.text();
