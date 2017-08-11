@@ -10,7 +10,9 @@ function initAuditItems(canUndoCount) {
     
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         options.startDate = startDate;
-        options.endDate = endDate;
+        var dateFormat = "DD/MM/YYYY";
+        var newEndDate = moment(endDate, dateFormat).add(1, 'days').format(dateFormat);
+        options.endDate = newEndDate;
         doSearch();
     });
 }
