@@ -98,7 +98,7 @@
         
         var options = keditor.options;
         var allGroups = options.allGroups;
-
+        
         return $.ajax({
             url: '/static/jquery.contentEditor/1.0.0/jquery.contentEditorContainerSettings-1.0.0.html',
             type: 'get',
@@ -149,14 +149,14 @@
                     var container = keditor.getSettingContainer();
                     container.find('.container-bg').attr('data-groups', selectedGroups);
                 });
-
+                
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
                     e.preventDefault();
-
+                    
                     form.find('.currentMselect').val('.bgImagesPreview .btn-edit-image');
                     form.find('#btnAddImagesBGs').trigger('click');
                 });
-
+                
                 form.find('.bgImagesPreview .btn-delete-image').on('click', function (e) {
                     e.preventDefault();
                     var container = keditor.getSettingContainer();
@@ -167,106 +167,106 @@
                     if (images) {
                         var imagesArr = images.split(',');
                         var index = imagesArr.indexOf(oldImageUrl);
-                        if (index != -1){
+                        if (index != -1) {
                             imagesArr.splice(index, 1);
                         }
-                        if (imagesArr.length){
+                        if (imagesArr.length) {
                             form.find('.bgImagesPreview img').attr('src', imagesArr[0]);
-                            target.css('background-image', 'url("'+imagesArr[0]+'")');
+                            target.css('background-image', 'url("' + imagesArr[0] + '")');
                         }
                         form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
                         containerBg.attr('data-images', imagesArr.join(','));
                     }
                 });
-
+                
                 form.find('#btnAddImagesBGs').mselect({
                     contentTypes: ['image'],
                     bs3Modal: true,
                     pagePath: options.pagePath,
                     basePath: options.basePath,
                     onSelectFile: function (url, relativeUrl, fileType, hash) {
-
+                        
                         var container = keditor.getSettingContainer();
                         var containerBg = container.find('.container-bg');
                         var imageUrl = '/_hashes/files/' + hash;
                         var currentMselect = form.find('.currentMselect').val();
                         var target = container.find('.' + form.find('.select-bg-for').val());
-                        if (currentMselect === '.bgImagesPreview .btn-edit-image'){
-
+                        if (currentMselect === '.bgImagesPreview .btn-edit-image') {
+                            
                             var oldImageUrl = form.find('.bgImagesPreview img').attr('src');
                             form.find('.bgImagesPreview img').attr('src', imageUrl);
                             var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
-                            if (images){
+                            if (images) {
                                 var imagesArr = images.split(',');
                                 var index = imagesArr.indexOf(oldImageUrl);
                                 imagesArr[index] = imageUrl;
                                 form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
                                 containerBg.attr('data-images', imagesArr.join(','));
                             }
-                            target.css('background-image', 'url("'+imagesArr[0]+'")');
-                        } else if(currentMselect === '#background-image-edit') {
+                            target.css('background-image', 'url("' + imagesArr[0] + '")');
+                        } else if (currentMselect === '#background-image-edit') {
                             target.css('background-image', 'url("' + imageUrl + '")');
                             form.find('#background-image-previewer').attr('src', imageUrl);
                         } else {
                             form.find('.bgImagesPreview img').attr('src', imageUrl);
                             var images = form.find('.bgImagesPreview [data-images]').attr('data-images');
-                            if (images){
+                            if (images) {
                                 var imagesArr = images.split(',');
                                 imagesArr.push(imageUrl);
                                 form.find('.bgImagesPreview [data-images]').attr('data-images', imagesArr.join(','));
                                 containerBg.attr('data-images', imagesArr.join(','));
                             }
                         }
-
+                        
                         form.find('.currentMselect').val('');
                     }
                 });
-
+                
                 form.find('.bgImagesPreview .btn-nav').on('click', function (e) {
                     e.preventDefault();
-
+                    
                     var currentImage = $(this).siblings('p').find('img').attr('src');
                     var images = $(this).siblings('p').attr('data-images');
-                    if (images){
+                    if (images) {
                         var imagesArr = images.split(',');
                         var currIndex = imagesArr.indexOf(currentImage);
-                        if ($(this).hasClass('btn-nav-right')){
+                        if ($(this).hasClass('btn-nav-right')) {
                             currIndex++;
                         }
-                        if ($(this).hasClass('btn-nav-left')){
+                        if ($(this).hasClass('btn-nav-left')) {
                             currIndex--;
                         }
-                        if (currIndex > imagesArr.length-1){
+                        if (currIndex > imagesArr.length - 1) {
                             currIndex = 0;
                         }
-
-                        if (currIndex < 0){
-                            currIndex = imagesArr.length-1;
+                        
+                        if (currIndex < 0) {
+                            currIndex = imagesArr.length - 1;
                         }
-
+                        
                         $(this).siblings('p').find('img').attr('src', imagesArr[currIndex]);
                     }
                 });
-
+                
                 var txtTransition = form.find('.txt-transition');
                 txtTransition.on('change', function () {
                     var transition = this.value || '';
                     if (isNaN(transition)) {
                         height = 2;
                     }
-
+                    
                     var container = keditor.getSettingContainer();
                     var containerBg = container.find('.container-bg');
-
+                    
                     containerBg.attr('data-bg-transition', transition);
                 });
-
+                
                 form.find('.multiple-background').on('click', function (e) {
                     var container = keditor.getSettingContainer();
                     var containerBg = container.find('.container-bg');
                     var target = container.find('.' + form.find('.select-bg-for').val());
-
-                    if (this.checked){
+                    
+                    if (this.checked) {
                         form.find('.single-background-settings').addClass('hide');
                         form.find('.multiple-background-settings').removeClass('hide');
                         target.css('background-image', 'url("' + form.find('.bgImagesPreview img').attr('src') + '")');
@@ -275,17 +275,17 @@
                         form.find('.multiple-background-settings').addClass('hide');
                         target.css('background-image', 'url("' + form.find('#background-image-previewer').attr('src') + '")');
                     }
-
+                    
                     containerBg.attr('data-multiple-bg', this.checked);
                 });
-
+                
                 form.find('#background-image-edit').on('click', function (e) {
                     e.preventDefault();
-
+                    
                     form.find('.currentMselect').val('#background-image-edit');
                     form.find('#btnAddImagesBGs').trigger('click');
                 });
-
+                
                 form.find('#background-image-delete').on('click', function (e) {
                     e.preventDefault();
                     
@@ -627,7 +627,7 @@
             txtHeight.prop('disabled', true).val('');
             chkFullHeight.prop('checked', true);
         } else {
-            txtHeight.prop('disabled', false).val(containerBg.css('height').replace('px','') || '');
+            txtHeight.prop('disabled', false).val(containerBg.css('height').replace('px', '') || '');
             chkFullHeight.prop('checked', false);
         }
         
@@ -669,23 +669,23 @@
             dockType = 'bottom';
         }
         form.find('.select-dock-type').val(dockType);
-
+        
         var isMultiBg = containerBg.attr('data-multiple-bg') == 'true';
-        if (isMultiBg){
+        if (isMultiBg) {
             form.find('.multiple-background-settings').removeClass('hide');
             form.find('.single-background-settings').addClass('hide');
         } else {
             form.find('.multiple-background-settings').addClass('hide');
             form.find('.single-background-settings').removeClass('hide');
         }
-
+        
         var imagesStr = containerBg.attr('data-images');
-        if (imagesStr){
+        if (imagesStr) {
             var imagesArr = imagesStr.split(',');
             form.find('.bgImagesPreview img').attr('src', imagesArr[0]);
             form.find('.bgImagesPreview p').attr('data-images', imagesArr.join(','));
         }
-
+        
         form.find('.multiple-background').prop('checked', isMultiBg);
         var transition = containerBg.attr('data-bg-transition');
         form.find('.txt-transition').val(transition || 2);
@@ -1277,7 +1277,9 @@
                         tabTooltipEnabled: false,
                         snippetsTooltipEnabled: false,
                         onContentChanged: function (e, contentArea) {
-                            if (target.keditor('getContent').trim() === '') {
+                            var content = contentArea.html() || '';
+                            
+                            if (content.trim() === '') {
                                 contentArea.addClass('empty');
                             } else {
                                 contentArea.removeClass('empty');
