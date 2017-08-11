@@ -245,91 +245,42 @@
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('max-width', maxWidth + 'px');
                     });
-
-                    // =================================================================================
-                    // Rotating
-                    // =================================================================================
-
-                    var rotatingHandler = function(animationType, isInfiniteLoop){
-                        var target = $(keditor.getSettingComponent().find('.keditor-component-text-content'));
-                        var infiniteClass = 'infinite';
-                        var animateClass = 'animated';
-                        var animateValueKey = 'data-animate-type';
-
-                        var oldValue = target.attr(animateValueKey);
-                        target.removeClass(infiniteClass)
-                            .removeClass(animateClass)
-                            .removeClass(oldValue);
-                        target.attr(animateValueKey, "");
-
-                        if (animationType) {
-                            target.addClass(animationType).addClass(animateClass);
-                            target.attr(animateValueKey, animationType);
-                        }
-
-                        if (isInfiniteLoop) {
-                            target.addClass(infiniteClass);
-                        } else {
-                            target.removeClass(infiniteClass);
-                        }
-                    };
-
-                    form.find('select[name=rotating]').on('change', function () {
-                        var isInfinite = form.find('input[name=infinite]').is(":checked");
-                        rotatingHandler(this.value, isInfinite);
-                    });
-
-                    form.find('input[name=infinite]').on('change', function () {
-                        var animatedType = form.find('select[name=rotating]').val();
-                        rotatingHandler(animatedType, $(this).is(':checked'));
-                    });
                 }
             });
         },
-        
+
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
-            
+
             var target = component.find('.keditor-component-text-content').get(0);
-            
+
             var imageUrl = target.style.backgroundImage;
             imageUrl = (imageUrl || '').replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
             form.find('.background-image-previewer').attr('src', imageUrl !== 'none' && imageUrl !== '' ? imageUrl : '/static/images/photo_holder.png');
-            
+
             form.find('.select-bg-repeat').val(target.style.backgroundRepeat || 'repeat');
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
-            
+
             form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
-            
+
             form.find('.txt-padding').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-                
+
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
             form.find('.txt-margin').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-                
+
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
-            
+
             form.find('.txt-height').val((target.style.height || '').replace('px', ''));
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
-            form.find('.txt-max-width').val((target.style.maxWidth || '').replace('px', ''));
-
-            var $target = $(target);
-            var animatedType = $target.attr('data-animate-type');
-            if (!animatedType) animatedType = "";
-            form.find('select[name=rotating]').val(animatedType);
-
-            if($target.hasClass('infinite')) {
-                form.find('input[name=infinite]').prop('checked', true);
-            } else {
-                form.find('input[name=infinite]').prop('checked', false);
-            }
+            form.find('.txt-maxWith').val((target.style.maxWidth || '').replace('px', ''));
         }
     };
     
