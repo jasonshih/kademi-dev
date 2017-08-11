@@ -410,9 +410,9 @@ function findQuestionBySurvey(page, surveyId) {
     log.info('findQuestionBySurvey > page={}, surveyId={}', page, surveyId);
     
     var queryJson = {
-        'sort': {
-            'order': 'asc'
-        },
+        // 'sort': {
+        //     'order': 'asc'
+        // },
         'size': 1000,
         'aggs': {
             "group_by_question": {
@@ -686,6 +686,73 @@ function getSurveyStatistic(page, surveyId) {
         userAgentResult: userAgentResult,
         totalSubmits: searchResult1.hits.totalHits,
         histogram: histogram
+    };
+}
+
+function getUserSurveyStatistic(page, surveyId) {
+    log.info('getSurveyStatistic {}');
+    var queryJson = {
+        'size': 0,
+        'query': {
+            'bool': {
+                'must': [
+                    {'type': {'value': RECORD_TYPES.RESULT}},
+                    {'term': {'surveyId': surveyId}},
+                    {'term': {'userId': securityManager.currentUser.name}}
+                ]
+            }
+        },
+        'aggs': {
+            'by_question': {
+                'terms': {
+                    'field': 'questionId',
+                    'size': 10000
+                },
+                'aggs': {
+                    'by_answer': {
+                        'terms': {
+                            'field': 'answerId',
+                            'size': 10000
+                        }
+                    }
+                }
+            }
+        }
+    };
+    var searchResult = doDBSearch(page, queryJson);
+    var surveyResult = {};
+
+    if (searchResult.hits.totalHits > 0) {
+        var buckets = [];
+        if (searchResult.aggregations && searchResult.aggregations.get('by_question') && searchResult.aggregations.get('by_question').buckets) {
+            buckets = searchResult.aggregations.get('by_question').buckets;
+        }
+        for (var i = 0; i < buckets.length; i++) {
+            var question = buckets[i];
+
+            surveyResult[question.key] = {
+                docCount: question.docCount,
+                answers: {}
+            };
+
+            var answerBuckets = [];
+            if (question.aggregations && question.aggregations.get('by_answer') && question.aggregations.get('by_answer').buckets) {
+                answerBuckets = question.aggregations.get('by_answer').buckets;
+            }
+
+            for (var j = 0; j < answerBuckets.length; j++) {
+                var ans = answerBuckets[j];
+                log.info('answer key {}', ans.key);
+                surveyResult[question.key].answers[ans.key] = ans.docCount;
+            }
+        }
+
+        log.info('surveyResult {}', JSON.stringify(surveyResult));
+
+    }
+
+    return {
+        surveyResult: surveyResult
     };
 }
 

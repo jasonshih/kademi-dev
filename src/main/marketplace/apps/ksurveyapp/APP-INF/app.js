@@ -128,6 +128,23 @@ controllerMappings
     .addMethod("GET", "checkRedirect")
     .build();
 
+controllerMappings
+    .websiteController()
+    .path('/ksurvey/(?<surveyId>[^/]*)/myresult/')
+    .enabled(true)
+    .addPathResolver('surveyId', 'findSurvey')
+    .defaultView(views.templateView('ksurveyapp/myResult.html'))
+    .addMethod('GET', 'getSurvey')
+    .title('generateWebsiteTitle')
+    .build();
+
+controllerMappings
+    .websiteController()
+    .path('/ksurvey/(?<surveyId>[^/]*)/myresult')
+    .enabled(true)
+    .addMethod("GET", "checkRedirect")
+    .build();
+
 function initApp(orgRoot, webRoot, enabled) {
     log.info("initApp ksurveyapp: orgRoot={}", orgRoot);
     
@@ -158,6 +175,7 @@ controllerMappings.addNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmit
 controllerMappings.addComponent("ksurveyapp", "ksurveyEmail", "email", "Shows button with link to survey", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyForm", "html", "Shows survey form questions", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyResult", "html", "Shows survey result", "Ksurvey App component");
+controllerMappings.addComponent("ksurveyapp", "ksurveyMyResult", "html", "Shows user survey result", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyList", "html", "Shows surveys list", "Ksurvey App component");
 controllerMappings.journeyFieldsFunction(loadSurveyFields);
 

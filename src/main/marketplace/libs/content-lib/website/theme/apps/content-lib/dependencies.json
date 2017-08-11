@@ -9,6 +9,12 @@
         {
             "css": {
                 "cssMedia": "all",
+                "path": "/static/animate-css/animate.css"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/theme/apps/content/container.css"
             }
         },

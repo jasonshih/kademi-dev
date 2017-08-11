@@ -238,6 +238,44 @@
                         var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                         target.css('max-width', maxWidth + 'px');
                     });
+
+                    // =================================================================================
+                    // Rotating
+                    // =================================================================================
+
+                    var rotatingHandler = function(animationType, isInfiniteLoop){
+                        var target = $(keditor.getSettingComponent().find('.keditor-component-text-content'));
+                        var infiniteClass = 'infinite';
+                        var animateClass = 'animated';
+                        var animateValueKey = 'data-animate-type';
+
+                        var oldValue = target.attr(animateValueKey);
+                        target.removeClass(infiniteClass)
+                            .removeClass(animateClass)
+                            .removeClass(oldValue);
+                        target.attr(animateValueKey, "");
+
+                        if (animationType) {
+                            target.addClass(animationType).addClass(animateClass);
+                            target.attr(animateValueKey, animationType);
+                        }
+
+                        if (isInfiniteLoop) {
+                            target.addClass(infiniteClass);
+                        } else {
+                            target.removeClass(infiniteClass);
+                        }
+                    };
+
+                    form.find('select[name=rotating]').on('change', function () {
+                        var isInfinite = form.find('input[name=infinite]').is(":checked");
+                        rotatingHandler(this.value, isInfinite);
+                    });
+
+                    form.find('input[name=infinite]').on('change', function () {
+                        var animatedType = form.find('select[name=rotating]').val();
+                        rotatingHandler(animatedType, $(this).is(':checked'));
+                    });
                 }
             });
         },
@@ -274,6 +312,17 @@
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
             form.find('.txt-max-width').val((target.style.maxWidth || '').replace('px', ''));
+
+            var $target = $(target);
+            var animatedType = $target.attr('data-animate-type');
+            if (!animatedType) animatedType = "";
+            form.find('select[name=rotating]').val(animatedType);
+
+            if($target.hasClass('infinite')) {
+                form.find('input[name=infinite]').prop('checked', true);
+            } else {
+                form.find('input[name=infinite]').prop('checked', false);
+            }
         }
     };
     
