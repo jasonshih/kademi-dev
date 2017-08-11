@@ -1654,6 +1654,7 @@
             flog('getComponentContent', component);
             
             var self = this;
+            component = component.clone();
             var componentType = self.getComponentType(component);
             var componentData = KEditor.components[componentType];
             var dataAttributes = self.getDataAttributes(component, null, true);
