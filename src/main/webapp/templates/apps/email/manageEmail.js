@@ -198,6 +198,7 @@ function initChooseOrganisationModal() {
 
     modal.find('input:radio').on('click', function () {
         var radioBtn = $(this);
+        flog(radioBtn);
         flog("radiobutton click", radioBtn, radioBtn.is(":checked"));
         setOrganisationRecipient(radioBtn.attr('name'), radioBtn.val());
     });
@@ -237,10 +238,13 @@ function setOrganisationRecipient(name, orgType) {
                 flog("saved ok", name);
 
                 var blockWrapper = $('#orgsRecipients').find('.blocks-wrapper');
-                blockWrapper.find('.block.' + name).remove();
-
-                flog("add to list");
-                blockWrapper.filter('.' + orgType).append(
+                flog("add to list");              
+                flog('.block.' + name);
+                flog($('#orgsRecipients').find('.block.' + name));
+                $('#orgsRecipients').find('.block.' + name).remove();
+                
+                
+                blockWrapper.append(
                         '<span class="block ' + name + '">' +
                         '<span class="block-name">' + name + '</span>' +
                         '<a class="btn btn-xs btn-danger btn-remove-org" href="' + name + '" title="Remove this org"><i class="clip-minus-circle "></i></a>' +

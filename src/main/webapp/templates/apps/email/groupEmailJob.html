@@ -167,11 +167,12 @@
                                 Select which organisations and groups to send to and/or exclude
                             </div>
                             <div class="panel-body">
+                                <div id="orgsRecipients">
                                 <button class="btn btn-sm btn-success btn-add-orgs" data-toggle="modal" data-target="#modal-choose-orgs">
                                     <i class="fa fa-plus"></i> Add recipient Organisations
                                 </button>
                                 <hr class="hr-sm" />
-                                <div class="blocks-wrapper recipient">
+                                <div  class="blocks-wrapper recipient">
                                     #foreach($o in $page.organisationRecipients)
                                     <span class="block $o.orgId">
                                         <span class="block-name">$o.formattedName</span>
@@ -195,6 +196,7 @@
                                         #end
                                     </span>
                                     #end
+                                </div>
                                 </div>
                                 <p>&nbsp;</p>
 
