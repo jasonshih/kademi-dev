@@ -46,8 +46,9 @@ function initCRUDExtraField() {
     tableField.on('click', '.btn-delete-extra-field', function (e) {
         e.preventDefault();
         
+        var btn = $(this);
+        
         Kalert.confirm('Do you want to remove this field?', function () {
-            var btn = $(this);
             var fieldName = btn.attr('href');
             var fieldWrapper = btn.closest('tr');
             var groupHref = fieldWrapper.closest('table').attr('data-group-href');
