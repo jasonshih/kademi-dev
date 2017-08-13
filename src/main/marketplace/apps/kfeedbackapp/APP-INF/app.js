@@ -81,6 +81,17 @@ function getLastFeedbackResult(lead, exitingNode, funnel, vars) {
             {"created": "desc"}
         ]
     };
+    
+    if (vars != null && vars['surveyId'] != null) {
+        queryJson['query']['bool']['filter'] =  [
+            {
+                "term": {
+                    "survey_id": vars['surveyId']
+                }
+            }
+        ];
+    }
+    
     // find most recent response from this profile
     var searchResult = db.search(JSON.stringify(queryJson));
     log.info('search hit {}', searchResult.hits.totalHits);
