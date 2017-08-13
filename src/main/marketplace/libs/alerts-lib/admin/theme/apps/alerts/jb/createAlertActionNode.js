@@ -1,4 +1,4 @@
-JBNodes[''] = {
+JBNodes['createAlertAction'] = {
     icon: 'fa fa-exclamation-triangle',
     title: 'Create Alert',
     type: JB_NODE_TYPE.ACTION,
