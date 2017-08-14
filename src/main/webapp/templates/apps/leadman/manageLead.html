@@ -140,7 +140,7 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="details">
-                        <div class="form-horizontal">
+                        <form class="form-horizontal" action="$page.href" method="post" id="lead-details-form">
                             <div class="form-group">
                                 <div class="col-sm-12 text-right">
                                     <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
@@ -175,6 +175,9 @@
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                                        <span class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -199,11 +202,11 @@
                             <div class="form-group">
                                 <label class="control-label col-sm-3">Journey</label>
                                 <div class="col-sm-6">
-                                    #set( $leadsFolder = $page.find("/leads") )
+                                    #set( $leadsFolder = $page.find("/funnels") )
                                     <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
                                         <option value="">[None]</option>
-                                        #foreach( $funnel in $leadsFolder.funnels )
-                                            $formatter.option($funnel.funnelRepo.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
+                                        #foreach( $funnel in $leadsFolder.children )
+                                            $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
                                         #end
                                     </select>
                                 </div>
@@ -219,7 +222,7 @@
                                 </div>
                             #end
                             <hr />
-                        </div>
+                        </form>
                     </div>
                     <div class="tab-pane" id="notes">
                         <p class="text-right">

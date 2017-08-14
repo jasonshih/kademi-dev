@@ -79,7 +79,9 @@
         var pickers = $('.date-time');
         flog("pickers", pickers);
         pickers.datetimepicker({
-            format: 'DD/MM/YYYY HH:mm'
+            format: 'DD/MM/YYYY HH:mm',
+            keepInvalid: true,
+            timeZone: window.KademiTimeZone
         });
     }
     
@@ -116,6 +118,12 @@
     }
     
     function initLeadActions() {
+        $('#lead-details-form').forms({
+            onSuccess: function () {
+                Msg.success('Saved OK!');
+            }
+        });
+        
         $(document.body).off('click', '.btn-reopen').on('click', '.btn-reopen', function (e) {
             e.preventDefault();
             
