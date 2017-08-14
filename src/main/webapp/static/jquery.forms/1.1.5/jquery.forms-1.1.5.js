@@ -1,7 +1,7 @@
 /**
  *
  * jquery.forms.js
- * @version: 1.1.4
+ * @version: 1.1.5
  * @depends: common.js, moment.js
  *
  * Configuration:
@@ -67,7 +67,7 @@
     $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
-            flog('[jquery.forms] Default validate of v1.1.1', form, config);
+            flog('[jquery.forms] Default validate of v1.1.5', form, config);
             
             return {
                 error: 0,
@@ -76,19 +76,19 @@
             }
         },
         onValid: function (form, config) {
-            flog('[jquery.forms] Default onValid of v1.1.1', form, config);
+            flog('[jquery.forms] Default onValid of v1.1.5', form, config);
         },
         onInvalid: function (form, config) {
-            flog('[jquery.forms] Default onInvalid of v1.1.1', form, config);
+            flog('[jquery.forms] Default onInvalid of v1.1.5', form, config);
         },
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
-            flog('[jquery.forms] Default beforePostForm of v1.1.1', form, config, data);
+            flog('[jquery.forms] Default beforePostForm of v1.1.5', form, config, data);
             
             return data;
         },
         onSuccess: function (resp, form, config) {
-            flog('[jquery.forms] Default onSuccess of v1.1.1', resp, form, config);
+            flog('[jquery.forms] Default onSuccess of v1.1.5', resp, form, config);
         },
         onError: function (resp, form, config) {
             try {
