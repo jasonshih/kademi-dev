@@ -2,3 +2,9 @@
     display: inline-block;
     vertical-align: top;
 }
+
+#membershipsContainer .twitter-typeahead {
+    float: none;
+    width: auto;
+    line-height: 16px;
+}

@@ -47,7 +47,7 @@
                                 </span>
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                            <ul class="dropdown-menu dropdown-menu-right" id="assignToMenu" role="menu">
                                 <li><a href="$user.name">Assign to me</a></li>
                                 <li><a href="">Clear</a></li>
                                 #if ($page.find("/leads").teamMembers.size() > 0)
@@ -367,7 +367,7 @@
                     </div>
                     <div class="tab-pane" id="files">
                         <p class="text-right">
-                            <button type="button" class="btn btn-xs btn-success upload-files"><span class="fa fa-upload"></span> Upload</button>
+                            <a href="#modal-upload-lead-files" data-toggle="modal" class="btn btn-success btn-sm"><i class="fa fa-upload"></i> Upload files</a>
                         </p>
                         <div class="table-responsive ie-overflow">
                             <table class="table table-hover">
@@ -378,7 +378,7 @@
                                         <th>Notes</th>
                                         <th>Date</th>
                                         <th></th>
-                                        <th>Action</th>
+                                        <th width="100">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="files-body">
@@ -423,7 +423,7 @@
                                                 #end
                                             </td>
                                             <td>
-                                                <div style="min-width: 125px;" class="btn-group" role="group">
+                                                <div class="btn-group" role="group">
                                                     <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
                                                     <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
                                                     </button>
@@ -437,6 +437,52 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="modal fade" id="modal-upload-lead-files" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Upload files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="$page.href" id="lead-files-upload" class="form-horizontal dropzone" enctype="multipart/form-data">
+                            <input type="hidden" name="override" value="true" />
+                            <input type="hidden" name="uploadFiles" value="uploadFiles" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Edit Note</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="updateNotes">Note</label>
+                                <div class="col-md-9">
+                                    <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
 
         <div class="modal fade" id="modalCancelLead" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -477,7 +523,6 @@
                 </div>
             </div>
         </div>
-
 
         <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">

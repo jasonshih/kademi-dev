@@ -10,6 +10,67 @@
         initCancelLeadModal();
         initCloseDealModal();
         initDateTimePickers();
+        initFileNoteEdit();
+        
+        if (typeof Dropzone === 'undefined') {
+            $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
+            $.getScriptOnce('/static/dropzone/4.3.0/downloads/dropzone.min.js', function () {
+                initFileUploads();
+            });
+        } else {
+            initFileUploads();
+        }
+    }
+    
+    function initFileUploads() {
+        flog('initFileUploads');
+        
+        Dropzone.autoDiscover = false;
+        $('#lead-files-upload').dropzone({
+            paramName: 'file',
+            maxFilesize: 2000.0, // MB
+            addRemoveLinks: true,
+            parallelUploads: 1,
+            uploadMultiple: true,
+            init: function () {
+                this.on('success', function (file) {
+                    flog('added file', file);
+                    reloadFileList();
+                });
+                this.on('error', function (file, errorMessage) {
+                    Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+                });
+            }
+        });
+    }
+    
+    function initFileNoteEdit() {
+        var noteModal = $('#editFileNoteModal');
+        var noteForm = noteModal.find('form');
+        
+        $('body').on('click', '.edit-file-note', function (e) {
+            e.preventDefault();
+            
+            var btn = $(this);
+            var span = btn.closest('td').find('span');
+            var leadId = btn.attr('href');
+            
+            noteForm.attr('action', window.location.pathname + leadId);
+            noteForm.find('textarea[name=updateNotes]').val(span.html());
+            
+            noteModal.modal('show');
+        });
+        
+        noteForm.forms({
+            onSuccess: function () {
+                reloadFileList();
+                noteModal.modal('hide');
+            }
+        });
+    }
+    
+    function reloadFileList() {
+        $('#files-body').reloadFragment();
     }
     
     function initDateTimePickers() {
@@ -80,6 +141,38 @@
                 });
             });
         });
+        
+        $(document.body).on("click", "#assignToMenu a", function (e) {
+            e.preventDefault();
+            
+            var name = $(e.target).attr("href");
+            var href = $(this).closest('ul').data('href');
+            
+            $.ajax({
+                type: 'POST',
+                url: href || window.location.pathname,
+                data: {
+                    assignToName: name
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        Msg.info("The assignment has been changed.");
+                        
+                        $("#assignedBlock").reloadFragment({
+                            url: href || window.location.pathname
+                        });
+                    } else {
+                        Msg.error("Sorry, we couldnt change the assignment");
+                    }
+                },
+                error: function (resp) {
+                    flog('error', resp);
+                    Msg.error('Sorry couldnt change the assigned person ' + resp);
+                }
+            });
+        });
+        
     }
     
     function initAddTag() {
