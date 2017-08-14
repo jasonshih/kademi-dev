@@ -131,35 +131,35 @@
 
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
-                    <li class="active"><a href="#details" data-toggle="tab"><i class="fa fa-edit"></i> Details</a></li>
-                    <li><a href="#notes" data-toggle="tab">Notes</a></li>
-                    <li><a href="#quotes-proposals" data-toggle="tab">Quotes Proposals</a></li>
-                    <li><a href="#tasks" data-toggle="tab">Tasks</a></li>
-                    <li><a href="#files" data-toggle="tab">Files</a></li>
+                    <li class="active"><a href="#information" data-toggle="tab"><i class="fa fa-info-circle"></i> Information</a></li>
+                    <li><a href="#notes" data-toggle="tab"><i class="fa fa-file-text"></i> Notes</a></li>
+                    <li><a href="#quotes-proposals" data-toggle="tab"><i class="fa fa-usd"></i> Quotes Proposals</a></li>
+                    <li><a href="#tasks" data-toggle="tab"><i class="fa fa-list"></i> Tasks</a></li>
+                    <li><a href="#files" data-toggle="tab"><i class="fa fa-files-o"></i> Files</a></li>
                 </ul>
 
                 <div class="tab-content">
-                    <div class="tab-pane active" id="details">
+                    <div class="tab-pane active" id="information">
                         <form class="form-horizontal" action="$page.href" method="post" id="lead-details-form">
                             <div class="form-group">
                                 <div class="col-sm-12 text-right">
-                                    <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
+                                    <button type="submit" class="btn btn-sm btn-primary">Save details</button>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-3">Description</label>
+                                <label class="control-label col-sm-2">Description</label>
                                 <div class="col-sm-6">
                                     <textarea id="description" class="form-control" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-3">Deal value</label>
+                                <label class="control-label col-sm-2">Deal value</label>
                                 <div class="col-sm-6">
                                     <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-3">Stage</label>
+                                <label class="control-label col-sm-2">Stage</label>
                                 <div class="col-sm-6">
                                     <select name="stageName" class="form-control immediateUpdate">
                                         <option value="">[None]</option>
@@ -171,7 +171,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 control-label" for="createDate">Created</label>
+                                <label class="control-label col-sm-2" for="createDate">Created</label>
                                 <div class="col-md-6">
                                     <div class="input-group">
                                         <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-3">Source</label>
+                                <label class="control-label col-sm-2">Source</label>
                                 <div class="col-sm-6">
                                     <select id="" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
                                         <option value="">[None]</option>
@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-sm-3">Journey</label>
+                                <label class="control-label col-sm-2">Journey</label>
                                 <div class="col-sm-6">
                                     #set( $leadsFolder = $page.find("/funnels") )
                                     <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
@@ -212,16 +212,95 @@
                                 </div>
                             </div>
                             #foreach($field in $page.extraFields)
-                                <div class="col-sm-12 col-md-12 col-lg-6">
-                                    <div class="form-group" style="padding-right: 15px">
-                                        <label>$field.title</label>
-                                        $field.html($field.value, ' immediateUpdate', 'extraField_')
-                                        <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required,
-                                            'required', '')"/>-->
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2">$field.title</label>
+                                    <div class="col-sm-6">
+                                        $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
                                     </div>
                                 </div>
                             #end
-                            <hr />
+                        </form>
+                        <hr />
+                        <h4>Contact information</h4>
+                        <form method="post" action="$page.href" class="form-horizontal" id="lead-contact-form">
+                            <input type="hidden" name="saveDetails" value="saveDetails" />
+                            <div class="modal-body" id="profile-body">
+                                #set( $p = $page.leadProfile )
+                                #set( $profile = $page.profile )
+                                #if (!$page.href.contains("cust"))
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="jobTitle">Job Title</label>
+                                        <div class="col-md-6">
+                                            <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
+                                        </div>
+                                    </div>
+                                #end
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="nickName">Customer</label>
+                                    <div class="col-md-3">
+                                        <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick Name" value="$!profile.nickName" />
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="text" name="firstName" id="firstName" class="form-control" placeholder="First name" value="$!profile.firstName" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" name="surName" id="surName" class="form-control" placeholder="Surname" value="$!profile.surName" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                    <div class="col-md-5">
+                                        <input type="text" name="email" id="email" class="form-control" placeholder="Email" value="$!p.email" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" value="$!p.phone" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="notes">Notes</label>
+                                    <div class="col-md-10">
+                                        <textarea name="notes" class="form-control" style="height: 100px">$!p.notes</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="clearfix extra-fields">
+                                    <div class="row">
+                                        #set($fields = $page.profileExtraFields)
+                                        #foreach($field in $fields.keySet())
+                                            #if ($extraFields && $extraFields.contains($field.name))
+                                            #else
+                                                #if ($foreach.index % 2 == 0)
+                                                    <div class="clearfix"></div>
+                                                #end
+                                                <div class="col-sm-6">
+                                                    <div class="form-group">
+                                                        <label class="control-label col-md-4" for="field_${field.name}">$field.text</label>
+                                                        <div class="controls col-md-8">
+                                                            $field.html( $fields[$field] )
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            #end
+                                        #end
+                                    </div>
+                                </div>
+
+                                #if( $page.completed)
+                                #else
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+
+                                            <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                            #if(!$page.href.contains("cust") && $page.leadProfile)
+                                                <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                            #end
+                                        </div>
+                                    </div>
+                                #end
+                            </div>
                         </form>
                     </div>
                     <div class="tab-pane" id="notes">
@@ -525,6 +604,69 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Assign new profile</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                        <input type="hidden" name="assignNewProfile" value="assignNewProfile" />
+                        <input type="hidden" name="userId" />
+                        <div class="modal-body">
+                            <div class="form-group hide">
+                                <label class="control-label col-md-2" for="nickName">Nick Name</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick name" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4" for="updateUserFirstName">Name</label>
+                                        <div class="col-md-8" id="searchbox-wrap">
+                                            <i class="fa fa-search"></i>
+                                            <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-4" for="newUserEmail">Contact</label>
+                                        <div class="col-md-8">
+                                            <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
 
         <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">

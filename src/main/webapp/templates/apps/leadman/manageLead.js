@@ -11,6 +11,8 @@
         initCloseDealModal();
         initDateTimePickers();
         initFileNoteEdit();
+        initLeadContactForm();
+        initUpdateUserModal();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -20,6 +22,66 @@
         } else {
             initFileUploads();
         }
+    }
+    
+    function initUpdateUserModal() {
+        var profileSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/leads?profileSearch=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+
+        var modal = $('#modal-change-profile');
+        var form = modal.find('form');
+
+        $('#updateUserFirstName', modal).typeahead({
+            highlight: true
+        }, {
+            display: 'firstName',
+            limit: 10,
+            source: profileSearch,
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'No existing contacts were found.',
+                    '</div>'
+                ].join('\n'),
+                suggestion: Handlebars.compile(
+                        '<div>'
+                        + '<div>{{name}}</div>'
+                        + '<div>{{phone}}</div>'
+                        + '<div>{{email}}</div>'
+                        + '</div><hr>')
+            }
+        });
+
+        $('#updateUserFirstName', modal).bind('typeahead:select', function (ev, sug) {
+            form.find('input[name=nickName]').val(sug.name);
+            form.find('input[name=firstName]').val(sug.firstName);
+            form.find('input[name=surName]').val(sug.surName);
+            form.find('input[name=email]').val(sug.email);
+            form.find('input[name=phone]').val(sug.phone);
+        });
+
+        form.forms({
+            onSuccess: function (resp) {
+                modal.modal('hide');
+                Msg.success(resp.messages);
+                $('#profile-body').reloadFragment();
+            }
+        });
+    }
+    
+    function initLeadContactForm() {
+        var form = $('#lead-contact-form');
+        form.forms({
+            onSuccess: function () {
+                Msg.success('Contact is saved!');
+            }
+        })
     }
     
     function initFileUploads() {
