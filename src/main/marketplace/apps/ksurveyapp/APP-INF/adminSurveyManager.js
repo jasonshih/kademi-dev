@@ -410,9 +410,9 @@ function findQuestionBySurvey(page, surveyId) {
     log.info('findQuestionBySurvey > page={}, surveyId={}', page, surveyId);
     
     var queryJson = {
-        // 'sort': {
-        //     'order': 'asc'
-        // },
+        'sort': {
+            'order': 'asc'
+        },
         'size': 1000,
         'aggs': {
             "group_by_question": {
