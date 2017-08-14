@@ -1047,7 +1047,6 @@ function initNewNoteForm() {
     });
 }
 
-
 function reloadTasks() {
     $("#tasksList").reloadFragment({
         whenComplete: function (doc) {

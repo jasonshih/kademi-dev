@@ -1,0 +1,4 @@
+#membershipsContainer > * {
+    display: inline-block;
+    vertical-align: top;
+}

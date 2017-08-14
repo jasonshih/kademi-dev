@@ -1,0 +1,541 @@
+<html>
+    <head>
+        <title>Manage Lead</title>
+        <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
+        <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
+        <script type="text/javascript" src="/theme/apps/leadman/manageLead.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/apps/leadman/manageLead.css" />
+    </head>
+    <body>
+        <div id="lead-details">
+            #set ($ava = "/templates/apps/user/profile.png")
+            #set ($bgsize = "background-size: 100%;")
+            #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
+                #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
+            #end
+
+            <div class="clearfix">
+                <p class="main-profile-photo pull-left">
+                    <img class="img img-circle h2" style="height: 80px; width: 80px;" src="$ava" alt="" />
+                </p>
+
+                <div class="pull-right text-right h2">
+                    #if( $page.completed)
+                        <button class="btn btn-success btn-reopen" type="button"><i class="fa fa-check"></i> Reopen</button>
+                    #else
+                        <p>
+                            <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                                <span class="fa fa-remove"></span>
+                                Cancel
+                            </a>
+
+                            <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
+                                <span class="fa fa-dollar"></span>
+                                Close deal
+                            </button>
+                        </p>
+
+                        <div class="btn-group dropdown">
+                            <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
+                                <span>
+                                    #if( $page.assignedTo )
+                                        Assigned to: $!page.assignedTo.thisUser.formattedName
+                                    #else
+                                        Not assigned
+                                    #end
+                                </span>
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" id="assignToMenu" role="menu">
+                                <li><a href="$user.name">Assign to me</a></li>
+                                <li><a href="">Clear</a></li>
+                                #if ($page.find("/leads").teamMembers.size() > 0)
+                                    <li role="separator" class="divider"></li>
+                                #end
+                                #foreach($user in $page.find("/leads").teamMembers)
+                                    <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
+                                #end
+                            </ul>
+                        </div>
+                    #end
+                </div>
+
+                <div style="margin-left: 100px;">
+                    <h2>
+                        #if($page.leadOrg)
+                            #if($page.profile)
+                                $page.customerDescription ($page.leadOrg.formattedName)
+                            #else
+                                <$page.leadOrg.formattedName
+                            #end
+                        #elseif( $page.profile )
+                            $page.customerDescription
+                        #else
+                            $page.customerDescription
+                        #end
+                    </h2>
+                    #if($page.profile)
+                        <div class="memberships-wrapper" id="membershipsContainer">
+                            <div class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
+                                    <i class="fa fa-plus-circle"></i> Tags
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li style="padding: 3px 15px">
+                                        <strong>Quick add</strong>
+                                    </li>
+                                    #foreach($group in $page.tags)
+                                        <li class="addTag">
+                                            <a href="$group.name">
+                                                <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                                            </a>
+                                        </li>
+                                    #end
+                                </ul>
+                            </div>
+                            #set( $selectedTags = '[' )
+                            #foreach($m in $page.assignedTags)
+                                #if ($selectedTags == '[')
+                                    #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+                                #else
+                                    #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+                                #end
+                            #end
+                            #set( $selectedTags = $selectedTags + ']' )
+
+                            <input type="text" id="view-lead-tags" placeholder="Type to Add Tags" value="$selectedTags" />
+                        </div>
+                        <br />
+                    #end
+                </div>
+            </div>
+
+            #if( $page.completed)
+                #if( $page.cancelled)
+                    <div class="alert alert-warning">
+                        <p class="lead">
+                            <span class="fa fa-exclamation-circle"></span>
+                            Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        </p>
+                    </div>
+                #else
+                    <div class="alert alert-success">
+                        <p class="lead">
+                            <span class="fa fa-check"></span>
+                            Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                        </p>
+                    </div>
+                #end
+            #end
+
+            <div class="tabbable">
+                <ul class="nav nav-tabs tab-bricky">
+                    <li class="active"><a href="#details" data-toggle="tab"><i class="fa fa-edit"></i> Details</a></li>
+                    <li><a href="#notes" data-toggle="tab">Notes</a></li>
+                    <li><a href="#quotes-proposals" data-toggle="tab">Quotes Proposals</a></li>
+                    <li><a href="#tasks" data-toggle="tab">Tasks</a></li>
+                    <li><a href="#files" data-toggle="tab">Files</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="details">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-12 text-right">
+                                    <button type="submit" class="btn btn-sm btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Description</label>
+                                <div class="col-sm-6">
+                                    <textarea id="description" class="form-control" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Deal value</label>
+                                <div class="col-sm-6">
+                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Stage</label>
+                                <div class="col-sm-6">
+                                    <select name="stageName" class="form-control immediateUpdate">
+                                        <option value="">[None]</option>
+                                        #foreach( $stage in $page.allStages )
+                                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                            $formatter.option($stage.name, $a, $page.stageName)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="createDate">Created</label>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Source</label>
+                                <div class="col-sm-6">
+                                    <select id="" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                        <option value="">[None]</option>
+                                        #set($foundSource = false)
+                                        #foreach( $source in $page.allSources )
+                                            #if($source == $page.source)
+                                                #set($foundSource = true)
+                                            #end
+                                            $formatter.option($source, $source, $page.source)
+                                        #end
+                                        #if(!$foundSource && $page.source)
+                                            $formatter.option($page.source, $page.source, $page.source)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-3">Journey</label>
+                                <div class="col-sm-6">
+                                    #set( $leadsFolder = $page.find("/leads") )
+                                    <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
+                                        <option value="">[None]</option>
+                                        #foreach( $funnel in $leadsFolder.funnels )
+                                            $formatter.option($funnel.funnelRepo.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            #foreach($field in $page.extraFields)
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <div class="form-group" style="padding-right: 15px">
+                                        <label>$field.title</label>
+                                        $field.html($field.value, ' immediateUpdate', 'extraField_')
+                                        <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required,
+                                            'required', '')"/>-->
+                                    </div>
+                                </div>
+                            #end
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="notes">
+                        <p class="text-right">
+                            <a class="btn btn-xs btn-success createNote" href="$page.href">
+                                <span class="fa fa-plus"></span> New note
+                            </a>
+                        </p>
+                        <div id="leadNotesBody">
+                            #set( $notes = $page.notes )
+                            #if( $notes.size() > 0 )
+                                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                                    #foreach($note in $notes)
+                                        <div class="note-item">
+                                            <div>
+                                                <img src="/theme/img/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                                #if( $note.inbound )
+                                                    <small class="text-muted fa fa-arrow-left"></small>
+                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                #else
+                                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                                    <small class="text-muted fa fa-arrow-right"></small>
+                                                #end
+                                                #set($type = $note.actionType +  "-" + $note.inbound)
+                                                <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                    <span class="fa fa-pencil"></span>
+                                                </a>
+                                                <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
+                                            </div>
+                                            <div class="note-content" style="white-space: pre-wrap">$!note.notes <a class='note-more' href='#'>more</a></div>
+                                        </div>
+                                    #end
+                                </div>
+                            #else
+                                <p>
+                                    <span class="label label-warning">No contact with the lead yet</span>
+                                </p>
+                            #end
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="quotes-proposals">
+                        <p class="text-right">
+                            <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
+                                <span class="fa fa-plus"></span> New quote
+                            </a>
+                            <a class="btn btn-xs btn-success" href="/proposals/new?leadId=$page.leadId">
+                                <span class="fa fa-plus"></span> New proposal
+                            </a>
+                        </p>
+                        <div id="leadQuotesBody">
+                            <h5><strong>Proposals</strong></h5>
+                            #set( $proposals = $page.proposals )
+                            #if( $proposals.size() > 0 )
+                                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                                    #foreach($proposal in $proposals)
+                                        <span>Proposal $proposal.id</span>
+                                        #foreach($quote in $proposal.quotes)
+                                            <div id="quote-$quote.id" class="note-item">
+                                                <div>
+                                                    <i onclick="removeQuote('/quotes/$quote.id', $!quote.id)" class="fa fa-remove clickable"></i>
+                                                    <a href="/quotes/$quote.id">$quote.title</a>
+                                                    #if($quote.quoteStatus == "ASSIGNED")
+                                                        <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
+                                                    #elseif($quote.quoteStatus == "ACCEPTED")
+                                                        <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                                    #elseif($quote.quoteStatus == "INVOICED")
+                                                        <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                                    #elseif($quote.quoteStatus == "REJECTED")
+                                                        <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
+                                                    #else
+                                                        <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
+                                                    #end
+                                                    <abbr title="$formatter.formatDateISO8601($quote.issuedDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                                                </div>
+                                            </div>
+                                        #end
+                                        <hr />
+                                    #end
+                                </div>
+                            #else
+                                <p>
+                                    <span class="label label-warning">No proposals has been added to lead yet</span>
+                                </p>
+                            #end
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tasks">
+                        #set ($taskCount = 0)
+                        #foreach($task in $page.children.ofType.open)
+                            #set ($taskCount = $taskCount + 1)
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h4 class="clearfix task-item">
+                                        #if( $task.completedDate )
+                                            <div class="pull-left">
+                                                <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                    <s class="task-title">$task.title</s>
+                                                </a>
+                                            </div>
+                                        #else
+                                            <div class="pull-left">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                    <span class="task-title">$task.title</span>
+                                                </a>
+                                            </div>
+                                            <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                <span class="task-edit text-success fa fa-pencil"></span>
+                                            </a>
+                                        #end
+                                    </h4>
+                                </div>
+                                <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        #if( $task.is("open") )
+                                            #if($task.assignedTo)
+                                                Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                            #else
+                                                Not assigned
+                                            #end
+                                            <br />
+
+                                            <div class="btn-task-panel-wrap pull-right">
+                                                <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
+                                                    <span class="fa fa-remove"></span>
+                                                </a>
+                                                <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
+                                                    <span class="fa fa-check"></span>
+                                                </a>
+                                            </div>
+                                            #if( $task.dueDate )
+                                                Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                            #end
+                                        #end
+                                        <br />
+                                        $!task.taskDescription
+                                    </div>
+                                </div>
+                            </div>
+                        #end
+                        #if($taskCount<1)
+                            <p>No tasks found</p>
+                        #end
+                    </div>
+                    <div class="tab-pane" id="files">
+                        <p class="text-right">
+                            <button type="button" class="btn btn-xs btn-success upload-files"><span class="fa fa-upload"></span> Upload</button>
+                        </p>
+                        <div class="table-responsive ie-overflow">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">Type</th>
+                                        <th>Name</th>
+                                        <th>Notes</th>
+                                        <th>Date</th>
+                                        <th></th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="files-body">
+                                    #foreach($file in $page.children.ofType.leadFile)
+                                        <tr>
+                                            <td class="text-center">
+                                                #genFileIcon($file)
+                                            </td>
+                                            <td>
+                                                <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                    #if($file.name.length() > 25)
+                                            $formatter.truncate($file.name, 20)
+                                        #else
+                                                        $file.name
+                                                    #end
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span>$!file.notes</span>
+                                                <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                            </td>
+                                            <td>
+                                                <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
+                                            </td>
+                                            <td>
+                                                #if($file.is('audio/'))
+                                                    <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                    <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                                        <i class="fa fa-play"></i>
+                                                    </button>
+                                                    <span class="lead-audio-duration"></span>
+                                                #elseif($file.is('image/'))
+                                                    <a target="_blank" href="$file.name" class="btn btn-success">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    #if($file.geoLocation)
+                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
+                                                            ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                            <i class="fa fa-map-marker"></i>
+                                                        </a>
+                                                    #end
+                                                #end
+                                            </td>
+                                            <td>
+                                                <div style="min-width: 125px;" class="btn-group" role="group">
+                                                    <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                    <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalCancelLead" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Cancel Lead: $page.title</h4>
+                    </div>
+                    <form method="post" action="$page.href?cancel" class="form-horizontal">
+                        <div class="modal-body">
+                            <input type="hidden" name="cancelDeal" />
+
+                            <div class="modal-body">
+
+                                <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as lost, ie no sale.</p>
+
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <select name="reason" class="form-control required" required="true">
+                                            <option value="">[Reason the sale was lost]</option>
+                                            #foreach( $reason in $page.lostReasons )
+                                                <option>$reason</option>
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Cancel lead</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Mark deal as closed</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <input type="hidden" name="closeDeal" />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-md-12 text-center">
+                                    <p class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="closedDate">Closed Date</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="closedDate" id="closedDate" class="required form-control date-time" placeholder="Closed date/time" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
+                                <div class="col-md-9">
+                                    <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="Deal Amount" />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-success" type="submit">Mark deal as closed</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        #macro(genFileIcon $file)
+            #set($fIcon = "fa-file")
+
+            #if($file.is('audio/'))
+                #set($fIcon = "fa-file-audio-o")
+            #elseif($file.is('image/'))
+                #set($fIcon = "fa-file-image-o")
+            #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+                #set($fIcon = "fa-file-excel-o")
+            #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+                #set($fIcon = "fa-file-word-o")
+            #elseif($file.name.endsWith('.pdf'))
+                #set($fIcon = "fa-file-pdf-o")
+            #else
+                #set($fIcon = "fa-file-o")
+            #end
+            <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+        #end
+
+    </body>
+</html>
