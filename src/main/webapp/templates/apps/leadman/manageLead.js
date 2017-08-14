@@ -13,6 +13,10 @@
         initFileNoteEdit();
         initLeadContactForm();
         initUpdateUserModal();
+        initLeadOrgForm();
+        initOrgSearch();
+        initJobTitleSearch();
+        initUnlinkCompany();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -24,6 +28,162 @@
         }
     }
     
+    function initOrgSearch() {
+        var orgSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/leads?orgSearch=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+        var orgTitleSearch = $('#orgTitleSearch');
+        var form = orgTitleSearch.closest('.form-horizontal');
+        var btnSaveCompany = form.find('.btn-save-company');
+        
+        orgTitleSearch.typeahead({
+            highlight: true
+        }, {
+            display: 'title',
+            limit: 10,
+            source: orgSearch,
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'No existing companies were found.',
+                    '</div>'
+                ].join('\n'),
+                suggestion: Handlebars.compile(
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
+            }
+        });
+        
+        var timer;
+        orgTitleSearch.bind('typeahead:render', function (ev) {
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                var ttMenu = orgTitleSearch.siblings('.tt-menu');
+                var isSuggestionAvailable = ttMenu.find('.empty-message').length === 0;
+                
+                flog('typeahead:render Is suggestion available: ' + isSuggestionAvailable, ttMenu.find('.empty-message'));
+                
+                if (!isSuggestionAvailable) {
+                    btnSaveCompany.html('Create new company');
+                    form.find('.btn-company-details').css('display', 'none');
+                    form.find('input[name=leadOrgId]').val('');
+                }
+            }, 50);
+        });
+        
+        orgTitleSearch.bind('typeahead:select', function (ev, sug) {
+            form.find('input[name=email]').val(sug.email);
+            form.find('input[name=phone]').val(sug.phone);
+            form.find('input[name=address]').val(sug.address);
+            form.find('input[name=addressLine2]').val(sug.addressLine2);
+            form.find('input[name=addressState]').val(sug.state);
+            form.find('input[name=postcode]').val(sug.postcode);
+            form.find('input[name=leadOrgId]').val(sug.orgId);
+            form.find('[name=country]').val(sug.country);
+            form.find('.btn-company-details').css('display', 'inline').attr('href', '/companies/' + sug.id);
+            btnSaveCompany.html('Save details');
+        });
+        
+        orgTitleSearch.on({
+            input: function () {
+                if (!this.value) {
+                    form.find('input[name=email]').val('');
+                    form.find('input[name=phone]').val('');
+                    form.find('input[name=address]').val('');
+                    form.find('input[name=addressLine2]').val('');
+                    form.find('input[name=addressState]').val('');
+                    form.find('input[name=postcode]').val('');
+                    form.find('input[name=leadOrgId]').val('');
+                    form.find('[name=country]').val('');
+                }
+            }
+        });
+    }
+    
+    function initJobTitleSearch() {
+        var jobTitleSearch = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: window.location.pathname + '?jobTitle&q=%QUERY',
+                wildcard: '%QUERY',
+                transform: function (resp) {
+                    return resp.data;
+                }
+            }
+        });
+        
+        $('#jobTitle').typeahead({
+            highlight: true
+        }, {
+            limit: 10,
+            source: jobTitleSearch,
+            templates: {
+                empty: [
+                    '<div class="empty-message">',
+                    'No existing job title were found.',
+                    '</div>'
+                ].join('\n')
+            }
+        });
+    }
+    
+    function initUnlinkCompany() {
+        flog('initUnlinkCompany');
+        
+        $(document.body).on('click', '.btn-unlink-company', function (e) {
+            e.preventDefault();
+            
+            var form = $(this).closest('.form-horizontal');
+            form.find('input[name=title]').val('');
+            form.find('input[name=email]').val('');
+            form.find('input[name=phone]').val('');
+            form.find('input[name=address]').val('');
+            form.find('input[name=addressLine2]').val('');
+            form.find('input[name=addressState]').val('');
+            form.find('input[name=postcode]').val('');
+            form.find('input[name=leadOrgId]').val('');
+            form.find('[name=country]').val('');
+            form.find('.btn-unlink-company').css('display', 'none');
+            
+            form.trigger('submit');
+        });
+    }
+    
+    function initLeadOrgForm() {
+        var leadOrgDetailsForm = $('#lead-org-form');
+        leadOrgDetailsForm.forms({
+            onSuccess: function (resp) {
+                var btnSaveCompany = $('.btn-save-company');
+                
+                $('#leadOrgDetailsPreview, #btn-company-details-wrapper').reloadFragment({
+                    whenComplete: function () {
+                        if (btnSaveCompany.text().trim() === 'Create new company') {
+                            btnSaveCompany.html('Save details');
+                            Msg.success('New company is created');
+                        } else {
+                            Msg.success('Company details is saved')
+                        }
+                        
+                        if (leadOrgDetailsForm.find('[name=title]').val() === '') {
+                            leadOrgDetailsForm.find('.btn-unlink-company').css('display', 'none');
+                        }
+                    }
+                });
+            }
+        });
+    }
+    
     function initUpdateUserModal() {
         var profileSearch = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
@@ -33,10 +193,10 @@
                 wildcard: '%QUERY'
             }
         });
-
+        
         var modal = $('#modal-change-profile');
         var form = modal.find('form');
-
+        
         $('#updateUserFirstName', modal).typeahead({
             highlight: true
         }, {
@@ -50,14 +210,14 @@
                     '</div>'
                 ].join('\n'),
                 suggestion: Handlebars.compile(
-                        '<div>'
-                        + '<div>{{name}}</div>'
-                        + '<div>{{phone}}</div>'
-                        + '<div>{{email}}</div>'
-                        + '</div><hr>')
+                    '<div>'
+                    + '<div>{{name}}</div>'
+                    + '<div>{{phone}}</div>'
+                    + '<div>{{email}}</div>'
+                    + '</div><hr>')
             }
         });
-
+        
         $('#updateUserFirstName', modal).bind('typeahead:select', function (ev, sug) {
             form.find('input[name=nickName]').val(sug.name);
             form.find('input[name=firstName]').val(sug.firstName);
@@ -65,7 +225,7 @@
             form.find('input[name=email]').val(sug.email);
             form.find('input[name=phone]').val(sug.phone);
         });
-
+        
         form.forms({
             onSuccess: function (resp) {
                 modal.modal('hide');

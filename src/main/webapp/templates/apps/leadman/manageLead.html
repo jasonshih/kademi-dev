@@ -220,6 +220,7 @@
                                 </div>
                             #end
                         </form>
+
                         <hr />
                         <h4>Contact information</h4>
                         <form method="post" action="$page.href" class="form-horizontal" id="lead-contact-form">
@@ -302,223 +303,338 @@
                                 #end
                             </div>
                         </form>
-                    </div>
-                    <div class="tab-pane" id="notes">
-                        <p class="text-right">
-                            <a class="btn btn-xs btn-success createNote" href="$page.href">
-                                <span class="fa fa-plus"></span> New note
-                            </a>
-                        </p>
-                        <div id="leadNotesBody">
-                            #set( $notes = $page.notes )
-                            #if( $notes.size() > 0 )
-                                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
-                                    #foreach($note in $notes)
-                                        <div class="note-item">
-                                            <div>
-                                                <img src="/theme/img/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
-                                                <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                                #if( $note.inbound )
-                                                    <small class="text-muted fa fa-arrow-left"></small>
-                                                    <small class="text-muted fa fa-${note.icon}"></small>
-                                                #else
-                                                    <small class="text-muted fa fa-${note.icon}"></small>
-                                                    <small class="text-muted fa fa-arrow-right"></small>
-                                                #end
-                                                #set($type = $note.actionType +  "-" + $note.inbound)
-                                                <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                    <span class="fa fa-pencil"></span>
-                                                </a>
-                                                <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
-                                            </div>
-                                            <div class="note-content" style="white-space: pre-wrap">$!note.notes <a class='note-more' href='#'>more</a></div>
-                                        </div>
-                                    #end
-                                </div>
-                            #else
-                                <p>
-                                    <span class="label label-warning">No contact with the lead yet</span>
-                                </p>
-                            #end
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="quotes-proposals">
-                        <p class="text-right">
-                            <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
-                                <span class="fa fa-plus"></span> New quote
-                            </a>
-                            <a class="btn btn-xs btn-success" href="/proposals/new?leadId=$page.leadId">
-                                <span class="fa fa-plus"></span> New proposal
-                            </a>
-                        </p>
-                        <div id="leadQuotesBody">
-                            <h5><strong>Proposals</strong></h5>
-                            #set( $proposals = $page.proposals )
-                            #if( $proposals.size() > 0 )
-                                <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
-                                    #foreach($proposal in $proposals)
-                                        <span>Proposal $proposal.id</span>
-                                        #foreach($quote in $proposal.quotes)
-                                            <div id="quote-$quote.id" class="note-item">
-                                                <div>
-                                                    <i onclick="removeQuote('/quotes/$quote.id', $!quote.id)" class="fa fa-remove clickable"></i>
-                                                    <a href="/quotes/$quote.id">$quote.title</a>
-                                                    #if($quote.quoteStatus == "ASSIGNED")
-                                                        <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
-                                                    #elseif($quote.quoteStatus == "ACCEPTED")
-                                                        <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
-                                                    #elseif($quote.quoteStatus == "INVOICED")
-                                                        <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
-                                                    #elseif($quote.quoteStatus == "REJECTED")
-                                                        <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
-                                                    #else
-                                                        <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
-                                                    #end
-                                                    <abbr title="$formatter.formatDateISO8601($quote.issuedDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
-                                                </div>
-                                            </div>
-                                        #end
-                                        <hr />
-                                    #end
-                                </div>
-                            #else
-                                <p>
-                                    <span class="label label-warning">No proposals has been added to lead yet</span>
-                                </p>
-                            #end
-                        </div>
-                    </div>
-                    <div class="tab-pane" id="tasks">
-                        #set ($taskCount = 0)
-                        #foreach($task in $page.children.ofType.open)
-                            #set ($taskCount = $taskCount + 1)
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="clearfix task-item">
-                                        #if( $task.completedDate )
-                                            <div class="pull-left">
-                                                <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                    <s class="task-title">$task.title</s>
-                                                </a>
-                                            </div>
-                                        #else
-                                            <div class="pull-left">
-                                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                    <span class="task-title">$task.title</span>
-                                                </a>
-                                            </div>
-                                            <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
-                                                <span class="task-edit text-success fa fa-pencil"></span>
-                                            </a>
-                                        #end
-                                    </h4>
-                                </div>
-                                <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
-                                    <div class="panel-body">
-                                        #if( $task.is("open") )
-                                            #if($task.assignedTo)
-                                                Assigned to <strong>$task.assignedTo.formattedName()</strong>
-                                            #else
-                                                Not assigned
-                                            #end
-                                            <br />
 
-                                            <div class="btn-task-panel-wrap pull-right">
-                                                <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
-                                                    <span class="fa fa-remove"></span>
-                                                </a>
-                                                <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
-                                                    <span class="fa fa-check"></span>
-                                                </a>
-                                            </div>
-                                            #if( $task.dueDate )
-                                                Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                                            #end
-                                        #end
-                                        <br />
-                                        $!task.taskDescription
+                        <hr />
+                        <h4>Company information</h4>
+
+                        <form method="post" action="$page.href" class="form-horizontal" id="lead-org-form">
+                            <input type="hidden" name="leadOrgDetails" value="leadOrgDetails" />
+
+                            <div class="panel-body">
+                                #set( $leadOrg = $page.leadOrg )
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="">Company</label>
+
+                                    <div class="col-md-8">
+                                        <div class="input-group">
+                                            <input type="text" id="orgTitleSearch" name="title" class="form-control" placeholder="Title" value="$!leadOrg.title" autocomplete="off" />
+                                            <span class="input-group-addon">
+                                                #if( $page.is("company") )
+                                                #else
+                                                    <span id="btn-company-details-wrapper">
+                                                        <a href="/organisations/$!leadOrg.id/edit" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end><i class="fa fa-edit"></i> Company details</a>
+                                                    </span>
+                                                #end
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
+
+                            <div id="leadOrgDetailsPreview">
+                                <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
+
+                                    <div class="col-md-5">
+                                        <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="newUserEmail">Address</label>
+
+                                    <div class="col-md-5">
+                                        <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-5">
+                                        <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="country" class="control-label col-md-2">Country</label>
+
+                                    <div class="col-md-8">
+                                        <select name="country" class="form-control chosen-select" id="country">
+                                            <option value="">[No country selected]</option>
+                                            #foreach($cc in $formatter.countryCodes.list)
+                                                $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+
+                                #set($fields = $page.leadCompanyExtraFields)
+                                #set($counter = 0)
+                                #foreach($field in $fields.keySet())
+                                    #if ($extraFields && $extraFields.contains($field.name))
+                                    #else
+
+                                        #if ($counter % 2 == 0)
+                                        <div class="control-group form-group">
+                                        #end
+
+                                        <label class="control-label col-md-2" for="extraField_${field.name}">$field.text</label>
+
+                                        <div class="controls col-md-4">
+                                            $field.html( $fields[$field], "", "extraField_" )
+                                        </div>
+
+                                        #if (($counter + 1) % 2 == 0)
+                                        </div>
+                                        #end
+
+                                        #set($counter = $counter + 1)
+                                    #end
+                                #end
+
+                                #if ($counter != 0 && ($counter) % 2 != 0)
+                                </div>
+                                #end
+
+                                #if( $page.completed)
+                                #else
+                                    <div class="form-group">
+                                        <div class="col-md-10 col-md-offset-2">
+                                            <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
+                                            <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
+                                        </div>
+                                    </div>
+                                #end
                             </div>
-                        #end
-                        #if($taskCount<1)
-                            <p>No tasks found</p>
+                    </div>
+                    </form>
+                </div>
+                <div class="tab-pane" id="notes">
+                    <p class="text-right">
+                        <a class="btn btn-xs btn-success createNote" href="$page.href">
+                            <span class="fa fa-plus"></span> New note
+                        </a>
+                    </p>
+                    <div id="leadNotesBody">
+                        #set( $notes = $page.notes )
+                        #if( $notes.size() > 0 )
+                            <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                                #foreach($note in $notes)
+                                    <div class="note-item">
+                                        <div>
+                                            <img src="/theme/img/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                            <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                            #if( $note.inbound )
+                                                <small class="text-muted fa fa-arrow-left"></small>
+                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                            #else
+                                                <small class="text-muted fa fa-${note.icon}"></small>
+                                                <small class="text-muted fa fa-arrow-right"></small>
+                                            #end
+                                            #set($type = $note.actionType +  "-" + $note.inbound)
+                                            <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                                <span class="fa fa-pencil"></span>
+                                            </a>
+                                            <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
+                                        </div>
+                                        <div class="note-content" style="white-space: pre-wrap">$!note.notes <a class='note-more' href='#'>more</a></div>
+                                    </div>
+                                #end
+                            </div>
+                        #else
+                            <p>
+                                <span class="label label-warning">No contact with the lead yet</span>
+                            </p>
                         #end
                     </div>
-                    <div class="tab-pane" id="files">
-                        <p class="text-right">
-                            <a href="#modal-upload-lead-files" data-toggle="modal" class="btn btn-success btn-sm"><i class="fa fa-upload"></i> Upload files</a>
-                        </p>
-                        <div class="table-responsive ie-overflow">
-                            <table class="table table-hover">
-                                <thead>
+                </div>
+                <div class="tab-pane" id="quotes-proposals">
+                    <p class="text-right">
+                        <a class="btn btn-xs btn-success createQuote" data-lead-id="$page.name" href="/quotes/">
+                            <span class="fa fa-plus"></span> New quote
+                        </a>
+                        <a class="btn btn-xs btn-success" href="/proposals/new?leadId=$page.leadId">
+                            <span class="fa fa-plus"></span> New proposal
+                        </a>
+                    </p>
+                    <div id="leadQuotesBody">
+                        <h5><strong>Proposals</strong></h5>
+                        #set( $proposals = $page.proposals )
+                        #if( $proposals.size() > 0 )
+                            <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                                #foreach($proposal in $proposals)
+                                    <span>Proposal $proposal.id</span>
+                                    #foreach($quote in $proposal.quotes)
+                                        <div id="quote-$quote.id" class="note-item">
+                                            <div>
+                                                <i onclick="removeQuote('/quotes/$quote.id', $!quote.id)" class="fa fa-remove clickable"></i>
+                                                <a href="/quotes/$quote.id">$quote.title</a>
+                                                #if($quote.quoteStatus == "ASSIGNED")
+                                                    <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
+                                                #elseif($quote.quoteStatus == "ACCEPTED")
+                                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                                #elseif($quote.quoteStatus == "INVOICED")
+                                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                                #elseif($quote.quoteStatus == "REJECTED")
+                                                    <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
+                                                #else
+                                                    <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
+                                                #end
+                                                <abbr title="$formatter.formatDateISO8601($quote.issuedDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                                            </div>
+                                        </div>
+                                    #end
+                                    <hr />
+                                #end
+                            </div>
+                        #else
+                            <p>
+                                <span class="label label-warning">No proposals has been added to lead yet</span>
+                            </p>
+                        #end
+                    </div>
+                </div>
+                <div class="tab-pane" id="tasks">
+                    #set ($taskCount = 0)
+                    #foreach($task in $page.children.ofType.open)
+                        #set ($taskCount = $taskCount + 1)
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="clearfix task-item">
+                                    #if( $task.completedDate )
+                                        <div class="pull-left">
+                                            <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                <s class="task-title">$task.title</s>
+                                            </a>
+                                        </div>
+                                    #else
+                                        <div class="pull-left">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                <span class="task-title">$task.title</span>
+                                            </a>
+                                        </div>
+                                        <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                            <span class="task-edit text-success fa fa-pencil"></span>
+                                        </a>
+                                    #end
+                                </h4>
+                            </div>
+                            <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    #if( $task.is("open") )
+                                        #if($task.assignedTo)
+                                            Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                        #else
+                                            Not assigned
+                                        #end
+                                        <br />
+
+                                        <div class="btn-task-panel-wrap pull-right">
+                                            <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
+                                                <span class="fa fa-remove"></span>
+                                            </a>
+                                            <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
+                                                <span class="fa fa-check"></span>
+                                            </a>
+                                        </div>
+                                        #if( $task.dueDate )
+                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                        #end
+                                    #end
+                                    <br />
+                                    $!task.taskDescription
+                                </div>
+                            </div>
+                        </div>
+                    #end
+                    #if($taskCount<1)
+                        <p>No tasks found</p>
+                    #end
+                </div>
+                <div class="tab-pane" id="files">
+                    <p class="text-right">
+                        <a href="#modal-upload-lead-files" data-toggle="modal" class="btn btn-success btn-sm"><i class="fa fa-upload"></i> Upload files</a>
+                    </p>
+                    <div class="table-responsive ie-overflow">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Type</th>
+                                    <th>Name</th>
+                                    <th>Notes</th>
+                                    <th>Date</th>
+                                    <th></th>
+                                    <th width="100">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="files-body">
+                                #foreach($file in $page.children.ofType.leadFile)
                                     <tr>
-                                        <th class="text-center">Type</th>
-                                        <th>Name</th>
-                                        <th>Notes</th>
-                                        <th>Date</th>
-                                        <th></th>
-                                        <th width="100">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="files-body">
-                                    #foreach($file in $page.children.ofType.leadFile)
-                                        <tr>
-                                            <td class="text-center">
-                                                #genFileIcon($file)
-                                            </td>
-                                            <td>
-                                                <span #if($file.name.length() > 25)title="$file.name"#end>
-                                                    #if($file.name.length() > 25)
+                                        <td class="text-center">
+                                            #genFileIcon($file)
+                                        </td>
+                                        <td>
+                                            <span #if($file.name.length() > 25)title="$file.name"#end>
+                                                #if($file.name.length() > 25)
                                             $formatter.truncate($file.name, 20)
                                         #else
-                                                        $file.name
-                                                    #end
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span>$!file.notes</span>
-                                                <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
-                                            </td>
-                                            <td>
-                                                <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
-                                            </td>
-                                            <td>
-                                                #if($file.is('audio/'))
-                                                    <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
-                                                    <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
-                                                        <i class="fa fa-play"></i>
-                                                    </button>
-                                                    <span class="lead-audio-duration"></span>
-                                                #elseif($file.is('image/'))
-                                                    <a target="_blank" href="$file.name" class="btn btn-success">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                    #if($file.geoLocation)
-                                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
-                                                            ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
-                                                            <i class="fa fa-map-marker"></i>
-                                                        </a>
-                                                    #end
+                                                    $file.name
                                                 #end
-                                            </td>
-                                            <td>
-                                                <div class="btn-group" role="group">
-                                                    <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
-                                                    <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    #end
-                                </tbody>
-                            </table>
-                        </div>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span>$!file.notes</span>
+                                            <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                        <td>
+                                            <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
+                                        </td>
+                                        <td>
+                                            #if($file.is('audio/'))
+                                                <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                                <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                                    <i class="fa fa-play"></i>
+                                                </button>
+                                                <span class="lead-audio-duration"></span>
+                                            #elseif($file.is('image/'))
+                                                <a target="_blank" href="$file.name" class="btn btn-success">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                                #if($file.geoLocation)
+                                                    <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
+                                                        ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                                        <i class="fa fa-map-marker"></i>
+                                                    </a>
+                                                #end
+                                            #end
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                                <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                #end
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
         <div class="modal fade" id="modal-upload-lead-files" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">

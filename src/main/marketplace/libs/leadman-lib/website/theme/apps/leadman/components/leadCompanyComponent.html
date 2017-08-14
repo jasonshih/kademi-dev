@@ -17,9 +17,9 @@
                         </div>
                         #if( $page.is("company") )
                         #else
-                        <span id="btn-company-details-wrapper">
-                            <a href="/companies/$!leadOrg.id" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end>Company details</a>
-                        </span>
+                            <span id="btn-company-details-wrapper">
+                                <a href="/companies/$!leadOrg.id" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end>Company details</a>
+                            </span>
                         #end
                     </div>
 
@@ -64,7 +64,7 @@
                                 <select name="country" class="form-control chosen-select" id="country">
                                     <option value="">[No country selected]</option>
                                     #foreach($cc in $formatter.countryCodes.list)
-                                    $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
+                                        $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
                                     #end
                                 </select>
                             </div>
@@ -73,44 +73,43 @@
                         #set($fields = $page.leadCompanyExtraFields)
                         #set($counter = 0)
                         #foreach($field in $fields.keySet())
-                        #if ($extraFields && $extraFields.contains($field.name))
-                        #else
+                            #if ($extraFields && $extraFields.contains($field.name))
+                            #else
 
-                        #if ($counter % 2 == 0)
-                        <div class="control-group form-group">
+                                #if ($counter % 2 == 0)
+                                <div class="control-group form-group">
+                                #end
+
+                                <label class="control-label col-md-2" for="extraField_${field.name}">$field.text</label>
+
+                                <div class="controls col-md-4">
+                                    $field.html( $fields[$field], "", "extraField_" )
+                                </div>
+
+                                #if (($counter + 1) % 2 == 0)
+                                </div>
+                                #end
+
+                                #set($counter = $counter + 1)
                             #end
-
-                            <label class="control-label col-md-2" for="extraField_${field.name}">$field.text</label>
-
-                            <div class="controls col-md-4">
-                                $field.html( $fields[$field], "", "extraField_" )
-                            </div>
-
-                            #if (($counter + 1) % 2 == 0)
-                        </div>
-                        #end
-
-                        #set($counter = $counter + 1)
-
-                        #end
                         #end
 
                         #if ($counter != 0 && ($counter) % 2 != 0)
-                    </div>
-                    #end
-
-                    #if( $page.completed)
-                    #else
-                    <div class="form-group">
-                        <div class="col-md-10 col-md-offset-2">
-                            <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
-                            <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
                         </div>
+                        #end
+
+                        #if( $page.completed)
+                        #else
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
+                                    <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
+                                </div>
+                            </div>
+                        #end
                     </div>
-                    #end
                 </div>
+            </form>
         </div>
-        </form>
     </div>
-</div>
 </div>
