@@ -778,6 +778,14 @@ function getPlainAnswers(page, questionId, surveyId) {
 function migrateDB(page, params) {
     var db = getDB(page);
     saveMapping(db);
+    var surveys = db.findByType(RECORD_TYPES.SURVEY);
+    for (var i in surveys) {
+        var s = surveys[i];
+        if (!s.jsonObject.title) {
+            s.jsonObject.title = s.jsonObject.name;
+            s.save();
+        }
+    }
     
     return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
 }
