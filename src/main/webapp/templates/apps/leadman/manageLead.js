@@ -17,6 +17,9 @@
         initOrgSearch();
         initJobTitleSearch();
         initUnlinkCompany();
+        initNewNoteForm();
+        initNoteMoreLess();
+        initNotesDotDotDot();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -26,6 +29,130 @@
         } else {
             initFileUploads();
         }
+    }
+    
+    
+    function initNotesDotDotDot() {
+        function dotdotdotCallback(isTruncated, originalContent) {
+            if (!isTruncated) {
+                $("a.note-more", this).remove();
+            }
+        }
+        
+        $('.note-content').dotdotdot({
+            height: 100,
+            callback: dotdotdotCallback,
+            after: 'a.note-more'
+        });
+    }
+    
+    function initNoteMoreLess() {
+        $(document).on('click', 'a.note-more', function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var div = btn.parents('.note-content');
+            if (btn.hasClass('note-less')) {
+                div.find('a.note-more').text('more').removeClass('note-less');
+                initNotesDotDotDot();
+            } else {
+                $('.note-content').trigger('destroy').css('max-height', '');
+                div.find('a.note-more').text('less').addClass('note-less');
+            }
+            
+        });
+    }
+    
+    function initNewNoteForm() {
+        flog('initNewNoteForm');
+        
+        var modal = $('#newNoteModal');
+        var form = modal.find('form');
+        form.find('.newLeadForm').hide();
+        
+        $(document.body).off('click', '.createNote').on('click', '.createNote', function (e) {
+            e.preventDefault();
+            
+            var href = $(e.target).closest("a").attr("href");
+            form.attr("action", href);
+            modal.modal("show");
+        });
+        
+        form.forms({
+            onSuccess: function (resp) {
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                Msg.info('Created note');
+                modal.modal("hide");
+                
+                var leadNotesBody = $('#leadNotesBody');
+                var viewProfilePage = $('#view-profile-page');
+                
+                if (leadNotesBody.length) {
+                    $('#leadNotesBody').reloadFragment({
+                        whenComplete: function () {
+                            initNotesDotDotDot()
+                        }
+                    });
+                }
+                
+                if (viewProfilePage.length) {
+                    viewProfilePage.reloadFragment({
+                        whenComplete: function () {
+                            $(document).find('abbr.timeago').timeago();
+                            initNotesDotDotDot()
+                        }
+                    });
+                }
+            }
+        });
+        
+        form.find('#note_newTask').on('change', function (e) {
+            var btn = $(this);
+            var checked = btn.is(':checked');
+            
+            if (checked) {
+                form.find('.newLeadForm').show();
+                form.find('.required-if-shown').addClass('required');
+            } else {
+                form.find('.newLeadForm').hide();
+                form.find('.required-if-shown').removeClass('required');
+            }
+        });
+        
+        var editModal = $('#editNoteModal');
+        var editForm = editModal.find('form');
+        
+        $(document.body).on('click', '.note-edit', function (e) {
+            e.preventDefault();
+            
+            var btn = $(this);
+            var noteId = btn.attr('href');
+            var type = btn.data('type');
+            var notes = btn.data('notes');
+            
+            editModal.find('[name=action]').val(type);
+            editModal.find('[name=note]').val(notes);
+            editModal.find('[name=editNote]').val(noteId);
+            
+            editModal.modal('show');
+        });
+        
+        editForm.forms({
+            onSuccess: function (resp) {
+                if (resp.nextHref) {
+                    window.location.href = resp.nextHref;
+                }
+                Msg.info('Updated Note');
+                editModal.modal("hide");
+                $('#notes').reloadFragment({
+                    whenComplete: function () {
+                        $(document).find('abbr.timeago').timeago();
+                        initNotesDotDotDot();
+                    }
+                });
+            }
+        });
     }
     
     function initOrgSearch() {
@@ -248,6 +375,10 @@
         flog('initFileUploads');
         
         Dropzone.autoDiscover = false;
+        try {
+            Dropzone.forElement("#lead-files-upload").destroy();
+        } catch (e) {}
+        
         $('#lead-files-upload').dropzone({
             paramName: 'file',
             maxFilesize: 2000.0, // MB
@@ -326,16 +457,22 @@
     
     function initCancelLeadModal() {
         var cancelLeadModal = $("#modalCancelLead");
-        cancelLeadModal.find("form").forms({
-            onSuccess: function (resp) {
-                $('#lead-details').reloadFragment({
-                    whenComplete: function () {
-                        Msg.info('Lead cancelled');
-                        initViewLeadsPage();
-                        cancelLeadModal.modal("hide");
-                    }
-                });
-            }
+        
+        cancelLeadModal.on('loaded.bs.modal', function () {
+            cancelLeadModal.find("form").forms({
+                onSuccess: function (resp) {
+                    Msg.info('Lead cancelled');
+                    initViewLeadsPage();
+                    cancelLeadModal.modal("hide");
+                }
+            });
+        });
+        
+        $(document.body).on("click", ".btnLeadCancelLead", function (e) {
+            e.preventDefault();
+            var href = $(e.target).attr("href");
+            cancelLeadModal.find("form").attr("action", href);
+            cancelLeadModal.modal("show");
         });
     }
     

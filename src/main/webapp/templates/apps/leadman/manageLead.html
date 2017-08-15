@@ -3,6 +3,7 @@
         <title>Manage Lead</title>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
+        <script type="text/javascript" src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"></script>
         <script type="text/javascript" src="/theme/apps/leadman/manageLead.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css" />
         <link rel="stylesheet" type="text/css" href="/theme/apps/leadman/manageLead.css" />
@@ -428,11 +429,11 @@
                     <div id="leadNotesBody">
                         #set( $notes = $page.notes )
                         #if( $notes.size() > 0 )
-                            <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
+                            <div class="list-notes">
                                 #foreach($note in $notes)
                                     <div class="note-item">
                                         <div>
-                                            <img src="/theme/img/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
+                                            <img src="/theme/apps/leadman/user-placeholder.png" alt="Image" class="img-circle thumb32 lead-note-author" width="32" />
                                             <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
                                             #if( $note.inbound )
                                                 <small class="text-muted fa fa-arrow-left"></small>
@@ -508,9 +509,9 @@
                     #set ($taskCount = 0)
                     #foreach($task in $page.children.ofType.open)
                         #set ($taskCount = $taskCount + 1)
-                        <div class="panel panel-default">
+                        <div class="panel panel-default panel-no-icon">
                             <div class="panel-heading">
-                                <h4 class="clearfix task-item">
+                                <h4 class="clearfix task-item panel-title">
                                     #if( $task.completedDate )
                                         <div class="pull-left">
                                             <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
@@ -637,6 +638,66 @@
         </div>
         </div>
 
+        <div class="modal fade" id="modalEditTask" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Edit task</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog modal-lg ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Edit a note on a lead</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <input type="hidden" name="editNote" />
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <select name="action" class="form-control">
+                                        <option value="">[Select what the note is for]</option>
+                                        <option value="phone-false">Call to customer</option>
+                                        <option value="phone-true">Call from customer</option>
+                                        <option value="email-false">Email to customer</option>
+                                        <option value="email-true">Email from customer</option>
+                                        <option value="note-false">General note</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <textarea name="note" class="form-control" style="height: 120px"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Save note</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
         <div class="modal fade" id="modal-upload-lead-files" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -684,33 +745,16 @@
         </div>
 
         <div class="modal fade" id="modalCancelLead" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Cancel Lead: $page.title</h4>
+                        <h4 class="modal-title">Cancel lead</h4>
                     </div>
-                    <form method="post" action="$page.href?cancel" class="form-horizontal">
+                    <form method="post" action="" class="form-horizontal">
+                        <input type="hidden" name="cancelDeal" />
                         <div class="modal-body">
-                            <input type="hidden" name="cancelDeal" />
-
-                            <div class="modal-body">
-
-                                <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as lost, ie no sale.</p>
-
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <select name="reason" class="form-control required" required="true">
-                                            <option value="">[Reason the sale was lost]</option>
-                                            #foreach( $reason in $page.lostReasons )
-                                                <option>$reason</option>
-                                            #end
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-
+                            ...
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
@@ -718,8 +762,8 @@
                             <button class="btn btn-primary" type="submit">Cancel lead</button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
 
         <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
@@ -822,6 +866,86 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog modal-lg ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Enter a note on a lead</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <select name="action" class="form-control required">
+                                        <option value="">[Select what the note is for]</option>
+                                        <option value="phone-false">Call to customer</option>
+                                        <option value="phone-true">Call from customer</option>
+                                        <option value="email-false">Email to customer</option>
+                                        <option value="email-true">Email from customer</option>
+                                        <option value="note-false">General note</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div class="checkbox">
+                                        <label for="note_newTask">
+                                            <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
+                                            <input type="hidden" value="false" name="newTask_checkbox" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row newLeadForm">
+                                <div class="col-md-4">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                                <li><a href="#">Call customer</a></li>
+                                                <li><a href="#">Email customer</a></li>
+                                                <li><a href="#">Send documents</a></li>
+                                                <li><a href="#">Arrange a meeting</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                    </div>
+                                    <br />
+                                    <div class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                    <textarea name="taskDescription" class="form-control" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Save note</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
 
         #macro(genFileIcon $file)
