@@ -13,17 +13,13 @@
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.1.0/js/bootstrap-toggle.min.js">//</script>
 
         <style>
-            #editor-frame {
-                border: 1px solid #ddd;
-            }
-
             .form-actions {
                 display: none !important;
             }
         </style>
     </head>
     <body>
-        <form action="" method="POST" class="manageRewardForm form-horizontal" role="form" novalidate="true">
+        <form action="" method="POST" class="manageRewardForm form-horizontal" role="form" novalidate="true" enctype="multipart/form-data">
             <div id="manageReward" class="MainContent tabbable">
                 <div class="clearfix">
                     <div class="pull-right">
@@ -42,7 +38,7 @@
                                 <li><a>Select a version:</a></li>
                                 <li class="divider"></li>
                                 #foreach($version in $page.parent.branches)
-                                <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
+                                    <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
                                 #end
                             </ul>
                         </div>
@@ -211,10 +207,7 @@
                     </div>
 
                     <div class="tab-pane Details" id="rewardContent">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="" id="editor-frame"></iframe>
-                        </div>
-
+                        <textarea id="body" name="body" class="contenteditor" cols="100" rows="5">$!page.body</textarea>
 
                         <br />
                         <i>This copy will be displayed to the winners.</i>
@@ -231,17 +224,17 @@
                                 <div>
                                     #set($image = $page.imageHref )
                                     #if( $image )
-                                    <div id="reward-image">
-                                        <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
-                                        <!--
+                                        <div id="reward-image">
+                                            <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
+                                            <!--
                                     <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
                                             <span class="fa fa-times"></span>
                                     </a>
                                         -->
-                                    </div>
-                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
+                                        </div>
+                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
                                     #else
-                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
+                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
                                     #end
                                 </div>
                             </div>
@@ -253,7 +246,7 @@
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                                <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
                             #end
                         </div>
                     </div>
@@ -274,7 +267,7 @@
                                     $formatter.checkbox("allowAnon", $page.allowAnon)
                                     Anonymous entries.
                                 </label>
-                                <br/>
+                                <br />
                                 Check this if you want to allow non-logged in users to submit entries
                             </p>
 
@@ -309,7 +302,7 @@
                                     <select name="selectOrgType" class="form-control">
                                         <option value="">Any type of organisation</option>
                                         #foreach( $ot in $page.organisation.orgTypes )
-                                        $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
+                                            $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
                                         #end
                                     </select>
                                     <i>If selected, the user will be required to select an organisation of this type, eg "store"</i>
@@ -325,7 +318,7 @@
                             <div id="entryFormBuilder"></div>
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         <h3>Terms and conditions</h3>
 
@@ -343,7 +336,7 @@
                                 <select name="storeName" class="form-control">
                                     <option value="">No store</option>
                                     #foreach( $store in $page.stores )
-                                    $formatter.option($store.name, $store.title, $page.storeName)
+                                        $formatter.option($store.name, $store.title, $page.storeName)
                                     #end
                                 </select>
                                 <i>If selected, this checkout promotion will be active for the selected store. Manage <a href="/reward-store/">stores here</a></i>
@@ -355,7 +348,7 @@
                             <label for="promoProductCodes" class="col-sm-2 control-label">Product codes</label>
 
                             <div class="col-sm-10">
-                                <textarea name="promoProductCodes"  class="form-control">$!page.promoProductCodes</textarea>
+                                <textarea name="promoProductCodes" class="form-control">$!page.promoProductCodes</textarea>
                                 <i>Note that these are <a href="/products/">product codes</a>, not <a href="/skus/">SKUs</a>.</i>
                             </div>
                         </div>
@@ -364,12 +357,12 @@
                             <label for="promoCategoryCodes" class="col-sm-2 control-label">Category codes</label>
 
                             <div class="col-sm-10">
-                                <textarea name="promoCategoryCodes"  class="form-control">$!page.promoCategoryCodes</textarea>
+                                <textarea name="promoCategoryCodes" class="form-control">$!page.promoCategoryCodes</textarea>
                                 <i>Manage <a href="/categories/">product categories here</a></i>
                             </div>
                         </div>
 
-                        <hr/>
+                        <hr />
 
                         <h3>Promotion offer:</h3>
 
@@ -384,7 +377,7 @@
                             <label for="promoDiscountAmount" class="col-sm-2 control-label">Discount amount</label>
 
                             <div class="col-sm-4">
-                                <input name="promoDiscountAmount"  class="form-control" value="$!page.promoDiscountAmount" />
+                                <input name="promoDiscountAmount" class="form-control" value="$!page.promoDiscountAmount" />
                             </div>
                         </div>
 
@@ -399,9 +392,9 @@
                             <label for="promoGiftSku" class="col-sm-2 control-label">Gift SKU</label>
 
                             <div class="col-sm-4">
-                                <input name="promoGiftSku"  class="form-control" value="$!page.promoGiftSku" />
+                                <input name="promoGiftSku" class="form-control" value="$!page.promoGiftSku" />
                             </div>
-                        </div>                        
+                        </div>
                         
                         <h3>Promotion codes</h3>
 
@@ -409,7 +402,7 @@
                             <label for="promoEntryCodes" class="col-sm-2 control-label">Codes</label>
 
                             <div class="col-sm-10">
-                                <textarea name="promoEntryCodes"  class="form-control">$!page.promoEntryCodes</textarea>
+                                <textarea name="promoEntryCodes" class="form-control">$!page.promoEntryCodes</textarea>
                                 <i>If provided, users will be required to enter a code to activate the promotion</i>
                             </div>
                         </div>
@@ -427,12 +420,12 @@
                         <div class="well">Add restrictions which will prevent rewards from being given unless they have been met.</div>
                         <ul class="restrictionList clearfix" style="padding-left: 0px;">
                             #foreach($r in $page.restrictions)
-                            <li>
-                                $r.description
-                                <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
-                                <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
-                                <button data-dismiss="alert" class="close remove">&times;</button>
-                            </li>
+                                <li>
+                                    $r.description
+                                    <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
+                                    <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
+                                    <button data-dismiss="alert" class="close remove">&times;</button>
+                                </li>
                             #end
                         </ul>
                     </div>
@@ -461,56 +454,69 @@
         </form>
 
         <div id="modalGroup" class="modal fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Choose groups</h4>
-            </div>
-            <div class="modal-body">
-                <div class="ListItem">
-                    #foreach($g in $page.allGroups)
-                    <div class="panel panel-default">
-                        <div class="panel-body membership">
-                            <label for="$g.name">$g.name</label>
-                            <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Choose groups</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="ListItem">
+                            #foreach($g in $page.allGroups)
+                                <div class="panel panel-default">
+                                    <div class="panel-body membership">
+                                        <label for="$g.name">$g.name</label>
+                                        <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
+                                    </div>
+                                </div>
+                            #end
                         </div>
                     </div>
-                    #end
                 </div>
             </div>
         </div>
 
         <div id="modalAddRestriction" class="modal fade">
-            <form class="addRestrictionForm">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Add a restriction</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group clearfix">
-                                <label class="col-sm-4 control-label" for="type">Select a type of restriction</label>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form class="addRestrictionForm">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Add a restriction</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-4 control-label" for="type">Select a type of restriction</label>
 
-                                <div class="col-sm-7">$formatter.select("type", $page.availableRestrictionTypes)</div>
-                            </div>
-                            <div class="form-group clearfix">
-                                <label class="col-sm-4 control-label" for="item">Select an item</label>
+                                        <div class="col-sm-7">$formatter.select("type", $page.availableRestrictionTypes)</div>
+                                    </div>
+                                    <div class="form-group clearfix">
+                                        <label class="col-sm-4 control-label" for="item">Select an item</label>
 
-                                <div class="col-sm-7">$formatter.select("item", $page.availableRestrictionItems)</div>
+                                        <div class="col-sm-7">$formatter.select("item", $page.availableRestrictionItems)</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary btn-sm">Add</button>
-                </div>
-            </form>
+            </div>
         </div>
 
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
+            var allGroups = {
+                #foreach ($group in $page.find("/").allGroups)
+                    '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
+                #end
+            };
             var quiz = $formatter.toJson($page.quiz);
             $(function () {
                 $("select.pointsType").click(function () {
@@ -518,7 +524,7 @@
                 });
                 showHidePointsOrgType();
 
-                initEditReward(quiz);
+                initEditReward(quiz, allGroups);
                 //function to initiate bootstrap-datepicker
                 $('.date-picker').datepicker({
                     autoclose: true

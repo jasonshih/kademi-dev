@@ -174,6 +174,45 @@ function initMasonryPanel() {
     }
 }
 
+function initIframeContentEditor(target, allGroups, snippetsUrl) {
+    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+        if (!target) {
+            target = $('.contenteditor');
+        }
+        
+        target.each(function () {
+            var editor = $(this);
+            
+            if (editor.closest('.editor-wrapper').length === 0) {
+                editor.wrap('<div class="editor-wrapper clearfix"></div>');
+            }
+            
+            var loading = $(
+                '<div class="editor-loading">' +
+                '    <span>' +
+                '        <span class="loading-icon">' +
+                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+                '        </span>' +
+                '        <span class="loading-text">Initializing Content Editor...</span>' +
+                '    </span>' +
+                '</div>'
+            );
+            
+            editor.before(loading);
+            editor.hide();
+            
+            editor.contentEditor({
+                iframeMode: true,
+                allGroups: allGroups,
+                snippetsUrl: snippetsUrl || '_components',
+                onReady: function () {
+                    loading.remove();
+                }
+            });
+        });
+    });
+}
+
 function initDatePicker() {
     flog('initDatePicker');
     
@@ -476,7 +515,7 @@ function initNewUserForm() {
                     if (resp.nextHref) {
                         window.location.href = resp.nextHref;
                     }
-
+                    
                     modal.modal('hide');
                     break;
                 
