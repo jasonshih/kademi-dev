@@ -1,7 +1,79 @@
 (function ($, window) {
     $(function () {
         initViewLeadsPage();
+        initEditTaskModal();
+        initImmediateUpdate();
     });
+    
+    function initEditTaskModal() {
+        if ($('#modalEditTask').length > 0) {
+            flog('Init modalEditTask');
+            
+            $(document.body).on('click', '.btn-task-panel', function (e) {
+                e.preventDefault();
+                
+                $('#modalEditTask').addClass('completeTask');
+            });
+            
+            $(document.body).on('loaded.bs.modal shown.bs.modal', '#modalEditTask', function () {
+                flog('Modal Loaded');
+                
+                var modal = $(this);
+                var isCompleteTask = modal.hasClass('completeTask');
+                
+                $(".completeTaskDiv")[isCompleteTask ? 'show' : 'hide'](300);
+                $(".hideOnComplete")[isCompleteTask ? 'hide' : 'show'](300);
+                
+                initDateTimePickers();
+                
+                var notes = modal.find('.lead-notes');
+                notes.dotdotdot({
+                    height: 200,
+                    callback: function (isTruncated, orgContent) {
+                        if (isTruncated) {
+                            var currentContent = notes.html();
+                            notes.html('<div class="lead-notes-inner">' + currentContent + '</div>');
+                            var notesInner = notes.find('.lead-notes-inner');
+                            var toggler = $('<a href="#" class="text-info">View more <i class="fa fa-angle-double-down"></i></a>');
+                            notes.append(toggler);
+                            
+                            toggler.click(function (e) {
+                                e.preventDefault();
+                                
+                                if (toggler.hasClass('opened')) {
+                                    notesInner.html(currentContent);
+                                    toggler.html('View more <i class="fa fa-angle-double-down"></i>');
+                                    toggler.removeClass('opened');
+                                } else {
+                                    notesInner.html(orgContent);
+                                    toggler.html('Hide <i class="fa fa-angle-double-up"></i>');
+                                    toggler.addClass('opened');
+                                }
+                            });
+                        }
+                    }
+                });
+                
+                var form = modal.find(".completeTaskForm");
+                flog("complete task form", form);
+                if (form.length > 0) {
+                    form.forms({
+                        onSuccess: function (resp) {
+                            flog("onSuccess", resp, modal);
+                            form.closest(".modal").modal("hide");
+                            flog("done");
+                            reloadTasks();
+                        }
+                    });
+                }
+            });
+            
+            
+            $(document.body).on('hidden.bs.modal', '#modalEditTask', function () {
+                $(this).removeClass('completeTask');
+            });
+        }
+    }
     
     function initViewLeadsPage() {
         initAddTag();
@@ -20,6 +92,8 @@
         initNewNoteForm();
         initNoteMoreLess();
         initNotesDotDotDot();
+        initCancelTaskModal();
+        initNewTaskModal();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -29,8 +103,130 @@
         } else {
             initFileUploads();
         }
+        
+        $(document.body).off("click", ".autoFillText").on("click", ".autoFillText", function (e) {
+            e.preventDefault();
+            var target = $(e.target).closest("a");
+            var text = target.text();
+            var inp = target.closest(".input-group").find("input[type=text]");
+            flog("autofill", text, inp);
+            inp.val(text);
+        });
+        
+        $(document.body).on('hidden.bs.modal', '.modal', function () {
+            $(this).removeData('bs.modal');
+        });
     }
     
+    function updateField(href, fieldName, fieldValue, form) {
+        var data = {};
+        data[fieldName] = fieldValue;
+        flog("updateField", href, data, fieldName, fieldValue);
+        $.ajax({
+            type: 'POST',
+            url: href,
+            data: data,
+            dataType: 'json',
+            success: function (resp) {
+                var fieldLabel = fieldName;
+                var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
+                if (label.length) {
+                    fieldLabel = label.text().replace(':', '');
+                }
+                Msg.info("Saved " + fieldLabel);
+                reloadTasks();
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('Sorry couldnt save field ' + fieldName);
+            }
+        });
+    }
+    
+    function initImmediateUpdate() {
+        var onchange = function (e) {
+            flog("field changed", e);
+            var target = $(e.target);
+            var href = target.data("href");
+            var name = target.attr("name");
+            var id = href + ':' + name;
+            if (timers.hasOwnProperty(id)) {
+                var t = timers[id];
+                t = clearTimeout(t);
+                timers[id] = null;
+            }
+            
+            var value = target.val();
+            var form = target.parents('.form-horizontal');
+            var oldValue = target.data("original-value");
+            if (value != oldValue) {
+                updateField(href, name, value, form);
+            }
+        };
+        
+        var timers = {};
+        
+        $(document.body).on("keyup", ".immediateUpdate", function (e) {
+            var target = $(e.target);
+            var href = target.data("href");
+            var name = target.attr("name");
+            var id = href + ':' + name;
+            if (timers.hasOwnProperty(id)) {
+                var t = timers[id];
+                t = clearTimeout(t);
+                timers[id] = null;
+            }
+            
+            timers[id] = setTimeout(function () {
+                onchange(e);
+            }, 1000);
+        });
+        $(document.body).on("change", ".immediateUpdate", function (e) {
+            
+            onchange(e);
+        });
+        $(document.body).on("dp.change", ".immediateUpdate", function (e) {
+            onchange(e);
+        });
+    }
+    
+    function initNewTaskModal() {
+        var modal = $("#newTaskModal");
+        var form = modal.find("form");
+        form.forms({
+            onSuccess: function (resp) {
+                Msg.info('Created new task');
+                reloadTasks();
+                modal.modal("hide");
+            }
+        });
+    }
+    
+    function reloadTasks() {
+        $("#tasks").reloadFragment({
+            whenComplete: function (doc) {
+            }
+        });
+    }
+    
+    function initCancelTaskModal() {
+        var cancelTaskModal = $("#cancelTaskModal");
+        cancelTaskModal.find("form").forms({
+            onSuccess: function (resp) {
+                Msg.info('Task cancelled');
+                reloadTasks();
+                cancelTaskModal.modal("hide");
+            }
+        });
+        
+        $(document.body).off('click', '.btnCancelTask').on("click", ".btnCancelTask", function (e) {
+            e.preventDefault();
+            var href = $(e.target).closest("a").attr("href");
+            flog("set href", href);
+            cancelTaskModal.find("form").attr("action", href);
+            cancelTaskModal.modal("show");
+        });
+    }
     
     function initNotesDotDotDot() {
         function dotdotdotCallback(isTruncated, originalContent) {
@@ -377,7 +573,8 @@
         Dropzone.autoDiscover = false;
         try {
             Dropzone.forElement("#lead-files-upload").destroy();
-        } catch (e) {}
+        } catch (e) {
+        }
         
         $('#lead-files-upload').dropzone({
             paramName: 'file',

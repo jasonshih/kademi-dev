@@ -506,63 +506,68 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="tasks">
-                    #set ($taskCount = 0)
-                    #foreach($task in $page.children.ofType.open)
-                        #set ($taskCount = $taskCount + 1)
-                        <div class="panel panel-default panel-no-icon">
-                            <div class="panel-heading">
-                                <h4 class="clearfix task-item panel-title">
-                                    #if( $task.completedDate )
-                                        <div class="pull-left">
-                                            <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                <s class="task-title">$task.title</s>
-                                            </a>
-                                        </div>
-                                    #else
-                                        <div class="pull-left">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                <span class="task-title">$task.title</span>
-                                            </a>
-                                        </div>
-                                        <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
-                                            <span class="task-edit text-success fa fa-pencil"></span>
-                                        </a>
-                                    #end
-                                </h4>
-                            </div>
-                            <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
-                                <div class="panel-body">
-                                    #if( $task.is("open") )
-                                        #if($task.assignedTo)
-                                            Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                    <p class="text-right">
+                        <button class="btn btn-sm btn-success" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
+                    </p>
+                    <div id="tasksList">
+                        #set ($taskCount = 0)
+                        #foreach($task in $page.children.ofType.open)
+                            #set ($taskCount = $taskCount + 1)
+                            <div class="panel panel-default panel-no-icon">
+                                <div class="panel-heading">
+                                    <h4 class="clearfix task-item panel-title">
+                                        #if( $task.completedDate )
+                                            <div class="pull-left">
+                                                <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                    <s class="task-title">$task.title</s>
+                                                </a>
+                                            </div>
                                         #else
-                                            Not assigned
+                                            <div class="pull-left">
+                                                <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                                    '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                                    <span class="task-title">$task.title</span>
+                                                </a>
+                                            </div>
+                                            <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                                <span class="task-edit text-success fa fa-pencil"></span>
+                                            </a>
+                                        #end
+                                    </h4>
+                                </div>
+                                <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        #if( $task.is("open") )
+                                            #if($task.assignedTo)
+                                                Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                            #else
+                                                Not assigned
+                                            #end
+                                            <br />
+
+                                            <div class="btn-task-panel-wrap pull-right">
+                                                <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
+                                                    <span class="fa fa-remove"></span>
+                                                </a>
+                                                <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
+                                                    <span class="fa fa-check"></span>
+                                                </a>
+                                            </div>
+                                            #if( $task.dueDate )
+                                                Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                            #end
                                         #end
                                         <br />
-
-                                        <div class="btn-task-panel-wrap pull-right">
-                                            <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
-                                                <span class="fa fa-remove"></span>
-                                            </a>
-                                            <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
-                                                <span class="fa fa-check"></span>
-                                            </a>
-                                        </div>
-                                        #if( $task.dueDate )
-                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                                        #end
-                                    #end
-                                    <br />
-                                    $!task.taskDescription
+                                        $!task.taskDescription
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    #end
-                    #if($taskCount<1)
-                        <p>No tasks found</p>
-                    #end
+                        #end
+                        #if($taskCount<1)
+                            <p>No tasks found</p>
+                        #end
+                    </div>
                 </div>
                 <div class="tab-pane" id="files">
                     <p class="text-right">
@@ -942,6 +947,86 @@
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
                             <button class="btn btn-primary" type="submit">Save note</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="cancelTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">Cancel Task</h4>
+                    </div>
+                    <form method="post" action="" class="form-horizontal">
+                        <input type="hidden" name="cancelTask" />
+                        <div class="modal-body">
+                            <p>Cancel this task if it is no longer required to be done.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                            <button class="btn btn-primary" type="submit">Cancel this task</button>
+                        </div>
+                    </form>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
+
+        <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="">Create a task</h4>
+                    </div>
+                    <form method="post" action="$page.href" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="newTaskTitle">Description</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="fa fa-pencil"></span>
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                                <li><a href="#">Call customer</a></li>
+                                                <li><a href="#">Email customer</a></li>
+                                                <li><a href="#">Send documents</a></li>
+                                                <li><a href="#">Arrange a meeting</a></li>
+                                            </ul>
+                                        </div><!-- /btn-group -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                                <div class="col-md-9">
+                                    <div class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="taskDescription">Description</label>
+                                <div class="col-md-9">
+                                    <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                            <button class="btn btn-primary" type="submit">Create</button>
                         </div>
                     </form>
                 </div><!-- /.modal-content -->
