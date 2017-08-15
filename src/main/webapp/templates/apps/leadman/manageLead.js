@@ -94,6 +94,7 @@
         initNotesDotDotDot();
         initCancelTaskModal();
         initNewTaskModal();
+        initAddQuote();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -115,6 +116,39 @@
         
         $(document.body).on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
+        });
+    }
+    
+    function initAddQuote() {
+        var modal = $('#addQuoteLeadModal');
+        var form = modal.find('form');
+        
+        form.forms({
+            onSuccess: function (resp) {
+                if (resp.nextHref && !modal.hasClass('no-redirect')) {
+                    window.location.href = "/quotes/" + resp.nextHref;
+                }
+                
+                $('#leadQuotesBody').reloadFragment({
+                    whenComplete: function () {
+                        Msg.info('Created quote');
+                        modal.modal("hide");
+                        form.find('input').not('[type=hidden]').val('');
+                    }
+                });
+            }
+        });
+        
+        $(document.body).off('click', '.createQuote').on('click', '.createQuote', function (e) {
+            e.preventDefault();
+            var href = $(e.target).closest("a").attr("href");
+            form.attr("action", href);
+            
+            var leadId = $(e.target).closest("a").data("lead-id");
+            
+            $("#createQuoteLeadId").val(leadId);
+            
+            modal.modal("show");
         });
     }
     
