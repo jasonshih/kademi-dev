@@ -1,58 +1,154 @@
+/**
+ * =========================================================================
+ * Journal container
+ * =========================================================================
+ */
 .journal {
     position: fixed;
-    right: 0;
-    top: 30%;
-    z-index: 1000;    
-}
-.journal.active {
-    
+    right: -300px;
+    top: 0;
+    bottom: 0;
+    border: 1px solid #ddd;
+    z-index: 1000;
+    width: 300px;
+    transition: right 0.2s;
+    background: #fff;
+    box-shadow: 0 0 4px rgba(0, 0, 0, .2);
 }
 
-.journal-show {
-    height: 64px;
-    width: 64px;
-    margin: 0;
-    opacity: 0.3;
-    float: right;
-    background: url("/static/images/icon_journal.png") no-repeat scroll center center transparent;
+.journal.active {
+    right: 0;
 }
+
+/**
+ * =========================================================================
+ * Journal show button
+ * =========================================================================
+ */
+.journal-show {
+    position: absolute;
+    opacity: 0.5;
+    font-size: 30px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0;
+    transition: right 0.2s;
+    z-index: 1;
+    top: 30%;
+    width: 70px;
+    text-align: center;
+    left: -70px;
+    transition: left 0.2s;
+    outline: none !important;
+}
+
 .journal-show:hover {
     opacity: 1;
 }
-.journal-show span {
-    visibility: hidden
-}
-.journal-notes {
-    display:none; 
-    width: 0;
-    min-height: 200px; 
-    max-height: 300px;
-    border: solid lightgray 1px;
-    overflow-y: scroll;
-    overflow-x: hidden;    
-    padding: 20px;
-    background: white;
-}
-.journal.active .journal-notes {
-    display: block;
-}
-.journal textarea {
-    background: #EEE;
-}
-        
-.journal div.active textarea {
-    background: white;
+
+.journal.active .journal-show {
+    left: 0;
 }
 
-.journal-entry {
-    margin-bottom: 10px;
-}
-.journal .ajax-loader {
+/**
+ * =========================================================================
+ * Journal close button
+ * =========================================================================
+ */
+.journal-close {
     position: absolute;
-    top: 70px;
-    left: 5px;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    font-weight: 700;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    font-size: 20px;
+    opacity: 0.2;
+    text-decoration: none !important;
+}
+
+.journal-close:hover {
+    opacity: 0.8;
+}
+
+/**
+ * =========================================================================
+ * Journal inners
+ * =========================================================================
+ */
+.journal-inner {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: #fff;
+}
+
+/**
+ * =========================================================================
+ * Journal title
+ * =========================================================================
+ */
+.journal-title {
+    border-bottom: 1px solid #ededed;
+    padding: 15px;
+    position: relative;
+}
+
+.journal-title * {
+    margin: 0;
+}
+
+.journal-title p {
+    margin: 10px 0 0;
+}
+
+/**
+ * =========================================================================
+ * Journal icons
+ * =========================================================================
+ */
+.journal .journal-icon {
+    display: inline-block;
+}
+
+.journal .ajax-loader {
     display: none;
 }
+
 .journal.ajax-processing .ajax-loader {
-    display: block;
+    display: inline-block;
+}
+
+.journal.ajax-processing .journal-icon {
+    display: none;
+}
+
+/**
+ * =========================================================================
+ * Journal notes
+ * =========================================================================
+ */
+.journal-notes {
+    position: absolute;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 15px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.journal-entry textarea {
+    resize: none;
+}
+
+.journal-entry + .journal-entry {
+    border-top: 1px solid #eee;
+    margin-top: 15px;
+    padding-top: 15px;
 }
