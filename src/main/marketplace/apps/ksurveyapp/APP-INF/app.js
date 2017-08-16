@@ -66,6 +66,7 @@ controllerMappings
     .addMethod('GET', 'getQuestion', 'getQuestion')
     .addMethod('GET', 'deleteQuestion', 'deleteQuestion')
     .addMethod('GET', 'reorderQuestions', 'reorderQuestions')
+    .addMethod('GET', 'reorderAnswers', 'reorderAnswers')
     .addMethod('POST', 'saveQuestion')
     .build();
 

@@ -95,6 +95,7 @@
         initCancelTaskModal();
         initNewTaskModal();
         initAddQuote();
+        initAssignTo();
         
         if (typeof Dropzone === 'undefined') {
             $.getStyleOnce('/static/dropzone/4.3.0/downloads/css/dropzone.css');
@@ -116,6 +117,74 @@
         
         $(document.body).on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
+        });
+    }
+    
+    function assignLeadTo(name, href) {
+        $('#findAnAssignee').siblings('.search-input').val('');
+        
+        $.ajax({
+            type: 'POST',
+            url: href || window.location.pathname,
+            data: {
+                assignToName: name
+            },
+            dataType: 'json',
+            success: function (resp) {
+                if (resp && resp.status) {
+                    $("#assignedBlock").reloadFragment({
+                        url: href || window.location.pathname,
+                        whenComplete: function () {
+                            Msg.info("The assignment has been changed.");
+                        }
+                    });
+                } else {
+                    Msg.error("Sorry, we couldnt change the assignment");
+                }
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('Sorry couldnt change the assigned person ' + resp);
+            }
+        });
+    }
+    
+    function initAssignTo() {
+        $('#findAnAssignee').entityFinder({
+            maxResults: 10,
+            type: 'profile',
+            renderSuggestions: function (data) {
+                var suggestionsHtml = '';
+                
+                for (var i = 0; i < data.length; i++) {
+                    var item = data[i];
+                    
+                    var userName = item.fields.userName[0];
+                    var userId = item.fields.userId[0];
+                    var firstName = item.fields.firstName ? item.fields.firstName[0] : '';
+                    var surName = item.fields.surName ? item.fields.surName[0] : '';
+                    var displayText = (firstName || surName) ? firstName + ' ' + surName : userName;
+                    displayText = displayText.trim();
+                    
+                    suggestionsHtml += '<li class="search-suggestion" data-id="' + userName + '" data-actual-id="' + userId + '" data-type="user" data-text="' + (displayText || userName) + '">';
+                    suggestionsHtml += '    <a href="javascript:void(0);">' + displayText + '</a>';
+                    suggestionsHtml += '</li>';
+                }
+                
+                return suggestionsHtml;
+            },
+            onSelectSuggestion: function (suggestion, id, actualId, type) {
+                assignLeadTo(id);
+            }
+        });
+        
+        $(document.body).on("click", "#assignToMenu a", function (e) {
+            e.preventDefault();
+            
+            var name = $(e.target).attr("href");
+            var href = $(this).closest('ul').data('href');
+            
+            assignLeadTo(name, href);
         });
     }
     
@@ -739,38 +808,6 @@
                 });
             });
         });
-        
-        $(document.body).on("click", "#assignToMenu a", function (e) {
-            e.preventDefault();
-            
-            var name = $(e.target).attr("href");
-            var href = $(this).closest('ul').data('href');
-            
-            $.ajax({
-                type: 'POST',
-                url: href || window.location.pathname,
-                data: {
-                    assignToName: name
-                },
-                dataType: 'json',
-                success: function (resp) {
-                    if (resp && resp.status) {
-                        Msg.info("The assignment has been changed.");
-                        
-                        $("#assignedBlock").reloadFragment({
-                            url: href || window.location.pathname
-                        });
-                    } else {
-                        Msg.error("Sorry, we couldnt change the assignment");
-                    }
-                },
-                error: function (resp) {
-                    flog('error', resp);
-                    Msg.error('Sorry couldnt change the assigned person ' + resp);
-                }
-            });
-        });
-        
     }
     
     function initAddTag() {

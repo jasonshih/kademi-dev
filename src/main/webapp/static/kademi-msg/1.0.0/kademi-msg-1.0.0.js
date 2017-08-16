@@ -378,7 +378,7 @@
             type: type,
             allow_dismiss: true,
             newest_on_top: true,
-            showProgressbar: true,
+            showProgressbar: false,
             mouse_over: 'pause',
             placement: {
                 from: 'top',
