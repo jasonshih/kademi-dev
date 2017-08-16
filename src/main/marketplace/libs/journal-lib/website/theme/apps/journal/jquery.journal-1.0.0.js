@@ -78,12 +78,12 @@
                 dataType: 'json',
                 success: function (resp) {
                     try {
-                        flog('[jquery.journal] got jounrals', resp.length);
+                        flog('[jquery.journal] Got journals', resp.length);
                         
                         for (var i = 1; i < resp.length; i++) {
                             var r = resp[i];
                             if (!r.name.startsWith('.') && r.name.length > 0) {
-                                var textarea = addJournalEntry(journalNotes, r.name, r.title);
+                                var textarea = addJournalEntry(journalNotes, r.name);
                                 textarea.val(r.textContent);
                                 flog('[jquery.journal] r', r, textarea, r.textContent);
                             }
@@ -92,9 +92,8 @@
                         flog('[jquery.journal] Set focus', current);
                         current.focus();
                     } catch (e) {
-                        flog('[jquery.journal] exception showing jounral entries', e);
+                        flog('[jquery.journal] Error in showing journal entries', e);
                     }
-                    journalDiv.addClass('ajax-loading');
                 },
                 error: function (resp) {
                     if (resp.status === 404) {
@@ -110,7 +109,9 @@
                         flog('[jquery.journal] Failed to get journal', resp);
                         alert('Sorry, we could not load journal entries');
                     }
-                    journalDiv.addClass('ajax-loading');
+                },
+                complete: function () {
+                    journalDiv.removeClass('ajax-processing');
                 }
             });
         } catch (e) {
@@ -137,13 +138,13 @@
         
         container.on('focus', 'textarea', function (e) {
             flog('[jquery.journal] focus', e.target);
-            textareas.parent().removeClass('active');
+            container.find('textarea').parent().removeClass('active');
             $(e.target).parent().addClass('active');
         });
         
         $(document).on('pjaxComplete', function () {
             try {
-        var textareas = container.find('textarea');
+                var textareas = container.find('textarea');
                 textareas.parent().removeClass('active');
                 var thisPage = getFileName(window.location.pathname);
                 var newSelected = textareas.parent().find('[name="' + thisPage + '"]').parent();
@@ -153,12 +154,6 @@
                     newSelected = newTextArea.closest('.journal-entry');
                 }
                 newSelected.addClass('active');
-                flog('[jquery.journal] container', container.scrollTop());
-                flog('[jquery.journal] newSelected top: ', newSelected.scrollTop());
-                //container.scrollTop(newSelected.position().top);
-                container.animate({
-                    scrollTop: newSelected.position().top
-                }, 1000);
             } catch (e) {
                 flog('[jquery.journal] Exception in pjaxComplete', e);
             }
@@ -214,44 +209,36 @@
             dataType: 'json',
             success: function (resp) {
                 flog('[jquery.journal] saveJournal succeed', resp);
-                journalDiv.removeClass('ajax-processing');
             },
             error: function (resp) {
                 if (resp.status === 404) {
                     flog('[jquery.journal] No journal', resp);
                     
-                    var entryDiv = $(
+                    div.append(
                         '<div class="journal-entry">' +
                         '    <a href="' + name + '">' + name + '</a>' +
                         '    <textarea class="form-control" row="2" name="' + name + '"></textarea>' +
                         '</div>'
                     );
-                    div.append(entryDiv);
                 } else {
                     flog('[jquery.journal] Failed to get journal', resp);
                     alert('Sorry, we could not load journal entries');
                 }
+            },
+            complete: function () {
                 journalDiv.removeClass('ajax-processing');
             }
         });
-        
     }
     
-    function removeAjaxProcessing(journalDiv) {
-        window.setTimeout(function () {
-            journalDiv.removeClass("ajax-processing");
-        }, 500);
-    }
-    
-    function sortJournalEntries(div) {
-        function sortAlpha(a, b) {
-            var t1 = $(a).find("textarea");
-            var t2 = $(b).find("textarea");
-            return t1.attr("name") > t2.attr("name") ? 1 : -1;
-        }
+    function sortJournalEntries(container) {
+        var arr = $('.journal-entry').sort(function (a, b) {
+            var t1 = $(a).find('textarea');
+            var t2 = $(b).find('textarea');
+            return t1.attr('name') > t2.attr('name') ? 1 : -1;
+        });
         
-        var arr = $('.journal-entry').sort(sortAlpha);
-        div.append(arr);
+        container.find('.journal-notes').html(arr);
     }
     
     $(function () {
