@@ -15,66 +15,66 @@
         url: window.location.pathname,
         whenComplete: null
     };
-
+    
     var methods = {
         init: function (options) {
             var config = $.extend({
                 ids: []
             }, DEFAULT, options);
-
+            
             var targets = $(this);
             targets.each(function () {
                 var target = $(this);
                 var id = target.attr('id');
-
+                
                 if (id === null || id === '') {
                     flog('[jquery.reloadFragment] WARN: Element does not have "id"', target);
                 } else {
                     config.ids.push(id);
                 }
             });
-
+            
             flog('[jquery.reloadFragment] IDs: ' + config.ids.join(','));
-
+            
             if (!targets.hasClass('reloading-fragment')) {
                 flog('[jquery.reloadFragment] Reloading...');
-
+                
                 var ids = config.ids;
                 var url = window.location.pathname;
                 if (config.url) {
                     url = config.url;
                 }
                 flog('[jquery.reloadFragment] Request url=', url);
-
+                
                 targets.addClass('reloading-fragment');
                 $.get(url, {}, function (resp, status, xhr) {
                     targets.removeClass('reloading-fragment');
-
+                    
                     var newDom = $('<div />').html(resp);
-
+                    
                     for (var i = 0; i < ids.length; i++) {
                         var id = '#' + ids[i];
                         var target = $(id);
-
+                        
                         target.html(
                             newDom.find(id).html()
                         );
-
+                        
                         if (typeof config.whenComplete === 'function') {
                             config.whenComplete.call(target, newDom, resp, status, xhr);
                         }
-
+                        
                         target.trigger("reloaded", newDom, resp, status, xhr);
                     }
+                    
+                    flog('[jquery.reloadFragment] Reloaded!');
                 });
-
-                flog('[jquery.reloadFragment] Reloaded!');
             }
-
+            
             return targets;
         }
     };
-
+    
     $.fn.reloadFragment = function (method) {
         if (methods[method]) {
             return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
@@ -84,8 +84,8 @@
             $.error('[jquery.reloadFragment] Method ' + method + ' does not exist on jQuery.subscribe');
         }
     };
-
+    
     // Version for jquery.reloadFragment
     $.fn.reloadFragment.version = '1.0.2';
-
+    
 })(jQuery);
