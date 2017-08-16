@@ -1,0 +1,22 @@
+{
+    "appDependencies": [        
+        {
+            "appId": "journal-lib",
+            "branch": "1.0.0"
+        }        
+    ],    
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/journal/journal.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/journal/jquery.journal-1.0.0.js"
+            }
+        }
+    ]
+}
