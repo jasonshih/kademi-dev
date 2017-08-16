@@ -43,9 +43,9 @@
                         #if( $page.catalogs )
                         #foreach($c in $page.catalogs)
                         #if( $c.id == $!page.catalogId)
-                        <option value="$c.id" selected="selected">
+                        <option value="$c.name" selected="selected">
                             #else
-                            <option value="$c.id">
+                            <option value="$c.name">
                                 #end
                                 $c.name</option>
                             #end
