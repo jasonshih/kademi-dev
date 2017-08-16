@@ -1,12 +1,17 @@
 {
     "appDependencies": [
-
     ],
     "dependencies": [
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/journal/journal.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/alerts/alerts.js"
+                "path": "/theme/apps/journal/jquery.journal-1.0.0.js"
             }
         }
     ]
