@@ -11,8 +11,11 @@
     position: relative;
     padding-right: 50px;
 }
+.answer-item.ui-sortable-helper{
+    left: 28px !important;
+}
 
-.btn-delete-answer, .btn-edit-answer {
+.btn-delete-answer, .btn-edit-answer, .btn-reorder-answer {
     padding: 0 10px;
     position: absolute;
     right: 30px;
@@ -21,6 +24,10 @@
 
 .btn-delete-answer {
     right: 10px;
+}
+
+.btn-reorder-answer{
+    right: 55px;
 }
 
 .list-group .progress-bar {

@@ -1,12 +1,12 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/theme/apps/ksurveyapp/main.css">
+        <link rel="stylesheet" href="/theme/apps/ksurveyapp/main.css?v=1">
         <link rel="stylesheet" href="/theme/apps/ksurveyapp/morris.css">
         <script src="/theme/apps/ksurveyapp/raphael-min.js">//</script>
         <script src="/theme/apps/ksurveyapp/morris.min.js">//</script>
         <script src="/static/d3/d3.v3.js">//</script>
         <script src="/static/nvd3/nv.d3.js">//</script>
-        <script bottom="true" src="/theme/apps/ksurveyapp/main.js?v=1">//</script>
+        <script bottom="true" src="/theme/apps/ksurveyapp/main.js?v=3">//</script>
     </head>
     <body>
         #set($survey = $page.attributes.survey)
@@ -48,21 +48,21 @@
                         <input type="hidden" name="user" value="$user.name" />
                         <input type="hidden" name="surveyId" value="$survey.name" />
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="name">Survey name</label>
+                            <label class="control-label col-md-2" for="">Survey name</label>
                             <div class="col-md-4">
                                 <input type="text" class="form-control required" name="name" required="required" value="$!survey.jsonObject.name" />
                             </div>
                         </div>
                         <br>
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="name">Survey title</label>
+                            <label class="control-label col-md-2" for="">Survey title</label>
                             <div class="col-md-4">
                                 <input type="text" class="form-control required" name="title" required="required" value="$!survey.jsonObject.title" />
                             </div>
                         </div>
                         <br>
                         <div class="form-group">
-                            <label class="control-label col-md-2" for="description">Description</label>
+                            <label class="control-label col-md-2" for="">Description</label>
                             <div class="col-md-4">
                                 <textarea rows="8" class="form-control required" name="description" required="required" value="">$!survey.jsonObject.description</textarea>
                             </div>
@@ -116,6 +116,7 @@
                 <div role="tabpanel" class="tab-pane" id="questions">
                     <div class="clearfix">
                         <a href="#" class="btn btn-primary btn-sm pull-right btn-add-question" data-survey="$survey.name"><i class="fa fa-plus-square"></i> Add new question</a>
+                        <a style="margin-right: 5px" href="#" class="btn btn-info btn-sm pull-right btn-toggle-questions"><i class="fa fa-list"></i> Toggle questions</a>
                     </div>
                     <hr>
 
@@ -133,29 +134,28 @@
                                     </h3></div>
                                     <div class="panel-body">
                                         <div class="question-body">$!question.source.body</div>
-                                        <!-- tan $question  $question.fields $question.source.type -->
                                         <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
                                         </p>
-                                        <!-- tan $question  $question.fields $question.source.type -->
                                         #if($question.source.type != '1')
                                             <p class="clearfix"><strong>Answers List</strong></p>
                                             <!-- List group -->
-                                            <ul class="list-group">
+                                            <ul class="list-group answersList">
                                                 #if($page.attributes.answerResult.hits.totalHits > 0)
                                                     #foreach($answer in $answers)
                                                         #if($answer.source.questionId == $question.id)
                                                             <li class="list-group-item answer-item" data-answer="$answer.id">
                                                                 <span>$answer.source.body</span>
+                                                                <a class="btn btn-link btn-sm btn-reorder-answer pull-right" href="#" title="Re-order answer"><i class="fa fa-sort"></i></a>
                                                                 #if($question.source.type!='2')
                                                                     <a href="#" class="btn btn-link btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a>
                                                                 #end
                                                                 <a href="#" class="btn btn-link btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>
+
                                                         #end
                                                     #end
                                                 #end
                                             </ul>
-                                        #end
-                                        #if($question.source.type!='1')
+
                                             <form class="answer-form #if($question.source.type=='2') hide #end" autocomplete="off">
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -178,6 +178,7 @@
                     <hr />
                     <div class="clearfix">
                         <a href="#" class="btn btn-primary btn-sm pull-right btn-add-question" data-survey="$survey.name"><i class="fa fa-plus-square"></i> Add new question</a>
+                        <a style="margin-right: 5px" href="#" class="btn btn-info btn-sm pull-right btn-toggle-questions"><i class="fa fa-list"></i> Toggle questions</a>
                     </div>
                 </div>
 

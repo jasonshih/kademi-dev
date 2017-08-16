@@ -372,8 +372,6 @@ function reorderQuestions(page, params) {
                     var question = JSON.parse(questionRes.json);
                     question.order = index;
                     questionRes.update(JSON.stringify(question), RECORD_TYPES.QUESTION);
-                    
-                    return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
                 } else {
                     errorIds.push(questionsIdsArr[index]);
                 }
@@ -387,6 +385,39 @@ function reorderQuestions(page, params) {
         }
     } else {
         return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when re-ordering questions. Please try again']})).wrapJsonResult();
+    }
+}
+
+// GET /ksurvey/reorderQuestions
+function reorderAnswers(page, params) {
+    log.info('reorderAnswers > page={}, params={}', page, params);
+
+    var answersIds = (params.answersIds || '').trim();
+    var answersIdsArr = answersIds.split(',');
+
+    if (answersIds && answersIdsArr.length > 0) {
+        var db = getDB(page);
+        var errorIds = [];
+
+        for (var i = 0; i < answersIdsArr.length; i++) {
+            (function (index) {
+                var answerRes = db.child(answersIdsArr[index]);
+                if (answerRes !== null) {
+                    answerRes.jsonObject.order = index;
+                    answerRes.save();
+                } else {
+                    errorIds.push(answersIdsArr[index]);
+                }
+            })(i);
+        }
+
+        if (errorIds.length === 0) {
+            return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
+        } else {
+            return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when re-ordering answers: ' + errorIds.join(', ')]})).wrapJsonResult();
+        }
+    } else {
+        return views.jsonObjectView(JSON.stringify({status: false, messages: ['There was an error when re-ordering answers. Please try again']})).wrapJsonResult();
     }
 }
 
