@@ -63,7 +63,7 @@
     function showJournalNotes(journalDiv, journalNotes, config) {
         try {
             journalNotes.addClass('loaded').html('');
-            journalDiv.addClass('ajax-loading');
+            journalDiv.addClass('ajax-processing');
             
             var baseUrl = config.journalBaseUrl + '/' + config.journalName;
             var url = baseUrl + '/_DAV/PROPFIND?fields=name,milton:textContent&depth=1';
@@ -116,7 +116,7 @@
             });
         } catch (e) {
             flog('[jquery.journal] Error when showing journal notes', e);
-            journalDiv.addClass('ajax-loading');
+            journalDiv.removeClass('ajax-processing');
         }
     }
     
