@@ -248,6 +248,10 @@ var answerMapping = {
                     "type": "keyword"
                 }
             }
+        },
+        "order": {
+            "store": true,
+            "type": "long"
         }
     }
 };
