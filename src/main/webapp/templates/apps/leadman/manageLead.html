@@ -37,27 +37,24 @@
                             </button>
                         </p>
 
-                        <div class="btn-group dropdown">
-                            <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
-                                <span>
-                                    #if( $page.assignedTo )
-                                        Assigned to: $!page.assignedTo.thisUser.formattedName
-                                    #else
-                                        Not assigned
-                                    #end
-                                </span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right" id="assignToMenu" role="menu">
-                                <li><a href="$user.name">Assign to me</a></li>
-                                <li><a href="">Clear</a></li>
-                                #if ($page.find("/leads").teamMembers.size() > 0)
-                                    <li role="separator" class="divider"></li>
+                        <div class="input-group" style="width: 400px;">
+                            <span class="input-group-addon" id="assignedBlock">
+                                #if( $page.assignedTo )
+                                    Assigned to: $!page.assignedTo.thisUser.formattedName
+                                #else
+                                    Not assigned
                                 #end
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                    <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
-                                #end
-                            </ul>
+                            </span>
+                            <input type="text" class="form-control" id="findAnAssignee" placeholder="Type to search..." />
+                            <span class="input-group-btn">
+                                <button class="btn dropdown-toggle btn-default" data-toggle="dropdown" type="button">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="assignToMenu" role="menu">
+                                    <li><a href="$user.name">Assign to me</a></li>
+                                    <li><a href="">Clear</a></li>
+                                </ul>
+                            </span>
                         </div>
                     #end
                 </div>
