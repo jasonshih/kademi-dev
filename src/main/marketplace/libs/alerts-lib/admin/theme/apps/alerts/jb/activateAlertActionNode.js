@@ -1,8 +1,8 @@
-JBNodes['createAlertAction'] = {
+JBNodes['activateAlertAction'] = {
     icon: 'fa fa-exclamation-triangle',
-    title: 'Create Alert',
+    title: 'Activate Alert',
     type: JB_NODE_TYPE.ACTION,
-    previewUrl: '/theme/apps/vayaExtra/jb/createAlertActionNode.png',
+    previewUrl: '/theme/apps/vayaExtra/jb/activateAlertActionNode.png',
     ports: {
         nextNodeId: {
             label: 'then',
@@ -11,63 +11,46 @@ JBNodes['createAlertAction'] = {
         }
     },
 
-    nodeTypeClass: 'customAction',
-    
     settingEnabled: true,
 
     initSettingForm: function (form) {
         form.append(
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Website name</label>' +
-                '        <input type="text" class="form-control website" placeholder="Name of the website" />' +
+                '        <label>Website</label>' +
+                '        <select class="form-control website"></select>' +
                 '    </div>' +
                 '</div>' +
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Title</label>' +
-                '        <input type="text" class="form-control title" placeholder="User friendly title" />' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Message</label>' +
-                '        <textarea class="form-control message" placeholder="the actual message of this alert"></textarea>' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Type</label>' +
-                '        <select class="form-control type">' +
-                '           <option value="">[Please Select]</option>' +
-                '           <option value="top">Top</option>' +
-                '           <option value="bottom">Bottom</option>' +
-                '        </select>' +
-                '    </div>' +
-                '</div>' +
-                '<div class="form-group">' +
-                '    <div class="col-md-12">' +
-                '        <label>Group name</label>' +
-                '        <input type="text" class="form-control groupName" placeholder="The group which this alert applies to" />' +
+                '        <label>Alert Id</label>' +
+                '        <input type="text" class="form-control alertId" placeholder="The alert id" />' +
                 '    </div>' +
                 '</div>'
                 );
+        
+        $.ajax({
+            url: '/websites/_DAV/PROPFIND?fields=name',
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                var optionsStr = '<option value="">[No website selected]</option>';
+                for (var i = 1; i < resp.length; i++) {
+                    optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name+ '</option>';
+                }
+
+                form.find('.website').html(optionsStr);
+            }
+        });
 
         form.forms({
             allowPostForm: false,
             onValid: function () {
                 var website = form.find('.website').val();
-                var title = form.find('.title').val();
-                var message = form.find('.message').val();
-                var type = form.find('.type').val();
-                var groupName = form.find('.groupName').val();
+                var alertId = form.find('.alertId').val();
                 
-                JBApp.currentSettingNode.customSettings = {};
-                JBApp.currentSettingNode.customSettings['website'] = website || null;
-                JBApp.currentSettingNode.customSettings['title'] = title || null;
-                JBApp.currentSettingNode.customSettings['message'] = message || null;
-                JBApp.currentSettingNode.customSettings['type'] = type || null;
-                JBApp.currentSettingNode.customSettings['groupName'] = groupName || null;
+                JBApp.currentSettingNode.website = website || null;
+                JBApp.currentSettingNode.alertId = alertId || null;
 
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
@@ -76,13 +59,8 @@ JBNodes['createAlertAction'] = {
     },
 
     showSettingForm: function (form, node) {
-        var customSettings = node.customSettings === undefined ? {} : node.customSettings;
-        
-        form.find('.website').val(customSettings.website !== null ? customSettings.website : '');
-        form.find('.title').val(customSettings.title !== null ? customSettings.title : '');
-        form.find('.message').val(customSettings.message !== null ? customSettings.message : '');
-        form.find('.type').val(customSettings.type !== null ? customSettings.type : '');
-        form.find('.groupName').val(customSettings.groupName !== null ? customSettings.groupName : '');    
+        form.find('.website').val(node.website !== null ? node.website : '');
+        form.find('.alertId').val(node.alertId !== null ? node.alertId : '');
         
         JBApp.showSettingPanel(node);
     }
