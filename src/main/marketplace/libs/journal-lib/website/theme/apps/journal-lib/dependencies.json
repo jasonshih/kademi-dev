@@ -1,0 +1,13 @@
+{
+    "appDependencies": [
+
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/alerts/alerts.js"
+            }
+        }
+    ]
+}
