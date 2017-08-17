@@ -38,7 +38,7 @@
                                 <li><a>Select a version:</a></li>
                                 <li class="divider"></li>
                                 #foreach($version in $page.parent.branches)
-                                    <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
+                                <li><a target="_blank" href="$page.href?goto=$version.repository.name:$version.name">$version.repository.name - $version.name</a></li>
                                 #end
                             </ul>
                         </div>
@@ -112,6 +112,17 @@
                                                     $formatter.option($st.key, $st.value, $page.status)
                                                     #end
                                                 </select>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>Require Approval</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-2">
+                                                $formatter.checkbox("requireApproval", $page.requireApproval)
                                             </div>
                                         </div>
                                     </td>
@@ -224,17 +235,17 @@
                                 <div>
                                     #set($image = $page.imageHref )
                                     #if( $image )
-                                        <div id="reward-image">
-                                            <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
-                                            <!--
-                                    <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
-                                            <span class="fa fa-times"></span>
-                                    </a>
+                                    <div id="reward-image">
+                                        <a href="$image" target="_blank" class="thumbnail"><img style="width: 150px" src="$image/alt-150-150.png" /></a>
+                                        <!--
+                                <a id="delete-image" class="btn btn-xs btn-danger" href="$image">
+                                        <span class="fa fa-times"></span>
+                                </a>
                                         -->
-                                        </div>
-                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
+                                    </div>
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Change image</button>
                                     #else
-                                        <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
+                                    <button id="btn-change-img" class="btn btn-success" type="button" data-toggle="modal" data-target="#modal-add-image">Add image</button>
                                     #end
                                 </div>
                             </div>
@@ -246,7 +257,7 @@
                         <div class="well margin-top-10">Add user groups to rewards to allow these users to directly enter the competition. These users will see the reward on their dashboard when it is active.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
-                                <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
+                            <button class="btn btn-sm btn-default reset-margin-bottom" type="button">$g.name</button>
                             #end
                         </div>
                     </div>
@@ -302,7 +313,7 @@
                                     <select name="selectOrgType" class="form-control">
                                         <option value="">Any type of organisation</option>
                                         #foreach( $ot in $page.organisation.orgTypes )
-                                            $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
+                                        $formatter.option($ot.name, $ot.displayName, $page.selectOrgType)
                                         #end
                                     </select>
                                     <i>If selected, the user will be required to select an organisation of this type, eg "store"</i>
@@ -336,7 +347,7 @@
                                 <select name="storeName" class="form-control">
                                     <option value="">No store</option>
                                     #foreach( $store in $page.stores )
-                                        $formatter.option($store.name, $store.title, $page.storeName)
+                                    $formatter.option($store.name, $store.title, $page.storeName)
                                     #end
                                 </select>
                                 <i>If selected, this checkout promotion will be active for the selected store. Manage <a href="/reward-store/">stores here</a></i>
@@ -395,7 +406,7 @@
                                 <input name="promoGiftSku" class="form-control" value="$!page.promoGiftSku" />
                             </div>
                         </div>
-                        
+
                         <h3>Promotion codes</h3>
 
                         <div class="form-group">
@@ -420,12 +431,12 @@
                         <div class="well">Add restrictions which will prevent rewards from being given unless they have been met.</div>
                         <ul class="restrictionList clearfix" style="padding-left: 0px;">
                             #foreach($r in $page.restrictions)
-                                <li>
-                                    $r.description
-                                    <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
-                                    <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
-                                    <button data-dismiss="alert" class="close remove">&times;</button>
-                                </li>
+                            <li>
+                                $r.description
+                                <input type="hidden" name="restrictionType${foreach.count}" value="$r.type" />
+                                <input type="hidden" name="restrictionItem${foreach.count}" value="$r.item" />
+                                <button data-dismiss="alert" class="close remove">&times;</button>
+                            </li>
                             #end
                         </ul>
                     </div>
@@ -463,12 +474,12 @@
                     <div class="modal-body">
                         <div class="ListItem">
                             #foreach($g in $page.allGroups)
-                                <div class="panel panel-default">
-                                    <div class="panel-body membership">
-                                        <label for="$g.name">$g.name</label>
-                                        <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
-                                    </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body membership">
+                                    <label for="$g.name">$g.name</label>
+                                    <label class="pull-right">$formatter.checkbox($g.name, $page.isSelected($g))</label>
                                 </div>
+                            </div>
                             #end
                         </div>
                     </div>
@@ -513,9 +524,10 @@
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js"></script>
         <script type="text/javascript">
             var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                    '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end
+            #foreach ($group in $page.find("/").allGroups)
+                    '$group.name': '$formatter.firstNotNull($group.title, $group.name)'
+                    #if(!$foreach.last),#end
+                    #end
             };
             var quiz = $formatter.toJson($page.quiz);
             $(function () {

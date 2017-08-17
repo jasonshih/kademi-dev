@@ -33,6 +33,7 @@
                     <table class="entries table table-striped table-hover table-full-width pagination-container">
                         <thead>
                             <tr>
+                                <th>Status</th>
                                 <th>Full name</th>
                                 <th>Organisation</th>
                                 <th>Email</th>
@@ -49,7 +50,20 @@
                         </thead>
                         <tbody class="pagination-results" >
                             #foreach($entry in $page.paginator.records)
-                            <tr>
+                            <tr data-entryid="$entry.id">
+                                <td>
+                                    #if($entry.approvalStatus == "PENDING")
+                                    <i title="Pending Approval" class="text-info fa fa-hourglass-half fa-lg fa-fw"></i>    
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" title="Accept Entry" class="btn btn-success btn-rewardentry-accept"><i class="fa fa-check"></i></button>
+                                        <button type="button" title="Reject Entry" class="btn btn-danger btn-rewardentry-reject"><i class="fa fa-times"></i></button>
+                                    </div>        
+                                    #elseif($entry.approvalStatus == "REJECTED")
+                                    <span class="text-danger" title="Entry Rejected"><i class="fa fa-times fa-2x fa-fw"></i></span>
+                                    #else
+                                    <span class="text-success" title="Entry Accepted"><i class="fa fa-check fa-2x fa-fw"></i></span>
+                                    #end
+                                </td>
                                 <td>$entry.awardedTo.formattedName</td>
                                 <td>$page.orgForEntry($entry)</td>
                                 <td>$entry.awardedTo.email</td>
@@ -147,11 +161,6 @@
             </div>
         </section>
         <script type="text/javascript">
-            $(function () {
-                initRemoveEntries();
-                initRemoveAnswers();
-                initSelectAll();
-            });
             function initRemoveEntries() {
                 $(".removeUsers").click(function (e) {
                     var node = $(e.target);
@@ -180,6 +189,53 @@
                     }
                 });
             }
+
+            function initAcceptEntry() {
+                $('body').on('click', '.btn-rewardentry-accept', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var row = btn.closest('tr');
+                    var entryid = row.data('entryid');
+
+                    Kalert.confirm('Do you want to accept this entry?', 'Yes', function () {
+                        flog('Accept it!', entryid);
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                acceptEntry: entryid
+                            },
+                            success: function (resp) {
+                                if (resp.status) {
+                                    Kalert.success(resp.messages);
+                                } else {
+                                    Kalert.warning(resp.messages);
+                                }
+                            },
+                            error: function () {
+                                Kalert.warning('Oh No!', 'Something went wrong with your request!');
+                            }
+                        });
+                    });
+                });
+            }
+
+            function initRejectEntry() {
+                $('body').on('click', '.btn-rewardentry-reject', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var row = btn.closest('tr');
+                    var entryid = row.data('entryid');
+
+                    Kalert.confirm('Do you want to reject this entry?', 'Yes', function () {
+                        flog('Reject it!', entryid);
+                    });
+                });
+            }
+
             function doRemoveEntries(checkBoxes) {
                 $.ajax({
                     type: 'POST',
@@ -200,6 +256,14 @@
                     }
                 });
             }
+
+            $(function () {
+                initRemoveEntries();
+                initRemoveAnswers();
+                initSelectAll();
+                initAcceptEntry();
+                initRejectEntry();
+            });
         </script>
     </body>
 </html>
