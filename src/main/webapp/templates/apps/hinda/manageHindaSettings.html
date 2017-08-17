@@ -42,16 +42,16 @@
                     <select name="hindaCatalogId" class="form-control">
                         #if( $page.catalogs )
                         #foreach($c in $page.catalogs)
-                        #if( $c.id == $!page.catalogId)
-                        <option value="$c.name" selected="selected">
+                            #if( $c.catalogId == $!page.catalogId && $c.accountNumber == $!page.accountNumber)
+                                <option value="$c.name" selected="selected">
                             #else
-                            <option value="$c.name">
-                                #end
+                                <option value="$c.name">
+                            #end
                                 $c.name</option>
                             #end
-                            #else
+                        #else
                             <option value="-1">[ Set the credentials ]</option>
-                            #end
+                        #end
                     </select>
                 </div>
             </div>
