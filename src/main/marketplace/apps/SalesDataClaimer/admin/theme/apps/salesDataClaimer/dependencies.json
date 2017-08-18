@@ -1,0 +1,30 @@
+{
+    "appDependencies": [
+        {
+            "appId": "userApp",
+            "branch": ""
+        },
+        {
+            "appId": "salesData",
+            "branch": ""
+        },
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": ""
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": ""
+            }
+        }
+    ]
+}

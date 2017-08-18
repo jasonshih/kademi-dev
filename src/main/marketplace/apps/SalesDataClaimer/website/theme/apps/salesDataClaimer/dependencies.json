@@ -1,0 +1,38 @@
+{
+    "appDependencies": [
+        {
+            "appId": "userApp",
+            "branch": ""
+        },
+        {
+            "appId": "salesData",
+            "branch": ""
+        },
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        },
+        {
+            "appId": "moment-lib",
+            "branch": "2.18.3"
+        },
+        {
+            "appId": "datetimepicker-lib",
+            "branch": "4.17.37"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesDataClaimer/claimsList.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesDataClaimer/claimsList1.js"
+            }
+        }
+    ]
+}

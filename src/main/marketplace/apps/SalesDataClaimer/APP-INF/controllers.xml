@@ -1,0 +1,27 @@
+<controllers onAppEnabled="initApp">
+    <source>/APP-INF/mapping.js</source>
+    <source>/APP-INF/dbUtils.js</source>
+    <source>/APP-INF/utils.js</source>
+    <source>/APP-INF/config.js</source>
+    <source>/APP-INF/app.js</source>
+    <source>/APP-INF/website.js</source>
+    <!--<source>/APP-INF/admin.js</source>-->
+
+    <menu parentId="menuRoot" id="menuManageSaleDataClaimer" text="Sale Data Claimer" css="fa fa-id-card-o" path="/manageSaleDataClaimer/" ordering="50"/>
+
+    <role class="role">
+        <name>SalesClaimEditor</name>
+        <privNames>
+            <string>READ_CONTENT</string>
+            <string>WRITE_CONTENT</string>
+        </privNames>
+    </role>
+
+    <role class="role">
+        <name>SalesClaimAdmin</name>
+        <privNames>
+            <string>READ_CONTENT</string>
+            <string>WRITE_CONTENT</string>
+        </privNames>
+    </role>
+</controllers>
