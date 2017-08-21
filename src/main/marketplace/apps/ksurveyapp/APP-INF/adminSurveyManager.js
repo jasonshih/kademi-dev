@@ -824,7 +824,7 @@ function migrateDB(page, params) {
     var questions = db.findByType(RECORD_TYPES.QUESTION);
     for (var i in questions) {
         var s = questions[i];
-        if (typeof s.jsonObject.required == "undefined" || typeof s.jsonObject.required == "null") {
+        if (typeof s.jsonObject.required == "undefined" || s.jsonObject.required == null) {
             s.jsonObject.required = 'true';
         }
         s.save();
