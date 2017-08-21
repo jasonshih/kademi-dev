@@ -818,8 +818,14 @@ function migrateDB(page, params) {
         if (!s.jsonObject.title) {
             s.jsonObject.title = s.jsonObject.name;
         }
-        if (!s.required){
-            s.jsonObject.required = true;
+        s.save();
+    }
+
+    var questions = db.findByType(RECORD_TYPES.QUESTION);
+    for (var i in questions) {
+        var s = questions[i];
+        if (typeof s.jsonObject.required == "undefined" || typeof s.jsonObject.required == "null") {
+            s.jsonObject.required = 'true';
         }
         s.save();
     }
