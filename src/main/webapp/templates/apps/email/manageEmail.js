@@ -237,14 +237,14 @@ function setOrganisationRecipient(name, orgType) {
             success: function (data) {
                 flog("saved ok", name);
 
-                var blockWrapper = $('#orgsRecipients').find('.blocks-wrapper');
-                flog("add to list");              
+                //var blockWrapper = $('#orgsRecipients').find('.recipient');
+                flog("add to list", orgType);
                 flog('.block.' + name);
                 flog($('#orgsRecipients').find('.block.' + name));
                 $('#orgsRecipients').find('.block.' + name).remove();
-                
-                
-                blockWrapper.append(
+
+
+                $('#orgsRecipients').find('.' + orgType).append(
                         '<span class="block ' + name + '">' +
                         '<span class="block-name">' + name + '</span>' +
                         '<a class="btn btn-xs btn-danger btn-remove-org" href="' + name + '" title="Remove this org"><i class="clip-minus-circle "></i></a>' +
@@ -316,11 +316,11 @@ function setGroupRecipient(name, groupType) {
             success: function (data) {
                 flog("saved ok", name);
 
-                var blockWrapper = $('#recipients').find('.blocks-wrapper');
-                blockWrapper.find('.block.' + name).remove();
+                var blockWrapper = $('#groupRecipients').find('.' + groupType);
+                $('#groupRecipients').find('.block.' + name).remove();
 
                 flog("add to list");
-                blockWrapper.filter('.' + groupType).append(
+                blockWrapper.append(
                         '<span class="block ' + name + '">' +
                         '    <span class="block-name">' + name + '</span>' +
                         '    <a class="btn btn-xs btn-danger btn-remove-role" href="' + name + '" title="Remove this role"><i class="clip-minus-circle "></i></a>' +

@@ -63,6 +63,7 @@ $(function () {
                         modalQuestion.find('[name=questionType]').val(question.type).attr('disabled', 'disabled');
                         modalQuestion.find('[name=questionBody]').val(question.body);
                         modalQuestion.find('[name=answerLayout]').val(question.answerLayout);
+                        modalQuestion.find('[name=required]').prop('checked', question.required == "true");
                         if (question.type == "3") {
                             modalQuestion.find('.answerLayout').removeClass('hide');
                         } else {
