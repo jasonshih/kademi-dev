@@ -6,7 +6,7 @@
         <div class="col-xs-6 text-right">
             <div class="h3">
                 <div class="btn-group btn-group-sm">
-                    <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success"><i class="fa fa-plus"></i> Add claim</button>
+                    <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
                     <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
                     <button type="button" class="btn btn-danger btn-remove-claims"><i class="fa fa-times"></i> Remove</button>
                 </div>
@@ -50,7 +50,7 @@
                         </td>
                         <td>$!hit.fields.tags.value</td>
                         <td>$!hit.fields.productSku.value</td>
-                        <td><button type="button" class="btn btn-sm btn-link btn-edit-claim"><i class="fa fa-edit"></i> Edit</button></td>
+                        <td><button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button></td>
                         <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
                     </tr>
                 #end
@@ -73,7 +73,7 @@
             <form class="form-horizontal form-new-claim" action="/salesDataClaims/" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
-                    <input type="hidden" name="createClaim" value="true" />
+                    <input type="hidden" name="createClaim" value="true" class="modal-action" />
                     <input type="hidden" name="soldBy" value="$!userResource.name" />
 
                     <div class="form-group">
