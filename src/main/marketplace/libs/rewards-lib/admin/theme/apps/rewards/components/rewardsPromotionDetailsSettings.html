@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Promotion</label>
+        <div class="col-sm-12">
+            <select class="form-control rewards-select-promotion">
+                <option value="" selected="selected">- None -</option>
+                #foreach($reward in $applications.rewards.allRewards)
+                <option value="$reward.name">$formatter.firstNotNull($reward.title, $reward.name)</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>
