@@ -4,8 +4,13 @@
     <source>/APP-INF/utils.js</source>
     <source>/APP-INF/config.js</source>
     <source>/APP-INF/app.js</source>
+    <source>/APP-INF/common.js</source>
     <source>/APP-INF/website.js</source>
-    <!--<source>/APP-INF/admin.js</source>-->
+    <source>/APP-INF/admin.js</source>
+
+    <settings enabled="true" path="/theme/apps/salesDataClaimer/settings.html">
+        <function>saveSettings</function>
+    </settings>
 
     <menu parentId="menuRoot" id="menuManageSaleDataClaimer" text="Sale Data Claimer" css="fa fa-id-card-o" path="/manageSaleDataClaimer/" ordering="50"/>
 

@@ -24,6 +24,37 @@ function initApp(orgRoot, webRoot, enabled) {
     saveMapping(db);
 }
 
+function saveSettings(page, params) {
+    log.info('saveSettings > page={}, params={}', page, params);
+    
+    var dataSeries = params.dataSeries || '';
+    
+    page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
+    
+    return views.jsonResult(true);
+};
+
+
+function getAppSettings(page) {
+    log.info('getAppSettings > page={}', page);
+    
+    var websiteFolder = page.closest('websiteVersion');
+    var org = page.organisation;
+    var branch = null;
+    
+    if (websiteFolder !== null && typeof websiteFolder !== 'undefined') {
+        branch = websiteFolder.branch;
+    }
+    
+    var app = applications.get(APP_NAME);
+    if (app !== null) {
+        var settings = app.getAppSettings(org, branch);
+        return settings;
+    }
+    
+    return null;
+};
+
 function checkRedirect(page, params) {
     var href = page.href;
     if (!href.endsWith('/')) {

@@ -9,11 +9,15 @@ var recordMapping = {
                 }
             }
         },
-        "saleDate": {
+        "soldDate": {
             "store": true,
             "type": "date"
         },
         "enteredDate": {
+            "store": true,
+            "type": "date"
+        },
+        "modifiedDate": {
             "store": true,
             "type": "date"
         },
@@ -25,25 +29,7 @@ var recordMapping = {
             "type": "long",
             "store": true
         },
-        "dataSeriesId": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "salesBy": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "enteredBy": {
+        "soldBy": {
             "type": "keyword",
             "store": true,
             "fields": {
@@ -106,43 +92,7 @@ var recordMapping = {
                 }
             }
         },
-        "tag1": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "tag2": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "tag3": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "tag4": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "tag5": {
+        "tags": {
             "type": "keyword",
             "store": true,
             "fields": {

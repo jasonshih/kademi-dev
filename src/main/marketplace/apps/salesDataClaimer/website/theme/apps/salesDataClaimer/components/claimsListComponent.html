@@ -17,18 +17,48 @@
     <table class="table table-hover table-striped" id="table-claims">
         <thead>
             <tr>
-                <th></th>
+                <th width="50"></th>
                 <th>Amount</th>
-                <th>Sales by</th>
                 <th>Date</th>
                 <th>Tags</th>
                 <th>SKU Entered</th>
-                <th></th>
-                <th></th>
+                <th width="90"></th>
+                <th width="30"><input type="checkbox" class="chk-all" /></th>
             </tr>
         </thead>
         <tbody id="table-claims-body">
-
+            #set ($searchResult = $page.attributes.searchResult)
+            #if ($searchResult.hits.hits.size() > 0)
+                #foreach($hit in $searchResult.hits.hits)
+                    <tr>
+                        <td class="fa-2x text-center">
+                            #if ($hit.fields.status.value == 0)
+                                <i class="fa fa-circle text-muted" title="New"></i>
+                            #elseif ($hit.fields.status.value == 1)
+                                <i class="fa fa-gear fa-spin text-info" title="Requesting approval"></i>
+                            #elseif ($hit.fields.status.value == 2)
+                                <i class="fa fa-check-circle text-success" title="Arppoved"></i>
+                            #elseif ($hit.fields.status.value == -1)
+                                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                            #end
+                        </td>
+                        <td>$hit.fields.amount.value</td>
+                        <td>
+                            <abbr class="timeago" title="$hit.fields.soldDate.value">
+                                $hit.fields.soldDate.value
+                            </abbr>
+                        </td>
+                        <td>$!hit.fields.tags.value</td>
+                        <td>$!hit.fields.productSku.value</td>
+                        <td><button type="button" class="btn btn-sm btn-link btn-edit-claim"><i class="fa fa-edit"></i> Edit</button></td>
+                        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+                    </tr>
+                #end
+            #else
+                <tr>
+                    <td colspan="99">No claim found</td>
+                </tr>
+            #end
         </tbody>
     </table>
 </div>
@@ -43,7 +73,8 @@
             <form class="form-horizontal form-new-claim" action="/salesDataClaims/" method="post" enctype="multipart/form-data">
                 <div class="modal-body">
                     <div class="form-message alert alert-danger" style="display: none;"></div>
-                    <input type="hidden" name="createClaim" />
+                    <input type="hidden" name="createClaim" value="true" />
+                    <input type="hidden" name="soldBy" value="$!userResource.name" />
 
                     <div class="form-group">
                         <label for="amount" class="control-label col-md-4">Amount</label>
@@ -58,17 +89,9 @@
 
                         <div class="col-md-8">
                             <div class="input-group">
-                                <input type="text" name="periodFrom" id="periodFrom" placeholder="Period from" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
+                                <input type="text" name="soldDate" id="soldDate" placeholder="Period from" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="attributedTo" class="control-label col-md-4">Attributed to</label>
-
-                        <div class="col-md-8">
-                            <input name="attributedTo" id="attributedTo" class="form-control required" placeholder="email address or Org Id" value="" />
                         </div>
                     </div>
 
@@ -77,6 +100,7 @@
 
                         <div class="col-md-8">
                             <input name="tags" id="tags" class="form-control" placeholder="Summer promotion,New business" value="" />
+                            <small class="help-block">Maximum tags is 5</small>
                         </div>
                     </div>
 
