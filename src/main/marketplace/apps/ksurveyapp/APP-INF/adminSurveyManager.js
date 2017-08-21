@@ -266,7 +266,7 @@ function saveQuestion(page, params) {
     var answerLayout = params.answerLayout || 0; // o means vertical
     var questionBody = params.questionBody || '';
     var user = params.createdBy;
-    var required = params.required;
+    var required = params.required || 'false';
     var db = getDB(page);
     var errors = [];
     var returnObj;
@@ -824,10 +824,13 @@ function migrateDB(page, params) {
     var questions = db.findByType(RECORD_TYPES.QUESTION);
     for (var i in questions) {
         var s = questions[i];
-        if (typeof s.jsonObject.required == "undefined" || s.jsonObject.required == null) {
+        if (!s.jsonObject.required) {
+            // if null then default to be true
             s.jsonObject.required = 'true';
         }
         s.save();
+
+
     }
     
     return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
