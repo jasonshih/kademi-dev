@@ -266,6 +266,7 @@ function saveQuestion(page, params) {
     var answerLayout = params.answerLayout || 0; // o means vertical
     var questionBody = params.questionBody || '';
     var user = params.createdBy;
+    var required = params.required;
     var db = getDB(page);
     var errors = [];
     var returnObj;
@@ -282,6 +283,7 @@ function saveQuestion(page, params) {
                 question.type = questionType;
                 question.body = questionBody;
                 question.answerLayout = answerLayout;
+                question.required = required;
                 question.modifiedDate = new Date();
                 returnObj = question;
                 returnObj.questionId = questionId;
@@ -299,6 +301,7 @@ function saveQuestion(page, params) {
                 type: questionType,
                 body: questionBody,
                 answerLayout: answerLayout,
+                required: required,
                 modifiedDate: new Date(),
                 createdDate: new Date(),
                 createdBy: user
@@ -814,8 +817,11 @@ function migrateDB(page, params) {
         var s = surveys[i];
         if (!s.jsonObject.title) {
             s.jsonObject.title = s.jsonObject.name;
-            s.save();
         }
+        if (!s.required){
+            s.jsonObject.required = true;
+        }
+        s.save();
     }
     
     return views.jsonObjectView(JSON.stringify({status: true})).wrapJsonResult();
