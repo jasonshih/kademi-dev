@@ -136,6 +136,7 @@
                                         <div class="question-body">$!question.source.body</div>
                                         <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
                                         </p>
+                                        <p><strong>Mandatory:</strong> #if ($question.source.required == "true") Yes #else No #end</p>
                                         #if($question.source.type != '1')
                                             <p class="clearfix"><strong>Answers List</strong></p>
                                             <!-- List group -->
@@ -381,11 +382,11 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         </div>
                         <form class="form-horizontal">
-                            <input type="hidden" name="createdBy" value="anhnt" />
+                            <input type="hidden" name="createdBy" value="$userResource.name" />
                             <input type="hidden" name="questionId" value="" />
                             <input type="hidden" name="surveyId" value="$survey.name" />
                             <div class="form-group">
-                                <label class="control-label col-md-2" for="title">Title</label>
+                                <label class="control-label col-md-2" for="">Title</label>
                                 <div class="col-md-10">
                                     <input type="text" class="form-control required" name="questionTitle" required="required" value="" />
                                 </div>
@@ -394,7 +395,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-2" for="questionType">Question type</label>
                                 <div class="col-md-10">
-                                    <select name="questionType" class="form-control required" id="">
+                                    <select name="questionType" class="form-control required" id="questionType">
                                         <option value="0">Multiple Choices</option>
                                         <option value="1">Plain Text</option>
                                         <option value="2">Yes/No Question</option>
@@ -402,8 +403,18 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <label class="control-label col-md-2" for="">Mandatory?</label>
+                                <div class="col-sm-10">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input name="required" type="checkbox" checked value="true">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group answerLayout hide">
-                                <label class="control-label col-md-2" for="title">Answers layout</label>
+                                <label class="control-label col-md-2" for="">Answers layout</label>
                                 <div class="col-md-10">
                                     <select name="answerLayout" class="form-control required" id="">
                                         <option selected value="0">Vertical (Default)</option>

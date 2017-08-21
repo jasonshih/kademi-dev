@@ -1,0 +1,123 @@
+<div class="claims-list-component">
+    <div class="row">
+        <div class="col-xs-6">
+            <h3>Claims List</h3>
+        </div>
+        <div class="col-xs-6 text-right">
+            <div class="h3">
+                <div class="btn-group btn-group-sm">
+                    <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
+                    <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
+                    <button type="button" class="btn btn-danger btn-remove-claims"><i class="fa fa-times"></i> Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <table class="table table-hover table-striped" id="table-claims">
+        <thead>
+            <tr>
+                <th width="50"></th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Tags</th>
+                <th>SKU Entered</th>
+                <th width="90"></th>
+                <th width="30"><input type="checkbox" class="chk-all" /></th>
+            </tr>
+        </thead>
+        <tbody id="table-claims-body">
+            #set ($searchResult = $page.attributes.searchResult)
+            #if ($searchResult.hits.hits.size() > 0)
+                #foreach($hit in $searchResult.hits.hits)
+                    <tr>
+                        <td class="fa-2x text-center">
+                            #if ($hit.fields.status.value == 0)
+                                <i class="fa fa-circle text-muted" title="New"></i>
+                            #elseif ($hit.fields.status.value == 1)
+                                <i class="fa fa-gear fa-spin text-info" title="Requesting approval"></i>
+                            #elseif ($hit.fields.status.value == 2)
+                                <i class="fa fa-check-circle text-success" title="Arppoved"></i>
+                            #elseif ($hit.fields.status.value == -1)
+                                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                            #end
+                        </td>
+                        <td>$hit.fields.amount.value</td>
+                        <td>
+                            <abbr class="timeago" title="$hit.fields.soldDate.value">
+                                $hit.fields.soldDate.value
+                            </abbr>
+                        </td>
+                        <td>$!hit.fields.tags.value</td>
+                        <td>$!hit.fields.productSku.value</td>
+                        <td><button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button></td>
+                        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+                    </tr>
+                #end
+            #else
+                <tr>
+                    <td colspan="99">No claim found</td>
+                </tr>
+            #end
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="modal-add-claim">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Add new claim</h3>
+            </div>
+            <form class="form-horizontal form-new-claim" action="/salesDataClaims/" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                    <input type="hidden" name="createClaim" value="true" class="modal-action" />
+                    <input type="hidden" name="soldBy" value="$!userResource.name" />
+
+                    <div class="form-group">
+                        <label for="amount" class="control-label col-md-4">Amount</label>
+
+                        <div class="col-md-8">
+                            <input type="number" id="amount" class="form-control required" name="amount" placeholder="Amount for this record" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="periodFrom" class="control-label col-md-4">Date</label>
+
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" name="soldDate" id="soldDate" placeholder="Period from" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker" />
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tags" class="control-label col-md-4">Tags</label>
+
+                        <div class="col-md-8">
+                            <input name="tags" id="tags" class="form-control" placeholder="Summer promotion,New business" value="" />
+                            <small class="help-block">Maximum tags is 5</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productSku" class="control-label col-md-4">Product SKU</label>
+
+                        <div class="col-md-8">
+                            <input name="productSku" id="productSku" class="form-control" placeholder="ABC-123" value="">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-success" type="submit">Save claim</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

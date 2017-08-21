@@ -1,66 +1,80 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
+        <script type="text/javascript" src="manageHindaSettings.js">//</script>
     </head>
     <body>
         <div id="settings-content">
-        <h3>Settings</h3>
-        <form action="." method="POST" enctype="multipart/form-data" id="hindaForm" class="form-horizontal">
-            <input type="hidden" name="save" value="true" />
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="hindaToken">Token</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control required" id="appName" name="hindaToken" value="$!page.token" />
+            <h3>Settings</h3>
+
+            <form method="post" action="$page.href" class="form-horizontal importForm" role="form">
+                <div class="form-group">
+                    <div class="col-md-9">
+                        <input type="hidden" name="run" value="true" />
+                        <button class="btn btn-danger" name="import" type="submit" id="btn-cancel">Manual import</button>
+                    </div>
                 </div>
-            </div>
+            </form>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="hindaUsername">Username</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control required simpleChars" id="appName" name="hindaUsername" value="$!page.username" />
+            <form action="." method="POST" id="hindaForm" class="form-horizontal">
+                <input type="hidden" name="save" value="true" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaToken">Token</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control required" id="appName" name="hindaToken" value="$!page.token" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="hindaPassword">Password</label>
-                <div class="col-sm-9">
-                    <input type="password" class="form-control required" id="appName" name="hindaPassword" value="$!page.password" />
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaUsername">Username</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control required simpleChars" id="appName" name="hindaUsername" value="$!page.username" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="hindaDelta">Delta</label>
-                <div class="col-sm-9">
-                    $formatter.checkbox($!page.delta, "hindaDelta", $!page.delta)
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaPassword">Password</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control required" id="appName" name="hindaPassword" value="$!page.password" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label class="col-sm-2 control-label" for="hindaCatalogId">Catalog ($!page.catalogId)</label>
-                <div class="col-sm-9">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaDelta">Delta</label>
+                    <div class="col-sm-9">
+                        $formatter.checkbox($!page.delta, "hindaDelta", $!page.delta)
+                    </div>
+                </div>
 
-                    <select name="hindaCatalogId" class="form-control">
-                        #if( $page.catalogs )
-                        #foreach($c in $page.catalogs)
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaCatalogId">Catalog ($!page.catalogId)</label>
+                    <div class="col-sm-9">
+
+                        <select name="hindaCatalogId" class="form-control">
+                            #if( $page.catalogs )
+                            #foreach($c in $page.catalogs)
                             #if( $c.catalogId == $!page.catalogId && $c.accountNumber == $!page.accountNumber)
-                                <option value="$c.name" selected="selected">
-                            #else
+                            <option value="$c.name" selected="selected">
+                                #else
                                 <option value="$c.name">
-                            #end
-                                $c.name</option>
-                            #end
-                        #else
-                            <option value="-1">[ Set the credentials ]</option>
-                        #end
-                    </select>
+                                    #end
+                                    $c.name</option>
+                                #end
+                                #else
+                                <option value="-1">[ Set the credentials ]</option>
+                                #end
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <p class="pull-right">
-                <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
-            </p>
+                <p class="pull-right">
+                    <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
+                </p>
 
-        </form>
+            </form>
         </div>
+        <script>
+            hindaApp();
+        </script>
     </body>
 </html>

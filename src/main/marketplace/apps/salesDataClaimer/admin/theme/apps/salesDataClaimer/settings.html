@@ -1,0 +1,11 @@
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="salesDataClaimer-dataSeries">Date Series</label>
+    <div class="col-sm-7">
+        <select class="form-control" name="dataSeries" id="salesDataClaimer-dataSeries">
+            <option value=""> - None Sale Data Series Selected -</option>
+            #foreach ($dataSeries in $page.find("/sales").children)
+                $formatter.option($dataSeries.name, $dataSeries.title, $selectedDateSeries)
+            #end
+        </select>
+    </div>
+</div>
