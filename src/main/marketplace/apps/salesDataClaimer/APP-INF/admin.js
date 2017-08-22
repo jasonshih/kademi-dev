@@ -127,8 +127,8 @@ function getClaim(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function changeClaimsStatus(status, page, params) {
-    log.info('changeClaimsStatus > status={}, page={}, params={}', status, page, params);
+function changeClaimsStatus(status, page, params, callback) {
+    log.info('changeClaimsStatus > status={}, page={}, params={}', status, page, params, callback);
     
     var result = {
         status: true
@@ -160,6 +160,10 @@ function changeClaimsStatus(status, page, params) {
                 }
             })(ids[i]);
         }
+        
+        if (typeof callback === 'function') {
+            callback(result);
+        }
     } catch (e) {
         result.status = false;
         result.messages = ['Error in ' + action + ': ' + e];
@@ -171,7 +175,27 @@ function changeClaimsStatus(status, page, params) {
 function approveClaims(page, params) {
     log.info('approveClaims > page={}, params={}', page, params);
     
-    return changeClaimsStatus(RECORD_STATUS.APPROVED, page, params);
+    return changeClaimsStatus(RECORD_STATUS.APPROVED, page, params, function (result) {
+        try {
+            var db = getDB(page);
+            var ids = params.ids;
+            ids = ids.split(',');
+            
+            for (var i = 0; i < ids.length; i++) {
+                (function (id) {
+                    var claim = db.child(id);
+                    
+                    if (claim !== null) {
+                        // TODO: Add data to data series
+                        // applications.salesData.insertDataPoint();
+                    }
+                })(ids[i]);
+            }
+        } catch (e) {
+            result.status = false;
+            result.messages = ['Error in approving: ' + e];
+        }
+    });
 }
 
 function rejectClaims(page, params) {
