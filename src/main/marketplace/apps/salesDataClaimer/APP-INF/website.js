@@ -56,6 +56,14 @@ function getClaims(page, params) {
                     'tags'
                 ],
                 'size': 10000,
+                'sort': [
+                    {
+                        'modifiedDate': 'desc'
+                    },
+                    {
+                        'enteredDate': 'desc'
+                    }
+                ],
                 'query': {
                     'bool': {
                         'must': [
