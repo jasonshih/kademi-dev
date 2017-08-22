@@ -1,6 +1,4 @@
-controllerMappings.addComponent("salesDataClaimer/components", "claimForm", "html", "Displays form to enter a new sales claim", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
-controllerMappings.addComponent("salesDataClaimer/components", "claimsPending", "html", "Displays pending claim need to approve", "Sales Data Claimer");
 
 function initApp(orgRoot, webRoot, enabled) {
     log.info("initApp SalesDataClaimer: orgRoot={}", orgRoot);
