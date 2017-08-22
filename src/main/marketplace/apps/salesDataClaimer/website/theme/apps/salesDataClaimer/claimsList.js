@@ -27,6 +27,18 @@
             modal.find('.modal-action').attr('name', 'createClaim');
         });
         
+        var uri = new URI(window.location.href);
+        $('.select-status').on('change', function (e) {
+            uri.removeSearch('status');
+            
+            if (this.value) {
+                uri.addSearch('status', this.value);
+            }
+            
+            window.history.pushState('', document.title, uri.toString());
+            reloadClaimsList();
+        });
+        
         table.on('click', '.btn-edit-claim', function (e) {
             e.preventDefault();
             
@@ -186,9 +198,13 @@
     
     function reloadClaimsList(callback) {
         $('#table-claims-body').reloadFragment({
+            url: window.location.pathname + window.location.search,
             whenComplete: function () {
                 $('.timeago').timeago();
-                callback();
+                
+                if (typeof callback === 'function') {
+                    callback();
+                }
             }
         });
     }

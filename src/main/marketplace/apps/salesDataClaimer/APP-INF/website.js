@@ -66,6 +66,12 @@ function getClaims(page, params) {
                 }
             };
             
+            if (params.status) {
+                queryJson.query.bool.must.push({
+                    'term': {'status': +params.status}
+                });
+            }
+            
             var searchResult = doDBSearch(page, queryJson);
             
             page.attributes.searchResult = searchResult;

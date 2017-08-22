@@ -1,19 +1,27 @@
 <div class="claims-list-component">
     <div class="row">
-        <div class="col-xs-6">
-            <h3>Claims List</h3>
+        <div class="col-sm-3">
+            <p class="input-group input-group-sm">
+                <span class="input-group-addon">Status</span>
+                <select class="form-control select-status">
+                    <option value="" selected="selected"> - All statuses -</option>
+                    $formatter.option("0", "New", $params.status)
+                    $formatter.option("1", "Requesting approval", $params.status)
+                    $formatter.option("2", "Approved", $params.status)
+                    $formatter.option("-1", "Rejected", $params.status)
+                </select>
+            </p>
         </div>
-        <div class="col-xs-6 text-right">
-            <div class="h3">
-                <div class="btn-group btn-group-sm">
-                    <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
-                    <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
-                    <button type="button" class="btn btn-danger btn-remove-claims"><i class="fa fa-times"></i> Remove</button>
-                </div>
-            </div>
+        <div class="col-sm-9 text-right">
+            <p class="btn-group btn-group-sm">
+                <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
+                <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
+                <button type="button" class="btn btn-danger btn-remove-claims"><i class="fa fa-times"></i> Remove</button>
+            </p>
         </div>
     </div>
     <br />
+
     <table class="table table-hover table-striped" id="table-claims">
         <thead>
             <tr>
@@ -50,7 +58,9 @@
                         </td>
                         <td>$!hit.fields.tags.value</td>
                         <td>$!hit.fields.productSku.value</td>
-                        <td><button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button></td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
+                        </td>
                         <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
                     </tr>
                 #end
