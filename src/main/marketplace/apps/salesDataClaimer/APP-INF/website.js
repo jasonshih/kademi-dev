@@ -143,11 +143,17 @@ function createClaim(page, params) {
         var obj = {
             recordId: id,
             soldBy: params.soldBy,
+            soldById: params.soldById,
             amount: amount,
             soldDate: soldDate,
             enteredDate: new Date(),
             modifiedDate: new Date(),
             productSku: params.productSku || '',
+            field1: params.field1 || '',
+            field2: params.field2 || '',
+            field3: params.field3 || '',
+            field4: params.field4 || '',
+            field5: params.field5 || '',
             status: RECORD_STATUS.NEW
         };
         
@@ -201,11 +207,17 @@ function updateClaim(page, params) {
             var obj = {
                 recordId: id,
                 soldBy: claim.jsonObject.soldBy,
+                soldById: claim.jsonObject.soldById,
                 amount: amount,
                 soldDate: soldDate,
                 enteredDate: claim.jsonObject.enteredDate,
                 modifiedDate: new Date(),
                 productSku: params.productSku || '',
+                field1: params.field1 || '',
+                field2: params.field2 || '',
+                field3: params.field3 || '',
+                field4: params.field4 || '',
+                field5: params.field5 || '',
                 status: claim.jsonObject.status,
                 tags: claim.jsonObject.tags
             };

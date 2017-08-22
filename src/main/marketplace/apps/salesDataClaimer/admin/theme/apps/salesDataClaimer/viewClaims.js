@@ -11,10 +11,54 @@
         var components = $('.claims-list-component');
         
         if (components.length > 0) {
+            initModalViewClaim();
             initModalReviewClaim();
             initClaimsTable();
+            initUpdateMapping();
         }
     });
+    
+    function initModalViewClaim() {
+        flog('initModalViewClaim');
+        
+        var modal = $('#modal-view-claim');
+        
+        modal.on('hidden.bs.modal', function () {
+            modal.find('.form-control-static').html('');
+        });
+    }
+    
+    function initUpdateMapping() {
+        var btnUpdateMapping = $('.btn-update-mapping');
+        
+        if (btnUpdateMapping.length > 0) {
+            btnUpdateMapping.on('click', function (e) {
+                e.preventDefault();
+                
+                btnUpdateMapping.prop('disabled', true);
+                $.ajax({
+                    url: '/updateMappingSaleDataClaimer',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    success: function (resp) {
+                        if (resp && resp.status) {
+                            Msg.success('Mapping is updated');
+                        } else {
+                            Msg.error('Error in updating mapping. Please contact your administrators to resolve this issue.');
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        Msg.error('Error in updating mapping: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
+                        flog('Error in updating mapping', jqXHR, textStatus, errorThrown);
+                    },
+                    complete: function () {
+                        
+                        btnUpdateMapping.prop('disabled', false);
+                    }
+                });
+            });
+        }
+    }
     
     function changeClaimsStatus(status) {
         var table = $('#table-claims');
@@ -29,7 +73,7 @@
                 actionCapitalize = 'Approve';
                 actionVing = 'approving';
                 break;
-                
+            
             case RECORD_STATUS.REJECTED:
                 action = 'reject';
                 actionCapitalize = 'Reject';

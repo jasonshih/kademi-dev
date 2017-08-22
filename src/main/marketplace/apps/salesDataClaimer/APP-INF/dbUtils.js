@@ -16,6 +16,24 @@ function getDB(page) {
     return db;
 }
 
+function updateMapping(page, prams) {
+    log.info('updateMapping > page={}, prams={}', prams);
+    
+    var result = {
+        status: true
+    };
+    
+    try {
+        var db = getDB(page);
+        saveMapping(db);
+    } catch (e) {
+        result.status = false;
+        result.messages = ['Error in updating mapping: ' + e];
+    }
+    
+    return views.jsonObjectView(JSON.stringify(result))
+}
+
 function saveMapping(db) {
     log.info('saveMapping');
     

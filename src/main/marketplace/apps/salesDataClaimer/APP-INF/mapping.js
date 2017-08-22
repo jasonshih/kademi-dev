@@ -38,6 +38,10 @@ var recordMapping = {
                 }
             }
         },
+        "soldById": {
+            "type": "long",
+            "store": true
+        },
         "productSku": {
             "type": "keyword",
             "store": true,

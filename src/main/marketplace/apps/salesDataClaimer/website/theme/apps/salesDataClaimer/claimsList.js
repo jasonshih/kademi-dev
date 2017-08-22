@@ -6,6 +6,7 @@
         
         if (components.length > 0) {
             initModalAddClaim();
+            initModalViewClaim();
             initClaimsTable();
         }
     });
@@ -198,6 +199,16 @@
         });
     }
     
+    function initModalViewClaim() {
+        flog('initModalViewClaim');
+        
+        var modal = $('#modal-view-claim');
+        
+        modal.on('hidden.bs.modal', function () {
+            modal.find('.form-control-static').html('');
+        });
+    }
+    
     function initModalAddClaim() {
         flog('initModalAddClaim');
         
@@ -223,7 +234,7 @@
         });
         
         modal.on('hidden.bs.modal', function () {
-            form.find('input').not('[name=soldBy]').val('');
+            form.find('input').not('[name=soldBy], [name=soldById]').val('');
         });
     }
     

@@ -7,6 +7,13 @@ controllerMappings
 
 controllerMappings
     .adminController()
+    .path('/updateMappingSaleDataClaimer')
+    .addMethod('POST', 'updateMapping')
+    .enabled(true)
+    .build();
+
+controllerMappings
+    .adminController()
     .path('/manageSaleDataClaimer/')
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
     .addMethod('GET', 'getClaims')
@@ -52,6 +59,14 @@ function getClaims(page, params) {
                     'field4',
                     'field5',
                     'tags'
+                ],
+                'sort': [
+                    {
+                        'modifiedDate': 'desc'
+                    },
+                    {
+                        'enteredDate': 'desc'
+                    }
                 ],
                 'size': 10000,
                 'query': {

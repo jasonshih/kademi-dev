@@ -23,6 +23,11 @@
                     </p>
                 </div>
                 <div class="col-sm-9 text-right">
+                    #if ($user.isInGroup("administrators"))
+                        <p class="btn-group btn-group-sm">
+                            <button type="button" class="btn btn-info btn-update-mapping"><i class="fa fa-refresh"></i> Update mapping</button>
+                        </p>
+                    #end
                     <p class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
                         <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
@@ -185,6 +190,46 @@
 
                                 <div class="col-md-8">
                                     <p class="form-control-static productSku"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Field 1</label>
+
+                                <div class="col-md-8">
+                                    <p class="form-control-static field1"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Field 2</label>
+
+                                <div class="col-md-8">
+                                    <p class="form-control-static field2"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Field 3</label>
+
+                                <div class="col-md-8">
+                                    <p class="form-control-static field3"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Field 4</label>
+
+                                <div class="col-md-8">
+                                    <p class="form-control-static field4"></p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-4">Field 5</label>
+
+                                <div class="col-md-8">
+                                    <p class="form-control-static field5"></p>
                                 </div>
                             </div>
 
