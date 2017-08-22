@@ -48,6 +48,8 @@ function getClaims(page, params) {
                 'stored_fields': [
                     'recordId',
                     'soldDate',
+                    'soldBy',
+                    'soldById',
                     'enteredDate',
                     'modifiedDate',
                     'amount',

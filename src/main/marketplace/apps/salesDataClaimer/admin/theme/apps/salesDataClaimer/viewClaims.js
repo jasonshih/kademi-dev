@@ -11,20 +11,45 @@
         var components = $('.claims-list-component');
         
         if (components.length > 0) {
-            initModalViewClaim();
             initModalReviewClaim();
             initClaimsTable();
             initUpdateMapping();
         }
     });
     
-    function initModalViewClaim() {
-        flog('initModalViewClaim');
+    function initModalReviewClaim() {
+        flog('initModalReviewClaim');
         
-        var modal = $('#modal-view-claim');
+        var modal = $('#modal-review-claim');
+        var form = modal.find('form');
+        var action = modal.find('.modal-action');
+        
+        modal.find('.btn-approve-claim').on('click', function (e) {
+            e.preventDefault();
+            
+            action.attr('name', 'approveClaims');
+            form.trigger('submit');
+        });
+        
+        modal.find('.btn-reject-claim').on('click', function (e) {
+            e.preventDefault();
+            
+            action.attr('name', 'rejectClaims');
+            form.trigger('submit');
+        });
         
         modal.on('hidden.bs.modal', function () {
             modal.find('.form-control-static').html('');
+            form.find('input').val('');
+        });
+        
+        form.forms({
+            onSuccess: function () {
+                reloadClaimsList(function () {
+                    Msg.success('Claim is ' + (action === 'rejectClaims' ? 'rejected' : 'approved') + '!');
+                    modal.modal('hide');
+                });
+            }
         });
     }
     
@@ -125,8 +150,10 @@
     function initClaimsTable() {
         var table = $('#table-claims');
         var tbody = $('#table-claims-body');
-        var modal = $('#modal-add-claim');
-        var form = modal.find('form');
+        var modalAdd = $('#modal-add-claim');
+        var formAdd = modalAdd.find('form');
+        var modalReview = $('#modal-review-claim');
+        var formReview = modalReview.find('form');
         
         table.find('.chk-all').on('click', function () {
             tbody.find(':checkbox').prop('checked', this.checked);
@@ -144,11 +171,13 @@
             reloadClaimsList();
         });
         
-        table.on('click', '.btn-view-claim', function (e) {
+        table.on('click', '.btn-view-claim, .btn-review-claim', function (e) {
             e.preventDefault();
             
-            var id = $(this).attr('data-id');
+            var btn = $(this);
+            var id = btn.attr('data-id');
             var url = MAIN_URL + id + '/';
+            var isReview = btn.hasClass('btn-review-claim');
             
             $.ajax({
                 url: url,
@@ -156,19 +185,20 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status) {
-                        var modal = $('#modal-view-claim');
-                        
                         $.each(resp.data, function (key, value) {
                             var newValue = value;
                             if (key === 'soldDate') {
                                 newValue = '<abbr class="timeago" title="' + value + '">' + value + '</abbr>';
                             }
                             
-                            modal.find('.' + key).html(newValue);
+                            modalReview.find('.' + key).html(newValue);
                         });
                         
-                        modal.find('.timeago').timeago();
-                        modal.modal('show');
+                        modalReview.find('.timeago').timeago();
+                        modalReview.find('[name=ids]').val(id);
+                        modalReview.find('.btn-approve-claim, .btn-reject-claim').css('display', isReview ? 'inline-block' : 'none');
+                        modalReview.find('.modal-title').html(isReview ? 'Review claim' : 'View claim details');
+                        modalReview.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
                     }
@@ -192,8 +222,8 @@
                 dataType: 'json',
                 success: function (resp) {
                     if (resp && resp.status) {
-                        form.attr('action', url);
-                        modal.find('.modal-action').attr('name', 'updateClaim');
+                        formAdd.attr('action', url);
+                        modalAdd.find('.modal-action').attr('name', 'updateClaim');
                         
                         $.each(resp.data, function (key, value) {
                             var newValue = value;
@@ -201,10 +231,10 @@
                                 newValue = moment(value).format('DD/MM/YYYY HH:mm');
                             }
                             
-                            modal.find('[name=' + key + ']').val(newValue);
+                            modalAdd.find('[name=' + key + ']').val(newValue);
                         });
                         
-                        modal.modal('show');
+                        modalAdd.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
                     }
@@ -271,11 +301,6 @@
                 alert('Please select claims which you want to delete');
             }
         });
-    }
-    
-    function initModalReviewClaim() {
-        var modal = $('#modal-review-claim');
-        var form = modal.find('form');
     }
     
     function reloadClaimsList(callback) {
