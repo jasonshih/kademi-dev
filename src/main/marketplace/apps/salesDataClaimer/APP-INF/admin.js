@@ -181,6 +181,10 @@ function approveClaims(page, params) {
             var ids = params.ids;
             ids = ids.split(',');
             
+            var settings = getAppSettings(page);
+            var selectedDataSeries = settings.get('dataSeries');
+            log.info('======================== {}', selectedDataSeries);
+            
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
                     var claim = db.child(id);
