@@ -152,7 +152,7 @@
                                 <td><a href="/points-buckets/$p.reward.name">$p.reward.title</a></td>
                                 <td>
                                     #if( $p.issuedTo.asOrg() )
-                                    <a href="/organisations/$p.issuedTo.orgId/edit">$p.issuedTo.formattedName</a>
+                                    <a href="/organisations/$p.issuedTo.id/edit">$p.issuedTo.formattedName</a>
                                     #else
                                     <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
                                     #end
