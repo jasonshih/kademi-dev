@@ -1,22 +1,28 @@
 {
-  "dependencies": [
-    {
-      "css": {
-        "cssMedia": "all",
-        "path": "/theme/apps/kpollapp/kpollPortlet.css"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
-      }
-    },
-    {
-      "js": {
-        "group": "main",
-        "path": "/theme/apps/kpollapp/kpollPortlet.js"
-      }
-    }
-  ]
+    "appDependencies": [
+        {
+            "appId": "KongoDB",
+            "branch": ""
+        }
+    ],
+    "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/kpollapp/kpollPortlet.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/kpollapp/kpollPortlet.js"
+            }
+        }
+    ]
 }
