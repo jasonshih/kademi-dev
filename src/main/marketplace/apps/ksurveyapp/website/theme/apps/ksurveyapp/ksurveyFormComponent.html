@@ -83,6 +83,7 @@
             #set ($surveySearchResult = $cApp.call('findQuestionBySurvey', $page, $survey.name))
             #set($questions = $surveySearchResult.questionResult.hits.hits)
             #set($answers = $surveySearchResult.answerResult.hits.hits)
+            #set ($notMandatoryCount = 0)
             #if($surveySearchResult.questionResult.hits.totalHits > 0)
             <form id="surveyform" data-survey="$survey.name" action="/ksurvey/$survey.name/" method="post">
                 <input type="hidden" name="temp-surveyId" value="$survey.name">
@@ -91,6 +92,10 @@
                 <input type="hidden" name="temp-fromAddress" value="$request.fromAddress">
                 <input type="hidden" name="temp-totalQuestions" value="$page.attributes.questionResult.hits.totalHits">
                 #foreach($question in $questions)
+
+                #if ($question.source.required != 'true')
+                #set ($notMandatoryCount = $notMandatoryCount + 1)
+                #end
                 <div id="questions">
 
                     <div class="question-item">
@@ -152,6 +157,8 @@
                     </div>
                 </div>
                 #end
+
+                <input type="hidden" name="temp-totalNotMandatoryQuestions" value="$!notMandatoryCount">
                 <div class="text-right"><button type="submit" class="btn btn-primary">Submit</button></div>
             </form>
             #else
