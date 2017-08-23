@@ -1,3 +1,7 @@
+<div class="text-right clearfix">
+    <button class="btn btn-default"  data-toggle="modal" data-target="#modalCreateLead"><i class="fa fa-user-plus"></i> Add new lead</button>
+</div>
+<hr>
 #foreach($lead in $applications.funnels.getLeadsForProfile($page.thisProfile) )
 <div class="panel panel-default">
     #set( $funnel = $applications.funnels.funnel($lead) )
@@ -164,3 +168,112 @@
     </div>
 </div>
 #end
+
+<div id="modalCreateLead" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create new lead</h4>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Source</div>
+                                <div class="col-sm-9">
+                                    <select name="source" id="" class="form-control"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Lead type</div>
+                                <div class="col-sm-9">
+                                    <select name="funnel" id="" class="form-control required">
+                                        #foreach($f in $applications.leadMan.funnels)
+                                        <option value="$f.name">$f.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Company</div>
+                                <div class="col-sm-9">
+                                    <input class="form-control" name="newOrgId" value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">First name</div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control required" name="firstName" value="$!page.thisProfile.firstName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Last name</div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control required" name="surName" value="$!page.thisProfile.surName">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Email</div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control required" name="email" value="$!page.thisProfile.email">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Phone</div>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="phone" value="$!page.thisProfile.phone">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group clearfix">
+                                <div class="control-label col-sm-3">Notes</div>
+                                <div class="col-sm-9">
+                                    <textarea placeholder="Notes" class="form-control" name="notes"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="col-sm-6">-->
+                            <!--<div class="form-group clearfix">-->
+                                <!--<div class="control-label col-sm-3">Tags</div>-->
+                                <!--<div class="col-sm-9">-->
+                                    <!--<input placeholder="Tags" class="form-control" name="tags" />-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btnCreateLead">Create lead</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    window.pageInitFunctions.push(initProfileLeads);
+</script>
