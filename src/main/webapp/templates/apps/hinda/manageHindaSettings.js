@@ -1,4 +1,4 @@
-function hindaApp(){
+function hindaApp() {
     startSaveSettings();
     startImport();
 }
@@ -19,6 +19,11 @@ function startSaveSettings() {
         onSuccess: function (resp) {
             flog("The settings were updated", resp);
             Msg.success("The settings were updated");
+            $('#settings-content').reloadFragment({
+                whenComplete: function () {
+                    hindaApp();
+                }
+            });
         }
     });
 }
