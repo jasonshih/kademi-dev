@@ -4,6 +4,8 @@ function initProfile() {
     initNewMembershipForm();
     initEnableDisable();
     initTabLazyLoading();
+
+
     $(".initProfileForm").forms({
         onSuccess: function (resp, form) {
             Msg.info("Done");
@@ -334,5 +336,48 @@ function initEditMemberships() {
                 }
             })
         });
+    })
+}
+
+function initProfileLeads() {
+    var modal = $('#modalCreateLead');
+    var form = $('#modalCreateLead form');
+
+
+    $(document).on('change','#modalCreateLead [name=funnel]', function () {
+        modal.reloadFragment({
+            url: window.location.pathname + '?showTab=funnelsTab&leadName='+this.value,
+            whenComplete: function () {
+                modal.find('form').forms({
+                    postUrl: '/leads',
+                    onSuccess: function (resp) {
+                        if (resp.status){
+                            Msg.success('lead created')
+                            modal.modal('hide');
+                            setTimeout(function () {
+                                reloadActiveTab();
+                            },100)
+                        }
+                    }
+                });
+
+                modal.find('[name=newOrgTitle]').entityFinder({
+                    useActualId: true,
+                    type: 'organisation'
+                });
+
+                modal.find('.btnCreateLead').click(function (e) {
+                    e.preventDefault();
+
+                    form.trigger('submit');
+                });
+            }
+        })
+    });
+
+
+
+    modal.on('shown.bs.modal', function () {
+        modal.find('[name=funnel]').trigger('change');
     })
 }
