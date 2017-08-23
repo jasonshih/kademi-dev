@@ -7,18 +7,17 @@
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-            <a href="/funnels/$funnel.name">
+            <a class="pull-left" href="/funnels/$funnel.name">
                 #if( $funnel.title )
             $funnel.title
             #else
                     $funnel.name
                 #end
             </a>
+        <a class="pull-right" href="/leads/$lead.id">View lead <i class="fa fa-arrow-right"></i></a>
         #else
             COULD NOT FIND FUNNEL -$lead.funnel
         #end
-        
-        <b>ID=$lead.id</b>
     </div>
     <div class="panel-body">
         <table class="table table-striped">
