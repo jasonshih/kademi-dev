@@ -371,6 +371,10 @@ function initProfileLeads() {
 
                     form.trigger('submit');
                 });
+
+                modal.find('#lead-fields-tab input[required]').each(function () {
+                    $(this).removeAttr('required');
+                })
             }
         })
     });
