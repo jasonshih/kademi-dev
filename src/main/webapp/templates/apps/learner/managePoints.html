@@ -121,6 +121,7 @@
                             <tr>
                                 <th><a class="sort-field" id="reward" href="#">Reward</a></th>
                                 <th><a class="sort-field" id="ISSUED_TO" href="#">Issued to</a></th>
+                                <th><a class="sort-field" id="issued_by" href="#">Issued By</a></th>
                                 <th><a class="sort-field" id="issued_Date" href="#">Issued date/time</a></th>
                                 <th><a class="sort-field" id="expiry_Date" href="#">Expiry</a></th>
                                 <th><a class="sort-field" id="num_Points" href="#">No. Points</a></th>
@@ -154,6 +155,11 @@
                                     <a href="/organisations/$p.issuedTo.orgId/edit">$p.issuedTo.formattedName</a>
                                     #else
                                     <a href="/manageUsers/$p.issuedTo.id">$p.issuedTo.formattedName</a>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $p.issuedBy )
+                                    <a href="/manageUsers/$p.issuedBy.id">$p.issuedBy.formattedName</a>
                                     #end
                                 </td>
                                 <td>$formatter.formatDateTime($p.issuedDate, $page.organisation.timezone)</td>
