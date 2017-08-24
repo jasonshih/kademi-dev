@@ -5,6 +5,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/salesdata/kpis.js"
             }
         },
@@ -60,6 +66,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/salesdata/manageDataRecord.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/panelKpiTarget.js"
             }
         },
         {
