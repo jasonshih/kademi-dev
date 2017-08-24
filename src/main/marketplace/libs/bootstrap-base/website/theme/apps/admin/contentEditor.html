@@ -1,14 +1,22 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Edit: $!params.fileName</title>
+        #set($isCustomApp = false)
+        #set($fileTitle = $params.fileName)
+        #if($page.attributes.editFile)
+            #set($fileTitle = $page.attributes.editFile.title)
+            #set($fileBody = $page.attributes.editFile.body)
+            #set($isCustomApp = true)
+        #end
+
+        <title>Edit: $!fileTitle</title>
         <link href="/theme/apps/admin/contentEditor.css" rel="stylesheet" type="text/css" />
-        
+
         <script type="text/javascript">
             // Templates should push page init function into this array. It will then be run after outer template init functions.
             var pageInitFunctions = new Array();
         </script>
-        
+
         <script src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
         <script src="/theme/js/kademi.js">//</script>
         <script src="/theme/js/kademi.jquery.js">//</script>
@@ -34,29 +42,29 @@
         $templater.pushLess("/theme/theme-params.less", "all")
 
         #foreach( $lessSource in $templater.lessSources.entrySet())
-            <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
+        <link href="/$templater.getCombinedPath($lessSource.value)" rel="stylesheet" type="text/css" media="$lessSource.key" />
         #end
-        
+
         <link rel="stylesheet" href="/static/bootstrap-msg/0.3/bootstrap-msg.min.css" type="text/css" />
-        
+
         <!-- Injected CSS sources -->
         #foreach($groupEntry in $templater.cssSources.entrySet())
-            #foreach($cssFile in $groupEntry.value)
-                <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
-            #end
+        #foreach($cssFile in $groupEntry.value)
+        <link rel="stylesheet" href="$cssFile" media="$!groupEntry.key" />
+        #end
         #end
         <!-- End injected CSS sources -->
-        
+
         <!-- Injected JS sources -->
         #foreach($groupEntry in $templater.jsSources.entrySet())
-            #foreach($jsFile in $groupEntry.value)
-                <script charset="utf-8" src="$jsFile">//</script>
-            #end
+        #foreach($jsFile in $groupEntry.value)
+        <script charset="utf-8" src="$jsFile">//</script>
+        #end
         #end
         <!-- End injected CSS sources -->
 
         #portlets("header")
-        
+
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
         <script src="/js/html5shiv.js"></script>
@@ -66,11 +74,14 @@
         <![endif]-->
     </head>
     <body class="content-editor-page">
-        #set($fname = $params.fileName)
-        #if( $fname )
-            #set($file = $folder.child($fname))
-        #else
-            #set($file = $page)
+        #if(!$isCustomApp)
+            #set($fname = $params.fileName)
+            #if( $fname )
+                #set($file = $folder.child($fname))
+            #else
+                #set($file = $page)
+                #set($fileBody = $page.body)
+            #end
         #end
         #set($useHash = $params.useHash)
 
@@ -80,23 +91,38 @@
                 <i class="fa fa-angle-double-down"></i>
             </a>
             <span class="content-editor-file" id="file-title">
-                #if( $file.title )
+                #if($isCustomApp)
+                    #if( $fileTitle )
+                        $fileTitle
+                        <small class="text-muted">
+                        - $page.name
+                        </small>
+                    #else
+                        $page.name
+                    #end
+                #else
+                    #if( $file.title )
                     $file.title
                     <small class="text-muted">
                         - $file.name
                     </small>
-                #else
+                    #else
                     $file.fileName
-                #end</span>
+                    #end
+                #end
+            </span>
             <ul class="content-editor-navbar">
                 <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                #if(!$isCustomApp)
                 <li><a href="#modal-page-properties" data-toggle="modal" title="Edit page properties" class="btn-edit-properties"><i class="fa fa-edit"></i></a></li>
                 <li><a href="texteditor?fileName=$!fname" title="Edit with text editor"><i class="fa fa-file-text-o"></i></a></li>
+                #end
             </ul>
         </nav>
-        
-        <div id="content-area">$!file.body</div>
-        
+
+        <div id="content-area">$!fileBody</div>
+
+        #if(!$isCustomApp)
         <div id="modal-page-properties" class="modal fade" aria-hidden="true" tabindex="-1">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -111,13 +137,13 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-message"></div>
-                            
+
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="active"><a href="#properties" data-toggle="tab">Properties</a></li>
                                 <li><a href="#for-search" data-toggle="tab">For search</a></li>
                             </ul>
-                            
+
                             <!-- Tab panes -->
                             <div class="tab-content">
                                 <div class="tab-pane active" id="properties">
@@ -125,43 +151,43 @@
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">Meta tags</label>
-                                        
+
                                         <div class="col-md-9">
                                             <p>
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
                                             </p>
                                             <div class="meta-wrapper">
                                                 #foreach($metaName in $file.metaNames)
-                                                    <div class="input-group meta">
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
-                                                        <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
-                                                        <span class="input-group-btn">
-                                                            <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
-                                                        </span>
-                                                    </div>
+                                                <div class="input-group meta">
+                                                    <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
+                                                    <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
+                                                    </span>
+                                                </div>
                                                 #end
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label col-md-3">Data/parameter tags</label>
-                                        
+
                                         <div class="col-md-9">
                                             <p>
                                                 <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
                                             </p>
                                             <div class="param-wrapper">
                                                 #foreach($paramName in $file.paramNames)
-                                                    #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
-                                                        'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
-                                                        <div class="input-group param">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </div>
-                                                    #end
+                                                #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
+                                                'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
+                                                <div class="input-group param">
+                                                    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
+                                                    <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
+                                                    <span class="input-group-btn">
+                                                        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
+                                                    </span>
+                                                </div>
+                                                #end
                                                 #end
                                             </div>
                                         </div>
@@ -172,64 +198,73 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="itemType" class="control-label col-md-3">Item type</label>
-                                        
+
                                         <div class="col-md-9">
                                             <input type="text" name="itemType" id="itemType" class="form-control" value="$!file.getParam("itemType")" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="category" class="control-label col-md-3">Category</label>
-                                        
-                                        <div class="col-md-9">
-                                            <input type="text" name="category" id="category" class="form-control" value="$!file.getParam("category")" />
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tags" class="control-label col-md-3">Tags</label>
-                                        
-                                        <div class="col-md-9">
-                                            <input type="text" name="tags" id="tags" class="form-control" value="$!file.getParam("tags")" />
-                                        </div>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="category" class="control-label col-md-3">Category</label>
+
+                                    <div class="col-md-9">
+                                        <input type="text" name="category" id="category" class="form-control" value="$!file.getParam("category")" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tags" class="control-label col-md-3">Tags</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" name="tags" id="tags" class="form-control" value="$!file.getParam("tags")" />
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-success" type="submit">Save & Close</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                <button class="btn btn-sm btn-success" type="submit">Save & Close</button>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+        #end
 
-        <div id="editor-loading">
-            <span>
-                <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
-                <span class="loading-text">Initializing Content Editor...</span>
-            </span>
-        </div>
+<div id="editor-loading">
+    <span>
+        <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
+        <span class="loading-text">Initializing Content Editor...</span>
+    </span>
+</div>
+
+#set($snippetsUrl = "_components?fileName=$!fname")
+#set($snippetsHandlersUrl = "${page.parent.href}_components?handlers&fileName=$!fname")
+#if($isCustomApp)
+    #set($snippetsUrl = "/" + $snippetsUrl)
+    #set($snippetsHandlersUrl = "/_components?handlers&fileName=$!{fname}")
+#end
         
-        <script type="text/javascript">
-            var useHash = "$!useHash";
-            var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end};
-            
-            $(function () {
-                initContentEditorPage({
-                    fileName: '$!fname',
-                    snippetsUrl: '_components?fileName=$!{fname}',
-                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=$!{fname}"',
-                    allGroups: allGroups,
-                    pagePath: '$!pagePath'
-                });
-            });
-        </script>
-    
-    </body>
+<script type="text/javascript">
+    var useHash = "$!useHash";
+    var allGroups = {
+    #foreach ($group in $page.find("/").allGroups)
+            '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
+            #end}
+    ;
+
+    $(function () {
+        initContentEditorPage({
+            fileName: '$!fname',
+            snippetsUrl: '$snippetsUrl',
+            snippetsHandlersUrl: '$snippetsHandlersUrl',
+            allGroups: allGroups,
+            pagePath: '$!pagePath'
+        });
+    });
+</script>
+
+</body>
 </html>
 #macro( groupTitle $group )
-    #if($group.title) '$group.title' #else '$group.name' #end
+#if($group.title) '$group.title' #else '$group.name' #end
 #end
