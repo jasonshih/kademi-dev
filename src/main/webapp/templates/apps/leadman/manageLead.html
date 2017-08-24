@@ -3,6 +3,7 @@
         <title>Manage Lead</title>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
+        <script type="text/javascript" src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"></script>
         <script type="text/javascript" src="/theme/apps/leadman/manageLead.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css" />
         <link rel="stylesheet" type="text/css" href="/theme/apps/leadman/manageLead.css" />
@@ -12,7 +13,7 @@
             #set ($ava = "/templates/apps/user/profile.png")
             #set ($bgsize = "background-size: 100%;")
             #if ($page.profile.photoHash && $page.profile.photoHash != "/templates/apps/user/profile.png")
-                #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
+            #set ($ava = "/_hashes/files/" + $page.profile.photoHash)
             #end
 
             <div class="clearfix">
@@ -22,118 +23,115 @@
 
                 <div class="pull-right text-right h2">
                     #if( $page.completed)
-                        <button class="btn btn-success btn-reopen" type="button"><i class="fa fa-check"></i> Reopen</button>
+                    <button class="btn btn-success btn-reopen" type="button"><i class="fa fa-check"></i> Reopen</button>
                     #else
-                        <p>
-                            <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
-                                <span class="fa fa-remove"></span>
-                                Cancel
-                            </a>
+                    <p>
+                        <a href="$page.href?cancel" class="btn btn-danger" title="Deal cancelled" data-target="#modalCancelLead" data-toggle="modal">
+                            <span class="fa fa-remove"></span>
+                            Cancel
+                        </a>
 
-                            <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
-                                <span class="fa fa-dollar"></span>
-                                Close deal
-                            </button>
-                        </p>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#closeDealModal">
+                            <span class="fa fa-dollar"></span>
+                            Close deal
+                        </button>
+                    </p>
 
-                        <div class="btn-group dropdown">
-                            <button id="assignedBlock" class="btn dropdown-toggle btn-info" data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false">
-                                <span>
-                                    #if( $page.assignedTo )
-                                        Assigned to: $!page.assignedTo.thisUser.formattedName
-                                    #else
-                                        Not assigned
-                                    #end
-                                </span>
+                    <div class="input-group" style="width: 400px;">
+                        <span class="input-group-addon" id="assignedBlock">
+                            #if( $page.assignedTo )
+                            Assigned to: $!page.assignedTo.thisUser.formattedName
+                            #else
+                            Not assigned
+                            #end
+                        </span>
+                        <input type="text" class="form-control" id="findAnAssignee" placeholder="Type to search..." />
+                        <span class="input-group-btn">
+                            <button class="btn dropdown-toggle btn-default" data-toggle="dropdown" type="button">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right" id="assignToMenu" role="menu">
                                 <li><a href="$user.name">Assign to me</a></li>
                                 <li><a href="">Clear</a></li>
-                                #if ($page.find("/leads").teamMembers.size() > 0)
-                                    <li role="separator" class="divider"></li>
-                                #end
-                                #foreach($user in $page.find("/leads").teamMembers)
-                                    <li><a href="$user.name">$!user.firstName $!user.surName</a></li>
-                                #end
                             </ul>
-                        </div>
+                        </span>
+                    </div>
                     #end
                 </div>
 
                 <div style="margin-left: 100px;">
                     <h2>
                         #if($page.leadOrg)
-                            #if($page.profile)
-                                $page.customerDescription ($page.leadOrg.formattedName)
-                            #else
-                                <$page.leadOrg.formattedName
-                            #end
-                        #elseif( $page.profile )
-                            $page.customerDescription
+                        #if($page.profile)
+                        $page.customerDescription ($page.leadOrg.formattedName)
                         #else
-                            $page.customerDescription
+                        <$page.leadOrg.formattedName
+                        #end
+                        #elseif( $page.profile )
+                        $page.customerDescription
+                        #else
+                        $page.customerDescription
                         #end
                     </h2>
                     #if($page.profile)
-                        <div class="memberships-wrapper" id="membershipsContainer">
-                            <div class="dropdown">
-                                <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
-                                    <i class="fa fa-plus-circle"></i> Tags
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li style="padding: 3px 15px">
-                                        <strong>Quick add</strong>
-                                    </li>
-                                    #foreach($group in $page.tags)
-                                        <li class="addTag">
-                                            <a href="$group.name">
-                                                <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
-                                            </a>
-                                        </li>
-                                    #end
-                                </ul>
-                            </div>
-                            #set( $selectedTags = '[' )
-                            #foreach($m in $page.assignedTags)
-                                #if ($selectedTags == '[')
-                                    #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
-                                #else
-                                    #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+                    <div class="memberships-wrapper" id="membershipsContainer">
+                        <div class="dropdown">
+                            <a data-toggle="dropdown" class="dropdown-toggle btn btn-primary" href="#">
+                                <i class="fa fa-plus-circle"></i> Tags
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li style="padding: 3px 15px">
+                                    <strong>Quick add</strong>
+                                </li>
+                                #foreach($group in $page.tags)
+                                <li class="addTag">
+                                    <a href="$group.name">
+                                        <i class="fa fa-tag"></i> $formatter.firstNotNull($group.title, $group.name)
+                                    </a>
+                                </li>
                                 #end
-                            #end
-                            #set( $selectedTags = $selectedTags + ']' )
-
-                            <input type="text" id="view-lead-tags" placeholder="Type to Add Tags" value="$selectedTags" />
+                            </ul>
                         </div>
-                        <br />
+                        #set( $selectedTags = '[' )
+                        #foreach($m in $page.assignedTags)
+                        #if ($selectedTags == '[')
+                        #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+                        #else
+                        #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+                        #end
+                        #end
+                        #set( $selectedTags = $selectedTags + ']' )
+
+                        <input type="text" id="view-lead-tags" placeholder="Type to Add Tags" value="$selectedTags" />
+                    </div>
+                    <br />
                     #end
                 </div>
             </div>
 
             #if( $page.completed)
-                #if( $page.cancelled)
-                    <div class="alert alert-warning">
-                        <p class="lead">
-                            <span class="fa fa-exclamation-circle"></span>
-                            Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                        </p>
-                    </div>
-                #else
-                    <div class="alert alert-success">
-                        <p class="lead">
-                            <span class="fa fa-check"></span>
-                            Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
-                        </p>
-                    </div>
-                #end
+            #if( $page.cancelled)
+            <div class="alert alert-warning">
+                <p class="lead">
+                    <span class="fa fa-exclamation-circle"></span>
+                    Lead cancelled - Failed - <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                </p>
+            </div>
+            #else
+            <div class="alert alert-success">
+                <p class="lead">
+                    <span class="fa fa-check"></span>
+                    Lead closed Successfully <abbr title="$formatter.formatDateISO8601($page.closedDate)" class="timeago">$page.closedDate</abbr>
+                </p>
+            </div>
+            #end
             #end
 
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
                     <li class="active"><a href="#information" data-toggle="tab"><i class="fa fa-info-circle"></i> Information</a></li>
                     <li><a href="#notes" data-toggle="tab"><i class="fa fa-file-text"></i> Notes</a></li>
-                    <li><a href="#quotes-proposals" data-toggle="tab"><i class="fa fa-usd"></i> Quotes Proposals</a></li>
+                    <li><a href="#quotes-proposals" data-toggle="tab"><i class="fa fa-usd"></i> Quotes &amp; Proposals</a></li>
                     <li><a href="#tasks" data-toggle="tab"><i class="fa fa-list"></i> Tasks</a></li>
                     <li><a href="#files" data-toggle="tab"><i class="fa fa-files-o"></i> Files</a></li>
                 </ul>
@@ -164,8 +162,8 @@
                                     <select name="stageName" class="form-control immediateUpdate">
                                         <option value="">[None]</option>
                                         #foreach( $stage in $page.allStages )
-                                            #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                            $formatter.option($stage.name, $a, $page.stageName)
+                                        #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                        $formatter.option($stage.name, $a, $page.stageName)
                                         #end
                                     </select>
                                 </div>
@@ -188,13 +186,13 @@
                                         <option value="">[None]</option>
                                         #set($foundSource = false)
                                         #foreach( $source in $page.allSources )
-                                            #if($source == $page.source)
-                                                #set($foundSource = true)
-                                            #end
-                                            $formatter.option($source, $source, $page.source)
+                                        #if($source == $page.source)
+                                        #set($foundSource = true)
+                                        #end
+                                        $formatter.option($source, $source, $page.source)
                                         #end
                                         #if(!$foundSource && $page.source)
-                                            $formatter.option($page.source, $page.source, $page.source)
+                                        $formatter.option($page.source, $page.source, $page.source)
                                         #end
                                     </select>
                                 </div>
@@ -206,22 +204,61 @@
                                     <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
                                         <option value="">[None]</option>
                                         #foreach( $funnel in $leadsFolder.children )
-                                            $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
+                                        $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
                                         #end
                                     </select>
                                 </div>
                             </div>
                             #foreach($field in $page.extraFields)
-                                <div class="form-group">
-                                    <label class="control-label col-sm-2">$field.title</label>
-                                    <div class="col-sm-6">
-                                        $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
-                                    </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-2">$field.title</label>
+                                <div class="col-sm-6">
+                                    $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
                                 </div>
+                            </div>
                             #end
                         </form>
 
                         <hr />
+                        #if( $!page.currentGoalIsTask == false )
+                        <div class="timeline-panel">
+                            <div class="timeline-heading">
+                                #if( $page.timerDate )
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                    <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
+                                </small>
+                                #else
+                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                    <span class="label label-warning">No current timer</span>
+                                </small>
+
+
+                                #end
+
+                                <h4 class="timeline-title">Waiting for..</h4>
+                            </div>
+                            <div class="timeline-body">
+                                <p>$page.nodeTitle( $page.currentGoal )</p>
+                                <div class="btn-group">
+                                    <button class="timer-btn-go btn btn-success btn-sm" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
+                                        <span class="fa fa-play"></span>
+                                    </button>
+                                    <!--<button class="timer-btn-stop btn btn-danger btn-sm" title="Stop this timer, can be rescheduled later">
+                                        <span class="fa fa-pause"></span>
+                                    </button>
+                                    <button class="timer-btn-resched btn btn-info btn-sm" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
+                                        <span class="fa fa-clock-o"></span>
+                                    </button>
+
+                                    <button class="timer-btn-goal btn btn-info btn-sm" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
+                                        <span class="fa fa-pencil"></span>
+                                    </button>-->
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr />
+                        #end
                         <h4>Contact information</h4>
                         <form method="post" action="$page.href" class="form-horizontal" id="lead-contact-form">
                             <input type="hidden" name="saveDetails" value="saveDetails" />
@@ -229,12 +266,12 @@
                                 #set( $p = $page.leadProfile )
                                 #set( $profile = $page.profile )
                                 #if (!$page.href.contains("cust"))
-                                    <div class="form-group">
-                                        <label class="control-label col-md-2" for="jobTitle">Job Title</label>
-                                        <div class="col-md-6">
-                                            <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
-                                        </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2" for="jobTitle">Job Title</label>
+                                    <div class="col-md-6">
+                                        <input type="text" name="jobTitle" id="jobTitle" class="form-control" placeholder="Job Title" value="$!page.jobTitle" />
                                     </div>
+                                </div>
                                 #end
                                 <div class="form-group">
                                     <label class="control-label col-md-2" for="nickName">Customer</label>
@@ -270,36 +307,36 @@
                                     <div class="row">
                                         #set($fields = $page.profileExtraFields)
                                         #foreach($field in $fields.keySet())
-                                            #if ($extraFields && $extraFields.contains($field.name))
-                                            #else
-                                                #if ($foreach.index % 2 == 0)
-                                                    <div class="clearfix"></div>
-                                                #end
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <label class="control-label col-md-4" for="field_${field.name}">$field.text</label>
-                                                        <div class="controls col-md-8">
-                                                            $field.html( $fields[$field] )
-                                                        </div>
-                                                    </div>
+                                        #if ($extraFields && $extraFields.contains($field.name))
+                                        #else
+                                        #if ($foreach.index % 2 == 0)
+                                        <div class="clearfix"></div>
+                                        #end
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-4" for="field_${field.name}">$field.text</label>
+                                                <div class="controls col-md-8">
+                                                    $field.html( $fields[$field] )
                                                 </div>
-                                            #end
+                                            </div>
+                                        </div>
+                                        #end
                                         #end
                                     </div>
                                 </div>
 
                                 #if( $page.completed)
                                 #else
-                                    <div class="form-group">
-                                        <div class="col-md-10 col-md-offset-2">
-                                            <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
+                                <div class="form-group">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <button class="btn btn-sm btn-default btn-fullwidth-mobile" type="reset">Reset</button>
 
-                                            <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
-                                            #if(!$page.href.contains("cust") && $page.leadProfile)
-                                                <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
-                                            #end
-                                        </div>
+                                        <button class="btn btn-primary btn-fullwidth-mobile" type="submit">Save details</button>
+                                        #if(!$page.href.contains("cust") && $page.leadProfile)
+                                        <button class="btn btn-info btn-fullwidth-mobile" data-toggle="modal" data-target="#modal-change-profile" type="button">Change Profile</button>
+                                        #end
                                     </div>
+                                </div>
                                 #end
                             </div>
                         </form>
@@ -322,70 +359,70 @@
                                             <span class="input-group-addon">
                                                 #if( $page.is("company") )
                                                 #else
-                                                    <span id="btn-company-details-wrapper">
-                                                        <a href="/organisations/$!leadOrg.id/edit" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end><i class="fa fa-edit"></i> Company details</a>
-                                                    </span>
+                                                <span id="btn-company-details-wrapper">
+                                                    <a href="/organisations/$!leadOrg.id/edit" class="btn-company-details" #if(!$leadOrg.id) style="display: none" #end><i class="fa fa-edit"></i> Company details</a>
+                                                </span>
                                                 #end
                                             </span>
                                         </div>
                                     </div>
                                 </div>
 
-                            <div id="leadOrgDetailsPreview">
-                                <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
+                                <div id="leadOrgDetailsPreview">
+                                    <input type="hidden" name="leadOrgId" value="$!leadOrg.orgId" />
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="newCompanyEmail">Contact</label>
 
-                                    <div class="col-md-5">
-                                        <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                                        <div class="col-md-5">
+                                            <input type="text" name="email" id="newCompanyEmail" class="form-control email" placeholder="Email" value="$!leadOrg.email" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-5">
-                                        <input type="text" name="phone" class="form-control" placeholder="Phone" value="$!leadOrg.phone" />
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-2" for="newUserEmail">Address</label>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="newUserEmail">Address</label>
 
-                                    <div class="col-md-5">
-                                        <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                        <div class="col-md-5">
+                                            <input type="text" name="address" class="form-control" placeholder="Address" value="$!leadOrg.address" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-5">
-                                        <input type="text" name="addressLine2" class="form-control" placeholder="Address 2" value="$!leadOrg.addressLine2" />
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <div class="col-md-offset-2 col-md-5">
-                                        <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-5">
+                                            <input type="text" name="addressState" class="form-control" placeholder="State" value="$!leadOrg.addressState" />
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
+                                        </div>
                                     </div>
-                                    <div class="col-md-5">
-                                        <input type="text" name="postcode" class="form-control" placeholder="Postcode" value="$!leadOrg.postcode" />
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="country" class="control-label col-md-2">Country</label>
+                                    <div class="form-group">
+                                        <label for="country" class="control-label col-md-2">Country</label>
 
-                                    <div class="col-md-8">
-                                        <select name="country" class="form-control chosen-select" id="country">
-                                            <option value="">[No country selected]</option>
-                                            #foreach($cc in $formatter.countryCodes.list)
+                                        <div class="col-md-8">
+                                            <select name="country" class="form-control chosen-select" id="country">
+                                                <option value="">[No country selected]</option>
+                                                #foreach($cc in $formatter.countryCodes.list)
                                                 $formatter.option( $cc.alpha2Code, $cc.englishShortName, $leadOrg.country )
-                                            #end
-                                        </select>
+                                                #end
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
 
-                                #set($fields = $page.leadCompanyExtraFields)
-                                #set($counter = 0)
-                                #foreach($field in $fields.keySet())
+                                    #set($fields = $page.leadCompanyExtraFields)
+                                    #set($counter = 0)
+                                    #foreach($field in $fields.keySet())
                                     #if ($extraFields && $extraFields.contains($field.name))
                                     #else
 
-                                        #if ($counter % 2 == 0)
-                                        <div class="control-group form-group">
+                                    #if ($counter % 2 == 0)
+                                    <div class="control-group form-group">
                                         #end
 
                                         <label class="control-label col-md-2" for="extraField_${field.name}">$field.text</label>
@@ -395,25 +432,25 @@
                                         </div>
 
                                         #if (($counter + 1) % 2 == 0)
-                                        </div>
-                                        #end
-
-                                        #set($counter = $counter + 1)
+                                    </div>
                                     #end
-                                #end
 
-                                #if ($counter != 0 && ($counter) % 2 != 0)
+                                    #set($counter = $counter + 1)
+                                    #end
+                                    #end
+
+                                    #if ($counter != 0 && ($counter) % 2 != 0)
                                 </div>
                                 #end
 
                                 #if( $page.completed)
                                 #else
-                                    <div class="form-group">
-                                        <div class="col-md-10 col-md-offset-2">
-                                            <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
-                                            <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
-                                        </div>
+                                <div class="form-group">
+                                    <div class="col-md-10 col-md-offset-2">
+                                        <button class="btn btn-primary btn-save-company" type="submit">Save details</button>
+                                        <button class="btn btn-info btn-unlink-company" type="button" #if(!$leadOrg.id) style="display: none" #end>Unlink company</button>
                                     </div>
+                                </div>
                                 #end
                             </div>
                     </div>
@@ -428,33 +465,33 @@
                     <div id="leadNotesBody">
                         #set( $notes = $page.notes )
                         #if( $notes.size() > 0 )
-                            <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
-                                #foreach($note in $notes)
-                                    <div class="note-item">
-                                        <div>
-                                            <img src="/theme/img/user/05.jpg" alt="Image" class="img-circle thumb32 lead-note-author">
-                                            <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
-                                            #if( $note.inbound )
-                                                <small class="text-muted fa fa-arrow-left"></small>
-                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                            #else
-                                                <small class="text-muted fa fa-${note.icon}"></small>
-                                                <small class="text-muted fa fa-arrow-right"></small>
-                                            #end
-                                            #set($type = $note.actionType +  "-" + $note.inbound)
-                                            <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
-                                                <span class="fa fa-pencil"></span>
-                                            </a>
-                                            <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
-                                        </div>
-                                        <div class="note-content" style="white-space: pre-wrap">$!note.notes <a class='note-more' href='#'>more</a></div>
-                                    </div>
-                                #end
+                        <div class="list-notes">
+                            #foreach($note in $notes)
+                            <div class="note-item">
+                                <div>
+                                    <img src="/theme/apps/leadman/user-placeholder.png" alt="Image" class="img-circle thumb32 lead-note-author" width="32" />
+                                    <a href="/users/$note.createdBy.name">$note.createdBy.formattedName</a>
+                                    #if( $note.inbound )
+                                    <small class="text-muted fa fa-arrow-left"></small>
+                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                    #else
+                                    <small class="text-muted fa fa-${note.icon}"></small>
+                                    <small class="text-muted fa fa-arrow-right"></small>
+                                    #end
+                                    #set($type = $note.actionType +  "-" + $note.inbound)
+                                    <a class="note-edit" href="$note.id" data-type="$type" data-notes="$!note.notes">
+                                        <span class="fa fa-pencil"></span>
+                                    </a>
+                                    <abbr title="$formatter.formatDateISO8601($note.createDate)" class="timeago pull-right" style="margin-right: 10px">$note.createDate</abbr>
+                                </div>
+                                <div class="note-content" style="white-space: pre-wrap">$!note.notes <a class='note-more' href='#'>more</a></div>
                             </div>
+                            #end
+                        </div>
                         #else
-                            <p>
-                                <span class="label label-warning">No contact with the lead yet</span>
-                            </p>
+                        <p>
+                            <span class="label label-warning">No contact with the lead yet</span>
+                        </p>
                         #end
                     </div>
                 </div>
@@ -468,100 +505,104 @@
                         </a>
                     </p>
                     <div id="leadQuotesBody">
-                        <h5><strong>Proposals</strong></h5>
                         #set( $proposals = $page.proposals )
                         #if( $proposals.size() > 0 )
-                            <div class="list-notes" style="max-height: 300px; overflow-y: scroll">
-                                #foreach($proposal in $proposals)
-                                    <span>Proposal $proposal.id</span>
-                                    #foreach($quote in $proposal.quotes)
-                                        <div id="quote-$quote.id" class="note-item">
-                                            <div>
-                                                <i onclick="removeQuote('/quotes/$quote.id', $!quote.id)" class="fa fa-remove clickable"></i>
-                                                <a href="/quotes/$quote.id">$quote.title</a>
-                                                #if($quote.quoteStatus == "ASSIGNED")
-                                                    <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
-                                                #elseif($quote.quoteStatus == "ACCEPTED")
-                                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
-                                                #elseif($quote.quoteStatus == "INVOICED")
-                                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
-                                                #elseif($quote.quoteStatus == "REJECTED")
-                                                    <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
-                                                #else
-                                                    <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
-                                                #end
-                                                <abbr title="$formatter.formatDateISO8601($quote.issuedDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
-                                            </div>
-                                        </div>
+                        <div class="list-notes">
+                            #foreach($proposal in $proposals)
+                            <span>Proposal $proposal.id</span>
+                            #foreach($quote in $proposal.quotes)
+                            <div id="quote-$quote.id" class="note-item">
+                                <div>
+                                    <i onclick="removeQuote('/quotes/$quote.id', $!quote.id)" class="fa fa-remove clickable"></i>
+                                    <a href="/quotes/$quote.id">$quote.title</a>
+                                    #if($quote.quoteStatus == "ASSIGNED")
+                                    <i class="fa fa-plug text-muted" title="$quote.quoteStatus"></i>
+                                    #elseif($quote.quoteStatus == "ACCEPTED")
+                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                    #elseif($quote.quoteStatus == "INVOICED")
+                                    <i class="fa fa-check-circle text-success" title="$quote.quoteStatus"></i>
+                                    #elseif($quote.quoteStatus == "REJECTED")
+                                    <i class="fa fa-check-circle text-danger" title="$quote.quoteStatus"></i>
+                                    #else
+                                    <i class="fa fa-exclamation-circle text-danger" title="$quote.quoteStatus"></i>
                                     #end
-                                    <hr />
-                                #end
+                                    <abbr title="$formatter.formatDateISO8601($quote.issuedDate)" class="timeago pull-right" style="margin-right: 10px">$quote.issuedDate</abbr>
+                                </div>
                             </div>
+                            #end
+                            <hr />
+                            #end
+                        </div>
                         #else
-                            <p>
-                                <span class="label label-warning">No proposals has been added to lead yet</span>
-                            </p>
+                        <p>
+                            <span class="label label-warning">No proposals has been added to lead yet</span>
+                        </p>
                         #end
                     </div>
                 </div>
                 <div class="tab-pane" id="tasks">
-                    #set ($taskCount = 0)
-                    #foreach($task in $page.children.ofType.open)
+                    <p class="text-right">
+                        <button class="btn btn-sm btn-success" data-target="#newTaskModal" data-toggle="modal">Add new Task</button>
+                    </p>
+                    <div id="tasksList">
+                        #set ($taskCount = 0)
+                        #foreach($task in $page.children.ofType.open)
                         #set ($taskCount = $taskCount + 1)
-                        <div class="panel panel-default">
+                        <div class="panel panel-default panel-no-icon">
                             <div class="panel-heading">
-                                <h4 class="clearfix task-item">
+                                <h4 class="clearfix task-item panel-title">
                                     #if( $task.completedDate )
-                                        <div class="pull-left">
-                                            <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                <s class="task-title">$task.title</s>
-                                            </a>
-                                        </div>
-                                    #else
-                                        <div class="pull-left">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
-                                                '/','_')" aria-expanded="true" aria-controls="collapseOne">
-                                                <span class="task-title">$task.title</span>
-                                            </a>
-                                        </div>
-                                        <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
-                                            <span class="task-edit text-success fa fa-pencil"></span>
+                                    <div class="pull-left">
+                                        <a class="text-muted" data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                           '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                            <s class="task-title">$task.title</s>
                                         </a>
+                                    </div>
+                                    #else
+                                    <div class="pull-left">
+                                        <a data-toggle="collapse" data-parent="#accordion" href="#$task.href.replace(
+                                           '/','_')" aria-expanded="true" aria-controls="collapseOne">
+                                            <span class="task-title">$task.title</span>
+                                        </a>
+                                    </div>
+                                    <a style="margin-left: 5px" href="$task.href .taskEditModal" class="pull-left" data-target="#modalEditTask" data-toggle="modal">
+                                        <span class="task-edit text-success fa fa-pencil"></span>
+                                    </a>
                                     #end
                                 </h4>
                             </div>
                             <div id="$task.href.replace('/','_')" aria-labelledby="" class="panel-collapse collapse in">
                                 <div class="panel-body">
                                     #if( $task.is("open") )
-                                        #if($task.assignedTo)
-                                            Assigned to <strong>$task.assignedTo.formattedName()</strong>
-                                        #else
-                                            Not assigned
-                                        #end
-                                        <br />
+                                    #if($task.assignedTo)
+                                    Assigned to <strong>$task.assignedTo.formattedName()</strong>
+                                    #else
+                                    Not assigned
+                                    #end
+                                    <br />
 
-                                        <div class="btn-task-panel-wrap pull-right">
-                                            <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
-                                                <span class="fa fa-remove"></span>
-                                            </a>
-                                            <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
-                                                <span class="fa fa-check"></span>
-                                            </a>
-                                        </div>
-                                        #if( $task.dueDate )
-                                            Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
-                                        #end
+                                    <div class="btn-task-panel-wrap pull-right">
+                                        <a class="btn btn-danger btn-task-panel-sm btnCancelTask btn-task-panel" title="Cancel task" href="$task.href">
+                                            <span class="fa fa-remove"></span>
+                                        </a>
+                                        <a href="$task.href .taskViewModal" class="btn btn-task-panel-sm btn-success btn-task-panel" data-target="#modalEditTask" data-toggle="modal">
+                                            <span class="fa fa-check"></span>
+                                        </a>
+                                    </div>
+                                    #if( $task.dueDate )
+                                    Due in <abbr title="$formatter.formatDateISO8601($task.dueDate)" class="timeago">$task.dueDate</abbr>
+                                    #end
                                     #end
                                     <br />
                                     $!task.taskDescription
                                 </div>
                             </div>
                         </div>
-                    #end
-                    #if($taskCount<1)
+                        #end
+                        #if($taskCount<1)
                         <p>No tasks found</p>
-                    #end
+                        #end
+                    </div>
                 </div>
                 <div class="tab-pane" id="files">
                     <p class="text-right">
@@ -581,53 +622,53 @@
                             </thead>
                             <tbody id="files-body">
                                 #foreach($file in $page.children.ofType.leadFile)
-                                    <tr>
-                                        <td class="text-center">
-                                            #genFileIcon($file)
-                                        </td>
-                                        <td>
-                                            <span #if($file.name.length() > 25)title="$file.name"#end>
-                                                #if($file.name.length() > 25)
+                                <tr>
+                                    <td class="text-center">
+                                        #genFileIcon($file)
+                                    </td>
+                                    <td>
+                                        <span #if($file.name.length() > 25)title="$file.name"#end>
+                                            #if($file.name.length() > 25)
                                             $formatter.truncate($file.name, 20)
-                                        #else
-                                                    $file.name
-                                                #end
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <span>$!file.notes</span>
-                                            <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                        <td>
-                                            <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
-                                        </td>
-                                        <td>
-                                            #if($file.is('audio/'))
-                                                <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
-                                                <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
-                                                    <i class="fa fa-play"></i>
-                                                </button>
-                                                <span class="lead-audio-duration"></span>
-                                            #elseif($file.is('image/'))
-                                                <a target="_blank" href="$file.name" class="btn btn-success">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                                #if($file.geoLocation)
-                                                    <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
-                                                        ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
-                                                        <i class="fa fa-map-marker"></i>
-                                                    </a>
-                                                #end
+                                            #else
+                                            $file.name
                                             #end
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
-                                                <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span>$!file.notes</span>
+                                        <a href="$file.name" class="pull-right edit-file-note"><i class="fa fa-pencil"></i></a>
+                                    </td>
+                                    <td>
+                                        <abbr class="timeago" title="$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)">$formatter.formatDateISO8601($file.createdDate, $page.organisation.timezone)</abbr>
+                                    </td>
+                                    <td>
+                                        #if($file.is('audio/'))
+                                        <audio class="lead-audio-file" id="audio_$file.hash" src="$file.name"></audio>
+                                        <button type="button" data-id="audio_$file.hash" class="btn btn-success play-audio">
+                                            <i class="fa fa-play"></i>
+                                        </button>
+                                        <span class="lead-audio-duration"></span>
+                                        #elseif($file.is('image/'))
+                                        <a target="_blank" href="$file.name" class="btn btn-success">
+                                            <i class="fa fa-eye"></i>
+                                        </a>
+                                        #if($file.geoLocation)
+                                        <a target="_blank" href="https://www.google.co.nz/maps/place//@${file.geoLocation.replace(
+                                           ":", ",")},17.25z?hl=en" title="View location on map" class="btn btn-info">
+                                            <i class="fa fa-map-marker"></i>
+                                        </a>
+                                        #end
+                                        #end
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a title="Download" download="$file.name" href="$file.name" class="btn btn-info"><i class="fa fa-download"></i></a>
+                                            <button title="Delete" type="button" data-fname="$file.name" class="btn btn-danger btn-delete-file"><i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
                                 #end
                             </tbody>
                         </table>
@@ -635,213 +676,481 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 
-        <div class="modal fade" id="modal-upload-lead-files" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Upload files</h4>
-                    </div>
+    <div class="modal fade" id="modalEditTask" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Edit task</h4>
+                </div>
+                <form method="post" action="" class="form-horizontal">
                     <div class="modal-body">
-                        <form method="post" action="$page.href" id="lead-files-upload" class="form-horizontal dropzone" enctype="multipart/form-data">
-                            <input type="hidden" name="override" value="true" />
-                            <input type="hidden" name="uploadFiles" value="uploadFiles" />
-                        </form>
+                        ...
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                        <button class="btn btn-primary" type="submit">Save</button>
                     </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="editNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Edit a note on a lead</h4>
+                </div>
+                <form method="post" action="" class="form-horizontal">
+                    <input type="hidden" name="editNote" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <select name="action" class="form-control">
+                                    <option value="">[Select what the note is for]</option>
+                                    <option value="phone-false">Call to customer</option>
+                                    <option value="phone-true">Call from customer</option>
+                                    <option value="email-false">Email to customer</option>
+                                    <option value="email-true">Email from customer</option>
+                                    <option value="note-false">General note</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <textarea name="note" class="form-control" style="height: 120px"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                        <button class="btn btn-primary" type="submit">Save note</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-upload-lead-files" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Upload files</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="$page.href" id="lead-files-upload" class="form-horizontal dropzone" enctype="multipart/form-data">
+                        <input type="hidden" name="override" value="true" />
+                        <input type="hidden" name="uploadFiles" value="uploadFiles" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Edit Note</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="updateNotes">Note</label>
-                                <div class="col-md-9">
-                                    <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
-                                </div>
+    <div class="modal fade" id="editFileNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Edit Note</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="updateNotes">Note</label>
+                            <div class="col-md-9">
+                                <textarea name="updateNotes" class="form-control" id="updateNotes"></textarea>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-primary" type="submit">Save</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-
-        <div class="modal fade" id="modalCancelLead" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Cancel Lead: $page.title</h4>
                     </div>
-                    <form method="post" action="$page.href?cancel" class="form-horizontal">
-                        <div class="modal-body">
-                            <input type="hidden" name="cancelDeal" />
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
 
-                            <div class="modal-body">
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 
-                                <p>Cancel this lead if you are sure it will not go ahead. The lead will be marked as lost, ie no sale.</p>
+    <div class="modal fade" id="modalCancelLead" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Cancel lead</h4>
+                </div>
+                <form method="post" action="" class="form-horizontal">
+                    <input type="hidden" name="cancelDeal" />
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
 
+                        <button class="btn btn-primary" type="submit">Cancel lead</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Assign new profile</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" name="assignNewProfile" value="assignNewProfile" />
+                    <input type="hidden" name="userId" />
+                    <div class="modal-body">
+                        <div class="form-group hide">
+                            <label class="control-label col-md-2" for="nickName">Nick Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick name" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="updateUserFirstName">Name</label>
+                                    <div class="col-md-8" id="searchbox-wrap">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
                                 <div class="form-group">
                                     <div class="col-md-12">
-                                        <select name="reason" class="form-control required" required="true">
-                                            <option value="">[Reason the sale was lost]</option>
-                                            #foreach( $reason in $page.lostReasons )
-                                                <option>$reason</option>
-                                            #end
-                                        </select>
+                                        <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label class="control-label col-md-4" for="newUserEmail">Contact</label>
+                                    <div class="col-md-8">
+                                        <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
 
+                        <button class="btn btn-primary" type="submit">Save</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Mark deal as closed</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal">
+                    <input type="hidden" name="closeDeal" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-12 text-center">
+                                <p class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="closedDate">Closed Date</label>
+                            <div class="col-md-9">
+                                <input type="text" name="closedDate" id="closedDate" class="required form-control date-time" placeholder="Closed date/time" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
+                            <div class="col-md-9">
+                                <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="Deal Amount" />
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                        <button class="btn btn-success" type="submit">Mark deal as closed</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="newNoteModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog modal-lg ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Enter a note on a lead</h4>
+                </div>
+                <form method="post" action="" class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-message alert alert-danger" style="display: none;"></div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <select name="action" class="form-control required">
+                                    <option value="">[Select what the note is for]</option>
+                                    <option value="phone-false">Call to customer</option>
+                                    <option value="phone-true">Call from customer</option>
+                                    <option value="email-false">Email to customer</option>
+                                    <option value="email-true">Email from customer</option>
+                                    <option value="note-false">General note</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <textarea name="newNote" class="form-control" style="height: 120px"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="checkbox">
+                                    <label for="note_newTask">
+                                        <input type="checkbox" name="newTask" value="true" id="note_newTask" /> Create a new task
+                                        <input type="hidden" value="false" name="newTask_checkbox" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row newLeadForm">
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-pencil"></span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                            <li><a href="#">Call customer</a></li>
+                                            <li><a href="#">Email customer</a></li>
+                                            <li><a href="#">Send documents</a></li>
+                                            <li><a href="#">Arrange a meeting</a></li>
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                </div>
+                                <br />
+                                <div class="input-group">
+                                    <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($page.dueDate, 7))">
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </span>
+                                </div>
                             </div>
 
+                            <div class="col-md-8">
+                                <textarea name="taskDescription" class="form-control" style="height: 100px" placeholder="Describe the next follow-up task"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                        <button class="btn btn-primary" type="submit">Save note</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="cancelTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Cancel Task</h4>
+                </div>
+                <form method="post" action="" class="form-horizontal">
+                    <input type="hidden" name="cancelTask" />
+                    <div class="modal-body">
+                        <p>Cancel this task if it is no longer required to be done.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                        <button class="btn btn-primary" type="submit">Cancel this task</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="">Create a task</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="newTaskTitle">Description</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="title" placeholder="Next follow-up task" />
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="fa fa-pencil"></span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-right autoFillText">
+                                            <li><a href="#">Call customer</a></li>
+                                            <li><a href="#">Email customer</a></li>
+                                            <li><a href="#">Send documents</a></li>
+                                            <li><a href="#">Arrange a meeting</a></li>
+                                        </ul>
+                                    </div><!-- /btn-group -->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="dueDate">Task Due</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDateTime($formatter.addDays($formatter.now, 7))">
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="taskDescription">Description</label>
+                            <div class="col-md-9">
+                                <textarea name="taskDescription" id="taskDescription" class="form-control" placeholder="Enter task details here"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+
+                        <button class="btn btn-primary" type="submit">Create</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade no-redirect" id="addQuoteLeadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Add new Quote</h4>
+                </div>
+                <div>
+                    <form id="add-quote-form" class="form-horizontal" method="POST" action=".">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="quoteNumber" class="col-sm-3 control-label">Quote Number</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control required" id="quoteNumber" name="number" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="quoteTitle" class="col-sm-3 control-label">Quote Title</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control required" id="quoteTitle" name="title" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="quoteDescription" class="col-sm-3 control-label">Description</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="quoteDescription" name="description" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="quoteExpiryDate" class="col-sm-3 control-label">Expiry Date</label>
+                                <div class="col-sm-8">
+                                    <input type='text' class="form-control date-time required" id="quoteExpiryDate" name="expiryDate" style="cursor:pointer;" />
+                                </div>
+                            </div>
+                            <input type="hidden" name="leadId" id="createQuoteLeadId" />
+                            <input type="hidden" name="createQuoteFolder" value="true" />
                         </div>
                         <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-
-                            <button class="btn btn-primary" type="submit">Cancel lead</button>
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button id="add-quote-button" type="submit" class="btn btn-sm btn-primary" data-type="form-submit">Create Quote</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+    </div><!-- /.modal -->
 
-        <div class="modal fade" id="modal-change-profile" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Assign new profile</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
-                        <input type="hidden" name="assignNewProfile" value="assignNewProfile" />
-                        <input type="hidden" name="userId" />
-                        <div class="modal-body">
-                            <div class="form-group hide">
-                                <label class="control-label col-md-2" for="nickName">Nick Name</label>
-                                <div class="col-md-8">
-                                    <input type="text" name="nickName" id="nickName" class="form-control" placeholder="Nick name" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4" for="updateUserFirstName">Name</label>
-                                        <div class="col-md-8" id="searchbox-wrap">
-                                            <i class="fa fa-search"></i>
-                                            <input type="text" name="firstName" id="updateUserFirstName" class="form-control" placeholder="First name" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input type="text" name="surName" id="newUserSurName" class="form-control" placeholder="Surname" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <div class="form-group">
-                                        <label class="control-label col-md-4" for="newUserEmail">Contact</label>
-                                        <div class="col-md-8">
-                                            <input type="text" name="email" id="newUserEmail" class="form-control required" placeholder="Email" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Phone" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-primary" type="submit">Save</button>
-                        </div>
-                    </form>
-                </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-        </div>
-
-        <div class="modal fade" id="closeDealModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title">Mark deal as closed</h4>
-                    </div>
-                    <form method="post" action="$page.href" class="form-horizontal">
-                        <input type="hidden" name="closeDeal" />
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <div class="col-md-12 text-center">
-                                    <p class="alert alert-info">Closing the lead will mark it as sold and close any related tasks.</p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="closedDate">Closed Date</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="closedDate" id="closedDate" class="required form-control date-time" placeholder="Closed date/time" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3" for="dealAmount">Sale amount</label>
-                                <div class="col-md-9">
-                                    <input type="text" name="dealAmount" id="dealAmount" class="required form-control" placeholder="Deal Amount" />
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
-
-                            <button class="btn btn-success" type="submit">Mark deal as closed</button>
-                        </div>
-                    </form>
+    <div class="modal fade" id="goNextNodeModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Complete goal - $page.nodeTitle( $page.currentGoal )</h4>
                 </div>
-            </div>
-        </div>
+                <div class="modal-body">
+                    <p class="lead">Please select the another goal in the journey you would like to progress to</p>
+                    #foreach($nextNodeId in $page.nextNodeIds)
+                    <a class="btn btn-success timer-btn-go-next" href="$nextNodeId">$page.nodeTitle($nextNodeId)</a>
+                    #end
+                </div>
 
-        #macro(genFileIcon $file)
-            #set($fIcon = "fa-file")
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 
-            #if($file.is('audio/'))
-                #set($fIcon = "fa-file-audio-o")
-            #elseif($file.is('image/'))
-                #set($fIcon = "fa-file-image-o")
-            #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
-                #set($fIcon = "fa-file-excel-o")
-            #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
-                #set($fIcon = "fa-file-word-o")
-            #elseif($file.name.endsWith('.pdf'))
-                #set($fIcon = "fa-file-pdf-o")
-            #else
-                #set($fIcon = "fa-file-o")
-            #end
-            <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
-        #end
+    #macro(genFileIcon $file)
+    #set($fIcon = "fa-file")
 
-    </body>
+    #if($file.is('audio/'))
+    #set($fIcon = "fa-file-audio-o")
+    #elseif($file.is('image/'))
+    #set($fIcon = "fa-file-image-o")
+    #elseif($file.name.endsWith('.xlsx') || $file.name.endsWith('.xls'))
+    #set($fIcon = "fa-file-excel-o")
+    #elseif($file.name.endsWith('.doc') || $file.name.endsWith('.docx') || $file.name.endsWith('.docm'))
+    #set($fIcon = "fa-file-word-o")
+    #elseif($file.name.endsWith('.pdf'))
+    #set($fIcon = "fa-file-pdf-o")
+    #else
+    #set($fIcon = "fa-file-o")
+    #end
+    <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
+    #end
+
+</body>
 </html>

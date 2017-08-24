@@ -83,6 +83,7 @@
             #set ($surveySearchResult = $cApp.call('findQuestionBySurvey', $page, $survey.name))
             #set($questions = $surveySearchResult.questionResult.hits.hits)
             #set($answers = $surveySearchResult.answerResult.hits.hits)
+            #set ($notMandatoryCount = 0)
             #if($surveySearchResult.questionResult.hits.totalHits > 0)
             <form id="surveyform" data-survey="$survey.name" action="/ksurvey/$survey.name/" method="post">
                 <input type="hidden" name="temp-surveyId" value="$survey.name">
@@ -91,6 +92,10 @@
                 <input type="hidden" name="temp-fromAddress" value="$request.fromAddress">
                 <input type="hidden" name="temp-totalQuestions" value="$page.attributes.questionResult.hits.totalHits">
                 #foreach($question in $questions)
+
+                #if ($question.source.required != 'true')
+                #set ($notMandatoryCount = $notMandatoryCount + 1)
+                #end
                 <div id="questions">
 
                     <div class="question-item">
@@ -100,25 +105,26 @@
                             #if($question.source.type==1)
                             <!-- Plain text -->
                             <div class="form-group">
-                                <textarea required="required" name="$question.id" class="form-control required" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
+                                <textarea name="$question.id" class="form-control #if ($question.source.required == 'true') required #end" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
                             </div>
                             #end
 
                             #if($surveySearchResult.answerResult.hits.totalHits > 0)
+                            <div class="form-group"> <!-- Start form-group -->
                             #foreach($answer in $answers)
                             #if($answer.source.questionId == $question.id)
                             #if($question.source.type==0)
                             <!-- Multichoices -->
-                            <div class="checkbox">
-                                <label>
-                                    <input name="$question.id" value="$answer.id" type="checkbox"> $answer.source.body
-                                </label>
-                            </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="$question.id" value="$answer.id" type="checkbox"> $answer.source.body
+                                    </label>
+                                </div>
                             #elseif($question.source.type==2)
                             <!-- Yes/No question -->
                             <div class="radio">
                                 <label>
-                                    <input required="required" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #elseif($question.source.type==3)
@@ -127,13 +133,13 @@
                             #if($question.source.answerLayout=="0")
                             <div class="radio">
                                 <label>
-                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #else
                             <div class="radio-inline">
                                 <label>
-                                    <input name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #end
@@ -141,14 +147,18 @@
                             #end
                             #end
                             #end
+
                             #if($question.source.type==0)
                             <!-- Multichoices -->
-                            <input required="required" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
+                            <input class="#if ($question.source.required == 'true') required #end" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
                             #end
+                            </div> <!-- End form-group -->
                         </div>
                     </div>
                 </div>
                 #end
+
+                <input type="hidden" name="temp-totalNotMandatoryQuestions" value="$!notMandatoryCount">
                 <div class="text-right"><button type="submit" class="btn btn-primary">Submit</button></div>
             </form>
             #else

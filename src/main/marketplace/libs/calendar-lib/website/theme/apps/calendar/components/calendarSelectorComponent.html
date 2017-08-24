@@ -8,7 +8,7 @@
     
     
 #set($cals = $calendars.children.ofType.calendar)
-<!-- size1 $!cals -- $!cals.size()  -->
+
 #if(!$page and (!$cals || $cals.size() == 0) )
 <!--<p class="lead">No calendars are currently available</p>-->
 
@@ -16,11 +16,6 @@
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
         No calendars <span class="caret"></span>
     </button>
-    <!--<ul class="dropdown-menu" role="menu">-->
-        <!--<li><a href="$cal.href">Calendar 1</a></li>-->
-        <!--<li><a href="$cal.href">Calendar 2</a></li>-->
-        <!--<li><a href="$cal.href">Calendar 3</a></li>-->
-    <!--</ul>-->
 </div>
 
 #else
@@ -31,6 +26,15 @@
     <ul class="dropdown-menu" role="menu">
         #foreach($cal in $cals)
         <li><a href="$cal.href">$cal.title</a></li>
+        #end
+        #if($userResource)
+        #set($calPage = $userResource.href + "Calendars/")
+        #foreach($cal in $page.find($calPage).children.ofType.calendar)
+        #if($foreach.first)
+        <li class="divider"></li>
+        #end
+        <li><a href="$cal.href">$cal.title</a></li>
+        #end
         #end
     </ul>
 </div>

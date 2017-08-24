@@ -1,0 +1,92 @@
+#set ($currentStartDate = $formatter.yearStart)
+#set ($currentEndDate = $formatter.yearEnd())
+
+#set ($startDate = $queryManager.commonStartDate)
+#set ($endDate = $queryManager.commonFinishDate)
+
+#if ($startDate && $endDate)
+    #set ($currentStartDate = $startDate)
+    #set ($currentEndDate = $endDate)
+#end
+#set ($lastStartDate = $formatter.addYears($currentStartDate, -1))
+
+#set ($sales = $rootFolder.find('/sales/'))
+#set ($sales = $page.find('/sales/'))
+#set($kpis = $sales.allKpis)
+
+#set ($selectedKpi = false)
+#foreach($k in $kpis)
+    #if ($k.name == $kpi)
+        #set ($selectedKpi = $k)
+    #end
+#end
+#set($dataSeries = $selectedKpi.parent)
+
+#if ($selectedKpi)
+    #set ($lastYearSale = $applications.get("salesdata-lib").call("getLastYearSale", $dataSeries.name, $currentStartDate, $currentEndDate))
+    #set ($lastYearSale = $lastYearSale.aggregations.get("totalSales").value)
+    #set ($currentAggs = $selectedKpi.getProgressAndBaseline($currentStartDate, $currentEndDate))
+
+    <div class="panel-kpi-target">
+        <div class="row hidden-xs">
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title">Sales $formatter.getYear($lastStartDate)</span>
+                </div>
+            </div>
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title">Actual Sales $formatter.getYear($currentStartDate)</span>
+                </div>
+            </div>
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title">$selectedKpi.title</span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title visible-xs-block">Sales $formatter.getYear($lastStartDate)</span>
+                    <div class="circle-sale circle-sale-warning">
+                        <span>$$formatter.formatCurrency($lastYearSale)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title visible-xs-block">Actual Sales $formatter.getYear($currentStartDate)</span>
+                    <div class="circle-sale circle-sale-info">
+                        <span>$$formatter.formatCurrency($currentAggs.rawAmount)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 text-center">
+                <div class="circle-sale-wrapper">
+                    <span class="circle-sale-title visible-xs-block">$selectedKpi.title</span>
+                    <div class="circle-sale circle-sale-success">
+                        <span>$$formatter.formatCurrency($currentAggs.baseline)</span>
+                    </div>
+                </div>
+            </div>
+            #if ($currentAggs.aggrAmount >= 100)
+                <div class="col-sm-3 text-center target-track-wrapper on-track">
+                    <div class="target-track">
+                        <i class="fa fa-check fa-4x"></i>
+                        <p>You're<br />On track</p>
+                    </div>
+                </div>
+            #else
+                <div class="col-sm-3 text-center target-track-wrapper off-track">
+                    <div class="target-track">
+                        <i class="fa fa-times fa-4x"></i>
+                        <p>You're<br />Not On track</p>
+                    </div>
+                </div>
+            #end
+        </div>
+    </div>
+#else
+<p class="alert alert-warning">No KPI found</p>
+#end

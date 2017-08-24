@@ -32,12 +32,15 @@
                     });
                 });
                 
-                carousel.attr('data-height', 200).css('height', 200);
+                carousel.attr('data-height', 300).css('height', 300);
                 carousel.find('.carousel-inner').html('');
                 carousel.find('.carousel-indicators').html('');
                 
                 $.each(images, function (i, image) {
-                    self.addItemToCarousel(component, image.src, image.hash);
+                    self.addItemToCarousel(component, {
+                        src: image.src,
+                        hash: image.hash
+                    });
                 });
             }
             
@@ -48,6 +51,8 @@
         },
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
+            componentContent.find('.carousel-inner').children().removeClass('active').eq(0).addClass('active');
+            
             return componentContent.html();
         },
         settingEnabled: true,
@@ -341,8 +346,9 @@
             flog('addItemToCarousel', component, data);
             
             var carousel = component.find('.carousel');
+            var carouselInner = carousel.find('.carousel-inner');
             var id = carousel.attr('id');
-            var index = carousel.find('.carousel-indicators').children().length;
+            var index = carouselInner.children().length;
             var cls = index === 0 ? 'active' : '';
             var backgroundUrl = "background-image: url('" + data.src + "')";
             
@@ -363,7 +369,7 @@
                 itemStr += '</div>';
             }
             
-            carousel.find('.carousel-inner').append(itemStr);
+            carouselInner.append(itemStr);
         },
         
         addItemToList: function (form, data) {

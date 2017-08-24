@@ -1,7 +1,7 @@
 /**
  *
  * jquery.forms.js
- * @version: 1.1.1
+ * @version: 1.1.2
  * @depends: common.js, moment.js
  *
  * Configuration:
@@ -34,7 +34,7 @@
  */
 
 (function ($) {
-    flog('[jquery.forms] DEPRECATED options of 1.1.1 which will be removed 1.2.0:');
+    flog('[jquery.forms] DEPRECATED options of 1.1.2 which will be removed 1.2.0:');
     flog('********************************************');
     flog('- "doPostForm" is DEPRECATED and removed. Use "allowPostForm" instead');
     flog('- "error" is DEPRECATED. Use "onInvalid" instead');
@@ -56,7 +56,7 @@
     var defaultRegionCode = typeof window.defaultRegionCode !== 'undefined' ? window.defaultRegionCode : 'AU';
     
     // Version for jquery.forms
-    $.fn.forms.version = '1.1.1';
+    $.fn.forms.version = '1.1.2';
     
     // Get libphonenumber.js
     $.getScriptOnce('/static/libphonenumber/7.2.6/libphonenumber.js', function () {
@@ -67,7 +67,7 @@
     $.fn.forms.DEFAULT = {
         postUrl: null, // means to use the form action as url
         validate: function (form, config) {
-            flog('[jquery.forms] Default validate of v1.1.1', form, config);
+            flog('[jquery.forms] Default validate of v1.1.2', form, config);
             
             return {
                 error: 0,
@@ -76,19 +76,19 @@
             }
         },
         onValid: function (form, config) {
-            flog('[jquery.forms] Default onValid of v1.1.1', form, config);
+            flog('[jquery.forms] Default onValid of v1.1.2', form, config);
         },
         onInvalid: function (form, config) {
-            flog('[jquery.forms] Default onInvalid of v1.1.1', form, config);
+            flog('[jquery.forms] Default onInvalid of v1.1.2', form, config);
         },
         allowPostForm: true,
         beforePostForm: function (form, config, data) {
-            flog('[jquery.forms] Default beforePostForm of v1.1.1', form, config, data);
+            flog('[jquery.forms] Default beforePostForm of v1.1.2', form, config, data);
             
             return data;
         },
         onSuccess: function (resp, form, config) {
-            flog('[jquery.forms] Default onSuccess of v1.1.1', resp, form, config);
+            flog('[jquery.forms] Default onSuccess of v1.1.2', resp, form, config);
         },
         onError: function (resp, form, config) {
             try {

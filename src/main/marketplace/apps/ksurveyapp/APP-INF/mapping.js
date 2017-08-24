@@ -189,6 +189,10 @@ var questionMapping = {
         "order": {
             "store": true,
             "type": "long"
+        },
+        "required": {
+            "store": true,
+            "type": "keyword"
         }
     }
 };
@@ -248,6 +252,10 @@ var answerMapping = {
                     "type": "keyword"
                 }
             }
+        },
+        "order": {
+            "store": true,
+            "type": "long"
         }
     }
 };

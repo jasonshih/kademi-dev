@@ -1,0 +1,120 @@
+.panel-kpi-target {
+    position: relative;
+    padding: 50px;
+    background: #fcfcfc;
+    
+    .circle-sale-title {
+        margin-bottom: 10px;
+        font-size: @font-size-h4;
+        display: block;
+    }
+    
+    .circle-sale-wrapper {
+        margin: 0 auto;
+        width: 80%;
+        
+        @media (max-width: 767px) {
+            max-width: 320px;
+            margin-bottom: 30px;
+        }
+    }
+    
+    .circle-sale {
+        width: 100%;
+        padding-bottom: 100%;
+        position: relative;
+        
+        &:before {
+            position: absolute;
+            z-index: 1;
+            border: 15px solid #ccc;
+            border-radius: 50%;
+            left: 0;
+            top: 0;
+            content: '';
+            width: 100%;
+            height: 100%;
+        }
+        
+        span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            font-weight: bold;
+            z-index: 2;
+        }
+        
+        &.circle-sale-primary {
+            &:before {
+                border-color: @brand-primary;
+            }
+        }
+        
+        &.circle-sale-info {
+            &:before {
+                border-color: @brand-info;
+            }
+        }
+        
+        &.circle-sale-success {
+            &:before {
+                border-color: @brand-success;
+            }
+        }
+        
+        &.circle-sale-warning {
+            &:before {
+                border-color: @brand-warning;
+            }
+        }
+        
+        &.circle-sale-danger {
+            &:before {
+                border-color: @brand-danger;
+            }
+        }
+    }
+    
+    .target-track-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        color: #fff;
+        font-size: 25px;
+        line-height: 28px;
+        
+        &.on-track {
+            background: @brand-success;
+        }
+        
+        &.off-track {
+            background: @brand-danger;
+        }
+        
+        @media (max-width: 767px) {
+            position: static;
+            height: auto;
+            padding: 30px 15px;
+            
+            .target-track {
+                position: static;
+                transform: none;
+                text-align: center;
+            }
+        }
+    }
+    
+    .target-track {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        p {
+            margin: 10px 0 0;
+        }
+    }
+}

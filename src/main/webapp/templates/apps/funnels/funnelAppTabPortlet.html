@@ -1,20 +1,23 @@
+<div class="text-right clearfix">
+    <button class="btn btn-default"  data-toggle="modal" data-target="#modalCreateLead"><i class="fa fa-user-plus"></i> Add new lead</button>
+</div>
+<hr>
 #foreach($lead in $applications.funnels.getLeadsForProfile($page.thisProfile) )
 <div class="panel panel-default">
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
         #if( $funnel )
-            <a href="/funnels/$funnel.name">
+            <a class="pull-left" href="/funnels/$funnel.name">
                 #if( $funnel.title )
             $funnel.title
             #else
                     $funnel.name
                 #end
             </a>
+        <a class="pull-right" href="/leads/$lead.id">View lead <i class="fa fa-arrow-right"></i></a>
         #else
             COULD NOT FIND FUNNEL -$lead.funnel
         #end
-        
-        <b>ID=$lead.id</b>
     </div>
     <div class="panel-body">
         <table class="table table-striped">
@@ -164,3 +167,150 @@
     </div>
 </div>
 #end
+
+<div id="modalCreateLead" class="modal fade" tabindex="-1" role="dialog">
+    #set( $leadsPage = $page.find("/leads") )
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Enter a new lead</h4>
+            </div>
+            <form method="post" action="/leads/" class="form-horizontal">
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" class="active"><a href="#lead-info-tab" data-toggle="tab">Lead Details</a></li>
+                        <li role="presentation"><a href="#lead-fields-tab" data-toggle="tab">Extra Fields</a></li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="lead-info-tab" class="tab-pane active">
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newUserFirstName">Source</label>
+                                <div id="select-frm-div" class="col-md-4">
+                                    <select id="source-frm" data-placeholder="Select a source" name="source" class="form-control select2" style="width: 100%">
+                                        <option value="">[None]</option>
+                                        #foreach( $source in $page.find("/leads/").funnels.get($request.params.leadName).sources )
+                                        $formatter.option($source, $source, $page.source)
+                                        #end
+                                    </select>
+                                </div>
+                                <label class="control-label col-md-2" for="newUserNickName">Lead type</label>
+                                <div class="col-md-4">
+
+                                    <select name="funnel" class="form-control">
+                                        #foreach($entry in $leadsPage.funnels.entrySet())
+                                        #set ($sl = "")
+                                        #if($entry.value.name == $request.params.leadName)
+                                        #set ($sl = "selected")
+                                        #end
+                                        <option $!sl value="$entry.key">$entry.value.title</option>
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newLeadStage">Stage</label>
+                                <div id="select-frm-div" class="col-md-4">
+                                    <select id="newLeadStage" data-placeholder="Select a stage" name="stage" class="form-control" style="width: 100%">
+                                        <option value="">[None]</option>
+                                        #set ($stages = $page.find("/leads/").funnels.get($request.params.leadName).stages)
+                                        #foreach( $stage in $stages )
+                                        #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                        $formatter.option($stage.name, $a, $stages[0].name)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group org-field">
+                                <label class="control-label col-md-2" for="newOrgTitle">Company</label>
+                                <div class="col-md-5">
+                                    <input type="hidden" name="newOrgId" />
+                                    <input type="text" name="newOrgTitle" id="newOrgTitle" class="form-control" placeholder="Title" />
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newUserFirstName">Name</label>
+                                <div class="col-md-5">
+                                    <input value="$!page.thisProfile.firstName" name="firstName" id="newUserFirstName" class="form-control contact-finder" placeholder="First name" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input value="$!page.thisProfile.surName" name="surName" id="newUserSurName" class="form-control contact-finder" placeholder="Surname" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="newUserEmail">Contact</label>
+                                <div class="col-md-5">
+                                    <input value="$!page.thisProfile.email" name="email" id="newUserEmail" class="form-control contact-finder" placeholder="Email" />
+                                </div>
+                                <div class="col-md-5">
+                                    <input value="$!page.thisProfile.phone" name="phone" id="phone" class="form-control contact-finder" placeholder="Phone" />
+                                </div>
+
+                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<label class="control-label col-md-2" for="tags">Tags</label>-->
+                                <!--<div class="col-md-10">-->
+                                    <!--<input type="text" name="tags" id="tags" class="form-control tag-finder" placeholder="Start typing Tags" />-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="">Notes</label>
+                                <div class="col-md-10">
+                                    <textarea name="notes" class="form-control" style="height: 90px"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2" for="">Follow-up</label>
+                                <div class="col-md-4">
+                                    <div id="dueDate" class="input-group">
+                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                    <br />
+
+                                    <input type="text" name="title" id="title" class="form-control" placeholder="Task" />
+                                </div>
+
+                                <div class="col-md-6">
+                                    <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="lead-fields-tab" class="tab-pane">
+                            #foreach($entry in $leadsPage.funnels.entrySet())
+                            #set( $funnel = $entry.value )
+                            #if ($funnel.extraFields && $entry.key == $request.params.leadName)
+                            <div class="row">
+                                <div style="padding: 15px">
+                                    #foreach($field in $funnel.extraFields)
+                                    <div class="col-sm-12 col-md-12 col-lg-6">
+                                        <div class="form-group" style="padding-right: 15px">
+                                            <label>$field.title:</label>
+                                            $field.html(null, '', 'extraField_')
+                                        </div>
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                            #end
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-sm btn-default btn-fullwidth-mobile" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary btnCreateAndClose" type="submit">Create</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+    window.pageInitFunctions.push(initProfileLeads);
+</script>

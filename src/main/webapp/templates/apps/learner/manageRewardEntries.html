@@ -11,28 +11,49 @@
     <body>
         <section id="manageReward" class="MainContent">
             <header class="clearfix">
-                <h4 class="col-sm-5">$page.title</h4>
-                <div class="pull-right">
-                    <a href="$page.reward.name/photos.html" class="export btn btn-primary btn-sm">
-                        <span class="fa fa-photo"></span>
-                        Photo entries
-                    </a>
-                    <a href="${page.reward.name}/entries.csv" class="export btn btn-primary btn-sm">
-                        <span class="fa fa-table"></span>
-                        Export as CSV
-                    </a>
-                    <button class="btn btn-danger btn-sm removeUsers" style="margin-left: 30px">
-                        <span class="fa fa-times"></span>
-                        Remove Selected
-                    </button>
 
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4>$page.title</h4>
+                    </div>
+                    <div class="col-md-3 form-horizontal">
+                        <label for="rewardEntriesStatus" class="control-label col-md-2">Status</label>
+                        <div class="col-md-10">
+                            <select id="rewardEntriesStatus" class="form-control">
+                                <option value="">[NONE]</option>
+                                $formatter.option("PENDING", "Pending", $request.params.status)
+                                $formatter.option("ACCEPTED", "Accepted", $request.params.status)
+                                $formatter.option("REJECTED", "Rejected", $request.params.status)
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <div class="pull-right">
+                            <a href="$page.reward.name/photos.html" class="export btn btn-primary btn-sm">
+                                <span class="fa fa-photo"></span>
+                                Photo entries
+                            </a>
+                            <a href="${page.reward.name}/entries.csv?status=$!request.params.status" data-href="${page.reward.name}/entries.csv" class="rewardentries-csv export btn btn-primary btn-sm">
+                                <span class="fa fa-table"></span>
+                                Export as CSV
+                            </a>
+                            <button class="btn btn-danger btn-sm removeUsers" style="margin-left: 30px">
+                                <span class="fa fa-times"></span>
+                                Remove Selected
+                            </button>
+
+                        </div>
+                    </div>
                 </div>
+
+
             </header>
             <div class="Content Details">
                 <div class="table-responsive">
                     <table class="entries table table-striped table-hover table-full-width pagination-container">
                         <thead>
                             <tr>
+                                <th>Status</th>
                                 <th>Full name</th>
                                 <th>Organisation</th>
                                 <th>Email</th>
@@ -47,9 +68,22 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="pagination-results" >
+                        <tbody id="rewardentries-resultsbody" class="pagination-results" >
                             #foreach($entry in $page.paginator.records)
-                            <tr>
+                            <tr data-entryid="$entry.id">
+                                <td>
+                                    #if($entry.approvalStatus == "PENDING")
+                                    <i title="Pending Approval" class="text-info fa fa-hourglass-half fa-lg fa-fw"></i>    
+                                    <div class="btn-group btn-group-sm">
+                                        <button type="button" title="Accept Entry" class="btn btn-success btn-rewardentry-accept"><i class="fa fa-check"></i></button>
+                                        <button type="button" title="Reject Entry" class="btn btn-danger btn-rewardentry-reject"><i class="fa fa-times"></i></button>
+                                    </div>        
+                                    #elseif($entry.approvalStatus == "REJECTED")
+                                    <span class="text-danger" title="Entry Rejected"><i class="fa fa-times fa-2x fa-fw"></i></span>
+                                    #else
+                                    <span class="text-success" title="Entry Accepted"><i class="fa fa-check fa-2x fa-fw"></i></span>
+                                    #end
+                                </td>
                                 <td>$entry.awardedTo.formattedName</td>
                                 <td>$page.orgForEntry($entry)</td>
                                 <td>$entry.awardedTo.email</td>
@@ -147,11 +181,6 @@
             </div>
         </section>
         <script type="text/javascript">
-            $(function () {
-                initRemoveEntries();
-                initRemoveAnswers();
-                initSelectAll();
-            });
             function initRemoveEntries() {
                 $(".removeUsers").click(function (e) {
                     var node = $(e.target);
@@ -180,6 +209,71 @@
                     }
                 });
             }
+
+            function initAcceptEntry() {
+                $('body').on('click', '.btn-rewardentry-accept', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var row = btn.closest('tr');
+                    var entryid = row.data('entryid');
+
+                    Kalert.confirm('Do you want to accept this entry?', 'Yes', function () {
+                        flog('Accept it!', entryid);
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                acceptEntry: entryid
+                            },
+                            success: function (resp) {
+                                if (resp.status) {
+                                    Kalert.success(resp.messages);
+                                } else {
+                                    Kalert.warning(resp.messages);
+                                }
+                            },
+                            error: function () {
+                                Kalert.warning('Oh No!', 'Something went wrong with your request!');
+                            }
+                        });
+                    });
+                });
+            }
+
+            function initRejectEntry() {
+                $('body').on('click', '.btn-rewardentry-reject', function (e) {
+                    e.preventDefault();
+
+                    var btn = $(this);
+                    var row = btn.closest('tr');
+                    var entryid = row.data('entryid');
+
+                    Kalert.confirm('Do you want to reject this entry?', 'Yes', function () {
+                        flog('Reject it!', entryid);
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                rejectEntry: entryid
+                            },
+                            success: function (resp) {
+                                if (resp.status) {
+                                    Kalert.success(resp.messages);
+                                } else {
+                                    Kalert.warning(resp.messages);
+                                }
+                            },
+                            error: function () {
+                                Kalert.warning('Oh No!', 'Something went wrong with your request!');
+                            }
+                        });
+                    });
+                });
+            }
+
             function doRemoveEntries(checkBoxes) {
                 $.ajax({
                     type: 'POST',
@@ -200,6 +294,36 @@
                     }
                 });
             }
+
+            function initStatusFilter() {
+                //URI.parseQuery(location.search)
+                $('body').on('change', '#rewardEntriesStatus', function (e) {
+                    e.preventDefault();
+
+                    var sel = $(this);
+                    var query = URI.parseQuery(location.search);
+
+                    query.status = sel.val();
+
+                    $('#rewardentries-resultsbody').reloadFragment({
+                        url: window.location.pathname + '?' + URI.buildQuery(query),
+                        whenComplete: function () {
+                            var csv = $('.rewardentries-csv');
+                            var href = csv.data('href');
+                            csv.attr('href', href + '?' + URI.buildQuery(query));
+                        }
+                    });
+                });
+            }
+
+            $(function () {
+                initRemoveEntries();
+                initRemoveAnswers();
+                initSelectAll();
+                initAcceptEntry();
+                initRejectEntry();
+                initStatusFilter();
+            });
         </script>
     </body>
 </html>

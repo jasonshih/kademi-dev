@@ -63,6 +63,7 @@ $(function () {
                         modalQuestion.find('[name=questionType]').val(question.type).attr('disabled', 'disabled');
                         modalQuestion.find('[name=questionBody]').val(question.body);
                         modalQuestion.find('[name=answerLayout]').val(question.answerLayout);
+                        modalQuestion.find('[name=required]').prop('checked', question.required == "true");
                         if (question.type == "3") {
                             modalQuestion.find('.answerLayout').removeClass('hide');
                         } else {
@@ -164,7 +165,7 @@ $(function () {
             form.addClass('hide');
         } else {
             var list = form.siblings('.list-group');
-            list.append('<li class="list-group-item"><span>' + form.find('[name=answerBody]').val() + '</span><a href="#" class="btn btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a> <a href="#" class="btn btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>');
+            list.append('<li class="list-group-item answer-item"><span>' + form.find('[name=answerBody]').val() + '</span><a class="btn btn-link btn-sm btn-reorder-answer pull-right" href="#" title="Re-order answer"><i class="fa fa-sort"></i></a><a href="#" class="btn btn-sm pull-right btn-delete-answer"><i class="fa fa-trash"></i></a> <a href="#" class="btn btn-sm pull-right btn-edit-answer"><i class="fa fa-edit"></i></a></li>');
             form.find('[name=answerBody]').attr('readonly', 'readonly').val('');
         }
         $.ajax({
@@ -183,6 +184,8 @@ $(function () {
                     $('#stats-questions').reloadFragment({
                         whenComplete: function () {
                             initProgressBar();
+                            var answersList = form.siblings('.answersList');
+                            answersList.sortable( "refresh" );
                         }
                     });
                 } else {
@@ -274,6 +277,7 @@ $(function () {
                                 scrollTop: $('#questions-list').find('[data-question-id="' + returnObj.questionId + '"]').offset().top - 50
                             }, 500);
                             form.trigger('reset');
+                            $('#questions-list').sortable('refresh');
                         }
                     });
                     $('#stats-questions').reloadFragment({
@@ -588,6 +592,59 @@ $(function () {
             });
         }
     }
+
+    function initSortableAnswers() {
+        var answersList = $('.answersList');
+        if (answersList.length > 0) {
+            flog('initSortableAnswers');
+
+            answersList.each(function () {
+                var list = $(this);
+                list.sortable({
+                    items: '> .answer-item',
+                    handle: '.btn-reorder-answer',
+                    axis: 'y',
+                    tolerance: 'pointer',
+                    containment: list,
+                    update: function () {
+                        var answersIds = [];
+                        list.find('.answer-item').each(function () {
+                            answersIds.push($(this).attr('data-answer'));
+                        });
+                        answersIds = answersIds.join(',');
+
+                        flog('Reordered questions list IDs: ' + answersIds);
+
+                        $.ajax({
+                            url: '/ksurvey/question/',
+                            type: 'get',
+                            data: {
+                                answersIds: answersIds,
+                                reorderAnswers: 'reorderAnswers'
+                            },
+                            dataType: 'json',
+                            success: function (resp) {
+                                if (resp && resp.status && resp.data.status) {
+                                    Msg.info('Answers was re-ordered', 1000);
+                                } else {
+                                    Msg.error(resp.messages.join('\n'));
+                                }
+                            }
+                        });
+                    }
+                });
+            })
+        }
+    }
+    
+    function initToggleQuestions() {
+        $('.btn-toggle-questions').on('click', function (e) {
+            e.preventDefault();
+            $('#questions-list').find('.panel-question').each(function () {
+                $(this).find('.panel-body').slideToggle();
+            })
+        })
+    }
     
     initGroupModal();
     initDateRange();
@@ -597,4 +654,6 @@ $(function () {
     initClearResult();
     initMigration();
     initSortableQuestions();
+    initSortableAnswers();
+    initToggleQuestions();
 });

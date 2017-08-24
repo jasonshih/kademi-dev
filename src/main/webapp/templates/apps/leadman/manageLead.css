@@ -23,3 +23,19 @@
 #searchbox-wrap .tt-suggestion.tt-selectable + .tt-suggestion.tt-selectable {
     border-top: 1px solid #eee;
 }
+
+.lead-note-author {
+    margin-right: 10px;;
+}
+
+.note-item {
+    padding: 15px;
+}
+
+.note-item > div + div {
+    margin-top: 15px;
+}
+
+.note-item:nth-child(2n+1) {
+    background: #f0f5f8;
+}

@@ -67,6 +67,12 @@
                 "cssMedia": "all",
                 "path": "/theme/apps/salesdata/manageDataRecord.css"
             }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/salesdata/panelKpiTarget.less"
+            }
         }
     ]
 }

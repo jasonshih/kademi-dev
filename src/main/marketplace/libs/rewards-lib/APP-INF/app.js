@@ -1,0 +1,1 @@
+controllerMappings.addComponent("rewards/components", "rewardsPromotionDetails", "edm", "Shows details about a promotion", "Rewards and promotions");

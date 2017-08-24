@@ -16,6 +16,7 @@ function submitSurvey(page, params) {
     var userAgentHeader = params['temp-userAgentHeader'];
     var fromAddress = params['temp-fromAddress'];
     var totalQuestions = params['temp-totalQuestions'];
+    var totalNotMandatoryQuestions = params['temp-totalNotMandatoryQuestions'];
     var surveyResult = [];
     var parser = new UAParser(userAgentHeader).getResult();
     var browserName = parser.browser.name;
@@ -74,7 +75,7 @@ function submitSurvey(page, params) {
         messages: ['Successfully submitted survey'],
         data: surveyResult
     };
-    if (surveyResult.length < totalQuestions) {
+    if (surveyResult.length < (totalQuestions - totalNotMandatoryQuestions)) {
         result.status = false;
         result.messages = ['Please check your answers and submit again!'];
     } else {
@@ -114,7 +115,7 @@ function submitSurvey(page, params) {
         log.info('saveResult done {}', JSON.stringify(surveyResult));
     }
     
-    return views.jsonObjectView(JSON.stringify(result)).wrapJsonResult();
+    return views.jsonObjectView(JSON.stringify(result));
 }
 
 // private function to check if user already submitted survey
