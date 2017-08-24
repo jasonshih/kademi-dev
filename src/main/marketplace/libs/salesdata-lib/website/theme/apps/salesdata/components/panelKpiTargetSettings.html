@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12"><strong>KPI</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-kpi">
+                <option value="">- None -</option>
+                #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
+                    <option value="$kpi.name">$kpi.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>
