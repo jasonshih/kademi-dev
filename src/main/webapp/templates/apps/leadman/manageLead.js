@@ -3,7 +3,7 @@
         initViewLeadsPage();
         initEditTaskModal();
         initImmediateUpdate();
-        initTimerControls();
+        initLeadTimerControls();
     });
 
     function initEditTaskModal() {
@@ -973,7 +973,52 @@
         $("#membershipsContainer .twitter-typeahead").focus();
     }
 
-    function initTimerControls() {
+    function initLeadTimerControls() {
+        flog("initLeadTimerControls");
+        $(document.body).on("click", ".timer-btn-stop", function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "timerCmd": "stop"
+                },
+                success: function () {
+                    Msg.info("Stopped timer. Reloading page");
+                    window.location.reload();
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong');
+                }
+            });
+        });
+
+
+        $(document.body).on("click", ".timer-btn-do-resched", function (e) {
+            e.preventDefault();
+            var btn = $(e.target).closest("button");
+            var modal = btn.closest(".modal");
+            var dateControl = modal.find(".date-time");
+
+            var timerDate = dateControl.val();
+            flog("reschdule", dateControl, timerDate);
+            $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    "timerCmd": "resched",
+                    "timerDate": timerDate
+                },
+                success: function () {
+                    Msg.info("Recheduled timer. Reloading page");
+                    window.location.reload();
+                },
+                error: function () {
+                    Msg.error('Oh No! Something went wrong');
+                }
+            });
+        });
+
         $(document.body).on("click", ".timer-btn-go-next", function (e) {
             e.preventDefault();
             var btn = $(e.target).closest("a");

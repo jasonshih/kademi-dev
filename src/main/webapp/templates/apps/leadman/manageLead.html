@@ -4,7 +4,7 @@
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
         <script type="text/javascript" src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"></script>
-        <script type="text/javascript" src="/theme/apps/leadman/manageLead.js"></script>
+        <script type="text/javascript" src="/theme/apps/leadman/manageLead.js?v=1"></script>
         <link rel="stylesheet" type="text/css" href="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.css" />
         <link rel="stylesheet" type="text/css" href="/theme/apps/leadman/manageLead.css" />
     </head>
@@ -138,127 +138,134 @@
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="information">
-                        <form class="form-horizontal" action="$page.href" method="post" id="lead-details-form">
-                            <div class="form-group">
-                                <div class="col-sm-12 text-right">
-                                    <button type="submit" class="btn btn-sm btn-primary">Save details</button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">Description</label>
-                                <div class="col-sm-6">
-                                    <textarea id="description" class="form-control" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">Deal value</label>
-                                <div class="col-sm-6">
-                                    <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">Stage</label>
-                                <div class="col-sm-6">
-                                    <select name="stageName" class="form-control immediateUpdate">
-                                        <option value="">[None]</option>
-                                        #foreach( $stage in $page.allStages )
-                                        #set($a = $formatter.ifNull($stage.desc, $stage.name))
-                                        $formatter.option($stage.name, $a, $page.stageName)
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2" for="createDate">Created</label>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
-                                        <span class="input-group-addon">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <form class="form-horizontal" action="$page.href" method="post" id="lead-details-form">
+                                    <div class="form-group">
+                                        <div class="col-sm-11 text-right">
+                                            <button type="submit" class="btn btn-sm btn-primary">Save details</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Description</label>
+                                        <div class="col-sm-8">
+                                            <textarea id="description" class="form-control" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Deal value</label>
+                                        <div class="col-sm-8">
+                                            <input type="number" value="$!page.dealAmount" name="dealAmount" class="form-control immediateUpdate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Stage</label>
+                                        <div class="col-sm-8">
+                                            <select name="stageName" class="form-control immediateUpdate">
+                                                <option value="">[None]</option>
+                                                #foreach( $stage in $page.allStages )
+                                                #set($a = $formatter.ifNull($stage.desc, $stage.name))
+                                                $formatter.option($stage.name, $a, $page.stageName)
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3" for="createDate">Created</label>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
+                                                <span class="input-group-addon">
                                             <i class="fa fa-calendar"></i>
                                         </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Source</label>
+                                        <div class="col-sm-8">
+                                            <select id="" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
+                                                <option value="">[None]</option>
+                                                #set($foundSource = false)
+                                                #foreach( $source in $page.allSources )
+                                                #if($source == $page.source)
+                                                #set($foundSource = true)
+                                                #end
+                                                $formatter.option($source, $source, $page.source)
+                                                #end
+                                                #if(!$foundSource && $page.source)
+                                                $formatter.option($page.source, $page.source, $page.source)
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">Journey</label>
+                                        <div class="col-sm-8">
+                                            #set( $leadsFolder = $page.find("/funnels") )
+                                            <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
+                                                <option value="">[None]</option>
+                                                #foreach( $funnel in $leadsFolder.children )
+                                                $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
+                                                #end
+                                            </select>
+                                        </div>
+                                    </div>
+                                    #foreach($field in $page.extraFields)
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">$field.title</label>
+                                        <div class="col-sm-8">
+                                            $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
+                                        </div>
+                                    </div>
+                                    #end
+                                </form>
+
+                            </div>
+                            <div class="col-sm-4">
+                                #if( $!page.currentGoalIsTask == false )
+                                <div class="timeline-panel">
+                                    <div class="timeline-heading">
+                                        #if( $page.timerDate )
+                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                            <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
+                                        </small>
+                                        #else
+                                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
+                                            <span class="label label-warning">No current timer</span>
+                                        </small>
+
+
+                                        #end
+
+                                        <h4 class="timeline-title">Waiting for <i class="fa fa-refresh fa-spin"></i></h4>
+                                    </div>
+                                    <div class="timeline-body">
+                                        <p>$page.nodeTitle($page.currentGoal) </p>
+                                        <br>
+                                        <div class="btn-group">
+                                            <button class="timer-btn-go btn btn-success" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
+                                                <span class="fa fa-play"></span>
+                                            </button>
+                                            <button class="timer-btn-stop btn btn-danger" title="Stop this timer, can be rescheduled later">
+                                                <span class="fa fa-pause"></span>
+                                            </button>
+                                            <button class="timer-btn-resched btn btn-info" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
+                                                <span class="fa fa-clock-o"></span>
+                                            </button>
+
+                                            <button class="timer-btn-goal btn btn-info" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
+                                                <span class="fa fa-pencil"></span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">Source</label>
-                                <div class="col-sm-6">
-                                    <select id="" data-placeholder="Select a source" name="source" class="form-control immediateUpdate" style="width: 100%">
-                                        <option value="">[None]</option>
-                                        #set($foundSource = false)
-                                        #foreach( $source in $page.allSources )
-                                        #if($source == $page.source)
-                                        #set($foundSource = true)
-                                        #end
-                                        $formatter.option($source, $source, $page.source)
-                                        #end
-                                        #if(!$foundSource && $page.source)
-                                        $formatter.option($page.source, $page.source, $page.source)
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">Journey</label>
-                                <div class="col-sm-6">
-                                    #set( $leadsFolder = $page.find("/funnels") )
-                                    <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
-                                        <option value="">[None]</option>
-                                        #foreach( $funnel in $leadsFolder.children )
-                                        $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
-                                        #end
-                                    </select>
-                                </div>
-                            </div>
-                            #foreach($field in $page.extraFields)
-                            <div class="form-group">
-                                <label class="control-label col-sm-2">$field.title</label>
-                                <div class="col-sm-6">
-                                    $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
-                                </div>
-                            </div>
-                            #end
-                        </form>
-
-                        <hr />
-                        #if( $!page.currentGoalIsTask == false )
-                        <div class="timeline-panel">
-                            <div class="timeline-heading">
-                                #if( $page.timerDate )
-                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
-                                    <abbr title="$formatter.formatDateISO8601($page.timerDate)" class="info timeago">$page.timerDate</abbr>
-                                </small>
-                                #else
-                                <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
-                                    <span class="label label-warning">No current timer</span>
-                                </small>
-
-
                                 #end
-
-                                <h4 class="timeline-title">Waiting for..</h4>
-                            </div>
-                            <div class="timeline-body">
-                                <p>$page.nodeTitle( $page.currentGoal )</p>
-                                <div class="btn-group">
-                                    <button class="timer-btn-go btn btn-success btn-sm" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
-                                        <span class="fa fa-play"></span>
-                                    </button>
-                                    <!--<button class="timer-btn-stop btn btn-danger btn-sm" title="Stop this timer, can be rescheduled later">
-                                        <span class="fa fa-pause"></span>
-                                    </button>
-                                    <button class="timer-btn-resched btn btn-info btn-sm" data-toggle="modal" data-target="#rescheduleModal" title="Reschedule this timer">
-                                        <span class="fa fa-clock-o"></span>
-                                    </button>
-
-                                    <button class="timer-btn-goal btn btn-info btn-sm" data-toggle="modal" data-target="#switchGoalModal" title="Switch to a different goal">
-                                        <span class="fa fa-pencil"></span>
-                                    </button>-->
-                                </div>
                             </div>
                         </div>
 
                         <hr />
-                        #end
+
                         <h4>Contact information</h4>
                         <form method="post" action="$page.href" class="form-horizontal" id="lead-contact-form">
                             <input type="hidden" name="saveDetails" value="saveDetails" />
@@ -1129,6 +1136,50 @@
                     #end
                 </div>
 
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div class="modal fade" id="switchGoalModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Switch to another goal - $page.nodeTitle( $page.currentGoal )</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="lead">Please select the another goal in the journey you would like to progress to</p>
+                    #foreach($nextNode in $page.goals)
+                    <a class="btn btn-success timer-btn-go-next" href="$nextNode.nodeId">$page.nodeTitle($nextNode.nodeId)</a>
+                    #end
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+
+    <div class="modal fade" id="rescheduleModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Reschedule goal - $page.nodeTitle( $page.currentGoal )</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="lead">Please select a new date and time for this goal</p>
+                    <div class="input-group">
+                        <input type="text" name="timerDate" id="timerDate" class="form-control date-time" value=" $formatter.formatDateTime( $!page.timerDate )" />
+                        <span class="input-group-addon">
+                            <span class="fa fa-calendar"></span>
+                        </span>
+                    </div>
+                    <br>
+                    <button class="btn btn-success timer-btn-do-resched">
+                        <span></span>
+                        Reschedule
+                    </button>
+                </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
