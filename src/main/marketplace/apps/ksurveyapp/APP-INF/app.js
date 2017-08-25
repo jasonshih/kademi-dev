@@ -49,7 +49,8 @@ controllerMappings
     .enabled(true)
     .addMethod('GET', 'deleteAnswer', 'deleteAnswer')
     .addMethod('GET', 'getPlainAnswers', 'getPlainAnswers')
-    .addMethod('POST', 'saveAnswer')
+    .addMethod('POST', 'saveAnswer', 'saveAnswer')
+    .addMethod('POST', 'saveAnswerRequiredQuestions', 'saveAnswerRequiredQuestions')
     .build();
 
 controllerMappings

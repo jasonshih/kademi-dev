@@ -229,6 +229,28 @@ function saveAnswer(page, params) {
     return views.jsonObjectView(JSON.stringify(status)).wrapJsonResult();
 }
 
+// POST /ksurvey/saveAnswer
+function saveAnswerRequiredQuestions(page, params) {
+    var answerId = params.answerId;
+    var requiredQuestions = params.requiredQuestions;
+    var db = getDB(page);
+    var errors = [];
+    if (answerId !== null) {
+        var answerRes = db.child(answerId);
+        if (answerRes !== null) {
+            answerRes.requiredQuestions = requiredQuestions;
+            answerRes.modifiedDate = Date.now();
+            answerRes.save();
+        } else {
+            errors.push('Answer not found');
+        }
+    } else {
+        errors.push('Missing parameters');
+    }
+
+    return views.jsonObjectView(JSON.stringify({status: errors.length < 1, messages: errors}));
+}
+
 // GET /ksurvey/getQuestion
 function getQuestion(page, params) {
     log.info('getQuestion {}', params.getQuestion);
@@ -791,7 +813,7 @@ function getUserSurveyStatistic(page, surveyId) {
 }
 
 function getPlainAnswers(page, questionId, surveyId) {
-    log.info('getPlainAnswers {} questionId {} surveyId {}', page, questionId, surveyId);
+    log.info('getPlainAnswers {} questionId {} surveyId {}', [page, questionId, surveyId]);
     var queryJson = {
         'size': 10000,
         'query': {
