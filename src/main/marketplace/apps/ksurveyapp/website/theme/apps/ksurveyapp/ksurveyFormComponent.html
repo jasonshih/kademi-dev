@@ -124,7 +124,7 @@
                             <!-- Yes/No question -->
                             <div class="radio">
                                 <label>
-                                    <input data-requiredQuestions="$!answer.source.requiredQuestions" data-required="$question.source.required" class="yesnoAnswer #if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input data-requiredQuestions="$!answer.source.requiredQuestions" data-required="$question.source.required" class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #elseif($question.source.type==3)
