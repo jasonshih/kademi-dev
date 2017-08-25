@@ -1,8 +1,12 @@
-#set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $page, $user))
+#if ($page)
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $page, $user))
+#else
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $rootFolder, $user))
+#end
 
 #foreach($poll in $availablePolls)
 <div class="col-sm-6">
-    <div class="kpoll kpoll-tile">
+    <div class="kpoll-tile component-tile component-info">
         <form method="post" action="/kpoll/${poll.id}/answer">
             <div class="kpoll-question clearfix">
                 $poll.fields.question.value

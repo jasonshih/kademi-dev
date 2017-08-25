@@ -1,18 +1,16 @@
 .kpoll-tile {
-    background: @brand-info;
-    padding: 30px;
-    color: #fff;
-    position: relative;
-    min-height: 205px;
-    
     .kpoll-question {
         font-size: @font-size-h3;
     }
     
+    form {
+        position: static;
+    }
+    
     .kpoll-point {
         position: absolute;
-        top: -30px;
-        right: -30px;
+        top: 0;
+        right: 0;
         background: @brand-primary;
         height: 30px;
         line-height: 30px;
@@ -30,7 +28,11 @@
     
     .kpoll-anwser {
         display: inline-block;
-        margin: 0 20px 10px 0;
+        margin: 0 20px 10px 0 !important;
+    }
+    
+    .kpoll-action {
+        margin-top: 10px;
     }
     
     .kpoll-success{
