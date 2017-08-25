@@ -53,7 +53,7 @@ controllerMappings
     .build();
 
 controllerMappings
-    .adminController()
+    .adminController() 
     .path('/kpoll/updateAnswerMapping')
     .enabled(true)
     .defaultView(views.templateView('kpollapp/updateDB.html'))
@@ -79,6 +79,7 @@ controllerMappings
     .postPriviledge("READ_CONTENT")
     .build();
 
-controllerMappings.addComponent("kpollapp", "kpoll", "html", "Shows polls", "KPoll App component");
+controllerMappings.addComponent("kpollapp/components", "kpoll", "html", "Shows polls", "KPoll App component");
+controllerMappings.addComponent("kpollapp/components", "kpollsTile", "html", "Shows polls in tile format", "KPoll App component;Tile component");
 
 controllerMappings.addNodeType("kpollAnsweredGoal", "kpollapp/kpollAnsweredGoalNode.js");
