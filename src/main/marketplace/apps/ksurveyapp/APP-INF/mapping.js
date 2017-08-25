@@ -256,6 +256,10 @@ var answerMapping = {
         "order": {
             "store": true,
             "type": "long"
+        },
+        "requiredQuestions": {
+            "store": true,
+            "type": "text"
         }
     }
 };
