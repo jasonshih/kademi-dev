@@ -64,12 +64,39 @@
         });
     }
 
+    function initRequiredQuestions() {
+        $(document).on('click', '[data-requiredQuestions]', function () {
+
+            var rqs = $(this).attr('data-requiredQuestions');
+            if (rqs){
+                $('#surveyform').find('[data-required]').each(function () {
+                    var name = $(this).attr('name').replace('temp-', '');
+                    if (rqs.indexOf(name) != -1){
+                        $(this).addClass('required');
+                    } else {
+                        if ($(this).attr('data-required') != 'true'){
+                            $(this).removeClass('required');
+                        }
+                    }
+                })
+            } else {
+                $('#surveyform').find('[data-required]').each(function () {
+                    if ($(this).attr('data-required') != 'true'){
+                        $(this).removeClass('required');
+                    }
+                })
+            }
+
+        });
+    }
+
     $(function () {
         if ($('.ksurvey').length){
             initCheckboxes();
             initForm();
             initTimeago();
             initCountDown();
+            initRequiredQuestions();
             if ($('.ksurveyResult').length){
                 initProgressBar();
             }

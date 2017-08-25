@@ -289,9 +289,12 @@ $(function () {
                 } else {
                     Msg.error(resp.data.messages.join('<br />'));
                 }
+
+                form.find('[name=questionId]').val('');
             },
             error: function (e) {
                 Msg.error('System error! Please contact your system administrator for support.');
+                form.find('[name=questionId]').val('');
             }
         });
     });

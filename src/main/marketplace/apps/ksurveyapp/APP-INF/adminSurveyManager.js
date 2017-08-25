@@ -813,7 +813,7 @@ function getUserSurveyStatistic(page, surveyId) {
 }
 
 function getPlainAnswers(page, questionId, surveyId) {
-    log.info('getPlainAnswers {} questionId {} surveyId {}', page, questionId, surveyId);
+    log.info('getPlainAnswers {} questionId {} surveyId {}', [page, questionId, surveyId]);
     var queryJson = {
         'size': 10000,
         'query': {
