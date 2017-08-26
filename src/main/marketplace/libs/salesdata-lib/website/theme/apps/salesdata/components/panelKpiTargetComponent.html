@@ -23,7 +23,7 @@
 #set($dataSeries = $selectedKpi.parent)
 
 #if ($selectedKpi)
-    #set ($lastYearSale = $applications.get("salesdata-lib").call("getLastYearSale", $dataSeries.name, $currentStartDate, $currentEndDate))
+    #set ($lastYearSale = $applications.get("salesdata-lib").call("getLastYearSale", $userResource, $dataSeries.name, $currentStartDate, $currentEndDate))
     #set ($lastYearSale = $lastYearSale.aggregations.get("totalSales").value)
     #set ($currentAggs = $selectedKpi.getProgressAndBaseline($currentStartDate, $currentEndDate))
 
