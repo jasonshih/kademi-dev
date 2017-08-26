@@ -15,7 +15,7 @@
 
     #set($modules = $curCourse.children.ofType.module.sortByField("order"))
     #foreach($mod in $modules)
-        #if( $mod.percentComplete || $mod.startable )
+        #if( ($mod.complete == false && $mod.percentComplete) || (!$mod.complete && $mod.startable) )
         <div class="col-sm-6">
             <div class="module-tile component-tile component-info">
                 <h3 class="module-tile-title">$mod.title</h3>
