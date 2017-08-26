@@ -1,16 +1,37 @@
-$(function () {
-    var panel = $('.panel-coming-up-auction');
-
-    if (panel.length > 0) {
+(function ($) {
+    $(function () {
+        var panel = $('.panel-coming-up-auction');
+        
+        if (panel.length > 0) {
+            var countdown = panel.find('.countdown');
+            var WSUri = countdown.attr('data-WSUri');
+            initWebsockets(WSUri, panel);
+            initCountDown(panel);
+            initBidForm(panel);
+        }
+    });
+    
+    function initBidForm(panel) {
+        flog('initBidForm', panel);
+        
+        var form = panel.find('form');
+        form.forms({
+            onSuccess: function () {
+                Msg.success('Bid Placed');
+            }
+        })
+    }
+    
+    function initCountDown(panel) {
+        flog('initCountDown', panel);
+        
         var countdown = panel.find('.countdown');
         var finalDate = countdown.attr('data-end');
-        var WSUri = countdown.attr('data-WSUri');
-        initWebsockets(WSUri, panel);
         var c = moment(finalDate).format('YYYY/MM/DD HH:MM:ss');
-
+        
         countdown.countdown(c)
             .on('update.countdown', function (event) {
-                var format = '%H:%M:%S';
+                var format = '%H:%M:<span>%S</span>';
                 if (event.offset.days > 0) {
                     format = '%-d day%!d ' + format;
                 }
@@ -21,14 +42,23 @@ $(function () {
             })
             .on('finish.countdown', function (event) {
                 $(this).html('This auction has expired!')
-
+                
             });
     }
-
+    
     function initWebsockets(WSUri, panel) {
-        flog("initWebsockets", window.location.host, "ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
         try {
-            wsocket = new WebSocket("ws://" + window.location.host + "/comments/" + window.location.host + "/auctionBid/" + WSUri);
+            var port = parseInt(window.location.port || 80) + 1;
+            var proto = 'ws://';
+            if (window.location.protocol === 'https:') {
+                proto = 'wss://';
+                port = parseInt(window.location.port || 443) + 1;
+            }
+            var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + WSUri;
+            
+            flog("initWebsockets", window.location.hostname, wsPath);
+            
+            wsocket = new WebSocket(wsPath);
             wsocket.onmessage = function (evt) {
                 var c = $.parseJSON(evt.data);
                 if (c.beanType != null && c.beanType == "auctionBid") {
@@ -47,5 +77,5 @@ $(function () {
             log("Websocket initialisation failed. Live bid stream is not available");
         }
     }
-
-});
+    
+})(jQuery);
