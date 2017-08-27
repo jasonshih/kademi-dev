@@ -88,8 +88,7 @@
                         <div class="$clsName product-item">
                             <div class="thumbnail product">
                                 <div class="product-info">
-                                    <h3 class="product-title" title="$p.title"><a class="text-primary"
-                                                                                               href="/$prodUrl">$p.title</a>
+                                    <h3 class="product-title" title="$p.title"><a class="text-primary" href="/$prodUrl">$p.title</a>
                                     </h3>
                                     <div class="embed-responsive embed-responsive-4by3">
                                         <a href="/$prodUrl" class="embed-responsive-item"
@@ -115,7 +114,11 @@
             #else
             <div class="products-list ecom-store-category-products" id="products-list-$!prodsListId">
                 #foreach($p in $prods)
+                    #if($category)
                     #set ($prodUrl = "/$store/$category/$p.name")
+                    #else
+                    #set ($prodUrl = "/$store/$p.name")
+                    #end
                     <div class="media prod">
                         <div class="media-left hidden-sm hidden-xs">
                             #set($bg = "/static/images/photo_holder.png")
