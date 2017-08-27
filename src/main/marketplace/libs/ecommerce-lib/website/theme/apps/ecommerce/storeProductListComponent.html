@@ -43,6 +43,7 @@
     #else
         #set($ascParam = false)
     #end
+
     #if ($page.is('category'))
         #set ($category = $page.name)
     #end
@@ -79,7 +80,11 @@
 
                 <div class="row products-list grid-layout ecomStoreCategoryProductsComponent ecom-store-category-products" id="products-list-${prodsListId}">
                     #foreach($p in $prods)
+                        #if($category)
                         #set ($prodUrl = "$store/$category/$p.name")
+                        #else
+                        #set ($prodUrl = "$store/$p.name")
+                        #end
                         #set($bg = "/static/images/photo_holder.png")
                         #if( $p.primaryImageHref )
                             #set($bg = $p.primaryImageHref)
