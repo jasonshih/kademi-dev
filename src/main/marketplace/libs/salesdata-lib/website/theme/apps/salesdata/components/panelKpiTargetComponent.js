@@ -15,11 +15,21 @@
                 success: function (resp) {
                     form.html(resp);
                     
+                    var cbbLevel = form.find('.select-level');
+                    cbbLevel.on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-kpi-level', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
                     form.find('.select-kpi').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-kpi', this.value);
+                        cbbLevel.find('option').css('display', 'none').filter('[data-kpi="' + this.value + '"]').css('display', 'block');
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -30,6 +40,9 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-kpi').val(dataAttributes['data-kpi']);
+            var cbbLevel = form.find('.select-level');
+            cbbLevel.find('option').css('display', 'none').filter('[data-kpi="' + dataAttributes['data-kpi'] + '"]').css('display', 'block');
+            cbbLevel.val(dataAttributes['data-kpi-level']);
         }
     };
     
