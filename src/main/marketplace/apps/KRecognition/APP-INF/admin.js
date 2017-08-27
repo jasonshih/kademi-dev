@@ -45,12 +45,12 @@ function createTopic(page, params) {
 
 function updateTopic(page, params) {
 
-    var id = formatter.asLong( page.attributes.topicId );
+    var id = formatter.toLong( page.attributes.topicId );
     var topic = applications.userApp.recognitionService.getTopic(id);
 
     transactionManager.begin();
 
-    pagee.dataBind(topic, params);
+    page.dataBind(topic, params);
 
     transactionManager.commit();
 

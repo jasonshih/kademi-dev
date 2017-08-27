@@ -4,7 +4,7 @@
         <script type="text/javascript" src="/theme/apps/KRecognition/viewTopic.js"></script>
     </head>
     <body>
-        #set( $id = $formatter.asLong($page.attributes.topicId) )
+        #set( $id = $formatter.toLong($page.attributes.topicId) )
         #set( $topic = $applications.userApp.recognitionService.getTopic( $id ) )
 
         <h1>$topic.title</h1>
