@@ -533,7 +533,9 @@ function showFieldMessages(fieldMessages, form) {
                 flog('trying to find target by name', target, message.field);
                 target = form.find('[name=' + message.field + ']');
             }
-            var parent = target.parent();
+            
+            var formGroup = target.closest('.form-group');
+            var parent = formGroup.find('div[class*="col-"]');
             
             var errorMessage = parent.find('.help-block.error-message');
             if (errorMessage.length > 0) {

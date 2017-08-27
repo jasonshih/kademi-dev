@@ -1,0 +1,40 @@
+#if ($page)
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $page, $user))
+#else
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $rootFolder, $user))
+#end
+
+#foreach($poll in $availablePolls)
+<div class="col-sm-6">
+    <div class="kpoll-tile component-tile component-info">
+        <form method="post" action="/kpoll/${poll.id}/answer">
+            <div class="kpoll-question clearfix">
+                $poll.fields.question.value
+            </div>
+            #if ($poll.fields.point.value)
+                <div class="kpoll-point">
+                    <i class="fa fa-star"></i> $poll.fields.point.value
+                </div>
+            #end
+            <div class="kpoll-anwsers">
+                #foreach($ans in  $poll.fields.answers.values)
+                    #set ($anwserId = "answer-" + $foreach.index)
+                    <div class="radio kpoll-anwser">
+                        <label for="$anwserId">
+                            $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
+                        </label>
+                    </div>
+                #end
+            </div>
+            <div class="kpoll-action">
+                <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
+            </div>
+        </form>
+        <div class="kpoll-success text-center clearfix" style="display: none;">
+            <i class="fa fa-thumbs-up fa-4x"></i>
+            <h3><strong>Thanks!</strong></h3>
+            <p class="lead">Your answer is submitted</p>
+        </div>
+    </div>
+</div>
+#end

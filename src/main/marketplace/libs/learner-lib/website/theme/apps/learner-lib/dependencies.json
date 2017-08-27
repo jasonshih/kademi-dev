@@ -25,6 +25,12 @@
             }
         },
         {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/learner/modulesTile.less"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/static/quiz/quiz.css"

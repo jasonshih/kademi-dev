@@ -1,0 +1,91 @@
+.panel-kpi-target {
+    position: relative;
+    padding: 50px;
+    
+    .circle-sale-title {
+        margin-bottom: 10px;
+        font-size: @font-size-h4;
+        display: block;
+    }
+    
+    .circle-sale-wrapper {
+        margin: 0 auto;
+        width: 90%;
+        
+        @media (max-width: 767px) {
+            max-width: 320px;
+            margin-bottom: 30px;
+        }
+    }
+    
+    .circle-sale {
+        position: relative;
+        padding-bottom: 100%;
+    }
+    
+    .circle-sale-knob-wrapper {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0;
+        z-index: 1;
+    }
+    
+    .circle-sale-label {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 22px;
+        font-weight: bold;
+        z-index: 2;
+        
+        span {
+            font-size: 16px;
+            line-height: 18px;
+            font-weight: 300;
+            display: block;
+        }
+    }
+    
+    .target-track-wrapper {
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100%;
+        color: #fff;
+        font-size: 25px;
+        line-height: 28px;
+        
+        &.on-track {
+            background: @brand-success;
+        }
+        
+        &.off-track {
+            background: @brand-danger;
+        }
+        
+        @media (max-width: 767px) {
+            position: static;
+            height: auto;
+            padding: 30px 15px;
+            
+            .target-track {
+                position: static;
+                transform: none;
+                text-align: center;
+            }
+        }
+    }
+    
+    .target-track {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        p {
+            margin: 10px 0 0;
+        }
+    }
+}

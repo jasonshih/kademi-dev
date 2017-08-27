@@ -105,7 +105,7 @@
                             #if($question.source.type==1)
                             <!-- Plain text -->
                             <div class="form-group">
-                                <textarea name="$question.id" class="form-control #if ($question.source.required == 'true') required #end" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
+                                <textarea data-required="$question.source.required" name="$question.id" class="form-control #if ($question.source.required == 'true') required #end" placeholder="Please enter your answer here" id="exampleInputFile" ></textarea>
                             </div>
                             #end
 
@@ -124,7 +124,7 @@
                             <!-- Yes/No question -->
                             <div class="radio">
                                 <label>
-                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input data-requiredQuestions="$!answer.source.requiredQuestions" data-required="$question.source.required" class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #elseif($question.source.type==3)
@@ -133,13 +133,13 @@
                             #if($question.source.answerLayout=="0")
                             <div class="radio">
                                 <label>
-                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input data-required="$question.source.required" class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #else
                             <div class="radio-inline">
                                 <label>
-                                    <input class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
+                                    <input data-required="$question.source.required" class="#if ($question.source.required == 'true') required #end" name="$question.id" value="$answer.id" type="radio"> $answer.source.body
                                 </label>
                             </div>
                             #end
@@ -150,7 +150,7 @@
 
                             #if($question.source.type==0)
                             <!-- Multichoices -->
-                            <input class="#if ($question.source.required == 'true') required #end" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
+                            <input data-required="$question.source.required" class="#if ($question.source.required == 'true') required #end" type="text" style="width:1px; height: 1px;opacity:0.01" name="temp-$question.id" value="">
                             #end
                             </div> <!-- End form-group -->
                         </div>

@@ -49,7 +49,8 @@ controllerMappings
     .enabled(true)
     .addMethod('GET', 'deleteAnswer', 'deleteAnswer')
     .addMethod('GET', 'getPlainAnswers', 'getPlainAnswers')
-    .addMethod('POST', 'saveAnswer')
+    .addMethod('POST', 'saveAnswer', 'saveAnswer')
+    .addMethod('POST', 'saveAnswerRequiredQuestions', 'saveAnswerRequiredQuestions')
     .build();
 
 controllerMappings
@@ -197,7 +198,7 @@ function loadSurveyFields(rootFolder, fields) {
                 log.info('question name {}', q.name);
                 
                 var lead = arguments[0];
-                var profileId = lead.profile.name;
+                var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, true);
             });
@@ -209,7 +210,7 @@ function loadSurveyFields(rootFolder, fields) {
                 log.info('question name {}', q.name);
                 
                 var lead = arguments[0];
-                var profileId = lead.profile.name;
+                var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
                 
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, false);
