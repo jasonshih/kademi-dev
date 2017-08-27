@@ -104,8 +104,6 @@
         },
 
         initDropDown: function () {
-            flog('[jquery.pageDatePicker] initDropDown');
-
             var self = this;
             var dropDownTrigger = self.dropDownTrigger;
             var dropDown = self.dropDown;
@@ -130,8 +128,6 @@
         },
 
         initTabSwitcher: function () {
-            flog('[jquery.pageDatePicker] initTabSwitcher');
-
             var self = this;
             var tabTriggers = self.tabTriggers;
 
@@ -147,8 +143,6 @@
         },
 
         initEndingNowTab: function () {
-            flog('[jquery.pageDatePicker] initEndingNowTab');
-
             var self = this;
             var options = self.options;
             var endingNowTab = self.endingNowTab;
@@ -196,8 +190,6 @@
         },
 
         initCustomDateTab: function () {
-            flog('[jquery.pageDatePicker] initCustomDateTab');
-
             var self = this;
             var options = self.options;
             var customDateTab = self.customDateTab;
@@ -246,8 +238,6 @@
         },
 
         selectRange: function (startDate, endDate, text, trigger, initial) {
-            flog('[jquery.pageDatePicker] selectRange', startDate, endDate, text, trigger, initial);
-
             var self = this;
             var options = self.options;
             var previewText = self.previewText;
@@ -291,8 +281,6 @@
         },
 
         initOriginRange: function () {
-            flog('[jquery.pageDatePicker] initOriginRange');
-
             var self = this;
             var options = self.options;
             var rangeItems = self.rangeItems;
@@ -305,7 +293,7 @@
             var cookieStartDate = $.cookie('pageDatePicker-startDate');
             var cookieEndDate = $.cookie('pageDatePicker-endDate');
 
-            flog('[jquery.pageDatePicker] Cookie text = "' + cookieText + '", cookie start date = "' + cookieStartDate + '", cookie end date = "' + cookieEndDate + '"');
+            //flog('[jquery.pageDatePicker] Cookie text = "' + cookieText + '", cookie start date = "' + cookieStartDate + '", cookie end date = "' + cookieEndDate + '"');
 
             if (cookieText) {
                 var trigger = rangeItems.filter('[data-text="' + cookieText + '"]');
@@ -317,7 +305,7 @@
             }
 
             if (cookieStartDate && cookieEndDate) {
-                flog('[jquery.pageDatePicker] Init value: ' + cookieStartDate + ' - ' + cookieEndDate);
+                //flog('[jquery.pageDatePicker] Init value: ' + cookieStartDate + ' - ' + cookieEndDate);
 
                 var trigger = rangeItems.filter('[data-start-date="' + cookieStartDate + '"][data-end-date="' + cookieEndDate + '"]');
                 if (trigger.length > 0) {
@@ -334,15 +322,15 @@
                 return;
             }
 
-            flog('[jquery.pageDatePicker] Init value: ' + options.default);
+            //flog('[jquery.pageDatePicker] Init value: ' + options.default);
             var defaultValue = options.default.split(' ');
             if (moment(defaultValue[0], options.dateFormat).isValid() && moment(defaultValue[1], options.dateFormat).isValid()) {
-                flog('[jquery.pageDatePicker] Default is range');
+                //flog('[jquery.pageDatePicker] Default is range');
 
                 startDate = defaultValue[0];
                 endDate = defaultValue[1];
             } else {
-                flog('[jquery.pageDatePicker] Default is time ago');
+                //flog('[jquery.pageDatePicker] Default is time ago');
 
                 var now = moment();
                 var from = moment().subtract(+defaultValue[0] - 1, defaultValue[1]);
