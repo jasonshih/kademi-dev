@@ -1,0 +1,36 @@
+<html>
+    <head>
+        <title>Recognition Topic</title>
+        <script type="text/javascript" src="/theme/apps/KRecognition/viewTopic.js"></script>
+    </head>
+    <body>
+        #set( $id = $formatter.toLong($page.attributes.topicId) )
+        #set( $topic = $applications.userApp.recognitionService.getTopic( $id ) )
+
+        <h1>$topic.title</h1>
+
+        <form class="form-horizontal" action="$page.href" id="topic-detail-form" method="POST" >
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="">Code</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control required" name="name" required="required" value="$topic.name" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2" for="">Title</label>
+                <div class="col-md-4">
+                    <input type="text" class="form-control required" name="title" required="required" value="$topic.title" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-2">
+                    <button class="btn btn-primary" type="submit">Save changes</button>
+                </div>
+            </div>
+        </form>
+
+    </body>
+</html>
