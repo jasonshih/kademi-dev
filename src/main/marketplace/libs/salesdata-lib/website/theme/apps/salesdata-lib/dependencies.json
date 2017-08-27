@@ -11,6 +11,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/jquery-knob/1.2.13/dist/jquery.knob.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/salesdata/kpis.js"
             }
         },
