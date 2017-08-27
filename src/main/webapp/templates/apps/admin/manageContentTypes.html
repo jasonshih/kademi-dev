@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Audit Records</title>
+    </head>
+    <body>
+
+        HELLO WORLD
+
+        #if( $page.contentTypeRepo )
+        HAZ REPO
+        #else
+        NO REPO
+        #end
+
+        #foreach( $contentType in $page.children )
+        $contentType.link
+        #end
+
+        <script>
+            $(function () {
+
+            });
+        </script>
+    </body>
+</html>
