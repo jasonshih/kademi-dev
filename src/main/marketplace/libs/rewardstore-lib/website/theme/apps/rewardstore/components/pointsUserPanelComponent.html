@@ -21,50 +21,49 @@
 
                 <h2 class="profile-welcome-name"><b>$name</b></h2>
             </div>
-            #set( $rewardStoreApp = $applications.rewardStore )
-            #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
+        </div>
+        
+        #set( $rewardStoreApp = $applications.rewardStore )
+        #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
 
-            #if ($pointsBuckets)
-                #set ($availablePanel = 0)
-                #foreach($reward in $pointsBuckets)
-                    #set( $myPoint = false )
-                    #set( $myPoint = $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
-                    #if ($myPoint)
-                        #set ($availablePanel = $availablePanel + 1)
-                    #end
+        #if ($pointsBuckets)
+            #set ($availablePanel = 0)
+            #foreach($reward in $pointsBuckets)
+                #set( $myPoint = false )
+                #set( $myPoint = $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
+                #if ($myPoint)
+                    #set ($availablePanel = $availablePanel + 1)
                 #end
+            #end
 
-                #if ($availablePanel > 0)
-                    <div class="">
+            #if ($availablePanel > 0)
+                <div class="panel-primary text-center">
+                    <div class="panel-heading user-total-points">
                         #foreach($reward in $pointsBuckets)
                             #set ($rewardPath = "/" + $reward.name)
                             #set( $rewardFolder = $page.find($rewardPath))
                             #set( $myPoint = false )
                             #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
-
+    
                             #if ($myPoint)
                                 #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
-                                <div class="">
-                                    <div class="user-total-points bg-primary text-center">
-                                        <h2>
-                                            <span id="user-total-points" title="$myPointString">$myPointString</span>
-                                        </h2>
-                                        <small>
-                                            #if ($reward.title && $reward.title != " ")
-                                                $reward.title
-                                            #else
-                                                Points
-                                            #end
-                                        </small>
-                                    </div>
-                                </div>
+                                <h2>
+                                    <span id="user-total-points" title="$myPointString">$myPointString</span>
+                                </h2>
+                                <small>
+                                    #if ($reward.title && $reward.title != " ")
+                                        $reward.title
+                                    #else
+                                        Points
+                                    #end
+                                </small>
                             #end
                         #end
                     </div>
-                #end
-
+                </div>
             #end
-        </div>
+        #end
+        
     </div>
 </div>
 #else
