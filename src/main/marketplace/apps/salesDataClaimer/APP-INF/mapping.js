@@ -95,15 +95,6 @@ var recordMapping = {
                     "type": "text"
                 }
             }
-        },
-        "tags": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
         }
     }
 };

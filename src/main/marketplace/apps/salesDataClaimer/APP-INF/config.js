@@ -9,8 +9,7 @@ var DB_MAPPINGS = {
 };
 var RECORD_STATUS = {
     NEW: 0,
-    REQUESTING: 1,
-    APPROVED: 2,
+    APPROVED: 1,
     REJECTED: -1
 };
 

@@ -11,7 +11,6 @@ controllerMappings
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
     .addMethod('GET', 'getClaims')
     .addMethod('POST', 'createClaim', 'createClaim')
-    .addMethod('POST', 'requestApproval', 'requestApproval')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
     .postPriviledge('WRITE_CONTENT')
     .enabled(true)
@@ -52,8 +51,7 @@ function getClaims(page, params) {
                     'field2',
                     'field3',
                     'field4',
-                    'field5',
-                    'tags'
+                    'field5'
                 ],
                 'size': 10000,
                 'sort': [
@@ -135,14 +133,6 @@ function createClaim(page, params) {
             return views.jsonObjectView(JSON.stringify(result))
         }
         
-        var tags = (params.tags || '').trim();
-        tags = tags !== '' ? tags.split(',') : null;
-        if (tags && tags.length > 5) {
-            result.status = false;
-            result.messages = ['Maximum tags is 5'];
-            return views.jsonObjectView(JSON.stringify(result))
-        }
-        
         var tempDateTime = params.soldDate;
         var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
         var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
@@ -164,10 +154,6 @@ function createClaim(page, params) {
             field5: params.field5 || '',
             status: RECORD_STATUS.NEW
         };
-        
-        if (tags) {
-            obj.tags = tags.join(',');
-        }
         
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
     } catch (e) {
@@ -198,14 +184,6 @@ function updateClaim(page, params) {
                 return views.jsonObjectView(JSON.stringify(result))
             }
             
-            var tags = (params.tags || '').trim();
-            tags = tags !== '' ? tags.split(',') : null;
-            if (tags && tags.length > 5) {
-                result.status = false;
-                result.messages = ['Maximum tags is 5'];
-                return views.jsonObjectView(JSON.stringify(result))
-            }
-            
             var tempDateTime = params.soldDate;
             var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
@@ -226,13 +204,8 @@ function updateClaim(page, params) {
                 field3: params.field3 || '',
                 field4: params.field4 || '',
                 field5: params.field5 || '',
-                status: claim.jsonObject.status,
-                tags: claim.jsonObject.tags
+                status: claim.jsonObject.status
             };
-            
-            if (tags) {
-                obj.tags = tags.join(',');
-            }
             
             claim.update(JSON.stringify(obj), TYPE_RECORD);
         } else {
@@ -242,36 +215,6 @@ function updateClaim(page, params) {
     } catch (e) {
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
-    }
-    
-    return views.jsonObjectView(JSON.stringify(result))
-}
-
-function requestApproval(page, params) {
-    log.info('requestApproval > page={}, params={}', page, params);
-    
-    var result = {
-        status: true
-    };
-    
-    try {
-        var db = getDB(page);
-        var ids = params.ids;
-        ids = ids.split(',');
-        
-        for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
-                
-                if (claim !== null) {
-                    claim.jsonObject.status = RECORD_STATUS.REQUESTING;
-                    claim.save();
-                }
-            })(ids[i]);
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error in requesting approval: ' + e];
     }
     
     return views.jsonObjectView(JSON.stringify(result))
@@ -293,7 +236,7 @@ function deleteClaims(page, params) {
             (function (id) {
                 var claim = db.child(id);
                 
-                if (claim !== null) {
+                if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
                     claim.delete();
                 }
             })(ids[i]);

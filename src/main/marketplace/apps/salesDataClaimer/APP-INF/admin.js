@@ -59,8 +59,7 @@ function getClaims(page, params) {
                     'field2',
                     'field3',
                     'field4',
-                    'field5',
-                    'tags'
+                    'field5'
                 ],
                 'sort': [
                     {
@@ -183,7 +182,6 @@ function approveClaims(page, params) {
             
             var settings = getAppSettings(page);
             var selectedDataSeries = settings.get('dataSeries');
-            log.info('======================== {}', selectedDataSeries);
             
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
@@ -224,7 +222,7 @@ function deleteClaims(page, params) {
             (function (id) {
                 var claim = db.child(id);
                 
-                if (claim !== null) {
+                if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
                     claim.delete();
                 }
             })(ids[i]);

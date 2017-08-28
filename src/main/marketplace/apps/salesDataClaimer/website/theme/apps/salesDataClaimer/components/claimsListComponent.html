@@ -6,8 +6,7 @@
                 <select class="form-control select-status">
                     <option value="" selected="selected"> - All statuses -</option>
                     $formatter.option("0", "New", $params.status)
-                    $formatter.option("1", "Requesting approval", $params.status)
-                    $formatter.option("2", "Approved", $params.status)
+                    $formatter.option("1", "Approved", $params.status)
                     $formatter.option("-1", "Rejected", $params.status)
                 </select>
             </p>
@@ -15,7 +14,6 @@
         <div class="col-sm-9 text-right">
             <p class="btn-group btn-group-sm">
                 <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
-                <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
                 <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
             </p>
         </div>
@@ -28,7 +26,6 @@
                 <th width="50"></th>
                 <th>Amount</th>
                 <th>Date</th>
-                <th>Tags</th>
                 <th>SKU Entered</th>
                 <th width="90"></th>
                 <th width="30"><input type="checkbox" class="chk-all" /></th>
@@ -43,9 +40,7 @@
                             #if ($hit.fields.status.value == 0)
                                 <i class="fa fa-circle text-muted" title="New"></i>
                             #elseif ($hit.fields.status.value == 1)
-                                <i class="fa fa-gear fa-spin text-info" title="Requesting approval"></i>
-                            #elseif ($hit.fields.status.value == 2)
-                                <i class="fa fa-check-circle text-success" title="Arppoved"></i>
+                                <i class="fa fa-check-circle text-success" title="Approved"></i>
                             #elseif ($hit.fields.status.value == -1)
                                 <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
                             #end
@@ -56,7 +51,6 @@
                                 $hit.fields.soldDate.value
                             </abbr>
                         </td>
-                        <td>$!hit.fields.tags.value</td>
                         <td>$!hit.fields.productSku.value</td>
                         <td>
                             #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
@@ -65,7 +59,17 @@
                                 <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
                             #end
                         </td>
-                        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+                        <td>
+                            #if ($hit.fields.status.value == 0)
+                                <input type="checkbox" value="$hit.fields.recordId.value" />
+                            #else
+                                #set ($chkTitle = "This claim is already approved. You can't delete this.")
+                                #if ($hit.fields.status.value == -1)
+                                    #set ($chkTitle = "This claim is already rejected. You can't delete this.")
+                                #end
+                                <input type="checkbox" value="$hit.fields.recordId.value" disabled="disabled" title="$chkTitle" />
+                            #end
+                        </td>
                     </tr>
                 #end
             #else
@@ -107,15 +111,6 @@
                                 <input type="text" name="soldDate" id="soldDate" placeholder="Period from" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tags" class="control-label col-md-4">Tags</label>
-
-                        <div class="col-md-8">
-                            <input name="tags" id="tags" class="form-control" placeholder="Summer promotion,New business" value="" />
-                            <small>Maximum tags is 5</small>
                         </div>
                     </div>
 
@@ -199,14 +194,6 @@
 
                         <div class="col-md-8">
                             <p class="form-control-static soldDate"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Tags</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static tags"></p>
                         </div>
                     </div>
 
