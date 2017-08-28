@@ -239,7 +239,6 @@ function saveAnswerRequiredQuestions(page, params) {
         var answerRes = db.child(answerId);
         if (answerRes !== null) {
             answerRes.requiredQuestions = requiredQuestions;
-            answerRes.modifiedDate = Date.now();
             answerRes.save();
         } else {
             errors.push('Answer not found');
