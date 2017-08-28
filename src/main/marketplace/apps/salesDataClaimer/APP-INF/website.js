@@ -36,6 +36,12 @@ function getClaims(page, params) {
     log.info('getClaims > page={}, params={}', page, params);
     
     if (!params.claimId) {
+        var results = searchClaims(page, params.status);
+        page.attributes.searchResult = results;
+    }
+}
+
+function searchClaims(page, status) {
         try {
             var currentUser = securityManager.getCurrentUser();
             var queryJson = {
@@ -72,9 +78,9 @@ function getClaims(page, params) {
                 }
             };
             
-            if (params.status) {
+            if (status) {
                 queryJson.query.bool.must.push({
-                    'term': {'status': +params.status}
+                    'term': {'status': + status}
                 });
             }
             
@@ -83,8 +89,7 @@ function getClaims(page, params) {
             page.attributes.searchResult = searchResult;
         } catch (e) {
             log.error('ERROR in getClaims: ' + e);
-        }
-    }
+        }    
 }
 
 function getClaim(page, params) {
