@@ -239,7 +239,6 @@ function saveAnswerRequiredQuestions(page, params) {
         var answerRes = db.child(answerId);
         if (answerRes !== null) {
             answerRes.requiredQuestions = requiredQuestions;
-            answerRes.modifiedDate = Date.now();
             answerRes.save();
         } else {
             errors.push('Answer not found');
@@ -743,6 +742,16 @@ function getSurveyStatistic(page, surveyId) {
         totalSubmits: searchResult1.hits.totalHits,
         histogram: histogram
     };
+}
+
+function getUserSurveyStatsByUserId(page, surveyId, userId) {
+    var result;
+    if (userId){
+        securityManager.runAsUser(userId, function () {
+            result = getUserSurveyStatistic(page, surveyId);
+        })
+    }
+    return result;
 }
 
 function getUserSurveyStatistic(page, surveyId) {

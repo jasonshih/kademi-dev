@@ -1,22 +1,28 @@
 #if ($page)
 #set($cApp = $applications.ksurveyapp)
+#if ($params.profileId)
+#set ($currentUserRes = $applications.userApp.findUserResourceById($formatter.toLong($params.profileId)))
+#else
+#set ($currentUserRes = $userResource)
+#end
+
 <div class="container ksurvey ksurveyResult">
     #set($survey = $page.attributes.survey)
 
-    #if("$!survey" != "")
+    #if($survey)
     #if ($survey.jsonObject.groups)
     #set($accessGroups = $survey.jsonObject.groups.split(','))
     #set($canAccessSurvey = false)
     #foreach($groupName in $accessGroups)
     #if(!$canAccessSurvey)
-    #set($canAccessSurvey = $userResource.isInGroup($groupName))
+    #set($canAccessSurvey = $currentUserRes.isInGroup($groupName))
     #end
     #end
     #else
     #set($canAccessSurvey = true) ## Groups restrict null so every user can access
     #end
 
-    #set ($taken = $cApp.call('getSurveyResultByUser', $page, $user.name, $survey.name))
+    #set ($taken = $cApp.call('getSurveyResultByUser', $page, $currentUserRes.name, $survey.name))
     #if($survey.jsonObject.endTime && $survey.jsonObject.startTime)
     #set($expired = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.endTime)))
     #set($openingSoon = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.startTime)))
@@ -65,7 +71,7 @@
             #end
             <p>$survey.jsonObject.description</p>
 
-            #set ($surveyStatistic = $cApp.call('getUserSurveyStatistic', $page, $survey.name))
+            #set ($surveyStatistic = $cApp.call('getUserSurveyStatsByUserId', $page, $survey.name, $currentUserRes.name))
             #set ($surveyResult = $surveyStatistic.get('surveyResult'))
             #set ($totalSubmits = $surveyStatistic.get('totalSubmits'))
             #set($questions = $page.attributes.questionResult.hits.hits)
@@ -115,7 +121,7 @@
                         #set ($plainAnswers = $controllers.call('getPlainAnswers', $page, $question.id, $survey.name))
                         #if($plainAnswers.hits.totalHits > 0)
                         #foreach($plainAnswer in $plainAnswers.hits.hits)
-                        #if ($userResource.name == $plainAnswer.source.userId)
+                        #if ($currentUserRes.name == $plainAnswer.source.userId)
                         <p><b>Your answer:</b></p>
                         <p>$!plainAnswer.source.answerBody</p>
                         #end
