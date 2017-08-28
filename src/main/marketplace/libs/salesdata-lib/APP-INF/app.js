@@ -211,7 +211,7 @@ function getTopSkusCSV(page, params) {
     page.attributes.csvValues = csvLines;
 }
 
-function getLastYearSale(dataSeries, currentStartDate, currentEndDate) {
+function getLastYearSale(userResource, dataSeries, currentStartDate, currentEndDate) {
     log.info('getLastYearSale > dataSeries={}, currentStartDate={}, currentEndDate={}', dataSeries, currentStartDate, currentEndDate);
     
     var lastStartDate = formatter.addYears(currentStartDate, -1);
@@ -258,6 +258,11 @@ function getLastYearSale(dataSeries, currentStartDate, currentEndDate) {
                                 "gte": new Date(formatter.formatDateISO8601(lastStartDate)).toISOString(),
                                 "lte": new Date(formatter.formatDateISO8601(lastEndDate)).toISOString()
                             }
+                        }
+                    },
+                    {
+                        "term": {
+                            "profileId": userResource.userId
                         }
                     }
                 ]

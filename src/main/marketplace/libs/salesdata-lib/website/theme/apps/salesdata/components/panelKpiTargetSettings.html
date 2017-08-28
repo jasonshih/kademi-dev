@@ -10,4 +10,18 @@
             </select>
         </div>
     </div>
+    <div class="form-group">
+        <label class="col-sm-12"><strong>Target Level</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-level">
+                <option value="">- None -</option>
+                #foreach ($kpi in $rootFolder.find('/sales/').allKpis)
+                    #set ($levelTitles = $kpi.levelTitles)
+                    #foreach ($level in $kpi.levelNames)
+                        <option value="$level" data-kpi="$kpi.name" style="display: none;">$levelTitles.get($foreach.index)</option>
+                    #end
+                #end
+            </select>
+        </div>
+    </div>
 </form>

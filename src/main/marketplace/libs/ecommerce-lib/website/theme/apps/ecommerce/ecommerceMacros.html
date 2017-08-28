@@ -15,11 +15,11 @@
                 #set ($categories = $page.find($url).children.ofType.category)
                 #foreach($cat in $categories)
                     #if ($page.href == $cat.href)
-                        <a href="javascript:void(0);" class="list-group-item selected">
+                        <a href="$cat.href" class="list-group-item selected">
                             $cat.title <i class="fa fa-angle-right  pull-right"></i>
                         </a>
                     #else
-                        <a href="javascript:void(0);" class="list-group-item">
+                        <a href="$cat.href" class="list-group-item">
                             $cat.title <i class="fa fa-angle-right  pull-right"></i>
                         </a>
                     #end
