@@ -32,6 +32,13 @@ controllerMappings
         .enabled(true)
         .build();
 
+controllerMappings
+        .websiteController()
+        .path('/salesDataClaimsProducts/')
+        .addMethod('GET', 'searchProducts')
+        .enabled(true)
+        .build();
+
 function getClaims(page, params) {
     log.info('getClaims > page={}, params={}', page, params);
 
@@ -39,6 +46,12 @@ function getClaims(page, params) {
         var results = searchClaims(page, params.status);
         page.attributes.searchResult = results;
     }
+}
+
+function searchProducts(page, params) {
+    var q = params.q;
+    var prods = applications.productsApp.searchProducts(q, null);
+    return views.jsonObjectView(prods);
 }
 
 function searchClaims(page, status) {
