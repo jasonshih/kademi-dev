@@ -51,43 +51,7 @@ var recordMapping = {
                 }
             }
         },
-        "field1": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "field2": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "field3": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "field4": {
-            "type": "keyword",
-            "store": true,
-            "fields": {
-                "text": {
-                    "type": "text"
-                }
-            }
-        },
-        "field5": {
+        "receipt": {
             "type": "keyword",
             "store": true,
             "fields": {

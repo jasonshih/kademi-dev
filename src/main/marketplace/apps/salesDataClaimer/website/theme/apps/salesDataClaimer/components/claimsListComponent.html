@@ -32,6 +32,7 @@
         <thead>
             <tr>
                 <th width="50"></th>
+                <th width="200">Receipt</th>
                 <th>Amount</th>
                 <th>Date</th>
                 <th>SKU Entered</th>
@@ -53,6 +54,13 @@
                     <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
                     #end
                 </td>
+                <td>
+                    #if ($hit.fields.receipt.value)
+                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail">
+                            <img src="$hit.fields.receipt.value" class="img-responsive" />
+                        </a>
+                    #end
+                </td>
                 <td>$hit.fields.amount.value</td>
                 <td>
                     <abbr class="timeago" title="$hit.fields.soldDate.value">
@@ -61,7 +69,7 @@
                 </td>
                 <td>$!hit.fields.productSku.value</td>
                 <td>
-                    #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
+                    #if ($hit.fields.status.value == 0)
                     <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
                     #else
                     <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
@@ -140,6 +148,19 @@
                     </div>  
                     #end
 
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Receipt</label>
+
+                        <div class="col-md-8">
+                            <p class="thumbnail">
+                                <img src="/static/images/photo_holder.png" class="img-responsive" />
+                            </p>
+                            <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> Upload</button>
+                            <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                            <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -183,43 +204,23 @@
                         </div>
                     </div>
 
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
-                        <label class="control-label col-md-4">Field 1</label>
+                        <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
                         <div class="col-md-8">
-                            <p class="form-control-static field1"></p>
+                            <p class="form-control-static field_${xf.name}"></p>
                         </div>
                     </div>
+                    #end
 
                     <div class="form-group">
-                        <label class="control-label col-md-4">Field 2</label>
+                        <label class="control-label col-md-4">Receipt</label>
 
                         <div class="col-md-8">
-                            <p class="form-control-static field2"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 3</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field3"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 4</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field4"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 5</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field5"></p>
+                            <p class="thumbnail">
+                                <img src="" class="img-responsive" />
+                            </p>
                         </div>
                     </div>
 

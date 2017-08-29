@@ -59,18 +59,14 @@ function searchClaims(page, status) {
         var currentUser = securityManager.getCurrentUser();
         var queryJson = {
             'stored_fields': [
+                'receipt',
                 'recordId',
                 'soldDate',
                 'enteredDate',
                 'modifiedDate',
                 'amount',
                 'status',
-                'productSku',
-                'field1',
-                'field2',
-                'field3',
-                'field4',
-                'field5'
+                'productSku'
             ],
             'size': 10000,
             'sort': [
@@ -127,7 +123,7 @@ function getClaim(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function createClaim(page, params) {
+function createClaim(page, params, files) {
     log.info('createClaim > page={}, params={}', page, params);
     
     var result = {
@@ -174,6 +170,12 @@ function createClaim(page, params) {
             obj[fieldName] = params.get(fieldName) || '';
         }
         
+        // Upload receipt
+        var uploadedFiles = uploadFile(page, params, files);
+        if (uploadedFiles.length > 0) {
+            obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
+        }
+        
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
     } catch (e) {
         result.status = false;
@@ -183,7 +185,7 @@ function createClaim(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function updateClaim(page, params) {
+function updateClaim(page, params, files) {
     log.info('updateClaim > page={}, params={}', page, params);
     
     var result = {
@@ -208,7 +210,6 @@ function updateClaim(page, params) {
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
             
-            
             var obj = {
                 recordId: id,
                 soldBy: claim.jsonObject.soldBy,
@@ -218,7 +219,8 @@ function updateClaim(page, params) {
                 enteredDate: claim.jsonObject.enteredDate,
                 modifiedDate: formatter.now,
                 productSku: params.productSku || '',
-                status: claim.jsonObject.status
+                status: claim.jsonObject.status,
+                receipt: claim.jsonObject.receipt
             };
         
             // Parse extra fields
@@ -228,6 +230,12 @@ function updateClaim(page, params) {
                 var fieldName = 'field_' + ex.name;
                 
                 obj[fieldName] = params.get(fieldName) || '';
+            }
+        
+            // Upload receipt
+            var uploadedFiles = uploadFile(page, params, files);
+            if (uploadedFiles.length > 0) {
+                obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
             }
             
             claim.update(JSON.stringify(obj), TYPE_RECORD);
