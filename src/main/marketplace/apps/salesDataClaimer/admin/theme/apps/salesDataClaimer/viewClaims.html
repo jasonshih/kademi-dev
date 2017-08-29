@@ -75,7 +75,7 @@
                                 <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
                                 <td>$!hit.fields.productSku.value</td>
                                 <td>
-                                    #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
+                                    #if ($hit.fields.status.value == 0)
                                         <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
                                             <i class="fa fa-pencil-square-o"></i> Review
                                         </button>
