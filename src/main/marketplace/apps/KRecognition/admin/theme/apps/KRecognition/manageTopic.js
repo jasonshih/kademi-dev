@@ -33,7 +33,7 @@
             onSuccess: function (resp) {
                 Msg.success(resp.messages);
 
-                $('#krecognition-badges-body').reloadFragment();
+                reloadBadges();
 
                 modal.modal('hide');
                 form.trigger('reset');
@@ -42,17 +42,18 @@
     }
 
     function initBadgeImageUpload() {
+        flog('initBadgeImageUpload');
         $('.btn-krecognition-badge-img-upload').each(function (i, item) {
             var btn = $(item);
             var badgeid = btn.data('badgeid');
 
             btn.upcropImage({
                 buttonContinueText: 'Save',
-                url: window.location.pathname + '?badgeid=' + badgeid,
+                url: window.location.pathname + '?uploadBadgeImage&badgeid=' + badgeid,
                 fieldName: 'badgeImg',
                 onCropComplete: function (resp) {
                     flog('onCropComplete:', resp, resp.nextHref);
-                    reloadVariantList();
+                    reloadBadges();
                 },
                 onContinue: function (resp) {
                     flog('onContinue:', resp, resp.result.nextHref);
@@ -68,7 +69,7 @@
                             flog('success');
                             if (resp.status) {
                                 Msg.info('Done');
-                                reloadVariantList();
+                                reloadBadges();
                             } else {
                                 Msg.error('An error occured processing the badge image.');
                             }
@@ -82,10 +83,90 @@
         });
     }
 
+    function initBadgeImageDelete() {
+        $('body').on('click', '.btn-krecognition-badge-img-del', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var badgeid = btn.data('badgeid');
+
+            Kalert.confirm('You want to remove the badge image?', 'Ok', function () {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        removeBadgeImage: badgeid
+                    },
+                    success: function (resp) {
+                        Kalert.close();
+
+                        if (resp.status) {
+                            reloadBadges();
+                            Msg.success(resp.messages);
+                        } else {
+                            Msg.warning(resp.messages);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        reloadBadges();
+                        Kalert.close();
+
+                        Msg.error('Oh No! Something went wrong!');
+                    }
+                });
+            });
+        });
+    }
+
+    function initBadgeDelete() {
+        $('body').on('click', '.btn-krecognition-badge-del', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var badgeid = btn.data('badgeid');
+
+            Kalert.confirm('You want to delete this badge?', 'Ok', function () {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        deleteBadge: badgeid
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        Kalert.close();
+
+                        if (resp.status) {
+                            reloadBadges();
+                            Msg.success(resp.messages);
+                        } else {
+                            Msg.warning(resp.messages);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        reloadBadges();
+                        Kalert.close();
+
+                        Msg.error('Oh No! Something went wrong!');
+                    }
+                });
+            });
+        });
+    }
+
+    function reloadBadges() {
+        $('#krecognition-badges-body').reloadFragment({
+            whenComplete: function () {
+                initBadgeImageUpload();
+            }
+        });
+    }
+
     $(function () {
         initSaveDetails();
         initSelectLevelsValueType();
         initCreateBadge();
         initBadgeImageUpload();
+        initBadgeImageDelete();
+        initBadgeDelete();
     });
 })(jQuery);
