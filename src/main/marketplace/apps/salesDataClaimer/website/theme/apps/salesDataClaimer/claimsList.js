@@ -182,6 +182,30 @@
             });
         });
         
+        var txtProductSku = form.find('[name=productSku]');
+        var productSearcher = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: '/salesDataClaimsProducts/?q=%QUERY',
+                wildcard: '%QUERY'
+            }
+        });
+        
+        txtProductSku.typeahead({
+            highlight: true
+        }, {
+            display: 'value',
+            limit: 10,
+            source: productSearcher,
+            templates: {
+                empty: '<div class="empty-message" style="padding: 0 5px;">No products were <found></found></div>',
+                suggestion: function (data) {
+                    return '<div>' + data.value + '<span class="text-muted">(' + data.tokens[1] + ')</span>' + '</div>';
+                }
+            }
+        });
+        
         form.forms({
             onSuccess: function () {
                 reloadClaimsList(function () {
