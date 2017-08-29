@@ -1,5 +1,8 @@
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
 
+controllerMappings.addNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js");
+controllerMappings.addNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js");
+
 function initApp(orgRoot, webRoot, enabled) {
     log.info("initApp SalesDataClaimer: orgRoot={}", orgRoot);
     

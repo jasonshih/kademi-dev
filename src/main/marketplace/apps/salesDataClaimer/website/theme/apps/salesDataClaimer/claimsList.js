@@ -18,7 +18,7 @@
         var formAdd = modalAdd.find('form');
         
         table.find('.chk-all').on('click', function () {
-            tbody.find(':checkbox').prop('checked', this.checked);
+            tbody.find(':checkbox:enabled').prop('checked', this.checked);
         });
         
         $('.btn-add-claim').on('click', function (e) {
@@ -113,48 +113,6 @@
         });
         
         tbody.find('.timeago').timeago();
-        
-        $('.btn-request-approval').on('click', function (e) {
-            e.preventDefault();
-            
-            var checked = tbody.find(':checkbox:checked');
-            
-            if (checked.length > 0) {
-                var isConfirmed = confirm('Are you that you want to request approval for ' + checked.length + ' selected ' + (checked.length > 1 ? 'claims' : 'claim') + '?');
-                
-                if (isConfirmed) {
-                    var ids = [];
-                    checked.each(function () {
-                        ids.push(this.value);
-                    });
-                    
-                    $.ajax({
-                        url: MAIN_URL,
-                        type: 'POST',
-                        dataType: 'JSON',
-                        data: {
-                            requestApproval: true,
-                            ids: ids.join(',')
-                        },
-                        success: function (resp) {
-                            if (resp && resp.status) {
-                                reloadClaimsList(function () {
-                                    Msg.success('Request approval succeed');
-                                })
-                            } else {
-                                alert('Error in requesting approval. Please contact your administrators to resolve this issue.');
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert('Error in requesting approval: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
-                            flog('Error in requesting approval', jqXHR, textStatus, errorThrown);
-                        }
-                    });
-                }
-            } else {
-                alert('Please select claims which you want to request approval');
-            }
-        });
         
         $('.btn-delete-claims').on('click', function (e) {
             e.preventDefault();
