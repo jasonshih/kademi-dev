@@ -1,8 +1,11 @@
+
 #script()
 <script>
     applications.salesDataClaimer.call('getClaims', page, request.params);
 </script>
 #end
+
+#set($app = $applications.salesDataClaimer )
 
 <div class="claims-list-component">
     <div class="row">
@@ -40,48 +43,48 @@
         <tbody id="table-claims-body">
             #set ($searchResult = $page.attributes.searchResult)
             #if ($searchResult.hits.hits.size() > 0)
-                #foreach($hit in $searchResult.hits.hits)
-                    <tr>
-                        <td class="fa-2x text-center">
-                            #if ($hit.fields.status.value == 0)
-                                <i class="fa fa-circle text-muted" title="New"></i>
-                            #elseif ($hit.fields.status.value == 1)
-                                <i class="fa fa-check-circle text-success" title="Approved"></i>
-                            #elseif ($hit.fields.status.value == -1)
-                                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
-                            #end
-                        </td>
-                        <td>$hit.fields.amount.value</td>
-                        <td>
-                            <abbr class="timeago" title="$hit.fields.soldDate.value">
-                                $hit.fields.soldDate.value
-                            </abbr>
-                        </td>
-                        <td>$!hit.fields.productSku.value</td>
-                        <td>
-                            #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
-                                <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
-                            #else
-                                <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
-                            #end
-                        </td>
-                        <td>
-                            #if ($hit.fields.status.value == 0)
-                                <input type="checkbox" value="$hit.fields.recordId.value" />
-                            #else
-                                #set ($chkTitle = "This claim is already approved. You can't delete this.")
-                                #if ($hit.fields.status.value == -1)
-                                    #set ($chkTitle = "This claim is already rejected. You can't delete this.")
-                                #end
-                                <input type="checkbox" value="$hit.fields.recordId.value" disabled="disabled" title="$chkTitle" />
-                            #end
-                        </td>
-                    </tr>
-                #end
+            #foreach($hit in $searchResult.hits.hits)
+            <tr>
+                <td class="fa-2x text-center">
+                    #if ($hit.fields.status.value == 0)
+                    <i class="fa fa-circle text-muted" title="New"></i>
+                    #elseif ($hit.fields.status.value == 1)
+                    <i class="fa fa-check-circle text-success" title="Approved"></i>
+                    #elseif ($hit.fields.status.value == -1)
+                    <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                    #end
+                </td>
+                <td>$hit.fields.amount.value</td>
+                <td>
+                    <abbr class="timeago" title="$hit.fields.soldDate.value">
+                        $hit.fields.soldDate.value
+                    </abbr>
+                </td>
+                <td>$!hit.fields.productSku.value</td>
+                <td>
+                    #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
+                    <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
+                    #else
+                    <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
+                    #end
+                </td>
+                <td>
+                    #if ($hit.fields.status.value == 0)
+                    <input type="checkbox" value="$hit.fields.recordId.value" />
+                    #else
+                    #set ($chkTitle = "This claim is already approved. You can't delete this.")
+                    #if ($hit.fields.status.value == -1)
+                    #set ($chkTitle = "This claim is already rejected. You can't delete this.")
+                    #end
+                    <input type="checkbox" value="$hit.fields.recordId.value" disabled="disabled" title="$chkTitle" />
+                    #end
+                </td>
+            </tr>
+            #end
             #else
-                <tr>
-                    <td colspan="99">No claim found</td>
-                </tr>
+            <tr>
+                <td colspan="99">No claim found</td>
+            </tr>
             #end
         </tbody>
     </table>
@@ -128,45 +131,15 @@
                         </div>
                     </div>
 
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
-                        <label for="field1" class="control-label col-md-4">Field 1</label>
+                        <label for="field_${xf.name}" class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
                         <div class="col-md-8">
-                            <input name="field1" id="field1" class="form-control" placeholder="Field 1" value="">
+                            $xf.html
                         </div>
-                    </div>                    
-
-                    <div class="form-group">
-                        <label for="field2" class="control-label col-md-4">Field 2</label>
-
-                        <div class="col-md-8">
-                            <input name="field2" id="field2" class="form-control" placeholder="Field 2" value="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="field3" class="control-label col-md-4">Field 3</label>
-
-                        <div class="col-md-8">
-                            <input name="field3" id="field3" class="form-control" placeholder="Field 3" value="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="field4" class="control-label col-md-4">Field 4</label>
-
-                        <div class="col-md-8">
-                            <input name="field4" id="field4" class="form-control" placeholder="Field 4" value="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="field5" class="control-label col-md-4">Field 5</label>
-
-                        <div class="col-md-8">
-                            <input name="field5" id="field5" class="form-control" placeholder="Field 5" value="">
-                        </div>
-                    </div>
+                    </div>  
+                    #end
 
                 </div>
                 <div class="modal-footer">

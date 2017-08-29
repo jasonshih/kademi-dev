@@ -1,21 +1,6 @@
 #if($page)
-    #set($programs = $page.find("/programs"))
-    #if($page.is("course"))
-        #set($curCourse = $page)
-        #set($curProgram = $curCourse.parent)
-    #else
-        #set($curCourse = $programs.bestCourse)
-        #if( $curCourse )
-            #set($curProgram = $curCourse.parent)
-        #else
-            #set($curProgram = $programs.bestProgram)
-            #set($curCourse = $curProgram.children.ofType.course.first)
-        #end
-    #end
-
-    #set($modules = $curCourse.children.ofType.module.sortByField("order"))
+    #set($modules = $page.find("/programs").availModules)
     #foreach($mod in $modules)
-        #if( ($mod.complete == false && $mod.percentComplete) || (!$mod.complete && $mod.startable) )
         <div class="col-sm-6">
             <div class="module-tile component-tile component-info">
                 <h3 class="module-tile-title">$mod.title</h3>
@@ -37,29 +22,28 @@
                 </div>
             </div>
         </div>
-        #end
     #end
 #else
     #fakeUI()
 #end
 
 #macro(fakeUI)
-<div class="col-sm-6">
-    <div class="module-tile component-tile component-info">
-        <h3>Module #1</h3>
-        <p class="clearfix">This is brief of module #1</p>
-        <div class="text-right">
-            <a href="#" class="btn btn-primary btn-sm">Continue</a>
+    <div class="col-sm-6">
+        <div class="module-tile component-tile component-info">
+            <h3>Module #1</h3>
+            <p class="clearfix">This is brief of module #1</p>
+            <div class="text-right">
+                <a href="#" class="btn btn-primary btn-sm">Continue</a>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-sm-6">
-    <div class="module-tile component-tile component-info">
-        <h3>Module #2</h3>
-        <p class="clearfix">This is brief of module #2</p>
-        <div class="text-right">
-            <a href="#" class="btn btn-primary btn-sm">Start</a>
+    <div class="col-sm-6">
+        <div class="module-tile component-tile component-info">
+            <h3>Module #2</h3>
+            <p class="clearfix">This is brief of module #2</p>
+            <div class="text-right">
+                <a href="#" class="btn btn-primary btn-sm">Start</a>
+            </div>
         </div>
     </div>
-</div>
 #end
