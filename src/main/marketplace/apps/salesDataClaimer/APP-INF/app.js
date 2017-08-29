@@ -4,11 +4,11 @@ controllerMappings.addNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubm
 controllerMappings.addNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js");
 
 function initApp(orgRoot, webRoot, enabled) {
-    log.info("initApp SalesDataClaimer: orgRoot={}", orgRoot);
+    log.info("initApp SalesDataClaimer > orgRoot={}, webRoot={}", orgRoot, webRoot);
     
     var dbs = orgRoot.find(JSON_DB);
     if (isNull(dbs)) {
-        page.throwNotFound('KongoDB is disabled. Please enable it for continue with this app!');
+        log.error('ERROR: KongoDB is disabled. Please enable it for continue with this app!');
         return;
     }
     
