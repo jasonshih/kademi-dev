@@ -192,11 +192,12 @@ function approveClaims(page, params) {
                             soldById: claim.jsonObject.soldById,
                             amount: formatter.toBigDecimal(claim.jsonObject.amount),
                             soldDate: formatter.toDate(claim.jsonObject.soldDate),
-                            enteredDate: formatter.toDate(claim.jsonObject.enteredDate)
+                            enteredDate: formatter.toDate(claim.jsonObject.enteredDate),
+                            productSku: claim.jsonObject.productSku
                         };
                         
                         var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
-                        applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate);
+                        applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
                         
                         eventManager.goalAchieved('claimSubmittedGoal', {'claim': id});
                     }
