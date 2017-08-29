@@ -191,8 +191,8 @@ function approveClaims(page, params) {
                         var obj = {
                             soldById: claim.jsonObject.soldById,
                             amount: formatter.toBigDecimal(claim.jsonObject.amount),
-                            soldDate: claim.jsonObject.soldDate,
-                            enteredDate: claim.jsonObject.enteredDate
+                            soldDate: formatter.toDate(claim.jsonObject.soldDate),
+                            enteredDate: formatter.toDate(claim.jsonObject.enteredDate)
                         };
                         
                         var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
