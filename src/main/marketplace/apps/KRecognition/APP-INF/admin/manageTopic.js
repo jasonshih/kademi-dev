@@ -1,22 +1,34 @@
-/* global controllerMappings, views, transactionManager, applications, formatter, Utils */
+/* global controllerMappings, views, transactionManager, applications, formatter, Utils, fileManager */
 
 (function (g) {
     controllerMappings
             .adminController()
+            .enabled(true)
             .path('/recognition/(?<topicId>[^/]*)')
             .addMethod('GET', 'checkRedirect')
-            .enabled(true)
             .build();
 
     controllerMappings
             .adminController()
+            .enabled(true)
             .path('/recognition/(?<topicId>[^/]*)/')
+            .addPathResolver('topicId', 'resolveTopicId')
             .defaultView(views.templateView('/theme/apps/KRecognition/manageTopic.html'))
             .addMethod('POST', '_updateTopic', 'saveDetails')
-            .addMethod('POST', '_createBadge', 'createBadge')
             .addMethod('DELETE', '_deleteTopic')
-            .addPathResolver('topicId', 'resolveTopicId')
-            .enabled(true)
+            /* Images */
+            .addMethod('POST', '_applyImage', 'applyImage')
+            /* Badges */
+            .addMethod('POST', '_createBadge', 'createBadge')
+            .addMethod('POST', '_deleteBadge', 'deleteBadge')
+            .addMethod('POST', '_uploadBadgeImage', 'uploadBadgeImage')
+            .addMethod('POST', '_removeBadgeImage', 'removeBadgeImage')
+            /* Levels */
+            .addMethod('POST', '_createLevel', 'createLevel')
+            .addMethod('POST', '_deleteLevel', 'deleteLevel')
+            .addMethod('POST', '_uploadLevelImage', 'uploadLevelImage')
+            .addMethod('POST', '_removeLevelImage', 'removeLevelImage')
+            /* Build the controller */
             .build();
 
     /**
@@ -37,14 +49,8 @@
             newParams.remove('dataSeries');
             newParams.remove('pointsBucket');
 
-            var allDataseries = applications.salesData.allSalesDataSeries;
-            for (var i = 0; i < allDataseries.size(); i++) {
-                var dataSeries = allDataseries.get(i);
-                if (dataSeries.name == dataSeriesName) {
-                    newParams.put('dataSeries', dataSeries);
-                    break;
-                }
-            }
+            var sds = applications.salesData.getSalesDataSeries(dataSeriesName);
+            newParams.put('dataSeries', sds);
         }
         // Check for pointsBucket
         else if (Utils.isStringNotBlank(newParams.pointsBucket)) {
@@ -72,6 +78,13 @@
         return views.jsonResult(true, 'Saved ' + topic.title);
     };
 
+    /**
+     * API to create a new badge
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @returns {unresolved}
+     */
     g._createBadge = function (page, params) {
         var topic = page.attributes.topicId;
 
@@ -90,7 +103,27 @@
             newBadge = applications.userApp.recognitionService.createBadge(topic, badgeName, badgeTitle);
         });
 
-        return views.jsonResult(true, 'Created ' + newBadge.title);
+        return page.jsonResult(true, 'Created ' + newBadge.title);
+    };
+
+    /**
+     * API to delete a badge
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @returns {unresolved}
+     */
+    g._deleteBadge = function (page, params) {
+        var topic = page.attributes.topicId;
+        var badge = topic.getBadge(Utils.safeInt(params.badgeid));
+
+        if (Utils.isNull(badge)) {
+            return page.jsonResult(false, 'Could not find badge with ID: ' + params.badgeid);
+        }
+
+        applications.userApp.recognitionService.deleteBadge(topic, badge);
+
+        return page.jsonResult(true, 'Success');
     };
 
     /**
@@ -106,6 +139,87 @@
             applications.userApp.recognitionService.deleteTopic(topic.id);
         });
 
-        return views.jsonResult(true, 'Deleted ' + topic.title);
+        return page.jsonResult(true, 'Deleted ' + topic.title);
+    };
+
+    /**
+     * API for uploading badge images
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @param {type} files
+     * @returns {undefined}
+     */
+    g._uploadBadgeImage = function (page, params, files) {
+        var topic = page.attributes.topicId;
+        var badge = topic.getBadge(Utils.safeInt(params.badgeid));
+
+        if (Utils.isNull(badge)) {
+            return page.jsonResult(false, 'Could not find badge with ID: ' + params.badgeid);
+        }
+
+        if (params.containsKey('overwrite')) {
+            var file = files.get('badgeImg');
+            var hash;
+
+            transactionManager.runInTransaction(function () {
+                hash = fileManager.uploadFile(file);
+                var m = {
+                    imageHash: hash
+                };
+
+                page.dataBind(badge, m);
+            });
+
+            return page.jsonResult(true, 'Uploaded', '/_hashes/files/' + hash);
+        } else if (params.containsKey('crop')) {
+            var newHash = g.cropImage(null, params);
+
+            transactionManager.runInTransaction(function () {
+                var m = {
+                    imageHash: newHash
+                };
+
+                page.dataBind(badge, m);
+            });
+
+            return page.jsonResult(true, 'cropped', '/_hashes/files/' + newHash);
+        }
+    };
+
+    /**
+     * API for removing an image fron a badge
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @returns {unresolved}
+     */
+    g._removeBadgeImage = function (page, params) {
+        var topic = page.attributes.topicId;
+        var badge = topic.getBadge(Utils.safeInt(params.removeBadgeImage));
+
+        if (Utils.isNull(badge)) {
+            return page.jsonResult(false, 'Could not find badge with ID: ' + params.removeBadgeImage);
+        }
+
+        transactionManager.runInTransaction(function () {
+            var m = {
+                imageHash: null
+            };
+
+            page.dataBind(badge, m);
+        });
+
+        return page.jsonResult(true, 'Success');
+    };
+
+    /**
+     * Used with the image cropper
+     * 
+     * @param {type} page
+     * @returns {unresolved}
+     */
+    g._applyImage = function (page) {
+        return page.jsonResult(true);
     };
 })(this);

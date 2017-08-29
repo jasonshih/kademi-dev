@@ -1,7 +1,9 @@
 #if( !$height )
-    #set( $height = 200 )
+    #set( $height = 250 )
 #end
-<div class="panel panel-default panel-sales-visualisation">
+
+#set ($href = '/sales/'+$name)
+<div class="panel panel-default panel-sales-visualisation salesVis" data-href="$href">
     <div class="panel-heading">
         <i class="fa fa-bar-chart"></i> Sales data Visualisation
     </div>

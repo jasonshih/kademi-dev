@@ -6,70 +6,79 @@
         #set( $topic = $page.attributes.topicId )
         <h1>$topic.title</h1>
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><i class="fa fa-id-card-o"></i>Details</div>
-            <div class="panel-body">
-                <form class="form-horizontal" action="$page.href" id="topic-detail-form" method="POST" >
-                    <input type="hidden" name="saveDetails" value="true"/>
-                    <div class="form-group">
-                        <label class="control-label col-md-2">Code</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control required reallySimpleChars" name="name" required="required" value="$topic.name" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">Title</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control required" name="title" required="required" value="$topic.title" />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">Levels Value</label>
-                        <div class="col-md-4">
-                            <select class="form-control krecognition-select-levels-value">
-                                <option value="">[NONE]</option>
-                                <option value="dataSeries" #if($topic.dataSeries)selected="selected"#end>Sales Data Series</option>
-                                <option value="pointsBucket" #if($topic.pointsBucket)selected="selected"#end>Points Bucket</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group krecognition-select-dataSeries" #if(!$topic.dataSeries)style="display: none;"#end>
-                         <label class="control-label col-md-2">Sales Data Series</label>
-                        <div class="col-md-4">
-                            <select name="dataSeries" class="form-control">
-                                $formatter.option('', '[NONE]', $topic.dataSeries.name)
-                                #foreach($sds in $applications.salesData.allSalesDataSeries)
-                                $formatter.option($sds.name, $formatter.firstNotNull($sds.title, $sds.name), $topic.dataSeries.name)
-                                #end
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group krecognition-select-pointsBucket" #if(!$topic.pointsBucket)style="display: none;"#end>
-                         <label class="control-label col-md-2">Points Bucket</label>
-                        <div class="col-md-4">
-                            <select name="pointsBucket" class="form-control">
-                                $formatter.option('', '[NONE]', $topic.pointsBucket.name)
-                                #foreach($pb in $applications.rewards.allPointsBuckets)
-                                $formatter.option($pb.name, $formatter.firstNotNull($pb.title, $pb.name), $topic.pointsBucket.name)
-                                #end
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-4 col-sm-offset-2">
-                            <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
         <div class="row">
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-id-card-o"></i>Details</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" action="$page.href" id="topic-detail-form" method="POST" >
+                            <input type="hidden" name="saveDetails" value="true"/>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Code</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control required reallySimpleChars" name="name" required="required" value="$topic.name" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Title</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control required" name="title" required="required" value="$topic.title" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Levels Value</label>
+                                <div class="col-md-10">
+                                    <select class="form-control krecognition-select-levels-value">
+                                        <option value="">[NONE]</option>
+                                        <option value="dataSeries" #if($topic.dataSeries)selected="selected"#end>Sales Data Series</option>
+                                        <option value="pointsBucket" #if($topic.pointsBucket)selected="selected"#end>Points Bucket</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group krecognition-select-dataSeries" #if(!$topic.dataSeries)style="display: none;"#end>
+                                 <label class="control-label col-md-2">Sales Data Series</label>
+                                <div class="col-md-10">
+                                    <select name="dataSeries" class="form-control">
+                                        $formatter.option('', '[NONE]', $topic.dataSeries.name)
+                                        #foreach($sds in $applications.salesData.allSalesDataSeries)
+                                        $formatter.option($sds.name, $formatter.firstNotNull($sds.title, $sds.name), $topic.dataSeries.name)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group krecognition-select-pointsBucket" #if(!$topic.pointsBucket)style="display: none;"#end>
+                                 <label class="control-label col-md-2">Points Bucket</label>
+                                <div class="col-md-10">
+                                    <select name="pointsBucket" class="form-control">
+                                        $formatter.option('', '[NONE]', $topic.pointsBucket.name)
+                                        #foreach($pb in $applications.rewards.allPointsBuckets)
+                                        $formatter.option($pb.name, $formatter.firstNotNull($pb.title, $pb.name), $topic.pointsBucket.name)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
+                    <div class="panel-body">
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-6">
                 <div class="panel panel-default">
@@ -98,29 +107,27 @@
                                 <td>
                                     #if($badge.imageHash)
                                     <div class="col-md-12">
-                                        <a data-optid="$opt.id" href="/_hashes/files/$badge.imageHash" class="thumbnail krecognition-image-change">
+                                        <a target="_blank" href="/_hashes/files/$badge.imageHash" class="thumbnail">
                                             <img src="/_hashes/files/$badge.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
                                         </a>
                                     </div>
                                     <button data-badgeid="$badge.id" class="btn btn-xs btn-warning btn-krecognition-badge-img-del"><i class="fa fa-trash"></i> Remove Image</button>
                                     #else
-                                    <div class="btn-group btn-group-sm">
-                                        <button type="button" title="Upload Image" data-badgeid="$badge.id" class="btn btn-success btn-krecognition-badge-img-upload">
-                                            <i class="fa fa-upload"></i>
-                                        </button>
-                                    </div>
+                                    <button type="button" title="Upload Image" data-badgeid="$badge.id" class="btn btn-sm btn-success btn-krecognition-badge-img-upload">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
                                     #end
                                 </td>
                                 <td>$!badge.title</td>
                                 <td></td>
                                 <td>
-                                    <div class="btn-group" role="group">
-                                        <button type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                                    <div class="btn-group pull-right" role="group">
+                                        <button data-badgeid="$badge.id" type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a href="#"><i class="fa fa-trash"></i> Delete</a></li>
+                                            <li><a data-badgeid="$badge.id" href="#" class="btn-krecognition-badge-del"><i class="fa fa-trash"></i> Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -128,15 +135,6 @@
                             #end
                         </tbody>
                     </table>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
-                    <div class="panel-body">
-                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
-                    </div>
                 </div>
             </div>
 
@@ -184,6 +182,6 @@
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js">//</script>
+        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js?v=$formatter.now.time">//</script>
     </body>
 </html>
