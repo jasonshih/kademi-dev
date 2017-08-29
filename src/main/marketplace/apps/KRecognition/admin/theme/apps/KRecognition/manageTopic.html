@@ -1,0 +1,187 @@
+<html>
+    <head>
+        <title>Recognition Topic</title>
+    </head>
+    <body>
+        #set( $topic = $page.attributes.topicId )
+        <h1>$topic.title</h1>
+
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-id-card-o"></i>Details</div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" action="$page.href" id="topic-detail-form" method="POST" >
+                            <input type="hidden" name="saveDetails" value="true"/>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Code</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control required reallySimpleChars" name="name" required="required" value="$topic.name" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Title</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control required" name="title" required="required" value="$topic.title" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Levels Value</label>
+                                <div class="col-md-10">
+                                    <select class="form-control krecognition-select-levels-value">
+                                        <option value="">[NONE]</option>
+                                        <option value="dataSeries" #if($topic.dataSeries)selected="selected"#end>Sales Data Series</option>
+                                        <option value="pointsBucket" #if($topic.pointsBucket)selected="selected"#end>Points Bucket</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group krecognition-select-dataSeries" #if(!$topic.dataSeries)style="display: none;"#end>
+                                 <label class="control-label col-md-2">Sales Data Series</label>
+                                <div class="col-md-10">
+                                    <select name="dataSeries" class="form-control">
+                                        $formatter.option('', '[NONE]', $topic.dataSeries.name)
+                                        #foreach($sds in $applications.salesData.allSalesDataSeries)
+                                        $formatter.option($sds.name, $formatter.firstNotNull($sds.title, $sds.name), $topic.dataSeries.name)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group krecognition-select-pointsBucket" #if(!$topic.pointsBucket)style="display: none;"#end>
+                                 <label class="control-label col-md-2">Points Bucket</label>
+                                <div class="col-md-10">
+                                    <select name="pointsBucket" class="form-control">
+                                        $formatter.option('', '[NONE]', $topic.pointsBucket.name)
+                                        #foreach($pb in $applications.rewards.allPointsBuckets)
+                                        $formatter.option($pb.name, $formatter.firstNotNull($pb.title, $pb.name), $topic.pointsBucket.name)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-sm-10 col-sm-offset-2">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
+                    <div class="panel-body">
+                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Badges</div>
+                    <div class="panel-body">
+                        <button data-toggle="modal" data-target="#model-krecognition-create-badge" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Badge</button>
+                    </div>
+                    <table class="table">
+                        <colgroup>
+                            <col width="100px"/>
+                            <col/>
+                            <col/>
+                            <col width="85px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Groups</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="krecognition-badges-body">
+                            #foreach($badge in $topic.badges)
+                            <tr>
+                                <td>
+                                    #if($badge.imageHash)
+                                    <div class="col-md-12">
+                                        <a target="_blank" href="/_hashes/files/$badge.imageHash" class="thumbnail">
+                                            <img src="/_hashes/files/$badge.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
+                                        </a>
+                                    </div>
+                                    <button data-badgeid="$badge.id" class="btn btn-xs btn-warning btn-krecognition-badge-img-del"><i class="fa fa-trash"></i> Remove Image</button>
+                                    #else
+                                    <button type="button" title="Upload Image" data-badgeid="$badge.id" class="btn btn-sm btn-success btn-krecognition-badge-img-upload">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                    #end
+                                </td>
+                                <td>$!badge.title</td>
+                                <td></td>
+                                <td>
+                                    <div class="btn-group pull-right" role="group">
+                                        <button data-badgeid="$badge.id" type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a data-badgeid="$badge.id" href="#" class="btn-krecognition-badge-del"><i class="fa fa-trash"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="model-krecognition-create-badge" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="POST" action="$page.href">
+                        <input type="hidden" name="createBadge" value="true"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">New Badge</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Code</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="newName" class="form-control required reallySimpleChars" placeholder="A unique identifier"/>
+                                        <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-4">Title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="title" class="form-control required" placeholder="User friendly name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
+        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js?v=$formatter.now.time">//</script>
+    </body>
+</html>

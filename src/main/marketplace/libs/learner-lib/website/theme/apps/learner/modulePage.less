@@ -3,24 +3,23 @@
         textarea {
             width: 100%;
         }
-    }    
+    }
     iframe {
         width: 100% !important;
     }
     .module-container {
         position: relative;
         min-height: 300px;
-        // border: solid lightgray 1px;
+        
         .navbar {
             margin-bottom: 0;
         }
     }
-
 }
 
 .modulePage .panelBox ol ol {
     list-style-type: none;
-    margin-left: -6px;    
+    margin-left: -6px;
 }
 
 body.edifyIsEditMode div.pages {
@@ -33,20 +32,51 @@ a.disabled {
 }
 
 ol.quiz {
+    > li {
+        font-size: 24px;
+        color: @brand-info;
+        vertical-align: top;
+        position: relative;
+        font-weight: bold;
+        
+        > * {
+            margin: 5px 0 0;
+            color: @text-color;
+            font-size: 14px;
+            font-weight: normal;
+        }
+        
+        > *:first-child {
+            margin-top: 0;
+        }
+        
+        > h3 {
+            font-size: 24px;
+            color: @brand-info;
+        }
+    }
+    
     ol {
         li {
+            clear: both;
             margin-top: 10px;
+            position: relative;
+            padding-left: 20px;
+            
             input {
-                margin: 0px 10px 0 5px;
+                position: absolute;
+                margin: 4px 0 0 -20px;
             }
+            
             label {
-                display: inline;
+                display: block;
             }
         }
     }
+    
     li.error {
         .alert();
-        .alert-danger();        
+        .alert-danger();
     }
 }
 

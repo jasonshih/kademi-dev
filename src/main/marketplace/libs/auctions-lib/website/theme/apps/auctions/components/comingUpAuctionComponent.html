@@ -2,7 +2,7 @@
 #if ($auctionFolder && $auctionFolder.isReadable())
 <div class="panel panel-default panel-coming-up-auction">
     <div class="panel-heading">
-        <div class="panel-title">Living Auction</div>
+        <div class="panel-title">Live Auction</div>
     </div>
     #set($auctions = $auctionFolder.childrenWithPermission.sortByExpr("auctionEndDate"))
     #set($isAvailable = false)
@@ -27,9 +27,9 @@
                     <div class="auction-info">
                         <div class="text-center">Current Bid:
                             #if($auction.currentBidValue)
-                                <strong class="bidValue">$$formatter.formatNumeric($auction.currentBidValue, "#[[#,###]]#")</strong>
+                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.currentBidValue, "#[[#,###]]#")</strong>
                             #else
-                                <strong class="bidValue">$$formatter.formatNumeric($auction.auctionStartValue, "#[[#,###]]#")</strong>
+                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.auctionStartValue, "#[[#,###]]#")</strong>
                             #end
                         </div>
                     </div>

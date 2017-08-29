@@ -31,12 +31,6 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/quiz/quiz.css"
-            }
-        },
-        {
             "js": {
                 "group": "main",
                 "path": "/static/js/jquery.lightbox-0.5.js"

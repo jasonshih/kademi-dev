@@ -36,7 +36,19 @@
         },
         {
             "css": {
-                "media": "all",
+                "cssMedia": "all",
+                "path": "/static/typeahead/0.11.1/typeahead.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/typeahead/0.11.1/typeahead.bundle.min.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
                 "path": "/theme/apps/salesDataClaimer/claimsList.css"
             }
         },

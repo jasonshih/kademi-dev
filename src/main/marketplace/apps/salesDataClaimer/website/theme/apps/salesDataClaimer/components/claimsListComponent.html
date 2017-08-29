@@ -1,3 +1,13 @@
+#script()
+<script>
+    applications.salesDataClaimer.call('getOwnClaims', page, request.params);
+</script>
+#end
+
+
+
+#set($app = $applications.salesDataClaimer )
+
 <div class="claims-list-component">
     <div class="row">
         <div class="col-sm-3">
@@ -6,8 +16,7 @@
                 <select class="form-control select-status">
                     <option value="" selected="selected"> - All statuses -</option>
                     $formatter.option("0", "New", $params.status)
-                    $formatter.option("1", "Requesting approval", $params.status)
-                    $formatter.option("2", "Approved", $params.status)
+                    $formatter.option("1", "Approved", $params.status)
                     $formatter.option("-1", "Rejected", $params.status)
                 </select>
             </p>
@@ -15,7 +24,6 @@
         <div class="col-sm-9 text-right">
             <p class="btn-group btn-group-sm">
                 <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
-                <button type="button" class="btn btn-info btn-request-approval"><i class="fa fa-send"></i> Request approval</button>
                 <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
             </p>
         </div>
@@ -26,52 +34,66 @@
         <thead>
             <tr>
                 <th width="50"></th>
+                <th width="200">Receipt</th>
                 <th>Amount</th>
                 <th>Date</th>
-                <th>Tags</th>
                 <th>SKU Entered</th>
                 <th width="90"></th>
                 <th width="30"><input type="checkbox" class="chk-all" /></th>
             </tr>
         </thead>
         <tbody id="table-claims-body">
-            #set ($searchResult = $page.attributes.searchResult)
+            #set ($searchResult = $page.attributes.claimsResult)
             #if ($searchResult.hits.hits.size() > 0)
-                #foreach($hit in $searchResult.hits.hits)
-                    <tr>
-                        <td class="fa-2x text-center">
-                            #if ($hit.fields.status.value == 0)
-                                <i class="fa fa-circle text-muted" title="New"></i>
-                            #elseif ($hit.fields.status.value == 1)
-                                <i class="fa fa-gear fa-spin text-info" title="Requesting approval"></i>
-                            #elseif ($hit.fields.status.value == 2)
-                                <i class="fa fa-check-circle text-success" title="Arppoved"></i>
-                            #elseif ($hit.fields.status.value == -1)
-                                <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
-                            #end
-                        </td>
-                        <td>$hit.fields.amount.value</td>
-                        <td>
-                            <abbr class="timeago" title="$hit.fields.soldDate.value">
-                                $hit.fields.soldDate.value
-                            </abbr>
-                        </td>
-                        <td>$!hit.fields.tags.value</td>
-                        <td>$!hit.fields.productSku.value</td>
-                        <td>
-                            #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
-                                <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
-                            #else
-                                <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
-                            #end
-                        </td>
-                        <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
-                    </tr>
-                #end
+            #foreach($hit in $searchResult.hits.hits)
+            <tr>
+                <td class="fa-2x text-center">
+                    #if ($hit.fields.status.value == 0)
+                    <i class="fa fa-circle text-muted" title="New"></i>
+                    #elseif ($hit.fields.status.value == 1)
+                    <i class="fa fa-check-circle text-success" title="Approved"></i>
+                    #elseif ($hit.fields.status.value == -1)
+                    <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                    #end
+                </td>
+                <td>
+                    #if ($hit.fields.receipt.value)
+                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail">
+                            <img src="$hit.fields.receipt.value" class="img-responsive" />
+                        </a>
+                    #end
+                </td>
+                <td>$hit.fields.amount.value</td>
+                <td>
+                    <abbr class="timeago" title="$hit.fields.soldDate.value">
+                        $hit.fields.soldDate.value
+                    </abbr>
+                </td>
+                <td>$!hit.fields.productSku.value</td>
+                <td>
+                    #if ($hit.fields.status.value == 0)
+                    <button type="button" class="btn btn-sm btn-link btn-edit-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-edit"></i> Edit</button>
+                    #else
+                    <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View</button>
+                    #end
+                </td>
+                <td>
+                    #if ($hit.fields.status.value == 0)
+                    <input type="checkbox" value="$hit.fields.recordId.value" />
+                    #else
+                    #set ($chkTitle = "This claim is already approved. You can't delete this.")
+                    #if ($hit.fields.status.value == -1)
+                    #set ($chkTitle = "This claim is already rejected. You can't delete this.")
+                    #end
+                    <input type="checkbox" value="$hit.fields.recordId.value" disabled="disabled" title="$chkTitle" />
+                    #end
+                </td>
+            </tr>
+            #end
             #else
-                <tr>
-                    <td colspan="99">No claim found</td>
-                </tr>
+            <tr>
+                <td colspan="99">No claim found</td>
+            </tr>
             #end
         </tbody>
     </table>
@@ -111,15 +133,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tags" class="control-label col-md-4">Tags</label>
-
-                        <div class="col-md-8">
-                            <input name="tags" id="tags" class="form-control" placeholder="Summer promotion,New business" value="" />
-                            <small>Maximum tags is 5</small>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <label for="productSku" class="control-label col-md-4">Product SKU</label>
 
                         <div class="col-md-8">
@@ -127,43 +140,26 @@
                         </div>
                     </div>
 
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
-                        <label for="field1" class="control-label col-md-4">Field 1</label>
+                        <label for="field_${xf.name}" class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
                         <div class="col-md-8">
-                            <input name="field1" id="field1" class="form-control" placeholder="Field 1" value="">
-                        </div>
-                    </div>                    
-
-                    <div class="form-group">
-                        <label for="field2" class="control-label col-md-4">Field 2</label>
-
-                        <div class="col-md-8">
-                            <input name="field2" id="field2" class="form-control" placeholder="Field 2" value="">
+                            $xf.html
                         </div>
                     </div>
+                    #end
 
                     <div class="form-group">
-                        <label for="field3" class="control-label col-md-4">Field 3</label>
+                        <label class="control-label col-md-4">Receipt</label>
 
                         <div class="col-md-8">
-                            <input name="field3" id="field3" class="form-control" placeholder="Field 3" value="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="field4" class="control-label col-md-4">Field 4</label>
-
-                        <div class="col-md-8">
-                            <input name="field4" id="field4" class="form-control" placeholder="Field 4" value="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="field5" class="control-label col-md-4">Field 5</label>
-
-                        <div class="col-md-8">
-                            <input name="field5" id="field5" class="form-control" placeholder="Field 5" value="">
+                            <p class="thumbnail">
+                                <img src="/static/images/photo_holder.png" class="img-responsive" />
+                            </p>
+                            <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> Upload</button>
+                            <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
+                            <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
                         </div>
                     </div>
 
@@ -203,14 +199,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-4">Tags</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static tags"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         <label class="control-label col-md-4">Product SKU</label>
 
                         <div class="col-md-8">
@@ -218,43 +206,23 @@
                         </div>
                     </div>
 
+                    #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
-                        <label class="control-label col-md-4">Field 1</label>
+                        <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
                         <div class="col-md-8">
-                            <p class="form-control-static field1"></p>
+                            <p class="form-control-static field_${xf.name}"></p>
                         </div>
                     </div>
+                    #end
 
                     <div class="form-group">
-                        <label class="control-label col-md-4">Field 2</label>
+                        <label class="control-label col-md-4">Receipt</label>
 
                         <div class="col-md-8">
-                            <p class="form-control-static field2"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 3</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field3"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 4</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field4"></p>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-4">Field 5</label>
-
-                        <div class="col-md-8">
-                            <p class="form-control-static field5"></p>
+                            <p class="thumbnail">
+                                <img src="" class="img-responsive" />
+                            </p>
                         </div>
                     </div>
 
@@ -266,3 +234,5 @@
         </div>
     </div>
 </div>
+
+

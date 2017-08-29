@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Series</label>
+        <div class="col-sm-12">
+            <select class="form-control select-data">
+                <option value="">- None -</option>
+                #foreach ($series in $applications.salesData.allSalesDataSeries )
+                <option value="$series.name">$series.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+</form>

@@ -16,8 +16,7 @@
                                 <option value="" selected="selected"> - All statuses -</option>
                                 $formatter.option("0", "New", $params.status)
                             #end
-                            $formatter.option("1", "Requesting approval", $params.status)
-                            $formatter.option("2", "Approved", $params.status)
+                            $formatter.option("1", "Approved", $params.status)
                             $formatter.option("-1", "Rejected", $params.status)
                         </select>
                     </p>
@@ -31,10 +30,12 @@
                     <p class="btn-group btn-group-sm">
                         <button type="button" class="btn btn-success btn-approve-claims"><i class="fa fa-check"></i> Approve</button>
                         <button type="button" class="btn btn-danger btn-reject-claims"><i class="fa fa-times"></i> Reject</button>
-                        #if ($user.isInGroup("administrators"))
-                            <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
-                        #end
                     </p>
+                    #if ($user.isInGroup("administrators"))
+                    <p class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
+                    </p>
+                    #end
                 </div>
             </div>
             <br />
@@ -43,9 +44,9 @@
                 <thead>
                     <tr>
                         <th width="50"></th>
+                        <th width="200">Receipt</th>
                         <th>Amount</th>
                         <th>Date</th>
-                        <th>Tags</th>
                         <th>Entered By</th>
                         <th>SKU Entered</th>
                         <th width="90"></th>
@@ -61,11 +62,16 @@
                                     #if ($hit.fields.status.value == 0)
                                         <i class="fa fa-circle text-muted" title="New"></i>
                                     #elseif ($hit.fields.status.value == 1)
-                                        <i class="fa fa-gear fa-spin text-info" title="Requesting approval"></i>
-                                    #elseif ($hit.fields.status.value == 2)
-                                        <i class="fa fa-check-circle text-success" title="Arppoved"></i>
+                                        <i class="fa fa-check-circle text-success" title="Approved"></i>
                                     #elseif ($hit.fields.status.value == -1)
                                         <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                                    #end
+                                </td>
+                                <td>
+                                    #if ($hit.fields.receipt.value)
+                                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail">
+                                            <img src="$hit.fields.receipt.value" class="img-responsive" />
+                                        </a>
                                     #end
                                 </td>
                                 <td>$hit.fields.amount.value</td>
@@ -74,11 +80,10 @@
                                         $hit.fields.soldDate.value
                                     </abbr>
                                 </td>
-                                <td>$!hit.fields.tags.value</td>
                                 <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
                                 <td>$!hit.fields.productSku.value</td>
                                 <td>
-                                    #if ($hit.fields.status.value == 0 || $hit.fields.status.value == 1)
+                                    #if ($hit.fields.status.value == 0)
                                         <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
                                             <i class="fa fa-pencil-square-o"></i> Review
                                         </button>
@@ -129,14 +134,6 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label col-md-4">Tags</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static tags"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="control-label col-md-4">Product SKU</label>
 
                                 <div class="col-md-8">
@@ -144,43 +141,23 @@
                                 </div>
                             </div>
 
+                            #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                             <div class="form-group">
-                                <label class="control-label col-md-4">Field 1</label>
-
+                                <label class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
+        
                                 <div class="col-md-8">
-                                    <p class="form-control-static field1"></p>
+                                    <p class="form-control-static field_${xf.name}"></p>
                                 </div>
                             </div>
+                            #end
 
                             <div class="form-group">
-                                <label class="control-label col-md-4">Field 2</label>
-
+                                <label class="control-label col-md-4">Receipt</label>
+        
                                 <div class="col-md-8">
-                                    <p class="form-control-static field2"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Field 3</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static field3"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Field 4</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static field4"></p>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-4">Field 5</label>
-
-                                <div class="col-md-8">
-                                    <p class="form-control-static field5"></p>
+                                    <p class="thumbnail">
+                                        <img src="" class="img-responsive" />
+                                    </p>
                                 </div>
                             </div>
 

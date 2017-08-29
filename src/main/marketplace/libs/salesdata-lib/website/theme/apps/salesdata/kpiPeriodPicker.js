@@ -13,11 +13,11 @@ $(function () {
         $(this).parent().addClass('active').siblings('li').removeClass('active');
         $(document.body).trigger('pageDateChanged');
     });
-
+    
     var kpiPeriodPicker = $('.kpiPeriodPicker');
-    if (!$.cookie('kpiPeriodPicker-text')){
+    if (!$.cookie('kpiPeriodPicker-text')) {
         kpiPeriodPicker.find('ul li a.current').trigger('click');
     } else {
-        kpiPeriodPicker.find('ul li a:contains("'+$.cookie('kpiPeriodPicker-text')+'")').trigger('click');
+        kpiPeriodPicker.find('ul li a:contains("' + $.cookie('kpiPeriodPicker-text') + '")').trigger('click');
     }
 });
