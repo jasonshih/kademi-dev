@@ -1,16 +1,11 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">KPI</label>
+        <label class="col-sm-12">Series</label>
         <div class="col-sm-12">
             <select class="form-control select-data">
                 <option value="">- None -</option>
-                #foreach ($kpi in $rootFolder.find('/sales/').children.ofType.series)
-                    #if( $rootFolder.find("/").is("website") )
-                        #set ($urlKpi = "/sales/${kpi.parent.name}/${kpi.name}")
-                    #else
-                        #set ($urlKpi = "/sales/${kpi.dataSeries.name}/${kpi.name}")
-                    #end
-                    <option value="${urlKpi}">$kpi.title</option>
+                #foreach ($series in $applications.salesData.allSalesDataSeries )
+                    <option value="$series.name">$series.title</option>
                 #end
             </select>
         </div>

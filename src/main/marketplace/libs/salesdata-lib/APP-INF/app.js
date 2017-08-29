@@ -4,6 +4,7 @@ controllerMappings.addComponent("salesdata", "kpiVis", "html", "Displays a KPI v
 controllerMappings.addComponent("salesdata", "salesDataVis", "html", "Displays sales data in a visualisation, eg dateHistogram, sparkline, kpiLeaderboard, pointsLeaderboard or a summary", "Sales data");
 controllerMappings.addComponent("salesdata", "onTrack", "html", "An indicator to show if the user is on track to achieve the KPI target", "Sales data");
 controllerMappings.addComponent("salesdata", "kpiPeriodPicker", "html", "Allows select a KPI period from a dropdown list", "Sales data");
+controllerMappings.addComponent("salesdata", "salesTable", "html", "Displays sales data in a table", "Sales data");
 
 controllerMappings
     .websiteController()
