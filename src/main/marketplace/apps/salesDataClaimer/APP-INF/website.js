@@ -33,17 +33,18 @@ controllerMappings
     .build();
 
 controllerMappings
-        .websiteController()
-        .path('/salesDataClaimsProducts/')
-        .addMethod('GET', 'searchProducts')
-        .enabled(true)
-        .build();
+    .websiteController()
+    .path('/salesDataClaimsProducts/')
+    .addMethod('GET', 'searchProducts')
+    .enabled(true)
+    .build();
 
-function getClaims(page, params) {
-    log.info('getClaims > page={}, params={}', page, params);
+
+function getOwnClaims(page, params) {
+    log.info('getOwnClaims.2 > page={}, params={}', page, params);
 
     if (!params.claimId) {
-        var results = searchClaims(page, params.status);
+        var results = searchOwnClaims(page, params.status);
         page.attributes.searchResult = results;
     }
 }
@@ -54,23 +55,20 @@ function searchProducts(page, params) {
     return views.jsonObjectView(prods);
 }
 
-function searchClaims(page, status) {
+function searchOwnClaims(page, status) {
     try {
         var currentUser = securityManager.getCurrentUser();
+        log.info("searchOwnClaims: user.2={}", currentUser.name);
         var queryJson = {
             'stored_fields': [
+                'receipt',
                 'recordId',
                 'soldDate',
                 'enteredDate',
                 'modifiedDate',
                 'amount',
                 'status',
-                'productSku',
-                'field1',
-                'field2',
-                'field3',
-                'field4',
-                'field5'
+                'productSku'
             ],
             'size': 10000,
             'sort': [
@@ -81,8 +79,8 @@ function searchClaims(page, status) {
             'query': {
                 'bool': {
                     'must': [
-                        {'type': {'value': TYPE_RECORD}},
-                        {'term': {'soldBy': currentUser.name}}
+                        {'type': {'value': TYPE_RECORD}}
+                        ,{'term': {'soldBy': currentUser.name}}
                     ]
                 }
             }
@@ -96,7 +94,8 @@ function searchClaims(page, status) {
 
         var searchResult = doDBSearch(page, queryJson);
 
-        page.attributes.searchResult = searchResult;
+        page.attributes.claimsResult = searchResult;
+
     } catch (e) {
         log.error('ERROR in getClaims: ' + e);
     }
@@ -127,7 +126,7 @@ function getClaim(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function createClaim(page, params) {
+function createClaim(page, params, files) {
     log.info('createClaim > page={}, params={}', page, params);
 
     var result = {
@@ -174,10 +173,14 @@ function createClaim(page, params) {
             obj[fieldName] = params.get(fieldName) || '';
         }
 
-        db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+        // Upload receipt
+        var uploadedFiles = uploadFile(page, params, files);
+        if (uploadedFiles.length > 0) {
+            obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
+        }
 
+        db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
         eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
-        
     } catch (e) {
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
@@ -186,7 +189,7 @@ function createClaim(page, params) {
     return views.jsonObjectView(JSON.stringify(result));
 }
 
-function updateClaim(page, params) {
+function updateClaim(page, params, files) {
     log.info('updateClaim > page={}, params={}', page, params);
 
     var result = {
@@ -211,7 +214,6 @@ function updateClaim(page, params) {
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
 
-
             var obj = {
                 recordId: id,
                 soldBy: claim.jsonObject.soldBy,
@@ -221,7 +223,8 @@ function updateClaim(page, params) {
                 enteredDate: claim.jsonObject.enteredDate,
                 modifiedDate: formatter.now,
                 productSku: params.productSku || '',
-                status: claim.jsonObject.status
+                status: claim.jsonObject.status,
+                receipt: claim.jsonObject.receipt
             };
 
             // Parse extra fields
@@ -231,6 +234,12 @@ function updateClaim(page, params) {
                 var fieldName = 'field_' + ex.name;
 
                 obj[fieldName] = params.get(fieldName) || '';
+            }
+
+            // Upload receipt
+            var uploadedFiles = uploadFile(page, params, files);
+            if (uploadedFiles.length > 0) {
+                obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
             }
 
             claim.update(JSON.stringify(obj), TYPE_RECORD);
