@@ -1,8 +1,10 @@
 #script()
 <script>
-    applications.salesDataClaimer.call('getClaims', page, request.params);
+    applications.salesDataClaimer.call('getOwnClaims', page, request.params);
 </script>
 #end
+
+
 
 #set($app = $applications.salesDataClaimer )
 
@@ -41,7 +43,7 @@
             </tr>
         </thead>
         <tbody id="table-claims-body">
-            #set ($searchResult = $page.attributes.searchResult)
+            #set ($searchResult = $page.attributes.claimsResult)
             #if ($searchResult.hits.hits.size() > 0)
             #foreach($hit in $searchResult.hits.hits)
             <tr>
@@ -145,7 +147,7 @@
                         <div class="col-md-8">
                             $xf.html
                         </div>
-                    </div>  
+                    </div>
                     #end
 
                     <div class="form-group">
@@ -232,3 +234,5 @@
         </div>
     </div>
 </div>
+
+
