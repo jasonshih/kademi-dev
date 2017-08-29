@@ -1,4 +1,4 @@
-/* global log, views, applications, Utils, formatter */
+/* global log, views, applications, Utils, formatter, fileManager */
 
 (function (g) {
     g.initApp = function (orgRoot, webRoot, enabled) {
@@ -58,5 +58,26 @@
         }
 
         return views.redirectView(href);
+    };
+
+    g.cropImage = function (name, params) {
+        var hash = Utils.safeString(params.uploadedHref).replace('/_hashes/files/', '');
+        var imageDim = fileManager.utils.getImageDimensions(hash);
+
+        var x = Utils.safeInt(params.x);
+        var y = Utils.safeInt(params.y);
+        var w = Utils.safeInt(params.w);
+        var h = Utils.safeInt(params.h);
+
+        if (w > imageDim.width) {
+            w = imageDim.width;
+        }
+
+        if (h > imageDim.height) {
+            h = imageDim.height;
+        }
+
+        var fileExt = (Utils.isStringNotBlank(name) ? formatter.fileExt(name) : null);
+        return fileManager.utils.cropImage(hash, x, y, w, h, fileExt);
     };
 })(this);
