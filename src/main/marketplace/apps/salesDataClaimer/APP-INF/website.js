@@ -85,13 +85,13 @@ function searchOwnClaims(page, status) {
                 }
             }
         };
-        
+
         if (status) {
             queryJson.query.bool.must.push({
                 'term': {'status': +status}
             });
         }
-        
+
         var searchResult = doDBSearch(page, queryJson);
 
         page.attributes.claimsResult = searchResult;
@@ -103,15 +103,15 @@ function searchOwnClaims(page, status) {
 
 function getClaim(page, params) {
     log.info('getClaim > page={}, params={}', page, params);
-    
+
     var result = {
         status: true
     };
-    
+
     try {
         var db = getDB(page);
         var claim = db.child(page.attributes.claimId);
-        
+
         if (claim !== null) {
             result.data = claim.jsonObject + '';
         } else {
@@ -122,36 +122,36 @@ function getClaim(page, params) {
         result.status = false;
         result.messages = ['Error when getting claim: ' + e];
     }
-    
+
     return views.jsonObjectView(JSON.stringify(result));
 }
 
 function createClaim(page, params, files) {
     log.info('createClaim > page={}, params={}', page, params);
-    
+
     var result = {
         status: true
     };
-    
+
     try {
         var currentRoles = securityManager.getRoles();
         log.info('currentRoles={}', currentRoles);
-        
+
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
-        
+
         var amount = +params.amount;
         if (isNaN(amount)) {
             result.status = false;
             result.messages = ['Amount must be digits'];
             return views.jsonObjectView(JSON.stringify(result));
         }
-        
+
         var tempDateTime = params.soldDate;
         var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
         var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
         var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-        
+
         var obj = {
             recordId: id,
             soldBy: params.soldBy,
@@ -163,44 +163,44 @@ function createClaim(page, params, files) {
             productSku: params.productSku || '',
             status: RECORD_STATUS.NEW
         };
-        
+
         // Parse extra fields
         var extraFields = getSalesDataExtreFields(page);
         for (var i = 0; i < extraFields.length; i++) {
             var ex = extraFields[i];
             var fieldName = 'field_' + ex.name;
-            
+
             obj[fieldName] = params.get(fieldName) || '';
         }
-        
+
         // Upload receipt
         var uploadedFiles = uploadFile(page, params, files);
         if (uploadedFiles.length > 0) {
             obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
         }
-        
+
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
         eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
     } catch (e) {
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
     }
-    
+
     return views.jsonObjectView(JSON.stringify(result));
 }
 
 function updateClaim(page, params, files) {
     log.info('updateClaim > page={}, params={}', page, params);
-    
+
     var result = {
         status: true
     };
-    
+
     try {
         var db = getDB(page);
         var id = page.attributes.claimId;
         var claim = db.child(id);
-        
+
         if (claim !== null) {
             var amount = +params.amount;
             if (isNaN(amount)) {
@@ -208,12 +208,12 @@ function updateClaim(page, params, files) {
                 result.messages = ['Amount must be digits'];
                 return views.jsonObjectView(JSON.stringify(result));
             }
-            
+
             var tempDateTime = params.soldDate;
             var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-            
+
             var obj = {
                 recordId: id,
                 soldBy: claim.jsonObject.soldBy,
@@ -226,22 +226,22 @@ function updateClaim(page, params, files) {
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt
             };
-            
+
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
             for (var i = 0; i < extraFields.length; i++) {
                 var ex = extraFields[i];
                 var fieldName = 'field_' + ex.name;
-                
+
                 obj[fieldName] = params.get(fieldName) || '';
             }
-            
+
             // Upload receipt
             var uploadedFiles = uploadFile(page, params, files);
             if (uploadedFiles.length > 0) {
                 obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
             }
-            
+
             claim.update(JSON.stringify(obj), TYPE_RECORD);
         } else {
             result.status = false;
@@ -251,26 +251,26 @@ function updateClaim(page, params, files) {
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
-    
+
     return views.jsonObjectView(JSON.stringify(result));
 }
 
 function deleteClaims(page, params) {
     log.info('deleteClaims > page={}, params={}', page, params);
-    
+
     var result = {
         status: true
     };
-    
+
     try {
         var db = getDB(page);
         var ids = params.ids;
         ids = ids.split(',');
-        
+
         for (var i = 0; i < ids.length; i++) {
             (function (id) {
                 var claim = db.child(id);
-                
+
                 if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
                     claim.delete();
                 }
@@ -280,19 +280,19 @@ function deleteClaims(page, params) {
         result.status = false;
         result.messages = ['Error in deleting: ' + e];
     }
-    
+
     return views.jsonObjectView(JSON.stringify(result));
 }
 
 function getSalesDataExtreFields(page) {
     var settings = getAppSettings(page);
     var selectedDataSeries = settings.get('dataSeries');
-    
+
     var extraFields = [];
-    
+
     if (isNotNull(selectedDataSeries)) {
         extraFields = applications.salesData.getDataSeriesExtraFields(selectedDataSeries);
     }
-    
+
     return extraFields;
 }
