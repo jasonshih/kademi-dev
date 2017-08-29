@@ -161,6 +161,9 @@ function createClaim(page, params) {
         };
         
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+        
+        eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+        
     } catch (e) {
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];

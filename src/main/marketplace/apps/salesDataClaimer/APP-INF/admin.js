@@ -156,6 +156,8 @@ function changeClaimsStatus(status, page, params, callback) {
                 if (claim !== null) {
                     claim.jsonObject.status = status;
                     claim.save();
+                    
+                    eventManager.goalAchieved("claimProcessedGoal", {"claim": id, "status" : status});
                 }
             })(ids[i]);
         }
