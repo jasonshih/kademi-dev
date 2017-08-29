@@ -33,11 +33,11 @@ controllerMappings
     .build();
 
 controllerMappings
-        .websiteController()
-        .path('/salesDataClaimsProducts/')
-        .addMethod('GET', 'searchProducts')
-        .enabled(true)
-        .build();
+    .websiteController()
+    .path('/salesDataClaimsProducts/')
+    .addMethod('GET', 'searchProducts')
+    .enabled(true)
+    .build();
 
 function getClaims(page, params) {
     log.info('getClaims > page={}, params={}', page, params);
@@ -177,6 +177,7 @@ function createClaim(page, params, files) {
         }
         
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+        eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
     } catch (e) {
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
@@ -222,7 +223,7 @@ function updateClaim(page, params, files) {
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt
             };
-        
+            
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
             for (var i = 0; i < extraFields.length; i++) {
@@ -231,7 +232,7 @@ function updateClaim(page, params, files) {
                 
                 obj[fieldName] = params.get(fieldName) || '';
             }
-        
+            
             // Upload receipt
             var uploadedFiles = uploadFile(page, params, files);
             if (uploadedFiles.length > 0) {
