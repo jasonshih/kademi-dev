@@ -4,11 +4,33 @@ controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claim
 controllerMappings.addGoalNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js", "checkProcessedGoal");
 
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, event) {
-    return true;
+    var claimId = lead.getFieldValue(LEAD_CLAIM_ID);
+
+    if (isNotBlank(claimId)) {
+        // Process only for this claim ID
+        return safeString(eventParams.claim) === safeString(claimId);
+    } else {
+        lead.setFieldValue(LEAD_CLAIM_ID, eventParams.claim);
+
+        return true;
+    }
+
+    return false;
 }
 
 function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, event) {
-    return true;
+    var claimId = lead.getFieldValue(LEAD_CLAIM_ID);
+
+    if (isNotBlank(claimId)) {
+        // Process only for this claim ID
+        return safeString(eventParams.claim) === safeString(claimId);
+    } else {
+        lead.setFieldValue(LEAD_CLAIM_ID, eventParams.claim);
+
+        return true;
+    }
+
+    return false;
 }
 
 function initApp(orgRoot, webRoot, enabled) {
@@ -41,7 +63,8 @@ function saveSettings(page, params) {
     page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
 
     return views.jsonResult(true);
-};
+}
+;
 
 
 function getAppSettings(page) {
@@ -62,7 +85,8 @@ function getAppSettings(page) {
     }
 
     return null;
-};
+}
+;
 
 function checkRedirect(page, params) {
     var href = page.href;
