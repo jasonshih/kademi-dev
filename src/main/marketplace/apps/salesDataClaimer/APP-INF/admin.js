@@ -64,9 +64,6 @@ function getClaims(page, params) {
                 'sort': [
                     {
                         'modifiedDate': 'desc'
-                    },
-                    {
-                        'enteredDate': 'desc'
                     }
                 ],
                 'size': 10000,
@@ -157,7 +154,7 @@ function changeClaimsStatus(status, page, params, callback) {
                     claim.jsonObject.status = status;
                     claim.save();
                     
-                    eventManager.goalAchieved("claimProcessedGoal", {"claim": id, "status" : status});
+                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
                 }
             })(ids[i]);
         }
@@ -184,14 +181,24 @@ function approveClaims(page, params) {
             
             var settings = getAppSettings(page);
             var selectedDataSeries = settings.get('dataSeries');
+            var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
             
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
                     var claim = db.child(id);
                     
                     if (claim !== null) {
-                        // TODO: Add data to data series
-                        // applications.salesData.insertDataPoint();
+                        var obj = {
+                            soldById: claim.jsonObject.soldById,
+                            amount: formatter.toBigDecimal(claim.jsonObject.amount),
+                            soldDate: claim.jsonObject.soldDate,
+                            enteredDate: claim.jsonObject.enteredDate
+                        };
+                        
+                        var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
+                        applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate);
+                        
+                        eventManager.goalAchieved('claimSubmittedGoal', {'claim': id});
                     }
                 })(ids[i]);
             }
