@@ -152,7 +152,6 @@
         var modalAdd = $('#modal-add-claim');
         var formAdd = modalAdd.find('form');
         var modalReview = $('#modal-review-claim');
-        var formReview = modalReview.find('form');
         
         table.find('.chk-all').on('click', function () {
             tbody.find(':checkbox').prop('checked', this.checked);
@@ -193,47 +192,13 @@
                             modalReview.find('.' + key).html(newValue);
                         });
                         
+                        modalReview.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
+                        
                         modalReview.find('.timeago').timeago();
                         modalReview.find('[name=ids]').val(id);
                         modalReview.find('.btn-approve-claim, .btn-reject-claim').css('display', isReview ? 'inline-block' : 'none');
                         modalReview.find('.modal-title').html(isReview ? 'Review claim' : 'View claim details');
                         modalReview.modal('show');
-                    } else {
-                        alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
-                    }
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert('Error in getting claim data: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
-                    flog('Error in getting claim data', jqXHR, textStatus, errorThrown);
-                }
-            })
-        });
-        
-        table.on('click', '.btn-edit-claim', function (e) {
-            e.preventDefault();
-            
-            var id = $(this).attr('data-id');
-            var url = MAIN_URL + id + '/';
-            
-            $.ajax({
-                url: url,
-                type: 'get',
-                dataType: 'json',
-                success: function (resp) {
-                    if (resp && resp.status) {
-                        formAdd.attr('action', url);
-                        modalAdd.find('.modal-action').attr('name', 'updateClaim');
-                        
-                        $.each(resp.data, function (key, value) {
-                            var newValue = value;
-                            if (key === 'soldDate') {
-                                newValue = moment(value).format('DD/MM/YYYY HH:mm');
-                            }
-                            
-                            modalAdd.find('[name=' + key + ']').val(newValue);
-                        });
-                        
-                        modalAdd.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
                     }

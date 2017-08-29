@@ -46,6 +46,7 @@ function getClaims(page, params) {
             var currentUser = securityManager.getCurrentUser();
             var queryJson = {
                 'stored_fields': [
+                'receipt',
                     'recordId',
                     'soldDate',
                     'soldBy',
@@ -54,12 +55,7 @@ function getClaims(page, params) {
                     'modifiedDate',
                     'amount',
                     'status',
-                    'productSku',
-                    'field1',
-                    'field2',
-                    'field3',
-                    'field4',
-                    'field5'
+                    'productSku'
                 ],
                 'sort': [
                     {
@@ -70,8 +66,7 @@ function getClaims(page, params) {
                 'query': {
                     'bool': {
                         'must': [
-                            {'type': {'value': TYPE_RECORD}},
-                            {'term': {'soldBy': currentUser.name}}
+                            {'type': {'value': TYPE_RECORD}}
                         ]
                     }
                 }
