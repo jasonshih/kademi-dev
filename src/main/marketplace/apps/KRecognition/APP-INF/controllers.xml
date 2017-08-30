@@ -8,6 +8,9 @@
     <source>/APP-INF/admin/manageRecognition.js</source>
     <source>/APP-INF/admin/manageTopic.js</source>
     
+    <!-- Profile Tabs -->
+    <source>/APP-INF/admin/adminProfileTab.js</source>
+    
     <!-- Website Controllers -->
     <source>/APP-INF/website/website.js</source>
     
