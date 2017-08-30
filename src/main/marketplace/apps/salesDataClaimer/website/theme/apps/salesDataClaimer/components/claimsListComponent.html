@@ -1,12 +1,5 @@
-#script()
-<script>
-    applications.salesDataClaimer.call('getOwnClaims', page, request.params);
-</script>
-#end
-
-
-
 #set($app = $applications.salesDataClaimer )
+#set($searchResult = $app.call('getOwnClaims', $page, $request.params))
 
 <div class="claims-list-component">
     <div class="row">
@@ -34,7 +27,7 @@
         <thead>
             <tr>
                 <th width="50"></th>
-                <th width="200">Receipt</th>
+                <th width="100">Receipt</th>
                 <th>Amount</th>
                 <th>Date</th>
                 <th>SKU Entered</th>
@@ -43,7 +36,6 @@
             </tr>
         </thead>
         <tbody id="table-claims-body">
-            #set ($searchResult = $page.attributes.claimsResult)
             #if ($searchResult.hits.hits.size() > 0)
             #foreach($hit in $searchResult.hits.hits)
             <tr>
@@ -58,8 +50,8 @@
                 </td>
                 <td>
                     #if ($hit.fields.receipt.value)
-                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail">
-                            <img src="$hit.fields.receipt.value" class="img-responsive" />
+                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
+                            <span style="background-image: url('$hit.fields.receipt.value');"></span>
                         </a>
                     #end
                 </td>
@@ -147,7 +139,7 @@
                         <div class="col-md-8">
                             $xf.html
                         </div>
-                    </div>
+                    </div>  
                     #end
 
                     <div class="form-group">
