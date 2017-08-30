@@ -1353,9 +1353,58 @@ Kalert.confirm = function (title, message, type, btnClass, btnText, callback) {
         confirmButtonClass: option.btnClass,
         confirmButtonText: option.btnText,
         closeOnConfirm: true,
+        showLoaderOnConfirm: false
+    }, typeof option.callback === 'function' ? option.callback : null);
+};
+
+Kalert.confirmWait = function (title, message, type, btnClass, btnText, callback) {
+    var option = {};
+    
+    if (arguments.length > 3) {
+        option = {
+            title: title,
+            message: message,
+            type: type,
+            btnClass: btnClass,
+            btnText: btnText,
+            callback: callback
+        };
+    } else if (arguments.length === 3) {
+        // Arguments are message, btnText, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: message,
+            callback: type
+        };
+    } else if (arguments.length === 2) {
+        // Arguments are message, callback
+        option = {
+            title: 'Are you sure?',
+            message: title,
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: 'Ok',
+            callback: message
+        };
+    } else {
+        return;
+    }
+    
+    swal({
+        title: option.title || 'Are you sure?',
+        text: option.message,
+        type: option.type || 'warning',
+        showCancelButton: true,
+        confirmButtonClass: option.btnClass,
+        confirmButtonText: option.btnText,
+        closeOnConfirm: false,
         showLoaderOnConfirm: true
     }, typeof option.callback === 'function' ? option.callback : null);
 };
+
 Kalert.close = function () {
     swal.close();
 };

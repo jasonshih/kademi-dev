@@ -1,4 +1,4 @@
-/* global controllerMappings, views, transactionManager, applications */
+/* global controllerMappings, views, transactionManager, applications, Utils */
 
 (function (g) {
     controllerMappings
@@ -12,7 +12,9 @@
             .adminController()
             .path('/recognition/')
             .defaultView(views.templateView('/theme/apps/KRecognition/manageTopics.html'))
+            .addMethod('GET', '_getTopicsAsJson', 'asJson')
             .addMethod('POST', '_createTopic', 'newName')
+            .addMethod('POST', '_deleteAward', 'deleteAward')
             .postPriviledge('WRITE_CONTENT')
             .enabled(true)
             .build();
@@ -35,5 +37,71 @@
         });
 
         return views.jsonResult(true, "Created " + newTopic.title, newTopic.id);
+    };
+
+    /**
+     * API to retrieve all the topics and there levels/badges in JSON
+     * 
+     * @returns {undefined}
+     */
+    g._getTopicsAsJson = function () {
+        var json = [];
+
+        var allTopics = applications.userApp.recognitionService.allTopics;
+
+        for (var i = 0; i < allTopics.size(); i++) {
+            var topic = allTopics.get(i);
+
+            var j = {
+                id: topic.id,
+                name: topic.name,
+                title: topic.title,
+                badges: [],
+                levels: []
+            };
+
+            var badges = topic.badges;
+            for (var b = 0; b < badges.size(); b++) {
+                var badge = badges.get(b);
+
+                j.badges.push({
+                    id: badge.id,
+                    name: badge.name,
+                    title: badge.title
+                });
+            }
+
+            var levels = topic.levels;
+            for (var l = 0; l < levels.size(); l++) {
+                var level = levels.get(l);
+
+                j.levels.push({
+                    id: level.id,
+                    name: level.name,
+                    title: level.title
+                });
+            }
+
+            json.push(j);
+        }
+
+        return views.textView(JSON.stringify(json), 'application/json');
+    };
+
+    /**
+     * API to delete an award
+     * 
+     * @param {type} page
+     * @param {type} params
+     * @returns {undefined}
+     */
+    g._deleteAward = function (page, params) {
+        var awardId = Utils.safeInt(params.awardid);
+
+        transactionManager.runInTransaction(function () {
+            applications.userApp.recognitionService.deleteAward(awardId);
+        });
+
+        return page.jsonResult(true, 'Success');
     };
 })(this);
