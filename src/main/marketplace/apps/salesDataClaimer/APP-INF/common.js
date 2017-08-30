@@ -32,6 +32,8 @@ function searchClaims(page, status, user) {
                 'receipt',
                 'recordId',
                 'soldDate',
+                'soldBy',
+                'soldById',
                 'enteredDate',
                 'modifiedDate',
                 'amount',
