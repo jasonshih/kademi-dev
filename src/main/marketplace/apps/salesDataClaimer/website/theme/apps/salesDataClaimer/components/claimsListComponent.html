@@ -13,7 +13,7 @@
         </div>
         <div class="col-sm-9 text-right">
             <p class="btn-group btn-group-sm">
-                <button type="button" data-target="#modal-add-claim" data-toggle="modal" class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
+                <button type="button" #if ($page) data-target="#modal-add-claim" data-toggle="modal" #end class="btn btn-success btn-add-claim"><i class="fa fa-plus"></i> Add claim</button>
                 <button type="button" class="btn btn-danger btn-delete-claims"><i class="fa fa-times"></i> Delete</button>
             </p>
         </div>
