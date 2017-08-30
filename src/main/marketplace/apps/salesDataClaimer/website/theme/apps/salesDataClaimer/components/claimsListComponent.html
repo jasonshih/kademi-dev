@@ -1,5 +1,5 @@
 #set($app = $applications.salesDataClaimer )
-#set($searchResult = $app.call('getClaims', $page, $request.params))
+#set($searchResult = $app.call('getOwnClaims', $page, $request.params))
 
 <div class="claims-list-component">
     <div class="row">
@@ -226,3 +226,5 @@
         </div>
     </div>
 </div>
+
+

@@ -77,8 +77,12 @@ function changeClaimsStatus(status, page, params, callback) {
                 if (claim !== null) {
                     claim.jsonObject.status = status;
                     claim.save();
+
+                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
+                    var custProfileBean = enteredUser.extProfileBean;
                     
-                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
+//                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
+
                 }
             })(ids[i]);
         }
@@ -87,6 +91,7 @@ function changeClaimsStatus(status, page, params, callback) {
             callback(result);
         }
     } catch (e) {
+        log.error('Error in ' + action + ': ' + e);
         result.status = false;
         result.messages = ['Error in ' + action + ': ' + e];
     }
@@ -121,13 +126,15 @@ function approveClaims(page, params) {
                         };
                         
                         var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
+                        var custProfileBean = enteredUser.extProfileBean;
                         applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
-                        
-                        eventManager.goalAchieved('claimSubmittedGoal', {'claim': id});
+
+                        eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                     }
                 })(ids[i]);
             }
         } catch (e) {
+            log.error('Error in approving: ' + e);
             result.status = false;
             result.messages = ['Error in approving: ' + e];
         }

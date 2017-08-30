@@ -38,8 +38,8 @@ controllerMappings
     .enabled(true)
     .build();
 
-function getClaims(page, params) {
-    log.info('getClaims > page={}, params={}', page, params);
+function getOwnClaims(page, params) {
+    log.info('getOwnClaims > page={}, params={}', page, params);
     
     if (!params.claimId) {
         var currentUser = securityManager.getCurrentUser();
