@@ -1,6 +1,6 @@
 <controllers onAppEnabled="initApp">
     <!-- Common files -->
-    <source>/APP-INF/common/Utils.js</source>
+    <source>/APP-INF/common/utils.js</source>
     <source>/APP-INF/common/common.js</source>
     <source>/APP-INF/common/config.js</source>
    
