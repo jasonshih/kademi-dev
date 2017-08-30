@@ -1,0 +1,14 @@
+#table-claims-body tr td {
+    vertical-align: middle;
+}
+
+.claim-receipt {
+    margin: 0;
+}
+
+.claim-receipt span {
+    display: block;
+    padding-bottom: 100%;
+    background: no-repeat 50% 50%;
+    background-size: cover;
+}

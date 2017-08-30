@@ -49,7 +49,7 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/salesDataClaimer/claimsList.css"
+                "path": "/theme/apps/salesDataClaimer/salesDataClaimer.css"
             }
         },
         {

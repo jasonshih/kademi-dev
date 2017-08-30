@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>View Claims</title>
-        <link rel="stylesheet" type="text/css" href="/theme/apps/salesDataClaimer/viewClaims.css" />
+        <link rel="stylesheet" type="text/css" href="/theme/apps/salesDataClaimer/salesDataClaimer.css" />
         <script type="text/javascript" src="/static/uri/1.15.1/URI.js"></script>
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/viewClaims.js"></script>
     </head>
@@ -44,7 +44,7 @@
                 <thead>
                     <tr>
                         <th width="50"></th>
-                        <th width="200">Receipt</th>
+                        <th width="100">Receipt</th>
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Entered By</th>
@@ -69,8 +69,8 @@
                                 </td>
                                 <td>
                                     #if ($hit.fields.receipt.value)
-                                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail">
-                                            <img src="$hit.fields.receipt.value" class="img-responsive" />
+                                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
+                                            <span style="background-image: url('$hit.fields.receipt.value');"></span>
                                         </a>
                                     #end
                                 </td>

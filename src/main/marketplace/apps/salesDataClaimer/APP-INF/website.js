@@ -9,7 +9,6 @@ controllerMappings
     .websiteController()
     .path('/salesDataClaims/')
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
-    .addMethod('GET', 'getClaims')
     .addMethod('POST', 'createClaim', 'createClaim')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
     .postPriviledge('WRITE_CONTENT')
@@ -43,8 +42,8 @@ function getClaims(page, params) {
     log.info('getClaims > page={}, params={}', page, params);
     
     if (!params.claimId) {
-        var results = searchClaims(page, params.status);
-        page.attributes.searchResult = results;
+        var currentUser = securityManager.getCurrentUser();
+        return searchClaims(page, params.status, currentUser);
     }
 }
 
@@ -52,75 +51,6 @@ function searchProducts(page, params) {
     var q = params.q;
     var prods = applications.productsApp.searchProducts(q, null);
     return views.jsonObjectView(prods);
-}
-
-function searchClaims(page, status) {
-    try {
-        var currentUser = securityManager.getCurrentUser();
-        var queryJson = {
-            'stored_fields': [
-                'receipt',
-                'recordId',
-                'soldDate',
-                'enteredDate',
-                'modifiedDate',
-                'amount',
-                'status',
-                'productSku'
-            ],
-            'size': 10000,
-            'sort': [
-                {
-                    'modifiedDate': 'desc'
-                }
-            ],
-            'query': {
-                'bool': {
-                    'must': [
-                        {'type': {'value': TYPE_RECORD}},
-                        {'term': {'soldBy': currentUser.name}}
-                    ]
-                }
-            }
-        };
-        
-        if (status) {
-            queryJson.query.bool.must.push({
-                'term': {'status': +status}
-            });
-        }
-        
-        var searchResult = doDBSearch(page, queryJson);
-        
-        page.attributes.searchResult = searchResult;
-    } catch (e) {
-        log.error('ERROR in getClaims: ' + e);
-    }
-}
-
-function getClaim(page, params) {
-    log.info('getClaim > page={}, params={}', page, params);
-    
-    var result = {
-        status: true
-    };
-    
-    try {
-        var db = getDB(page);
-        var claim = db.child(page.attributes.claimId);
-        
-        if (claim !== null) {
-            result.data = claim.jsonObject + '';
-        } else {
-            result.status = false;
-            result.messages = ['This claim does not exist'];
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error when getting claim: ' + e];
-    }
-    
-    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function createClaim(page, params, files) {
@@ -250,46 +180,4 @@ function updateClaim(page, params, files) {
     }
     
     return views.jsonObjectView(JSON.stringify(result));
-}
-
-function deleteClaims(page, params) {
-    log.info('deleteClaims > page={}, params={}', page, params);
-    
-    var result = {
-        status: true
-    };
-    
-    try {
-        var db = getDB(page);
-        var ids = params.ids;
-        ids = ids.split(',');
-        
-        for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
-                
-                if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
-                    claim.delete();
-                }
-            })(ids[i]);
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error in deleting: ' + e];
-    }
-    
-    return views.jsonObjectView(JSON.stringify(result));
-}
-
-function getSalesDataExtreFields(page) {
-    var settings = getAppSettings(page);
-    var selectedDataSeries = settings.get('dataSeries');
-    
-    var extraFields = [];
-    
-    if (isNotNull(selectedDataSeries)) {
-        extraFields = applications.salesData.getDataSeriesExtraFields(selectedDataSeries);
-    }
-    
-    return extraFields;
 }
