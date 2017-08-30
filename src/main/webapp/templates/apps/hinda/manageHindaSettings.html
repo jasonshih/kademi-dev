@@ -67,6 +67,20 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="country">Country</label>
+                    <div class="col-sm-9">
+                        #if ($page.country)
+                            <input type="text" class="form-control disabled" disabled value="$page.country" />
+                            <i>You can configure the country from the organisation page.</i>
+                        #else
+                        <div class="alert alert-danger">
+                            Please configure the country in the organisation page.
+                        </div>
+                        #end
+                    </div>
+                </div>
+
                 <p class="pull-right">
                     <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
                 </p>
