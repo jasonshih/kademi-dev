@@ -30,6 +30,8 @@
             .addMethod('POST', '_updateLevel', 'updateLevel')
             .addMethod('POST', '_uploadLevelImage', 'uploadLevelImage')
             .addMethod('POST', '_removeLevelImage', 'removeLevelImage')
+            /* Process Levels */
+            .addMethod('POST', '_processLevels', 'processLevels')
             /* Build the controller */
             .build();
 
@@ -60,14 +62,8 @@
             newParams.remove('dataSeries');
             newParams.remove('pointsBucket');
 
-            var allPointsBuckets = applications.rewards.allPointsBuckets;
-            for (var i = 0; i < allPointsBuckets.size(); i++) {
-                var pb = allPointsBuckets.get(i);
-                if (pb.name == pointsBucketName) {
-                    newParams.put('pointsBucket', pb);
-                    break;
-                }
-            }
+            var pointsBuckets = applications.rewards.getPointsBucket(pointsBucketName);
+            newParams.put('pointsBucket', pointsBuckets);
         } else {
             newParams.remove('dataSeries');
             newParams.remove('pointsBucket');
@@ -404,6 +400,32 @@
         });
 
         return page.jsonResult(true, 'Success');
+    };
+
+    g._processLevels = function (page, params) {
+        var topic = page.attributes.topicId;
+
+        if (Utils.isStringBlank(topic.dataSeries) && Utils.isStringBlank(topic.pointsBucket)) {
+            return page.jsonResult(false, 'No Data Series or Points Bucket configured');
+        }
+
+        if (Utils.isStringNotBlank(topic.dataSeries)) {
+            var sds = applications.salesData.getSalesDataSeries(topic.dataSeries);
+
+            if (Utils.isNull(sds)) {
+                return page.jsonResult(false, 'Unable to locate the Data Series: ' + topic.dataSeries);
+            }
+
+            g._processSalesDataForAllUsers(page, sds);
+        } else if (Utils.isStringNotBlank(topic.pointsBucket)) {
+            var pointsBuckets = applications.rewards.getPointsBucket(topic.pointsBucket);
+
+            if (Utils.isNull(pointsBuckets)) {
+                return page.jsonResult(false, 'Unable to locate the Points Bucket: ' + topic.dataSeries);
+            }
+
+            g._processPointsBucketForAllUsers(page, pointsBuckets);
+        }
     };
 
     /**
