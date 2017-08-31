@@ -127,46 +127,15 @@
             var quantity = 1;
 
             flog('add item', href);
-            getOrderForm(href, function (orderForm) {
+            getEcomOrderForm(href, function (orderForm) {
                 if (!orderForm) {
                     doAddToCart(href, quantity);
                 } else {
-                    showOrderForm(href, orderForm);
+                    showEcomOrderForm(href, orderForm);
                 }
             });
 
         });
-    }
-
-    function getOrderForm(href, callback) {
-        var link = href;
-        if (!link.contains("?")) {
-            link += "?"
-        } else {
-            link += "&";
-        }
-        link += "getOrderForm";
-        $.ajax({
-            type: 'GET',
-            url: link,
-            dataType: 'json',
-            success: function (data) {
-                flog("getorderform response", data);
-                if (data.status) {
-                    callback(data.data);
-                } else {
-                    flog("No order form");
-                    callback(null);
-                }
-            },
-            error: function (resp) {
-                Msg.error('An error occured checking for an order form');
-            }
-        });
-    }
-
-    function showOrderForm(href, orderForm) {
-        createModal("orderForm", href, "Enter fields", orderForm);
     }
 
     $(document).ready(function () {
