@@ -1,3 +1,7 @@
+#if (!$position)
+    #set ($position = 'top')
+#end
+
 #if ($page)
     #set ($alerts = $applications.alerts.getMessages($rootFolder, $user, $position))
 
