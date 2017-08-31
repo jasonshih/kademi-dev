@@ -194,7 +194,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" data-min-date="now" data-format="DD/MM/YYYY HH:mm" placeholder="Start date" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control" />
+                                                    <input type="text" id="auctionStartDate" name="auctionStartDate" placeholder="Start date" value="$formatter.formatDateTime($page.auctionStartDate, $page.organisation.timezone)" class="form-control required" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
@@ -207,7 +207,7 @@
                                         <div class="form-group">
                                             <div class="col-sm-5">
                                                 <div class="input-group">
-                                                    <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" data-format="DD/MM/YYYY HH:mm" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control" />
+                                                    <input type="text" id="auctionEndDate" name="auctionEndDate" placeholder="End date" value="$formatter.formatDateTime($page.auctionEndDate, $page.organisation.timezone)" class="form-control required" />
                                                     <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                                                 </div>
                                             </div>
@@ -263,7 +263,7 @@
                                     <td>
                                         <div class="form-group editor-wrapper">
                                             <div class="col-sm-12">
-                                                <textarea cols="120" name="auctionDescription" rows="10" class="htmleditor toolbar-Lite" placeholder="">$!page.description</textarea>
+                                                <textarea cols="120" name="auctionDescription" rows="10" class="htmleditor toolbar-Lite required" placeholder="">$!page.description</textarea>
                                             </div>
                                         </div>
                                     </td>
