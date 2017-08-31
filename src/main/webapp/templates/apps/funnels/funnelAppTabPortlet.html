@@ -6,6 +6,7 @@
 <div class="panel panel-default">
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
+
         #if( $funnel )
             <a class="pull-left" href="/funnels/$funnel.name">
                 #if( $funnel.title )
