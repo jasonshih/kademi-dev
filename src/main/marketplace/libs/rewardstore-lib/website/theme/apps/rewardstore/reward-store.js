@@ -144,5 +144,7 @@
         //showModal(myPromptModal);
     }
 
+    window.showOrderForm = showOrderForm;
+    window.getOrderForm = getOrderForm;
     window.createRewardOrderFormModal = createRewardOrderFormModal;
 })(jQuery)
