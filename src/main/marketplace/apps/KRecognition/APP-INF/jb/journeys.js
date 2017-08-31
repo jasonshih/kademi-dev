@@ -55,15 +55,23 @@
 
         var topic = applications.userApp.recognitionService.getTopic(topicId);
         var badge = null;
-        if (Utils.isNotNull(topic)) {
-            badge = topic.getBadge(badgeId);
-        }
 
-        if (Utils.isNotNull(badge)) {
-            // We have a configured badge so make sure it matches
-            return Utils.safeInt(eventParams.badgeid) === badgeId;
+        if (Utils.isNotNull(topic)) {
+            // We found a configured topic, so it MUST match
+            var topicMatches = Utils.safeInt(eventParams.topicId) === topicId;
+            var badgeMatches = false;
+
+            badge = topic.getBadge(badgeId);
+
+            if (Utils.isNotNull(badge)) {
+                // We found a configured badge, so it MUST match
+                badgeMatches = Utils.safeInt(eventParams.badgeid) === badgeId;
+            } else {
+                badgeMatches = true;
+            }
+
+            return topicMatches && badgeMatches;
         } else {
-            // No badge has been configured so just return true
             return true;
         }
 
@@ -82,6 +90,31 @@
      * @returns {undefined}
      */
     g._onLevelAchievedGoalEnter = function (rf, lead, f, eventParams, customNextNodes, customSettings, event) {
+        var topicId = Utils.safeInt(customSettings.topic);
+        var levelId = Utils.safeInt(customSettings.level);
 
+        var topic = applications.userApp.recognitionService.getTopic(topicId);
+        var level = null;
+
+        if (Utils.isNotNull(topic)) {
+            // We found a configured topic, so it MUST match
+            var topicMatches = Utils.safeInt(eventParams.topicId) === topicId;
+            var levelMatches = false;
+
+            level = topic.getLevel(levelId);
+
+            if (Utils.isNotNull(level)) {
+                // We found a configured badge, so it MUST match
+                levelMatches = Utils.safeInt(eventParams.levelid) === levelId;
+            } else {
+                levelMatches = true;
+            }
+
+            return topicMatches && levelMatches;
+        } else {
+            return true;
+        }
+
+        return false;
     };
 })(this);
