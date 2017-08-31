@@ -73,7 +73,7 @@ function getOrderForm(href, callback) {
     $.ajax({
         type: 'GET',
         url: link,
-        datatype: 'json',
+        dataType: 'json',
         success: function (data) {
             flog("getorderform response", data);
             if (data.status) {
