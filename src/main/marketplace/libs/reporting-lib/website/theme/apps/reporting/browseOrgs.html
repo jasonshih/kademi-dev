@@ -1,7 +1,7 @@
 #if ($request.params.groupNames)
-#set ($groups = $request.params.groupNames)
+    #set ($groups = $request.params.groupNames)
 #else
-#set ($groups = '')
+    #set ($groups = '')
 #end
 
 #set ($groups = $formatter.split($groups))
@@ -10,33 +10,37 @@
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
 #if( $orgCookie )
-#set( $selectedOrgId = $orgCookie.value )
+    #set( $selectedOrgId = $orgCookie.value )
 #end
 
 #if( $selectedOrgId == $rootFolder.orgData.orgId )
-#set ($selectedOrg = $rootFolder.orgData )
+    #set ($selectedOrg = $rootFolder.orgData )
 #else
-#set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
+    #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
-#set($beans = $applications.Reporting.getSelectedUserOrgs(20, $rootFolder.orgData, true, $groups))
+#set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, $groups))
 #if($beans.empty)
-<li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
+    <li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
 #else
-#foreach($b in $beans)
-#genList($b)
-#end
+    #foreach($b in $beans)
+        #genList($b)
+    #end
 #end
 
 #macro(genList $b $padding)
-<li #if($padding && $padding > 0)style="padding-left: ${padding}px"#end><a data-orgId="$b.orgId" href="#"><i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> $b.title</a></li>
-#if($b.childOrgs && !$b.childOrgs.empty)
-#if(!$padding)
-#set($padding = 0)
-#end
-#set($p = $padding + 10)
-#foreach($bc in $b.childOrgs)
-#genList($bc $p)
-#end
-#end
+    <li #if($padding && $padding > 0)style="padding-left: ${padding}px"#end>
+        <a data-orgId="$b.orgId" href="#">
+            <i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> $b.title
+        </a>
+    </li>
+    #if($b.childOrgs && !$b.childOrgs.empty)
+        #if(!$padding)
+            #set($padding = 0)
+        #end
+        #set($p = $padding + 10)
+        #foreach($bc in $b.childOrgs)
+            #genList($bc $p)
+        #end
+    #end
 #end
