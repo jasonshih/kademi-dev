@@ -1,6 +1,6 @@
-JBNodes['promotionEntryGoal'] = {
+JBNodes['dataSeriesValueGoal'] = {
     icon: 'fa fa-puzzle-piece',
-    title: 'Promotion entry',
+    title: 'Data Series Value',
     type: JB_NODE_TYPE.GOAL,
     ports: {
         timeoutNode: {
@@ -10,7 +10,7 @@ JBNodes['promotionEntryGoal'] = {
         },
         nextNodeId: {
             label: 'then',
-            title: 'When entered',
+            title: 'When achieved',
             maxConnections: 1
         }
     },
@@ -21,54 +21,42 @@ JBNodes['promotionEntryGoal'] = {
         form.append(
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Promotion</label>' +
-                '        <select class="form-control promoName"></select>' +
+                '        <label>Date series name</label>' +
+                '        <select class="form-control dataSeriesName"></select>' +
                 '    </div>' +
                 '</div>' +
                 '<div class="form-group">' +
                 '    <div class="col-md-12">' +
-                '        <label>Status</label>' +
-                '        <select class="form-control promoStatus">' +
-                '            <option value="">All</option>' +
-                '            <option value="PENDING">Pending</option>' +
-                '            <option value="ACCEPTED">Accepted</option>' +
-                '            <option value="REJECTED">Rejected</option>' +
-                '        </select>' +
+                '        <label>Amount</label>' +
+                '        <input type="text" class="form-control amount" value="" />' +
                 '    </div>' +
-                '</div>' +
-                JBApp.standardGoalSettingControls
+                '</div>'
                 );
 
         $.ajax({
-            url: '/rewards/_DAV/PROPFIND?fields=name,milton:title',
+            url: '/sales/_DAV/PROPFIND?fields=name',
             type: 'get',
             dataType: 'json',
             success: function (resp) {
-                var optionsStr = '<option value="">[No promotion selected]</option>';
+                var optionsStr = '<option value="">[No data series selected]</option>';
                 for (var i = 1; i < resp.length; i++) {
-                    if (resp[i].name != "points") {
-                        console.log("name", resp[i].name);
-                        optionsStr += '<option value="' + resp[i].name + '">' + resp[i].title + '</option>';
-                    }
+                    optionsStr += '<option value="' + resp[i].name + '">' + resp[i].name + '</option>';
                 }
 
-                form.find('.promoName').html(optionsStr);
+                form.find('.dataSeriesName').html(optionsStr);
             }
         });
 
-        JBApp.initStandardGoalSettingControls(form);
+        //JBApp.initStandardGoalSettingControls(form);
 
         form.forms({
             allowPostForm: false,
             onValid: function () {
-                var promoName = form.find('.promoName').val();
-                JBApp.currentSettingNode.promoName = promoName || null;
+                var dataSeriesName = form.find('.dataSeriesName').val();
+                var amount = form.find('.amount').val();
 
-                var promoStatus = form.find('.promoStatus').val();
-                JBApp.currentSettingNode.promoStatus = promoStatus || null;
-
-                JBApp.saveStandardGoalSetting(form);
-
+                JBApp.currentSettingNode.dataSeriesName = dataSeriesName || null;
+                JBApp.currentSettingNode.amount = amount || null;
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -76,9 +64,8 @@ JBNodes['promotionEntryGoal'] = {
     },
 
     showSettingForm: function (form, node) {
-        JBApp.showStandardGoalSettingControls(form, node);
-        form.find('.promoName').val(node.promoName !== null ? node.promoName : '');
-        form.find('.promoStatus').val(node.promoStatus !== null ? node.promoStatus : '');
+        form.find('.dataSeriesName').val(node.dataSeriesName !== null ? node.dataSeriesName : '');
+        form.find('.amount').val(node.amount !== null ? node.amount : '');
         JBApp.showSettingPanel(node);
     }
 };
