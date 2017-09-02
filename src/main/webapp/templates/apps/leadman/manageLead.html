@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Manage Lead</title>
+        <script type="text/javascript" src="/static/typeahead/0.11.1/typeahead.bundle.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap-tagsinput.min.js"></script>
         <script type="text/javascript" src="/static/bootstrap-tagsinput/0.6.1/bootstrap3-typeahead.min.js"></script>
         <script type="text/javascript" src="/static/dotdotdot/1.7.4/jquery.dotdotdot.min.js"></script>
@@ -223,7 +224,7 @@
 
                             </div>
                             <div class="col-sm-4">
-                                #if( $!page.currentGoalIsTask == false )
+                                #if( !$page.currentGoalIsTask && !$page.completed )
                                 <div class="timeline-panel">
                                     <div class="timeline-heading">
                                         #if( $page.timerDate )
@@ -234,14 +235,11 @@
                                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i>
                                             <span class="label label-warning">No current timer</span>
                                         </small>
-
-
                                         #end
-
                                         <h4 class="timeline-title">Waiting for <i class="fa fa-refresh"></i></h4>
                                     </div>
                                     <div class="timeline-body">
-                                        <p>$page.nodeTitle($page.currentGoal) </p>
+                                        <p>$!page.nodeTitle($page.currentGoal) </p>
                                         <br>
                                         <div class="btn-group">
                                             <button class="timer-btn-go btn btn-success" data-toggle="modal" data-target="#goNextNodeModal" title="Mark this goal as attained">
@@ -1127,12 +1125,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Complete goal - $page.nodeTitle( $page.currentGoal )</h4>
+                    <h4 class="modal-title">Complete goal - $!page.nodeTitle( $page.currentGoal )</h4>
                 </div>
                 <div class="modal-body">
                     <p class="lead">Please select the another goal in the journey you would like to progress to</p>
+
                     #foreach($nextNodeId in $page.nextNodeIds)
+                    #if ($nextNodeId)
                     <a class="btn btn-success timer-btn-go-next" href="$nextNodeId">$page.nodeTitle($nextNodeId)</a>
+                    #end
                     #end
                 </div>
 
@@ -1145,12 +1146,14 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Switch to another goal - $page.nodeTitle( $page.currentGoal )</h4>
+                    <h4 class="modal-title">Switch to another goal - $!page.nodeTitle( $page.currentGoal )</h4>
                 </div>
                 <div class="modal-body">
                     <p class="lead">Please select the another goal in the journey you would like to progress to</p>
                     #foreach($nextNode in $page.goals)
+                    #if ($nextNode)
                     <a class="btn btn-success timer-btn-go-next" href="$nextNode.nodeId">$page.nodeTitle($nextNode.nodeId)</a>
+                    #end
                     #end
                 </div>
 
@@ -1164,7 +1167,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Reschedule goal - $page.nodeTitle( $page.currentGoal )</h4>
+                    <h4 class="modal-title">Reschedule goal - $!page.nodeTitle( $page.currentGoal )</h4>
                 </div>
                 <div class="modal-body">
                     <p class="lead">Please select a new date and time for this goal</p>

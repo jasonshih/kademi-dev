@@ -159,50 +159,50 @@
                     <input type="hidden" name="soldById" value="$!userResource.userId" />
 
                     <div class="form-group">
-                        <label for="amount" class="control-label col-md-4">Amount</label>
+                        <label for="amount" class="control-label sr-only">Amount</label>
 
-                        <div class="col-md-8">
-                            <input type="number" id="amount" class="form-control required" name="amount" placeholder="Amount for this record" />
+                        <div class="col-sm-12">
+                            <input type="number" id="amount" class="form-control required" name="amount" placeholder="Sale amount" />
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="soldDate" class="control-label col-md-4">Date</label>
+                        <label for="soldDate" class="control-label sr-only">Date</label>
 
-                        <div class="col-md-8">
+                        <div class="col-sm-12">
                             <div class="input-group">
-                                <input type="text" name="soldDate" id="soldDate" placeholder="Period from" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
+                                <input type="text" name="soldDate" id="soldDate" placeholder="Purchase date" data-format="DD/MM/YYYY HH:mm" class="form-control date-time-picker required" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="productSku" class="control-label col-md-4">Product SKU</label>
+                        <label for="productSku" class="control-label sr-only">Product SKU</label>
 
-                        <div class="col-md-8">
-                            <input name="productSku" id="productSku" class="form-control" placeholder="ABC-123" value="">
+                        <div class="col-sm-12">
+                            <input name="productSku" id="productSku" class="form-control" placeholder="Product name" value="" />
                         </div>
                     </div>
 
                     #foreach($xf in $app.call("getSalesDataExtreFields", $page))
                     <div class="form-group">
-                        <label for="field_${xf.name}" class="control-label col-md-4">$formatter.firstNotNull($xf.title, $xf.name)</label>
+                        <label for="field_${xf.name}" class="control-label sr-only">$formatter.firstNotNull($xf.title, $xf.name)</label>
 
-                        <div class="col-md-8">
+                        <div class="col-sm-12">
                             $xf.html
                         </div>
                     </div>  
                     #end
 
                     <div class="form-group">
-                        <label class="control-label col-md-4">Receipt</label>
+                        <label class="control-label sr-only">Receipt</label>
 
-                        <div class="col-md-8">
+                        <div class="col-sm-12">
                             <p class="thumbnail">
                                 <img src="/static/images/photo_holder.png" class="img-responsive" />
                             </p>
-                            <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> Upload</button>
+                            <button type="button" class="btn btn-sm btn-info btn-upload-receipt"><i class="fa fa-file-picture-o"></i> Upload receipt</button>
                             <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
                             <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
                         </div>

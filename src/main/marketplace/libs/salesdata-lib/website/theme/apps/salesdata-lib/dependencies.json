@@ -81,6 +81,12 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/salesTable.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/salesdata/manageDataRecord.css"
