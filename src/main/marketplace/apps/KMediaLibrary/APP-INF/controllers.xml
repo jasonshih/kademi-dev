@@ -1,0 +1,18 @@
+<controllers onAppEnabled="initApp">
+    <!-- Common files -->
+    <source>/APP-INF/common/utils.js</source>
+    <source>/APP-INF/common/common.js</source>
+    <source>/APP-INF/common/config.js</source>
+    
+    <!-- DB Files -->
+    <source>/APP-INF/db/common.js</source>
+    <source>/APP-INF/db/config.js</source>
+    <source>/APP-INF/db/mappings.js</source>
+   
+    <!-- Admin Controllers -->
+    <source>/APP-INF/admin/manageMediaLibrary.js</source>
+    <source>/APP-INF/admin/manageMediaItem.js</source>
+
+    <!-- Menu Items -->
+    <menu parentId="menuContent" id="menuKMediaLibrary" text="Media Library" path="/mediaLibrary/" ordering="50"/>
+</controllers>
