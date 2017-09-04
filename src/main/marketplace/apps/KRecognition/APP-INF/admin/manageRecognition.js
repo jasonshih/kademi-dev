@@ -1,6 +1,7 @@
 /* global controllerMappings, views, transactionManager, applications, Utils */
 
 (function (g) {
+
     controllerMappings
             .adminController()
             .path('/recognition')
@@ -18,6 +19,27 @@
             .postPriviledge('WRITE_CONTENT')
             .enabled(true)
             .build();
+
+    controllerMappings.addEventListener('RecognitionEvent', true, "_onRecognitionAwarded");
+
+    g._onRecognitionAwarded = function (rf, event) {
+        var award = event.award;
+        var badge = award.recognition;
+        var profile = award.awardedTo.asProfile();
+
+        if (profile != null) {
+            log.info("_onRecognitionAwarded award ID={}", award.id);
+            var m = {
+                'awardid': Utils.safeString(award.id),
+                'createdDate': formatter.formatDateISO8601(award.createdDate),
+                'badgeid': Utils.safeString(badge.id),
+                'badgename': Utils.safeString(badge.name),
+                'badgetitle': Utils.safeString(badge.title)
+            };
+
+            eventManager.goalAchieved(g.BADGE_AWARDED_GOAL_NAME, profile, m);
+        }
+    }
 
     /**
      * API for creating a new topic

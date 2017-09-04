@@ -14,6 +14,9 @@
             .path('/recognition/(?<topicId>[^/]*)/')
             .addPathResolver('topicId', 'resolveTopicId')
             .defaultView(views.templateView('/theme/apps/KRecognition/manageTopic.html'))
+            /* Process Levels */
+            .addMethod('POST', '_processLevels', 'processLevels')
+    
             .addMethod('POST', '_updateTopic', 'saveDetails')
             .addMethod('DELETE', '_deleteTopic')
             /* Images */
@@ -30,8 +33,6 @@
             .addMethod('POST', '_updateLevel', 'updateLevel')
             .addMethod('POST', '_uploadLevelImage', 'uploadLevelImage')
             .addMethod('POST', '_removeLevelImage', 'removeLevelImage')
-            /* Process Levels */
-            .addMethod('POST', '_processLevels', 'processLevels')
             /* Build the controller */
             .build();
 
@@ -403,29 +404,17 @@
     };
 
     g._processLevels = function (page, params) {
+        log.info("processLevels {}", page.attributes.topicId);
         var topic = page.attributes.topicId;
 
         if (Utils.isStringBlank(topic.dataSeries) && Utils.isStringBlank(topic.pointsBucket)) {
             return page.jsonResult(false, 'No Data Series or Points Bucket configured');
         }
 
-        if (Utils.isStringNotBlank(topic.dataSeries)) {
-            var sds = applications.salesData.getSalesDataSeries(topic.dataSeries);
 
-            if (Utils.isNull(sds)) {
-                return page.jsonResult(false, 'Unable to locate the Data Series: ' + topic.dataSeries);
-            }
+        applications.userApp.recognitionService.scanLevels(topic);
+        return page.jsonResult(true, 'Done scan levels');
 
-            g._processSalesDataForAllUsers(page, sds);
-        } else if (Utils.isStringNotBlank(topic.pointsBucket)) {
-            var pointsBuckets = applications.rewards.getPointsBucket(topic.pointsBucket);
-
-            if (Utils.isNull(pointsBuckets)) {
-                return page.jsonResult(false, 'Unable to locate the Points Bucket: ' + topic.dataSeries);
-            }
-
-            g._processPointsBucketForAllUsers(page, pointsBuckets);
-        }
     };
 
     /**

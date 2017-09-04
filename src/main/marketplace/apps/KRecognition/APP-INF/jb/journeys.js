@@ -26,15 +26,6 @@
 
             var award = applications.userApp.recognitionService.createAward(badge, lead.profile);
 
-            var m = {
-                'awardid': Utils.safeString(award.id),
-                'createdDate': formatter.formatDateISO8601(award.createdDate),
-                'badgeid': Utils.safeString(badge.id),
-                'badgename': Utils.safeString(badge.name),
-                'badgetitle': Utils.safeString(badge.title)
-            };
-
-            eventManager.goalAchieved(g.BADGE_AWARDED_GOAL_NAME, lead.profile, m);
         }
     };
 

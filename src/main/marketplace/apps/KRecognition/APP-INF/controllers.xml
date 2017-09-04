@@ -18,5 +18,5 @@
     <source>/APP-INF/jb/journeys.js</source>
 
     <!-- Menu Items -->
-    <menu parentId="menuRoot" id="menuRecognition" text="Recognition" css="fa fa-id-card-o" path="/recognition/" ordering="50"/>
+    <menu parentId="menuRoot" id="menuRecognition" text="Recognition" css="fa fa-star-o" path="/recognition/" ordering="50"/>
 </controllers>
