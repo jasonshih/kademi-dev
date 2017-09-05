@@ -51,7 +51,7 @@
                         <th width="50"></th>
                         <th width="100">Receipt</th>
                         <th>Amount</th>
-                        <th>Date</th>
+                        <th>Sold Date</th>
                         <th>Entered By</th>
                         <th>SKU Entered</th>
                         <th width="90"></th>
@@ -62,43 +62,14 @@
                     #set ($searchResult = $page.attributes.searchResult)
                     #if ($searchResult.hits.hits.size() > 0)
                         #foreach($hit in $searchResult.hits.hits)
-                            <tr>
-                                <td class="fa-2x text-center">
-                                    #if ($hit.fields.status.value == 0)
-                                        <i class="fa fa-circle text-muted" title="New"></i>
-                                    #elseif ($hit.fields.status.value == 1)
-                                        <i class="fa fa-check-circle text-success" title="Approved"></i>
-                                    #elseif ($hit.fields.status.value == -1)
-                                        <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
-                                    #end
-                                </td>
-                                <td>
-                                    #if ($hit.fields.receipt.value)
-                                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
-                                            <span style="background-image: url('$hit.fields.receipt.value');"></span>
-                                        </a>
-                                    #end
-                                </td>
-                                <td>$hit.fields.amount.value</td>
-                                <td>
-                                    <abbr class="timeago" title="$hit.fields.soldDate.value">
-                                        $hit.fields.soldDate.value
-                                    </abbr>
-                                </td>
-                                <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
-                                <td>$!hit.fields.productSku.value</td>
-                                <td>
-                                    #if ($hit.fields.status.value == 0)
-                                        <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
-                                            <i class="fa fa-pencil-square-o"></i> Review
-                                        </button>
-                                    #else
-                                        <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View
-                                        </button>
-                                    #end
-                                </td>
-                                <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
-                            </tr>
+                            #if ($hit.fields.status.value == 0)
+                                #renderClaim($hit)
+                            #end
+                        #end
+                        #foreach($hit in $searchResult.hits.hits)
+                            #if ($hit.fields.status.value != 0)
+                                #renderClaim($hit)
+                            #end
                         #end
                     #else
                         <tr>
@@ -108,6 +79,46 @@
                 </tbody>
             </table>
         </div>
+        
+        #macro (renderClaim $hit)
+            <tr>
+                <td class="fa-2x text-center">
+                    #if ($hit.fields.status.value == 0)
+                        <i class="fa fa-circle text-muted" title="New"></i>
+                    #elseif ($hit.fields.status.value == 1)
+                        <i class="fa fa-check-circle text-success" title="Approved"></i>
+                    #elseif ($hit.fields.status.value == -1)
+                        <i class="fa fa-times-circle text-info text-danger" title="Rejected"></i>
+                    #end
+                </td>
+                <td>
+                    #if ($hit.fields.receipt.value)
+                        <a href="$hit.fields.receipt.value" target="_blank" class="thumbnail claim-receipt">
+                            <span style="background-image: url('$hit.fields.receipt.value');"></span>
+                        </a>
+                    #end
+                </td>
+                <td>$hit.fields.amount.value</td>
+                <td>
+                    <abbr class="timeago" title="$hit.fields.soldDate.value">
+                        $hit.fields.soldDate.value
+                    </abbr>
+                </td>
+                <td><a href="/manageUsers/$!hit.fields.soldById.value/">$!hit.fields.soldBy.value</a></td>
+                <td>$!hit.fields.productSku.value</td>
+                <td>
+                    #if ($hit.fields.status.value == 0)
+                        <button type="button" class="btn btn-sm btn-link btn-review-claim" data-id="$hit.fields.recordId.value">
+                            <i class="fa fa-pencil-square-o"></i> Review
+                        </button>
+                    #else
+                        <button type="button" class="btn btn-sm btn-link btn-view-claim" data-id="$hit.fields.recordId.value"><i class="fa fa-eye"></i> View
+                        </button>
+                    #end
+                </td>
+                <td><input type="checkbox" value="$hit.fields.recordId.value" /></td>
+            </tr>
+        #end
 
         <div class="modal fade" id="modal-review-claim">
             <div class="modal-dialog">

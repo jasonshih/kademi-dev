@@ -109,6 +109,7 @@ function createClaim(page, params, files) {
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
         eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
     } catch (e) {
+        log.error('Error when creating claim: ' + e);
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
     }
@@ -175,6 +176,7 @@ function updateClaim(page, params, files) {
             result.messages = ['This claim does not exist'];
         }
     } catch (e) {
+        log.error('Error when updating claim: ' + e);
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }

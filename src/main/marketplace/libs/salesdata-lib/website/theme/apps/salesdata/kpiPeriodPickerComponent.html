@@ -15,8 +15,8 @@
                 #end
                 <li class="$!defaultActive">
                     #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
-                    #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
-                    <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentStart</a>
+                    #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate))
+                    <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentEnd</a>
                 </li>
             </ul>
         </div>
@@ -32,8 +32,8 @@
         <ul class="dropdown-menu #if($pickerAlign == 'right') dropdown-menu-right #end">
             <li class="$!defaultActive">
                 #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
-                #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
-                <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentStart</a>
+                #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate))
+                <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentEnd</a>
             </li>
         </ul>
     </div>

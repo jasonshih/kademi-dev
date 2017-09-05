@@ -43,7 +43,7 @@ function searchClaims(page, status, user) {
             'size': 10000,
             'sort': [
                 {
-                    'modifiedDate': 'desc'
+                    'soldDate': 'desc'
                 }
             ],
             'query': {
