@@ -76,6 +76,9 @@
                     <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
                     <div class="panel-body">
                         <button data-toggle="modal" data-target="#modal-krecognition-create-level" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
+                        <button type="button" class="btn btn-success pull-right btn-generate-awards">
+                            <i class="fa fa-gift"></i> Generate awards
+                        </button>
                     </div>
                     <table class="table">
                         <colgroup>
@@ -89,6 +92,7 @@
                                 <th></th>
                                 <th>Title</th>
                                 <th>Amount</th>
+                                <th>Num awards</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -116,6 +120,7 @@
                                 </td>
                                 <td>$!level.title</td>
                                 <td>$!level.levelAmount</td>
+                                <td>$!level.numAwarded</td>
                                 <td>
                                     <div class="btn-group pull-right" role="group">
                                         <button type="button" class="btn btn-primary btn-krecognition-level-update"><i class="fa fa-pencil"></i></button>

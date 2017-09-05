@@ -21,21 +21,31 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaToken">Token</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control required" id="appName" name="hindaToken" value="$!page.token" />
+                        <input type="text" class="form-control required" id="hindaToken" name="hindaToken" value="$!page.token" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaUsername">Username</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control required simpleChars" id="appName" name="hindaUsername" value="$!page.username" />
+                        <input type="text" class="form-control required simpleChars" id="hindaUsername" name="hindaUsername" value="$!page.username" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaPassword">Password</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control required" id="appName" name="hindaPassword" value="$!page.password" />
+                        <input type="password" class="form-control required" id="hindaPassword" name="hindaPassword" value="$!page.password" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaUseProduction">Server</label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="hindaUseProduction" id="hindaUseProduction">
+                            $formatter.option('false', 'UAT', $page.useProduction)
+                            $formatter.option('true', 'Production', $page.useProduction)
+                        </select>
                     </div>
                 </div>
 
@@ -81,6 +91,24 @@
                     </div>
                 </div>  
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaRewardStore">Reward Store</label>
+                    <div class="col-sm-9">
+                        <select name="hindaRewardStore" class="form-control">
+                            <option value="" selected="selected">- None -</option>
+                            #foreach($store in $applications.rewardStore.stores)
+                                #if($store.name == $page.rewardStore)
+                                    <option value="$store.name" selected="selected">
+                                #else
+                                    <option value="$store.name">
+                                #end
+                                $store.title</option>
+                            #end
+                        </select>
+                        <i>All the products are going to be added automatically to this reward store.</i>
+                    </div>
+                </div>
+
                 <p class="pull-right">
                     <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
                 </p>
@@ -119,7 +147,7 @@
             </table>
         </div>
 
-        <script>
+        <script type="text/javascript">
             hindaApp();
         </script>
     </body>

@@ -373,6 +373,40 @@
         });
     }
 
+    function initGenerateLevelAwards() {
+        $('body').on('click', '.btn-generate-awards', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+
+            Kalert.confirm('You want to generate level awards for this topic?', 'Ok', function () {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        processLevels: true
+                    },
+                    success: function (resp) {
+                        Kalert.close();
+
+                        if (resp.status) {
+                            reloadLevels();
+                            Msg.success(resp.messages);
+                        } else {
+                            Msg.warning(resp.messages);
+                        }
+                    },
+                    error: function () {
+                        reloadBadges();
+                        Kalert.close();
+
+                        Msg.error('Oh No! Something went wrong!');
+                    }
+                });
+            });
+        });        
+    }
+
     function reloadLevels() {
         $('#krecognition-levels-body').reloadFragment({
             whenComplete: function () {
@@ -400,5 +434,6 @@
         initUpdateLevel();
         initLevelImageUpload();
         initLevelImageDelete();
+        initGenerateLevelAwards();
     });
 })(jQuery);
