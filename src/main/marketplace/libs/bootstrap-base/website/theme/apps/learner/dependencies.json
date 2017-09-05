@@ -2,11 +2,11 @@
     "appDependencies": [
         {
             "appId": "learner-lib",
-            "branch": "1.0.6"
+            "branch": "1.1.1"
         },
         {
             "appId": "forums",
-            "branch": "1.0.2"
+            "branch": "1.0.5"
         }
     ],
     "dependencies": [
