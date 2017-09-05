@@ -3,6 +3,10 @@ controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "ht
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event) {
     log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    if (!lead) {
+        return true;
+    }
+    
     var claimId = lead ? lead.getFieldValue(LEAD_CLAIM_ID) : null;
     
     if (isNotBlank(claimId)) {
@@ -20,6 +24,10 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
 controllerMappings.addGoalNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js", "checkProcessedGoal");
 function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event) {
     log.info('checkProcessedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
+    if (!lead) {
+        return true;
+    }
+    
     var claimId = lead ? lead.getFieldValue(LEAD_CLAIM_ID) : null;
     
     if (isNotBlank(claimId)) {
