@@ -232,10 +232,10 @@
                                     </li>
 
 
-                                    #foreach( $lang in $rootFolder.languages.entrySet() )
+                                    #foreach( $lang in $rootFolder.languages )
                                         <li>
-                                            <a href="$lang.key" class="select-lang">
-                                                <i class="fa fa-language"></i> &nbsp; $lang.value
+                                            <a href="$lang.code" class="select-lang">
+                                                <i class="fa fa-language"></i> &nbsp; $lang.title
                                             </a>
                                         </li>
                                     #end

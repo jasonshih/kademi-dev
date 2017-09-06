@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>Manage Translation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="manageTranslations.js">//</script>
+
+    </head>
+    <body>
+
+        <div id="translationTableContainer" class="panel-body">
+            <div class="row">
+                <form action="#" method="POST" class="form-horizontal updateTranslation">
+                    <div class="modal-body">
+                        <input type="hidden" name="updateTranslation" id="action" value="true"/>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="sourceType">Type</label>
+                            <div class="col-md-8">
+                                <input class="form-control required" type="text" value="$page.translation.sourceType" id="sourceType" name="sourceType" maxlength="30"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="langCode">Lang</label>
+                            <div class="col-md-8">
+                                <select name="langCode" class="form-control required">
+                                    #foreach( $lang in $rootFolder.languages )
+                                    #if( $lang.code == $page.translation.langCode ) 
+                                    <option value="$lang.code" selected="selected">
+                                        #else
+                                    <option value="$lang.code">
+                                        #end
+                                        $lang.title</option>
+                                    #end
+                                </select>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="sourceId">Source Id</label>
+                            <div class="col-md-8">
+                                <input class="form-control required" type="text" value="$page.translation.sourceId" id="sourceId" name="sourceId" maxlength="30"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="sourceField">Field</label>
+                            <div class="col-md-8">
+                                <input class="form-control required" type="text" value="$page.translation.sourceField" id="sourceField" name="sourceField" maxlength="30"  />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="translated">Translated</label>
+                            <div class="col-md-8">
+                                <input class="form-control required" type="text" value="$page.translation.translated" id="translated" name="translated" maxlength="30"  />
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="modal-footer">
+                        <a href="/translations" class="btn btn-sm btn-default" data-dismiss="modal">Back</a>
+
+                        <button class="btn btn-sm btn-primary" type="submit">Update</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <script>
+            initManageTranslation();
+        </script>
+    </body>
+</html>
