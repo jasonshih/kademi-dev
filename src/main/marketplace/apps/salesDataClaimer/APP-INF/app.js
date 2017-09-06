@@ -1,19 +1,19 @@
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
-function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event) {
+function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkSubmittedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
     if (!lead) {
         return true;
     }
     
-    var claimId = lead ? lead.getFieldValue(LEAD_CLAIM_ID) : null;
+    var claimId = attributes.get(LEAD_CLAIM_ID);
     
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
     } else {
-        lead.setFieldValue(LEAD_CLAIM_ID, eventParams.claim);
+        attributes.put(LEAD_CLAIM_ID, eventParams.claim);
         
         return true;
     }
@@ -22,19 +22,19 @@ function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNod
 }
 
 controllerMappings.addGoalNodeType("claimProcessedGoal", "salesDataClaimer/claimProcessedGoalNode.js", "checkProcessedGoal");
-function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event) {
+function checkProcessedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {
     log.info('checkProcessedGoal > lead={}, funnel={}, eventParams={}, customNextNodes={}, customSettings={}, event={}', lead, funnel, eventParams, customNextNodes, customSettings, event);
     if (!lead) {
         return true;
     }
     
-    var claimId = lead ? lead.getFieldValue(LEAD_CLAIM_ID) : null;
+    var claimId = attributes.get(LEAD_CLAIM_ID);
     
     if (isNotBlank(claimId)) {
         // Process only for this claim ID
         return safeString(eventParams.claim) === safeString(claimId);
     } else {
-        lead.setFieldValue(LEAD_CLAIM_ID, eventParams.claim);
+        attributes.put(LEAD_CLAIM_ID, eventParams.claim);
         
         return true;
     }
