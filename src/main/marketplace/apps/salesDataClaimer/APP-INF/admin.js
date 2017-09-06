@@ -134,7 +134,7 @@ function approveClaims(page, params) {
                 })(ids[i]);
             }
         } catch (e) {
-            log.error('Error in approving: ' + e);
+            log.error('Error in approving: ', e);
             result.status = false;
             result.messages = ['Error in approving: ' + e];
         }
