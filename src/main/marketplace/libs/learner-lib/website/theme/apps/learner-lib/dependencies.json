@@ -9,7 +9,7 @@
         {
             "css": {
                 "cssMedia": "print",
-                "path": "/templates/apps/learner/modulePagePrint.css"
+                "path": "/theme/apps/learner/modulePagePrint.css"
             }
         },
         {
@@ -87,7 +87,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/templates/apps/learner/jquery.module.js"
+                "path": "/theme/apps/learner/jquery.module.js"
             }
         },
         {
