@@ -1,4 +1,5 @@
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
+controllerMappings.addComponent("salesDataClaimer/components", "claimForm", "html", "Displays claim form", "Sales Data Claimer");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");
 function checkSubmittedGoal(rootFolder, lead, funnel, eventParams, customNextNodes, customSettings, event, attributes) {

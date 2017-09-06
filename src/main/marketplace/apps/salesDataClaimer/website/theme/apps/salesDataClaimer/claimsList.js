@@ -9,6 +9,13 @@
             initModalViewClaim();
             initClaimsTable();
         }
+        
+        var formNewClaim = $('.form-new-claim');
+        if (formNewClaim.length > 0) {
+            formNewClaim.each(function () {
+                initFormNewClaim($(this));
+            });
+        }
     });
     
     function initClaimsTable() {
@@ -181,84 +188,100 @@
         var modal = $('#modal-add-claim');
         var form = modal.find('.form-new-claim');
         
+        initFormNewClaim(form, modal);
+        
         modal.modal({
             show: false,
             backdrop: 'static'
         });
         
-        form.find('.date-time-picker').each(function () {
-            var input = $(this);
-            var format = input.attr('data-format') || 'DD/MM/YYYY';
-            
-            input.datetimepicker({
-                format: format
-            });
-        });
-        
-        form.find('[id^=field_]').each(function () {
-            $(this).addClass(this.id);
-        });
-        
-        var txtProductSku = form.find('[name=productSku]');
-        var productSearcher = new Bloodhound({
-            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
-            queryTokenizer: Bloodhound.tokenizers.whitespace,
-            remote: {
-                url: '/salesDataClaimsProducts/?q=%QUERY',
-                wildcard: '%QUERY'
-            }
-        });
-        
-        txtProductSku.typeahead({
-            highlight: true
-        }, {
-            display: 'value',
-            limit: 10,
-            source: productSearcher,
-            templates: {
-                empty: '<div class="empty-message" style="padding: 0 5px;">No products were <found></found></div>',
-                suggestion: function (data) {
-                    return '<div>' + data.value + '<span class="text-muted">(' + data.tokens[1] + ')</span>' + '</div>';
-                }
-            }
-        });
-        
-        form.forms({
-            onSuccess: function () {
-                reloadClaimsList(function () {
-                    Msg.success('New claim is created!');
-                    modal.modal('hide');
-                });
-            }
-        });
-        
-        var inputImage = form.find('[name=receiptImage]');
-        var thumbImg = form.find('.thumbnail img');
-        inputImage.on('change', function () {
-            var file = this.files[0];
-            var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
-            
-            form.find('.img-error').css('display', isImage ? 'none' : 'block');
-            
-            if (isImage) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    thumbImg.attr('src', e.target.result);
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        form.find('.btn-upload-receipt').on('click', function (e) {
-            e.preventDefault();
-            
-            inputImage.trigger('click');
-        });
-        
         modal.on('hidden.bs.modal', function () {
             form.find('input').not('[name=soldBy], [name=soldById]').val('');
-            thumbImg.attr('src', '/static/images/photo_holder.png');
+            form.find('.thumbnail img').attr('src', '/static/images/photo_holder.png');
         });
+    }
+    
+    function initFormNewClaim(form, modal) {
+        flog('initFormNewClaim', form, modal);
+        
+        if (!form.hasClass('initialized')) {
+            form.addClass('initialized');
+            
+            form.find('.date-time-picker').each(function () {
+                var input = $(this);
+                var format = input.attr('data-format') || 'DD/MM/YYYY';
+                
+                input.datetimepicker({
+                    format: format
+                });
+            });
+            
+            form.find('[id^=field_]').each(function () {
+                $(this).addClass(this.id);
+            });
+            
+            var txtProductSku = form.find('[name=productSku]');
+            var productSearcher = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/salesDataClaimsProducts/?q=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+            
+            txtProductSku.typeahead({
+                highlight: true
+            }, {
+                display: 'value',
+                limit: 10,
+                source: productSearcher,
+                templates: {
+                    empty: '<div class="empty-message" style="padding: 0 5px;">No products were <found></found></div>',
+                    suggestion: function (data) {
+                        return '<div>' + data.value + '<span class="text-muted">(' + data.tokens[1] + ')</span>' + '</div>';
+                    }
+                }
+            });
+            
+            var inputImage = form.find('[name=receiptImage]');
+            var thumbImg = form.find('.thumbnail img');
+            inputImage.on('change', function () {
+                var file = this.files[0];
+                var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
+                
+                form.find('.img-error').css('display', isImage ? 'none' : 'block');
+                
+                if (isImage) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        thumbImg.attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            form.find('.btn-upload-receipt').on('click', function (e) {
+                e.preventDefault();
+                
+                inputImage.trigger('click');
+            });
+            
+            form.forms({
+                onSuccess: function () {
+                    reloadClaimsList(function () {
+                        Msg.success('New claim is created!');
+                        
+                        if (modal) {
+                            modal.modal('hide');
+                        } else {
+                            form.find('input').not('[name=soldBy], [name=soldById]').val('');
+                            thumbImg.attr('src', '/static/images/photo_holder.png');
+                        }
+                    });
+                }
+            });
+        }
     }
     
     function reloadClaimsList(callback) {
