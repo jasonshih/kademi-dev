@@ -16,7 +16,7 @@
             .defaultView(views.templateView('/theme/apps/KRecognition/manageTopic.html'))
             /* Process Levels */
             .addMethod('POST', '_processLevels', 'processLevels')
-    
+
             .addMethod('POST', '_updateTopic', 'saveDetails')
             .addMethod('DELETE', '_deleteTopic')
             /* Images */
@@ -51,8 +51,7 @@
         // Check for dataSeries
         if (Utils.isStringNotBlank(newParams.dataSeries)) {
             var dataSeriesName = newParams.dataSeries;
-            newParams.remove('dataSeries');
-            newParams.remove('pointsBucket');
+            newParams.put('pointsBucket', null);
 
             var sds = applications.salesData.getSalesDataSeries(dataSeriesName);
             newParams.put('dataSeries', sds);
@@ -60,14 +59,13 @@
         // Check for pointsBucket
         else if (Utils.isStringNotBlank(newParams.pointsBucket)) {
             var pointsBucketName = newParams.pointsBucket;
-            newParams.remove('dataSeries');
-            newParams.remove('pointsBucket');
+            newParams.put('dataSeries', null);
 
             var pointsBuckets = applications.rewards.getPointsBucket(pointsBucketName);
             newParams.put('pointsBucket', pointsBuckets);
         } else {
-            newParams.remove('dataSeries');
-            newParams.remove('pointsBucket');
+            newParams.put('dataSeries', null);
+            newParams.put('pointsBucket', null);
         }
 
         transactionManager.runInTransaction(function () {
