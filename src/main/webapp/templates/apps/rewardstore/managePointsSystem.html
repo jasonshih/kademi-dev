@@ -92,9 +92,23 @@
                                                     $formatter.option("", "[Any]", $page.pointsOrgType)
                                                     #foreach($orgType in $page.orgTypes)
                                                     $formatter.option($orgType.name, $orgType.displayName, $page.pointsOrgType)
-                                                #end
+                                                    #end
                                                 </select>
                                                 <i>You can <a href="/orgTypes/">manage organisation types here</a></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Auto Reconcile</td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="col-sm-4">
+                                                <select name="autoReconcile" class="form-control">
+                                                    $formatter.option("false", "Disabled", $page.autoReconcile)
+                                                    $formatter.option("true", "Enabled", $page.autoReconcile)
+                                                </select>
+                                                <small>if enabled, debits will be linked to points</small>
                                             </div>
                                         </div>
                                     </td>
@@ -219,34 +233,34 @@
                             </thead>
                             <tbody id="tablePointsBody" class="pagination-results">
                                 #foreach($points in $page.paginator.records)
-                                    <tr>
-                                        <td>$points.numPoints</td>
-                                        <td>$formatter.formatDateTime($points.issuedDate)</td>
-                                        <td>$formatter.formatDateTime($points.expiryDate)</td>
-                                        <td>
-                                            #if( $points.issuedTo )
-                                                #if( $points.issuedTo.asProfile() )
-                                                    <a href="/manageUsers/$points.issuedTo.id">$points.issuedTo.formattedName</a>
-                                                #else
-                                                    <a href="/organisations/$points.issuedTo.id/edit">$points.issuedTo.formattedName</a>
-                                                #end
-                                            #else
-                                                $points.points.issuedTo.formattedName
-                                            #end
-                                        </td>
-                                        <td>$!points.reason</td>
-                                        <td>
-                                            #if( $points.expired )
-                                                <span class="label label-warning">Expired</span>
-                                            #elseif( $points.completelyUsed )
-                                                <span class="label label-info">Used</span>
-                                            #else
-                                                <span class="label label-success">Active</span>
-                                            #end
+                                <tr>
+                                    <td>$points.numPoints</td>
+                                    <td>$formatter.formatDateTime($points.issuedDate)</td>
+                                    <td>$formatter.formatDateTime($points.expiryDate)</td>
+                                    <td>
+                                        #if( $points.issuedTo )
+                                        #if( $points.issuedTo.asProfile() )
+                                        <a href="/manageUsers/$points.issuedTo.id">$points.issuedTo.formattedName</a>
+                                        #else
+                                        <a href="/organisations/$points.issuedTo.id/edit">$points.issuedTo.formattedName</a>
+                                        #end
+                                        #else
+                                        $points.points.issuedTo.formattedName
+                                        #end
+                                    </td>
+                                    <td>$!points.reason</td>
+                                    <td>
+                                        #if( $points.expired )
+                                        <span class="label label-warning">Expired</span>
+                                        #elseif( $points.completelyUsed )
+                                        <span class="label label-info">Used</span>
+                                        #else
+                                        <span class="label label-success">Active</span>
+                                        #end
 
-                                        </td>
-                                        <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
-                                    </tr>
+                                    </td>
+                                    <td><input type="checkbox" name="toRemoveId" value="$points.id" /></td>
+                                </tr>
                                 #end
                             </tbody>
                             <tfoot id="pointsFooter">
@@ -305,31 +319,31 @@
                                 <tbody id="debitsTableBody" class="pagination-results">
                                     #set( $paginator = $formatter.paginator().pageSize(10).totalRecords($page.debitPointsCount).skipToStart(false))
                                     #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
-                                        <tr>
-                                            <td>$debit.numPoints</td>
-                                            <td>$formatter.formatDateTime($debit.issuedDate)</td>
-                                            <td>
-                                                #if( $debit.issuedTo )
-                                                    #if( $debit.issuedTo.asProfile() )
-                                                        <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
-                                                    #else
-                                                        <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
-                                                    #end
-                                                #else
-                                                    $debit.points.issuedTo.formattedName
-                                                #end
-                                            </td>
-                                            <td>$!debit.reason</td>
-                                            <td>
-                                                #if( $debit.points )
-                                                    <span class="fa fa-check-circle fa-2x text-success"></span>
-                                                    $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
-                                                #else
-                                                    <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
-                                                #end
-                                            </td>
-                                            <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
-                                        </tr>
+                                    <tr>
+                                        <td>$debit.numPoints</td>
+                                        <td>$formatter.formatDateTime($debit.issuedDate)</td>
+                                        <td>
+                                            #if( $debit.issuedTo )
+                                            #if( $debit.issuedTo.asProfile() )
+                                            <a href="/manageUsers/$debit.issuedTo.id">$debit.issuedTo.formattedName</a>
+                                            #else
+                                            <a href="/organisations/$debit.issuedTo.id/edit">$debit.issuedTo.formattedName</a>
+                                            #end
+                                            #else
+                                            $debit.points.issuedTo.formattedName
+                                            #end
+                                        </td>
+                                        <td>$!debit.reason</td>
+                                        <td>
+                                            #if( $debit.points )
+                                            <span class="fa fa-check-circle fa-2x text-success"></span>
+                                            $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
+                                            #else
+                                            <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
+                                            #end
+                                        </td>
+                                        <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
+                                    </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -367,22 +381,22 @@
                                     #set( $lbStartDate = $formatter.toDate( $request.params.lbStartDate ) )
                                     #set( $lbFinishDate = $formatter.toDate( $request.params.lbFinishDate ) )
                                     #if(!$lbFinishDate)
-                                        #set( $lbFinishDate = $formatter.now )
+                                    #set( $lbFinishDate = $formatter.now )
                                     #end
                                     #set( $lbLimit = $formatter.toInteger($request.params.lbLimit, true) )
                                     #if(!$lbLimit)
-                                        #set( $lbLimit = 20 )
+                                    #set( $lbLimit = 20 )
                                     #end
                                     #set($myPointsInfo = $page.myPointsInfo($lbLimit, $lbStartDate, $lbFinishDate))
                                     $myPointsInfo.setExtendedProfiles(true)
                                     #foreach($point in $myPointsInfo.allMemberPoints)
-                                        <tr>
-                                            <td>$foreach.count</td>
-                                            <td>
-                                                <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
-                                            </td>
-                                            <td>$point.numPoints</td>
-                                        </tr>
+                                    <tr>
+                                        <td>$foreach.count</td>
+                                        <td>
+                                            <a href="/manageUsers/$point.memnber.id">$point.member.formattedName()</a>
+                                        </td>
+                                        <td>$point.numPoints</td>
+                                    </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -403,12 +417,12 @@
                     <div class="modal-body">
                         <div class="ListItem">
                             #foreach($g in $page.allGroups)
-                                <div class="panel panel-default">
-                                    <div class="panel-body membership">
-                                        <label for="$g.name">$g.name</label>
-                                        <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
-                                    </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body membership">
+                                    <label for="$g.name">$g.name</label>
+                                    <label class="pull-right" data-groupType="$!g.groupType">$formatter.checkbox($g.name, $page.isSelected($g))</label>
                                 </div>
+                            </div>
                             #end
                         </div>
                     </div>
@@ -416,23 +430,23 @@
             </div>
         </div>
         #macro(genGroup $group)
-            #set($gc = "")
-            #set($gIcon = "")
-            #if( $group.groupType == "P" || !$group.groupType)
-                #set($gc = "alert alert-success")
-                #set($gIcon = "clip-users")
-            #elseif( $group.groupType == "S" )
-                #set($gc = "alert alert-info")
-                #set($gIcon = "fa fa-trophy")
-            #elseif( $group.groupType == "M" )
-                #set($gc = "alert alert-info")
-                #set($gIcon = "fa fa-envelope")
-            #end
-            <span id="group_$group.name" class="group-list $gc">
-                <i class="$gIcon"></i>
-                <span class="block-name" title="$group.name">$group.name</span>
-                <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
-            </span>
+        #set($gc = "")
+        #set($gIcon = "")
+        #if( $group.groupType == "P" || !$group.groupType)
+        #set($gc = "alert alert-success")
+        #set($gIcon = "clip-users")
+        #elseif( $group.groupType == "S" )
+        #set($gc = "alert alert-info")
+        #set($gIcon = "fa fa-trophy")
+        #elseif( $group.groupType == "M" )
+        #set($gc = "alert alert-info")
+        #set($gIcon = "fa fa-envelope")
+        #end
+        <span id="group_$group.name" class="group-list $gc">
+            <i class="$gIcon"></i>
+            <span class="block-name" title="$group.name">$group.name</span>
+            <a href="$group.name" class="btn btn-xs btn-danger btn-remove-group" title="Delete access for group $group.name"><i href="$group.name" class="fa fa-times"></i></a>
+        </span>
         #end
 
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
