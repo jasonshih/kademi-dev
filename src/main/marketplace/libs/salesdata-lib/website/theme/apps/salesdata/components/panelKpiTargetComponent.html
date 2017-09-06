@@ -21,10 +21,41 @@
     #end
 #end
 
-#if ($selectedKpi)
+#set( $result = $selectedKpi.getAssessedResult($formatter.addDays($startDate,1)) )
+#set( $lastSale = 0 )
+#set( $currentSale = 0 )
+#set( $percent = 0 )
+
+#set ($isAchieved = false)
+#if( $result )
+    #set( $percent = 100 + $result.assessedAmount)
+    #set( $lastSale = $result.baselineAmount )
+    #set( $currentSale = $result.rawAmount )
+    
+    ## we have an assessed result, so display results
+    #if( $result.achievedLevelName == $kpiLevel)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+#else
+    ## no assessed result, so need to forecast
+    #set( $forecastLevel = $selectedKpi.progressLevel($formatter.addDays($startDate, 1), $endDate) )
     #set ($currentAggs = $selectedKpi.getProgressAndBaseline($currentStartDate, $currentEndDate))
     #set ($targetAmount = $selectedKpi.getTargetForLevel($kpiLevel))
+    
+    #if ($forecastLevel.actual > $forecastLevel.target)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+    #set( $percent = 100 + $forecastLevel.actual)
+    #set( $lastSale = $currentAggs.baseline )
+    #set( $currentSale = $currentAggs.rawAmount )
+#end
 
+
+#if ($selectedKpi)
     <div class="panel-kpi-target jumbotron-inverse">
         <div class="circle-sale-colors" style="display: none !important;">
             <button type="button" class="btn btn-primary"></button>
@@ -57,7 +88,7 @@
                     <div class="circle-sale-title visible-xs-block">Sales $formatter.getYear($lastStartDate)</div>
                     <div class="circle-sale">
                         <div class="circle-sale-knob-wrapper"><input class="circle-sale-knob circle-sale-warning" value="100" /></div>
-                        <div class="circle-sale-label">$$formatter.formatCurrency($currentAggs.baseline)</div>
+                        <div class="circle-sale-label">$$formatter.formatCurrency($lastSale)</div>
                     </div>
                 </div>
             </div>
@@ -66,7 +97,7 @@
                     <div class="circle-sale-title visible-xs-block">Actual Sales $formatter.getYear($currentStartDate)</div>
                     <div class="circle-sale">
                         <div class="circle-sale-knob-wrapper"><input class="circle-sale-knob circle-sale-info" value="100" /></div>
-                        <div class="circle-sale-label">$$formatter.formatCurrency($currentAggs.rawAmount)</div>
+                        <div class="circle-sale-label">$$formatter.formatCurrency($currentSale)</div>
                     </div>
                 </div>
             </div>
@@ -74,9 +105,9 @@
                 <div class="circle-sale-wrapper">
                     <span class="circle-sale-title visible-xs-block">$selectedKpi.title</span>
                     <div class="circle-sale">
-                        <div class="circle-sale-knob-wrapper"><input class="circle-sale-knob #if($currentAggs.aggrAmount >= 100) circle-sale-success #else circle-sale-danger #end" value="$formatter.formatCurrency($currentAggs.aggrAmount)" /></div>
+                        <div class="circle-sale-knob-wrapper"><input class="circle-sale-knob #if($isAchieved == true) circle-sale-success #else circle-sale-danger #end" value="$formatter.formatCurrency($percent)" /></div>
                         <div class="circle-sale-label">
-                            #if ($currentAggs.aggrAmount >= 100)
+                            #if ($isAchieved == true)
                                 <i class="fa fa-check fa-3x"></i>
                                 <span>You're<br />On track</span>
                             #else
