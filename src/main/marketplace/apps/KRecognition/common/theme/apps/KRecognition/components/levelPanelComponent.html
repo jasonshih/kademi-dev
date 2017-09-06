@@ -15,7 +15,7 @@
         #end
         <div class="panel-body">
             #if( $award == $null )
-                No awarded level found
+                <p class="text-center">No awarded level found</p>
             #else
                 #if ($displayType == 'text-icon' || $displayType == 'icon')
                     <p><img src="/_hashes/files/$award.recognition.imageHash" class="img-responsive center-block" alt="$award.recognition.title" /></p>
