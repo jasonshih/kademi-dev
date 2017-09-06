@@ -1,4 +1,13 @@
 #set( $recognitionService = $applications.userApp.recognitionService )
+#set($award = $recognitionService.getHighestLevelAward($topic) )
 #set( $topic = $recognitionService.getTopic($topic) )
-TOPIC - $topic
+
+
+<h1>$topic.title</h1>
+#if( $award == $null ) 
+NO AWARD
+#else
+AWARD - $award.recognition.title
+#end
+
 

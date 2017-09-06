@@ -200,8 +200,25 @@
                     </table>
                 </div>
             </div>
-
         </div>
+        
+        <hr/>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Badges</div>
+            <table class="table">
+                #foreach($award in $topic.allAwards)
+                <tr>
+                    <td>$award.recognition.title</td>
+                    <td>
+                        <a href="/manageUsers/$award.awardedTo.id">$award.awardedTo.formattedName</a>                        
+                    </td>
+                    <td>$award.createdDate</td>
+                </tr>
+                #end
+            </table>                    
+        </div>
+        
 
         <div id="modal-krecognition-create-badge" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
