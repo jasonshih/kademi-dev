@@ -21,6 +21,9 @@
             .build();
 
     controllerMappings.addEventListener('RecognitionEvent', true, "_onRecognitionAwarded");
+    
+    controllerMappings.addComponent("KRecognition/components", 
+        "levelPanel", "html", "Displays the current level for a topic", "Recognition");    
 
     g._onRecognitionAwarded = function (rf, event) {
         var award = event.award;
