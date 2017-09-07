@@ -1,18 +1,18 @@
 (function ($) {
     $(function () {
-        var components = $('[data-type="component-panelKpiTarget"]');
+        var panels = $('.panel-kpi-target');
         
-        if (components.length > 0) {
-            components.each(function () {
+        if (panels.length > 0) {
+            panels.each(function () {
                 initKnob($(this));
             });
             
             $(document.body).on('pageDateChanged', function () {
                 flog('pageDateChanged for panelKpiTarget');
                 
-                components.find('[data-dynamic-href]').reloadFragment({
+                panels.closest('[data-dynamic-href]').reloadFragment({
                     whenComplete: function () {
-                        components.each(function () {
+                        panels.each(function () {
                             initKnob($(this));
                         });
                     }
@@ -40,15 +40,17 @@
                 fgColor = colours.find('.btn-danger').css('background-color');
             }
             
-            knob.attr({
-                'data-width': '100%',
-                'data-displayinput': 'false',
-                'data-thickness': '.15',
-                'data-bgColor': 'rgba(255, 255, 255, .2)',
-                'data-fgColor': fgColor
-            }).knob({
-                readOnly: true
-            });
+            setTimeout(function () {
+                knob.attr({
+                    'data-width': '100%',
+                    'data-displayinput': 'false',
+                    'data-thickness': '.15',
+                    'data-bgColor': 'rgba(255, 255, 255, .2)',
+                    'data-fgColor': fgColor
+                }).knob({
+                    readOnly: true
+                });
+            }, 1000);
         });
     }
     

@@ -1,24 +1,78 @@
-#if( !$height )
-    #set( $height = 200 )
+#set ($currentStartDate = $formatter.yearStart)
+#set ($currentEndDate = $formatter.yearEnd())
+
+#set ($startDate = $queryManager.commonStartDate)
+#set ($endDate = $queryManager.commonFinishDate)
+
+#if ($startDate && $endDate)
+    #set ($currentStartDate = $startDate)
+    #set ($currentEndDate = $endDate)
 #end
-#set( $kpi = $page.find($href) )
-<div class="panel panel-default panel-kpi-visualisation">
-    <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> 
-        #if( $kpi )
-        $kpi.title
-        #else
-        Please select a KPI
-        #end
-    </div>
-    <div class="panel-body">
-        #set( $progressPerc = 0 )
-        #set( $progressPerc = $kpi.getProgressOfLevelPerc($level) )
-        <div style="height: $!{height}px" class="kpi-circle" data-value="$progressPerc" data-height="$height">
-            
+#set ($lastStartDate = $formatter.addYears($currentStartDate, -1))
+
+#set ($sales = $rootFolder.find('/sales/'))
+#set ($sales = $page.find('/sales/'))
+#set($kpis = $sales.allKpis)
+
+#set ($selectedKpi = false)
+#foreach($k in $kpis)
+    #if ($k.name == $kpi)
+        #set ($selectedKpi = $k)
+    #end
+#end
+
+#set( $result = $selectedKpi.getAssessedResult($formatter.addDays($startDate,1)) )
+#set( $percent = 0 )
+
+#set ($isAchieved = false)
+#if( $result )
+    #set( $percent = 100 + $result.assessedAmount)
+    
+    ## we have an assessed result, so display results
+    #if( $result.achievedLevelName == $kpiLevel)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+#else
+    ## no assessed result, so need to forecast
+    #set( $forecastLevel = $selectedKpi.progressLevel($formatter.addDays($startDate, 1), $endDate) )
+    
+    #if ($forecastLevel.actual > $forecastLevel.target)
+        #set ($isAchieved = true)
+    #else
+        #set ($isAchieved = false)
+    #end
+    #set( $percent = 100 + $forecastLevel.actual)
+#end
+
+#if ($selectedKpi)
+    <div class="panel-kpi-target panel-on-track jumbotron-inverse">
+        <div class="circle-sale-colors" style="display: none !important;">
+            <button type="button" class="btn btn-primary"></button>
+            <button type="button" class="btn btn-info"></button>
+            <button type="button" class="btn btn-success"></button>
+            <button type="button" class="btn btn-warning"></button>
+            <button type="button" class="btn btn-danger"></button>
         </div>
-        <p class="text-center">
-            <span>$progressPerc %</span>
-        </p>        
+        <div class="circle-sale-wrapper text-center">
+            <span class="circle-sale-title">$selectedKpi.title</span>
+            <div class="circle-sale">
+                <div class="circle-sale-knob-wrapper">
+                    <input class="circle-sale-knob #if($isAchieved == true) circle-sale-success #else circle-sale-danger #end" value="$formatter.formatCurrency($percent)" />
+                </div>
+                <div class="circle-sale-label">
+                    #if ($isAchieved == true)
+                    <i class="fa fa-check fa-3x"></i>
+                    <span>You're<br />On track</span>
+                    #else
+                    <i class="fa fa-times fa-3x"></i>
+                    <span>You're<br />Not On track</span>
+                    #end
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+#else
+    <p class="alert alert-warning">No KPI found</p>
+#end
