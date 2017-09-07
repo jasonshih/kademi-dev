@@ -269,16 +269,16 @@
             
             form.forms({
                 onSuccess: function () {
-                    reloadClaimsList(function () {
-                        Msg.success('New claim is created!');
-                        
-                        if (modal) {
+                    if (modal) {
+                        reloadClaimsList(function () {
+                            Msg.success('New claim is created!');
                             modal.modal('hide');
-                        } else {
-                            form.find('input').not('[name=soldBy], [name=soldById]').val('');
-                            thumbImg.attr('src', '/static/images/photo_holder.png');
-                        }
-                    });
+                        });
+                    } else {
+                        Msg.success('New claim is created!');
+                        form.find('input').not('[name=soldBy], [name=soldById]').val('');
+                        thumbImg.attr('src', '/static/images/photo_holder.png');
+                    }
                 }
             });
         }
