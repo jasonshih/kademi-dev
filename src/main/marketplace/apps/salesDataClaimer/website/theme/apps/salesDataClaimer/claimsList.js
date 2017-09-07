@@ -271,11 +271,11 @@
                 onSuccess: function () {
                     if (modal) {
                         reloadClaimsList(function () {
-                            Msg.success('New claim is created!');
+                            Msg.success('Your claim has been submitted.');
                             modal.modal('hide');
                         });
                     } else {
-                        Msg.success('New claim is created!');
+                        Msg.success('Your claim has been submitted.');
                         form.find('input').not('[name=soldBy], [name=soldById]').val('');
                         thumbImg.attr('src', '/static/images/photo_holder.png');
                     }
