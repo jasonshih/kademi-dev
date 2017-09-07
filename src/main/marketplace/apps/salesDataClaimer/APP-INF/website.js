@@ -78,6 +78,7 @@ function createClaim(page, params, files) {
         var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
         var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
         var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
+        var now = formatter.formatDateISO8601(formatter.now);
         
         var obj = {
             recordId: id,
@@ -85,8 +86,8 @@ function createClaim(page, params, files) {
             soldById: params.soldById,
             amount: amount,
             soldDate: soldDate,
-            enteredDate: formatter.now,
-            modifiedDate: formatter.now,
+            enteredDate: now,
+            modifiedDate: now,
             productSku: params.productSku || '',
             status: RECORD_STATUS.NEW
         };
@@ -141,6 +142,7 @@ function updateClaim(page, params, files) {
             var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
+            var now = formatter.formatDateISO8601(formatter.now);
             
             var obj = {
                 recordId: id,
@@ -149,7 +151,7 @@ function updateClaim(page, params, files) {
                 amount: amount,
                 soldDate: soldDate,
                 enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.now,
+                modifiedDate: now,
                 productSku: params.productSku || '',
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt
