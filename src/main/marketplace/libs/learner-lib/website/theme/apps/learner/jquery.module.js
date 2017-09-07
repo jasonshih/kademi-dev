@@ -73,7 +73,9 @@
             flog("iscomplete? ", self.isComplete);
             
             self.initModuleNav();
-            self.initLearningContentStyles();
+            
+            // BM: this is already called from initModuleNav
+            //self.initLearningContentStyles();
             initComments(options.currentUrl);
             initModuleSearch();
             
