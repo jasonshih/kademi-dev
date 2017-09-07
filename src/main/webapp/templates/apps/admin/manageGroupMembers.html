@@ -120,7 +120,7 @@
                     <div class="form-group">
                         <label for="search-group" class="col-sm-2 control-label">Org:</label>
                         <div class="col-sm-10 input-group">
-                            <input type="text" class="form-control required input-sm" id="filterOrg" data-text="$!request.params.orgId" value="$request.params.orgId"/>
+                            <input type="text" class="form-control required input-sm" id="filterOrg" data-text="$!request.params.orgId" value="$!request.params.orgId"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" data-type="clearer" data-target="#filterOrgId">
                                     <i class="fa fa-times"></i>
@@ -147,16 +147,10 @@
                     </thead>
                     <tbody>
 
-                        #set ($myMap = {})
-
-
-                        #foreach($member in $page.paginator.records)
-
-                        #if ("$!myMap.get($member.thisUser.id)" == "" )
-                        $!myMap.put($member.thisUser.id, "true")
+                        #foreach($gm in $page.paginator.records)
 
                         #set($pwdDate = false)
-                        #set($pwdDate = $member.thisUser.passwordCredentialDate)
+                        #set($pwdDate = $gm.member.passwordCredentialDate)
                         #set($rowClass = "")
                         #if( $pwdDate )
                         #set($rowClass = "withPassword")
@@ -166,26 +160,26 @@
 
                         <tr class="$rowClass">
                             <td>
-                                <a href="/manageUsers/$member.thisUser.id">$!member.thisUser.name</a>
+                                <a href="/manageUsers/$gm.$member.id">$!gm.member.name</a>
                             </td>
-                            <td>$!member.thisUser.firstName</td>
-                            <td>$!member.thisUser.surName</td>
-                            <td>$!member.thisUser.membership($page.parent.group).withinOrg.formattedName</td>
-                            <td>$!member.thisUser.phone</td>
-                            <td>$!member.thisUser.email</td>
+                            <td>$!gm.member.firstName</td>
+                            <td>$!gm.member.surName</td>
+                            <td>$!gm.withinOrg.formattedName</td>
+                            <td>$!gm.member.phone</td>
+                            <td>$!gm.member.email</td>
                             <td>
                                 #if( $pwdDate )
                                 <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>
                                 #end
                             </td>
                             <td>
-                                <a href="/manageUsers/$member.thisUser.id" class="btn btn-info">
+                                <a href="/manageUsers/$gm.member.id" class="btn btn-info">
                                     <span class="fa fa-pencil"></span>
                                 </a>
                             </td>
-                            <td><input type="checkbox" name="toRemoveId" value="$member.thisUser.id" /></td>
+                            <td><input type="checkbox" name="toRemoveId" value="$gm.id" /></td>
                         </tr>
-                        #end
+
 
 
                         #end
