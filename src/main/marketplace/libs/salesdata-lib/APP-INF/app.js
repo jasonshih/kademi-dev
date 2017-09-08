@@ -2,6 +2,7 @@ controllerMappings.addComponent("salesdata/components", "topSkus", "html", "Show
 controllerMappings.addComponent("salesdata/components", "panelKpiTarget", "html", "Shows total amounts of last and period, KPI Target and an indicator for on track or not", "Sales data");
 controllerMappings.addComponent("salesdata/components", "salesTable", "html", "Displays sales data in a table", "Sales data");
 controllerMappings.addComponent("salesdata/components", "salesDataCompare", "html", "Displays chart to compare sale amount between last year and current", "Sales data");
+controllerMappings.addComponent("salesdata/components", "onTrackAllKpis", "html", "Shows indicators if the user is on track to achieve all available KPIs", "Sales data");
 
 controllerMappings
     .websiteController()

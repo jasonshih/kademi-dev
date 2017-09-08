@@ -33,18 +33,6 @@
                 "group": "main",
                 "path": "/static/uri/1.15.1/URI.js"
             }
-        },
-        {
-            "css": {
-                "media": "all",
-                "path": "/theme/apps/salesDataClaimer/claimsList.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/salesDataClaimer/claimsList.js"
-            }
         }
     ]
 }
