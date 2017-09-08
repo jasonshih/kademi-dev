@@ -335,11 +335,15 @@
                                         </td>
                                         <td>$!debit.reason</td>
                                         <td>
-                                            #if( $debit.points )
-                                            <span class="fa fa-check-circle fa-2x text-success"></span>
-                                            $debit.points.numPoints - $formatter.formatDate($debit.points.issuedDate)
-                                            #else
-                                            <span class="fa fa-exclamation-circle fa-2x text-warning"></span>
+                                            #if ($page.autoReconcile)
+                                                #set($linkCount = $page.getPointsDebitLinkCount($debit))
+                                                #if( $linkCount > 0 )
+                                                <i class="fa fa-check-circle fa-2x text-success"></i>
+                                                &nbsp;
+                                                <span>$linkCount</span>
+                                                #else
+                                                <i class="fa fa-exclamation-circle fa-2x text-warning"></i>
+                                                #end
                                             #end
                                         </td>
                                         <td><input type="checkbox" name="removeDebitsId" value="$debit.id" /></td>
