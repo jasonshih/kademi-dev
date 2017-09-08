@@ -1,19 +1,22 @@
 .panel-circle-sales {
     position: relative;
-    padding: 50px;
+    padding: 50px 50px 25px;
     
     .circle-sales-wrapper {
-        margin: 0 auto;
+        margin: 0 auto 25px;
         width: 90%;
         
         @media (max-width: 767px) {
             max-width: 320px;
             margin-bottom: 30px;
         }
+        
+        &.no-margin {
+            margin-bottom: 0;
+        }
     }
     
     .circle-sales-title {
-        margin-bottom: 10px;
         font-size: @font-size-h4;
         display: block;
     }
@@ -21,6 +24,14 @@
     .circle-sales {
         position: relative;
         padding-bottom: 100%;
+    }
+    
+    .circle-sales-title + .circle-sales {
+        margin-top: 10px;
+    }
+    
+    .circle-sales + .circle-sales-title {
+        margin-top: 10px;
     }
     
     .circle-sales-knob-wrapper {

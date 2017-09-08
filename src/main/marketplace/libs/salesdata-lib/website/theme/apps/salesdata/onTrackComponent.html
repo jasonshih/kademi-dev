@@ -56,7 +56,6 @@
             <button type="button" class="btn btn-danger"></button>
         </div>
         <div class="circle-sales-wrapper text-center">
-            <span class="circle-sales-title">$selectedKpi.title</span>
             <div class="circle-sales">
                 <div class="circle-sales-knob-wrapper">
                     <input class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-danger #end" value="$formatter.formatCurrency($percent)" />
@@ -71,6 +70,7 @@
                     #end
                 </div>
             </div>
+            <span class="circle-sales-title">$selectedKpi.title</span>
         </div>
     </div>
 #else
