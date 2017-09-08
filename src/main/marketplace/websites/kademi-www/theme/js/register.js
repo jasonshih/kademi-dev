@@ -64,14 +64,18 @@ $(function () {
         validate: function () {
             if (hasGaq()) {
                 flog("Track validation");
-                _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "validate"]);
+                if (hasGaq()) {
+                    _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "validate"]);
+                }
             }
             return true;
         },
         callback: function (resp) {
             if (hasGaq()) {
                 flog("Created account", resp, this);
-                _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "success"]);
+                if (hasGaq()) {
+                    _gaq.push(['_trackEvent', 'Signup', window.location.pathname, "success"]);
+                }
             }
             //alert("Your account has been created, you will now be taken to your admin dashboard...");
             window.location.href = resp.nextHref;
@@ -119,7 +123,7 @@ $(function () {
             });
         }
     });
-    
+
     function hasGaq() {
         return (typeof _gaq !== 'undefined' && _gaq !== null);
     }
