@@ -9,6 +9,10 @@
             "branch": ""
         },
         {
+            "appId": "productsApp",
+            "branch": ""
+        },
+        {
             "appId": "KongoDB",
             "branch": ""
         },

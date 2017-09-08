@@ -48,7 +48,7 @@ controllerMappings
     .postPriviledge("READ_CONTENT")
     .build();
 
-controllerMappings.addNodeType("kfeedbackSubmittedGoal", "kfeedback/jb/kfeedbackSubmittedGoalNode.js");
+controllerMappings.addGoalNodeType("kfeedbackSubmittedGoal", "kfeedback/jb/kfeedbackSubmittedGoalNode.js", null);
 
 controllerMappings.addComponent("kfeedback", "kfeedbackEmail", "email", "Shows emoticons with links", "Kfeedback App component");
 

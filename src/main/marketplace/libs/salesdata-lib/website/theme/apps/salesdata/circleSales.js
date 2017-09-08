@@ -1,10 +1,12 @@
 (function ($) {
     $(function () {
-        var components = $('[data-type="component-panelKpiTarget"]');
+        var panels = $('.panel-circle-sales');
         
-        if (components.length > 0) {
+        if (panels.length > 0) {
+            var components = panels.closest('[data-type^=component]');
+            
             components.each(function () {
-                initKnob($(this));
+                initCircleSales($(this));
             });
             
             $(document.body).on('pageDateChanged', function () {
@@ -13,7 +15,7 @@
                 components.find('[data-dynamic-href]').reloadFragment({
                     whenComplete: function () {
                         components.each(function () {
-                            initKnob($(this));
+                            initCircleSales($(this));
                         });
                     }
                 });
@@ -21,22 +23,22 @@
         }
     });
     
-    function initKnob(component) {
-        var colours = component.find('.circle-sale-colors');
+    function initCircleSales(target) {
+        var colours = target.find('.circle-sales-colors');
         
-        component.find('.circle-sale-knob').each(function () {
+        target.find('.circle-sales-knob').each(function () {
             var knob = $(this);
             
             var fgColor = '';
-            if (knob.hasClass('circle-sale-primary')) {
+            if (knob.hasClass('circle-sales-primary')) {
                 fgColor = colours.find('.btn-primary').css('background-color');
-            } else if (knob.hasClass('circle-sale-info')) {
+            } else if (knob.hasClass('circle-sales-info')) {
                 fgColor = colours.find('.btn-info').css('background-color');
-            } else if (knob.hasClass('circle-sale-success')) {
+            } else if (knob.hasClass('circle-sales-success')) {
                 fgColor = colours.find('.btn-success').css('background-color');
-            } else if (knob.hasClass('circle-sale-warning')) {
+            } else if (knob.hasClass('circle-sales-warning')) {
                 fgColor = colours.find('.btn-warning').css('background-color');
-            } else if (knob.hasClass('circle-sale-danger')) {
+            } else if (knob.hasClass('circle-sales-danger')) {
                 fgColor = colours.find('.btn-danger').css('background-color');
             }
             

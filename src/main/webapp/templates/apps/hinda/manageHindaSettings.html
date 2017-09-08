@@ -94,15 +94,9 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaRewardStore">Reward Store</label>
                     <div class="col-sm-9">
-                        <select name="hindaRewardStore" class="form-control">
-                            <option value="" selected="selected">- None -</option>
+                        <select name="hindaRewardStore" class="form-control" multiple="true">
                             #foreach($store in $applications.rewardStore.stores)
-                                #if($store.name == $page.rewardStore)
-                                    <option value="$store.name" selected="selected">
-                                #else
-                                    <option value="$store.name">
-                                #end
-                                $store.title</option>
+                            <option value="$store.name" #if( $page.isStoreSelected($store.name)) selected="selected" #end>$store.title</option>
                             #end
                         </select>
                         <i>All the products are going to be added automatically to this reward store.</i>
@@ -114,6 +108,7 @@
                 </p>
 
             </form>
+            <h4>Stats</h4>
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -145,6 +140,29 @@
                     </tr>
                 </tbody>
             </table>
+            <br/>
+            <h5>Products log</h5>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Products Added</th>
+                        <th>Products Removed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($log in $page.logs)
+                    <tr>
+                        <td class="timeago" title="$formatter.formatDateISO8601($log.start)">$log.start</td>
+                        <td class="timeago" title="$formatter.formatDateISO8601($log.start)">$log.end</td>
+                        <td>$log.added</td>
+                        <td>$log.removed</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+
         </div>
 
         <script type="text/javascript">
