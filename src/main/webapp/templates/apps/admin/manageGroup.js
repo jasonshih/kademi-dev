@@ -28,6 +28,16 @@ function initCRUDGroup() {
         flog('addGroupFolderButton: click');
         showGroupFolderModal('Folder', 'Add new folder', 'Add', "createFolder");
     });
+        
+    $('.btn-add-rule-group').on('click', function (e) {
+        e.preventDefault();
+        var name = prompt("Enter a name for the new rules-based group");
+        if( name ) {
+            flog("create ", name);
+            createRuleBasedGroup(name);
+        }
+    });
+    
     
     // Bind event for Delete forum
     body.on('click', '.btn-delete-group', function (e) {
@@ -84,6 +94,29 @@ function initCRUDGroup() {
             nameInput.val(newVal);
         }
     });
+}
+
+function createRuleBasedGroup(name) {
+    flog('createRuleBasedGroup', name);
+    try {
+        $.ajax({
+            type: "POST",
+            url: window.location.href,
+            data: {
+                rulesGroupName: name
+            },
+            success: function (data) {
+                Msg.info("Saved, going to new group");
+                window.location = data.nextHref;
+            },
+            error: function (resp) {
+                flog('error', resp);
+                Msg.error('err');
+            }
+        });
+    } catch (e) {
+        flog('exception in createJob', e);
+    }    
 }
 
 function initPermissionCheckboxes() {
