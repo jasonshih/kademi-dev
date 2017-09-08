@@ -47,21 +47,21 @@
 #end
 
 #if ($selectedKpi)
-    <div class="panel-kpi-target panel-on-track jumbotron-inverse">
-        <div class="circle-sale-colors" style="display: none !important;">
+    <div class="panel-circle-sales panel-on-track jumbotron-inverse">
+        <div class="circle-sales-colors" style="display: none !important;">
             <button type="button" class="btn btn-primary"></button>
             <button type="button" class="btn btn-info"></button>
             <button type="button" class="btn btn-success"></button>
             <button type="button" class="btn btn-warning"></button>
             <button type="button" class="btn btn-danger"></button>
         </div>
-        <div class="circle-sale-wrapper text-center">
-            <span class="circle-sale-title">$selectedKpi.title</span>
-            <div class="circle-sale">
-                <div class="circle-sale-knob-wrapper">
-                    <input class="circle-sale-knob #if($isAchieved == true) circle-sale-success #else circle-sale-danger #end" value="$formatter.formatCurrency($percent)" />
+        <div class="circle-sales-wrapper text-center">
+            <span class="circle-sales-title">$selectedKpi.title</span>
+            <div class="circle-sales">
+                <div class="circle-sales-knob-wrapper">
+                    <input class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-danger #end" value="$formatter.formatCurrency($percent)" />
                 </div>
-                <div class="circle-sale-label">
+                <div class="circle-sales-label">
                     #if ($isAchieved == true)
                     <i class="fa fa-check fa-3x"></i>
                     <span>You're<br />On track</span>
