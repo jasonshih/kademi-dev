@@ -257,10 +257,12 @@
         </div>
             #macro( renderRulesGroup )
             <div class="alert alert-danger">
-                <img src="https://mixedsignal.files.wordpress.com/2014/02/img_0018.jpg" align="left" style="width: 100px" />                
-                <p class="lead">This is experimental. Have fun, but be careful!</p>                
+                <img src="https://mixedsignal.files.wordpress.com/2014/02/img_0018.jpg" align="left" style="width: 150px; padding-right: 15px" />
+                <p class="lead">Doc says this is experimental.
                 <br class="clearfix"/>
                 <br class="clearfix"/>
+
+                Have fun, but be careful!</p>
                 <br class="clearfix"/>
                 <br class="clearfix"/>
                 <br class="clearfix"/>
@@ -270,9 +272,22 @@
                 <h3>Rules as json</h3>
                 <textarea name="rules" class="form-control" style="min-height: 300px">$!page.group.rules</textarea>
             </div>
+
+            <div class="row">
+                members - $page.members
+                #if( $page.members )
+                <table class="table">
+                    #foreach($profile in $page.members)
+                    <tr>
+                        <td>$profile.email</td>
+                    </tr>
+                    #end
+                </table>
+                #end
+            </div>
             #end
-        
-        
+
+
             #macro( renderNormalGroup )
             <div class="row">
 
@@ -582,7 +597,7 @@
                     </div>
                 </div>
             </div>
-            #end        
+            #end
 
         <script type="text/javascript">
             $(function () {
