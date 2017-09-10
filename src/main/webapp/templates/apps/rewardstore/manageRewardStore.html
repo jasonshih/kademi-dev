@@ -26,6 +26,10 @@
                 </ul>
                 <div class="tab-content">
                     <div id="general" class="tab-pane">
+                        <a href="$page.href?goto" class="btn btn-info pull-right" target="_blank">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            View
+                        </a>
 
                         <div class="row">
                             <div class="col-md-7">
@@ -131,15 +135,10 @@
 
                     <div id="products" class="tab-pane">
                         <div class="clearfix form-horizontal">
-                            <a href="$page.href?goto" class="btn btn-info pull-right" target="_blank">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                                View
-                            </a>
-
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="input-group search input-group-sm col-sm-12">
-                                        <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="" />
+                                        <input type="text" id="product-query" class="form-control" placeholder="Search for products here" value="$!request.params.q" />
                                         <span class="input-group-btn">
                                             <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#product-query">
                                                 <i class="fa fa-times"></i>
@@ -149,27 +148,35 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="search-group" class="col-sm-2 control-label">Products:</label>
+                                        <label for="search-group" class="col-sm-2 control-label">Category</label>
                                         <div class="col-sm-10">
-                                            <select name="filterType" class="filterType form-control input-sm">
-                                                <option value="false">Included</option>
-                                                <option value="true">All</option>
-                                                <option value="notInStore">Not In Store</option>
+                                            <select name="categoryName" class="category form-control input-sm">
+                                                <option id="">[Any category]</option>
+                                                #foreach($cat in $page.categories)
+                                                $formatter.option($cat.name, $cat.title, $request.params.categoryName)
+                                                #end
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="search-group" class="col-sm-2 control-label">Library:</label>
-                                        <div class="col-sm-10">
-                                            <select name="searchOrg" id="search-library" class="form-control input-sm">
-                                                <option value="">My library</option>
-                                                #foreach($org in $page.parentOrgsWithProducts)
-                                                    <option value="$org.id">$org.title</option>
-                                                #end
-                                            </select>
-                                        </div>
+
+                                <div class="col-md-6">
+                                    <div class="pull-right">
+                                    <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add</a>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-info" role="button" id="removeSelected"><i class="fa fa-minus-circle"></i> Remove selected</button>
+                                        <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+
+                                        <ul class="dropdown-menu pull-right" role="menu">
+                                            <li>
+                                                <a href="#" class="removeAllMatched">
+                                                    <i class="glyphicon glyphicon-upload"></i> Remove all matched
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -195,38 +202,44 @@
                                         <th>Pts Multiplier</th>
                                         <th></th>
                                         <th class="text-center">
-                                            <input class="product-all-toggle" type="checkbox" />
+                                            <input class="chk-all" type="checkbox" />
                                         </th>
                                         <th></th>
                                     </tr>
                                 </thead>
-                                #set( $products = $page.searchProducts( $request.params.q, $request.params.all, $request.params.l ))
+                                #set( $products = $page.paginator.records)
                                 <tbody id="products-list">
                                     #if( $products.isEmpty() )
-                                        <tr>
-                                            <td colspan="6">No products were found matching the critieria</td>
-                                        </tr>
+                                    <tr>
+                                        <td colspan="6">No products were found matching the critieria</td>
+                                    </tr>
                                     #else
-                                        #foreach($p in $products )
-                                            <tr class='in-reward-$p.inReward' id='product-$p.productId'>
-                                                <td><a href='/products/$p.productId'>$p.name</a></td>
-                                                <td>$formatter.htmlEncode($p.title)</td>
-                                                <td>$!p.margin</td>
-                                                <td>$!p.multiplier</td>
-                                                <td></td>
-                                                <td class="text-center">
-                                                    <input $formatter.ifTrue( $p.inReward, "checked",
-                                                        "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
-                                                </td>
-                                                <td>
-                                                    <a href="$p.productId/" class="product-inreward-details">
-                                                        <span class="glyphicon glyphicon-cog"></span>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        #end
+                                    #foreach($p in $products )
+                                    <tr class='in-reward-$p.inReward' id='product-$p.productId'>
+                                        <td><a href='/products/$p.productId'>$p.name</a></td>
+                                        <td>$formatter.htmlEncode($p.title)</td>
+                                        <td>$!p.margin</td>
+                                        <td>$!p.multiplier</td>
+                                        <td></td>
+                                        <td class="text-center">
+                                            <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                        </td>
+                                        <td>
+                                            <a href="$p.productId/" class="product-inreward-details">
+                                                <span class="glyphicon glyphicon-cog"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    #end
                                     #end
                                 </tbody>
+                                <tfoot id="pointsFooter">
+                                    <tr>
+                                        <td colspan="6">
+                                            $!page.paginator.html
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -257,6 +270,12 @@
 
         <script type="text/javascript">
             $(function () {
+                initSearchProduct();
+                initRemoveProducts();
+                initEdit();
+            });
+
+            function initEdit() {
                 $(".rewardStoreForm").forms({
                     onSuccess: function (resp) {
                         if (resp.status) {
@@ -266,14 +285,8 @@
                         }
                     }
                 });
-                initSearchProduct();
-                //$(".product-toggle").bootstrapToggle();
-                $("#table-products").on("change", ".product-toggle", function (e) {
-                    var target = $(e.target);
-                    var productName = target.closest("tr").find("a").html();
-                    var v = target.prop("checked");
-                    updateProductIncluded(target.data('pid'), productName, v);
-                });
+
+
                 var productInRewardModal = $("#editProductInRewardModal");
                 $("#table-products").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
@@ -287,20 +300,43 @@
                     }
                 });
 
-                $('body').on('change', '.product-all-toggle', function (e) {
+            }
+
+            function initRemoveProducts() {
+                $('#removeSelected').click(function (e) {
+                    flog("clic");
                     e.preventDefault();
-                    var btn = $(this);
-                    Msg.info('Updating all products');
-                    var isChecked = btn.is(':checked');
+                    Msg.info('Adding selected');
+                    var checks = $("#products-list").find('input:checked');
                     var ids = [];
-                    var allIds = $('.product-toggle');
-                    allIds.each(function (count, item) {
+                    checks.each(function (count, item) {
                         ids.push($(item).data('pid'));
                     });
 
-                    updateProductSelected(ids.join(','), isChecked);
+                    updateProductSelected(ids.join(','));
                 });
-            });
+
+                $(".removeAllMatched").click(function(e) {
+                    e.preventDefault();
+                    Kalert.confirm('This will remove all products matching the current criteria. Are you sure you want to proceed?', 'Yes', function () {
+                        $.ajax({
+                            url: window.location,
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                removeAllMatched : true
+                            },
+                            success: function (data, textStatus, jqXHR) {
+                                window.location.reload();
+                            },
+                            error: function () {
+                                Msg.error('Oh No! Something went wrong!');
+                            }
+                        });
+                    });
+
+                });
+            }
 
             function loadProductInReward(href, productInRewardModal) {
                 $.ajax({
@@ -309,7 +345,7 @@
                     success: function (data) {
                         flog("success", data);
                         var $fragment =
-                        $(data).find("#product-in-reward-fields");
+                                $(data).find("#product-in-reward-fields");
                         flog("frag", $fragment);
                         var form = productInRewardModal.find("form");
                         form.find('.form-content').html($fragment);
@@ -329,75 +365,38 @@
                         doProductSearch();
                     }, 500);
                 });
-                $('body').on('change', '.filterType', function (e) {
-                    doProductSearch();
-                });
-                $("#search-library").change(function () {
+                $('body').on('change', '.category', function (e) {
                     doProductSearch();
                 });
             }
 
+
             function doProductSearch() {
                 flog("doProductSearch");
                 var query = $("#product-query").val();
-                var orgId = $("#search-library").val();
-                var all = $('.filterType').val();
+                var categoryName = $(".category").val();
                 flog("doSearch", query, orgId);
-                var newUrl = window.location.pathname + "?q=" + query + "&l=" + orgId + "&all=" + all + "#products-tab";
+                var newUrl = window.location.pathname + "?q=" + query + "&categoryName=" + categoryName;
                 window.history.replaceState("", "", newUrl);
                 $.ajax({
                     type: 'GET',
                     url: newUrl,
                     success: function (data) {
                         flog("success", data);
-                        var fragment = $(data).find("#products-list");
-                        flog("frag", fragment, $("#products-list"));
-                        $("#products-list").replaceWith(fragment);
-                        //$(".product-toggle").bootstrapToggle();
+                        var fragment = $(data).find("#table-products");
+                        $("#table-products").replaceWith(fragment);
                     },
                     error: function (resp) {
-                        Msg.error("An error occured doing the user search. Please check your internet connection and try again");
+                        Msg.error("An error occured doing the search. Please check your internet connection and try again");
                     }
                 });
             }
 
-            function updateProductIncluded(productId, productName, included) {
-                $.ajax({
-                    type: "POST",
-                    url: window.location.pathname,
-                    datatype: "json",
-                    data: {
-                        productId: productId,
-                        included: included
-                    },
-                    success: function (response) {
-                        flog("response", response, response.status);
-                        if (response.status) {
-                            if (included) {
-                                Msg.info("Added " + productName);
-                                $("#product-" + productId).addClass("in-reward-true");
-                            } else {
-                                Msg.info("Removed " + productName);
-                                $("#product-" + productId).removeClass("in-reward-true");
-                            }
-                        } else {
-                            Msg.error("There was an error changing the product inclusion status");
-                        }
-                    },
-                    error: function (event, XMLHttpRequest, ajaxOptions, thrownError) {
-                        flog('error saving moduleStatus', event, XMLHttpRequest, ajaxOptions, thrownError);
-                        Msg.error("There was an error changing the product inclusion status");
-                    }
-                });
-            }
 
-            function updateProductSelected(productIds, included) {
+            function updateProductSelected(productIds) {
                 var data = {};
-                if (included) {
-                    data['addProductIds'] = productIds;
-                } else {
-                    data['removeProductIds'] = productIds;
-                }
+                data['removeProductIds'] = productIds;
+
                 $.ajax({
                     type: "POST",
                     url: window.location.pathname,
@@ -407,10 +406,7 @@
                         flog("response", response, response.status);
                         if (response.status) {
                             Msg.info(response.messages[0]);
-                            var ids = productIds.split(',');
-                            $.each(ids, function (val) {
-                                $('.product-toggle[data-pid=' + val + ']').prop('checked', included);
-                            });
+                            window.location.reload();
                         } else {
                             Msg.error("There was an error changing the product status");
                         }
@@ -421,6 +417,7 @@
                     }
                 });
             }
+
         </script>
     </body>
 </html>
