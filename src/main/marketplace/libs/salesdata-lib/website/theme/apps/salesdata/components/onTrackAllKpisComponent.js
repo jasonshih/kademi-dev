@@ -2,9 +2,9 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
     
-    KEditor.components['panelKpiTarget'] = {
+    KEditor.components['onTrackAllKpis'] = {
         init: function (contentArea, container, component, keditor) {
-            flog('init "panelKpiTarget" component');
+            flog('init "onTrackAllKpis" component');
             
             var self = this;
             
@@ -15,34 +15,23 @@
         settingEnabled: true,
         settingTitle: 'Target Panel',
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "panelKpiTarget" component');
+            flog('initSettingForm "onTrackAllKpis" component');
             
             var self = this;
             
             return $.ajax({
-                url: '_components/panelKpiTarget?settings',
+                url: '_components/onTrackAllKpis?settings',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
                     
-                    var cbbLevel = form.find('.select-level');
+                    var cbbLevel = form.find('.select-items-per-row');
                     cbbLevel.on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-kpi-level', this.value);
-                        keditor.initDynamicContent(dynamicElement).done(function () {
-                            self.initCircleSales(dynamicElement);
-                        });
-                    });
-                    
-                    form.find('.select-kpi').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-                        
-                        component.attr('data-kpi', this.value);
-                        cbbLevel.find('option').css('display', 'none').filter('[data-kpi="' + this.value + '"]').css('display', 'block');
+                        component.attr('data-items-per-row', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initCircleSales(dynamicElement);
                         });
@@ -82,13 +71,10 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "panelKpiTarget" component');
+            flog('showSettingForm "onTrackAllKpis" component');
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-kpi').val(dataAttributes['data-kpi']);
-            var cbbLevel = form.find('.select-level');
-            cbbLevel.find('option').css('display', 'none').filter('[data-kpi="' + dataAttributes['data-kpi'] + '"]').css('display', 'block');
-            cbbLevel.val(dataAttributes['data-kpi-level']);
+            form.find('.select-items-per-row').val(dataAttributes['data-items-per-row'] || '3');
         }
     };
     
