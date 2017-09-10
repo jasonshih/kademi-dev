@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .userVisitsReport{
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-bar-chart"></i> User Visits
+        </div>
+        <div class="panel-body" id="userVisitsReportWrap">
+            <code class="hide">$applications.get("reporting-lib").call("getUserReportData", $page)</code>
+            <svg class="userVisitsReport">
+
+            </svg>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            function drawChart(userVisitsReportWrap) {
+                var svg = userVisitsReportWrap.find('.userVisitsReport');
+                var data = svg.siblings('code').text();
+                data = JSON.parse(data);
+
+                var chart = nv.models.multiBarChart()
+                    .margin({left: 20, right: 20, bottom: 20, top: 20})
+                    .rightAlignYAxis(false)
+                    .showControls(true)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
+                    .showLegend(true)
+                    .stacked(false)
+                    .showYAxis(true)
+                    .clipEdge(true);
+                chart.xAxis.tickFormat(function (d) {
+                    return d3.time.format("%e %b")(new Date(d))
+                });
+                chart.x(function (d) {
+                    return d.x;
+                });
+                chart.y(function (d) {
+                    return d.y;
+                });
+                d3.select(svg.get(0))
+                    .datum(data)
+                    .call(chart);
+
+                nv.utils.windowResize(chart.update);
+            }
+
+            $(document).on('pageDateChanged', function (e, startDate, endDate) {
+                var userVisitsReportWrap = $('#userVisitsReportWrap');
+                userVisitsReportWrap.reloadFragment({
+                    whenComplete: function (resp) {
+                        drawChart(userVisitsReportWrap)
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>
