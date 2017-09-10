@@ -274,12 +274,15 @@
             </div>
 
             <div class="row">
-                members - $page.members
                 #if( $page.members )
+                matched: $page.members.size()
                 <table class="table">
                     #foreach($profile in $page.members)
                     <tr>
-                        <td>$profile.email</td>
+                        <td>$profile.name</td>
+                        <td>$!profile.email</td>
+                        <td>$!profile.firstName</td>
+                        <td>$!profile.birthDate</td>
                     </tr>
                     #end
                 </table>
