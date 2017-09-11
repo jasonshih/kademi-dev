@@ -226,6 +226,14 @@
                 </div>
             </div>
             <div class="col-lg-3" id="aggregationsContainer">
+                
+                <button class="btn btn-info btn-sm pull-right" id="btnSaveDynaGroup">
+                    <span class="fa fa-list"></span>
+                    Save as dyna-group
+                </button>
+                <br/>
+                <br/>
+                
                 #if( $page.aggregations )
                     <table class="table">
                         #foreach($agg in $page.aggregations )

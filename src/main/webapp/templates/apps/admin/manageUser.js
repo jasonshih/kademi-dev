@@ -12,7 +12,42 @@ function initManageUsers() {
     initLoginAs();
     initAggregations();
     initSort();
+    initSaveAsDynamicGroup();
     //initUploadUsersFile();
+}
+
+function initSaveAsDynamicGroup() {
+    $("body").on("click", "#btnSaveDynaGroup", function(e) {
+        e.preventDefault();
+        var newTitle = prompt("Please enter the name for the new dynamic group");
+        if( newTitle ) {
+            
+            var uri = URI(window.location);
+            
+            var data = uri.search(true);
+            data["saveAsGroupTitle"] = newTitle;
+            flog("save data", data);
+            
+            $.ajax({
+                type: 'POST',
+                url: window.location.pathname,
+                dataType: 'json',
+                data: data,
+                success: function (data) {
+                    flog('success', data)
+                    if (data.status) {
+                        Msg.info("Created group, redirecting..")
+                        window.location = data.nextHref;
+                    } else {
+                        Msg.error('Oh No! Something went wrong! ' + data.messages);
+                    }
+                },
+                error: function (resp) {
+                    Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
+                }
+            });            
+        }
+    });
 }
 
 function initChangeUserId() {

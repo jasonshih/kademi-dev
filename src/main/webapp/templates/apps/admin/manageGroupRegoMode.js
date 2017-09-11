@@ -395,6 +395,7 @@ function initQueryBuilder() {
     $('form.query-builder').forms({
         onValid : function() {
             var rules = builder.queryBuilder('getRules');
+            rules = checkRuleType(rules);
             rulesInput.val( JSON.stringify(rules) );
             flog("onValid", rules);
         },
@@ -423,4 +424,23 @@ function initQueryBuilder() {
         });
     });
     $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
+}
+
+function checkRuleType(rules) {
+    if (rules.condition) {
+        rules.ruleType = 'ruleList';
+        rules.rules = checkRuleType(rules.rules);
+    } else {
+        if ($.isArray(rules)) {
+            for (var i = 0; i < rules.length; i++) {
+                if (rules[i].condition) {
+                    rules[i] = checkRuleType(rules[i]);
+                } else {
+                    rules[i].ruleType = 'rule';
+                }
+            }
+        }
+    }
+
+    return rules;
 }
