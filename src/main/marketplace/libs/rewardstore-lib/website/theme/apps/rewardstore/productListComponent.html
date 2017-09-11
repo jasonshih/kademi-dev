@@ -20,8 +20,8 @@
     
                     #set ($prodUrl = $p.fields.path.value)
                     #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.field.primaryImageHref.value )
-                        #set($bg = $p.field.primaryImageHref.value)
+                    #if( $p.fields.primaryImageHref.value )
+                        #set($bg = $p.fields.primaryImageHref.value)
                     #end
     
                     <div class="$clsName product-item">
@@ -53,8 +53,8 @@
                 #foreach($p in $prods.hits.hits)
                     #set ($prodUrl = $p.fields.path.value)
                     #set($bg = "/static/images/photo_holder.png")
-                    #if( $p.field.primaryImageHref.value )
-                        #set($bg = $p.field.primaryImageHref.value)
+                    #if( $p.fields.primaryImageHref.value )
+                        #set($bg = $p.fields.primaryImageHref.value)
                     #end
                     <div class="media prod">
                         <div class="media-left hidden-sm hidden-xs">
@@ -66,10 +66,10 @@
                             <h4 class="media-heading" style="margin-bottom: 10px;">
                                 <a href="$prodUrl">$p.fields.title.value</a>
                             </h4>
-                            <p><label class="label label-success" style="font-size: 14px;">$p.field.finalPoints.value Pts</label></p>
+                            <p><label class="label label-success" style="font-size: 14px;">$p.fields.finalPoints.value Pts</label></p>
                             <div class="media-content clearfix">
                                 <div class="productNotes">
-                                    $!p.field.notes.value
+                                    $!p.fields.notes.value
                                 </div>
                                 <div>
                                     <a href="$prodUrl" class="btn btn-default btn-sm" role="button">View</a>
