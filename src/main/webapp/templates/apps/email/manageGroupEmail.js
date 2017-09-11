@@ -226,20 +226,24 @@ function pollStatus() {
                 status: 'true'
             },
             success: function (resp) {
-                displayStatus(resp.data);
-                if (resp.data.statusCode === '') {
-                    setTimeout(pollStatus, 2000);
-                } else if (resp.data.statusCode === 's') {
-                    statusTools.attr('class', 'Canceled page-action');
-                } else if (resp.data.statusCode !== 'c') {
-                    statusTools.attr('class', 'Running page-action');
-                    setTimeout(pollStatus, 2000);
+                if (resp.status) {
+                    displayStatus(resp.data);
+                    if (resp.data.statusCode === '') {
+                        setTimeout(pollStatus, 2000);
+                    } else if (resp.data.statusCode === 's') {
+                        statusTools.attr('class', 'Canceled page-action');
+                    } else if (resp.data.statusCode !== 'c') {
+                        statusTools.attr('class', 'Running page-action');
+                        setTimeout(pollStatus, 2000);
+                    } else {
+                        flog("job status is finished, so just poll open rate");
+                        $(".send-progress .progress").hide();
+                        $("#open-rate").show();
+                        statusTools.attr('class', 'Completed page-action');
+                        pollOpenRate();
+                    }
                 } else {
-                    flog("job status is finished, so just poll open rate");
-                    $(".send-progress .progress").hide();
-                    $("#open-rate").show();
-                    statusTools.attr('class', 'Completed page-action');
-                    pollOpenRate();
+                    setTimeout(pollStatus, 2000);
                 }
             },
             error: function (resp) {
@@ -259,7 +263,6 @@ function pollOpenRate() {
 
 function displayStatus(data) {
     flog('displayStatus', data);
-    var tbody = $('#emails').find('tbody');
     var status = $('#status');
     var progress = status.find('.progress');
     var progressBar = progress.find('.progress-bar');
@@ -305,13 +308,15 @@ function displayStatus(data) {
 
         progressBar.next().text(txtProgress);
 
-
-        addRows(data.sending, 'Sending..', tbody);
-        addRows(data.retrying, 'Retrying..', tbody);
-        removeOkRows(data.sending.concat(data.retrying), tbody);
+        $('#groupEmail-totalToSend').text(data.totalToSend);
+        $('#groupEmail-totalGenerated').text(data.totalGenerated);
+        $('#groupEmail-totalSuccessful').text(data.successful);
+        $('#groupEmail-totalFailed').text(data.totalFailed);
+        $('#groupEmail-totalOpened').text(data.opened);
+        $('#groupEmail-totalConverted').text(data.converted);
+        $('#groupEmail-totalRetrying').text(data.totalRetrying);
     } else {
         status.children('div').hide().filter('.notsent').show();
-        tbody.html('');
     }
 }
 
