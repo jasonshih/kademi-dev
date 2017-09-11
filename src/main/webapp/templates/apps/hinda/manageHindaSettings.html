@@ -145,19 +145,21 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Start</th>
-                        <th>End</th>
+                        <th>Date</th>
                         <th>Products Added</th>
                         <th>Products Removed</th>
+                        <th>Catalog ID</th>
+                        <th>Account Number</th>
                     </tr>
                 </thead>
                 <tbody>
                     #foreach($log in $page.logs)
                     <tr>
-                        <td class="timeago" title="$formatter.formatDateISO8601($log.start)">$log.start</td>
                         <td class="timeago" title="$formatter.formatDateISO8601($log.start)">$log.end</td>
                         <td>$log.added</td>
                         <td>$log.removed</td>
+                        <td>$log.catalogId</td>
+                        <td>$log.account</td>
                     </tr>
                     #end
                 </tbody>
