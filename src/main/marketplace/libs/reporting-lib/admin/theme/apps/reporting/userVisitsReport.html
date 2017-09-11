@@ -16,6 +16,10 @@
             <i class="fa fa-bar-chart"></i> User Visits
         </div>
         <div class="panel-body" id="userVisitsReportWrap">
+            <div class="text-right">
+                <a href="userVisitReport.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
+            </div>
+            <br>
             <code class="hide">$applications.get("reporting-lib").call("getUserReportData", $page)</code>
             <svg class="userVisitsReport">
 

@@ -46,6 +46,11 @@
                             "cardinality" : {
                                 "field" : "reqUser"
                             }
+                        },
+                        "byUsers": {
+                            "terms": {
+                                "field": "reqUser"
+                            }
                         }
                     }
                 }
