@@ -1,0 +1,7 @@
+.accordionWrap .panel-title a.collapsed .panelIcon:before{
+    content: "\f103";
+}
+
+.accordionWrap .panel-title a .panelIcon:before{
+    content: "\f102";
+}
