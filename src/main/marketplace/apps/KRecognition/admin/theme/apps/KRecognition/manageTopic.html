@@ -75,8 +75,67 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
                     <div class="panel-body">
-                        <button type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
+                        <button data-toggle="modal" data-target="#modal-krecognition-create-level" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Level</button>
+                        <button type="button" class="btn btn-success pull-right btn-generate-awards">
+                            <i class="fa fa-gift"></i> Generate awards
+                        </button>
                     </div>
+                    <table class="table">
+                        <colgroup>
+                            <col width="100px"/>
+                            <col/>
+                            <col/>
+                            <col width="85px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Title</th>
+                                <th>Amount</th>
+                                <th>Num awards</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="krecognition-levels-body">
+                            #foreach($level in $formatter.sortByProperty($topic.levels, "levelAmount"))
+                            <tr 
+                                data-levelid="$level.id"
+                                data-levelname="$!formatter.htmlEncode($level.name)"
+                                data-leveltitle="$!formatter.htmlEncode($level.title)"
+                                data-levelamount="$!level.levelAmount"
+                                >
+                                <td>
+                                    #if($level.imageHash)
+                                    <div class="col-md-12">
+                                        <a target="_blank" href="/_hashes/files/$level.imageHash" class="thumbnail">
+                                            <img src="/_hashes/files/$level.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
+                                        </a>
+                                    </div>
+                                    <button class="btn btn-xs btn-warning btn-krecognition-level-img-del"><i class="fa fa-trash"></i> Remove Image</button>
+                                    #else
+                                    <button type="button" title="Upload Image" class="btn btn-sm btn-success btn-krecognition-level-img-upload">
+                                        <i class="fa fa-upload"></i>
+                                    </button>
+                                    #end
+                                </td>
+                                <td>$!level.title</td>
+                                <td>$!level.levelAmount</td>
+                                <td>$!level.numAwarded</td>
+                                <td>
+                                    <div class="btn-group pull-right" role="group">
+                                        <button type="button" class="btn btn-primary btn-krecognition-level-update"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" class="btn-krecognition-level-del"><i class="fa fa-trash"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -84,7 +143,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Badges</div>
                     <div class="panel-body">
-                        <button data-toggle="modal" data-target="#model-krecognition-create-badge" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Badge</button>
+                        <button data-toggle="modal" data-target="#modal-krecognition-create-badge" type="button" class="btn btn-success"><i class="fa fa-plus"></i> Add Badge</button>
                     </div>
                     <table class="table">
                         <colgroup>
@@ -103,7 +162,11 @@
                         </thead>
                         <tbody id="krecognition-badges-body">
                             #foreach($badge in $topic.badges)
-                            <tr>
+                            <tr
+                                data-badgeid="$badge.id"
+                                data-badgename="$formatter.htmlEncode($badge.name)"
+                                data-badgetitle="$formatter.htmlEncode($badge.title)"
+                                >
                                 <td>
                                     #if($badge.imageHash)
                                     <div class="col-md-12">
@@ -111,9 +174,9 @@
                                             <img src="/_hashes/files/$badge.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
                                         </a>
                                     </div>
-                                    <button data-badgeid="$badge.id" class="btn btn-xs btn-warning btn-krecognition-badge-img-del"><i class="fa fa-trash"></i> Remove Image</button>
+                                    <button class="btn btn-xs btn-warning btn-krecognition-badge-img-del"><i class="fa fa-trash"></i> Remove Image</button>
                                     #else
-                                    <button type="button" title="Upload Image" data-badgeid="$badge.id" class="btn btn-sm btn-success btn-krecognition-badge-img-upload">
+                                    <button type="button" title="Upload Image" class="btn btn-sm btn-success btn-krecognition-badge-img-upload">
                                         <i class="fa fa-upload"></i>
                                     </button>
                                     #end
@@ -122,12 +185,12 @@
                                 <td></td>
                                 <td>
                                     <div class="btn-group pull-right" role="group">
-                                        <button data-badgeid="$badge.id" type="button" class="btn btn-primary"><i class="fa fa-pencil"></i></button>
+                                        <button type="button" class="btn btn-primary btn-krecognition-badge-update"><i class="fa fa-pencil"></i></button>
                                         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a data-badgeid="$badge.id" href="#" class="btn-krecognition-badge-del"><i class="fa fa-trash"></i> Delete</a></li>
+                                            <li><a href="#" class="btn-krecognition-badge-del"><i class="fa fa-trash"></i> Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -137,10 +200,27 @@
                     </table>
                 </div>
             </div>
-
         </div>
+        
+        <hr/>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Rewards</div>
+            <table class="table">
+                #foreach($award in $topic.allAwards)
+                <tr>
+                    <td>$award.recognition.title</td>
+                    <td>
+                        <a href="/manageUsers/$award.awardedTo.id">$award.awardedTo.formattedName</a>                        
+                    </td>
+                    <td>$award.createdDate</td>
+                </tr>
+                #end
+            </table>                    
+        </div>
+        
 
-        <div id="model-krecognition-create-badge" class="modal fade" tabindex="-1" role="dialog">
+        <div id="modal-krecognition-create-badge" class="modal fade" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <form class="form-horizontal" method="POST" action="$page.href">
@@ -154,7 +234,7 @@
                                 <div class="form-message alert alert-danger" style="display: none;"></div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-4">Code</label>
+                                    <label class="control-label col-md-2">Code</label>
 
                                     <div class="col-md-8">
                                         <input type="text" name="newName" class="form-control required reallySimpleChars" placeholder="A unique identifier"/>
@@ -163,7 +243,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-4">Title</label>
+                                    <label class="control-label col-md-2">Title</label>
 
                                     <div class="col-md-8">
                                         <input type="text" name="title" class="form-control required" placeholder="User friendly name"/>
@@ -174,6 +254,144 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-krecognition-update-badge" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="POST" action="$page.href">
+                        <input type="hidden" name="badgeid"/>
+                        <input type="hidden" name="updateBadge" value="true"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Update Badge <span class='krecognition-badge-title'></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Code</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="newName" class="form-control required reallySimpleChars" placeholder="A unique identifier"/>
+                                        <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="title" class="form-control required" placeholder="User friendly name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-krecognition-create-level" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="POST" action="$page.href">
+                        <input type="hidden" name="createLevel" value="true"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">New Level</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Code</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="newName" class="form-control required reallySimpleChars" placeholder="A unique identifier"/>
+                                        <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="title" class="form-control required" placeholder="User friendly name"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Amount</label>
+
+                                    <div class="col-md-8">
+                                        <input type="number" step="0.01" name="levelAmount" class="form-control required" placeholder="The amount needed to reach this level"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-krecognition-update-level" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal" method="POST" action="$page.href">
+                        <input type="hidden" name="levelid"/>
+                        <input type="hidden" name="updateLevel" value="true"/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Update Level <span class='krecognition-level-title'></span></h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="modal-body">
+                                <div class="form-message alert alert-danger" style="display: none;"></div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Code</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="newName" class="form-control required reallySimpleChars" placeholder="A unique identifier"/>
+                                        <small>Please use simple characters only, like letters and numbers, and do not use spaces and punctuation etc.</small>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Title</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="title" class="form-control required" placeholder="User friendly name"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Amount</label>
+
+                                    <div class="col-md-8">
+                                        <input type="number" step="0.01" name="levelAmount" class="form-control required" placeholder="The amount needed to reach this level"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
                 </div>

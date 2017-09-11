@@ -77,7 +77,13 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/salesdata/panelKpiTarget.js"
+                "path": "/theme/apps/salesdata/circleSales.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/salesTable.js"
             }
         },
         {
@@ -89,7 +95,7 @@
         {
             "less": {
                 "lessMedia": "all",
-                "path": "/theme/apps/salesdata/panelKpiTarget.less"
+                "path": "/theme/apps/salesdata/circleSales.less"
             }
         }
     ]

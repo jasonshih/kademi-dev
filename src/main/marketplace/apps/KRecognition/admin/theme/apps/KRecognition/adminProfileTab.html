@@ -1,0 +1,91 @@
+<div class="krecognition-profile-achievements-tab">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-star-half-o" aria-hidden="true"></i>Levels</div>
+                <table class="table">
+                    <colgroup>
+                        <col width="100px"/>
+                        <col/>
+                        <col/>
+                        <col width="85px"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="krecognition-levels-body">
+                        #foreach($level in $formatter.sortByProperty($topic.levels, "levelAmount"))
+                        <tr 
+                            data-levelid="$level.id"
+                            data-levelname="$!formatter.htmlEncode($level.name)"
+                            data-leveltitle="$!formatter.htmlEncode($level.title)"
+                            data-levelamount="$!level.levelAmount"
+                            >
+                            <td>
+                                #if($level.imageHash)
+                                <div class="col-md-12">
+                                    <a target="_blank" href="/_hashes/files/$level.imageHash" class="thumbnail">
+                                        <img src="/_hashes/files/$level.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
+                                    </a>
+                                </div>
+                                #end
+                            </td>
+                            <td>$!level.title</td>
+                            <td>$!level.levelAmount</td>
+                            <td>$formatter.formatDateTime($level.createdDate)</td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading"><i class="fa fa-shield" aria-hidden="true"></i>Badges</div>
+                <table class="table">
+                    <colgroup>
+                        <col width="100px"/>
+                        <col/>
+                        <col width="130px"/>
+                        <col width="35px"/>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="krecognition-badges-body">
+                        #foreach($badge in $badges)
+                        <tr data-awardid="$badge.id">
+                            <td>
+                                #if($badge.imageHash)
+                                <div class="col-md-12">
+                                    <a target="_blank" href="/_hashes/files/$badge.imageHash" class="thumbnail">
+                                        <img src="/_hashes/files/$badge.imageHash/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
+                                    </a>
+                                </div>
+                                #end
+                            </td>
+                            <td>$!badge.title</td>
+                            <td>$formatter.formatDateTime($badge.createdDate)</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-danger btn-krecognition-award-del" title="Delete awarded badge"><i class="fa fa-times"></i></button>
+                            </td>
+                        </tr>
+                        #end
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

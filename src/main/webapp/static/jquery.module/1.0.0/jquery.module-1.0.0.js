@@ -454,7 +454,7 @@
             if (!self.isCompletable) {
                 // For a non-completable enrolement we allow users to view any page in any order
                 nextEnabled = true;
-            } else if (!options.isCompleted && (!isBeyondCurrent || (isBeyondCurrent && !modStatusComplete)) && (quiz.length > 0 || isLastPage)) {
+            } else if (!options.isCompleted && (!isBeyondCurrent || (isBeyondCurrent && !options.isCompleted)) && (quiz.length > 0 || isLastPage)) {
                 $('a.nextBtn').addClass('quizSubmit').find('span').text('Submit');
                 nextEnabled = true;
             } else {
@@ -518,6 +518,7 @@
             
             if (incompleteInputs.length > 0) {
                 flog('[jquery.module] Found incomplete input', incompleteInputs);
+                incompleteInputs.addClass('error');
                 self.showNextPopup(incompleteInputs);
                 
                 return false;
@@ -530,20 +531,22 @@
             flog('[jquery.module] showNextPopup');
             
             var popout = $('div.pages div.popout');
-            var popoutSpan = popout.find('span');
-            popoutSpan.html('Please enter <a href="#">required fields</a>');
-            popoutSpan.find('a').click(function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                $('html, body').animate({
-                    scrollTop: incompleteInput.first().offset().top
-                }, 1000);
-                
-            });
-            
-            pulseBorder(incompleteInput);
-            popout.show(100);
+            if( popout.length > 0 ) {
+                var popoutSpan = popout.find('span');
+                popoutSpan.html('Please enter <a href="#">required fields</a>');
+                popoutSpan.find('a').click(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    $('html, body').animate({
+                        scrollTop: incompleteInput.first().offset().top
+                    }, 1000);
+
+                });            
+                popout.show(100);
+            } else {
+                alert('Please enter the required fields highlighted in red');
+            }
         },
         
         findIncompleteInputs: function () {

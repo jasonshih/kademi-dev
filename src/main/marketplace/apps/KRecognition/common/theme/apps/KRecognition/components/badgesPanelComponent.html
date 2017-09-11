@@ -1,0 +1,18 @@
+#set( $recognitionService = $applications.userApp.recognitionService )
+#set( $badges = $recognitionService.getAwardedBadges($topic) )
+#set( $topic = $recognitionService.getTopic($topic) )
+
+
+<h1>$topic.title</h1>
+#if( !$badges or $badges.empty)
+NO BADGES
+#else
+
+#foreach($b in $badges)
+    $b.recognition.title
+    #if ($b.recognition.imageHash)
+    <img src="/_hashes/files/$b.recognition.imageHash"/>
+    #end
+#end
+
+#end

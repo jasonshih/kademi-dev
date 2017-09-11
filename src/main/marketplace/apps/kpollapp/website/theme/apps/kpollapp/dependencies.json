@@ -3,6 +3,10 @@
         {
             "appId": "KongoDB",
             "branch": ""
+        },
+        {
+            "appId": "rewards",
+            "branch": ""
         }
     ],
     "dependencies": [

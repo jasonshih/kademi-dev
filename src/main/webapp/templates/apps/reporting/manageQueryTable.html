@@ -5,8 +5,8 @@
     </head>
     <body>
         <h2>Query Table: $page.name</h2>
-        <a href="${page.href}?as=json" class="btn btn-info">JSON</a> |
-        <a href="${page.href}?as=csv" class="btn btn-info">CSV</a> |
+        <a href="${page.href}?as=json" download="${page.name}.json" class="btn btn-info"><i class="fa fa-download"></i> JSON</a>
+        <a href="${page.href}?as=csv" download="${page.name}.csv" class="btn btn-info"><i class="fa fa-download"></i> CSV</a>
 
         <div id="queryTable">
             #set( $resp = $page.records )
@@ -38,7 +38,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td>
+                            <td colspan="99">
                                 $!paginator.html("records")
                             </td>
                         </tr>

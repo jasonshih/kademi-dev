@@ -21,21 +21,31 @@
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaToken">Token</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control required" id="appName" name="hindaToken" value="$!page.token" />
+                        <input type="text" class="form-control required" id="hindaToken" name="hindaToken" value="$!page.token" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaUsername">Username</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control required simpleChars" id="appName" name="hindaUsername" value="$!page.username" />
+                        <input type="text" class="form-control required simpleChars" id="hindaUsername" name="hindaUsername" value="$!page.username" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-sm-2 control-label" for="hindaPassword">Password</label>
                     <div class="col-sm-9">
-                        <input type="password" class="form-control required" id="appName" name="hindaPassword" value="$!page.password" />
+                        <input type="password" class="form-control required" id="hindaPassword" name="hindaPassword" value="$!page.password" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaUseProduction">Server</label>
+                    <div class="col-sm-9">
+                        <select class="form-control required" name="hindaUseProduction" id="hindaUseProduction">
+                            $formatter.option('false', 'UAT', $page.useProduction)
+                            $formatter.option('true', 'Production', $page.useProduction)
+                        </select>
                     </div>
                 </div>
 
@@ -67,13 +77,97 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="country">Country</label>
+                    <div class="col-sm-9">
+                        #if ($page.country)
+                        <input type="text" class="form-control disabled" disabled value="$page.country" />
+                        <i>You can configure the country from the organisation page.</i>
+                        #else
+                        <div class="alert alert-danger">
+                            Please configure the country in the organisation page.
+                        </div>
+                        #end
+                    </div>
+                </div>  
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="hindaRewardStore">Reward Store</label>
+                    <div class="col-sm-9">
+                        <select name="hindaRewardStore" class="form-control" multiple="true">
+                            #foreach($store in $applications.rewardStore.stores)
+                            <option value="$store.name" #if( $page.isStoreSelected($store.name)) selected="selected" #end>$store.title</option>
+                            #end
+                        </select>
+                        <i>All the products are going to be added automatically to this reward store.</i>
+                    </div>
+                </div>
+
                 <p class="pull-right">
                     <button class="btn btn-success" type="submit"><i class="fa fa-save"></i> Save</button>
                 </p>
 
             </form>
+            <h4>Stats</h4>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Process</th>
+                        <th>Status</th>
+                        <th>Last run</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>Category</b></td>
+                        <td>$!page.getBySettings("CategoryImportProcessor")</td>
+                        <td>$!page.getBySettings("CategoryImportProcessorlastrun")</td>
+                    </tr>    
+                    <tr>
+                        <td><b>Product</b></td>
+                        <td>$!page.getBySettings("ProductImportProcessor")</td>
+                        <td>$!page.getBySettings("ProductImportProcessorlastrun")</td>
+                    </tr>                
+                    <tr>
+                        <td><b>Order Status</b></td>
+                        <td>$!page.getBySettings("OrderStatusImportProcessor")</td>
+                        <td>$!page.getBySettings("OrderStatusImportProcessorlastrun")</td>
+                    </tr>     
+                    <tr>
+                        <td><b>Send Product Order</b></td>
+                        <td>$!page.getBySettings("SendProductOrderProcessor")</td>
+                        <td>$!page.getBySettings("SendProductOrderProcessorlastrun")</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+            <h5>Products log</h5>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Products Added</th>
+                        <th>Products Removed</th>
+                        <th>Catalog ID</th>
+                        <th>Account Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    #foreach($log in $page.logs)
+                    <tr>
+                        <td class="timeago" title="$formatter.formatDateISO8601($log.start)">$log.end</td>
+                        <td>$log.added</td>
+                        <td>$log.removed</td>
+                        <td>$log.catalogId</td>
+                        <td>$log.account</td>
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+
         </div>
-        <script>
+
+        <script type="text/javascript">
             hindaApp();
         </script>
     </body>

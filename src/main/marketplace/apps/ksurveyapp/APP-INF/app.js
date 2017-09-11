@@ -171,8 +171,7 @@ function checkRedirect(page, params) {
     return views.redirectView(href);
 }
 
-
-controllerMappings.addNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js");
+controllerMappings.addGoalNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js", null);
 
 controllerMappings.addComponent("ksurveyapp", "ksurveyEmail", "email", "Shows button with link to survey", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyForm", "html", "Shows survey form questions", "Ksurvey App component");

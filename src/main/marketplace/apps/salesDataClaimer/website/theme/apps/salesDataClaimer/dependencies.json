@@ -9,6 +9,10 @@
             "branch": ""
         },
         {
+            "appId": "productsApp",
+            "branch": ""
+        },
+        {
             "appId": "KongoDB",
             "branch": ""
         },
@@ -49,7 +53,7 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/theme/apps/salesDataClaimer/claimsList.css"
+                "path": "/theme/apps/salesDataClaimer/salesDataClaimer.css"
             }
         },
         {

@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Activate Alert Action</title>
+    </head>
+    <body>
+        #if( $params.mode == "settings" )
+        <form method="POST" action="$page.path" class="form-horizontal" id="frmDetails">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="website">Website</label>
+                    <select name="website" class="form-control website">
+                        $formatter.option("", "[No website selected]", $page.websites)
+                        #foreach($website in $rootFolder.websites)
+                        $formatter.option($website.name, $website.name, $page.websiteName)
+                        #end
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label for="alertId">Alert Name</label>
+                    <select name="alertId" class="form-control alertId">
+                        $formatter.option("", "[No alert selected]", $page.alerts)
+                        #foreach($alert in $page.getAlerts($rootFolder.organisation))
+                            $formatter.option($alert.name, $alert.name, $page.alertName)
+                        #end
+                    </select>
+                </div>
+            </div>
+        </form>
+        #end
+    </body>
+</html>

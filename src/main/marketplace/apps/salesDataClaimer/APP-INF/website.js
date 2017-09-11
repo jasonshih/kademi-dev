@@ -9,7 +9,6 @@ controllerMappings
     .websiteController()
     .path('/salesDataClaims/')
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
-    .addMethod('GET', 'getClaims')
     .addMethod('POST', 'createClaim', 'createClaim')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
     .postPriviledge('WRITE_CONTENT')
@@ -39,13 +38,12 @@ controllerMappings
     .enabled(true)
     .build();
 
-
 function getOwnClaims(page, params) {
-    log.info('getOwnClaims.2 > page={}, params={}', page, params);
-
+    log.info('getOwnClaims > page={}, params={}', page, params);
+    
     if (!params.claimId) {
-        var results = searchOwnClaims(page, params.status);
-        page.attributes.searchResult = results;
+        var currentUser = securityManager.getCurrentUser();
+        return searchClaims(page, params.status, currentUser);
     }
 }
 
@@ -55,152 +53,83 @@ function searchProducts(page, params) {
     return views.jsonObjectView(prods);
 }
 
-function searchOwnClaims(page, status) {
-    try {
-        var currentUser = securityManager.getCurrentUser();
-        log.info("searchOwnClaims: user.2={}", currentUser.name);
-        var queryJson = {
-            'stored_fields': [
-                'receipt',
-                'recordId',
-                'soldDate',
-                'enteredDate',
-                'modifiedDate',
-                'amount',
-                'status',
-                'productSku'
-            ],
-            'size': 10000,
-            'sort': [
-                {
-                    'modifiedDate': 'desc'
-                }
-            ],
-            'query': {
-                'bool': {
-                    'must': [
-                        {'type': {'value': TYPE_RECORD}}
-                        ,{'term': {'soldBy': currentUser.name}}
-                    ]
-                }
-            }
-        };
-
-        if (status) {
-            queryJson.query.bool.must.push({
-                'term': {'status': +status}
-            });
-        }
-
-        var searchResult = doDBSearch(page, queryJson);
-
-        page.attributes.claimsResult = searchResult;
-
-    } catch (e) {
-        log.error('ERROR in getClaims: ' + e);
-    }
-}
-
-function getClaim(page, params) {
-    log.info('getClaim > page={}, params={}', page, params);
-
-    var result = {
-        status: true
-    };
-
-    try {
-        var db = getDB(page);
-        var claim = db.child(page.attributes.claimId);
-
-        if (claim !== null) {
-            result.data = claim.jsonObject + '';
-        } else {
-            result.status = false;
-            result.messages = ['This claim does not exist'];
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error when getting claim: ' + e];
-    }
-
-    return views.jsonObjectView(JSON.stringify(result));
-}
-
 function createClaim(page, params, files) {
     log.info('createClaim > page={}, params={}', page, params);
-
+    
     var result = {
         status: true
     };
-
+    
     try {
         var currentRoles = securityManager.getRoles();
         log.info('currentRoles={}', currentRoles);
-
+        
         var db = getDB(page);
         var id = 'claim-' + generateRandomText(32);
-
+        
         var amount = +params.amount;
         if (isNaN(amount)) {
             result.status = false;
             result.messages = ['Amount must be digits'];
             return views.jsonObjectView(JSON.stringify(result));
         }
-
+        
         var tempDateTime = params.soldDate;
         var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
         var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
         var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-
+        var now = formatter.formatDateISO8601(formatter.now);
+        
         var obj = {
             recordId: id,
             soldBy: params.soldBy,
             soldById: params.soldById,
             amount: amount,
             soldDate: soldDate,
-            enteredDate: formatter.now,
-            modifiedDate: formatter.now,
+            enteredDate: now,
+            modifiedDate: now,
             productSku: params.productSku || '',
             status: RECORD_STATUS.NEW
         };
-
+        
         // Parse extra fields
         var extraFields = getSalesDataExtreFields(page);
         for (var i = 0; i < extraFields.length; i++) {
             var ex = extraFields[i];
             var fieldName = 'field_' + ex.name;
-
+            
             obj[fieldName] = params.get(fieldName) || '';
         }
-
+        
         // Upload receipt
         var uploadedFiles = uploadFile(page, params, files);
         if (uploadedFiles.length > 0) {
             obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
         }
-
+        
         db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
         eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
     } catch (e) {
+        log.error('Error when creating claim: ' + e);
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
     }
-
+    
     return views.jsonObjectView(JSON.stringify(result));
 }
 
 function updateClaim(page, params, files) {
     log.info('updateClaim > page={}, params={}', page, params);
-
+    
     var result = {
         status: true
     };
-
+    
     try {
         var db = getDB(page);
         var id = page.attributes.claimId;
         var claim = db.child(id);
-
+        
         if (claim !== null) {
             var amount = +params.amount;
             if (isNaN(amount)) {
@@ -208,12 +137,13 @@ function updateClaim(page, params, files) {
                 result.messages = ['Amount must be digits'];
                 return views.jsonObjectView(JSON.stringify(result));
             }
-
+            
             var tempDateTime = params.soldDate;
             var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
             var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
             var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-
+            var now = formatter.formatDateISO8601(formatter.now);
+            
             var obj = {
                 recordId: id,
                 soldBy: claim.jsonObject.soldBy,
@@ -221,78 +151,37 @@ function updateClaim(page, params, files) {
                 amount: amount,
                 soldDate: soldDate,
                 enteredDate: claim.jsonObject.enteredDate,
-                modifiedDate: formatter.now,
+                modifiedDate: now,
                 productSku: params.productSku || '',
                 status: claim.jsonObject.status,
                 receipt: claim.jsonObject.receipt
             };
-
+            
             // Parse extra fields
             var extraFields = getSalesDataExtreFields(page);
             for (var i = 0; i < extraFields.length; i++) {
                 var ex = extraFields[i];
                 var fieldName = 'field_' + ex.name;
-
+                
                 obj[fieldName] = params.get(fieldName) || '';
             }
-
+            
             // Upload receipt
             var uploadedFiles = uploadFile(page, params, files);
             if (uploadedFiles.length > 0) {
                 obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
             }
-
+            
             claim.update(JSON.stringify(obj), TYPE_RECORD);
         } else {
             result.status = false;
             result.messages = ['This claim does not exist'];
         }
     } catch (e) {
+        log.error('Error when updating claim: ' + e);
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
-
+    
     return views.jsonObjectView(JSON.stringify(result));
-}
-
-function deleteClaims(page, params) {
-    log.info('deleteClaims > page={}, params={}', page, params);
-
-    var result = {
-        status: true
-    };
-
-    try {
-        var db = getDB(page);
-        var ids = params.ids;
-        ids = ids.split(',');
-
-        for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
-
-                if (claim !== null && +claim.jsonObject.status === RECORD_STATUS.NEW) {
-                    claim.delete();
-                }
-            })(ids[i]);
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error in deleting: ' + e];
-    }
-
-    return views.jsonObjectView(JSON.stringify(result));
-}
-
-function getSalesDataExtreFields(page) {
-    var settings = getAppSettings(page);
-    var selectedDataSeries = settings.get('dataSeries');
-
-    var extraFields = [];
-
-    if (isNotNull(selectedDataSeries)) {
-        extraFields = applications.salesData.getDataSeriesExtraFields(selectedDataSeries);
-    }
-
-    return extraFields;
 }

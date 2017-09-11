@@ -1,0 +1,33 @@
+#if (!$displayType)
+    #set ($displayType = 'text-icon')
+#end
+
+#if ($topic && $topic != "")
+    #set( $recognitionService = $applications.userApp.recognitionService )
+    #set($award = $recognitionService.getHighestLevelAward($topic) )
+    #set( $topic = $recognitionService.getTopic($topic) )
+
+    <div class="panel panel-default panel-level-achievement">
+        #if ($showTopicName == 'true')
+            <div class="panel-heading">
+                <div class="panel-title">$!topic.title</div>
+            </div>
+        #end
+        <div class="panel-body">
+            #if( $award == $null )
+                <p class="text-center">No awarded level found</p>
+            #else
+                #if ($displayType == 'text-icon' || $displayType == 'icon')
+                    <p><img src="/_hashes/files/$award.recognition.imageHash" class="img-responsive center-block" alt="$award.recognition.title" /></p>
+                #end
+                #if ($displayType == 'text-icon' || $displayType == 'text')
+                    <div class="text-center">$award.recognition.title</div>
+                #end
+            #end
+        </div>
+    </div>
+#else
+    <p class="alert alert-warning">No topic was selected</p>
+#end
+
+

@@ -72,7 +72,7 @@
                                 #if($variant.sku)
                                     #set($foundSku = true)
                                 #end
-                                <tr id="product-row-$product.id">
+                                <tr id="product-row-$product.id" data-skuid="$!variant.productSku.id">
                                     <td data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
                                         #if($variant.imageUrl)
                                             <div class="col-md-12 product-image-thumb">
@@ -108,7 +108,7 @@
                                     </td>
                                     #foreach($loc in $page.allLocations)
                                         <td>
-                                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="$!variant.getStock($loc)" />
+                                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="" />
                                         </td>
                                     #end
                                 </tr>

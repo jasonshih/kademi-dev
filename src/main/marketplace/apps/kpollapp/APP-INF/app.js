@@ -82,4 +82,4 @@ controllerMappings
 controllerMappings.addComponent("kpollapp/components", "kpoll", "html", "Shows polls", "KPoll App component");
 controllerMappings.addComponent("kpollapp/components", "kpollsTile", "html", "Shows polls in tile format", "KPoll App component;Tile component");
 
-controllerMappings.addNodeType("kpollAnsweredGoal", "kpollapp/kpollAnsweredGoalNode.js");
+controllerMappings.addGoalNodeType("kpollAnsweredGoal", "kpollapp/kpollAnsweredGoalNode.js", null);

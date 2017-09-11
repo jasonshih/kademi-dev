@@ -62,17 +62,9 @@ function initGroupDelete() {
 function initDateTimePickers() {
     var opts = {
         format: "DD/MM/YYYY HH:mm",
-        minDate: moment().tz(window.KademiTimeZone),
         timeZone: window.KademiTimeZone
     };
-
-    $('#auctionStartDate').datetimepicker(opts).on('dp.change', function (e) {
-        setTimeout(function () {
-            var d = $('#auctionStartDate').data("DateTimePicker").date();
-            var c = moment(d).add(1, 'h');
-            $('#auctionEndDate').data("DateTimePicker").minDate(d).date(c);
-        },0)
-    });
+    $('#auctionStartDate').datetimepicker(opts);
     $('#auctionEndDate').datetimepicker(opts);
 }
 
