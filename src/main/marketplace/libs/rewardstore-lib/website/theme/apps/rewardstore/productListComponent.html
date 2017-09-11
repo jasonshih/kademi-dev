@@ -18,7 +18,7 @@
             <div class="row products-list rewardStoreCategoryProductsComponent " id="products-list-${prodsListId}">
                 #foreach($p in $prods.hits.hits)
     
-                    #set ($prodUrl = $p.fields.path.value)
+                    #set ($prodUrl = '/' + $p.fields.path.value)
                     #set($bg = "/static/images/photo_holder.png")
                     #if( $p.fields.primaryImageHref.value )
                         #set($bg = $p.fields.primaryImageHref.value)
@@ -51,7 +51,8 @@
         #else
             <div class="products-list" id="products-list-${prodsListId}">
                 #foreach($p in $prods.hits.hits)
-                    #set ($prodUrl = $p.fields.path.value)
+    
+                    #set ($prodUrl = '/' + $p.fields.path.value)
                     #set($bg = "/static/images/photo_holder.png")
                     #if( $p.fields.primaryImageHref.value )
                         #set($bg = $p.fields.primaryImageHref.value)
