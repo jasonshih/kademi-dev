@@ -19,6 +19,12 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/content/accordion.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/toggleMenu.js"

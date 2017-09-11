@@ -18,8 +18,8 @@
             </div>
             <div class="form-group">
                 <div class="col-md-12">
-                    <label for="alertName">Alert Name</label>
-                    <select name="alertName" class="form-control alertName">
+                    <label for="alertId">Alert Name</label>
+                    <select name="alertId" class="form-control alertId">
                         $formatter.option("", "[No alert selected]", $page.alerts)
                         #foreach($alert in $page.getAlerts($rootFolder.organisation))
                             $formatter.option($alert.name, $alert.name, $page.alertName)

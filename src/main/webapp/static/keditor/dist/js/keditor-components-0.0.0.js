@@ -6,7 +6,7 @@
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
 /**
- * KEditor Jumbotron Component
+ * KEditor accordion Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
  * @version: @{version}
@@ -17,7 +17,8 @@
     var flog = KEditor.log;
 
     KEditor.components['accordion'] = {
-        settingEnabled: false,
+        settingEnabled: true,
+        settingTitle: 'Accordion Settings',
 
         init: function (contentArea, container, component, keditor) {
             var options = keditor.options;
@@ -35,8 +36,9 @@
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 var title = p.find('a[data-toggle]').html();
+                p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
                 if (title.indexOf('<div>') === -1) {
-                    p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).html('<div>' + title + '</div>');
+                    p.find('a[data-toggle]').html('<div>' + title + '</div>');
                 }
             });
 
@@ -111,7 +113,16 @@
                 var h = $(this).html();
                 $(this).replaceWith('<div class="panel-body">' + h + '</div>');
             });
+            if (component.attr('data-initial-collapsed') == 'true'){
+                componentContent.find('.panel').each(function () {
+                    var panelTitle = $(this).find('.panel-heading a');
+                    var panelCollapse = $(this).find('.panel-collapse');
+                    panelCollapse.addClass('collapse').attr('aria-expanded', 'false').removeClass('in');
+                    panelTitle.addClass('collapsed').attr('aria-expanded', 'false');
+                });
+            }
             componentContent.find('.panel-footer, .btnAddAccordionItem').addClass('hide');
+
             return componentContent.html();
         },
 
@@ -123,6 +134,35 @@
             if (editor) {
                 editor.destroy();
             }
+        },
+        initSettingForm: function (form, keditor) {
+            flog('init "accordion" settings', form);
+
+            return $.ajax({
+                url: '/static/keditor/componentAccordionSettings.html',
+                type: 'get',
+                dataType: 'HTML',
+                success: function (resp) {
+                    form.html(resp);
+
+                    form.find('.collapsedAll').on('click', function () {
+                        var comp = keditor.getSettingComponent();
+                        comp.attr('data-initial-collapsed', this.checked);
+                    });
+
+                    form.find('.panelStyle').on('change', function (e) {
+                        var comp = keditor.getSettingComponent();
+                        var old = comp.attr('data-panel-style') || 'panel-default';
+                        comp.attr('data-panel-style', this.value);
+                        comp.find('.panel').removeClass(old).addClass(this.value);
+                    });
+                }
+            });
+        },
+
+        showSettingForm: function (form, component, keditor) {
+            form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
+            form.find('.panelStyle').val(component.attr('data-panel-style'));
         }
     };
 })(jQuery);

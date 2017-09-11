@@ -5,9 +5,12 @@
     <body class="manageModulePages">
 
         <h1>Training Results</h1>
-        
-        #set( $results = $applications.learning.searchModuleStatuses(null, null, null) )
-        
+
+        #set( $paginator = $formatter.paginator().skipToStart(false) )
+        #set( $m = $applications.learning.searchModuleStatuses(null, null, null, $paginator.start, $paginator.pageSize) )
+        #set( $paginator = $paginator.totalRecords($m.totalRecords) )
+        #set( $records = $paginator.records($m.records) )
+
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -17,13 +20,15 @@
                     <th>Learner</th>
                     <th>Created</th>
                     <th>Modified</th>
+                    <th>Expiry</th>
+                    <th>Renewal</th>
                     <th>Status</th>
                     <th>Page</th>
                 </tr>
             </thead>
             <tbody>
-                #foreach( $row in $results )
-                <tr>
+                #foreach( $row in $records )
+                <tr data-modulestatusid="$row.id">
                     <td>
                         <a href="/programs/$row.programCode/">$row.programCode</a>                        
                     </td>
@@ -37,11 +42,23 @@
                         <a href="/manageUsers/$row.profile.id">$row.profile.formattedName</a>                        
                     </td>
                     <td>
-                        <abbr class="timeago">$row.createdDate</abbr>                        
+                        $!formatter.formatDateTime($row.createdDate)
                     </td>
                     <td>
-                        <abbr class="timeago">$row.modifiedDate</abbr>
-                    </td>                    
+                        $!formatter.formatDateTime($row.modifiedDate)
+                    </td>
+                    <td>
+                        #if($row.expiryDate)
+                        $formatter.formatDateTime($row.expiryDate)
+                        &nbsp;&nbsp;<button type="button" class="btn btn-sm btn-info btn-ms-editExpiry" data-date="$formatter.formatDateTime($row.renewalDate)"><i class="fa fa-pencil"></i></button>
+                        #end
+                    </td>
+                    <td>
+                        #if($row.renewalDate)
+                        $formatter.formatDateTime($row.renewalDate)
+                        &nbsp;&nbsp;<button type="button" class="btn btn-sm btn-info btn-ms-editRenewal" data-date="$formatter.formatDateTime($row.renewalDate)"><i class="fa fa-pencil"></i></button>
+                        #end
+                    </td>
                     <td>
                         #if( $row.complete )
                         <span class="label label-success">Complete</span>
@@ -52,11 +69,42 @@
                     <td><span class="label label-warning">$!row.currentPage</span></td>
                 </tr>
                 #end
+                <tr>
+                    <td colspan="10" class="text-center">
+                        $!paginator.html(null)
+                    </td>
+                </tr>
             </tbody>
         </table>
-        
-        <script type="text/javascript" >
 
-        </script>
+        <div id="modal-learning-editDate" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form form-horizontal">
+                        <input type="hidden" name="updateModuleStatus" value="true"/>
+                        <input type="hidden" name="moduleStatusId" value=""/>
+                        <input type="hidden" name="updateField" value=""/>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Edit Field</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="newValue" class="col-sm-2 control-label">New Value</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="newValue" class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="/theme/apps/learner/manageTrainingResults.js" type="text/javascript">//</script>
     </body>
 </html>
