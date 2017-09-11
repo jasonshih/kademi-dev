@@ -151,6 +151,22 @@
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="">Start journey</label>
+                            <div class="col-md-9">
+                                <div class="well">
+                                    <select name="funnelRepository" class="form-control">
+                                        <option value="">[Do not start journey]</option>
+                                        #foreach( $journey in $page.find("/funnels").children )
+                                        $formatter.option($journey.name, $journey.title, $page.journey.name)
+                                        #end
+                                    </select>
+                                    <br/>
+                                    <br/>
+                                    <i>This will start the selected journey for all recipients of the email. Manage <a href="/funnels/">journeys here</a></i>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="form-group">
                             <label class="control-label col-md-3" for="notes">Notes</label>
