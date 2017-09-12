@@ -568,6 +568,14 @@
                     table.attr('data-groups', selectedGroups ? selectedGroups.join(',') : '');
                 });
                 
+                form.on('change', '.txt-experiment', function () {
+                    var txt = $(this);
+                    var expPath = txt.val(); // experiment / variant
+                    var container = keditor.getSettingContainer();
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-experiment', expPath);
+                });
+                
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
                     var txt = $(this);
                     var dataCss = txt.attr('data-css');
@@ -625,6 +633,10 @@
         $.each(selectedGroups, function (i, group) {
             selectGroupsItems.filter('[value="' + group + '"]').prop('checked', true);
         });
+        
+        var expPath = table.data("experiment");
+        var txtExperiment = form.find('.txt-experiment');
+        txtExperiment.val(expPath);
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');

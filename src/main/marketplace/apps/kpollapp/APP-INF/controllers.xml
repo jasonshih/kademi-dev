@@ -14,7 +14,6 @@
         <name>Poll Answerer</name>
         <privNames>
             <string>READ_CONTENT</string>
-            <string>WRITE_CONTENT</string>
         </privNames>
     </role>
 </controllers>
