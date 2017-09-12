@@ -568,12 +568,33 @@
                     table.attr('data-groups', selectedGroups ? selectedGroups.join(',') : '');
                 });
                 
-                form.on('change', '.txt-experiment', function () {
-                    var txt = $(this);
-                    var expPath = txt.val(); // experiment / variant
+                var cbbExperiment = form.find('.select-experiment');
+                $.ajax({
+                    url: '/experiments/',
+                    type: 'get',
+                    dataType: 'JSON',
+                    data: {
+                        asJson: true
+                    },
+                    success: function (resp) {
+                        var experimentOptionsStr = '';
+                        
+                        $.each(resp.data, function (i, experiment) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
+                            
+                            $.each(experiment.variants, function (k, variant) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
+                            });
+                        });
+                        
+                        cbbExperiment.append(experimentOptionsStr);
+                    }
+                });
+                
+                cbbExperiment.on('change', function () {
                     var container = keditor.getSettingContainer();
                     var table = container.find('.keditor-container-inner > table');
-                    table.attr('data-experiment', expPath);
+                    table.attr('data-experiment', this.value);
                 });
                 
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
@@ -635,7 +656,7 @@
         });
         
         var expPath = table.data("experiment");
-        var txtExperiment = form.find('.txt-experiment');
+        var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
         
         var columnsSettings = form.find('.columns-setting');
