@@ -52,19 +52,53 @@
             if ($('#options [type=checkbox].option:checked').length < 1) {
                 Msg.warning("Please select at least one category to backup");
             } else {
-                Msg.info('Processing Backup');
-                var options = $('#options [type=checkbox].option');
+                Kalert.confirm('You want to create a backup?', 'Ok', function () {
+                    Msg.info('Processing Backup');
+                    var options = $('#options [type=checkbox].option');
 
-                var data = {
-                    
-                };
-                options.each(function (count, item) {
-                    var t = $(item);
-                    var checked = t.is(":checked");
-                    if (checked) {
-                        data[t.attr('name')] = checked;
-                    }
+                    var data = {
+                        startBackup: true
+                    };
+                    options.each(function (count, item) {
+                        var t = $(item);
+                        var checked = t.is(":checked");
+                        if (checked) {
+                            data[t.attr('name')] = checked;
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        data: data,
+                        success: function (resp) {
+                            Msg.success('Backup process has been submitted');
+                            initBackgroundTask();
+                        },
+                        error: function () {
+                            Msg.error('Oh No! Something went wrong!');
+                        }
+                    });
                 });
+            }
+        });
+    }
+
+    // Init background task
+    function initBackgroundTask() {
+        initBackgroundJobStatus({
+            onComplete: function () {
+                $('#downloadBtn').show();
+                $('#btn-restore').show();
+                $('#backup-records-table').reloadFragment();
+            },
+            onRunning: function () {
+                $('#downloadBtn').hide();
+                $('#btn-restore').hide();
+            },
+            onError: function () {
+                $('#downloadBtn').show();
+                $('#btn-restore').show();
             }
         });
     }
@@ -73,5 +107,6 @@
     $(function () {
         initUploadButton();
         initStartBackup();
+        initBackgroundTask();
     });
 })(jQuery);
