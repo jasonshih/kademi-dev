@@ -248,6 +248,7 @@ function pollStatus() {
             },
             error: function (resp) {
                 flog('error', resp);
+                setTimeout(pollStatus, 2000);
             }
         });
     } catch (e) {
@@ -429,3 +430,74 @@ function doRemoveAttachment(name, callback) {
         }
     }
 }
+
+function initGroupEmailListStatusPolling() {
+    $('.emailStatusRunning').each(function (i, item) {
+        var a = $(item);
+        var row = a.closest('tr');
+        var href = row.data('jobhref');
+        new GroupStatusPolling(row, href);
+    });
+}
+
+function GroupStatusPolling(row, href) {
+    var _self = this;
+
+    _self.row = row;
+    _self.href = href;
+
+    _self.startPolling();
+}
+
+
+GroupStatusPolling.prototype.startPolling = function () {
+    var _self = this;
+
+    if (_self.pollingTimer) {
+        _self.pollingTimer = window.clearTimeout(_self.pollingTimer);
+    }
+
+    _self.pollingTimer = window.setTimeout(_self.doPoll.bind(_self), 5000);
+};
+
+GroupStatusPolling.prototype.doPoll = function () {
+    var _self = this;
+    _self.pollingTimer = window.clearTimeout(_self.pollingTimer);
+
+    $.ajax({
+        type: 'GET',
+        url: _self.href,
+        dataType: 'json',
+        data: {
+            status: 'true'
+        },
+        success: function (resp) {
+            if (resp.status) {
+                _self.row.find('.groupEmail-totalToSend').text(resp.data.totalToSend);
+                _self.row.find('.groupEmail-successful').text(resp.data.successful);
+                _self.row.find('.groupEmail-opened').text(resp.data.opened);
+                _self.row.find('.groupEmail-converted').text(resp.data.converted);
+
+                var openRate = (resp.data.opened / resp.data.successful) * 100;
+                if (Number.isNaN(openRate)) {
+                    openRate = '';
+                } else {
+                    openRate += '%';
+                }
+                _self.row.find('.groupEmail-openRate').text(openRate);
+                
+                var convertedRate = (resp.data.converted / resp.data.successful) * 100;
+                if (Number.isNaN(convertedRate)) {
+                    convertedRate = '';
+                } else {
+                    convertedRate += '%';
+                }
+                _self.row.find('.groupEmail-conversionRate').text(convertedRate);
+            }
+            _self.startPolling();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            _self.startPolling();
+        }
+    });
+};
