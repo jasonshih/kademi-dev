@@ -11,7 +11,7 @@ controllerMappings
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
     .addMethod('POST', 'createClaim', 'createClaim')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
-    .postPriviledge('WRITE_CONTENT')
+    .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
 
@@ -27,7 +27,7 @@ controllerMappings
     .path('/salesDataClaims/(?<claimId>[^/]*)/')
     .addMethod('GET', 'getClaim')
     .addMethod('POST', 'updateClaim', 'updateClaim')
-    .postPriviledge('WRITE_CONTENT')
+    .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
 

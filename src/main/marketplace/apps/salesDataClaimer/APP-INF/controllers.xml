@@ -18,7 +18,6 @@
         <name>SalesClaimEditor</name>
         <privNames>
             <string>READ_CONTENT</string>
-            <string>WRITE_CONTENT</string>
         </privNames>
     </role>
 
@@ -26,7 +25,6 @@
         <name>SalesClaimAdmin</name>
         <privNames>
             <string>READ_CONTENT</string>
-            <string>WRITE_CONTENT</string>
         </privNames>
     </role>
 </controllers>
