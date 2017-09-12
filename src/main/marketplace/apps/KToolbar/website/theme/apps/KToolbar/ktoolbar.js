@@ -245,6 +245,7 @@
             '                    <p class="form-message alert alert-danger" style="display: none;"></p>' +
             '                    <input type="hidden" name="sourceType" value="" />' +
             '                    <input type="hidden" name="sourceId" value="" />' +
+            '                    <input type="hidden" name="sourceText" value="" />' +
             '                    <input type="hidden" name="sourceField" value="" />' +
             '                    <input type="hidden" name="langCode" value="" />' +
             '                    <div class="form-group">' +
@@ -306,11 +307,16 @@
         if (sourceId == null) {
             sourceId = target.closest("form").data("source-id");
         }
+        var sourceText = target.data("source-text");
+        if (sourceText == null) {
+            sourceText = target.closest("form").data("source-text");
+        }
         var sourceField = target.data("source-field");
         var langCode = $.cookie('selectedLangCode');
         
         modal.find('[name=sourceType]').val(sourceType);
         modal.find('[name=sourceId]').val(sourceId);
+        modal.find('[name=sourceText]').val(sourceText);
         modal.find('[name=sourceField]').val(sourceField);
         modal.find('[name=langCode]').val(langCode);
         
@@ -324,6 +330,7 @@
             data: {
                 sourceType: sourceType,
                 sourceId: sourceId,
+                sourceText: sourceText,
                 sourceField: sourceField,
                 langCode: langCode,
                 asJson: true
