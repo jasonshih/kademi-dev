@@ -6,6 +6,23 @@
         <script type="text/javascript" src="manageExperiments.js">//</script>
     </head>
     <body>
+
+        <h1>$page.experiment.title</h1>
+        <hr/>
+        <p class="lead">
+        #if( $page.numSamples > 0 )
+        #set( $best = $page.bestVariant )
+        #if( $best ) 
+        The best performing variant is <b>$best.title</b> with a <b>$page.conversionRate($best) %</b> conversion rate, 
+        compared to the control rate of $!page.controlConversionRate %
+        #else
+        According to current data the control option is currently best.
+        #end
+        #else
+        No data yet.
+        #end
+        </p>
+        <hr/>
         <div>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#addVariantModal"><i class="fa fa-plus"></i> Add Variant</button>
@@ -14,19 +31,7 @@
             <div class="btn-group pull-right" role="group">
                 <a href="#" class="btn btn-danger btn-delete-experiments" role="button"><i class="fa fa-times"></i> Delete</a>
             </div>
-        </div>
-        <br/>
-        <h1>$page.experiment.title</h1>
-        <hr/>
-        <p class="lead">
-        #set( $best = $page.bestVariant )
-        #if( $best ) 
-        The best performing variant is <b>$best.title</b> with a <b>$page.conversionRate($best) %</b> conversion rate, 
-        compared to the control rate of $!page.controlConversionRate %
-        #else
-        According to current data the control option is currently best.
-        #end
-        </p>
+        </div>        
         <br/>
         <div id="experimentTableContainer" class="panel-body">
             <table class="table table-striped" id="experimentTableContainer">

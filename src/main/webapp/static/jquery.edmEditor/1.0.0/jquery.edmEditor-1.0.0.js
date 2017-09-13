@@ -454,7 +454,7 @@
     };
     
     edmEditor.applySetting = function (keditor, input) {
-        flog('[jquery.edmEditor] applySetting', keditor, input);
+        //flog('[jquery.edmEditor] applySetting', keditor, input);
         
         var body = keditor.body;
         var dataCss = input.attr('data-css');
