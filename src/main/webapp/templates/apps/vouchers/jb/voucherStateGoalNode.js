@@ -2,7 +2,7 @@ JBNodes['voucherStateGoal'] = {
     icon: 'fa fa-users',
     title: 'Voucher state goal',
     type: JB_NODE_TYPE.GOAL,
-    previewUrl: '/theme/apps/vouchers/jb/groupGoalNode.png',
+    previewUrl: '/theme/apps/vouchers/jb/voucherStateGoalNode.png',
     ports: {
         timeoutNode: {
             label: 'timeout',
@@ -10,13 +10,8 @@ JBNodes['voucherStateGoal'] = {
             maxConnections: 1
         },
         nodeIdIssued: {
-            label: 'issued',
-            title: 'When issued',
-            maxConnections: 1
-        },
-        nodeIdStateChanged: {
-            label: 'change',
-            title: 'When state change',
+            label: 'then',
+            title: 'When issued or state changed',
             maxConnections: 1
         }
     },
@@ -29,6 +24,15 @@ JBNodes['voucherStateGoal'] = {
             '    <div class="col-md-12">' +
             '        <label>Voucher Type</label>' +
             '        <select class="form-control voucherType"></select>' +
+            '    </div>' +
+            '</div>'+
+            '<div class="form-group">' +
+            '    <div class="col-md-12">' +
+            '        <label>Goal Type</label>' +
+            '        <select class="form-control goalType">'+
+            '           <option value="ISSUED">Issued</option>'+
+            '           <option value="STATE_CHANGED">State changed</option>'+
+            '        </select>' +
             '    </div>' +
             '</div>'
         );
@@ -51,7 +55,9 @@ JBNodes['voucherStateGoal'] = {
             allowPostForm: false,
             onValid: function () {
                 var voucherType = form.find('.voucherType').val();
+                var goalType = form.find('.goalType').val();
                 JBApp.currentSettingNode.voucherType = voucherType || null;
+                JBApp.currentSettingNode.goalType = goalType || null;
                 JBApp.saveFunnel('Funnel is saved');
                 JBApp.hideSettingPanel();
             }
@@ -60,6 +66,7 @@ JBNodes['voucherStateGoal'] = {
 
     showSettingForm: function (form, node) {
         form.find('.voucherType').val(node.voucherType !== null ? node.voucherType : '');
+        form.find('.goalType').val(node.goalType !== null ? node.goalType : '');
         JBApp.showSettingPanel(node);
     }
 };
