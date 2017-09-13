@@ -5,3 +5,14 @@
 .accordionWrap .panel-title a .panelIcon:before{
     content: "\f102";
 }
+
+.htmlPanel .textEdit{
+    float: left;
+    display: inline-block;
+    width: calc(100% - 100px);
+}
+.htmlPanel .panelIconWrap{
+    float: left;
+    display: inline-block;
+    width: 100px;
+}
