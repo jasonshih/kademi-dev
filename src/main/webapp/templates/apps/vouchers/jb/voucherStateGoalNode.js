@@ -9,7 +9,7 @@ JBNodes['voucherStateGoal'] = {
             title: 'When timeout',
             maxConnections: 1
         },
-        nodeIdIssued: {
+        nextNodeId: {
             label: 'then',
             title: 'When issued or state changed',
             maxConnections: 1
