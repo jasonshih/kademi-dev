@@ -1,34 +1,33 @@
-(function (w, t) {
-
+(function (w, $) {
     var searchOptions = {
         aggr: 'source',
         filters: null,
         stage: null
     };
     
-    $(document).on("pageDateChanged", function() {
+    $(document).on("pageDateChanged", function () {
         var uri = URI(window.location.href);
         var filters = uri.query(true).filters;
         var stage = uri.query(true).stage;
-        if (filters){
+        if (filters) {
             searchOptions.filters = filters;
             var arr = filters.split('=');
-            if (arr.length>1){
+            if (arr.length > 1) {
                 searchOptions.aggr = arr[0];
             }
         }
-        if (stage){
+        if (stage) {
             searchOptions.stage = stage;
         }
         loadFunnel();
     });
-
-    loadFunnel = function (url) {
+    
+    var loadFunnel = function (url) {
         var data_url = url || w.location.pathname + "?asJson&" + $.param(searchOptions);
-
+        
         flog('data_url', data_url);
-
-        t('#kfvWrapper').funnel({
+        
+        $('#kfvWrapper').funnel({
             url: data_url,
             stageHeight: "120px",
             stageNameFontSize: "14px",
@@ -40,7 +39,7 @@
             onData: function (resp) {
                 initHistogram(resp);
                 initPies(resp);
-                initFunnelSource( t('#kfvWrapper'));
+                initFunnelSource($('#kfvWrapper'));
                 initSourceFilters();
             },
             onBubbleClick: function (data, stage) {
@@ -70,7 +69,7 @@
                     name = data.id;
                 }
                 searchOptions.filters = (searchOptions.aggr + "=" + name);
-
+                
                 // Select an aggregation other then the selected filter
                 var aggs = $(".btn-select-aggr");
                 flog("aggs", aggs, "filter out", searchOptions.aggr);
@@ -82,13 +81,13 @@
                 var filters = searchOptions.aggr + "=" + name;
                 uri.setSearch("filters", filters);
                 history.pushState(null, null, uri.toString());
-
+                
                 loadFunnel();
-
+                
             }
         });
     }
-
+    
     function initHistogram(resp) {
         flog("initHistogram", resp.summary);
         $('#histo svg').empty();
@@ -96,7 +95,7 @@
         var cancelledSalesColor = $('#histo').attr('data-cancelledSales') || '#3e3e3e';
         var closedBuckets = resp.summary.aggregations.closed.bydate.buckets;
         var cancelledBuckets = resp.summary.aggregations.cancelled.bydate.buckets;
-
+        
         var myData = [];
         var closedSales = {
             key: "Closed sales",
@@ -104,7 +103,7 @@
             values: []
         };
         myData.push(closedSales);
-
+        
         $.each(closedBuckets, function (b, dateBucket) {
             var v = dateBucket.doc_count;
             if (v == null) {
@@ -112,7 +111,7 @@
             }
             closedSales.values.push({x: dateBucket.key, y: v});
         });
-
+        
         var cancelledSales = {
             key: "Cancelled sales",
             color: cancelledSalesColor,
@@ -126,37 +125,37 @@
             }
             cancelledSales.values.push({x: dateBucket.key, y: v});
         });
-
-
+        
+        
         nv.addGraph(function () {
             var chart = nv.models.multiBarChart()
-                    .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
-                    .rotateLabels(45)      //Angle to rotate x-axis labels.
-                    .showControls(false)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
-                    .groupSpacing(0.1)    //Distance between each group of bars.
-                    ;
-
+                .reduceXTicks(true)   //If 'false', every single x-axis tick label will be rendered.
+                .rotateLabels(45)      //Angle to rotate x-axis labels.
+                .showControls(false)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
+                .groupSpacing(0.1)    //Distance between each group of bars.
+            ;
+            
             chart.xAxis.tickFormat(function (d) {
                 return d3.time.format('%x')(new Date(d))
             });
-
+            
             chart.yAxis.tickFormat(d3.format(','));
-
-
+            
+            
             d3.select('#histo svg')
-                    .datum(myData)
-                    .call(chart);
-
+                .datum(myData)
+                .call(chart);
+            
             nv.utils.windowResize(chart.update);
-
+            
             return chart;
         });
     }
-
+    
     function initAggrSelect() {
-        t('body').on('click', '.btn-select-aggr', function (e) {
+        $(document.body).on('click', '.btn-select-aggr', function (e) {
             e.preventDefault();
-
+            
             flog("clicked on", e.target);
             var btn = $(this);
             var title = btn.html();
@@ -171,92 +170,92 @@
             loadFunnel();
         });
     }
-
+    
     function initDataTable() {
         flog("initDataTable", $('#leadTable'));
         var dataTable = $('#leadTable').DataTable({
             paging: false
         });
-
+        
         $("#funnel-lead-query").on({
             input: function () {
                 typewatch(function () {
                     var text = $("#funnel-lead-query").val().trim();
-
+                    
                     dataTable.search(text).draw();
                 }, 500);
             }
         });
-
+        
     }
-
+    
     function initPies(aggs) {
         var reasonsAgg = aggs.summary.aggregations.cancelledReasons.buckets;
         var closedByOrgAgg = aggs.summary.aggregations.closedByOrg.orgId.buckets;
         var lostByOrgAgg = aggs.summary.aggregations.lostByOrg.orgId.buckets;
-        var colors = ['#ee145b','#3e3e3e','#4d9acc','#60b87e','#FF1493','#FF4500','#EE82EE','#ADFF2F','#FFDEAD','#F0FFFF','#FFF0F5','#DC143C','#FFC0CB'];
+        var colors = ['#ee145b', '#3e3e3e', '#4d9acc', '#60b87e', '#FF1493', '#FF4500', '#EE82EE', '#ADFF2F', '#FFDEAD', '#F0FFFF', '#FFF0F5', '#DC143C', '#FFC0CB'];
         flog("initPies", closedByOrgAgg);
         nv.addGraph(function () {
             var chartLost = nv.models.pieChart()
-                    .x(function (d) {
-                        return d.key;
-                    })
-                    .y(function (d) {
-                        return d.doc_count
-                    })
-                    .valueFormat(d3.format(','))
-                    .donut(true)
-                    .color(colors)
-                    .showLabels(false);                
-           
-
+                .x(function (d) {
+                    return d.key;
+                })
+                .y(function (d) {
+                    return d.doc_count
+                })
+                .valueFormat(d3.format(','))
+                .donut(true)
+                .color(colors)
+                .showLabels(false);
+            
+            
             d3.select("#lostReasonsPie svg")
-                    .datum(reasonsAgg)
-                    .transition().duration(1200)
-                    .call(chartLost);
-
+                .datum(reasonsAgg)
+                .transition().duration(1200)
+                .call(chartLost);
+            
             var chartClosedByOrg = nv.models.pieChart()
-                    .x(function (d) {
-                        return d.orgTitle.hits.hits[0]._source.assignedToOrg.title;
-                    })
-                    .y(function (d) {
-                        return d.doc_count;
-                    })
-                    .valueFormat(d3.format(','))
-                    .donut(true)
-                    .color(colors)
-                    .showLabels(false);   
+                .x(function (d) {
+                    return d.orgTitle.hits.hits[0]._source.assignedToOrg.title;
+                })
+                .y(function (d) {
+                    return d.doc_count;
+                })
+                .valueFormat(d3.format(','))
+                .donut(true)
+                .color(colors)
+                .showLabels(false);
             
             d3.select("#closedByOrgPie svg")
-                    .datum(closedByOrgAgg)
-                    .transition().duration(1200)
-                    .call(chartClosedByOrg);
-
+                .datum(closedByOrgAgg)
+                .transition().duration(1200)
+                .call(chartClosedByOrg);
+            
             var chartLostByOrg = nv.models.pieChart()
-                    .x(function (d) {
-                        return d.key;
-                    })
-                    .y(function (d) {
-                        return d.doc_count;
-                    })
-                    .valueFormat(d3.format(','))
-                    .donut(true)
-                    .color(colors)
-                    .showLabels(false);   
+                .x(function (d) {
+                    return d.key;
+                })
+                .y(function (d) {
+                    return d.doc_count;
+                })
+                .valueFormat(d3.format(','))
+                .donut(true)
+                .color(colors)
+                .showLabels(false);
             
             d3.select("#conversionRatePie svg")
-                    .datum(lostByOrgAgg)
-                    .transition().duration(1200)
-                    .call(chartLostByOrg);
-
+                .datum(lostByOrgAgg)
+                .transition().duration(1200)
+                .call(chartLostByOrg);
+            
             return chartLost;
         });
     }
-
-    function initFunnelSource(div){
-        var fnSource = t('.funnel-source').clone().removeClass('hide');
+    
+    function initFunnelSource(div) {
+        var fnSource = $('.funnel-source').clone().removeClass('hide');
         div.find('.funnel-labels').prepend(fnSource);
-        var text = fnSource.find('.btn-select-aggr[href="'+searchOptions.aggr+'"]').text();
+        var text = fnSource.find('.btn-select-aggr[href="' + searchOptions.aggr + '"]').text();
         fnSource.find('.aggr-title').text(text);
     }
     
@@ -264,13 +263,13 @@
         var uri = URI(window.location.href);
         var filters = uri.query(true).filters;
         var arr = filters && filters.split('=');
-        if (arr && arr.length > 1 && arr[1]){
+        if (arr && arr.length > 1 && arr[1]) {
             $('#funnelStages').append('<a href="#" class="btnClearFilters"><i class="fa fa-filter"></i> Clear all filters</a>');
         } else {
             $('#funnelStages').find('.btnClearFilters').remove();
         }
     }
-
+    
     function initClearFilters() {
         $(document).on('click', '.btnClearFilters', function (e) {
             e.preventDefault();
@@ -282,23 +281,26 @@
             loadFunnel();
         });
     }
-
-    w.initLeadManAnalytics = function () {
+    
+    function initLeadManAnalytics() {
         initAggrSelect();
         initDataTable();
         initClearFilters();
+        loadFunnel();
+        
         $(w).bind('popstate', function (event) {
             var uri = new URI(w.location.pathname + w.location.search);
             uri.addQuery('asJson');
-
+            
             flog('popstate', uri.toString());
             loadFunnel(uri.toString());
         });
     };
-
-    $(document).ready(function(){
-        if($('.lead-analytics-funnel-component').length > 0) {
+    
+    $(document).ready(function () {
+        if ($('.lead-analytics-funnel-component').length > 0) {
             initLeadManAnalytics();
         }
     });
+    
 })(this, jQuery);
