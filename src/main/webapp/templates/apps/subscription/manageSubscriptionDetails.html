@@ -33,7 +33,7 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-2 control-label" for="expiryDate">Expiry Date</label>
+                <label class="col-sm-2 control-label" for="expiryDate">Expiry Date</label>
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="input-group">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <label class="col-md-2 control-label" for="expiryDate">Due Date</label>
+                <label class="col-sm-2 control-label" for="expiryDate">Due Date</label>
                 <div class="col-md-4">
                     <div class="form-group">
                         <div class="input-group">
@@ -67,6 +67,15 @@
                     <input type="text" class="form-control required" name="licenseSig" disabled="disabled" value="$!page.subscription.licenseSig"/>
                 </div>
             </div>
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="licenseSig">Credit</label>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control required numeric" name="credit" value="$!page.subscription.credit"/>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-3">
                     <button type="submit" class="btn btn-sm btn-success">

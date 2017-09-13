@@ -150,6 +150,36 @@
                     container.find('.container-bg').attr('data-groups', selectedGroups);
                 });
                 
+                var cbbExperiment = form.find('.select-experiment');
+                flog("cbbExperiment");
+                $.ajax({
+                    url: '/experiments/',
+                    type: 'get',
+                    dataType: 'JSON',
+                    data: {
+                        asJson: true
+                    },
+                    success: function (resp) {
+                        var experimentOptionsStr = '';
+                        
+                        $.each(resp.data, function (i, experiment) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
+                            
+                            $.each(experiment.variants, function (k, variant) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
+                            });
+                        });
+                        
+                        cbbExperiment.append(experimentOptionsStr);
+                    }
+                });
+                
+                cbbExperiment.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    container.find('.container-bg').attr('data-experiment', this.value);                    
+                });
+                
+                
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
                     e.preventDefault();
                     
@@ -656,6 +686,11 @@
         $.each(selectedGroups, function (i, group) {
             selectGroupsItems.filter('[value="' + group + '"]').prop('checked', true);
         });
+        
+        var expPath = containerBg.data("experiment");
+        var txtExperiment = form.find('.select-experiment');
+        txtExperiment.val(expPath);
+        
         
         form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
         form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));

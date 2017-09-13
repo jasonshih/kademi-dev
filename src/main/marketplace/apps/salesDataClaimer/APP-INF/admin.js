@@ -20,7 +20,7 @@ controllerMappings
     .addMethod('POST', 'approveClaims', 'approveClaims')
     .addMethod('POST', 'rejectClaims', 'rejectClaims')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
-    .postPriviledge('WRITE_CONTENT')
+    .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
 
