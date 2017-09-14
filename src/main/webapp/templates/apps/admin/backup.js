@@ -20,6 +20,17 @@
             },
             onSuccess: function (resp) {
                 Msg.success(resp.messages);
+
+                modalForm.find('.progress').hide();
+                modal.modal('hide');
+
+                initBackgroundTask();
+            },
+            onProgress: function (percentComplete, form) {
+                modalForm.find('.progress').show();
+                modalForm.find('.progress .progress-bar')
+                        .css('width', percentComplete + '%')
+                        .attr('aria-valuenow', percentComplete);
             }
         });
 
@@ -91,6 +102,7 @@
                 $('#downloadBtn').show();
                 $('#btn-restore').show();
                 $('#backup-records-table').reloadFragment();
+                $('#restore-records-table').reloadFragment();
             },
             onRunning: function () {
                 $('#downloadBtn').hide();
