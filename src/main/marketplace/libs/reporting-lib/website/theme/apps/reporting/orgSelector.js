@@ -1,7 +1,19 @@
 $(function () {
     function initOrgSelector() {
         flog("initOrgSelector");
-        $('.orgSelectorWrap').on('click', 'a', function (e) {
+
+        $('.orgSelectorWrap').off('click', '.btn-reporting-clear-selected-org')
+                .on('click', '.btn-reporting-clear-selected-org', function (e) {
+                    e.preventDefault();
+
+                    $.cookie('selectedOrg', "", {expires: 360, path: '/'});
+                    orgTitle = "";
+
+                    $(e.target).closest(".org-selector").find(".selectOrgSearch").val(orgTitle);
+                    window.location.reload();
+                });
+
+        $('.orgSelectorWrap').on('click', 'a:not(.btn-reporting-clear-selected-org)', function (e) {
             e.preventDefault();
 
             var orgId = $(this).attr('data-orgId');
