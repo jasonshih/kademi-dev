@@ -65,7 +65,15 @@
         var result = {
             status: true
         };
-        try {
+        
+        try{
+            var orgData = page.closest("website").getOrgData();
+            var group = orgData.createGroup(groupName);
+        }catch(e){
+            //Group exists
+        }
+        
+        try {           
             securityManager.addToGroup(userName, groupName);
         } catch (e) {
             log.error('Error when updating user: ' + e);
