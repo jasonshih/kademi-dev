@@ -59,6 +59,20 @@
                         });
                     });
 
+                    form.find('.customIconColor').on('click', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-custom-icon-color', this.checked);
+                        if (this.checked){
+                            form.find('.iconColor').removeProp('disabled');
+                        } else {
+                            form.find('.iconColor').prop('disabled', true);
+                        }
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            that.initCkeditor(keditor, component)
+                        });
+                    });
+
                     form.find('.bgstyle').on('change', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -79,6 +93,7 @@
             form.find('.iconSize').val(dataAttributes['data-icon-size'])
             form.find('.bgstyle').val(dataAttributes['data-bg'])
             form.find('.iconColor').val(dataAttributes['data-icon-color']).colorpicker('setValue', dataAttributes['data-icon-color']);
+            form.find('.customIconColor').prop('checked', dataAttributes['data-custom-icon-color'] == 'true');
         },
         initCkeditor: function (keditor, component) {
             var that = this;

@@ -1,0 +1,32 @@
+.accordionWrap .panel-title a.collapsed .panelIcon:before{
+    content: "\f103";
+}
+
+.accordionWrap .panel-title a .panelIcon:before{
+    content: "\f102";
+}
+
+.htmlPanel {
+    .textEdit{
+        float: left;
+        display: inline-block;
+        width: calc(~"100% - 100px");
+    }
+    .panelIconWrap{
+        float: left;
+        display: inline-block;
+        width: 100px;
+    }
+    &.bg-success{
+        color: @panel-success-text;
+    }
+    &.bg-info{
+        color: @panel-info-text;
+    }
+    &.bg-warning{
+        color: @panel-warning-text;
+    }
+    &.bg-danger{
+        color: @panel-danger-text;
+    }
+}
