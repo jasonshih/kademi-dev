@@ -1,0 +1,28 @@
+{
+    "dependencies": [
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KConfirmDetails/kConfirmDetails.less"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.pageDatePicker/1.0.2/jquery.pageDatePicker-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/KConfirmDetails/kConfirmDetails.js"
+            }
+        }
+    ]
+}

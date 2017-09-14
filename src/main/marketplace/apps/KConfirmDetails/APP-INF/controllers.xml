@@ -1,0 +1,6 @@
+<controllers>
+    <source>/APP-INF/app.js</source>
+    <settings enabled="true" path="/theme/apps/KConfirmDetails/settings.html">
+        <function>_saveSettings</function>
+    </settings>
+</controllers>

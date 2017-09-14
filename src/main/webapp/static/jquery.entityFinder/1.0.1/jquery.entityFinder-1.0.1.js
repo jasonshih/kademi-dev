@@ -54,7 +54,7 @@
                 } else if (item.fields.entityId) {
                     var id = item.fields.entityId[0];
                     var orgId = item.fields.orgId[0];
-                    var orgTitle = item.fields.title[0] ? orgId : item.fields.title[0];
+                    var orgTitle = item.fields.title[0] ? item.fields.title[0] : orgId;
                     
                     suggestionsHtml += '<li class="search-suggestion" data-id="' + orgId + '" data-actual-id="' + id + '" data-type="org" data-text="' + orgTitle + '">';
                     suggestionsHtml += '    <a href="javascript:void(0);">';
