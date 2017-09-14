@@ -12,7 +12,19 @@
                         Msg.info('There was an error updating the profile.');
                     } else {
                         confirmDetailsModal.modal("hide");
-                        
+
+                        var userName = $("#userName").val();
+                        var groupName = $("#groupName").val();
+                        flog('userName= ', userName, 'groupName= ', groupName);
+                        $.ajax({
+                            type: "POST",
+                            url: '/confirm-details',
+                            data: {userName: userName, groupName: groupName},
+                            success: function (resp) {
+                                console.log(resp);
+                            }
+                        });
+
                     }
                 }
             });

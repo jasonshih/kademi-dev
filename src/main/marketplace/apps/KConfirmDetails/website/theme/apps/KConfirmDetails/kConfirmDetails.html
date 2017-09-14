@@ -2,12 +2,12 @@
 #set($currentUser = $userResource.thisUser)
 
 #set($groupName = $appSettings.groupName)
-#if( "$!$groupName" == "" )
+#if( "$!groupName" == "" )
     #set($groupName = "registered")
 #end
 
 #set($showExtraFields = $appSettings.showExtraFields)
-#if( "$!$showExtraFields" == "" )
+#if( "$!showExtraFields" == "" )
     #set($showExtraFields = false)
 #end
 
@@ -22,17 +22,13 @@
             </div>
             <form action="/profile/" method="POST" class="form-horizontal initProfileForm" charset="utf-8" role="form" id="confirmDetailsForm">
                 <div class="modal-body">
-
+                    <input type="hidden" value="$groupName" id="groupName"/>
+                    <input type="hidden" value="$websiteRootFolder.externalUrl" id="websiteURL"/>
                     <div class="form-group">
                         <label for="" class="control-label col-md-3">UserId:</label>
 
                         <div class="col-md-9">
-                            <div class="input-group">
-                                <span type="text" class="form-control">$currentUser.name</span>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default change-userid" type="button">Change</button>
-                                </span>
-                            </div>
+                            <input type="text" disabled="disabled" id="userName" class="form-control" value="$!currentUser.name" />
                             <small>Kademi ID: $currentUser.id</small>
                         </div>
                     </div>
@@ -71,21 +67,8 @@
                         <label for="birthDate" class="control-label col-md-3">Birth Date</label>
                         <div class="col-md-9">
                             <div class="input-group">
-                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control date-picker" />
+                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control pageDatePicker" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="languages" class="control-label col-md-3">Language</label>
-                        <div class="col-md-9">
-                            <div class="input-group">
-                                <select class="form-control" name="language">
-                                    <option value="">Select...</option>
-                                    #foreach( $lang in $rootFolder.languages )
-                                    $formatter.option($lang.code, $lang.title, $currentUser.language)
-                                    #end
-                                </select>
                             </div>
                         </div>
                     </div>

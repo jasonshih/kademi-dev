@@ -59,69 +59,19 @@
 
     g.updateUser = function (page, params) {
         log.info('updateUser > page={}, params={}', page, params);
-
+        
+        var userName = params.userName;
+        var groupName = params.groupName;
         var result = {
             status: true
         };
-
         try {
-            var db = getDB(page);
-            var id = page.attributes.profileId;
-            var claim = db.child(id);
-
-            if (claim !== null) {
-                var amount = +params.amount;
-                if (isNaN(amount)) {
-                    result.status = false;
-                    result.messages = ['Amount must be digits'];
-                    return views.jsonObjectView(JSON.stringify(result));
-                }
-
-                var tempDateTime = params.soldDate;
-                var tempDate = tempDateTime.substring(0, tempDateTime.indexOf(' ')).split('/');
-                var tempTime = tempDateTime.substring(tempDateTime.indexOf(' ') + 1, tempDateTime.length).split(':');
-                var soldDate = new Date(+tempDate[2], +tempDate[1] - 1, +tempDate[0], +tempTime[0], +tempTime[1], 00, 00);
-                var now = formatter.formatDateISO8601(formatter.now);
-
-                var obj = {
-                    recordId: id,
-                    soldBy: claim.jsonObject.soldBy,
-                    soldById: claim.jsonObject.soldById,
-                    amount: amount,
-                    soldDate: soldDate,
-                    enteredDate: claim.jsonObject.enteredDate,
-                    modifiedDate: now,
-                    productSku: params.productSku || '',
-                    status: claim.jsonObject.status,
-                    receipt: claim.jsonObject.receipt
-                };
-
-                // Parse extra fields
-                var extraFields = getSalesDataExtreFields(page);
-                for (var i = 0; i < extraFields.length; i++) {
-                    var ex = extraFields[i];
-                    var fieldName = 'field_' + ex.name;
-
-                    obj[fieldName] = params.get(fieldName) || '';
-                }
-
-                // Upload receipt
-                var uploadedFiles = uploadFile(page, params, files);
-                if (uploadedFiles.length > 0) {
-                    obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
-                }
-
-                claim.update(JSON.stringify(obj), TYPE_RECORD);
-            } else {
-                result.status = false;
-                result.messages = ['This claim does not exist'];
-            }
+            securityManager.addToGroup(userName, groupName);
         } catch (e) {
-            log.error('Error when updating claim: ' + e);
+            log.error('Error when updating user: ' + e);
             result.status = false;
-            result.messages = ['Error when updating claim: ' + e];
+            result.messages = ['Error when updating user: ' + e];
         }
-
         return views.jsonObjectView(JSON.stringify(result));
     };
 
