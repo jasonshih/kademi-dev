@@ -1,0 +1,128 @@
+#set($org = $page.organisation)
+#set($currentUser = $userResource.thisUser)
+
+#set($groupName = $appSettings.groupName)
+#if( "$!$groupName" == "" )
+    #set($groupName = "registered")
+#end
+
+#set($showExtraFields = $appSettings.showExtraFields)
+#if( "$!$showExtraFields" == "" )
+    #set($showExtraFields = false)
+#end
+
+#set($isInGroup = $currentUser.isInGroup($groupName, $org))
+#if( $isInGroup == false )
+<div id="modal-confirm-details" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                <h4 class="modal-title">Confirm Details</h4>
+            </div>
+            <form action="/profile/" method="POST" class="form-horizontal initProfileForm" charset="utf-8" role="form" id="confirmDetailsForm">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-md-3">UserId:</label>
+
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <span type="text" class="form-control">$currentUser.name</span>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default change-userid" type="button">Change</button>
+                                </span>
+                            </div>
+                            <small>Kademi ID: $currentUser.id</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="nickName" class="control-label col-md-3">Nickname:</label>
+                        <div class="col-md-9">
+                            <input type="text" name="nickName" id="nickName" class="form-control" value="$!currentUser.nickName" />
+                            <small>Display name, used when the user's real name should be hidden</small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="control-label col-md-3">Email:</label>
+                        <div class="col-md-9">
+                            <input type="text" name="email" id="email" class="form-control" value="$!currentUser.email" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="control-label col-md-3">Phone</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" name="phone" id="phone" value="$!currentUser.phone" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName" class="control-label col-md-3">First name</label>
+                        <div class="col-md-9">
+                            <input type="text" name="firstName" id="firstName" class="form-control" value="$!currentUser.firstName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="surName" class="control-label col-md-3">Surname</label>
+                        <div class="col-md-9">
+                            <input type="text" name="surName" id="surName" class="form-control" value="$!currentUser.surName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate" class="control-label col-md-3">Birth Date</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control date-picker" />
+                                <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="languages" class="control-label col-md-3">Language</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <select class="form-control" name="language">
+                                    <option value="">Select...</option>
+                                    #foreach( $lang in $rootFolder.languages )
+                                    $formatter.option($lang.code, $lang.title, $currentUser.language)
+                                    #end
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    #if(false)
+                        #set($fields = $userResource.allFields)
+                        #foreach($field in $fields.keySet())
+                        <div class="form-group">
+                            <label for="" title="From group $!field.key" class="control-label col-md-3">$!field.value</label>
+                            <div class="col-md-9">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
+                                    $field.html( $field.value)
+                                </div>
+                            </div>
+                        </div>
+                        #end
+                    #end
+                </div>
+
+                <div class="modal-footer">
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <button class="btn btn-sm btn-success pull-right" type="submit">
+                                <i class="fa fa-check"></i>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+#end
+
+
+
