@@ -19,9 +19,9 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/content/accordion.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/content/content.less"
             }
         },
         {
