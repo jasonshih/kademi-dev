@@ -1,5 +1,6 @@
 (function ($) {
-    $(function () {
+    // init Image Upload
+    function initImageUpload() {
         $('.btn-upload-api-logo').upcropImage({
             buttonContinueText: 'Save',
             url: window.location.pathname, // this is actually the default value anyway
@@ -28,6 +29,22 @@
                 });
             }
         });
+    }
+
+    // Init save details
+    function initSaveDetails() {
+        var form = $('#form-oauth2server-details');
+
+        form.forms({
+            onSuccess: function (resp) {
+                Msg.success(resp.messages);
+            }
+        });
+    }
+
+    $(function () {
+        initImageUpload();
+        initSaveDetails();
     });
-    
+
 })(jQuery);

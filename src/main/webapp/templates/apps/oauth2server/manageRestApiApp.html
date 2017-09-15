@@ -3,23 +3,36 @@
         <title>$page.title</title>
     </head>
     <body>
-        <form name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
+        <form id="form-oauth2server-details" name="frmDetails" action="." method="post" class="form-horizontal details" role="form">
             <div class="form-group">
                 <label for="apiAppTitle" class="col-sm-3 control-label">Logo</label>
                 <div class="col-sm-6">
                     <div id="api-app-logo">
                         #if ($page.restApiApp.logoHash)
-                            <p><img src="/_hashes/files/$page.restApiApp.logoHash" class="img-responsive" /></p>
+                        <p>
+                            <img style="max-height: 200px; max-width: 200px; width: 200px; height: auto;" src="/_hashes/files/$page.restApiApp.logoHash" class="img-responsive" />
+                        </p>
                         #end
                     </div>
                     <button type="button" class="btn btn-success btn-upload-api-logo">Upload logo</button>
                 </div>
             </div>
+
+            <input type="hidden" name="saveDetails" value="true"/>
+            
             <div class="form-group">
                 <label for="apiAppTitle" class="col-sm-3 control-label">Display name</label>
                 <div class="col-sm-6">
                     <input type="text" name="title" id="apiAppTitle" value="$!page.restApiApp.title" class="required form-control" required="required" />
                     <small>This is the publicly visible name of your application</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="apiAppDescription" class="col-sm-3 control-label">Description</label>
+                <div class="col-sm-6">
+                    <textarea style="resize: vertical;" name="description" id="apiAppDescription" class="required form-control" >$!page.restApiApp.description</textarea>
+                    <small>This is the publicly visible description of your application</small>
                 </div>
             </div>
 
@@ -45,6 +58,6 @@
         </form>
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
-        <script type="text/javascript" src="/theme/apps/oauth2server/manageRestApiApp.js"></script>
+        <script type="text/javascript" src="/theme/apps/oauth2server/manageRestApiApp.js?v1.0.1"></script>
     </body>
 </html>
