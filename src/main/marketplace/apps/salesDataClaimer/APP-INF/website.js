@@ -107,31 +107,33 @@ function createClaim(page, params, files) {
             obj.receipt = '/_hashes/files/' + uploadedFiles[0].hash;
         }
         
-        if (params.email) {
-            log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
-            var enteredUser = applications.userApp.findUserResource(params.email);
-            
-            if (isNull(enteredUser)) {
-                log.info('Create new user with email={}, firstName={}', params.email, params.firstName);
-                enteredUser = securityManager.createProfile(page.organisation, params.email, null, null);
-                enteredUser = applications.userApp.findUserResource(enteredUser);
-                log.info('Created user: {}', enteredUser);
-                page.parent.orgData.updateProfile(enteredUser.profile, params.firstName, enteredUser.surName, enteredUser.phone);
-            } else {
-                log.info('Found existing user for anonymous: {}', enteredUser);
+        transactionManager.runInTransaction(function () {
+            if (params.email) {
+                log.info('Anonymous with email={}, firstName={}', params.email, params.firstName);
+                var enteredUser = applications.userApp.findUserResource(params.email);
+                
+                if (isNull(enteredUser)) {
+                    log.info('Create new user with email={}, firstName={}', params.email, params.firstName);
+                    enteredUser = securityManager.createProfile(page.organisation, params.email, null, null);
+                    enteredUser = applications.userApp.findUserResource(enteredUser);
+                    log.info('Created user: {}', enteredUser);
+                    page.parent.orgData.updateProfile(enteredUser.profile, params.firstName, enteredUser.surName, enteredUser.phone);
+                } else {
+                    log.info('Found existing user for anonymous: {}', enteredUser);
+                }
+                
+                log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
+                obj.soldBy = enteredUser.name;
+                obj.soldById = enteredUser.userId;
             }
             
-            log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
-            obj.soldBy = enteredUser.name;
-            obj.soldById = enteredUser.userId;
-        }
-        
-        securityManager.runAsUser(obj.soldBy, function () {
-            db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
-            eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+            securityManager.runAsUser(enteredUser, function () {
+                db.createNew(id, JSON.stringify(obj), TYPE_RECORD);
+                eventManager.goalAchieved("claimSubmittedGoal", {"claim": id});
+            });
         });
     } catch (e) {
-        log.error('Error when creating claim: ' + e);
+        log.error('Error when creating claim: ' + e, e);
         result.status = false;
         result.messages = ['Error when creating claim: ' + e];
     }
@@ -199,7 +201,7 @@ function updateClaim(page, params, files) {
             result.messages = ['This claim does not exist'];
         }
     } catch (e) {
-        log.error('Error when updating claim: ' + e);
+        log.error('Error when updating claim: ' + e, e);
         result.status = false;
         result.messages = ['Error when updating claim: ' + e];
     }
