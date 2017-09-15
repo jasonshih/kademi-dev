@@ -118,7 +118,7 @@ function initCartForm() {
             } catch (e) {
                 flog('[jquery.forms] Error!', e);
             } finally {
-                $('#cart-form').find('button[type=submit] i').hide();
+                $('#cart-form').find('button[type=submit]').prop('disabled', false).find('i').hide();
             }
         }
     });
