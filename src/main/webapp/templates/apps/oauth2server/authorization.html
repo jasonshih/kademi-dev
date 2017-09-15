@@ -34,9 +34,15 @@
                         </div>
                     </div>
 
-                    <p>
+                    <p class="text-center">
                         <strong>$formatter.firstNotNull($page.restApiApp.title, $page.restApiApp.name)</strong> is requesting permission to access your profile
                     </p>
+
+                    #if($page.restApiApp.description)
+                    <p class="text-center">
+                        $page.restApiApp.description
+                    </p>
+                    #end
                 </div>
                 <div class="panel-footer">
                     <div class="pull-right">
