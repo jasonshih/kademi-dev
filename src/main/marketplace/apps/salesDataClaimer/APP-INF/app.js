@@ -69,8 +69,10 @@ function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
     
     var dataSeries = params.dataSeries || '';
+    var allowAnonymous = params.allowAnonymous || '';
     
     page.setAppSetting(APP_NAME, 'dataSeries', dataSeries);
+    page.setAppSetting(APP_NAME, 'allowAnonymous', allowAnonymous);
     
     return views.jsonResult(true);
 }
@@ -94,6 +96,19 @@ function getAppSettings(page) {
     }
     
     return null;
+}
+
+function isAnonymousAllowed(page) {
+    log.info('isAnonymousAllowed > page={}', page);
+    
+    var allowAnonymous = false;
+    var settings = getAppSettings(page);
+    
+    if (isNotNull(settings)) {
+        allowAnonymous = settings.allowAnonymous === 'true';
+    }
+    
+    return allowAnonymous;
 }
 
 function checkRedirect(page, params) {

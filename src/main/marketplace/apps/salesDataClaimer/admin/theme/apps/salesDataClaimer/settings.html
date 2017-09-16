@@ -1,12 +1,23 @@
 #set ($selectedDateSeries = $!page.getAppSetting($app.instanceId, 'dataSeries'))
+#set ($allowAnonymous = $!page.getAppSetting($app.instanceId, 'allowAnonymous'))
 <div class="form-group">
     <label class="col-sm-4 control-label" for="salesDataClaimer-dataSeries">Date Series</label>
     <div class="col-sm-7">
         <select class="form-control" name="dataSeries" id="salesDataClaimer-dataSeries">
-            <option value=""> - None Sale Data Series Selected -</option>
+            <option value=""> - None -</option>
             #foreach ($dataSeries in $page.find("/sales").children)
                 $formatter.option($dataSeries.name, $dataSeries.title, $selectedDateSeries)
             #end
         </select>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="salesDataClaimer-allowAnonymous">Allow Anonymous</label>
+    <div class="col-sm-7">
+        <div class="checkbox">
+            <label for="salesDataClaimer-allowAnonymous">
+                $formatter.checkbox("salesDataClaimer-allowAnonymous", "allowAnonymous", $allowAnonymous, "true" )
+            </label>
+        </div>
     </div>
 </div>

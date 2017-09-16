@@ -3,12 +3,12 @@
 
 #set($groupName = $appSettings.groupName)
 #if( "$!groupName" == "" )
-    #set($groupName = "registered")
+#set($groupName = "registered")
 #end
 
 #set($showExtraFields = $appSettings.showExtraFields)
 #if( "$!showExtraFields" == "" )
-    #set($showExtraFields = false)
+#set($showExtraFields = false)
 #end
 
 #set($isInGroup = $currentUser.isInGroup($groupName, $org))
@@ -73,19 +73,19 @@
                         </div>
                     </div>
 
-                    #if(false)
-                        #set($fields = $userResource.allFields)
-                        #foreach($field in $fields.keySet())
-                        <div class="form-group">
-                            <label for="" title="From group $!field.key" class="control-label col-md-3">$!field.value</label>
-                            <div class="col-md-9">
-                                <div class="input-group">
-                                    <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
-                                    $field.html( $field.value)
-                                </div>
+                    #if($showExtraFields == true)
+                    #set($fields = $page.find("/profile").extraFields)
+                    #foreach($field in $fields.keySet())
+                    <div class="form-group">
+                        <label for="surName" title="From group $!field.group.name" class="control-label col-md-3">$!field.text</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <span class="input-group-addon"> <i class="fa fa-star-o"></i> </span>
+                                $field.html( $fields[$field] )
                             </div>
                         </div>
-                        #end
+                    </div>
+                    #end
                     #end
                 </div>
 

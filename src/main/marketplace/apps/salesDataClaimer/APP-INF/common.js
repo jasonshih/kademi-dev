@@ -69,7 +69,7 @@ function searchClaims(page, status, user) {
         
         searchResult = doDBSearch(page, queryJson);
     } catch (e) {
-        log.error('ERROR in getClaims: ' + e);
+        log.error('ERROR in getClaims: ' + e, e);
     }
     
     return searchResult;
