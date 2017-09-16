@@ -7,8 +7,63 @@
         <script src="/static/jQuery-Smart-Wizard/3.3.1/js/jquery.smartWizard.js">//</script>
         <script src="/static/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js">//</script>
         <script src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.js"></script>
+        <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
     </head>
     <body>
+        #set($currentBranch = $page.find("/repositories/${folder.name}/${page.name}"))
+
+        <div class="btn-group publishing pull-right">
+            <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info" title="View repository history and revert changes">
+                <i class="fa fa-clock-o"></i>
+            </a>
+
+            #if( !$currentBranch.locks.isEmpty() )
+            <a href="$currentBranch.href/commits" class="btn btn-sm btn-warning" title="This branch has locks">
+                <i class="fa fa-lock"></i>
+            </a>
+            #end
+
+            #if( $currentBranch.live )
+            <a href="${currentBranch.parent.href}manageBranches" class="islive btn btn-sm btn-danger" title="This is the live branch. Manage repository versions">
+                <i class="fa fa-exclamation-triangle"></i>
+            </a>
+            #else
+            <a href="${currentBranch.href}publish" class="publish btn btn-sm btn-success">
+                <i class="glyphicon glyphicon-ok-sign"></i>
+                PUBLISH
+            </a>
+            <a href="${currentBranch.parent.href}manageBranches" class="btn btn-sm btn-primary">
+               <i class="fa fa-gear"></i>
+                Manage versions
+            </a>
+            #end
+
+            <a class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+                <b>Version:</b>
+                $currentBranch.name
+                <span class="caret"></span>
+            </a>
+            <ul role="menu" class="dropdown-menu list branches">
+                #foreach($b in $page.closest("branch").parent.children.ofType.branch)
+                <li role="presentation" class="list-item">
+                    <aside class="list-item-controller">
+                        <a href="#" class="copy btn btn-xs btn-primary pull-right" title="Copy this to a new version"><i class="fa fa-copy"></i></a>
+                        #if( $b.live )
+
+                        #else
+                        <a href="${b.href}" class="hide-branch pull-right btn-xs btn btn-warning" title="Hide this version. Can be restored from the manage versions screen"><i class="clip-eye"></i></a>
+                        #end
+                    </aside>
+                    <a href="${b.href}" class="branch noclear">
+                        $b.name
+                    </a>
+                </li>
+                #end
+            </ul>
+        </div>
+
+        <div class="clearfix"></div>
+
         <div class="tabbable clearfix">
             <div class="clearfix">
                 <ul class="nav nav-tabs tab-bricky">
@@ -93,763 +148,764 @@
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" name="hiddenToSales" #if ($page.funnel.hiddenToSales) checked #end />
-                                    </label>
-                                </div>
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Leads Group</label>
-                            <div class="col-sm-6">
-                                <select class="form-control required" name="leadsGroup">
-                                    <option value="">[No group selected]</option>
-                                    #foreach ($g in $page.find("/groups").children)
-                                        <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
-                                            #if ($g.groupTitle)
-                                        $g.groupTitle
-                                        #else
-                                                $g.name
-                                            #end
-                                        </option>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3">Leads Group</label>
+                        <div class="col-sm-6">
+                            <select class="form-control required" name="leadsGroup">
+                                <option value="">[No group selected]</option>
+                                #foreach ($g in $page.find("/groups").children)
+                                <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
+                                    #if ($g.groupTitle)
+                                    $g.groupTitle
+                                    #else
+                                    $g.name
                                     #end
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Sources</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-source">
-                                    <div class="form-group source">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control required" placeholder="Enter source name" name="sources" />
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-source"><i class="fa fa-plus"></i> Add source</button>
-                                </p>
-                                <div class="source-wrapper">
-                                    #foreach ($s in $page.funnel.sources)
-                                        <div class="form-group source">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="text" class="form-control required" placeholder="Enter source name" name="sources" value="$s" />
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Stages</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-stage">
-                                    <div class="form-group stage">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm input-group-stage">
-                                                <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: ">&nbsp;&nbsp;</span>
-                                                <input type="hidden" class="form-control" name="stageColour" />
-                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" />
-                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" />
-                                                <span class="input-group-btn">
-                                                    <a class="btn btn-default btn-move-stage"><i class="fa fa-arrows-v"></i></a>
-                                                    <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <script type="text/html" id="template-stage-colors">
-                                    <div class="dropdown-menu dropdown-menu-se label-colors">
-                                        <ul class="color-chooser">
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-b60205"
-                                                        style="background-color: #b60205 !important;"
-                                                        data-hex-color="b60205">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-d93f0b"
-                                                        style="background-color: #d93f0b !important;"
-                                                        data-hex-color="d93f0b">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-fbca04"
-                                                        style="background-color: #fbca04 !important;"
-                                                        data-hex-color="fbca04">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-0e8a16"
-                                                        style="background-color: #0e8a16 !important;"
-                                                        data-hex-color="0e8a16">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-006b75"
-                                                        style="background-color: #006b75 !important;"
-                                                        data-hex-color="006b75">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-1d76db"
-                                                        style="background-color: #1d76db !important;"
-                                                        data-hex-color="1d76db">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-0052cc"
-                                                        style="background-color: #0052cc !important;"
-                                                        data-hex-color="0052cc">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-5319e7"
-                                                        style="background-color: #5319e7 !important;"
-                                                        data-hex-color="5319e7">
-                                                  </span>
-                                            </li>
-                                        </ul>
-
-                                        <ul class="color-chooser">
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-e99695"
-                                                        style="background-color: #e99695 !important;"
-                                                        data-hex-color="e99695" data-selected="">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-f9d0c4"
-                                                        style="background-color: #f9d0c4 !important;"
-                                                        data-hex-color="f9d0c4">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-fef2c0"
-                                                        style="background-color: #fef2c0 !important;"
-                                                        data-hex-color="fef2c0">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-c2e0c6"
-                                                        style="background-color: #c2e0c6 !important;"
-                                                        data-hex-color="c2e0c6">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-bfdadc"
-                                                        style="background-color: #bfdadc !important;"
-                                                        data-hex-color="bfdadc">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-c5def5"
-                                                        style="background-color: #c5def5 !important;"
-                                                        data-hex-color="c5def5">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-bfd4f2"
-                                                        style="background-color: #bfd4f2 !important;"
-                                                        data-hex-color="bfd4f2">
-                                                  </span>
-                                            </li>
-                                            <li>
-                                                  <span class="color-cooser-color js-color-chooser-color labelstyle-d4c5f9"
-                                                        style="background-color: #d4c5f9 !important;"
-                                                        data-hex-color="d4c5f9">
-                                                  </span>
-                                            </li>
-                                        </ul>
-
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-stage"><i class="fa fa-plus"></i> Add Stage</button>
-                                </p>
-                                <div class="stage-wrapper">
-                                    #foreach ($s in $page.funnel.stages)
-                                        <div class="form-group stage">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm input-group-stage">
-                                                    <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: $!s.colour">&nbsp;&nbsp;</span>
-                                                    <input type="hidden" class="form-control" name="stageColour" value="$!s.colour" />
-                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
-                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
-                                                    <span class="input-group-btn">
-                                                        <a class="btn btn-default btn-move-stage"><i class="fa fa-arrows-v"></i></a>
-                                                        <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Extra Fields</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-extraField">
-                                    <div class="form-group extraField">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" />
-                                                <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" />
-                                                <span class="input-group-addon">
-                                                    <input type="checkbox" name="extraFieldRequired" /> Required
-                                                </span>
-                                                <span class="input-group-addon">
-                                                    <input type="checkbox" name="extraFieldAggregate" /> Include in search
-                                                </span>
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-extraField"><i class="fa fa-plus"></i> Add extra field</button>
-                                </p>
-                                <div class="extraField-wrapper">
-                                    #foreach ($ef in $page.funnel.extraFields)
-                                        <div class="form-group extraField">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" value="$ef.name" />
-                                                    <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" value="$ef.title" />
-                                                    <span class="input-group-addon">
-                                                        <input type="checkbox" name="extraFieldRequired" #if ($ef.required == "true") checked="checked" #end /> Required
-                                                    </span>
-                                                    <span class="input-group-addon">
-                                                        <input type="checkbox" name="extraFieldAggregate" #if ($ef.aggregate == "true") checked="checked" #end /> Include in search
-                                                    </span>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Lost Reasons</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-lostReason">
-                                    <div class="form-group lostReason">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" />
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-lostReason"><i class="fa fa-plus"></i> Add lost reason</button>
-                                </p>
-                                <div class="lostReason-wrapper">
-                                    #foreach ($lr in $page.funnel.lostReasons)
-                                        <div class="form-group lostReason">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" value="$lr" />
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Customer Activities</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-customerActivity">
-                                    <div class="form-group customerActivity">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
-                                                <input type="hidden" name="customerActivityId" />
-                                                <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" />
-                                                <select class="form-control" style="width: 40%;" name="customerActivityInbound">
-                                                    <option value="true">Inbound</option>
-                                                    <option value="false">Outbound</option>
-                                                </select>
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-customerActivity"><i class="fa fa-plus"></i> Add customer activity</button>
-                                </p>
-                                <div class="customerActivity-wrapper">
-                                    #foreach ($ca in $page.funnel.customerActivities)
-                                        <div class="form-group customerActivity">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="hidden" name="customerActivityId" value="$ca.id" />
-                                                    <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" value="$ca.text" />
-                                                    <select class="form-control" style="width: 40%;" name="customerActivityInbound">
-                                                        <option value="true" #if ($ca.inbound == "true") selected="selected" #end>Inbound</option>
-                                                        <option value="false" #if ($ca.inbound == "false") selected="selected" #end>Outbound</option>
-                                                    </select>
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                                <div class="alert alert-info">
-                                    <p>Specify the list of activities that can be added to leads as notes, eg "send documents", "give quote".</p>
-                                    <p>An activity can be inbound, ie something the customer did, or outbound, ie something the sales person did</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-3">Funnel Testers</label>
-                            <div class="col-sm-6">
-                                <script type="text/html" id="template-funnelTester">
-                                    <div class="form-group funnelTester">
-                                        <div class="col-sm-12">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" />
-                                                <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" />
-                                                <!--
-                                                <input type="number" class="form-control numeric " style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" />
-                                                -->
-                                                <span class="input-group-btn">
-                                                    <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </script>
-                                <p>
-                                    <button type="button" class="btn btn-sm btn-success btn-add-funnelTester"><i class="fa fa-plus"></i> Add funnel tester</button>
-                                </p>
-                                <div class="funnelTester-wrapper">
-                                    #foreach ($ft in $page.funnel.funnelTesters)
-                                        <div class="form-group funnelTester">
-                                            <div class="col-sm-12">
-                                                <div class="input-group input-group-sm">
-                                                    <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" value="$ft.emailDomain" />
-                                                    <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" value="$!ft.delayMins" />
-                                                    <!--
-                                                    <input type="number" class="form-control numeric" style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" value="$!ft.accelerator" />
-                                                    -->
-                                                    <span class="input-group-btn">
-                                                        <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    #end
-                                </div>
-                                <div class="alert alert-info">
-                                    <p>Profiles with a matching email domain will can have their delays processed faster, to aid with funnel testing.</p>
-                                    <p>Enter either:</p>
-                                    <ul>
-                                        <li>Delay: Specified in minutes, this replaces the delays on timers and goal timeouts. Eg use "1" for 1 minute</li>
-                                        <!--
-                                        <li>Accelerator: Divides the amount of time calculated for timers and goal timeouts. Eg use "100" to make 100 times faster</li>
-                                        -->
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                            </option>
+                            #end
+                        </select>
+                    </div>
                 </div>
-                <div id="lead" class="tab-pane">
-                    <p class="lead">$page.leads.size() leads</p>
-                    <p>
-
-                        <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
-                            <span class="glyphicon glyphicon-upload"></span>
-                            Upload CSV
-                        </a>
-                        <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
-                            <span class="glyphicon glyphicon-download"></span>
-                            Export to CSV
-                        </a>
-                        <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
-                            <span class="fa fa-refresh"></span>
-                            Refresh leads
-                        </a>
-
-                    </p>
-                    <hr />
-                    <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
-                        <div class="col-lg-12">
-                            <div class="wizard" id="myWizard">
-                                <div class="steps-container">
-                                    <ul class="steps">
-                                        <li data-step="1" data-name="upload" class="active">
-                                            <span class="badge">1</span>Upload
-                                            <span class="chevron"></span>
-                                        </li>
-                                        <li data-step="2">
-                                            <span class="badge">2</span>Select columns
-                                            <span class="chevron"></span>
-                                        </li>
-                                        <li data-step="3" data-name="import">
-                                            <span class="badge">3</span>Import
-                                            <span class="chevron"></span>
-                                        </li>
-                                        <li data-step="4" data-name="processing">
-                                            <span class="badge">4</span>Processing
-                                            <span class="chevron"></span>
-                                        </li>
-                                        <li data-step="5" data-name="complete">
-                                            <span class="badge">5</span>Complete
-                                            <span class="chevron"></span>
-                                        </li>
-
-                                    </ul>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Sources</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-source">
+                            <div class="form-group source">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" placeholder="Enter source name" name="sources" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="actions">
-                                    <button type="button" class="btn btn-default btn-prev">
-                                        <span class="glyphicon glyphicon-arrow-left"></span>Prev
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
-                                        <span class="glyphicon glyphicon-arrow-right"></span>
-                                    </button>
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-source"><i class="fa fa-plus"></i> Add source</button>
+                        </p>
+                        <div class="source-wrapper">
+                            #foreach ($s in $page.funnel.sources)
+                            <div class="form-group source">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" placeholder="Enter source name" name="sources" value="$s" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-source" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
                                 </div>
-                                <form method="post" action="">
-                                    <div class="step-content">
-                                        <div class="step-pane active sample-pane alert" data-step="1">
-                                            <h4>Upload CSV File</h4>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Stages</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-stage">
+                            <div class="form-group stage">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm input-group-stage">
+                                        <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: ">&nbsp;&nbsp;</span>
+                                        <input type="hidden" class="form-control" name="stageColour" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" />
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-move-stage"><i class="fa fa-arrows-v"></i></a>
+                                            <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <script type="text/html" id="template-stage-colors">
+                            <div class="dropdown-menu dropdown-menu-se label-colors">
+                                <ul class="color-chooser">
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-b60205"
+                                              style="background-color: #b60205 !important;"
+                                              data-hex-color="b60205">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-d93f0b"
+                                              style="background-color: #d93f0b !important;"
+                                              data-hex-color="d93f0b">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-fbca04"
+                                              style="background-color: #fbca04 !important;"
+                                              data-hex-color="fbca04">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-0e8a16"
+                                              style="background-color: #0e8a16 !important;"
+                                              data-hex-color="0e8a16">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-006b75"
+                                              style="background-color: #006b75 !important;"
+                                              data-hex-color="006b75">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-1d76db"
+                                              style="background-color: #1d76db !important;"
+                                              data-hex-color="1d76db">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-0052cc"
+                                              style="background-color: #0052cc !important;"
+                                              data-hex-color="0052cc">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-5319e7"
+                                              style="background-color: #5319e7 !important;"
+                                              data-hex-color="5319e7">
+                                        </span>
+                                    </li>
+                                </ul>
 
-                                            <div id='btn-upload' class="pull-left"></div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                        <div class="step-pane sample-pane alert" data-step="2">
-                                            <h4>Select columns</h4>
+                                <ul class="color-chooser">
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-e99695"
+                                              style="background-color: #e99695 !important;"
+                                              data-hex-color="e99695" data-selected="">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-f9d0c4"
+                                              style="background-color: #f9d0c4 !important;"
+                                              data-hex-color="f9d0c4">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-fef2c0"
+                                              style="background-color: #fef2c0 !important;"
+                                              data-hex-color="fef2c0">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-c2e0c6"
+                                              style="background-color: #c2e0c6 !important;"
+                                              data-hex-color="c2e0c6">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-bfdadc"
+                                              style="background-color: #bfdadc !important;"
+                                              data-hex-color="bfdadc">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-c5def5"
+                                              style="background-color: #c5def5 !important;"
+                                              data-hex-color="c5def5">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-bfd4f2"
+                                              style="background-color: #bfd4f2 !important;"
+                                              data-hex-color="bfd4f2">
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="color-cooser-color js-color-chooser-color labelstyle-d4c5f9"
+                                              style="background-color: #d4c5f9 !important;"
+                                              data-hex-color="d4c5f9">
+                                        </span>
+                                    </li>
+                                </ul>
 
-                                            <input type="hidden" name="fileHash" value="" />
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-stage"><i class="fa fa-plus"></i> Add Stage</button>
+                        </p>
+                        <div class="stage-wrapper">
+                            #foreach ($s in $page.funnel.stages)
+                            <div class="form-group stage">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm input-group-stage">
+                                        <span title="Stage colour" class="input-group-addon stageColorPicker" style="background: $!s.colour">&nbsp;&nbsp;</span>
+                                        <input type="hidden" class="form-control" name="stageColour" value="$!s.colour" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage name" name="stageName" value="$s.name" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter stage description" name="stageDesc" value="$s.desc" />
+                                        <span class="input-group-btn">
+                                            <a class="btn btn-default btn-move-stage"><i class="fa fa-arrows-v"></i></a>
+                                            <button class="btn btn-danger btn-remove-stage" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Extra Fields</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-extraField">
+                            <div class="form-group extraField">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" />
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldRequired" /> Required
+                                        </span>
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldAggregate" /> Include in search
+                                        </span>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-extraField"><i class="fa fa-plus"></i> Add extra field</button>
+                        </p>
+                        <div class="extraField-wrapper">
+                            #foreach ($ef in $page.funnel.extraFields)
+                            <div class="form-group extraField">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field name" name="extraFieldName" value="$ef.name" />
+                                        <input type="text" class="form-control required" style="width: 50%" placeholder="Enter field title" name="extraFieldTitle" value="$ef.title" />
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldRequired" #if ($ef.required == "true") checked="checked" #end /> Required
+                                        </span>
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldAggregate" #if ($ef.aggregate == "true") checked="checked" #end /> Include in search
+                                        </span>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Lost Reasons</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-lostReason">
+                            <div class="form-group lostReason">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-lostReason"><i class="fa fa-plus"></i> Add lost reason</button>
+                        </p>
+                        <div class="lostReason-wrapper">
+                            #foreach ($lr in $page.funnel.lostReasons)
+                            <div class="form-group lostReason">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" placeholder="Enter lost reason" name="lostReason" value="$lr" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-lostReason" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Customer Activities</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-customerActivity">
+                            <div class="form-group customerActivity">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="hidden" name="customerActivityId" />
+                                        <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" />
+                                        <select class="form-control" style="width: 40%;" name="customerActivityInbound">
+                                            <option value="true">Inbound</option>
+                                            <option value="false">Outbound</option>
+                                        </select>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-customerActivity"><i class="fa fa-plus"></i> Add customer activity</button>
+                        </p>
+                        <div class="customerActivity-wrapper">
+                            #foreach ($ca in $page.funnel.customerActivities)
+                            <div class="form-group customerActivity">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="hidden" name="customerActivityId" value="$ca.id" />
+                                        <input type="text" class="form-control required" style="width: 60%;" placeholder="Enter customer activity" name="customerActivityText" value="$ca.text" />
+                                        <select class="form-control" style="width: 40%;" name="customerActivityInbound">
+                                            <option value="true" #if ($ca.inbound == "true") selected="selected" #end>Inbound</option>
+                                            <option value="false" #if ($ca.inbound == "false") selected="selected" #end>Outbound</option>
+                                        </select>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-customerActivity" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                        <div class="alert alert-info">
+                            <p>Specify the list of activities that can be added to leads as notes, eg "send documents", "give quote".</p>
+                            <p>An activity can be inbound, ie something the customer did, or outbound, ie something the sales person did</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3">Funnel Testers</label>
+                    <div class="col-sm-6">
+                        <script type="text/html" id="template-funnelTester">
+                            <div class="form-group funnelTester">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" />
+                                        <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" />
+                                        <!--
+                                        <input type="number" class="form-control numeric " style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" />
+                                        -->
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </script>
+                        <p>
+                            <button type="button" class="btn btn-sm btn-success btn-add-funnelTester"><i class="fa fa-plus"></i> Add funnel tester</button>
+                        </p>
+                        <div class="funnelTester-wrapper">
+                            #foreach ($ft in $page.funnel.funnelTesters)
+                            <div class="form-group funnelTester">
+                                <div class="col-sm-12">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" class="form-control required" style="width: 50%;" placeholder="Enter email domain" name="funnelTesterEmailDomain" value="$ft.emailDomain" />
+                                        <input type="number" class="form-control numeric" style="width: 20%;" placeholder="Enter delay" name="funnelTesterDelay" value="$!ft.delayMins" />
+                                        <!--
+                                        <input type="number" class="form-control numeric" style="width: 30%;" placeholder="Enter accelerator" name="funnelTesterAcce" value="$!ft.accelerator" />
+                                        -->
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-danger btn-remove-funnelTester" type="button"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                        <div class="alert alert-info">
+                            <p>Profiles with a matching email domain will can have their delays processed faster, to aid with funnel testing.</p>
+                            <p>Enter either:</p>
+                            <ul>
+                                <li>Delay: Specified in minutes, this replaces the delays on timers and goal timeouts. Eg use "1" for 1 minute</li>
+                                <!--
+                                <li>Accelerator: Divides the amount of time calculated for timers and goal timeouts. Eg use "100" to make 100 times faster</li>
+                                -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="lead" class="tab-pane">
+            <p class="lead">$page.leads.size() leads</p>
+            <p>
 
-                                            <p>Please select which destination field each column should be imported into:</p>
+                <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
+                    <span class="glyphicon glyphicon-upload"></span>
+                    Upload CSV
+                </a>
+                <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
+                    <span class="glyphicon glyphicon-download"></span>
+                    Export to CSV
+                </a>
+                <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
+                    <span class="fa fa-refresh"></span>
+                    Refresh leads
+                </a>
 
-                                            <div class="row">
-                                                <div class="col-sm-12">
-                                                    <div class="form-horizontal">
-                                                        <div class="form-group">
-                                                            <label class="control-label col-md-2" for="startRow" style="text-align: left !important;">Start row</label>
+            </p>
+            <hr />
+            <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
+                <div class="col-lg-12">
+                    <div class="wizard" id="myWizard">
+                        <div class="steps-container">
+                            <ul class="steps">
+                                <li data-step="1" data-name="upload" class="active">
+                                    <span class="badge">1</span>Upload
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="2">
+                                    <span class="badge">2</span>Select columns
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="3" data-name="import">
+                                    <span class="badge">3</span>Import
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="4" data-name="processing">
+                                    <span class="badge">4</span>Processing
+                                    <span class="chevron"></span>
+                                </li>
+                                <li data-step="5" data-name="complete">
+                                    <span class="badge">5</span>Complete
+                                    <span class="chevron"></span>
+                                </li>
 
-                                                            <div class="controls col-md-3">
-                                                                <input type="text" name="startRow" id="startRow" class="form-control" value="" />
-                                                            </div>
-                                                        </div>
+                            </ul>
+                        </div>
+                        <div class="actions">
+                            <button type="button" class="btn btn-default btn-prev">
+                                <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                            </button>
+                            <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                                <span class="glyphicon glyphicon-arrow-right"></span>
+                            </button>
+                        </div>
+                        <form method="post" action="">
+                            <div class="step-content">
+                                <div class="step-pane active sample-pane alert" data-step="1">
+                                    <h4>Upload CSV File</h4>
+
+                                    <div id='btn-upload' class="pull-left"></div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="step-pane sample-pane alert" data-step="2">
+                                    <h4>Select columns</h4>
+
+                                    <input type="hidden" name="fileHash" value="" />
+
+                                    <p>Please select which destination field each column should be imported into:</p>
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-horizontal">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-2" for="startRow" style="text-align: left !important;">Start row</label>
+
+                                                    <div class="controls col-md-3">
+                                                        <input type="text" name="startRow" id="startRow" class="form-control" value="" />
                                                     </div>
                                                 </div>
-
                                             </div>
-
-                                            <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
-                                                <table class="table table-bordered table-striped" id="importerTable">
-                                                    <thead>
-                                                        <tr id="importerHead">
-                                                            <th>Please wait...</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="importerBody">
-                                                        <tr>
-                                                            <td>Loading...</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="step-pane sample-pane alert" data-step="3">
-                                            <h4>Start importing</h4>
-
-                                            <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
-                                                so may take some time depending on the size of the file</p>
-
-                                            <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
-
-                                            <hr/>
-
-                                            <div id="processing">
-                                                <h4>Processing the file validations. Please wait...</h4>
-                                            </div>
-
-                                            <div id="result">
-                                                <button type="submit" class="btn btn-success btn-large">
-                                                    <span class="fa fa-arrow-circle-right"></span>
-                                                    Import now
-                                                </button>
-
-                                                <span id="noValidRow">There are no valid row in the file, please review it</span>
-                                                <span id="toManyErrors">There are to many errors in the file, please review it</span>
-
-                                                <hr/>
-
-                                                <table class="table">
-                                                    <tr>
-                                                        <th>New leads to be inserted</th>
-                                                        <td class="beforeImportNumNew"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Existing leads to be updated</th>
-                                                        <td class="beforeImportNumExisting"></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th>Invalid records</th>
-                                                        <td class="beforeImportNumInvalid"></td>
-                                                    </tr>
-                                                </table>
-
-                                                <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                                <div class="table-responsive" style="max-height: 300px">
-                                                    <table class="table table-bordered table-striped">
-                                                        <tbody class="beforeImportInvalidRows">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="step-pane sample-pane alert" data-step="4">
-                                            <h4>Import running</h4>
-
-                                            <div class="progress" id="importProgressbar">
-                                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                                </div>
-                                            </div>
-                                            <div class="process-results">
-                                                <p>
-                                                    <strong>Process Status:</strong>
-                                                    <strong id='job-status'></strong>
-                                                </p>
-
-                                                <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
-                                            </div>
-
-                                        </div>
-                                        <div class="step-pane sample-pane alert" data-step="5">
-                                            <table
-                                                class="table table-bordered">
-                                                <tr>
-                                                    <th>Number created</th>
-                                                    <td class="createdCount"></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Number updated:</th>
-                                                    <td class="updatedCount"></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Number with
-                                                        errors</th>
-                                                    <td class="errorCount"></td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Errors file</th>
-                                                    <td class=""><a
-                                                        href=""
-                                                        class="errorRows btn btn-warning">
-                                                            <span
-                                                            class="fa fa-download"></span>
-                                                    </a></td>
-                                                </tr>
-                                            </table>
                                         </div>
 
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>TrackingID</th>
-                                    <th>Email</th>
-                                    <th>Last attained</th>
-                                    <th>Awaiting goal</th>
-                                    <th>Timer</th>
-                                    <th>Created date</th>
-                                    <th>Last attained date</th>
-                                    <th>Stage</th>
-                                    <th>Source</th>
-                                    <th>Funnel version</th>
-                                    <th>Team</th>
-                                    <th>Assigned to</th>
-                                    <th>Deleted date</th>
-                                    <th>Closed date</th>
-                                    <th>Cancelled</th>
-                                    <th>Source Lead Id</th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody id="lead-tbody">
-                                #foreach( $lead in $page.leads )
-                                    <tr>
-                                        <td>$!lead.trackingId</td>
-                                        <td>
-                                            #if( $lead.profile )
-                                                <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
-                                            #end
-                                        </td>
-                                        <td>
-                                            #if( $lead.lastAttainedGoal)
-                                                <a href="$lead.lastAttainedGoal">$page.nodeTitle($lead.lastAttainedGoal)</a>
-                                            #end
-                                        </td>
-                                        <td>
-                                            #if( $lead.currentGoal )
-                                                <a href="$lead.currentGoal">$page.nodeTitle($lead.currentGoal)</a>
-                                                ($lead.currentGoal)
-                                            #end
-                                        </td>
-                                        <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
-                                        <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
-                                        <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
-                                        <td>$!lead.stageName</td>
-                                        <td>$!lead.source</td>
-                                        <td>$!lead.funnelBranch</td>
-                                        <td>$!lead.assignedToOrg.formattedName</td>
-                                        <td>$!lead.assignedToProfile.formattedName</td>
-                                        <td>$!lead.deletedDate</td>
-                                        <td>$!lead.closedDate</td>
-                                        <td>$!lead.cancelled</td>
-                                        <td>$!lead.sourceLead.id</td>
-                                        <td>
-                                            <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
-                                        </td>
-                                        <td>
-                                            <a href="/leads/$lead.id" class="btn btn-info">
-                                                <span class="fa fa-pencil"></span>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    #if( $lead.processingStartedAt )
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>
-                                                #if( $lead.processingStartedAt )
-                                                    Processing started at:
-                                                    <br />
-                                                    <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>
-                                                #end
-                                            </td>
-                                            <td>
-                                                #if( $lead.completedProcessingAt )
-                                                    Completed
-                                                    <br />
-                                                    <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>
-                                                #end
-                                            </td>
-                                            <td>
-                                                #if( $lead.numAttempts )
-                                                    Num attempts
-                                                    <br />
-                                                    $lead.numAttempts
-                                                #end
-                                            </td>
-                                        </tr>
-                                    #end
-                                #end
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modalUploadCsv" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Upload Leads CSV</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row upload">
-                            <div class="col-sm-12">
-                                <div class="btn btn-primary btn-sm input uploadCsv" id="doUploadCsv"></div>
-                                <div class="results" style="display: none">
-                                    <p>
-                                        <strong>Num inserted:</strong>
-                                        <span class="numInserted">-</span>
-                                        <strong>Num updated:</strong>
-                                        <span class="numUpdated">-</span>
-                                        <strong>Unmatched rows:</strong>
-                                        <span class="numUnmatched">-</span>
-                                    </p>
-
-                                    <div class="table-responsive">
-                                        <table class="table table-striped table-hover table-condensed">
+                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
+                                        <table class="table table-bordered table-striped" id="importerTable">
                                             <thead>
-                                                <tr>
-                                                    <th></th>
+                                                <tr id="importerHead">
+                                                    <th>Please wait...</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody id="importerBody">
                                                 <tr>
-                                                    <td></td>
+                                                    <td>Loading...</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
+                                <div class="step-pane sample-pane alert" data-step="3">
+                                    <h4>Start importing</h4>
+
+                                    <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
+                                        so may take some time depending on the size of the file</p>
+
+                                    <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
+
+                                    <hr/>
+
+                                    <div id="processing">
+                                        <h4>Processing the file validations. Please wait...</h4>
+                                    </div>
+
+                                    <div id="result">
+                                        <button type="submit" class="btn btn-success btn-large">
+                                            <span class="fa fa-arrow-circle-right"></span>
+                                            Import now
+                                        </button>
+
+                                        <span id="noValidRow">There are no valid row in the file, please review it</span>
+                                        <span id="toManyErrors">There are to many errors in the file, please review it</span>
+
+                                        <hr/>
+
+                                        <table class="table">
+                                            <tr>
+                                                <th>New leads to be inserted</th>
+                                                <td class="beforeImportNumNew"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Existing leads to be updated</th>
+                                                <td class="beforeImportNumExisting"></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Invalid records</th>
+                                                <td class="beforeImportNumInvalid"></td>
+                                            </tr>
+                                        </table>
+
+                                        <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
+                                        <div class="table-responsive" style="max-height: 300px">
+                                            <table class="table table-bordered table-striped">
+                                                <tbody class="beforeImportInvalidRows">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="step-pane sample-pane alert" data-step="4">
+                                    <h4>Import running</h4>
+
+                                    <div class="progress" id="importProgressbar">
+                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                        </div>
+                                    </div>
+                                    <div class="process-results">
+                                        <p>
+                                            <strong>Process Status:</strong>
+                                            <strong id='job-status'></strong>
+                                        </p>
+
+                                        <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
+                                    </div>
+
+                                </div>
+                                <div class="step-pane sample-pane alert" data-step="5">
+                                    <table
+                                        class="table table-bordered">
+                                        <tr>
+                                            <th>Number created</th>
+                                            <td class="createdCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number updated:</th>
+                                            <td class="updatedCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number with
+                                                errors</th>
+                                            <td class="errorCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Errors file</th>
+                                            <td class=""><a
+                                                    href=""
+                                                    class="errorRows btn btn-warning">
+                                                    <span
+                                                        class="fa fa-download"></span>
+                                                </a></td>
+                                        </tr>
+                                    </table>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>TrackingID</th>
+                            <th>Email</th>
+                            <th>Last attained</th>
+                            <th>Awaiting goal</th>
+                            <th>Timer</th>
+                            <th>Created date</th>
+                            <th>Last attained date</th>
+                            <th>Stage</th>
+                            <th>Source</th>
+                            <th>Funnel version</th>
+                            <th>Team</th>
+                            <th>Assigned to</th>
+                            <th>Deleted date</th>
+                            <th>Closed date</th>
+                            <th>Cancelled</th>
+                            <th>Source Lead Id</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="lead-tbody">
+                        #foreach( $lead in $page.leads )
+                        <tr>
+                            <td>$!lead.trackingId</td>
+                            <td>
+                                #if( $lead.profile )
+                                <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
+                                #end
+                            </td>
+                            <td>
+                                #if( $lead.lastAttainedGoal)
+                                <a href="$lead.lastAttainedGoal">$page.nodeTitle($lead.lastAttainedGoal)</a>
+                                #end
+                            </td>
+                            <td>
+                                #if( $lead.currentGoal )
+                                <a href="$lead.currentGoal">$page.nodeTitle($lead.currentGoal)</a>
+                                ($lead.currentGoal)
+                                #end
+                            </td>
+                            <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
+                            <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
+                            <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
+                            <td>$!lead.stageName</td>
+                            <td>$!lead.source</td>
+                            <td>$!lead.funnelBranch</td>
+                            <td>$!lead.assignedToOrg.formattedName</td>
+                            <td>$!lead.assignedToProfile.formattedName</td>
+                            <td>$!lead.deletedDate</td>
+                            <td>$!lead.closedDate</td>
+                            <td>$!lead.cancelled</td>
+                            <td>$!lead.sourceLead.id</td>
+                            <td>
+                                <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
+                            </td>
+                            <td>
+                                <a href="/leads/$lead.id" class="btn btn-info">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
+                            </td>
+                        </tr>
+                        #if( $lead.processingStartedAt )
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                #if( $lead.processingStartedAt )
+                                Processing started at:
+                                <br />
+                                <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>
+                                #end
+                            </td>
+                            <td>
+                                #if( $lead.completedProcessingAt )
+                                Completed
+                                <br />
+                                <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>
+                                #end
+                            </td>
+                            <td>
+                                #if( $lead.numAttempts )
+                                Num attempts
+                                <br />
+                                $lead.numAttempts
+                                #end
+                            </td>
+                        </tr>
+                        #end
+                        #end
+                    </tbody>
+                </table>
+            </div>
         </div>
+    </div>
+</div>
 
-        <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
-        <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
-        <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
-        <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
-        <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
-        <script src="/theme/apps/funnels/manageFunnel.js?v=3" type="text/javascript">//</script>
+<div id="modalUploadCsv" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-        <script type="text/javascript">
-            $(function () {
-                initUploads();
-                initJourneyBuilder();
-                initManageFunnel();
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Upload Leads CSV</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row upload">
+                    <div class="col-sm-12">
+                        <div class="btn btn-primary btn-sm input uploadCsv" id="doUploadCsv"></div>
+                        <div class="results" style="display: none">
+                            <p>
+                                <strong>Num inserted:</strong>
+                                <span class="numInserted">-</span>
+                                <strong>Num updated:</strong>
+                                <span class="numUpdated">-</span>
+                                <strong>Unmatched rows:</strong>
+                                <span class="numUnmatched">-</span>
+                            </p>
 
-                $("body").on("click", ".btn-refresh-leads", function (e) {
-                    e.preventDefault();
-                    $("#lead-tbody").reloadFragment();
-                });
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
+    <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
+    <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
+    <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
+    <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
+    <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
+    <script src="/theme/apps/funnels/manageFunnel.js?v=3" type="text/javascript">//</script>
+
+    <script type="text/javascript">
+        $(function () {
+            initUploads();
+            initJourneyBuilder();
+            initManageFunnel();
+            initPublishingMenu('');
+
+            $("body").on("click", ".btn-refresh-leads", function (e) {
+                e.preventDefault();
+                $("#lead-tbody").reloadFragment();
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>
