@@ -801,6 +801,7 @@
                             basePath: options.basePath
                         },
                         niceScrollEnabled: false,
+                        nestedContainerEnabled: false,
                         tabContainersText: '<i class="fa fa-columns"></i>',
                         tabComponentsText: '<i class="fa fa-files-o"></i>',
                         snippetsUrl: options.snippetsUrl,
