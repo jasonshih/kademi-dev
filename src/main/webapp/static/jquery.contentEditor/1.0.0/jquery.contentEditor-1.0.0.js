@@ -1099,7 +1099,7 @@
             keditor.initDynamicContent(dynamicElement);
         });
         
-        
+        var menuTemplate = $('<div />').html($('#menuTreeTemplate').html());
         $.ajax({
             type: 'get',
             dataType: 'json',
@@ -1107,36 +1107,17 @@
             success: function (resp) {
                 flog('[jquery.contentEditor] Menu item data', resp);
                 
-                var menuItemsHtml = '';
-                
                 var items = resp.items;
                 items.splice(0, 1);
                 for (var i = 0; i < items.length; i++) {
-                    if (items[i].parentId === 'menuRoot') {
-                        menuItemsHtml += contentEditor.generateMenuItemHtml(items[i], items, true);
-                    }
+                    menuTemplate.find('[data-id="' + items[i].id + '"]').attr('data-hidden', items[i].hidden);
                 }
-                
-                $('.menuList.rootMenuList').html(
-                    '<li class="rootMenuItem">' +
-                    '    <div data-id="menuRoot" class="menuItem">' +
-                    '        <span class="btn-group btn-group-xs small">' +
-                    '            <a class="btn btn-success btnAddMenuItem" href="#">' +
-                    '                <span class="fa fa-plus small"></span>' +
-                    '            </a>' +
-                    '        </span>' +
-                    '        <span class="menuItemText">Root Menu Item</span>' +
-                    '    </div>' +
-                    '    <ol class="menuList" data-id="menuRoot">' + menuItemsHtml + '</ol>' +
-                    '</li>'
-                );
-                contentEditor.initMenuEditor(form, keditor);
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('[jquery.contentEditor] Error when getting menu data item', jqXHR, textStatus, errorThrown);
-                flog('[jquery.contentEditor] Fallback to use menu data item in template');
-                
-                $('.menuList.rootMenuList').html($('#menuTreeTemplate').html());
+            },
+            complete: function () {
+                $('.menuList.rootMenuList').html(menuTemplate.html());
                 contentEditor.initMenuEditor(form, keditor);
             }
         });
