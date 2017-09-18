@@ -386,17 +386,17 @@ function updateOptIn(chk) {
 
 function initQueryBuilder() {
     var builder = $('#query-builder');
-    if( builder.length == 0) {
-        return ;
+    if (builder.length == 0) {
+        return;
     }
 
     var rulesInput = $("#rulesInput");
 
     $('form.query-builder').forms({
-        onValid : function() {
+        onValid: function () {
             var rules = builder.queryBuilder('getRules');
             rules = checkRuleType(rules);
-            rulesInput.val( JSON.stringify(rules) );
+            rulesInput.val(JSON.stringify(rules));
             flog("onValid", rules);
         },
         onSuccess: function (resp) {
@@ -416,10 +416,13 @@ function initQueryBuilder() {
                 var rulesJson = rulesInput.val();
                 flog("riles ", rulesJson);
                 var rulesOb = JSON.parse(rulesJson);
-                builder.queryBuilder({
-                    filters: resp,
-                    rules: rulesOb
-                });
+                var qbConfig = {
+                    filters: resp
+                };
+                if (rulesOb.rules && rulesOb.rules.length > 0) {
+                    qbConfig["rules"] = rulesOb;
+                }
+                builder.queryBuilder(qbConfig);
             }
         });
     });
