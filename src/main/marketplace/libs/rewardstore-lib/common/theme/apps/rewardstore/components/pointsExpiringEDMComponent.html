@@ -1,7 +1,7 @@
 #if( $store.length() > 0 )
     #set( $days = $formatter.toInteger($months) * 30 )
     #set($pEndDate = $formatter.addDays($formatter.now, $days))
-    #set( $points = $applications.rewardStore.findExpiring( $store, $profile, $pEndDate) )
+    #set( $points = $applications.rewardStore.findAllExpiring( $store, $profile, $pEndDate) )
     #set( $pointsMonths = $points.groupByExpiryMonth )
     #if ($height)
         #set ($height = $formatter.toInteger($height) - 38 - 30 - 15)
