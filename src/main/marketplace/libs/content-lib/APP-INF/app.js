@@ -9,3 +9,4 @@ controllerMappings.addComponent("content/components", "pageTitle", "html", "Disp
 controllerMappings.addComponent("content/components", "breadcrumb", "html", "Displays the page breadcrumb", "Content App component;Bootstrap component");
 controllerMappings.addComponent("content/components", "socialLinks", "html", "Displays the social links", "Content App component");
 controllerMappings.addComponent("content/components", "errorDetails", "html", "Displays detailed error page", "Content App component");
+controllerMappings.addComponent("content/components", "htmlPanel", "html", "Displays panel with text and icon", "Content App component");

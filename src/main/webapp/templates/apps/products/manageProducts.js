@@ -259,7 +259,7 @@ function doHistorySearch() {
     var uri = URI(window.location);
 
     uri.setSearch('dataQuery', $("#data-query").val());
-    uri.setSearch('sosupplierrtdir', $("#supplier").val());
+    uri.setSearch('supplier', $("#supplier").val());
 
     var data = {
         dataQuery: $("#data-query").val(),

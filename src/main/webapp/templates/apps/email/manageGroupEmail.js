@@ -226,24 +226,29 @@ function pollStatus() {
                 status: 'true'
             },
             success: function (resp) {
-                displayStatus(resp.data);
-                if (resp.data.statusCode === '') {
-                    setTimeout(pollStatus, 2000);
-                } else if (resp.data.statusCode === 's') {
-                    statusTools.attr('class', 'Canceled page-action');
-                } else if (resp.data.statusCode !== 'c') {
-                    statusTools.attr('class', 'Running page-action');
-                    setTimeout(pollStatus, 2000);
+                if (resp.status) {
+                    displayStatus(resp.data);
+                    if (resp.data.statusCode === '') {
+                        setTimeout(pollStatus, 2000);
+                    } else if (resp.data.statusCode === 's') {
+                        statusTools.attr('class', 'Canceled page-action');
+                    } else if (resp.data.statusCode !== 'c') {
+                        statusTools.attr('class', 'Running page-action');
+                        setTimeout(pollStatus, 2000);
+                    } else {
+                        flog("job status is finished, so just poll open rate");
+                        $(".send-progress .progress").hide();
+                        $("#open-rate").show();
+                        statusTools.attr('class', 'Completed page-action');
+                        pollOpenRate();
+                    }
                 } else {
-                    flog("job status is finished, so just poll open rate");
-                    $(".send-progress .progress").hide();
-                    $("#open-rate").show();
-                    statusTools.attr('class', 'Completed page-action');
-                    pollOpenRate();
+                    setTimeout(pollStatus, 2000);
                 }
             },
             error: function (resp) {
                 flog('error', resp);
+                setTimeout(pollStatus, 2000);
             }
         });
     } catch (e) {
@@ -259,7 +264,6 @@ function pollOpenRate() {
 
 function displayStatus(data) {
     flog('displayStatus', data);
-    var tbody = $('#emails').find('tbody');
     var status = $('#status');
     var progress = status.find('.progress');
     var progressBar = progress.find('.progress-bar');
@@ -305,13 +309,15 @@ function displayStatus(data) {
 
         progressBar.next().text(txtProgress);
 
-
-        addRows(data.sending, 'Sending..', tbody);
-        addRows(data.retrying, 'Retrying..', tbody);
-        removeOkRows(data.sending.concat(data.retrying), tbody);
+        $('#groupEmail-totalToSend').text(data.totalToSend);
+        $('#groupEmail-totalGenerated').text(data.totalGenerated);
+        $('#groupEmail-totalSuccessful').text(data.successful);
+        $('#groupEmail-totalFailed').text(data.totalFailed);
+        $('#groupEmail-totalOpened').text(data.opened);
+        $('#groupEmail-totalConverted').text(data.converted);
+        $('#groupEmail-totalRetrying').text(data.totalRetrying);
     } else {
         status.children('div').hide().filter('.notsent').show();
-        tbody.html('');
     }
 }
 
@@ -424,3 +430,74 @@ function doRemoveAttachment(name, callback) {
         }
     }
 }
+
+function initGroupEmailListStatusPolling() {
+    $('.emailStatusRunning').each(function (i, item) {
+        var a = $(item);
+        var row = a.closest('tr');
+        var href = row.data('jobhref');
+        new GroupStatusPolling(row, href);
+    });
+}
+
+function GroupStatusPolling(row, href) {
+    var _self = this;
+
+    _self.row = row;
+    _self.href = href;
+
+    _self.startPolling();
+}
+
+
+GroupStatusPolling.prototype.startPolling = function () {
+    var _self = this;
+
+    if (_self.pollingTimer) {
+        _self.pollingTimer = window.clearTimeout(_self.pollingTimer);
+    }
+
+    _self.pollingTimer = window.setTimeout(_self.doPoll.bind(_self), 5000);
+};
+
+GroupStatusPolling.prototype.doPoll = function () {
+    var _self = this;
+    _self.pollingTimer = window.clearTimeout(_self.pollingTimer);
+
+    $.ajax({
+        type: 'GET',
+        url: _self.href,
+        dataType: 'json',
+        data: {
+            status: 'true'
+        },
+        success: function (resp) {
+            if (resp.status) {
+                _self.row.find('.groupEmail-totalToSend').text(resp.data.totalToSend);
+                _self.row.find('.groupEmail-successful').text(resp.data.successful);
+                _self.row.find('.groupEmail-opened').text(resp.data.opened);
+                _self.row.find('.groupEmail-converted').text(resp.data.converted);
+
+                var openRate = (resp.data.opened / resp.data.successful) * 100;
+                if (Number.isNaN(openRate)) {
+                    openRate = '';
+                } else {
+                    openRate += '%';
+                }
+                _self.row.find('.groupEmail-openRate').text(openRate);
+                
+                var convertedRate = (resp.data.converted / resp.data.successful) * 100;
+                if (Number.isNaN(convertedRate)) {
+                    convertedRate = '';
+                } else {
+                    convertedRate += '%';
+                }
+                _self.row.find('.groupEmail-conversionRate').text(convertedRate);
+            }
+            _self.startPolling();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            _self.startPolling();
+        }
+    });
+};

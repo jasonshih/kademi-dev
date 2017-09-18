@@ -19,7 +19,9 @@
 
             <div class="clearfix">
                 <p class="main-profile-photo pull-left">
-                    <img class="img img-circle h2" style="height: 80px; width: 80px;" src="$ava" alt="" />
+                    <a href="/manageUsers/$page.profile.id/">
+                        <img class="img img-circle h2" style="height: 80px; width: 80px;" src="$ava" alt="" />
+                    </a>
                 </p>
 
                 <div class="pull-right text-right h2">
@@ -128,6 +130,13 @@
             #end
             #end
 
+            <p class="lead">
+                Journey: <a href="/funnels/$page.funnel.name">$page.funnel.title</a>
+                , started 
+                <abbr title="$formatter.formatDateISO8601($page.createDate)" class="info timeago">$page.createDate</abbr>
+            </p>
+
+
             <div class="tabbable">
                 <ul class="nav nav-tabs tab-bricky">
                     <li class="active"><a href="#information" data-toggle="tab"><i class="fa fa-info-circle"></i> Information</a></li>
@@ -141,6 +150,7 @@
                     <div class="tab-pane active" id="information">
                         <div class="row">
                             <div class="col-sm-8">
+
                                 <form class="form-horizontal" action="$page.href" method="post" id="lead-details-form">
                                     <div class="form-group">
                                         <div class="col-sm-11 text-right">
@@ -177,8 +187,8 @@
                                             <div class="input-group">
                                                 <input type="text" name="createDate" id="createDate" class="form-control date-time immediateUpdate" value=" $formatter.formatDateTime( $!page.createDate )" />
                                                 <span class="input-group-addon">
-                                            <i class="fa fa-calendar"></i>
-                                        </span>
+                                                    <i class="fa fa-calendar"></i>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -200,18 +210,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-sm-3">Journey</label>
-                                        <div class="col-sm-8">
-                                            #set( $leadsFolder = $page.find("/funnels") )
-                                            <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
-                                                <option value="">[None]</option>
-                                                #foreach( $funnel in $leadsFolder.children )
-                                                $formatter.option($funnel.funnelRepository.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
-                                                #end
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     #foreach($field in $page.extraFields)
                                     <div class="form-group">
                                         <label class="control-label col-sm-3">$field.title</label>
@@ -460,6 +459,49 @@
                             </div>
                     </div>
                     </form>
+
+                    <div class="row">
+                        <div class="container">
+                            <hr />
+                            <ul class="timeline">
+                                #set( $month = "" )
+                                #set( $lastMonth = "" )
+                                #foreach( $action in $page.leadTimeLineItems )
+                                #set( $month = $formatter.getMonthName($action.actionDate) )
+                                #if( $month != $lastMonth )
+                                <li class="tldateLi">
+                                    <div class="tldate"><span>$month $formatter.getYear($action.actionDate)</span></div>
+                                </li>
+                                #end
+                                #set( $lastMonth = $month )
+                                <li class="$formatter.ifTrue($action.inbound, '', 'timeline-inverted')">
+                                    <div class="timeline-badge $action.category"><i class="fa $action.itemType"></i></div>
+                                    <div class="timeline-panel">
+                                        <div class="timeline-heading">
+                                            #if( $action.actionDate)
+                                            <small class="text-muted pull-right"><i class="glyphicon glyphicon-time"></i>
+                                                <abbr title="$formatter.formatDateISO8601($action.actionDate)" class="info timeago">$action.actionDate</abbr></small>
+                                            #end
+                                            <h4 class="timeline-title">$action.itemTitle</h4>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <p>$!action.actionDesc</p>
+                                            #if($action.path)
+                                            <p>
+                                                <a href="$action.path" class="btn btn-sm btn-info pull-right">
+                                                    View <i class="fa fa-arrow-circle-right"></i>
+                                                </a>
+                                            </p>
+                                            #end
+                                        </div>
+                                    </div>
+                                </li>
+                                #end
+
+                            </ul>                        
+                        </div>
+                    </div>
+
                 </div>
                 <div class="tab-pane" id="notes">
                     <p class="text-right">

@@ -20,7 +20,7 @@ controllerMappings
     .addMethod('POST', 'approveClaims', 'approveClaims')
     .addMethod('POST', 'rejectClaims', 'rejectClaims')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
-    .postPriviledge('WRITE_CONTENT')
+    .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
 
@@ -91,7 +91,7 @@ function changeClaimsStatus(status, page, params, callback) {
             callback(result);
         }
     } catch (e) {
-        log.error('Error in ' + action + ': ' + e);
+        log.error('Error in ' + action + ': ' + e, e);
         result.status = false;
         result.messages = ['Error in ' + action + ': ' + e];
     }
@@ -134,7 +134,7 @@ function approveClaims(page, params) {
                 })(ids[i]);
             }
         } catch (e) {
-            log.error('Error in approving: ', e);
+            log.error('Error in approving: ' + e, e);
             result.status = false;
             result.messages = ['Error in approving: ' + e];
         }
