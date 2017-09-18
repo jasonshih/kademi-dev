@@ -252,7 +252,7 @@
                     if (checkBoxes.length == 0) {
                         Msg.error("Please select the users you want to remove by clicking the checkboxs to the right");
                     } else {
-                        Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " users?", function () {
+                        Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " memberships? This will remove the connection between the user and the group, but will not remove the users from your account", function () {
                             $.ajax({
                                 type: 'POST',
                                 data: checkBoxes,
