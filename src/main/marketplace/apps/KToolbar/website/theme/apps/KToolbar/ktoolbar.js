@@ -93,7 +93,7 @@
             wrapper.wrap('<div class="colorpicker-container"></div>');
             colorPicker.before('<span class="input-group-addon"><i></i></span>');
             var previewer = wrapper.find('i');
-    
+            
             wrapper.colorpicker({
                 format: 'hex',
                 container: wrapper.parent(),
@@ -158,13 +158,16 @@
     var timer;
     
     $(function () {
-        initMultiLingual();
+        var modal = $('#modal-translate');
+        if (modal.length > 0) {
+            initMultiLingual(modal);
+        }
     });
     
-    function initMultiLingual () {
-        flog('initMultiLingual');
+    function initMultiLingual(modal) {
+        flog('initMultiLingual', modal);
         
-        initModalTranslate();
+        initModalTranslate(modal);
         
         $('.select-lang').on('click', function (e) {
             e.preventDefault();
@@ -203,19 +206,11 @@
         clearTimeout(timer);
         
         var btn = $('#btn-translate');
-        if (btn.length === 0) {
-            btn = $('<button class="btn btn-linnk btn-xs" id="btn-translate"><i class="fa fa-language"></i> Edit translation</button>');
-            btn.css({
-                position: 'absolute',
-                'z-index': 999999
-            });
-            $(document.body).append(btn);
-        }
-        
         btn.off('click').on('click', function (e) {
             e.preventDefault();
             
             showModalTranslate(target);
+            hideTranslateButton(true);
         });
         
         var position;
@@ -226,47 +221,16 @@
         }
         
         position.top = position.top - btn.innerHeight();
+        if (position.top < 0) {
+            position.top += (btn.innerHeight() * 2);
+        }
+        
         btn.css(position).show();
     }
     
-    function initModalTranslate() {
-        flog('initModalTranslate');
+    function initModalTranslate(modal) {
+        flog('initModalTranslate', modal);
         
-        var modal = $(
-            '<div id="modal-translate" class="modal fade" tabindex="-1">' +
-            '     <div class="modal-dialog modal-sm">' +
-            '        <div class="modal-content">' +
-            '            <div class="modal-header">' +
-            '                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
-            '                <h4 class="modal-title">Save translated text</h4>' +
-            '            </div>' +
-            '            <form method="POST" class="form-horizontal" action="/translations/">' +
-            '                <div class="modal-body">' +
-            '                    <p class="form-message alert alert-danger" style="display: none;"></p>' +
-            '                    <input type="hidden" name="sourceType" value="" />' +
-            '                    <input type="hidden" name="sourceId" value="" />' +
-            '                    <input type="hidden" name="sourceText" value="" />' +
-            '                    <input type="hidden" name="sourceField" value="" />' +
-            '                    <input type="hidden" name="langCode" value="" />' +
-            '                    <div class="form-group">' +
-            '                        <label for="translated" class="control-label col-md-3">Translated text</label>' +
-            '                        <div class="col-md-9">' +
-            '                            <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />' +
-            '                            <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>' +
-            '                            <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>' +
-            '                        </div>' +
-            '                    </div>' +
-            '                </div>' +
-            '                <div class="modal-footer">' +
-            '                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>' +
-            '                    <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>' +
-            '                </div>' +
-            '            </form>' +
-            '        </div>' +
-            '     </div>' +
-            '</div>'
-        );
-        $(document.body).append(modal);
         initHtmlEditors(modal.find('.htmleditor'));
         
         modal.find('form').forms({
@@ -367,10 +331,10 @@
         });
     }
     
-    function hideTranslateButton() {
+    function hideTranslateButton(immediate) {
         timer = setTimeout(function () {
             $('#btn-translate').hide();
-        }, 400);
+        }, immediate ? 0 : 400);
     }
     
 })(jQuery);
