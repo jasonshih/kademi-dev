@@ -17,10 +17,10 @@ function initManageUsers() {
 }
 
 function initSaveAsDynamicGroup() {
-    $("body").on("click", "#btnSaveDynaGroup", function(e) {
+    $("body").on("click", "#btnSaveDynaGroup", function (e) {
         e.preventDefault();
         var newTitle = prompt("Please enter the name for the new dynamic group");
-        if( newTitle ) {
+        if (newTitle) {
             
             var uri = URI(window.location);
             
@@ -45,7 +45,7 @@ function initSaveAsDynamicGroup() {
                 error: function (resp) {
                     Msg.error('An error occured attempting to remove the oauth signature. Please check your internet connection');
                 }
-            });            
+            });
         }
     });
 }
@@ -287,7 +287,7 @@ function doSearch() {
             $('#searchStats').replaceWith(newDom.find('#searchStats'));
             
             initSort();
-            initLoginAs();            
+            initLoginAs();
         },
         error: function (resp) {
             Msg.error('An error occured doing the user search. Please check your internet connection and try again', 'search');
@@ -530,12 +530,14 @@ function doRemoveUsers(checkBoxes, action) {
         success: function (data) {
             flog('success', data);
             if (data.status) {
-                doSearch();
                 if (action == "remove") {
                     Msg.success('Removed users ok');
                 } else {
                     Msg.success('Unsubscribe users ok');
                 }
+                setTimeout(function () {
+                    doSearch();
+                }, 1000);
             } else {
                 if (action == "remove") {
                     Msg.error('There was a problem removing users. Please try again and contact the adm	strator if you still have problems');
