@@ -7,6 +7,12 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/user/publicProfile.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/user/changeOrg.js"
@@ -56,4 +62,3 @@
         }
     ]
 }
-
