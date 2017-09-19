@@ -79,15 +79,14 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
                     carouselAddImage.mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relUrl, type, hash) {
                             flog('Keditor carousel selected a file', url, hash);
                             self.addItemToList(form, {

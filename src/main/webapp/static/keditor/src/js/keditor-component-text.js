@@ -103,15 +103,11 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    var basePath = window.location.pathname.replace('contenteditor', '');
-                    if (keditor.options.basePath) {
-                        basePath = keditor.options.basePath;
-                    }
                     form.find('.background-image-edit').mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                             var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;

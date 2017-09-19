@@ -241,7 +241,8 @@
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor', ''),
+                pagePath: keditor.options.pagePath,
+                basePath: keditor.options.basePath,
                 onSelectFile: function (url) {
                     instance.src = url;
                     instance.refreshAudioPlayerPreview();
@@ -382,15 +383,14 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    var basePath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/') + 1);
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
                     
                     carouselAddImage.mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relUrl, type, hash) {
                             flog('Keditor carousel selected a file', url, hash);
                             self.addItemToList(form, {
@@ -1598,8 +1598,8 @@
                     photoEdit.mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: options.pagePath,
-                        basePath: options.basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var img = keditor.getSettingComponent().find('img');
                             img.attr('src', "/_hashes/files/" + hash);
@@ -1843,15 +1843,11 @@
                     // =================================================================================
                     // Backgrounds
                     // =================================================================================
-                    var basePath = window.location.pathname.replace('contenteditor', '');
-                    if (keditor.options.basePath) {
-                        basePath = keditor.options.basePath;
-                    }
                     form.find('.background-image-edit').mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: basePath,
-                        basePath: basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var target = keditor.getSettingComponent().find('.keditor-component-text-content');
                             var imageUrl = 'http://' + window.location.host + '/_hashes/files/' + hash;
@@ -2148,7 +2144,8 @@
                     btnVideoFileInput.mselect({
                         contentTypes: ['video'],
                         bs3Modal: true,
-                        pagePath: window.location.pathname.replace('contenteditor', ''),
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url) {
                             keditor.getSettingComponent().find('.video-wrapper').attr('data-video-src', url);
                             self.refreshVideoPlayerPreview(keditor);

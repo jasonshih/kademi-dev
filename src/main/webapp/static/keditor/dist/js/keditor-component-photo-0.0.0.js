@@ -92,8 +92,8 @@
                     photoEdit.mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
-                        pagePath: options.pagePath,
-                        basePath: options.basePath,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url, relativeUrl, fileType, hash) {
                             var img = keditor.getSettingComponent().find('img');
                             img.attr('src', "/_hashes/files/" + hash);

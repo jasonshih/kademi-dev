@@ -134,7 +134,8 @@
                     btnVideoFileInput.mselect({
                         contentTypes: ['video'],
                         bs3Modal: true,
-                        pagePath: window.location.pathname.replace('contenteditor', ''),
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
                         onSelectFile: function (url) {
                             keditor.getSettingComponent().find('.video-wrapper').attr('data-video-src', url);
                             self.refreshVideoPlayerPreview(keditor);
