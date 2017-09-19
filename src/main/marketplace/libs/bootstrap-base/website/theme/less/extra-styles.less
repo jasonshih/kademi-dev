@@ -763,6 +763,14 @@ h2.course-selector {
 }
 
 // ==================================================
+// Navbrand
+// ==================================================
+.navbar-brand {
+    padding: 20px 20px 20px 15px;
+    height: auto;
+}
+
+// ==================================================
 // Small row
 // ==================================================
 .row-sm {
@@ -819,6 +827,47 @@ h2.course-selector {
 // ==================================================
 // Carousel components
 // ==================================================
+.component-tile {
+    padding: 30px;
+    color: #fff;
+    position: relative;
+    min-height: 205px;
+    margin-bottom: @grid-gutter-width;
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+        color: inherit;
+    }
+    
+    &.component-primary {
+        background-color: @brand-primary;
+    }
+    
+    &.component-info {
+        background-color: @brand-info;
+    }
+    
+    &.component-success {
+        background-color: @brand-success;
+    }
+    
+    &.component-warning {
+        background-color: @brand-warning;
+    }
+    
+    &.component-danger {
+        background-color: @brand-danger;
+    }
+}
+
+// ==================================================
+// Carousel components
+// ==================================================
 .carousel-fixed-height {
     .carousel-inner {
         height: 100%;
@@ -840,6 +889,13 @@ h2.course-selector {
             }
         }
     }
+}
+
+// ==================================================
+// Typeahead
+// ==================================================
+.twitter-typeahead {
+    background: #fff;
 }
 
 // ==================================================
@@ -874,3 +930,23 @@ h2.course-selector {
 .list-group-item .glyphicon {
     margin-right: 5px;
 }
+
+// ==================================================
+// Print
+// ==================================================
+@media print {
+    .kcommentArea,
+    [data-type="component-comments"],
+    #ktoolbar {
+        display: none !important;
+    }
+    
+    // TODO: Find the way to not fix width=100%
+    img {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+

@@ -16,11 +16,11 @@ controllerMappings
     .adminController()
     .path('/manageSaleDataClaimer/')
     .defaultView(views.templateView('/theme/apps/salesDataClaimer/viewClaims.html'))
-    .addMethod('GET', 'getClaims')
+    .addMethod('GET', 'getAllClaims')
     .addMethod('POST', 'approveClaims', 'approveClaims')
     .addMethod('POST', 'rejectClaims', 'rejectClaims')
     .addMethod('POST', 'deleteClaims', 'deleteClaims')
-    .postPriviledge('WRITE_CONTENT')
+    .postPriviledge('READ_CONTENT')
     .enabled(true)
     .build();
 
@@ -38,93 +38,13 @@ controllerMappings
     .enabled(true)
     .build();
 
-function getClaims(page, params) {
-    log.info('getClaims > page={}, params={}', page, params);
+function getAllClaims(page, params) {
+    log.info('getAllClaims > page={}, params={}', page, params);
     
     if (!params.claimId) {
-        try {
-            var currentUser = securityManager.getCurrentUser();
-            var queryJson = {
-                'stored_fields': [
-                    'recordId',
-                    'soldDate',
-                    'soldBy',
-                    'soldById',
-                    'enteredDate',
-                    'modifiedDate',
-                    'amount',
-                    'status',
-                    'productSku',
-                    'field1',
-                    'field2',
-                    'field3',
-                    'field4',
-                    'field5',
-                    'tags'
-                ],
-                'sort': [
-                    {
-                        'modifiedDate': 'desc'
-                    },
-                    {
-                        'enteredDate': 'desc'
-                    }
-                ],
-                'size': 10000,
-                'query': {
-                    'bool': {
-                        'must': [
-                            {'type': {'value': TYPE_RECORD}},
-                            {'term': {'soldBy': currentUser.name}}
-                        ]
-                    }
-                }
-            };
-            
-            if (params.status) {
-                queryJson.query.bool.must.push({
-                    'term': {'status': +params.status}
-                });
-            } else {
-                if (!currentUser.isInGroup('administrators')) {
-                    queryJson.query.bool.must.push({
-                        'term': {'status': RECORD_STATUS.REQUESTING}
-                    });
-                }
-            }
-            
-            var searchResult = doDBSearch(page, queryJson);
-            
-            page.attributes.searchResult = searchResult;
-        } catch (e) {
-            log.error('ERROR in getClaims: ' + e);
-        }
+        var results = searchClaims(page, params.status);
+        page.attributes.searchResult = results;
     }
-}
-
-function getClaim(page, params) {
-    log.info('getClaim > page={}, params={}', page, params);
-    
-    var result = {
-        status: true
-    };
-    
-    try {
-        var db = getDB(page);
-        var claim = db.child(page.attributes.claimId);
-        
-        if (claim !== null) {
-            result.data = claim.jsonObject + '';
-        } else {
-            result.status = false;
-            result.messages = ['This claim does not exist'];
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error when getting claim: ' + e];
-    }
-    
-    return views.jsonObjectView(JSON.stringify(result));
 }
 
 function changeClaimsStatus(status, page, params, callback) {
@@ -157,6 +77,12 @@ function changeClaimsStatus(status, page, params, callback) {
                 if (claim !== null) {
                     claim.jsonObject.status = status;
                     claim.save();
+
+                    var enteredUser = applications.userApp.findUserResourceById(claim.jsonObject.soldById);
+                    var custProfileBean = enteredUser.extProfileBean;
+                    
+//                    eventManager.goalAchieved('claimProcessedGoal', {'claim': id, 'status': status});
+
                 }
             })(ids[i]);
         }
@@ -165,6 +91,7 @@ function changeClaimsStatus(status, page, params, callback) {
             callback(result);
         }
     } catch (e) {
+        log.error('Error in ' + action + ': ' + e, e);
         result.status = false;
         result.messages = ['Error in ' + action + ': ' + e];
     }
@@ -183,19 +110,31 @@ function approveClaims(page, params) {
             
             var settings = getAppSettings(page);
             var selectedDataSeries = settings.get('dataSeries');
-            log.info('======================== {}', selectedDataSeries);
+            var dataSeries = applications.salesData.getSalesDataSeries(selectedDataSeries);
             
             for (var i = 0; i < ids.length; i++) {
                 (function (id) {
                     var claim = db.child(id);
                     
                     if (claim !== null) {
-                        // TODO: Add data to data series
-                        // applications.salesData.insertDataPoint();
+                        var obj = {
+                            soldById: claim.jsonObject.soldById,
+                            amount: formatter.toBigDecimal(claim.jsonObject.amount),
+                            soldDate: formatter.toDate(claim.jsonObject.soldDate),
+                            enteredDate: formatter.toDate(claim.jsonObject.enteredDate),
+                            productSku: claim.jsonObject.productSku
+                        };
+                        
+                        var enteredUser = applications.userApp.findUserResourceById(obj.soldById);
+                        var custProfileBean = enteredUser.extProfileBean;
+                        applications.salesData.insertDataPoint(dataSeries, obj.amount, obj.soldDate, obj.soldDate, enteredUser.thisUser, enteredUser.thisUser, obj.enteredDate, obj.productSku);
+
+                        eventManager.goalAchieved('claimProcessedGoal', custProfileBean, {'claim': id, 'status': RECORD_STATUS.APPROVED});
                     }
                 })(ids[i]);
             }
         } catch (e) {
+            log.error('Error in approving: ' + e, e);
             result.status = false;
             result.messages = ['Error in approving: ' + e];
         }
@@ -206,33 +145,4 @@ function rejectClaims(page, params) {
     log.info('rejectClaims > page={}, params={}', page, params);
     
     return changeClaimsStatus(RECORD_STATUS.REJECTED, page, params);
-}
-
-function deleteClaims(page, params) {
-    log.info('deleteClaims > page={}, params={}', page, params);
-    
-    var result = {
-        status: true
-    };
-    
-    try {
-        var db = getDB(page);
-        var ids = params.ids;
-        ids = ids.split(',');
-        
-        for (var i = 0; i < ids.length; i++) {
-            (function (id) {
-                var claim = db.child(id);
-                
-                if (claim !== null) {
-                    claim.delete();
-                }
-            })(ids[i]);
-        }
-    } catch (e) {
-        result.status = false;
-        result.messages = ['Error in deleting: ' + e];
-    }
-    
-    return views.jsonObjectView(JSON.stringify(result))
 }

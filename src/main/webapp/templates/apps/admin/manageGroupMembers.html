@@ -100,19 +100,35 @@
                     <h5>
                         <label class="label-control">Showing: </label>
                         <label class="label-control count">$page.paginator.records.size()</label>
-                        <label class="label-control"> users
+                        <label class="label-control"> memberships
                             #if( $page.paginator.records.size() < $page.paginator.totalRecords )
                             of $page.paginator.totalRecords
                             #end
                         </label>
                     </h5>
                 </div>
+
                 <div class="col-md-3">
                     <select id="showUserSelect" class="form-control">
                         <option>[Filter]</option>
-                        <option value="withPassword">Only those with a password</option>
-                        <option value="noPassword">Those without a password</option>
+                        <option value="withPassword" #if($request.params.password == true) selected="selected" #end>Only those with a password</option>
+                        <option value="noPassword"   #if($request.params.password == false) selected="selected" #end>Those without a password</option>
                     </select>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="search-group" class="col-sm-2 control-label">Org:</label>
+                        <div class="col-sm-10 input-group">
+                            <input type="text" class="form-control required input-sm" id="filterOrg" data-text="$!request.params.orgId" value="$!request.params.orgId"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" data-type="clearer" data-target="#filterOrgId">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </span>
+                            <input type="hidden" id="filterOrgId" value="$request.params.orgId" />
+                        </div>
+                    </div>
                 </div>
 
                 <table class="Summary members table table-hover">
@@ -131,56 +147,50 @@
                     </thead>
                     <tbody>
 
-                        #set ($myMap = {})
+                        #foreach($gm in $page.paginator.records)
 
+                        #set($pwdDate = false)
+                        #set($pwdDate = $gm.member.passwordCredentialDate)
+                        #set($rowClass = "")
+                        #if( $pwdDate )
+                        #set($rowClass = "withPassword")
+                        #else
+                        #set($rowClass = "noPassword")
+                        #end
 
-                        #foreach($member in $page.paginator.records)
-
-                            #if ("$!myMap.get($member.thisUser.id)" == "" )
-                                $!myMap.put($member.thisUser.id, "true")
-
-                                #set($pwdDate = false)
-                                #set($pwdDate = $member.thisUser.passwordCredentialDate)
-                                #set($rowClass = "")
+                        <tr class="$rowClass">
+                            <td>
+                                <a href="/manageUsers/$gm.member.id">$!gm.member.name</a>
+                            </td>
+                            <td>$!gm.member.firstName</td>
+                            <td>$!gm.member.surName</td>
+                            <td>$!gm.withinOrg.formattedName</td>
+                            <td>$!gm.member.phone</td>
+                            <td>$!gm.member.email</td>
+                            <td>
                                 #if( $pwdDate )
-                                    #set($rowClass = "withPassword")
-                                #else
-                                    #set($rowClass = "noPassword")
+                                <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>
                                 #end
+                            </td>
+                            <td>
+                                <a href="/manageUsers/$gm.member.id" class="btn btn-info">
+                                    <span class="fa fa-pencil"></span>
+                                </a>
+                            </td>
+                            <td><input type="checkbox" name="toRemoveId" value="$gm.id" /></td>
+                        </tr>
 
-                                <tr class="$rowClass">
-                                    <td>
-                                        <a href="/manageUsers/$member.thisUser.id">$!member.thisUser.name</a>
-                                    </td>
-                                    <td>$!member.thisUser.firstName</td>
-                                    <td>$!member.thisUser.surName</td>
-                                    <td>$!member.thisUser.membership($page.parent.group).withinOrg.formattedName</td>
-                                    <td>$!member.thisUser.phone</td>
-                                    <td>$!member.thisUser.email</td>
-                                    <td>
-                                        #if( $pwdDate )
-                                            <abbr title="$formatter.formatDateISO8601($pwdDate)" class="info timeago">$!pwdDate</abbr>
-                                        #end
-                                    </td>
-                                    <td>
-                                        <a href="/manageUsers/$member.thisUser.id" class="btn btn-info">
-                                            <span class="fa fa-pencil"></span>
-                                        </a>
-                                    </td>
-                                    <td><input type="checkbox" name="toRemoveId" value="$member.thisUser.id" /></td>
-                                </tr>
-                            #end
 
 
                         #end
                     </tbody>
-                        <tfoot id="pointsFooter">
-                            <tr>
-                                <td colspan="6">
-                                    $!page.paginator.html
-                                </td>
-                            </tr>
-                        </tfoot>
+                    <tfoot id="pointsFooter">
+                        <tr>
+                            <td colspan="6">
+                                $!page.paginator.html
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -188,27 +198,45 @@
         <script type="text/javascript">
             $(function () {
                 jQuery("abbr.timeago").timeago();
-                jQuery("#showUserSelect").val("").change(function () {
-                    var type = $(this).val();
-                    flog("change", type);
+                jQuery("#showUserSelect").change(function () {
+                    updateURL();
+                });
+
+                jQuery("#filterOrgId").change(function () {
+                    updateURL();
+                });
+
+                $("#filterOrg").entityFinder({
+                    type: 'organisation',
+                    useActualId: false,
+                    onSelectSuggestion: function (suggestion) {
+                        flog($(suggestion));
+                        var orgId = $(suggestion).attr("data-id");
+                        $("#filterOrgId").val(orgId);
+                        updateURL();
+                    }
+                });
+
+                function updateURL() {
+                    var orgId = $("#filterOrgId").val();
+                    var type = $("#showUserSelect").val();
                     var value = false;
-                    
-                    if (type == "noPassword") {
+                    if (type === "noPassword") {
                         value = "false";
-                    } else if (type == "withPassword") {
+                    } else if (type === "withPassword") {
                         value = "true";
-                    }else{
+                    } else {
                         value = "noFilter";
                     }
-                    
                     var uri = URI(window.location);
 
                     uri.setSearch("password", value);
-                    
+                    uri.setSearch("orgId", orgId);
                     var newHref = uri.toString();
                     flog("new location", newHref);
                     window.location = newHref;
-                });
+                }
+
                 initSelectAll();
                 initRemoveUsers();
                 initUploadCSV();
@@ -224,7 +252,7 @@
                     if (checkBoxes.length == 0) {
                         Msg.error("Please select the users you want to remove by clicking the checkboxs to the right");
                     } else {
-                        Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " users?" , function () {
+                        Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " memberships? This will remove the connection between the user and the group, but will not remove the users from your account", function () {
                             $.ajax({
                                 type: 'POST',
                                 data: checkBoxes,
@@ -306,7 +334,7 @@
                         flog("success", result);
                         if (result.data) {
                             var state = result.data.state;
-                            if( state ) {
+                            if (state) {
                                 resultUploadCsv.find('.lines-processed').text(state.linesProcessed);
                                 resultUploadCsv.find('.num-inserted').text(state.numInserted);
                                 resultUploadCsv.find('.num-unmatched').text(state.unmatched.length);
@@ -316,7 +344,7 @@
 
                             var modalUploadCsv = $("#modal-upload-csv");
                             modalUploadCsv.show(500);
-                            if( result.data.statusInfo.complete ) {
+                            if (result.data.statusInfo.complete) {
                                 // finished
                                 var dt = result.data.statusInfo.completedDate;
                                 jobTitle.text("Import finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));

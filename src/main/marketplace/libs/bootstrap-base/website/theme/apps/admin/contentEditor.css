@@ -120,6 +120,14 @@
 }
 
 /* ================================================================== */
+/* Tiled components */
+/* ================================================================== */
+.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="Tile"] [class*="col-"],
+.content-editor-page [data-dynamic-href*="_components/"][data-dynamic-href*="tile"] [class*="col-"] {
+    float: none !important;
+}
+
+/* ================================================================== */
 /* Loading */
 /* ================================================================== */
 #editor-loading {

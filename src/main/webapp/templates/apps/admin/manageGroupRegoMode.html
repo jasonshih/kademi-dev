@@ -9,6 +9,70 @@
         <script type="text/javascript" src="/templates/apps/learner/groupsAdminPortlet.js">//</script>
     </head>
     <body>
+        #if( $page.group.rules )
+            #renderRulesGroup()
+        #else
+            #renderNormalGroup()
+        #end
+
+
+
+        #macro( renderRulesGroup )
+        <form method="POST" action="$page.href" class="query-builder">
+            <div class="row">
+                <h3>Dynamic group</h3>
+                <p>A dynamic group is driven by rules. Select the rules below for profiles to be includede in this group</p>
+                <hr/>
+            </div>
+            
+            <div class="form-group text-right">
+                <button type="submit" class="btn btn-sm btn-success">
+                    <span class="glyphicon glyphicon-floppy-disk"></span>
+                    Save
+                </button>
+            </div>
+
+            <div class="row" style="min-height: 300px">
+                <div id="query-builder"></div>
+                <br/>
+
+                <textarea id="rulesInput" name="rules" class="form-control" style="min-height: 300px; display: none">$!page.group.rules</textarea>
+
+            </div>
+
+            <div class="row">
+                #if( $page.members )
+                matched: $page.members.size()
+                <table class="table">
+                    #foreach($profile in $page.members)
+                    <tr>
+                        <td>$profile.name</td>
+                        <td>$!profile.email</td>
+                        <td>$!profile.firstName</td>
+                        <td>$!profile.birthDate</td>
+                    </tr>
+                    #end
+                </table>
+                #end
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button type="submit" class="btn btn-sm btn-success">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+        #end
+
+
+
+
+
+
+
+        #macro( renderNormalGroup )
         <form method="POST" action="$page.href" class="general">
             <div class="form-group text-right">
                 <button type="submit" class="btn btn-sm btn-success">
@@ -95,7 +159,7 @@
                                     <select name="orgType" class="form-control">
                                         <option value="">[Any]</option>
                                         #foreach($ot in $page.organisation.orgTypes)
-                                            $formatter.option($ot.name, $ot.displayName, $page.group.regoOrgType.name)
+                                        $formatter.option($ot.name, $ot.displayName, $page.group.regoOrgType.name)
                                         #end
                                     </select>
                                 </div>
@@ -112,7 +176,7 @@
                                     <select name="sRootRegoOrg" class="form-control">
                                         <option value="">$page.organisation.formattedName (this organisation)</option>
                                         #foreach($org in $page.organisation.childOrgs())
-                                            $formatter.option($org.orgId, $org.formattedName, $page.group.rootRegoOrg.orgId)
+                                        $formatter.option($org.orgId, $org.formattedName, $page.group.rootRegoOrg.orgId)
                                         #end
                                     </select>
                                 </div>
@@ -157,18 +221,18 @@
                                 </thead>
                                 <tbody>
                                     #foreach($field in $page.dataCaptureFields.entrySet())
-                                        <tr class="extra-field">
-                                            <td>
-                                                <input type="hidden" value="$field.key" name="key" />
-                                                <input type="hidden" value="$field.value" name="value" />
-                                            </td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                    <tr class="extra-field">
+                                        <td>
+                                            <input type="hidden" value="$field.key" name="key" />
+                                            <input type="hidden" value="$field.value" name="value" />
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
                                     #end
                                 </tbody>
                             </table>
@@ -188,19 +252,19 @@
                                 #set($policies = false)
                                 #set($policies = $page.passwordPolicies)
                                 #if(!$policies || $policies.empty)
-                                    <p>This group does not have any password policies</p>
+                                <p>This group does not have any password policies</p>
                                 #else
-                                    #foreach($pp in $policies)
-                                        <article class="well" data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
-                                            <p class="article-name">
-                                                $page.getPasswordPolicyDescription($pp)
-                                            </p>
-                                            <aside class="article-action">
-                                                <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
-                                                <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
-                                            </aside>
-                                        </article>
-                                    #end
+                                #foreach($pp in $policies)
+                                <article class="well" data-ppid="$pp.id" data-current="$formatter.htmlEncode($formatter.toJson($pp))">
+                                    <p class="article-name">
+                                        $page.getPasswordPolicyDescription($pp)
+                                    </p>
+                                    <aside class="article-action">
+                                        <a href="#" class="btn btn-sm btn-info btn-edit-policy"><i class="fa fa-edit"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-del-policy"><i class="fa fa-trash"></i></a>
+                                    </aside>
+                                </article>
+                                #end
                                 #end
                             </div>
                         </div>
@@ -227,31 +291,31 @@
                             <div class="article-wrapper showed-action websites-list">
                                 #set($signups = $group.signupPages)
                                 #if( $signups.isEmpty() )
-                                    <p>This user group does not have access to any websites. Grant access from the <a href="/websites/">website manager</a></p>
+                                <p>This user group does not have access to any websites. Grant access from the <a href="/websites/">website manager</a></p>
                                 #else
-                                    #foreach($p in $signups.keySet())
-                                        <article>
-                                            <span class="article-name">
-                                                <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
-                                            </span>
-                                            #if( $group.publicSignup )
-                                                <aside class="article-action">
-                                                    <div class="btn-group btn-group-sm">
-                                                        <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-info" title="Visit the signup page">
-                                                            <i class="fa fa-wpforms"></i>
-                                                        </a>
-                                                        <a href="/websites/$group.websiteName($p)/" class="btn btn-sm btn-info" title="Website settings">
-                                                            <i class="fa fa-cog"></i>
-                                                        </a>
-                                                    </div>
-                                                </aside>
-                                            #else
-                                                <aside class="article-more-infor">
-                                                    No signup page
-                                                </aside>
-                                            #end
-                                        </article>
+                                #foreach($p in $signups.keySet())
+                                <article>
+                                    <span class="article-name">
+                                        <a target="_blank" href="http://${p}${formatter.portString}"><b>$p</b></a>
+                                    </span>
+                                    #if( $group.publicSignup )
+                                    <aside class="article-action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a target="_blank" href="$signups.get($p)" class="btn btn-sm btn-info" title="Visit the signup page">
+                                                <i class="fa fa-wpforms"></i>
+                                            </a>
+                                            <a href="/websites/$group.websiteName($p)/" class="btn btn-sm btn-info" title="Website settings">
+                                                <i class="fa fa-cog"></i>
+                                            </a>
+                                        </div>
+                                    </aside>
+                                    #else
+                                    <aside class="article-more-infor">
+                                        No signup page
+                                    </aside>
                                     #end
+                                </article>
+                                #end
                                 #end
                             </div>
                         </div>
@@ -268,10 +332,10 @@
                             <hr class="hr-sm" />
                             <div class="blocks-wrapper roles-wrapper">
                                 #foreach($role in $page.children.ofType.role)
-                                    <span class="block role">
-                                        <span class="block-name">$role.title</span>
-                                        <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
-                                    </span>
+                                <span class="block role">
+                                    <span class="block-name">$role.title</span>
+                                    <a class="btn btn-xs btn-danger btn-remove-role" href="$role.href" title="Remove this role"><i class="fa fa-times"></i></a>
+                                </span>
                                 #end
                             </div>
                         </div>
@@ -299,32 +363,33 @@
                             </div>
                             <div class="row">
                                 #foreach($group in $page.groups)
-                                    #if( $group == $page.group )
+                                #if( $group == $page.group )
 
-                                    #elseif ($group.mailingList)
+                                #elseif ($group.mailingList)
 
-                                        <div class="optins col-sm-12 col-md-6 col-lg-4">
-                                            #set($groupId = "optin" + $group.name)
-                                            <div class="checkbox">
-                                                <label for="$groupId">
+                                <div class="optins col-sm-12 col-md-6 col-lg-4">
+                                    #set($groupId = "optin" + $group.name)
+                                    <div class="checkbox">
+                                        <label for="$groupId">
 
-                                                    #set($optin = "")
-                                                    #set($optin = $page.optin($group))
-                                                    $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
-                                                    <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
+                                            #set($optin = "")
+                                            #set($optin = $page.optin($group))
+                                            $formatter.checkbox($groupId, "optinGroup", $formatter.isNotNull($optin), $group.name)
+                                            <strong><i class="fa fa-envelope-o"></i> $group.name</strong>
 
-                                                </label>
-                                            </div>
+                                        </label>
+                                    </div>
 
-                                            <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
-                                        </div>
-                                    #end
+                                    <input type="text" name="${groupId}_Desc" class="form-control" title="Invitation message to users" placeholder="Invitation message to users" value="$!optin.message" />
+                                </div>
+                                #end
                                 #end
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-sm-12 text-right">
                     <button type="submit" class="btn btn-sm btn-success">
@@ -358,7 +423,7 @@
                                 <select class="hide">
                                     <option value="">-- Select a repository --</option>
                                     #foreach($r in $formatter.sortByProperty( $page.organisation.repositories(), "name" ) )
-                                        <option value="$r.name">$r.name</option>
+                                    <option value="$r.name">$r.name</option>
                                     #end
                                 </select>
                             </p>
@@ -369,19 +434,19 @@
                                     <option value="">-- Select an organisation --</option>
                                     <option value="$page.organisation.id">$page.organisation.formattedName (this organisation)</option>
                                     #foreach($org in $page.organisation.childOrgs)
-                                        <option value="$org.id">$org.formattedName</option>
+                                    <option value="$org.id">$org.formattedName</option>
                                     #end
                                 </select>
                             </p>
                         </div>
                         <div class="article-wrapper article-sm showed-action roles">
                             #foreach($role in $page.parent.allRoles)
-                                <article>
-                                    <span class="article-name">$role</span>
-                                    <aside class="article-action">
-                                        <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
-                                    </aside>
-                                </article>
+                            <article>
+                                <span class="article-name">$role</span>
+                                <aside class="article-action">
+                                    <button class="btn btn-xs btn-success btn-add-role" title="Add role"><i class="clip-plus-circle "></i></button>
+                                </aside>
+                            </article>
                             #end
                         </div>
                     </div>
@@ -458,11 +523,11 @@
                                     <div id="options-wrapper"></div>
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
-                        <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Close</button>
+                            <button class="btn btn-primary btn-sm btn-save-menu" type="submit">Save</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -557,13 +622,19 @@
                 </div>
             </div>
         </div>
-        <!-- START OF MODAL PASSWORD POLICY -->
+        #end
+
 
         <script type="text/javascript">
             $(function () {
                 initManageExtraField();
                 initManageGroupRegoMode();
                 initGroupAdminPortlet();
+
+                $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
+                $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
+
+                });
             });
         </script>
     </body>

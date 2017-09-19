@@ -1,0 +1,61 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "reqDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "resultCode": 200
+                    }
+                },
+                {
+                    "prefix": {
+                        "contentType": "text/html"
+                    }
+                },
+                {
+                    "exists" : { "field" : "website" }
+                }
+            ]
+        }
+    },
+    "aggs": {
+        "byWebsite": {
+            "terms": {
+                "field": "website"
+            },
+            "aggs": {
+                "userVisits": {
+                    "date_histogram" : {
+                        "field" : "reqDate",
+                        "interval" : "day",
+                        "extended_bounds" : {
+                            "min" : "$startDate",
+                            "max" : "$endDate"
+                        }
+                    },
+                    "aggs": {
+                        "usersCount" : {
+                            "cardinality" : {
+                                "field" : "reqUser"
+                            }
+                        },
+                        "byUsers": {
+                            "terms": {
+                                "field": "reqUser"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "size": 0
+}

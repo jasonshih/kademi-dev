@@ -6,7 +6,7 @@
         <script src="/theme/apps/ksurveyapp/morris.min.js">//</script>
         <script src="/static/d3/d3.v3.js">//</script>
         <script src="/static/nvd3/nv.d3.js">//</script>
-        <script bottom="true" src="/theme/apps/ksurveyapp/main.js?v=3">//</script>
+        <script bottom="true" src="/theme/apps/ksurveyapp/main.js?v=5">//</script>
     </head>
     <body>
         #set($survey = $page.attributes.survey)
@@ -156,6 +156,33 @@
                                                     #end
                                                 #end
                                             </ul>
+
+                                            <div>
+                                                #if($question.source.type == '2')
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="enable">When user selected answer...</label>
+                                                        <select name="" class="form-control yesnoAnswer">
+                                                            #foreach($answer in $answers)
+                                                            #if($answer.source.questionId == $question.id)
+                                                            <option data-requiredQuestions="$!answer.source.requiredQuestions" value="$answer.id">$answer.source.body</option>
+                                                            #end
+                                                            #end
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="control-label" for="enable">then those following questions should be mandatory</label>
+                                                        #foreach($myQ in $questions)
+                                                        #if ($myQ.id != $question.id)
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input class="requiredQuestion" type="checkbox" value="$myQ.id"> $myQ.source.title
+                                                            </label>
+                                                        </div>
+                                                        #end
+                                                        #end
+                                                    </div>
+                                                #end
+                                            </div>
 
                                             <form class="answer-form #if($question.source.type=='2') hide #end" autocomplete="off">
                                                 <div class="row">

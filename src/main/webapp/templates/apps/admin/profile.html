@@ -251,13 +251,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="birthDate" class="control-label col-md-3">Language</label>
+                                                    <label for="languages" class="control-label col-md-3">Language</label>
                                                     <div class="col-md-9">
                                                         <div class="input-group">
-                                                            <select class="form-control" name="languaje">
+                                                            <select class="form-control" name="language">
                                                                 <option value="">Select...</option>
-                                                                #foreach( $lang in $rootFolder.languages.entrySet() )
-                                                                    $formatter.option($lang.key, $lang.value, $$page.profile.languaje)
+                                                                #foreach( $lang in $rootFolder.languages )
+                                                                    $formatter.option($lang.code, $lang.title, $page.profile.language)
                                                                 #end
                                                             </select>
                                                         </div>

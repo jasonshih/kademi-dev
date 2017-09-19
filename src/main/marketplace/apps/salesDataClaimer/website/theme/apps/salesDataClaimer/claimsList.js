@@ -9,6 +9,13 @@
             initModalViewClaim();
             initClaimsTable();
         }
+        
+        var formNewClaim = $('.form-new-claim');
+        if (formNewClaim.length > 0) {
+            formNewClaim.each(function () {
+                initFormNewClaim($(this));
+            });
+        }
     });
     
     function initClaimsTable() {
@@ -18,7 +25,7 @@
         var formAdd = modalAdd.find('form');
         
         table.find('.chk-all').on('click', function () {
-            tbody.find(':checkbox').prop('checked', this.checked);
+            tbody.find(':checkbox:enabled').prop('checked', this.checked);
         });
         
         $('.btn-add-claim').on('click', function (e) {
@@ -63,6 +70,8 @@
                             modal.find('.' + key).html(newValue);
                         });
                         
+                        modal.find('.thumbnail img').attr('src', resp.data.receipt || '/static/images/photo_holder.png');
+                        
                         modal.find('.timeago').timeago();
                         modal.modal('show');
                     } else {
@@ -100,6 +109,12 @@
                             modalAdd.find('[name=' + key + ']').val(newValue);
                         });
                         
+                        if (resp.data.receipt) {
+                            modalAdd.find('.thumbnail img').attr('src', resp.data.receipt);
+                        }
+                        
+                        modalAdd.find('.thumbnail img').attr('src')
+                        
                         modalAdd.modal('show');
                     } else {
                         alert('Error in getting claim data. Please contact your administrators to resolve this issue.');
@@ -113,48 +128,6 @@
         });
         
         tbody.find('.timeago').timeago();
-        
-        $('.btn-request-approval').on('click', function (e) {
-            e.preventDefault();
-            
-            var checked = tbody.find(':checkbox:checked');
-            
-            if (checked.length > 0) {
-                var isConfirmed = confirm('Are you that you want to request approval for ' + checked.length + ' selected ' + (checked.length > 1 ? 'claims' : 'claim') + '?');
-                
-                if (isConfirmed) {
-                    var ids = [];
-                    checked.each(function () {
-                        ids.push(this.value);
-                    });
-                    
-                    $.ajax({
-                        url: MAIN_URL,
-                        type: 'POST',
-                        dataType: 'JSON',
-                        data: {
-                            requestApproval: true,
-                            ids: ids.join(',')
-                        },
-                        success: function (resp) {
-                            if (resp && resp.status) {
-                                reloadClaimsList(function () {
-                                    Msg.success('Request approval succeed');
-                                })
-                            } else {
-                                alert('Error in requesting approval. Please contact your administrators to resolve this issue.');
-                            }
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            alert('Error in requesting approval: ' + errorThrown + '. Please contact your administrators to resolve this issue.');
-                            flog('Error in requesting approval', jqXHR, textStatus, errorThrown);
-                        }
-                    });
-                }
-            } else {
-                alert('Please select claims which you want to request approval');
-            }
-        });
         
         $('.btn-delete-claims').on('click', function (e) {
             e.preventDefault();
@@ -215,27 +188,100 @@
         var modal = $('#modal-add-claim');
         var form = modal.find('.form-new-claim');
         
-        form.find('.date-time-picker').each(function () {
-            var input = $(this);
-            var format = input.attr('data-format') || 'DD/MM/YYYY';
-            
-            input.datetimepicker({
-                format: format
-            });
-        });
+        initFormNewClaim(form, modal);
         
-        form.forms({
-            onSuccess: function () {
-                reloadClaimsList(function () {
-                    Msg.success('New claim is created!');
-                    modal.modal('hide');
-                });
-            }
+        modal.modal({
+            show: false,
+            backdrop: 'static'
         });
         
         modal.on('hidden.bs.modal', function () {
             form.find('input').not('[name=soldBy], [name=soldById]').val('');
+            form.find('.thumbnail img').attr('src', '/static/images/photo_holder.png');
         });
+    }
+    
+    function initFormNewClaim(form, modal) {
+        flog('initFormNewClaim', form, modal);
+        
+        if (!form.hasClass('initialized')) {
+            form.addClass('initialized');
+            
+            form.find('.date-time-picker').each(function () {
+                var input = $(this);
+                var format = input.attr('data-format') || 'DD/MM/YYYY';
+                
+                input.datetimepicker({
+                    format: format
+                });
+            });
+            
+            form.find('[id^=field_]').each(function () {
+                $(this).addClass(this.id);
+            });
+            
+            var txtProductSku = form.find('[name=productSku]');
+            var productSearcher = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: '/salesDataClaimsProducts/?q=%QUERY',
+                    wildcard: '%QUERY'
+                }
+            });
+            
+            txtProductSku.typeahead({
+                highlight: true
+            }, {
+                display: 'value',
+                limit: 10,
+                source: productSearcher,
+                templates: {
+                    empty: '<div class="empty-message" style="padding: 0 5px;">No products were <found></found></div>',
+                    suggestion: function (data) {
+                        return '<div>' + data.value + '<span class="text-muted">(' + data.tokens[1] + ')</span>' + '</div>';
+                    }
+                }
+            });
+            
+            var inputImage = form.find('[name=receiptImage]');
+            var thumbImg = form.find('.thumbnail img');
+            inputImage.on('change', function () {
+                var file = this.files[0];
+                var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
+                
+                form.find('.img-error').css('display', isImage ? 'none' : 'block');
+                
+                if (isImage) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        thumbImg.attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            form.find('.btn-upload-receipt').on('click', function (e) {
+                e.preventDefault();
+                
+                inputImage.trigger('click');
+            });
+            
+            form.forms({
+                onSuccess: function () {
+                    if (modal) {
+                        reloadClaimsList(function () {
+                            Msg.success('Your claim has been submitted.');
+                            modal.modal('hide');
+                        });
+                    } else {
+                        Msg.success('Your claim has been submitted.');
+                        form.find('input').not('[name=soldBy], [name=soldById]').val('');
+                        thumbImg.attr('src', '/static/images/photo_holder.png');
+                    }
+                }
+            });
+        }
     }
     
     function reloadClaimsList(callback) {

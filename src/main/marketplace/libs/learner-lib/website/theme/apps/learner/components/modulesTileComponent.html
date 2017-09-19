@@ -1,0 +1,49 @@
+#if($page)
+    #set($modules = $page.find("/programs").availModules)
+    #foreach($mod in $modules)
+        <div class="col-sm-6">
+            <div class="module-tile component-tile component-info">
+                <h3 class="module-tile-title">$mod.title</h3>
+                <p class="module-tile-brief">$formatter.toPlain($mod.brief)</p>
+
+                #if ($mod.moduleCompleteActions.size() > 0)
+                    <div class="module-tile-point">
+                        <i class="fa fa-star"></i>
+                        $formatter.formatCurrency($mod.moduleCompleteActions.get(0).number, false)
+                    </div>
+                #end
+
+                <div class="module-tile-action text-right">
+                    #if ($mod.percentComplete)
+                        <a href="$mod.href" class="btn btn-primary btn-sm">Continue</a>
+                    #else
+                        <a href="$mod.href" class="btn btn-primary btn-sm">Start</a>
+                    #end
+                </div>
+            </div>
+        </div>
+    #end
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+    <div class="col-sm-6">
+        <div class="module-tile component-tile component-info">
+            <h3>Module #1</h3>
+            <p class="clearfix">This is brief of module #1</p>
+            <div class="text-right">
+                <a href="#" class="btn btn-primary btn-sm">Continue</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="module-tile component-tile component-info">
+            <h3>Module #2</h3>
+            <p class="clearfix">This is brief of module #2</p>
+            <div class="text-right">
+                <a href="#" class="btn btn-primary btn-sm">Start</a>
+            </div>
+        </div>
+    </div>
+#end

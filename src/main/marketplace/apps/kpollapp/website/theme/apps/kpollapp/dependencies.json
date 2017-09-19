@@ -3,6 +3,10 @@
         {
             "appId": "KongoDB",
             "branch": ""
+        },
+        {
+            "appId": "rewards",
+            "branch": ""
         }
     ],
     "dependencies": [
@@ -10,6 +14,12 @@
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/kpollapp/kpollPortlet.css"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/kpollapp/kpollsTile.less"
             }
         },
         {
@@ -22,6 +32,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/kpollapp/kpollPortlet.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/kpollapp/kpollsTile.js"
             }
         }
     ]

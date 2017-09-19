@@ -2,8 +2,8 @@
     <head>
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageGroupEmail.js">//</script>
-        <script type="text/javascript" src="manageEmail.js">//</script>
+        <script type="text/javascript" src="manageGroupEmail.js?v103">//</script>
+        <script type="text/javascript" src="manageEmail.js?v103">//</script>
     </head>
     <body class="manageEmail">
         <p class="clearfix">
@@ -41,7 +41,7 @@
                         </thead>
                         <tbody>
                             #foreach($email in $page.children)
-                            <tr class="emailStatus$!{email.status}">
+                            <tr class="emailStatus$!{email.status}" data-jobid="$email.id" data-jobhref="$email.href">
                                 <td class="icon" title="$!email.status">
                                     #if($email.status == "Draft" )
                                     <i class="fa fa-edit text-muted"></i>
@@ -59,16 +59,28 @@
                                 </td>
                                 <td>$formatter.formatDate($email.statusDate)</td>
                                 <td>$formatter.htmlEncode($email.title)</td>
-                                <td>$email.numItems</td>
-                                <td>$email.numDelivered</td>
-                                <td>$email.numOpened</td>
-                                <td>$email.openRate</td>
-                                <td>$email.numConverted</td>
-                                <td>$email.conversionRate</td>
+                                <td>
+                                    <span class="groupEmail-totalToSend">$email.numItems</span>
+                                </td>
+                                <td>
+                                    <span class="groupEmail-successful">$email.numDelivered</span>
+                                </td>
+                                <td>
+                                    <span class="groupEmail-opened">$email.numOpened</span>
+                                </td>
+                                <td>
+                                    <span class="groupEmail-openRate">$email.openRate</span>
+                                </td>
+                                <td>
+                                    <span class="groupEmail-converted">$email.numConverted</span>
+                                </td>
+                                <td>
+                                    <span class="groupEmail-conversionRate">$email.conversionRate</span>
+                                </td>
                                 <td class="action" style="">
                                     <div class="btn-group btn-group-sm">
                                         <a href="$email.name" class="btn btn-sm btn-info btn-sm">
-                                            <i class="fa fa-edit"></i> Edit
+                                            <i class="fa fa-edit"></i> 
                                         </a>
                                         <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
@@ -109,11 +121,11 @@
                                     <input type="text" name="name" id="name" value="" placeholder="A name for the email job" class="required simpleChars form-control" />
                                 </div>
                             </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                        <button class="btn btn-sm btn-primary" type="submit">Save</button>
-                    </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -122,6 +134,7 @@
         <script type="text/javascript">
             $(function () {
                 initManageEmail();
+                initGroupEmailListStatusPolling();
             });
         </script>
     </body>

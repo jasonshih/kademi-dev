@@ -6,6 +6,7 @@
     <source>/APP-INF/managePoll.js</source>
     <source>/APP-INF/managePolls.js</source>
     <source>/APP-INF/portlet.js</source>
+    <source>/APP-INF/components.js</source>
 
     <menu parentId="menuContent" id="menuManagePolls" text="Polls" path="/kpoll/managePolls/" ordering="45"/>
 
@@ -13,7 +14,6 @@
         <name>Poll Answerer</name>
         <privNames>
             <string>READ_CONTENT</string>
-            <string>WRITE_CONTENT</string>
         </privNames>
     </role>
 </controllers>

@@ -1,33 +1,40 @@
-
 #if($page)
     #if ($kpi)
-    #set ($kpiDataPage = $page.find($kpi))
-    <div class="dropdown kpiPeriodPicker #if($pickerAlign == 'right') text-right #else text-left #end">
-        <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-            <span class="txt">Period</span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" style="#if($pickerAlign == 'right') right: 0; left: initial; #end" aria-labelledby="kpiPeriodPicker-$formatter.randomGuid">
-            #foreach($result in $kpiDataPage.assessedResults)
-            #set ($text = "$formatter.formatDate($result.periodStart) - $formatter.formatDate($result.periodEnd)")
-            <li class="$!active"><a href="#" data-start="${result.periodStart}" data-end="${result.periodEnd}">$!text</a></li>
-            #end
-            <li class="$!defaultActive"><a class="current" href="#" data-start="${kpiDataPage.latestPeriodStartDate}" data-end="${kpiDataPage.latestPeriodStartDate}">$formatter.formatDate($kpiDataPage.latestPeriodStartDate) - $formatter.formatDate($kpiDataPage.getPeriodEndDate($kpiDataPage.latestPeriodStartDate))</a></li>
-        </ul>
-    </div>
+        #set ($kpiDataPage = $page.find($kpi))
+        <div class="dropdown kpiPeriodPicker #if($pickerAlign == 'right') text-right #else text-left #end">
+            <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown">
+                <span class="txt">Period</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu #if($pickerAlign == 'right') dropdown-menu-right #end">
+                #foreach($result in $kpiDataPage.assessedResults)
+                    #set ($periodStart = $formatter.formatDate($result.periodStart))
+                    #set ($periodEnd = $formatter.formatDate($result.periodEnd))
+                    #set ($text = $periodStart + " - " + $periodEnd)
+                    <li class="$!active"><a href="#" data-start="$periodStart" data-end="$periodEnd">$!text</a></li>
+                #end
+                <li class="$!defaultActive">
+                    #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
+                    #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate))
+                    <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentEnd</a>
+                </li>
+            </ul>
+        </div>
     #else
-    No KPI selected
+        No KPI selected
     #end
 #else
     <div class="dropdown kpiPeriodPicker #if($pickerAlign == 'right') text-right #else text-left #end">
-        <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        <button class="btn $pickerSize $pickerColor dropdown-toggle" type="button" id="kpiPeriodPicker-$formatter.randomGuid" data-toggle="dropdown">
             <span class="txt">Period</span>
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" style="#if($pickerAlign == 'right') right: 0; left: initial; #end" aria-labelledby="kpiPeriodPicker-$formatter.randomGuid">
-            <li class="$!defaultActive"><a class="current" href="#" data-start="${kpiDataPage.latestPeriodStartDate}" data-end="${kpiDataPage.latestPeriodStartDate}">
-                $formatter.formatDate($formatter.getCurrentDateService().getNow()) -
-                $formatter.formatDate($formatter.getCurrentDateService().getNow())</a></li>
+        <ul class="dropdown-menu #if($pickerAlign == 'right') dropdown-menu-right #end">
+            <li class="$!defaultActive">
+                #set ($currentStart = $formatter.formatDate($kpiDataPage.latestPeriodStartDate))
+                #set ($currentEnd = $formatter.formatDate($kpiDataPage.latestPeriodEndDate))
+                <a class="current" href="#" data-start="$currentStart" data-end="$currentEnd">$currentStart - $currentEnd</a>
+            </li>
         </ul>
     </div>
 #end

@@ -5,6 +5,18 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery-knob/1.2.13/dist/jquery.knob.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/salesdata/kpis.js"
             }
         },
@@ -63,6 +75,18 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/circleSales.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/salesdata/salesTable.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/salesdata/manageDataRecord.css"
@@ -71,7 +95,7 @@
         {
             "less": {
                 "lessMedia": "all",
-                "path": "/theme/apps/salesdata/panelKpiTarget.less"
+                "path": "/theme/apps/salesdata/circleSales.less"
             }
         }
     ]

@@ -454,7 +454,7 @@
     };
     
     edmEditor.applySetting = function (keditor, input) {
-        flog('[jquery.edmEditor] applySetting', keditor, input);
+        //flog('[jquery.edmEditor] applySetting', keditor, input);
         
         var body = keditor.body;
         var dataCss = input.attr('data-css');
@@ -568,6 +568,35 @@
                     table.attr('data-groups', selectedGroups ? selectedGroups.join(',') : '');
                 });
                 
+                var cbbExperiment = form.find('.select-experiment');
+                $.ajax({
+                    url: '/experiments/',
+                    type: 'get',
+                    dataType: 'JSON',
+                    data: {
+                        asJson: true
+                    },
+                    success: function (resp) {
+                        var experimentOptionsStr = '';
+                        
+                        $.each(resp.data, function (i, experiment) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
+                            
+                            $.each(experiment.variants, function (k, variant) {
+                            experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
+                            });
+                        });
+                        
+                        cbbExperiment.append(experimentOptionsStr);
+                    }
+                });
+                
+                cbbExperiment.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-experiment', this.value);
+                });
+                
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
                     var txt = $(this);
                     var dataCss = txt.attr('data-css');
@@ -625,6 +654,10 @@
         $.each(selectedGroups, function (i, group) {
             selectGroupsItems.filter('[value="' + group + '"]').prop('checked', true);
         });
+        
+        var expPath = table.data("experiment");
+        var txtExperiment = form.find('.select-experiment');
+        txtExperiment.val(expPath);
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
@@ -768,6 +801,7 @@
                             basePath: options.basePath
                         },
                         niceScrollEnabled: false,
+                        nestedContainerEnabled: false,
                         tabContainersText: '<i class="fa fa-columns"></i>',
                         tabComponentsText: '<i class="fa fa-files-o"></i>',
                         snippetsUrl: options.snippetsUrl,

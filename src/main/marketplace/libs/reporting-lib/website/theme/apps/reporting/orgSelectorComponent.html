@@ -1,43 +1,59 @@
 #if (!$groups)
-#set ($groups = '')
+    #set ($groups = '')
 #end
 
 #set($selectedOrgId = "")
 
 #set( $orgCookie = $request.getCookie("selectedOrg") )
 #if( $orgCookie )
-#set( $selectedOrgId = $orgCookie.value )
+    #set( $selectedOrgId = $orgCookie.value )
 #end
 
 #if( $selectedOrgId == $rootFolder.orgData.orgId )
-#set ($selectedOrg = $rootFolder.orgData )
+    #set ($selectedOrg = $rootFolder.orgData )
 #else
-#set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
+    #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
 #if ($profile)
-<div class="org-selector">
-    <div class="dropdown">
-        <div class="input-group">
-            <span class="input-group-addon" id="basic-addon1">
-                <i class="fa fa-search"></i>
-            </span>
-
-            <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
-
-            <div class="input-group-btn orgSelectorWrap">
-                <a data-orgId="$!selectedOrgId" href="#" class="btn btn-default">
-                    <i class="fa fa-times-circle"></i>
-                </a>
-                <button type="button" class="btn btn-default dropdown-toggle btn-select-org-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Select
-                    <span class="caret"></span>
-                </button>
-                <ul data-groupnames="$!groups" class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector">
-                    <li><i class="fa fa-spinner fa-spin"></i> Loading</li>
-                </ul>
-            </div><!-- /btn-group -->
-        </div><!-- /input-group -->
-    </div>
-</div>
+    #set ($isShow = true)
+    #set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, ""))
+    
+    #if ($beans.empty)
+        #set ($isShow = false)
+    #else
+        #if ($beans.size() == 1)
+            #set ($bean = $beans.get(0))
+            #if(!$bean.childOrgs || $bean.childOrgs.empty)
+                #set ($isShow = false)
+            #end
+        #end
+    #end
+    
+    #if ($isShow)
+        <div class="org-selector">
+            <div class="dropdown">
+                <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">
+                        <i class="fa fa-search"></i>
+                    </span>
+        
+                    <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
+        
+                    <div class="input-group-btn orgSelectorWrap">
+                        <a data-orgId="$!selectedOrgId" href="#" class="btn btn-default btn-reporting-clear-selected-org">
+                            <i class="fa fa-times-circle"></i>
+                        </a>
+                        <button type="button" class="btn btn-default dropdown-toggle btn-select-org-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Select
+                            <span class="caret"></span>
+                        </button>
+                        <ul data-groupnames="$!groups" class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector">
+                            <li><i class="fa fa-spinner fa-spin"></i> Loading</li>
+                        </ul>
+                    </div><!-- /btn-group -->
+                </div><!-- /input-group -->
+            </div>
+        </div>
+    #end
 #end

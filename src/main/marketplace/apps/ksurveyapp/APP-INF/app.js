@@ -49,7 +49,8 @@ controllerMappings
     .enabled(true)
     .addMethod('GET', 'deleteAnswer', 'deleteAnswer')
     .addMethod('GET', 'getPlainAnswers', 'getPlainAnswers')
-    .addMethod('POST', 'saveAnswer')
+    .addMethod('POST', 'saveAnswer', 'saveAnswer')
+    .addMethod('POST', 'saveAnswerRequiredQuestions', 'saveAnswerRequiredQuestions')
     .build();
 
 controllerMappings
@@ -170,8 +171,7 @@ function checkRedirect(page, params) {
     return views.redirectView(href);
 }
 
-
-controllerMappings.addNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js");
+controllerMappings.addGoalNodeType("ksurveySubmittedGoal", "ksurveyapp/ksurveySubmittedGoalNode.js", null);
 
 controllerMappings.addComponent("ksurveyapp", "ksurveyEmail", "email", "Shows button with link to survey", "Ksurvey App component");
 controllerMappings.addComponent("ksurveyapp", "ksurveyForm", "html", "Shows survey form questions", "Ksurvey App component");
@@ -197,7 +197,7 @@ function loadSurveyFields(rootFolder, fields) {
                 log.info('question name {}', q.name);
                 
                 var lead = arguments[0];
-                var profileId = lead.profile.name;
+                var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, true);
             });
@@ -209,7 +209,7 @@ function loadSurveyFields(rootFolder, fields) {
                 log.info('question name {}', q.name);
                 
                 var lead = arguments[0];
-                var profileId = lead.profile.name;
+                var profileId = lead.profile === undefined ? lead.name : lead.profile.name;
                 
                 log.info("loadSurveyFields: profileid={}", profileId);
                 return getKsurveyFields(profileId, q.name, surveyId, false);

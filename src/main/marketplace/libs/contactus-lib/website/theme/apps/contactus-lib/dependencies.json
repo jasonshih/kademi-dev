@@ -13,12 +13,6 @@
                 "group": "main",
                 "path": "/theme/apps/contactus/contactus.js"
             }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/contactus/contactRequestsComponent.js"
-            }
         }
     ]
 }

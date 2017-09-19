@@ -6,6 +6,7 @@ function initManageGroupRegoMode() {
     initGroupPasswordPolicy();
     initRegoMode();
     initOptins();
+    initQueryBuilder();
 }
 
 function initOptins() {
@@ -380,4 +381,69 @@ function updateOptIn(chk) {
     } else {
         chk.closest('div.clearfix').removeClass('checked');
     }
+}
+
+
+function initQueryBuilder() {
+    var builder = $('#query-builder');
+    if (builder.length == 0) {
+        return;
+    }
+
+    var rulesInput = $("#rulesInput");
+
+    $('form.query-builder').forms({
+        onValid: function () {
+            var rules = builder.queryBuilder('getRules');
+            rules = checkRuleType(rules);
+            rulesInput.val(JSON.stringify(rules));
+            flog("onValid", rules);
+        },
+        onSuccess: function (resp) {
+            flog('done', resp);
+            $('#groups-folders').reloadFragment();
+            Msg.info("Saved");
+        }
+    });
+
+
+    $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
+        $.ajax({
+            url: window.location.pathname + '?fields',
+            type: 'get',
+            dataType: 'json',
+            success: function (resp) {
+                var rulesJson = rulesInput.val();
+                flog("riles ", rulesJson);
+                var rulesOb = JSON.parse(rulesJson);
+                var qbConfig = {
+                    filters: resp
+                };
+                if (rulesOb.rules && rulesOb.rules.length > 0) {
+                    qbConfig["rules"] = rulesOb;
+                }
+                builder.queryBuilder(qbConfig);
+            }
+        });
+    });
+    $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
+}
+
+function checkRuleType(rules) {
+    if (rules.condition) {
+        rules.ruleType = 'ruleList';
+        rules.rules = checkRuleType(rules.rules);
+    } else {
+        if ($.isArray(rules)) {
+            for (var i = 0; i < rules.length; i++) {
+                if (rules[i].condition) {
+                    rules[i] = checkRuleType(rules[i]);
+                } else {
+                    rules[i].ruleType = 'rule';
+                }
+            }
+        }
+    }
+
+    return rules;
 }

@@ -1,0 +1,10 @@
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="groupName">Group Name</label>
+    <div class="col-sm-7">
+        <input type="text" name="groupName" id="groupName" placeholder="" class="form-control" value="$!page.getAppSetting($app.instanceId, 'groupName')" />
+    </div>
+    <label class="col-sm-4 control-label" for="showExtraFields">Show Extra Fields</label>
+    <div class="col-sm-7">
+        $formatter.checkbox("showExtraFields", "showExtraFields", $!page.getAppSetting($app.instanceId, 'showExtraFields'))
+    </div>
+</div>

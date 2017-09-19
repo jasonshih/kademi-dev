@@ -1,0 +1,22 @@
+<controllers onAppEnabled="initApp">
+    <!-- Common files -->
+    <source>/APP-INF/common/utils.js</source>
+    <source>/APP-INF/common/common.js</source>
+    <source>/APP-INF/common/config.js</source>
+   
+    <!-- Admin Controllers -->
+    <source>/APP-INF/admin/manageRecognition.js</source>
+    <source>/APP-INF/admin/manageTopic.js</source>
+    
+    <!-- Profile Tabs -->
+    <source>/APP-INF/admin/adminProfileTab.js</source>
+    
+    <!-- Website Controllers -->
+    <source>/APP-INF/website/website.js</source>
+    
+    <!-- Journey Nodes -->
+    <source>/APP-INF/jb/journeys.js</source>
+
+    <!-- Menu Items -->
+    <menu parentId="menuRoot" id="menuRecognition" text="Recognition" css="fa fa-star-o" path="/recognition/" ordering="50"/>
+</controllers>

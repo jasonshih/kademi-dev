@@ -19,6 +19,12 @@
             }
         },
         {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/content/content.less"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/content/toggleMenu.js"

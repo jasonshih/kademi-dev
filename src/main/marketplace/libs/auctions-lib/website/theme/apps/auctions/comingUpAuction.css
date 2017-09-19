@@ -7,5 +7,16 @@
     text-transform: uppercase;
     font-weight: bold;
     font-size: 25px;
-    padding: 17px 0 0;
+}
+
+.panel-coming-up-auction .auction-countdown .countdown span {
+    font-weight: 300;
+}
+
+.panel-coming-up-auction .auction-info {
+    font-size: 20px;
+}
+
+.panel-coming-up-auction .form-group:last-child {
+    margin-bottom: 0;
 }

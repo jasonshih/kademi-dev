@@ -1,80 +1,14 @@
 {
-    "appDependencies": [        
+    "appDependencies": [
         {
             "appId": "learner-lib",
-            "branch": "1.0.6"
+            "branch": "1.1.1"
         },
         {
             "appId": "forums",
-            "branch": "1.0.2"
+            "branch": "1.0.5"
         }
-    ],    
+    ],
     "dependencies": [
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/css/jquery.lightbox-0.5.css"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "print",
-                "path": "/templates/apps/learner/modulePagePrint.css"
-            }
-        },
-        {
-            "less": {
-                "lessMedia": "all",
-                "path": "/theme/apps/learner/modulePage.less"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/quiz/quiz.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.lightbox-0.5.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.pjax.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.animate-shadow.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.fileupload.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.milton-upload.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/moduleSearch.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.module/1.0.0/jquery.module-1.0.0.js"
-            }
-        }
     ]
 }

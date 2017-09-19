@@ -3,6 +3,18 @@
         {
             "appId": "learning",
             "branch" : ""
-        }        
+        },
+        {
+            "appId": "learner-lib",
+            "branch": "1.1.1"
+        },
+        {
+            "appId": "forums",
+            "branch": ""
+        },
+        {
+            "appId": "forums-lib",
+            "branch": "1.0.5"
+        }
   ]
 }

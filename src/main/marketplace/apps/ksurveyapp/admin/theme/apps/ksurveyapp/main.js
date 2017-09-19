@@ -169,7 +169,7 @@ $(function () {
             form.find('[name=answerBody]').attr('readonly', 'readonly').val('');
         }
         $.ajax({
-            url: '/ksurvey/answer/',
+            url: '/ksurvey/answer/?saveAnswer=saveAnswer',
             type: 'post',
             data: data,
             dataType: 'json',
@@ -289,9 +289,12 @@ $(function () {
                 } else {
                     Msg.error(resp.data.messages.join('<br />'));
                 }
+
+                form.find('[name=questionId]').val('');
             },
             error: function (e) {
                 Msg.error('System error! Please contact your system administrator for support.');
+                form.find('[name=questionId]').val('');
             }
         });
     });
@@ -646,6 +649,58 @@ $(function () {
         })
     }
     
+    function initYesNoAnswers() {
+        $(document).on('change', '.yesnoAnswer', function (e) {
+            var requiredQuestions = $(this).find(':selected').attr('data-requiredQuestions') || '';
+            var panelBody = $(this).parents('.panel-body');
+            panelBody.find('.requiredQuestion').each(function () {
+                if(requiredQuestions.indexOf(this.value) != -1){
+                    this.checked = true;
+                } else {
+                    this.checked = false;
+                }
+            })
+        });
+
+        $(window).on('load', function () {
+            $(document).find('.yesnoAnswer').trigger('change');
+        });
+
+        $(document).on('click', '.requiredQuestion', function (e) {
+            var panelBody = $(this).parents('.panel-body');
+            var qs = getRequiredQuestions(panelBody);
+            var answerId = panelBody.find('.yesnoAnswer').val();
+            $.ajax({
+                url: '/ksurvey/answer/',
+                type: 'post',
+                data: {
+                    requiredQuestions: qs,
+                    answerId: answerId,
+                    saveAnswerRequiredQuestions: 'saveAnswerRequiredQuestions'
+                },
+                dataType: 'json',
+                success: function (resp) {
+                    if (resp && resp.status) {
+                        Msg.success('Saved');
+                        panelBody.find('.yesnoAnswer').find(':selected').attr('data-requiredQuestions', qs);
+                    } else {
+                        Msg.error('Error');
+                    }
+                }
+            })
+        });
+    }
+
+    function getRequiredQuestions(panelBody) {
+        var arr = [];
+        panelBody.find('.requiredQuestion').each(function () {
+            if (this.checked){
+                arr.push(this.value);
+            }
+        });
+        return arr.join(',');
+    }
+    
     initGroupModal();
     initDateRange();
     initProgressBar();
@@ -656,4 +711,5 @@ $(function () {
     initSortableQuestions();
     initSortableAnswers();
     initToggleQuestions();
+    initYesNoAnswers();
 });

@@ -16,3 +16,27 @@
         }
     }
 }
+
+// remove leadman-theme override
+.pageDatePicker{
+    .dropdown-menu{
+        -webkit-transform: scale(0);
+        -ms-transform: scale(0);
+        -o-transform: scale(0);
+        transform: scale(0);
+        &.showed{
+            -webkit-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+    .pageDatePicker-customDateTab.active{
+        .dropdown-menu{
+            -webkit-transform: scale(1);
+            -ms-transform: scale(1);
+            -o-transform: scale(1);
+            transform: scale(1);
+        }
+    }
+}

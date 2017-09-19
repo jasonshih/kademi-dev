@@ -46,12 +46,12 @@
                     form.html(resp);
 
                     form.find('.select-data').on('change', function () {
-                        var selectedKpi = this.value;
+                        var selectedSerie = this.value;
                         var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var dynamicElement = component.find('[data-dynamic-name]');
 
-                        if (selectedKpi) {
-                            component.attr('data-href', selectedKpi);
+                        if (selectedSerie) {
+                            component.attr('data-name', selectedSerie);
                             keditor.initDynamicContent(dynamicElement).done(function () {
                                 self.initKpiVis();
                             });
@@ -93,8 +93,8 @@
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "kpiVis" component');
 
-            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-data').val(dataAttributes['data-href']);
+            var dataAttributes = keditor.getDataAttributes(component, [], false);
+            form.find('.select-data').val(dataAttributes['data-name']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.data-height').val(dataAttributes['data-height']);
         }
