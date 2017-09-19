@@ -128,9 +128,13 @@
                         
                         if (confirm('Are you sure that you want to delete this image?')) {
                             var btn = $(this);
-
-                            self.refreshCarousel(keditor.getSettingComponent(), form);
+                            var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
+                            
+                            var carousel = keditor.getSettingComponent().find('.carousel');
+                            carousel.find('[data-hash=' + hash + ']').remove();
                             btn.closest('.carouselItem').remove();
+                            
+                            self.refreshCarousel(keditor.getSettingComponent(), form);
                         }
                     });
                     
