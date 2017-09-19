@@ -53,6 +53,12 @@
                 "group": "main",
                 "path": "/theme/apps/content/container.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/showHideButton.js"
+            }
         }
     ]
 }
