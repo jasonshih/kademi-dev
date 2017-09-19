@@ -439,9 +439,8 @@
                         
                         if (confirm('Are you sure that you want to delete this image?')) {
                             var btn = $(this);
-                            var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
-                            
-                            self.refreshCarousel(keditor.getSettingComponent(), hash);
+
+                            self.refreshCarousel(keditor.getSettingComponent(), form);
                             btn.closest('.carouselItem').remove();
                         }
                     });
