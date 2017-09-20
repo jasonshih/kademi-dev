@@ -1,4 +1,7 @@
 #if ($page.subscription)
+#set($adminDomain = $request.params.adminDomain)
+#set($pageName= "/license?refreshLicense=true")
+
 <script>
     $(document).ready(function () {
         $("#makePaymentBtn").on("click", function () {
@@ -71,20 +74,19 @@
 
     });
 </script>
-
+<a href="http://$adminDomain" class="btn btn-primary btn-sm">Return to site.</a>
+<br/>
 <br/>
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fa fa-bar-chart-o"></i>
-        Manage Subscription
+        Manage Subscription       
     </div>
     <div class="panel-body">
         <div class="table-responsive">
             <div id="paymentSuccessful" style="display:none;">
                 <div class="alert alert-success"><b>Thank you.</b> The payment was processed successfully</div>
                 <br/>
-                #set($adminDomain = $request.params.adminDomain)
-                #set($pageName= "/license?refreshLicense=true")
                 <a href="http://$adminDomain$pageName" class="btn btn-primary btn-lg btn-block">Refresh the license information in your site.</a>
             </div>
             <div id="planManagmentDetails">
@@ -212,7 +214,7 @@
                             <input type="text" class="form-control required" required="true" disabled="disabled" id="TotalAmount" name="TotalAmount" data-regex="^[0-9]+$" value=""/>
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control required" required="true" id="CurrencyCode" disabled="disabled" name="CurrencyCode" value=""/>
+                            <input type="text" class="form-control required" required="true" id="CurrencyCode" disabled="disabled" name="CurrencyCode" value="AUD"/>
                         </div>
                     </div>
 
