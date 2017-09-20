@@ -55,16 +55,16 @@
                         $("#paymentDetails").hide();
                         $("#planManagmentDetails").hide();
                         $("#paymentSuccessful").show();
-                        //paymentTransactions
+                        $('#payments-body').reloadFragment();
                     } else {
-                        Msg.error("There was a problem. Please see the transaction history for details");
-                        showErrors(data.messages, data.fieldMessages);
+                        var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
+                        Msg.error(msg);
                         $('#payments-body').reloadFragment();
                     }
                 },
-                error: function (resp) {
-                    flog("errors", resp);
-                    alert("Error attempting to process payment: " + resp);
+                error: function (data) {
+                    flog("errors", data);
+                    Msg.error("Error attempting to process payment: " + data.message);
                 }
             });
         });
@@ -130,7 +130,7 @@
                 #else
                 <div class="alert alert-warning">There is no encryption key for this website. Payments will fail unless you are PCI-DSS Compliant</div>
                 #end
-                
+
                 <form class="form-horizontal" data-eway-encrypt-key="$!encKey" id="paymentForm" method="POST">
                     <input type="hidden" id="productName" value="" />
                     <div class="form-group">
@@ -249,7 +249,7 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="payments-body">
                         #foreach($pt in $page.paymentTransactions)
                         <tr>
                             <td>#if($pt.transactionID) $pt.transactionID #else $pt.uuid #end</td>
