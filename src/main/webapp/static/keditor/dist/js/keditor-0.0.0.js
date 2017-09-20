@@ -1494,8 +1494,7 @@
             
             var container = btn.closest('.keditor-container');
             var contentArea = container.parent();
-            var newContainer = $(self.getContainerContent(container));
-            
+            var newContainer = $(self.getContainerContent(container, btn.parent().hasClass('keditor-toolbar-sub-container')));
             container.after(newContainer);
             self.convertToContainer(contentArea, newContainer);
             
@@ -1733,10 +1732,7 @@
         flog('getContainerContent - isNested=' + isNested, container);
         
         var self = this;
-        var containerInner = container.children('.keditor-container-inner');
-        if (!isNested) {
-            containerInner = containerInner.clone();
-        }
+        var containerInner = container.children('.keditor-container-inner').clone();
         
         containerInner.find('[data-type=container-content]').not(isNested ? '' : '.keditor-sub-container-content').each(function () {
             var containerContent = $(this);

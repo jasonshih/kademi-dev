@@ -137,8 +137,11 @@
                             var btn = $(this);
                             var hash = btn.closest('.btn-group').siblings('[data-hash]').attr('data-hash');
                             
-                            self.refreshCarousel(keditor.getSettingComponent(), hash);
+                            var carousel = keditor.getSettingComponent().find('.carousel');
+                            carousel.find('[data-hash=' + hash + ']').remove();
                             btn.closest('.carouselItem').remove();
+                            
+                            self.refreshCarousel(keditor.getSettingComponent(), form);
                         }
                     });
                     

@@ -1,5 +1,5 @@
 (function ($) {
-    $(document).ready(function () {
+    $(function () {
         var $content = $('.content-page');
         if($content.length > 0) {
             if(!pageInitFunctions) {
@@ -24,6 +24,6 @@
                 }
             });
         }
-
     });
+    
 }(jQuery));

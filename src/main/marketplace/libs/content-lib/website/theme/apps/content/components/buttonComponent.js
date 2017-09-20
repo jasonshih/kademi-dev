@@ -88,12 +88,12 @@
             flog('showSettingForm "button" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('#cbbButtonSize').val(dataAttributes['data-button-size']);
-            form.find('#cbbButtonAlign').val(dataAttributes['data-button-align']);
-            form.find('#cbbButtonColor').val(dataAttributes['data-button-color']);
-            form.find('#txtButtonClass').val(dataAttributes['data-button-class']);
-            form.find('#txtButtonText').val(dataAttributes['data-button-text']);
-            form.find('#cbbButtonType').val(dataAttributes['data-button-type']);
+            form.find('#cbbButtonSize').val(dataAttributes['data-button-size'] || 'btn-md');
+            form.find('#cbbButtonAlign').val(dataAttributes['data-button-align'] || 'text-left');
+            form.find('#cbbButtonColor').val(dataAttributes['data-button-color'] || 'btn-primary');
+            form.find('#txtButtonClass').val(dataAttributes['data-button-class'] || '');
+            form.find('#txtButtonText').val(dataAttributes['data-button-text'] || '');
+            form.find('#cbbButtonType').val(dataAttributes['data-button-type'] || 'button');
             form.find('#txtButtonLink').val(dataAttributes['data-button-link']).prop('disabled', dataAttributes['data-button-type'] !== 'link');
             form.find('#cbbButtonTarget').val(dataAttributes['data-button-target']).prop('disabled', dataAttributes['data-button-type'] !== 'link');
         }
