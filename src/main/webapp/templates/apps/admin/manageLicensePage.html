@@ -10,13 +10,31 @@
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
+                    #if($page.license)
                     <p>These are the details of your license:</p>
-                    <ul>
-                        <li><h4>Plan: $page.license.planName </h4></li>
-                        <li><h4>Created Date: $!formatter.formatDate($page.license.createdDate) </h4></li>
-                        <li><h4>Expiration Date: $!formatter.formatDate($page.license.toDate) </h4></li>
-                    </ul>
-                    <a href="$page.licenseServerAddress" class="btn btn-success">Manage Details</a>
+
+                    <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
+                        <colgroup>
+                            <col width="75px" />
+                            <col width="200px" />
+                        </colgroup>
+                        <tbody class="pagination-results">
+                            <tr>
+                                <td><b>Plan Name</b></td>
+                                <td>$page.license.planName</td>
+                            </tr>
+                            <tr>
+                                <td><b>Created Date</b></td>
+                                <td>$!formatter.formatDate($page.license.createdDate)</td>
+                            </tr>
+                            <tr>
+                                <td><b>Expiration Date</b></td>
+                                <td>$!formatter.formatDate($page.license.toDate)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    #end
+                    <a href="$page.licenseServerAddress" class="btn btn-lg btn-success"><span class="fa fa-cog"></span> Manage Subscription</a>
                 </div>
             </div>
         </div>
