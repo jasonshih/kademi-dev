@@ -166,7 +166,7 @@
                             experimentOptionsStr += '<option value="' + experiment.name + '">' + experiment.name + '</option>';
                             
                             $.each(experiment.variants, function (k, variant) {
-                            experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
+                                experimentOptionsStr += '<option value="' + experiment.name + '/' + variant.name + '">' + experiment.name + '/' + variant.name + '</option>';
                             });
                         });
                         
@@ -176,7 +176,7 @@
                 
                 cbbExperiment.on('change', function () {
                     var container = keditor.getSettingContainer();
-                    container.find('.container-bg').attr('data-experiment', this.value);                    
+                    container.find('.container-bg').attr('data-experiment', this.value);
                 });
                 
                 
@@ -1312,13 +1312,35 @@
                                 contentArea.addClass('empty');
                             }
                             
-                            var unknownContainer = contentArea.children().not('section');
-                            unknownContainer.wrap('<div data-type="container-content"></div>');
+                            var nonContainer = contentArea.children().not('section');
+                            var newContainer = null;
+                            if (nonContainer.length > 0) {
+                                flog('Wrap all contents which are not container into a text component inside 1 col container');
+                                
+                                newContainer = $(
+                                    '<section>' +
+                                    '    <div class="container-bg background-for">' +
+                                    '        <div class="container-layout container-fluid">' +
+                                    '            <div class="container-content-wrapper">' +
+                                    '                <div class="row">' +
+                                    '                    <div class="col-sm-12" data-type="container-content">' +
+                                    '                        <section data-type="component-text">' +
+                                    '                            <div class="keditor-component-text-content">' +
+                                    '                                <div class="keditor-component-text-content-inner clearfix"></div>' +
+                                    '                            </div>' +
+                                    '                        </section>' +
+                                    '                    </div>' +
+                                    '                </div>' +
+                                    '            </div>' +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '</section>'
+                                );
+                                newContainer.find('.keditor-component-text-content-inner').html(nonContainer)
+                                contentArea.append(newContainer)
+                            }
                             
-                            return unknownContainer.parent();
-                        },
-                        onInitContainer: function (container) {
-                            return container.children().children().not('section, .container-bg').attr('data-type', 'component-blank');
+                            return newContainer;
                         },
                         containerSettingEnabled: true,
                         containerSettingInitFunction: contentEditor.initContainerSetting,
