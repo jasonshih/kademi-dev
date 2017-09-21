@@ -27,9 +27,9 @@
             table: '#leadTable',
             idSrc: 'leadId',
             fields: [{
-                label: 'Deal Amount',
-                name: 'dealAmount'
-            },
+                    label: 'Deal Amount',
+                    name: 'dealAmount'
+                },
                 {
                     label: 'Stage',
                     name: 'stageName',
@@ -137,6 +137,10 @@
                         }
                         return '';
                     }
+                },
+                {
+                    data: 'funnelName',
+                    defaultContent: ""
                 },
                 {
                     data: 'leadId',
@@ -415,12 +419,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#sourcesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });
@@ -449,12 +453,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#stagesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });
