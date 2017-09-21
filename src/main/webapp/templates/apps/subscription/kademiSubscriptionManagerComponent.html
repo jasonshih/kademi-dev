@@ -75,7 +75,7 @@
                         var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
                         Msg.error(msg);
                     }
-                    $('#paymentTransactions').reloadFragment();
+                    $('#paymentTransactions').reloadFragment({url:window.location.href});
                 },
                 error: function (data) {
                     flog("errors", data);
