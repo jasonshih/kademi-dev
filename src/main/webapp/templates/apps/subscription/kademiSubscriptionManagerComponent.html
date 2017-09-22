@@ -1,9 +1,49 @@
 #if ($page.subscription)
 #set($adminDomain = $request.params.adminDomain)
 #set($pageName= "/license?refreshLicense=true")
+<link rel="stylesheet" href="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" media="all">
+<script charset="utf-8" src="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.js">//</script>
 
 <script>
     $(document).ready(function () {
+
+        function showSweetAlert(option) {
+            swal({
+                title: option.title || 'Are you sure?',
+                text: option.message,
+                type: option.type || 'warning',
+                showCancelButton: true,
+                confirmButtonClass: option.btnClass,
+                confirmButtonText: option.btnText,
+                closeOnConfirm: true,
+                showLoaderOnConfirm: false
+            }, typeof option.callback === 'function' ? option.callback : null);
+        }
+
+        $("#clearPaymentDetails").on("click", function () {
+            var option = {
+                title: "Are you sure you want to clear your payment details?",
+                message: "",
+                type: 'warning',
+                btnClass: 'btn-danger',
+                btnText: "Clear details",
+                callback: clearDetails
+            };
+            showSweetAlert(option);
+        });
+
+        $("#makeTokenPayment").on("click", function () {
+            var option = {
+                title: "Are you sure you want to proceed?",
+                message: "",
+                type: 'info',
+                btnClass: 'btn-info',
+                btnText: "Pay",
+                callback: makeTokenPayment
+            };
+            showSweetAlert(option);
+        });
+
         $("#makePaymentBtn").on("click", function () {
             var container = $("#changePlan");
             if ($(container).find('input[name=product]:checked').val() !== undefined) {
@@ -13,6 +53,43 @@
                 Msg.error("Please, select a plan.");
             }
         });
+
+        function clearDetails() {
+            flog("clearing details");
+            $.ajax({
+                url: "",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    clearCustomerToken: true
+                },
+                success: function (data) {
+                    successResponse(data);
+                },
+                error: function (data) {
+                    errorResponse(data);
+                }
+            });
+        }
+
+        function makeTokenPayment() {
+            flog("make Token Payment");
+            $.ajax({
+                url: "",
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    makeTokenPayment: true,
+                    productName: $("#currentPlanName").val()
+                },
+                success: function (data) {
+                    successResponse(data);
+                },
+                error: function (data) {
+                    errorResponse(data);
+                }
+            });
+        }
 
         $("#duePaymentBtn").on("click", function () {
             var container = $("#duePayments");
@@ -28,6 +105,26 @@
             $("#TotalAmount").val($(this).val());
             $("#productName").val($(this).parent().find(".productName").val());
         });
+
+        function successResponse(data) {
+            flog("successResponse", data);
+            if (data.status) {
+                $("#paymentDetailsModal").modal("hide");
+                $("#manageSubscriptionContent").hide();
+                $("#paymentSuccessful").show();
+            } else {
+                var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
+                Msg.error(msg);
+            }
+            $("#paymentProgressBar").hide();
+            $('#paymentTransactions').reloadFragment({url: window.location.href});
+        }
+
+        function errorResponse(data) {
+            flog("errorResponse", data);
+            $("#paymentProgressBar").hide();
+            Msg.error("Error attempting to process payment: " + data.message);
+        }
 
         $("body").on('click', '#paymentBtn', function (e) {
             e.preventDefault();
@@ -67,22 +164,10 @@
 
                 },
                 success: function (data) {
-                    flog("success", data);
-                    if (data.status) {
-                        $("#paymentDetailsModal").modal("hide");
-                        $("#manageSubscriptionContent").hide();
-                        $("#paymentSuccessful").show();
-                    } else {
-                        var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
-                        Msg.error(msg);
-                    }
-                    $("#paymentProgressBar").hide();
-                    $('#paymentTransactions').reloadFragment({url: window.location.href});
+                    successResponse(data);
                 },
                 error: function (data) {
-                    flog("errors", data);
-                    $("#paymentProgressBar").hide();
-                    Msg.error("Error attempting to process payment: " + data.message);
+                    errorResponse(data);
                 }
             });
         });
@@ -110,7 +195,7 @@
             <div class="panel-body">
                 <div class="table-responsive">
                     <div id="planManagmentDetails">
-                        <p><b>Current plan:</b> $page.subscription.planName</p>
+                        <p><b>Current plan:</b> $page.subscription.planName</p> <input type="hidden" value="$page.subscription.planName" id="currentPlanName" />
                         <p><b>Expiration Date:</b>  $formatter.format($page.subscription.expiryDate)</p>
                         #if($page.subscription.credit > 0)
                         <p><b>Credit:</b> $page.subscription.credit</p>
@@ -150,6 +235,11 @@
                         </table>            
                         <div class="col-sm-3">
                             <button id="makePaymentBtn" class="btn btn-sm btn-info" type="button">Change Plan</button>
+                        </div>
+                        <div class="col-sm-3">
+                            #if ($page.subscription.customerToken)
+                            <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Make payment using previous details</button>
+                            #end
                         </div>
                     </div>
                 </div>
@@ -202,12 +292,29 @@
             </div>
         </div>
     </div>
+
+    #if ($page.subscription.customerToken)
+    <div class="col-sm-4" data-type="container-content">
+        <div class="panel panel-default" id="duePayments">
+            <div class="panel-heading">
+                <i class="fa fa-info"></i>
+                Payment Details
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <button id="clearPaymentDetails" class="btn btn-sm btn-danger" type="button"><i class="fa fa-eraser"></i> Clear payment details</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    #end
+
 </div>
 
 <div id="paymentTransactions">
     #if($page.paymentTransactions && $page.paymentTransactions.size() > 0)
     <div class="panel panel-default">
-         <div class="panel-heading">
+        <div class="panel-heading">
             <i class="fa fa-bar-chart-o"></i>
             History of transactions    
         </div>
