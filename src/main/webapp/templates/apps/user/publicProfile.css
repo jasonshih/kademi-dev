@@ -1,4 +1,4 @@
-div.details {
+body.publicProfile div.details {
     border: solid lightgray 1px;
     border-radius: 5px;
     padding: 0.6em;
@@ -6,43 +6,54 @@ div.details {
     margin: 0.3em;
     width: 45%;
     float: left;
-}    
-div.details:nth-child(odd) {
+}
+
+body.publicProfile div.details:nth-child(odd) {
     margin-left: 0;
 }
-div.details:nth-child(even) {
+
+body.publicProfile div.details:nth-child(even) {
     margin-right: 0;
     float: right;
 }
-legend {
+
+body.publicProfile legend {
     font-size: 0.8em;
 }
-label {
+
+body.publicProfile label {
     display: inline-block;
 }
-form h4 {
+
+body.publicProfile form h4 {
     margin-top: 0;
 }
-input {
+
+body.publicProfile input {
     width: 70%;
     margin-right: 0;
 }
-div.input {
+
+body.publicProfile div.input {
     background-color: #F0F0F0;
     border-radius: 5px;
     padding: 0.6em 1em;
     margin-top: 0.6em;
     border: 1px solid #D3D3D3;
 }
-label {
+
+body.publicProfile label {
     width: 20%;
 }
-div.details form button {
+
+body.publicProfile div.details form button {
     float: right;
 }
-div.details ul {
+
+body.publicProfile div.details ul {
     margin-left: 2em;
 }
-div.details li {
+
+body.publicProfile div.details li {
     margin-left: 0;
 }

@@ -4,9 +4,6 @@ var win = $(window);
 function initManageEvent() {
     flog('initManageEvent');
     useHash = true;
-    
-    initHtmlEditors($('.htmleditor'), getStandardEditorHeight(), null, null, 'autogrow');
-    initContentEditor();
 
     var form = initEventForm();
     initConfirmationTab();
@@ -15,6 +12,8 @@ function initManageEvent() {
     initCreateEmail();
     initDetailsTab();
     initChosen();
+    
+    initFullscreenEditor($('[name=description]'), '?goto=');
 }
 
 window.onbeforeunload = function () {
@@ -22,23 +21,6 @@ window.onbeforeunload = function () {
         return 'Do you want to save your changes?';
     }
 };
-
-function initContentEditor() {
-    flog('initContentEditor');
-    
-    var contentEditor = $('.contenteditor');
-    if (contentEditor.length > 0) {
-        var pageName = getFileName(window.location.href);
-        
-        contentEditor.contentEditor({
-            iframeMode: true,
-            snippetsUrl: './_components?fileName=' + pageName,
-            snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
-            basePath: '',
-            pagePath: '',
-        });
-    }
-}
 
 function initChosen() {
     flog('initChosen');
@@ -109,11 +91,6 @@ function initEventForm() {
 
     form.forms({
         onValid: function (form) {
-            var contentEditor = $('.contenteditor');
-            if (contentEditor.length > 0) {
-                contentEditor.val(contentEditor.contentEditor('getContent'));
-            }
-            
             // Renumber reminder inputs
             form.find('.reminders tr').each(function (i, n) {
                 var tr = $(n);
@@ -126,6 +103,7 @@ function initEventForm() {
             });
         },
         onSuccess: function () {
+            $('.fullscreen-editor-preview').attr('src', '?goto=');
             Msg.info('Saved!');
             form.removeClass('dirty');
         }

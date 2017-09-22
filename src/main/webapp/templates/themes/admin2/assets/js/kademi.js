@@ -1400,3 +1400,115 @@ Kalert.confirmWait = function (title, message, type, btnClass, btnText, callback
 Kalert.close = function () {
     swal.close();
 };
+
+(function ($, window) {
+    window.initFullscreenEditor = function (target, previewLink) {
+        var isContentEditor = target.hasClass('contenteditor');
+        target.addClass('fullscreen-editor').removeClass('contenteditor htmleditor').hide();
+        
+        if (isContentEditor) {
+            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+                initFullscreenEditorModal(target, isContentEditor);
+                initFullscreenEditorPreview(target, previewLink);
+            });
+        } else {
+            initFullscreenEditorModal(target, isContentEditor);
+            initFullscreenEditorPreview(target, previewLink);
+        }
+    };
+    
+    function initFullscreenEditorPreview(target, previewLink) {
+        var iframe = $('<iframe border="0" class="fullscreen-editor-preview"></iframe>');
+        
+        target.after(iframe);
+        iframe.attr('src', previewLink);
+    }
+    
+    function initFullscreenEditorModal(target, isContentEditor) {
+        var content = target.html() || '';
+        var id = target.attr('id');
+        if (!id) {
+            id = 'editor-' + (new Date()).getTime();
+            target.attr('id', id);
+        }
+        var modalId = 'modal-fullscreen-' + id;
+        var modal = $(
+            '<div id="' + modalId + '" class="modal ' + (isContentEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
+            '    <div class="modal-dialog modal-lg">' +
+            '        <div class="modal-content">' +
+            '            <div class="modal-body">' +
+            '                <div class="editor-wrapper">' +
+            '                    <div class="editor-loading">' +
+            '                        <span>' +
+            '                            <span class="loading-icon">' +
+            '                                <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
+            '                            </span>' +
+            '                            <span class="loading-text">Initializing editor...</span>' +
+            '                        </span>' +
+            '                    </div>' +
+            '                    <textarea class="' + (isContentEditor ? 'contenteditor' : 'htmleditor') + '">' + content + '</textarea>' +
+            '                </div>' +
+            '            </div>' +
+            '            <div class="modal-footer">' +
+            '                <button type="button" data-dismiss="modal" class="btn btn-sm btn-default">Close</button>' +
+            '                <button type="button" class="btn btn-sm btn-info fullscreen-editor-save">Save</button>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
+            '</div>'
+        );
+        modal.appendTo(document.body);
+        
+        var textarea = modal.find('textarea');
+        var textareaId = 'modal-fullscreen-textarea-' + id;
+        textarea.attr('id', textareaId);
+        
+        var ckeditor;
+        var editorLoading = modal.find('.editor-loading');
+        if (isContentEditor) {
+            var pageName = getFileName(window.location.href);
+            
+            textarea.contentEditor({
+                iframeMode: true,
+                snippetsUrl: './_components?fileName=' + pageName,
+                snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
+                basePath: '',
+                pagePath: '',
+                onReady: function () {
+                    editorLoading.hide();
+                }
+            });
+        } else {
+            initHtmlEditors(textarea, 500, null, null, null, function (editor) {
+                ckeditor = editor;
+                editorLoading.hide();
+            });
+        }
+        
+        var btnEdit = $('<button type="button" class="btn btn-sm btn-info fullscreen-editor-edit">Edit content</button>');
+        target.before(btnEdit);
+        btnEdit.wrap('<p class="fullscreen-editor-actions"></p>');
+        
+        btnEdit.on('click', function (e) {
+            e.preventDefault();
+            
+            modal.modal('show');
+        });
+        
+        modal.find('.fullscreen-editor-save').on('click', function (e) {
+            e.preventDefault();
+            
+            var content;
+            if (isContentEditor) {
+                content = textarea.contentEditor('getContent');
+            } else {
+                content = ckeditor.getData();
+            }
+            
+            target.val(content);
+            target.closest('form').trigger('submit');
+            modal.modal('hide');
+        });
+    }
+    
+})(jQuery, window);
