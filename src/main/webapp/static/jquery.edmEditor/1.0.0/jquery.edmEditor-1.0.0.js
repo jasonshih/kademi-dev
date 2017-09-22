@@ -597,6 +597,12 @@
                     table.attr('data-experiment', this.value);
                 });
                 
+                var visRules = form.find(".visible-rules");
+                visRules.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    container.find('.container-bg').attr('data-expr', this.value);
+                });                  
+                
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
                     var txt = $(this);
                     var dataCss = txt.attr('data-css');
@@ -658,6 +664,10 @@
         var expPath = table.data("experiment");
         var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
+        
+        var visRulesExpr = table.data("expr");
+        var visRules = form.find(".visible-rules");
+        visRules.val(visRulesExpr);        
         
         var columnsSettings = form.find('.columns-setting');
         columnsSettings.html('');
