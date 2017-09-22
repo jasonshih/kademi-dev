@@ -78,7 +78,7 @@
                 dataType: 'json',
                 data: {
                     makeTokenPayment: true,
-                    productName: $("#currentPlanName").val()
+                    productName: $("#productName").val()
                 },
                 success: function (data) {
                     successResponse(data);
@@ -194,7 +194,7 @@
             <div class="panel-body">
                 <div class="table-responsive">
                     <div id="planManagmentDetails">
-                        <p><b>Current plan:</b> $page.subscription.planName</p> <input type="hidden" value="$page.subscription.planName" id="currentPlanName" />
+                        <p><b>Current plan:</b> $page.subscription.planName</p>
                         <p><b>Expiration Date:</b>  $formatter.format($page.subscription.expiryDate)</p>
                         #if($page.subscription.credit > 0)
                         <p><b>Credit:</b> $page.subscription.credit</p>
@@ -234,11 +234,6 @@
                         </table>            
                         <div class="col-sm-3">
                             <button id="makePaymentBtn" class="btn btn-sm btn-info" type="button">Change Plan</button>
-                        </div>
-                        <div class="col-sm-3">
-                            #if ($page.subscription.customerToken)
-                            <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Make payment using previous details</button>
-                            #end
                         </div>
                     </div>
                 </div>
@@ -283,6 +278,11 @@
                     </table>     
                     <div class="col-sm-3">
                         <button id="duePaymentBtn" class="btn btn-sm btn-info" type="button">Pay due</button>
+                    </div>
+                    <div class="col-sm-3">
+                        #if ($page.subscription.customerToken)
+                        <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Pay due with previous details</button>
+                        #end
                     </div>
                     #else
                     <div><p>There is no due payment. The next due date is: $formatter.format($page.subscription.expiryDate)</p></div>
@@ -473,7 +473,6 @@
                     <button id="paymentBtn" class="btn btn-sm btn-info" type="button">Submit payment</button>
                 </div>
             </div>
-            <script src="https://secure.ewaypayments.com/scripts/eCrypt.js">//</script>
         </div>
     </div>
 </div>
