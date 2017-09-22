@@ -5,52 +5,16 @@ function initManageBlogArticle(pagePath) {
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
     
-    var contentEditor = $('.contenteditor');
-    if (contentEditor.length === 0) {
-        initHtmlEditors();
-    } else {
-        $('.contenteditor').each(function () {
-            var editor = $(this);
-            var loading = $(
-                '<div class="editor-loading">' +
-                '    <span>' +
-                '        <span class="loading-icon">' +
-                '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
-                '        </span>' +
-                '        <span class="loading-text">Initializing Content Editor...</span>' +
-                '    </span>' +
-                '</div>'
-            );
-            
-            editor.closest('.editor-wrapper').css('height', getMainContainerContentHeight() - 38 - 32 - 2 - 15);
-            
-            editor.before(loading);
-            editor.hide();
-            
-            editor.contentEditor({
-                iframeMode: true,
-                allGroups: allGroups,
-                snippetsUrl: '_components/',
-                basePath: pagePath,
-                pagePath: pagePath,
-                onReady: function () {
-                    loading.remove();
-                    editor.next().css('height', getMainContainerContentHeight() - 38 - 32 - 2 - 15)
-                }
-            });
-        });
-    }
+    
+    initFullscreenEditor($('[name=body]'), '?goto=');
     
     $('.article-form').forms({
-        onValid: function () {
-            if (contentEditor.length > 0) {
-                contentEditor.val(contentEditor.contentEditor('getContent'));
-            }
-        },
         onSuccess: function (resp, form) {
             flog('Done', form, resp);
             if (resp.nextHref) {
                 window.location = resp.nextHref;
+            } else {
+                $('.fullscreen-editor-preview').attr('src', '?goto=');
             }
             Msg.info('Saved');
         }

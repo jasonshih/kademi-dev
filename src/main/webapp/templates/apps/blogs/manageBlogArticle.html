@@ -231,9 +231,13 @@
                                 $!page.body
                             </div>
                         #else
-                            <div class="editor-wrapper">
+                        #if ($applicationManager.isActive($applications.blogs, $page.parent.website.liveBranch()))
                                 <textarea class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
-                            </div>
+                        #else
+                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
+                            <b>$page.parent.website.name</b> website is disabled. Please enable it at
+                            <a href="/websites/${page.parent.website.name}/${page.parent.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
+                        #end
                         #end
                     </div>
 
@@ -580,17 +584,7 @@
             </div>
         </div>
 
-        #if ($isKEditor)
-            <script type="text/javascript" src="/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js"></script>
-        #end
-
         <script type="text/javascript">
-            var allGroups = {
-                #foreach ($group in $page.find("/").allGroups)
-                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                #end
-            };
-
             $(function () {
                 initManageBlogArticle('/repositories/${page.article.blog.name}/${page.article.blog.liveBranch}/');
             });

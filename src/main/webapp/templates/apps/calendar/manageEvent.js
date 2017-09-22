@@ -12,7 +12,6 @@ function initManageEvent() {
     initCreateEmail();
     initDetailsTab();
     initChosen();
-    
     initFullscreenEditor($('[name=description]'), '?goto=');
 }
 
