@@ -8,13 +8,5 @@
             "appId": "user-lib",
             "branch": "1.0.6"
         }
-    ],
-    "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/signup/register.js"
-            }
-        }
     ]
 }

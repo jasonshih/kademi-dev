@@ -4,19 +4,5 @@
             "appId": "contactus-lib",
             "branch": "1.0.4"
         }
-    ],
-    "dependencies": [
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/js/jquery.timeago.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/contactus/contactus.js"
-            }
-        }
     ]
 }

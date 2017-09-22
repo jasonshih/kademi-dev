@@ -4,8 +4,5 @@
             "appId": "leadforms-lib",
             "branch": "1.0.1"
         }
-    ],
-    "dependencies": [
-        
     ]
 }
