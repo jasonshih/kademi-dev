@@ -30,15 +30,20 @@
         });
 
         $("#makeTokenPayment").on("click", function () {
-            var option = {
-                title: "Are you sure you want to proceed?",
-                message: "",
-                type: 'info',
-                btnClass: 'btn-info',
-                btnText: "Pay",
-                callback: makeTokenPayment
-            };
-            showSweetAlert(option);
+            var container = $("#duePayments");
+            if ($(container).find('input[name=product]:checked').val() !== undefined) {
+                var option = {
+                    title: "Are you sure you want to proceed?",
+                    message: "",
+                    type: 'info',
+                    btnClass: 'btn-info',
+                    btnText: "Pay",
+                    callback: makeTokenPayment
+                };
+                showSweetAlert(option);
+            } else {
+                Msg.error("Please, select the due payment.");
+            }
         });
 
         $("#makePaymentBtn").on("click", function () {
@@ -276,12 +281,12 @@
                             #end
                         </tbody>
                     </table>     
-                    <div class="col-sm-3">
+                    <div class="col-sm-4">
                         <button id="duePaymentBtn" class="btn btn-sm btn-info" type="button">Pay due</button>
                     </div>
                     <div class="col-sm-3">
                         #if ($page.subscription.customerToken)
-                        <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Pay due with previous details</button>
+                        <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Pay with previous details</button>
                         #end
                     </div>
                     #else
