@@ -6,8 +6,13 @@
 #if ($bg)
 #set ($panelStyle = $bg.replace("bg-", "panel-"))
 #end
+
+#if (!$showIcon)
+#set ($showIcon = "true")
+#end
 <div class="panel $!panelStyle">
     <div class="htmlPanel panel-body $!bg">
+        #if ($showIcon == "true")
         <div class="panelIconWrap">
             #if ($customIconColor == "true")
             <i class="$!icon $!iconSize" style="color: $!iconColor"></i>
@@ -15,7 +20,8 @@
             <i class="$!icon $!iconSize"></i>
             #end
         </div>
-        <div class="textEdit">
+        #end
+        <div class="textEdit #if ($showIcon != 'true') noIcon #end">
             $!applications.get("content-lib").call("decodeHTML", $html, "<h3>This is sample content</h3>")
         </div>
     </div>
