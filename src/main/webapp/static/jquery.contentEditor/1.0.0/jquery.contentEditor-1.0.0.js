@@ -179,6 +179,12 @@
                     container.find('.container-bg').attr('data-experiment', this.value);
                 });
                 
+                var visRules = form.find(".visible-rules");
+                visRules.on('change', function () {
+                    var container = keditor.getSettingContainer();
+                    container.find('.container-bg').attr('data-expr', this.value);
+                });                
+                
                 
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
                     e.preventDefault();
@@ -690,6 +696,10 @@
         var expPath = containerBg.data("experiment");
         var txtExperiment = form.find('.select-experiment');
         txtExperiment.val(expPath);
+        
+        var visRulesExpr = containerBg.data("expr");
+        var visRules = form.find(".visible-rules");
+        visRules.val(visRulesExpr);
         
         
         form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());

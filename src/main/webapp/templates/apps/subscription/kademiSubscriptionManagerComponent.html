@@ -101,7 +101,7 @@
     </div>
 </div>
 <div class="row" id="manageSubscriptionContent">
-    <div class="col-sm-9" data-type="container-content">
+    <div class="col-sm-8" data-type="container-content">
         <div class="panel panel-default" id="changePlan">
             <div class="panel-heading">
                 <i class="fa fa-bar-chart-o"></i>
@@ -137,7 +137,7 @@
                                 #if ($prod.baseCost > 0 && $prod.title != $page.subscription.planName)
                                 <tr>
                                     <td>$prod.title</td>
-                                    <td>$prod.brief</td>
+                                    <td>$!prod.brief</td>
                                     <td>$prod.baseCost</td>
                                     <td>
                                         <input type="radio" class="productSelected" name="product" value="$prod.baseCost" class=""/>
@@ -156,7 +156,7 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-3" data-type="container-content">
+    <div class="col-sm-4" data-type="container-content">
         <div class="panel panel-default" id="duePayments">
             <div class="panel-heading">
                 <i class="fa fa-money"></i>
@@ -168,14 +168,12 @@
                     <table class="table table-striped table-hover pagination-container" style="table-layout: fixed">
                         <colgroup>
                             <col width="90%" />
-                            <col width="150px" />
-                            <col width="70px" />
+                            <col width="50px" />
                             <col width="50px" />
                         </colgroup>
                         <thead>
                             <tr>
-                                <th>Plan Name</th>
-                                <th>Expired Date</th>
+                                <th>Expired Plan</th>
                                 <th>Price</th>
                                 <th></th>
                             </tr>
@@ -184,8 +182,7 @@
                             #foreach($dp in $page.duePayments)
                             #set( $prod = $dp.product)
                             <tr>
-                                <td>$prod.title</td>
-                                <td>$prod.expiryDate</td>
+                                <td>$prod.title - $formatter.format($dp.expiryDate)</td>
                                 <td>$prod.baseCost</td>
                                 <td>
                                     <input type="radio" class="productSelected" name="product" value="$prod.baseCost" class=""/>
