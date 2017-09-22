@@ -29,8 +29,8 @@
             showSweetAlert(option);
         });
 
-        $("#makeTokenPayment").on("click", function () {
-            var container = $("#duePayments");
+        $(".makeTokenPayment").on("click", function () {
+            var container = "#"+$(this).data("container");
             if ($(container).find('input[name=product]:checked').val() !== undefined) {
                 var option = {
                     title: "Are you sure you want to proceed?",
@@ -42,7 +42,7 @@
                 };
                 showSweetAlert(option);
             } else {
-                Msg.error("Please, select the due payment.");
+                Msg.error("Please, select a item.");
             }
         });
 
@@ -66,7 +66,9 @@
                     clearCustomerToken: true
                 },
                 success: function (data) {
-                    Msg.success(data.message);
+                    var msg = (data.messages[0] === undefined) ? "Success:" : data.messages[0];
+                    Msg.success(msg);
+                    $(".makeTokenPayment").hide();
                     $('#clearPaymentDetailsContainer').reloadFragment({url: window.location.href});
                 },
                 error: function (data) {
@@ -237,8 +239,13 @@
                                 #end
                             </tbody>
                         </table>            
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <button id="makePaymentBtn" class="btn btn-sm btn-info" type="button">Change Plan</button>
+                        </div>
+                        <div class="col-sm-3">
+                            #if ($page.subscription.customerToken)
+                                <button data-container="changePlan" class="btn btn-sm btn-warning makeTokenPayment" type="button">Change plan with previous details</button>
+                            #end
                         </div>
                     </div>
                 </div>
@@ -286,7 +293,7 @@
                     </div>
                     <div class="col-sm-3">
                         #if ($page.subscription.customerToken)
-                        <button id="makeTokenPayment" class="btn btn-sm btn-warning" type="button">Pay with previous details</button>
+                        <button data-container="duePayments" class="btn btn-sm btn-warning makeTokenPayment" type="button">Pay with previous details</button>
                         #end
                     </div>
                     #else
