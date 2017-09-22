@@ -57,6 +57,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/calendar/calendar.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/calendar/dashboardUpcomingEvents.js"
             }
         },
