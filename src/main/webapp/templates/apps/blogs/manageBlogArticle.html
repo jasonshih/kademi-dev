@@ -496,13 +496,13 @@
                             <div class="form-group">
                                 <div class="errorHandler alert alert-danger no-display pageMessage">.</div>
                             </div>
-                            #if($page.availableServices)
+                            #if($page.availableServices && $page.availableServices.size() > 0)
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label" for="newTagName">Publish to social media</label>
                                     #foreach($sm in $page.availableServices)
                                         <div class="checkbox">
                                             <label>
-                                                <input name="publishTo_$sm" value="true" type="checkbox" /> $sm
+                                                <input name="publishTo_$sm.id" value="true" type="checkbox" /> $sm.title
                                             </label>
                                         </div>
                                     #end
