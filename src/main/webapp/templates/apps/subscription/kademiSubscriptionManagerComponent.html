@@ -1,9 +1,6 @@
 #if ($page.subscription)
 #set($adminDomain = $request.params.adminDomain)
 #set($pageName= "/license?refreshLicense=true")
-<link rel="stylesheet" href="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" media="all">
-<script charset="utf-8" src="/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.js">//</script>
-
 <script>
     $(document).ready(function () {
 
@@ -64,7 +61,8 @@
                     clearCustomerToken: true
                 },
                 success: function (data) {
-                    successResponse(data);
+                    Msg.success(data.message);
+                    $('#clearPaymentDetailsContainer').reloadFragment({url: window.location.href});
                 },
                 error: function (data) {
                     errorResponse(data);
@@ -117,6 +115,7 @@
                 Msg.error(msg);
             }
             $("#paymentProgressBar").hide();
+            $('#duePayments').reloadFragment({url: window.location.href});
             $('#paymentTransactions').reloadFragment({url: window.location.href});
         }
 
@@ -293,21 +292,23 @@
         </div>
     </div>
 
-    #if ($page.subscription.customerToken)
-    <div class="col-sm-4" data-type="container-content">
-        <div class="panel panel-default" id="duePayments">
-            <div class="panel-heading">
-                <i class="fa fa-info"></i>
-                Payment Details
-            </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <button id="clearPaymentDetails" class="btn btn-sm btn-danger" type="button"><i class="fa fa-eraser"></i> Clear payment details</button>
+    <div id="clearPaymentDetailsContainer">
+        #if ($page.subscription.customerToken)
+        <div class="col-sm-4" data-type="container-content">
+            <div class="panel panel-default" id="duePayments">
+                <div class="panel-heading">
+                    <i class="fa fa-info"></i>
+                    Payment Details
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <button id="clearPaymentDetails" class="btn btn-sm btn-danger" type="button"><i class="fa fa-eraser"></i> Clear payment details</button>
+                    </div>
                 </div>
             </div>
         </div>
+        #end
     </div>
-    #end
 
 </div>
 
