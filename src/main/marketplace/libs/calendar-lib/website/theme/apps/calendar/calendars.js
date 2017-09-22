@@ -100,7 +100,9 @@ function initFullCalendar() {
             },
             editable: false,
             allDayDefault: false,
-            events: eventsUrl
+            events: eventsUrl,
+            themeSystem: 'bootstrap3',
+            height: 'auto'
         });
     });
 }
