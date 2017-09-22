@@ -1,0 +1,1 @@
+controllerMappings.addComponent("calendar/components", "multiCalendars", "html", "Display multi-calendars for current and next years in tab format", "Calendar App component");

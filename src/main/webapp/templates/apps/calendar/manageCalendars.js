@@ -197,6 +197,7 @@ function initFullCalendar() {
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
         },
+        themeSystem: 'bootstrap3',
         editable: true,
         allDayDefault: false,
         events: window.location.pathname,
