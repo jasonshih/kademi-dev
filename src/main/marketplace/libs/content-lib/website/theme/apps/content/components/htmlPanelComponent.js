@@ -80,7 +80,17 @@
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             that.initCkeditor(keditor, component)
                         });
-                    })
+                    });
+
+                    form.find('.showIcon').on('click', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-show-icon', this.checked);
+
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            that.initCkeditor(keditor, component)
+                        });
+                    });
                 }
             });
         },
@@ -94,6 +104,11 @@
             form.find('.bgstyle').val(dataAttributes['data-bg'])
             form.find('.iconColor').val(dataAttributes['data-icon-color']).colorpicker('setValue', dataAttributes['data-icon-color']);
             form.find('.customIconColor').prop('checked', dataAttributes['data-custom-icon-color'] == 'true');
+            var showIcon = true;
+            if (dataAttributes['data-show-icon'] && dataAttributes['data-show-icon'] != 'true'){
+                showIcon = false;
+            }
+            form.find('.showIcon').prop('checked', showIcon);
         },
         initCkeditor: function (keditor, component) {
             var that = this;

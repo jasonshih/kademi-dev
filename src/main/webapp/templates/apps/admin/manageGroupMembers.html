@@ -96,7 +96,7 @@
                         <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                     </ul>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <h5>
                         <label class="label-control">Showing: </label>
                         <label class="label-control count">$page.paginator.records.size()</label>
@@ -108,9 +108,12 @@
                     </h5>
                 </div>
 
+                #if( $page.rulesGroup )
+                
+                #else
                 <div class="col-md-3">
                     <select id="showUserSelect" class="form-control">
-                        <option>[Filter]</option>
+                        <option value="">[No Filter]</option>
                         <option value="withPassword" #if($request.params.password == true) selected="selected" #end>Only those with a password</option>
                         <option value="noPassword"   #if($request.params.password == false) selected="selected" #end>Those without a password</option>
                     </select>
@@ -126,10 +129,11 @@
                                     <i class="fa fa-times"></i>
                                 </button>
                             </span>
-                            <input type="hidden" id="filterOrgId" value="$request.params.orgId" />
+                            <input type="hidden" id="filterOrgId" value="$!request.params.orgId" />
                         </div>
                     </div>
                 </div>
+                #end                
 
                 <table class="Summary members table table-hover">
                     <thead>
@@ -150,7 +154,7 @@
                         #foreach($gm in $page.paginator.records)
 
                         #set($pwdDate = false)
-                        #set($pwdDate = $gm.member.passwordCredentialDate)
+                        #set($pwdDate = $gm.passwordCredentialDate)
                         #set($rowClass = "")
                         #if( $pwdDate )
                         #set($rowClass = "withPassword")
@@ -159,12 +163,12 @@
                         #end
 
                         <tr class="$rowClass">
-                            <td>
-                                <a href="/manageUsers/$gm.member.id">$!gm.member.name</a>
+                            <td class="truncate">    
+                                <a href="/manageUsers/$gm.member.userId/">$!gm.member.name</a>
                             </td>
                             <td>$!gm.member.firstName</td>
                             <td>$!gm.member.surName</td>
-                            <td>$!gm.withinOrg.formattedName</td>
+                            <td>$!gm.orgTitle</td>
                             <td>$!gm.member.phone</td>
                             <td>$!gm.member.email</td>
                             <td>
@@ -173,11 +177,15 @@
                                 #end
                             </td>
                             <td>
-                                <a href="/manageUsers/$gm.member.id" class="btn btn-info">
-                                    <span class="fa fa-pencil"></span>
+                                <a href="/manageUsers/$gm.member.userId/" class="btn btn-info">
+                                    <span class="fa fa-user"></span>
                                 </a>
                             </td>
-                            <td><input type="checkbox" name="toRemoveId" value="$gm.id" /></td>
+                            <td>
+                                #if( $gm.membershipId )
+                                <input type="checkbox" name="toRemoveId" value="$gm.membershipId" />
+                                #end
+                            </td>
                         </tr>
 
 
