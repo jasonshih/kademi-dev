@@ -1,7 +1,8 @@
-.competitionFormWrap{
+.competitionFormWrap {
     position: relative;
 }
-.competitionFormWrap .competitionForm .thankyou{
+
+.competitionFormWrap .competitionForm .thankyou {
     position: absolute;
     padding-top: 50px;
     width: 100%;
@@ -10,40 +11,67 @@
     left: 0;
 }
 
-.rewardItem{
+.rewardItem {
     padding: 0;
     position: relative;
     border: none;
 }
-.rewardItem .rewardItemTitle{
+
+.rewardItem .rewardItemTitle {
     font-size: 22px;
     margin-top: 0;
 }
-.rewardItem .rewardItemTitle a{
+
+.rewardItem .rewardItemTitle a {
     -ms-text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
 }
-.rewardItem .rewardItemDate{
+
+.rewardItem .rewardItemDate {
     font-size: 15px;
     font-style: italic;
 }
-.rewardItem .closedReward{
+
+.rewardItem .closedReward {
     position: absolute;
     top: 13px;
     right: 11px;
     padding: 10px 15px;
     z-index: 1;
 }
-.rewardItem .embed-responsive-item{
+
+.rewardItem .embed-responsive-item {
     background-position: center;
     background-size: cover;
 }
-.rewardItem .rewardItemActions{
+
+.rewardItem .rewardItemActions {
     margin-top: 25px;
 }
-.rewardItem .caption{
+
+.rewardItem .caption {
     padding: 20px;
+}
+
+.promotion-photos .promotion-photo .promotion-photo-inner {
+    position: relative;
+    padding-bottom: 100%;
+    background: no-repeat 50% 50%;
+    background-size: cover;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+}
+
+#myPromotionUpload {
+    position: absolute;
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+}
+
+#myPromotionUpload .dz-message {
+    width: 100%;
 }

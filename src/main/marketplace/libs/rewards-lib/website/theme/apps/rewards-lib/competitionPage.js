@@ -1,70 +1,51 @@
-/**
- * Created by Anh on 7/19/2016.
- */
 $(function () {
-    $("form.entryForm").forms({
+    $('form.entryForm').forms({
         onSuccess: function (resp, form) {
-            flog("onSuccess", resp, form);
+            flog('onSuccess', resp, form);
             var f = $(form);
-            flog("hide", f);
+            flog('hide', f);
             f.hide(1000);
-            f.closest(".competitionForm").find(".thankyou").show(1000);
+            f.closest('.competitionForm').find('.thankyou').show(1000);
         }
     });
-    $("#myUploaded").mupload({
-        url: "uploads/",
-        buttonText: "Upload a photo",
+    
+    var myPromotionUpload = $('#myPromotionUpload');
+    var uploadUrl = myPromotionUpload.attr('data-url');
+    $('#myPromotionUpload').mupload({
+        url: uploadUrl,
+        buttonText: 'Upload a photo',
         oncomplete: function (data, name, href) {
-            $("form input[name=userAttachmentHash]").val(name);
-            var divViewUploaded = $("div.viewUploaded");
-            var img = divViewUploaded.find("img");
-            if (img.length == 0) {
-                img = $("<img/>");
-                divViewUploaded.empty();
-                divViewUploaded.append(img);
-            }
-            img.attr("src", href + "/alt-150-150.png");
-            pulseBorder(divViewUploaded);
+            $('form input[name=userAttachmentHash]').val(name);
+            $('div.viewUploaded').css('background-image', 'url("' + href + '/alt-150-150.png' + '")');
         }
     });
-
-    var rewardQuizes = $(".viewQuiz");
+    
+    var rewardQuizes = $('.viewQuiz');
     rewardQuizes.each(function (i, n) {
         var quiz = $(n);
         var json = quiz.text();
-        quiz.text("");
+        quiz.text('');
         quiz.formRender({
             dataType: 'json',
             formData: json,
-            labelClasses : "control-label",
-            inputClasses : "form-control"
+            labelClasses: 'control-label',
+            inputClasses: 'form-control'
         });
         quiz.show();
     });
-
-    checkViewUploaded();
-
+    
     initOrgSearchPromo();
     initSkuSearchPromo();
-
-    $(".go-again").click(function(e) {
+    
+    $('.go-again').click(function (e) {
         e.preventDefault();
         var f = $(e.target);
-        var div = f.closest(".competitionForm");
-        div.find(".reset-on-resubmit").val("");
-        div.find(".thankyou").hide(1000);
-        div.find(".entryForm").show(1000);
+        var div = f.closest('.competitionForm');
+        div.find('.reset-on-resubmit').val('');
+        div.find('.thankyou').hide(1000);
+        div.find('.entryForm').show(1000);
     });
 });
-function checkViewUploaded() {
-    var div = $(".viewUploaded");
-    log("checkViewUploaded", div);
-    if (div.find("img").length == 0) {
-        div.addClass("noImage");
-    } else {
-        div.removeClass("noImage");
-    }
-}
 
 function initOrgSearchPromo() {
     var orgSearch = new Bloodhound({
@@ -75,7 +56,7 @@ function initOrgSearchPromo() {
             wildcard: '%QUERY'
         }
     });
-
+    
     $('.relatedOrgTitlePromo').typeahead({
         highlight: true
     }, {
@@ -83,22 +64,15 @@ function initOrgSearchPromo() {
         limit: 10,
         source: orgSearch,
         templates: {
-            empty: [
-                '<div class="empty-message">',
-                'No existing stores were found.',
-                '</div>'
-            ].join('\n'),
-            suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{title}}</strong>'
-                + '</div>')
+            empty: '<div class="empty-message">No existing stores were found.</div>',
+            suggestion: Handlebars.compile('<div><strong>{{title}}</strong></div>')
         }
     });
-
+    
     $('.relatedOrgTitlePromo').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-
+        
         form.find('input[name=relatedOrg]').val(sug.orgId);
     });
 }
@@ -110,8 +84,8 @@ function initSkuSearchPromo() {
         remote: {
             url: window.location.pathname + '?searchProducts=%QUERY',
             wildcard: '%QUERY',
-            filter: function(data) {
-                var newData = data.map(function(item){
+            filter: function (data) {
+                var newData = data.map(function (item) {
                     item.tokens.splice(2, 1);
                     return {value: item.value, skuTitle: item.tokens.join(' - ')}
                 })
@@ -119,7 +93,7 @@ function initSkuSearchPromo() {
             }
         }
     });
-
+    
     $('.relatedProductSkuTitlePromo').typeahead({
         highlight: true
     }, {
@@ -127,22 +101,15 @@ function initSkuSearchPromo() {
         limit: 10,
         source: orgSearch,
         templates: {
-            empty: [
-                '<div class="empty-message">',
-                'No existing SKUs were found.',
-                '</div>'
-            ].join('\n'),
-            suggestion: Handlebars.compile(
-                '<div>'
-                + '<span>{{skuTitle}}</span>'
-                + '</div>')
+            empty: '<div class="empty-message">No existing SKUs were found.</div>',
+            suggestion: Handlebars.compile('<div><span>{{skuTitle}}</span></div>')
         }
     });
-
+    
     $('.relatedProductSkuTitlePromo').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-
+        
         form.find('input[name=relatedProductSku]').val(sug.value);
     });
 }

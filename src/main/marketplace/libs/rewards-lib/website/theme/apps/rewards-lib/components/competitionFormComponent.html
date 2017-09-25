@@ -4,6 +4,24 @@
 #set ( $promotionPage = $page.find("/rewards").child("$promotion") )
 #end
 
+#if (!$photosPerRow)
+#set ($photosPerRow = 3)
+#end
+#set ($photosPerRow = $formatter.toInteger( $photosPerRow ))
+
+#set ($photoClass = "col-sm-4")
+#if ($photosPerRow == 1)
+#set ($photoClass = "col-sm-12")
+#elseif ($photosPerRow == 2)
+#set ($photoClass = "col-sm-6")
+#elseif ($photosPerRow == 3)
+#set ($photoClass = "col-sm-4")
+#elseif ($photosPerRow == 4)
+#set ($photoClass = "col-sm-3")
+#end
+
+#set ($uploadPath = $promotionPage.href + "uploads")
+
 <div class="panel panel-default">
     <div class="panel-body competitionFormWrap">
         <div class="competitionForm">
@@ -17,43 +35,36 @@
             </div>
             #if( !$promotionPage.onePerRecipient || $promotionPage.entriesForUser.size() == 0 )
             <form class="entryForm" method="POST" action="$request.absolutePath">
-                <input type="hidden" name="entry" value="true"/>
+                <input type="hidden" name="entry" value="true" />
                 <div class="alert alert-danger pageMessage"></div>
-                
+        
                 #if( $user )
                 <p class="lead">Submit as $user.formattedName</p>
                 #else
-                
                 <div class="form-group">
                     <label class="control-label" for="firstName">First name</label>
-                    <input type="text" name="firstName" id="firstName" class="required form-control"
-                            placeholder="Enter your first name" value="$!user.firstName"/>
+                    <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="surName">Surname</label>
-                    <input type="text" name="surName" id="surName" class="form-control"
-                            placeholder="Enter your surname" value="$!user.surName"/>
+                    <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="email">Email</label>
-                    <input type="text" name="email" id="email" class="required form-control"
-                            placeholder="Enter your email address" value="$!user.email"/>
+                    <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="phone">Phone</label>
-                    <input type="text" name="phone" id="phone" class="form-control"
-                            placeholder="Enter your best contact number" value="$!user.phone"/>
+                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
                 </div>
-                
-                
+        
                 #if( $contactPage.hasOptins() )
                 <div class="form-group">
                     <div class="col-sm-12">
                         <div class="checkbox">
                             #foreach($optin in $contactPage.optins)
                             <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
-                                <input type="checkbox" name="optins" value="$optin.optinGroup.name"
-                                        id="optins_${optin.optinGroup.name}"/>
+                                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
                                 $optin.message
                             </label>
                             #end
@@ -61,7 +72,7 @@
                     </div>
                 </div>
                 #end
-                
+        
                 #if( $contactPage.captchaApp )
                 <div class="form-group">
                     <div class="col-sm-9">
@@ -70,62 +81,60 @@
                 </div>
                 #end
                 #end
-                
+        
                 #if( $promotionPage.selectOrg )
                 <div class="form-group">
                     <label class="control-label" for="phone">Your Organisation</label>
-                    <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required"
-                            placeholder="Enter your organisation" value=""/>
-                    <input type="hidden" name="relatedOrg"/>
+                    <input type="text" name="relatedOrgTitle" class="relatedOrgTitlePromo form-control required" placeholder="Enter your organisation" value="" />
+                    <input type="hidden" name="relatedOrg" />
                 </div>
                 #end
-                
+        
                 #if( $promotionPage.selectProduct )
                 <div class="form-group">
                     <label class="control-label" for="phone">Product</label>
-                    <input type="text" name="relatedProductSkuTitle"
-                            class="relatedProductSkuTitlePromo form-control required reset-on-resubmit"
-                            placeholder="Enter the product code" value=""/>
+                    <input type="text" name="relatedProductSkuTitle" class="relatedProductSkuTitlePromo form-control required reset-on-resubmit" placeholder="Enter the product code" value="" />
                     <input type="hidden" class="reset-on-resubmit" name="relatedProductSku">
                 </div>
                 #end
-                
-                
+        
+        
                 #if($promotionPage.userUploadEnabled )
                 <div class="entryFormItem uploadItem">
                     <h3>Photo Gallery</h3>
-                    <ul class="photos">
-                        <li class="first">
-                            <div class="viewUploaded">
-                                #if( $promotionPage.userAttachmentHash )
-                                <img src="uploads/$promotionPage.userAttachmentHash/alt-150-150.png" />
-                                #else
-                                Your photo
-                                #end
+                    <div class="promotion-photos">
+                        <div class="row">
+                            #if ($showUserPhoto == "true")
+                            #set ($userPhoto = "/static/image/photo_holder.png")
+                            #if( $promotionPage.userAttachmentHash )
+                            #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-150-150.pn")
+                            #end
+                            <div class="$photoClass promotion-photo promotion-photo-user">
+                                <div class="viewUploaded promotion-photo-inner #if( !$promotionPage.userAttachmentHash ) noImage #end" style="background-image: url('$userPhoto')"></div>
+                        
+                                <div id="myPromotionUpload" data-url="${uploadPath}/"></div>
+                                <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash" />
                             </div>
-                            
-                            <div class="input" id='myUploaded'></div>
-                            <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash"
-                                    value="$!page.userAttachmentHash"/>
-                        </li>
-                        #foreach($entry in $promotionPage.child("uploads").children)
-                        <li><a href="uploads/$entry.name/alt-600-400.png"><img
-                                src="uploads/$entry.name/alt-150-150.png"/></a></li>
-                        #end
-                    </ul>
-                    <div style="clear: both"></div>
+                            #end
+                            #foreach($entry in $promotionPage.child("uploads").children)
+                            <div class="$photoClass promotion-photo">
+                                <a href="${uploadPath}/$entry.name/alt-600-400.png" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-150-150.png')"></a>
+                            </div>
+                            #end
+                        </div>
+                    </div>
                 </div>
                 #end
-                
+        
                 #if($promotionPage.quizEnabled )
                 <div class="entryFormItem quizItem viewQuiz" style='display: none'>$!page.quizHtml</div>
                 #end
-                
+        
                 #if( $promotionPage.isEnterable() )
                 #if( $promotionPage.hasTerms )
                 <div class="form-group">
                     <label for="terms">
-                        <input id="terms" name="terms" required="true" class="required" type="checkbox"/>
+                        <input id="terms" name="terms" required="true" class="required" type="checkbox" />
                         Please check this box to confirm you have read our terms and conditions*
                         <a href="terms" target="_blank"> Click here to view full terms and conditions. </a>
                     </label>
@@ -158,8 +167,7 @@
                         #foreach($entry in $promotionPage.child("uploads").children)
                         <li>
                             #if( $entry.rewardEntry.awardedTo != $user.thisUser )
-                            <a href="uploads/$entry.name/alt-600-400.png"><img
-                                    src="uploads/$entry.name/alt-150-150.png"/></a>
+                            <a href="uploads/$entry.name/alt-600-400.png"><img src="uploads/$entry.name/alt-150-150.png" /></a>
                             #end
                         </li>
                         #end

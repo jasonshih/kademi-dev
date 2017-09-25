@@ -25,6 +25,22 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
     
+                    form.find('.select-photos-per-row').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+        
+                        component.attr('data-photos-per-row', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+    
+                    form.find('.chk-show-user-photo').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+        
+                        component.attr('data-show-user-photo', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+    
                     form.find('#chkFirstName').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -129,6 +145,8 @@
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-promotion').val(dataAttributes['data-promotion'] || '');
+            form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '2');
+            form.find('.chk-show-user-photo').prop('checked', dataAttributes['data-show-user-photo'] === 'true');
             form.find('#chkFirstName').prop('checked', dataAttributes['data-first-name'] === 'true');
             form.find('#chkSurname').prop('checked', dataAttributes['data-sur-name'] === 'true');
             form.find('#chkEmail').prop('checked', dataAttributes['data-email'] === 'true');
