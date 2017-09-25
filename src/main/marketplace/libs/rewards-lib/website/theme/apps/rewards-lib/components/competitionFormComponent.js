@@ -17,11 +17,11 @@
                 success: function (resp) {
                     form.html(resp);
     
-                    form.find('.select-promotion').on('click', function () {
+                    form.find('.select-promotion').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
         
-                        component.attr('data-promotion', this.checked);
+                        component.attr('data-promotion', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
     
