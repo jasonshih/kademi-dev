@@ -600,7 +600,8 @@
                 var visRules = form.find(".visible-rules");
                 visRules.on('change', function () {
                     var container = keditor.getSettingContainer();
-                    container.find('.container-bg').attr('data-expr', this.value);
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-expr', this.value);
                 });                  
                 
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
