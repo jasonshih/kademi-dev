@@ -18,6 +18,21 @@ function doSearch() {
     });
 }
 
+function initSelectAll() {
+    $("body").on("click", ".selectAll", function (e) {
+        var node = $(e.target);
+        log("selectall", node, node.is(":checked"));
+        var chkName = node.attr("name");
+        var checked = node.is(":checked");
+        checkBoxes = $("#vouchers-table-body").find("td input[type=checkbox][name=" + chkName + "]");
+        if (checked) {
+            checkBoxes.attr("checked", "true");
+        } else {
+            checkBoxes.removeAttr("checked");
+        }
+    });
+}
+
 function initSearchVoucher() {
     $("#voucher-query").on({
         keyup: function () {
