@@ -41,10 +41,13 @@
                         <label for="status" class="input-group-addon">Status </label>
                         <select name="status" id="status" class="form-control">
                             <option value="">[ Select a status ]</option>
-                            <option value="c" #if( $request.params.status == "c") selected="selected" #end> Complete</option>
+                            <option value="c" #if( $request.params.status == "c") selected="selected" #end>Complete</option>
+                            <option value="converted" #if( $request.params.status == "converted") selected="selected" #end>Converted</option>
                             <option value="f" #if( $request.params.status == "f") selected="selected" #end>Failed</option>
+                            <option value="o" #if( $request.params.status == "o") selected="selected" #end>Opened</option>
                             <option value="p" #if( $request.params.status == "p") selected="selected" #end>Pending</option>
-                            <option value="r" #if( $request.params.status == "r") selected="selected" #end>Retrying</option>                                                       
+                            <option value="q" #if( $request.params.status == "q") selected="selected" #end>Queue</option>
+                            <option value="r" #if( $request.params.status == "r") selected="selected" #end>Retrying</option>
                         </select>
                     </div>
                 </div>

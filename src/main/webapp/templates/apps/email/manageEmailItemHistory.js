@@ -127,10 +127,14 @@ function doSearch() {
     var query = $("#email-query").val();
     var status = $("#status").val();
     var job = $("#job").val();
+    
+    var newURL = window.location.pathname + "?emailStats&q=" + query + "&status=" + status + "&job=" + job
+    var uri = new URI(newURL);
+    window.history.pushState('', document.title, uri.toString());
 
     $.ajax({
         type: "GET",
-        url: "?emailStats&q=" + query + "&status=" + status + "&job=" + job,
+        url: uri.toString(),
         dataType: 'json',
         success: function (json) {
             flog('response', json);
