@@ -56,6 +56,10 @@
     padding: 20px;
 }
 
+.promotion-photos {
+    margin-bottom: 20px;
+}
+
 .promotion-photos .promotion-photo .promotion-photo-inner {
     position: relative;
     padding-bottom: 100%;
