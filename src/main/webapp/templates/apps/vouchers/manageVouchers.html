@@ -69,6 +69,7 @@
                                 </button>
                                 <ul role="menu" class="dropdown-menu pull-right">
                                     <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    <li><a href="#" data-vt="$v.name" class="hard-delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Hard Delete Vouchers</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -100,11 +101,11 @@
                             <input type="text" class="form-control required" required="true" id=newTitle name="newTitle" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Create voucher type</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Create voucher type</button>
+                </div>
             </form>
         </div><!-- /.modal -->
 
@@ -138,11 +139,11 @@
                             <input type="text" class="form-control required" required="true" id="numberToSell" name="numberToSell" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Sell vouchers</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Sell vouchers</button>
+                </div>
             </form>
         </div><!-- /.modal -->
 
@@ -161,12 +162,42 @@
             </div>
         </div><!-- /.modal -->
 
+        <div id="hardDeleteVouchers" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Are you sure you want to hard delete the vouchers?</h4>
+                    </div>
+
+                    <form action="#" method="POST" class="form-horizontal createLanguage">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <input type="hidden" name="vt" id="vt" value=""/>
+                            <input type="hidden" name="hardDelete" id="action" value="true"/>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label" for="password">Enter your password to confirm:</label>
+                                <div class="col-md-7">
+                                    <input class="form-control required" type="password" id="password" name="password" maxlength="30"  />
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript">
             $(function () {
                 flog("initManageVouchers");
                 initCreateVoucherType();
                 initDeleteVoucherType();
                 initSellVouchers();
+                hardDelete();
             });
 
             function initSellVouchers() {
@@ -223,6 +254,33 @@
                         createVoucherTypeModal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
                         $('#voucher-types-table').reloadFragment();
+                    }
+                });
+            }
+
+            function hardDelete() {
+                var hardDeleteVouchersModal = $("#hardDeleteVouchers");
+
+                $(".hard-delete-voucher-type").on("click", function () {
+                    var vt = $(this).data("vt");
+                    hardDeleteVouchersModal.find("#vt").val(vt);
+                    hardDeleteVouchersModal.modal("show");
+                });
+
+
+                var form = hardDeleteVouchersModal.find("form");
+                form.forms({
+                    onSuccess: function (resp) {
+                        flog('Success: ', resp);
+                        var msj = (resp.messages[0] === undefined) ? "Vouchers were deleted" : resp.messages[0];
+                        Msg.success(msj);
+                        hardDeleteVouchersModal.modal("hide");
+                        $("#voucher-types-table").reloadFragment();
+                    },
+                    error: function (resp) {
+                        flog('Error: ', resp);
+                        var msj = (resp.messages[0] === undefined) ? "Error" : resp.messages[0];
+                        Msg.error(msj);
                     }
                 });
             }
