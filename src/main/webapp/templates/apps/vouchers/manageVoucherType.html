@@ -402,7 +402,7 @@
                         Msg.info("Created vouchers");
                         $("#createVouchersModal").modal('hide');
                         $("#vouchers-table-body").reloadFragment({
-                            whenComplete: reloadVouchers
+                            whenComplete: setTimeout(reloadVouchers, 500)
                         });
                     }
                 });
@@ -468,7 +468,8 @@
             }
 
             function reloadVouchers() {
-                $("#vouchers-table-body").reloadFragment({
+                $("#vouchers").reloadFragment({
+                    url: window.location.href,
                     whenComplete: function () {
                         $('abbr.timeago').timeago();
                     }
