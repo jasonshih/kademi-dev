@@ -128,13 +128,13 @@ function doSearch() {
     var status = $("#status").val();
     var job = $("#job").val();
     
-    var newURL = window.location.pathname + "?emailStats&q=" + query + "&status=" + status + "&job=" + job
+    var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
     var uri = new URI(newURL);
     window.history.pushState('', document.title, uri.toString());
 
     $.ajax({
         type: "GET",
-        url: uri.toString(),
+        url: uri.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);
