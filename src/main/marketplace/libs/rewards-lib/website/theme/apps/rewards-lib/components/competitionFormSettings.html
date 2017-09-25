@@ -1,5 +1,17 @@
 <form class="form-horizontal">
     <div class="form-group">
+        <label class="col-sm-12"><strong>Promotion</strong></label>
+        <div class="col-sm-12">
+            <select class="form-control select-promotion">
+                <option value=""> - None -</option>
+                #foreach ($reward in $applications.rewards.allRewards)
+                <option value="$reward.name">$reward.title</option>
+                #end
+            </select>
+            <small class="help-block">If you place this component in promotion page, just leave this field blank</small>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-12"><strong>Available fields</strong></label>
         <div class="col-sm-12">
             <div class="checkbox">
