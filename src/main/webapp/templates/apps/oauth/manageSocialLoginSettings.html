@@ -40,8 +40,54 @@
                         Posters
                     </div>
                     <div class="panel-body">
-                        Panel content
+                        <div class="clearfix">
+                            <form id="social-logins-add-poster-form" class="form-inline pull-right">
+                                <div class="form-group">
+                                    <select name="newPosterService" class="form-control required">
+                                        <option>Add a new service</option>
+                                        #foreach($p in $page.socialPostServices)
+                                        $formatter.option($p.id, $p.title, null)
+                                        #end 
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add</button>
+                            </form>
+                        </div>
                     </div>
+                    <table id="socialPosters-table" class="table">
+                        <colgroup>
+                            <col/>
+                            <col/>
+                            <col width="108px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($a in $page.availablePostingServices)
+                            <tr data-title="$a.title" data-id="$a.id">
+                                <td>$a.title</td>
+                                <td>
+                                    #if($a.linkedTo)
+                                    <span class="label label-success">Linked to $a.linkedTo.formattedName()</span>
+                                    #else
+                                    <a href="/oauth?gotoPosterProvider=${a.id}" class="btn btn-success btn-${a.id.replace('kademi_', '')}"><i class="fa fa-${a.id.replace('kademi_', '')}"></i> | Connect with $a.title</a>
+                                    #end
+                                </td>
+                                <td class="text-right">
+                                    #if($a.availSettings && !$a.availSettings.empty)
+                                    <button type="button" class="btn btn-info btn-edit-poster" data-settings="$formatter.htmlEncode($formatter.toJson($a.settings))" data-fields="$formatter.htmlEncode($formatter.toJson($a.availSettings))"><i class="fa fa-pencil fa-fw"></i></button>
+                                    #end
+                                    <button type="button" class="btn btn-danger btn-delete-poster" title="Delete $a.title"><i class="fa fa-trash fa-fw"></i></button>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -157,6 +203,29 @@
                 </form>
             </div>
         </div>
+
+        <div id="modal-social-poster-edit" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <input type="hidden" name="editPosterSettings" value="true"/>
+                        <input type="hidden" name="posterId" value=""/>
+                        
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Edit <span class="poster-title"></span></h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <script type="text/javascript">
             var oauth2Templates = $formatter.toJson($page.oauth2Templates);
         </script>

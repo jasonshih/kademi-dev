@@ -125,11 +125,108 @@
         add_provider_modal.modal('show');
     }
 
+    function initAddSocialPoster() {
+        var form = $('#social-logins-add-poster-form');
+
+        form.forms({
+            onSuccess: function (resp) {
+                Msg.success(resp.messages);
+                form.trigger('reset');
+                $('#socialPosters-table').reloadFragment();
+            }
+        });
+    }
+
+    function initDeleteSocialPoster() {
+        $('body').on('click', '.btn-delete-poster', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var row = btn.closest('tr');
+            var title = row.data('title');
+            var id = row.data('id');
+
+            Kalert.confirm('You want to delete ' + title + '?', 'Ok', function () {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        deletePosterService: id
+                    },
+                    success: function (resp) {
+                        if (resp.status) {
+                            Msg.success(resp.messages);
+                            $('#socialPosters-table').reloadFragment();
+                        } else {
+                            Msg.warning(resp.messages);
+                        }
+                    },
+                    error: function () {
+                        Msg.error('Oh No! Something went wrong!');
+                    }
+                });
+            });
+        });
+    }
+
+    function initEditPosterSettings() {
+        var modal = $('#modal-social-poster-edit');
+        var form = modal.find('form');
+
+        $('body').on('click', '.btn-edit-poster', function (e) {
+            e.preventDefault();
+
+            var btn = $(this);
+            var row = btn.closest('tr');
+            var id = row.data('id');
+            var title = row.data('title');
+
+            var json = btn.data('fields');
+            var settings = btn.data('settings');
+
+            form.find('[name=editPosterSettings]').val(true);
+            form.find('[name=posterId]').val(id);
+            form.find('.poster-title').text(title);
+
+            var inputFields = [];
+
+            for (var i in json) {
+                var val = '';
+                if (settings.hasOwnProperty(i)) {
+                    val = settings[i];
+                }
+                inputFields.push(
+                        '<div class="form-group">' +
+                        '  <label for="settings_' + i + '" class="col-sm-2 control-label">' + json[i] + '</label>' +
+                        '  <div class="col-sm-10">' +
+                        '    <input type="text" class="form-control" id="settings_' + i + '" name="' + i + '" placeholder="' + json[i] + '" value="' + val + '">' +
+                        '  </div>' +
+                        '</div>');
+            }
+
+            form.find('.modal-body').empty().append(inputFields);
+
+            modal.modal('show');
+        });
+
+        form.forms({
+            onSuccess: function (resp) {
+                modal.modal('hide');
+                form.trigger('reset');
+                Msg.success(resp.messages);
+            }
+        });
+    }
+
     // Run init files
     $(function () {
         initLoginProviderModal();
         initAddLoginProvider();
         initEditLoginProvider();
         initDeleteLoginProvider();
+
+        initAddSocialPoster();
+        initDeleteSocialPoster();
+        initEditPosterSettings();
     });
 })(jQuery);
