@@ -1,12 +1,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>$view.title</title>
-        <script type="text/javascript" src="voucher.js">//</script>
+        <script type="text/javascript" src="voucher.js?v0001">//</script>
     </head>
     <body>
         <div class="row">
-            <button type="button" class="btn btn-danger btn-remove-vouchers pull-right"><i class="fa fa-trash"></i> Delete Vouchers</button>
-            <a href="vouchers.csv" class="btn btn-default pull-right download-csv"><i class="glyphicon glyphicon-download"></i> Export CSV</a>
+            <div class="col-md-11">
+                <button type="button" class="btn btn-danger btn-remove-vouchers pull-right"><i class="fa fa-trash"></i> Delete Vouchers</button>
+            </div>
+            <div class="col-md-1">
+                <a href="vouchers.csv" class="btn btn-default pull-right download-csv"><i class="glyphicon glyphicon-download"></i> Export CSV</a>
+            </div>
             <br/><br/>
         </div>
         <div class="panel panel-default">
@@ -79,9 +83,9 @@
                                 <td>$!page.statusText($v.status)</td>
                                 <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
                                 <td>#if($v.voucher.allocatedTo)
-                                        $v.voucher.allocatedTo.name
+                                    $v.voucher.allocatedTo.name
                                     #else
-                                        $!v.voucher.allocatedToId
+                                    $!v.voucher.allocatedToId
                                     #end
                                 </td>
                                 <td>
@@ -106,10 +110,7 @@
             </div>
         </div>
         <script>
-            initSearchVoucher();
-            initDeleteVouchers();
-            initDownloadCSV();
-            initSelectAll();
+            initVouchersPage();
         </script>
     </body>
 </html>

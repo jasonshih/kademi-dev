@@ -1,3 +1,10 @@
+function initVouchersPage() {
+    initSearchVoucher();
+    initDeleteVouchers();
+    initDownloadCSV();
+    initSelectAll();
+}
+
 function doSearch() {
     var newUrl = window.location.pathname + "?q=" + $("#voucher-query").val() + "&status=" + $("#status").val() + "&voucherType=" + $("#voucherType").val();
     flog("New URL ", newUrl);
