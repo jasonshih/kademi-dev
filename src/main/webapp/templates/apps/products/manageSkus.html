@@ -16,6 +16,12 @@
         <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
     </head>
     <body>
+        #if( $request.params.reloadProductId )
+            #set( $product = $page.findProduct($request.params.reloadProductId) )
+            <table>
+            #renderProduct($product)
+            </table>
+        #else        
         <p>
         <div class="btn-group" role="group">
             <a href="/product-images/" class="btn btn-sm btn-info" role="button"><i class="fa fa-picture-o"></i> Product images</a>
@@ -67,52 +73,7 @@
                     </thead>
                     <tbody id="productsTableBody" class="pagination-results">
                         #foreach($product in $page.paginator.records)
-                            #foreach($variant in $page.variants($product))
-                                #set($foundSku = false)
-                                #if($variant.sku)
-                                    #set($foundSku = true)
-                                #end
-                                <tr id="product-row-$product.id" data-skuid="$!variant.productSku.id">
-                                    <td data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
-                                        #if($variant.imageUrl)
-                                            <div class="col-md-12 product-image-thumb">
-                                                <a href="$variant.imageUrl" class="thumbnail image-change">
-                                                    <img src="$variant.imageUrl/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
-                                                </a>
-                                            </div>
-                                            <button class="btn btn-xs btn-warning btn-sku-img-del"><i class="fa fa-trash"></i> Remove Image</button>
-                                        #else
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" title="Select Image" class="btn btn-success btn-option-img"><i class="fa fa-image"></i></button>
-                                                <button type="button" title="Upload Image" class="btn btn-success #if($foundSku) btn-option-img-upload #end"><i class="fa fa-upload"></i></button>
-                                            </div>
-                                        #end
-                                    </td>
-                                    <td><a href="/products/$product.id">$product.title</a></td>
-                                    <td>
-                                        #foreach($opt in $variant.options)
-                                            <strong>$opt.productParameter.title:</strong> $opt.title
-                                            #if(!$foreach.last)
-                                                &nbsp;-&nbsp;
-                                            #end
-                                        #end
-                                    </td>
-                                    <td>
-                                        <input class="input-sku form-control" type="text" value="$!variant.sku" />
-                                    </td>
-                                    <td>
-                                        <input class="input-sku-Title form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="text" value="$!variant.skuTitle" />
-                                    </td>
-                                    <td>
-                                        <input class="input-sku-baseCost form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="number" value="$!variant.baseCost" />
-                                    </td>
-                                    #foreach($loc in $page.allLocations)
-                                        <td>
-                                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="" />
-                                        </td>
-                                    #end
-                                </tr>
-                            #end
+                            #renderProduct($product)
                         #end
                     </tbody>
                     <tfoot id="pointsFooter">
@@ -191,6 +152,57 @@
                 </div>
             </div>
         </div>
+        <!-- End if reloadProductId -->
+        #end
+        
+        #macro( renderProduct $product )
+            #foreach($variant in $page.variants($product))
+                #set($foundSku = false)
+                #if($variant.sku)
+                    #set($foundSku = true)
+                #end
+                <tr id="product-row-$variant.id" data-skuid="$!variant.productSku.id" data-productid="$product.id">
+                    <td data-selectableimg="$!variant.selectableImageHashes" data-skuid="$!variant.productSku.id" data-product="$product.id" data-options="$variant.optionIds">
+                        #if($variant.imageUrl)
+                            <div class="col-md-12 product-image-thumb">
+                                <a href="$variant.imageUrl" class="thumbnail image-change">
+                                    <img src="$variant.imageUrl/alt-150-150.png" class="responsive" style="max-height: 80px; max-width: 80px;" />
+                                </a>
+                            </div>
+                            <button class="btn btn-xs btn-warning btn-sku-img-del"><i class="fa fa-trash"></i> Remove Image</button>
+                        #else
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" title="Select Image" class="btn btn-success btn-option-img"><i class="fa fa-image"></i></button>
+                                <button type="button" title="Upload Image" class="btn btn-success #if($foundSku) btn-option-img-upload #end"><i class="fa fa-upload"></i></button>
+                            </div>
+                        #end
+                    </td>
+                    <td><a href="/products/$product.id">$product.title</a></td>
+                    <td>
+                        #foreach($opt in $variant.options)
+                            <strong>$opt.productParameter.title:</strong> $opt.title
+                            #if(!$foreach.last)
+                                &nbsp;-&nbsp;
+                            #end
+                        #end
+                    </td>
+                    <td>
+                        <input class="input-sku form-control" type="text" value="$!variant.sku" />
+                    </td>
+                    <td>
+                        <input class="input-sku-Title form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="text" value="$!variant.skuTitle" />
+                    </td>
+                    <td>
+                        <input class="input-sku-baseCost form-control" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end type="number" value="$!variant.baseCost" />
+                    </td>
+                    #foreach($loc in $page.allLocations)
+                        <td>
+                            <input data-locid="$loc.id" type="number" #if(!$foundSku)disabled="disabled" placeholder="Please enter a SKU code first"#end class="input-sku-stock form-control" value="" />
+                        </td>
+                    #end
+                </tr>
+            #end        
+        #end
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>

@@ -399,8 +399,9 @@
             dataType: "json",
             success: function (resp) {
                 if (resp.status) {
+                    flog("newSku", newSku);
                     Msg.success(resp.messages);
-                    reloadRow(rowId);
+                    reloadRow(rowId, productId);
                 } else {
                     Msg.error(resp.messages);
                 }
@@ -515,7 +516,7 @@
         });
     }
 
-    function reloadRow(reloadId) {
+    function reloadRow(reloadId, productId) {
         flog("Reloading row", reloadId);
         $("#" + reloadId).reloadFragment({
             whenComplete: function () {
@@ -530,7 +531,7 @@
                     initUpCropImage(btn, skuId, rowId);
                 });
             },
-            url: window.location.href
+            url: window.location.href + "?reloadProductId=" + productId
         });
     }
 
