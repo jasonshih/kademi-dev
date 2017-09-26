@@ -1,5 +1,4 @@
-
-(function($){
+(function ($) {
     function doAddToCart(href) {
         $.ajax({
             type: 'POST',
@@ -17,9 +16,9 @@
             }
         });
     }
-
-    $(document).ready(function(){
-        if($('.product-detail').length > 0) {
+    
+    $(document).ready(function () {
+        if ($('.product-detail').length > 0) {
             $("abbr.timeago").timeago();
             $(".cart-add").click(function (e) {
                 e.preventDefault();
