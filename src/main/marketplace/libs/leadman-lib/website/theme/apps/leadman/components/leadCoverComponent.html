@@ -116,13 +116,9 @@
         </a>
         <ul class="dropdown-menu">
             <a href="#" class="createTagModal">
-                <li style="padding: 3px 15px">
-                    <strong>Create and add tag</strong>
-                </li>
+                <li class="dropdown-header"><strong>Create and add tag</strong></li>
             </a>
-            <li style="padding: 3px 15px">
-                <strong>Quick add</strong>
-            </li>
+            <li class="dropdown-header"><strong>Quick add</strong></li>
             #foreach($group in $page.tags)
                 <li class="addTag">
                     <a href="$group.name">
