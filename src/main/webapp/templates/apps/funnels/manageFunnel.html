@@ -33,7 +33,7 @@
                 PUBLISH
             </a>
             <a href="${currentBranch.parent.href}manageBranches" class="btn btn-sm btn-primary">
-               <i class="fa fa-gear"></i>
+                <i class="fa fa-gear"></i>
                 Manage versions
             </a>
             #end
@@ -123,14 +123,23 @@
                     <form class="form-horizontal form-properties" action="$page.href" method="post">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div><a href="/repositories/$page.name/" class="btn btn-sm btn-success">Edit funnel as Text editor</a></div>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <a href="/repositories/$folder.name/$page.name/texteditor?fileName=funnel.json" class="btn btn-sm btn-info" target="_blank">
+                                        <span class="fa fa-edit"></span>
+                                        Edit journey
+                                    </a>
+                                    <a href="/repositories/$folder.name/$page.name/" class="btn btn-sm btn-info" target="_blank">
+                                        <span class="fa fa-folder-open"></span>
+                                        File manager
+                                    </a>                                    
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="visible-xs">
-                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-success" type="submit">Save</button>
                                 </div>
                                 <div class="text-right hidden-xs">
-                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-success" type="submit">Save</button>
                                 </div>
                             </div>
                         </div>
