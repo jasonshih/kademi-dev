@@ -3,6 +3,40 @@
 #set($pageName= "/license?refreshLicense=true")
 <script>
     $(document).ready(function () {
+        function initKademiSubscription() {
+            initMakeTokenPayment();
+            initMakePayment();
+            initClearPaymentDetails();
+            initDuePayment();
+            initProductSelect();
+            initPay();
+        }
+        
+        function successResponse(data) {
+            flog("successResponse", data);
+            if (data.status) {
+                $("#paymentDetailsModal").modal("hide");
+                //$("#manageSubscriptionContent").hide();
+                $("#paymentSuccessful").show();
+            } else {
+                var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
+                Msg.error(msg);
+            }
+            $("#paymentProgressBar").hide();
+            $('#paymentTransactions').reloadFragment({url: window.location.href});
+            $('#manageSubscriptionContent').reloadFragment({
+                url: window.location.href,
+                whenComplete: initKademiSubscription
+            });
+            $("#productName").val("");
+        }
+
+        function errorResponse(data) {
+            flog("errorResponse", data);
+            $("#paymentProgressBar").hide();
+            $("#productName").val("");
+            Msg.error("Error attempting to process payment: " + data.message);
+        }
 
         function showSweetAlert(option) {
             swal({
@@ -16,45 +50,6 @@
                 showLoaderOnConfirm: false
             }, typeof option.callback === 'function' ? option.callback : null);
         }
-
-        $("#clearPaymentDetails").on("click", function () {
-            var option = {
-                title: "Are you sure you want to clear your payment details?",
-                message: "",
-                type: 'warning',
-                btnClass: 'btn-danger',
-                btnText: "Clear details",
-                callback: clearDetails
-            };
-            showSweetAlert(option);
-        });
-
-        $(".makeTokenPayment").on("click", function () {
-            var container = "#"+$(this).data("container");
-            if ($(container).find('input[name=product]:checked').val() !== undefined) {
-                var option = {
-                    title: "Are you sure you want to proceed?",
-                    message: "",
-                    type: 'info',
-                    btnClass: 'btn-info',
-                    btnText: "Pay",
-                    callback: makeTokenPayment
-                };
-                showSweetAlert(option);
-            } else {
-                Msg.error("Please, select a item.");
-            }
-        });
-
-        $("#makePaymentBtn").on("click", function () {
-            var container = $("#changePlan");
-            if ($(container).find('input[name=product]:checked').val() !== undefined) {
-                $("#duePayment").val(false);
-                $("#paymentDetailsModal").modal("show");
-            } else {
-                Msg.error("Please, select a plan.");
-            }
-        });
 
         function clearDetails() {
             flog("clearing details");
@@ -77,6 +72,20 @@
             });
         }
 
+        function initClearPaymentDetails() {
+            $("#clearPaymentDetails").on("click", function () {
+                var option = {
+                    title: "Are you sure you want to clear your payment details?",
+                    message: "",
+                    type: 'warning',
+                    btnClass: 'btn-danger',
+                    btnText: "Clear details",
+                    callback: clearDetails
+                };
+                showSweetAlert(option);
+            });
+        }
+
         function makeTokenPayment() {
             flog("make Token Payment");
             $.ajax({
@@ -95,89 +104,106 @@
                 }
             });
         }
-
-        $("#duePaymentBtn").on("click", function () {
-            var container = $("#duePayments");
-            if ($(container).find('input[name=product]:checked').val() !== undefined) {
-                $("#duePayment").val(true);
-                $("#paymentDetailsModal").modal("show");
-            } else {
-                Msg.error("Please, select the due payment.");
-            }
-        });
-
-        $(".productSelected").on("click", function () {
-            $("#TotalAmount").val($(this).val());
-            $("#productName").val($(this).parent().find(".productName").val());
-        });
-
-        function successResponse(data) {
-            flog("successResponse", data);
-            if (data.status) {
-                $("#paymentDetailsModal").modal("hide");
-                $("#manageSubscriptionContent").hide();
-                $("#paymentSuccessful").show();
-            } else {
-                var msg = (data.messages[0] === undefined) ? "There was a problem. Please see the transaction history for details" : data.messages[0];
-                Msg.error(msg);
-            }
-            $("#paymentProgressBar").hide();
-            $('#duePayments').reloadFragment({url: window.location.href});
-            $('#paymentTransactions').reloadFragment({url: window.location.href});
-        }
-
-        function errorResponse(data) {
-            flog("errorResponse", data);
-            $("#paymentProgressBar").hide();
-            Msg.error("Error attempting to process payment: " + data.message);
-        }
-
-        $("body").on('click', '#paymentBtn', function (e) {
-            e.preventDefault();
-            $("#paymentProgressBar").show();
-
-            var num = $('#Number').val();
-            var cvn = $('#CVN').val();
-            flog("payment", num, cvn);
-
-            $.ajax({
-                url: "",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    payment: true,
-                    duePayment: $("#duePayment").val(),
-                    name: $('#Name').val(),
-                    expiryMonth: $('#ExpiryMonth').val(),
-                    expiryYear: $('#ExpiryYear').val(),
-                    totalAmount: $('#TotalAmount').val(),
-                    productName: $("#productName").val(),
-                    currencyCode: $('#CurrencyCode').val(),
-                    firstName: $('#firstName').val(),
-                    f: $('#firstName').val(),
-                    surName: $('#surName').val(),
-                    phone: $('#phone').val(),
-                    email: $('#email').val(),
-
-                    addressLine1: $('#addressLine1').val(),
-                    addressLine2: $('#addressLine2').val(),
-                    city: $('#city').val(),
-                    state: $('#state').val(),
-                    postCode: $('#postCode').val(),
-
-                    number: eCrypt.encryptValue(num),
-                    cvn: eCrypt.encryptValue(cvn)
-
-                },
-                success: function (data) {
-                    successResponse(data);
-                },
-                error: function (data) {
-                    errorResponse(data);
+        function initMakeTokenPayment() {
+            $(".makeTokenPayment").on("click", function () {
+                var container = "#" + $(this).data("container");
+                if ($(container).find('input[name=product]:checked').val() !== undefined) {
+                    var option = {
+                        title: "Are you sure you want to proceed?",
+                        message: "",
+                        type: 'info',
+                        btnClass: 'btn-info',
+                        btnText: "Pay",
+                        callback: makeTokenPayment
+                    };
+                    showSweetAlert(option);
+                } else {
+                    Msg.error("Please, select a item.");
                 }
             });
-        });
+        }
 
+        function initMakePayment() {
+            $("#makePaymentBtn").on("click", function () {
+                var container = $("#changePlan");
+                if ($(container).find('input[name=product]:checked').val() !== undefined) {
+                    $("#duePayment").val(false);
+                    $("#paymentDetailsModal").modal("show");
+                } else {
+                    Msg.error("Please, select a plan.");
+                }
+            });
+
+        }
+
+        function initDuePayment() {
+            $("#duePaymentBtn").on("click", function () {
+                var container = $("#duePayments");
+                if ($(container).find('input[name=product]:checked').val() !== undefined) {
+                    $("#duePayment").val(true);
+                    $("#paymentDetailsModal").modal("show");
+                } else {
+                    Msg.error("Please, select the due payment.");
+                }
+            });
+        }
+
+        function initProductSelect() {
+            $(".productSelected").on("click", function () {
+                $("#TotalAmount").val($(this).val());
+                $("#productName").val($(this).parent().find(".productName").val());
+            });
+        }
+
+        function initPay() {
+            $("body").on('click', '#paymentBtn', function (e) {
+                e.preventDefault();
+                $("#paymentProgressBar").show();
+
+                var num = $('#Number').val();
+                var cvn = $('#CVN').val();
+                flog("payment", num, cvn);
+
+                $.ajax({
+                    url: "",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        payment: true,
+                        duePayment: $("#duePayment").val(),
+                        name: $('#Name').val(),
+                        expiryMonth: $('#ExpiryMonth').val(),
+                        expiryYear: $('#ExpiryYear').val(),
+                        totalAmount: $('#TotalAmount').val(),
+                        productName: $("#productName").val(),
+                        currencyCode: $('#CurrencyCode').val(),
+                        firstName: $('#firstName').val(),
+                        f: $('#firstName').val(),
+                        surName: $('#surName').val(),
+                        phone: $('#phone').val(),
+                        email: $('#email').val(),
+
+                        addressLine1: $('#addressLine1').val(),
+                        addressLine2: $('#addressLine2').val(),
+                        city: $('#city').val(),
+                        state: $('#state').val(),
+                        postCode: $('#postCode').val(),
+
+                        number: eCrypt.encryptValue(num),
+                        cvn: eCrypt.encryptValue(cvn)
+
+                    },
+                    success: function (data) {
+                        successResponse(data);
+                    },
+                    error: function (data) {
+                        errorResponse(data);
+                    }
+                });
+            });
+        }
+        
+        initKademiSubscription();
     });
 </script>
 <a href="http://$adminDomain$pageName" class="btn btn-primary btn-sm"><span class="fa fa-arrow-left"></span> Return to site</a>
@@ -244,7 +270,7 @@
                         </div>
                         <div class="col-sm-3">
                             #if ($page.subscription.customerToken)
-                                <button data-container="changePlan" class="btn btn-sm btn-warning makeTokenPayment" type="button">Change plan with previous details</button>
+                            <button data-container="changePlan" class="btn btn-sm btn-warning makeTokenPayment" type="button">Change plan with previous details</button>
                             #end
                         </div>
                     </div>
