@@ -9,7 +9,7 @@
 #if (!$expandedIcon)
     #set ($expandedIcon = "fa-caret-down")
 #end
-<div class="$buttonAlign">
-    <button type="button" class="btn $!buttonSize $!buttonColor $!buttonClass btn-show-hide btnHideFollowing" data-collapsed-icon="$collapsedIcon" data-expanded-icon="$expandedIcon">
+<div class="$!buttonAlign">
+    <button type="button" class="btn $!buttonSize $!buttonColor $!buttonClass btn-show-hide" data-collapsed-icon="$collapsedIcon" data-expanded-icon="$expandedIcon">
         <span>$buttonText</span> <i class="fa $collapsedIcon"></i></button>
 </div>

@@ -395,7 +395,7 @@
             var options = self.getOptions();
             
             var pagesList = $('.pages');
-            var hiddenSections = $('.btnHideFollowing').not('.expanded');
+            var hiddenSections = $('.btn-show-hide').not('.showed-hidden-content');
             var hasHidden = hiddenSections.length > 0;
             var progressPageIndex = self.getProgressPageIndex();
             var currentPageIndex = self.getCurrentPageIndex();
@@ -473,7 +473,6 @@
             self.setLinkEnabled(pagesList.find('a.nextBtn'), nextEnabled);
         },
         
-        
         checkNext: function () {
             flog('[jquery.module] checkNext');
             
@@ -484,7 +483,7 @@
             
             var incompleteInputs = self.findIncompleteInputs();
             
-            var hiddenSections = $('.btnHideFollowing').not('.expanded').filter(':visible');
+            var hiddenSections = $('.btn-show-hide').not('.showed-hidden-content').filter(':visible');
             flog('[jquery.module] hiddenSections', hiddenSections);
             
             if (hiddenSections.length > 0) {
@@ -507,7 +506,7 @@
                 });
                 
                 if (incompleteInput == null) {
-                    first.click();
+                    first.trigger('click');
                 } else {
                     self.showNextPopup(incompleteInputs);
                 }
@@ -533,18 +532,18 @@
             flog('[jquery.module] showNextPopup');
             
             var popout = $('div.pages div.popout');
-            if( popout.length > 0 ) {
+            if (popout.length > 0) {
                 var popoutSpan = popout.find('span');
                 popoutSpan.html('Please enter <a href="#">required fields</a>');
                 popoutSpan.find('a').click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-
+                    
                     $('html, body').animate({
                         scrollTop: incompleteInput.first().offset().top
                     }, 1000);
-
-                });            
+                    
+                });
                 popout.show(100);
             } else {
                 alert('Please enter the required fields highlighted in red');
@@ -583,27 +582,14 @@
             var currentPageIndex = self.getCurrentPageIndex();
             var progressPageIndex = self.getProgressPageIndex();
             flog('[jquery.module] currentPageIndex: ' + currentPageIndex, 'progressPageIndex: ' + progressPageIndex);
-            var btnHideFollowing = $('.btnHideFollowing');
+            var btnHideFollowing = $('.btn-show-hide');
             
             if (currentPageIndex >= progressPageIndex) {
-                var afterBtnHideFollowing = $('.btnHideFollowing').nextAll();
-                flog('[jquery.module] Show .btnHideFollowing', afterBtnHideFollowing);
-                afterBtnHideFollowing.hide(); // initially hide everything after it
-                
-                btnHideFollowing.click(function () {
-                    btnHideFollowing.addClass('expanded');
-                    var toToggle = btnHideFollowing.nextUntil('.btnHideFollowing').not('.linked-modal');
-                    flog('[jquery.module] btnHideFollowing: toggle:', toToggle);
-                    toToggle.show(200);
-                    
-                    // also show the next button, if there is one
-                    var last = toToggle.last();
-                    last.next().not('.linked-modal').show(); // because toToggle is nextUntil .btnHideFollowing, the next after the last should be a btnHideFollowing, or nothing
-                    
+                btnHideFollowing.on('clicked.showHideButton', function () {
                     self.checkProgressPageVisibility();
                 });
             } else {
-                flog('[jquery.module] Hide .btnHideFollowing');
+                flog('[jquery.module] Hide .btn-show-hide');
                 btnHideFollowing.hide(); // if we're not using continue buttons, hide them
             }
             
