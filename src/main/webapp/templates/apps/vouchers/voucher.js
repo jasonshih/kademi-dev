@@ -26,17 +26,13 @@ function doSearch() {
 }
 
 function initSelectAll() {
-    $("body").on("click", ".selectAll", function (e) {
-        var node = $(e.target);
-        log("selectall", node, node.is(":checked"));
-        var chkName = node.attr("name");
-        var checked = node.is(":checked");
-        checkBoxes = $("#vouchers-table-body").find("td input[type=checkbox][name=" + chkName + "]");
-        if (checked) {
-            checkBoxes.attr("checked", "true");
-        } else {
-            checkBoxes.removeAttr("checked");
-        }
+    $('body').on('change', '.selectAll', function (e) {
+        flog($(this).is(":checked"));
+        //$("body").find(":checkbox.product-check").check($(this).is(":checked"));
+        var checkedStatus = this.checked;
+        $('body').find(':checkbox.voucher-check').each(function () {
+            $(this).prop('checked', checkedStatus);
+        });
     });
 }
 
