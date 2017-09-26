@@ -10,7 +10,7 @@
                     $.each(resp.data, function (i, field) {
                         fields.push([
                             field.label,
-                            field.id
+                            field.placeholder
                         ]);
                     });
                 }
@@ -41,7 +41,7 @@
                     onOk: function () {
                         var data = {};
                         this.commitContent(data);
-                        editor.insertHtml('[' + data.kcode + ']');
+                        editor.insertHtml( data.kcode );
                     }
                 };
             });
