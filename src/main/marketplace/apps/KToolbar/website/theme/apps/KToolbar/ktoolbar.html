@@ -165,38 +165,39 @@
             <button type="button" class="btn-close">Close</button>
         </div>
     </div>
-
-    <button class="btn btn-linnk btn-xs" id="btn-translate" title="Edit translation"><i class="fa fa-language"></i></button>
-    <div id="modal-translate" class="modal fade" tabindex="-1"> 
-         <div class="modal-dialog modal-sm"> 
-            <div class="modal-content"> 
-                <div class="modal-header"> 
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button> 
-                    <h4 class="modal-title">Save translated text</h4> 
-                </div> 
-                <form method="POST" class="form-horizontal" action="/translations/"> 
-                    <div class="modal-body"> 
-                        <p class="form-message alert alert-danger" style="display: none;"></p> 
-                        <input type="hidden" name="sourceType" value="" /> 
-                        <input type="hidden" name="sourceId" value="" /> 
-                        <input type="hidden" name="sourceText" value="" /> 
-                        <input type="hidden" name="sourceField" value="" /> 
-                        <input type="hidden" name="langCode" value="" /> 
-                        <div class="form-group"> 
-                            <label class="control-label col-md-3">Translated text</label>
-                            <div class="col-md-9"> 
-                                <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" /> 
-                                <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea> 
-                                <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div> 
-                            </div> 
-                        </div> 
-                    </div> 
-                    <div class="modal-footer"> 
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button> 
-                        <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button> 
-                    </div> 
-                </form> 
-            </div> 
-         </div> 
-    </div>
+    #if ($applications.KToolbar.call("isTranslationEnabled", $page))
+        <button class="btn btn-linnk btn-xs" id="btn-translate" title="Edit translation"><i class="fa fa-language"></i></button>
+        <div id="modal-translate" class="modal fade" tabindex="-1">
+             <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Save translated text</h4>
+                    </div>
+                    <form method="POST" class="form-horizontal" action="/translations/">
+                        <div class="modal-body">
+                            <p class="form-message alert alert-danger" style="display: none;"></p>
+                            <input type="hidden" name="sourceType" value="" />
+                            <input type="hidden" name="sourceId" value="" />
+                            <input type="hidden" name="sourceText" value="" />
+                            <input type="hidden" name="sourceField" value="" />
+                            <input type="hidden" name="langCode" value="" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Translated text</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />
+                                    <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>
+                                    <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+             </div>
+        </div>
+    #end
 #end
