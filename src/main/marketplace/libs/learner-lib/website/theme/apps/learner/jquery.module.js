@@ -422,7 +422,7 @@
                 flog('[jquery.module] Not a quiz page, so check if fields completed... = ', isInputsDone);
             }
             
-            // Page nav button is enabled if its index is <= progress page index, or all btnHideFollowing have expanded class and its index = current+1 and current page=progress page
+            // Page nav button is enabled if its index is <= progress page index, or all btnShowHide have expanded class and its index = current+1 and current page=progress page
             // if for some reason progress page is less then current page, then make progress page the current page
             if (progressPageIndex < currentPageIndex) {
                 progressPageIndex = currentPageIndex;
@@ -582,15 +582,16 @@
             var currentPageIndex = self.getCurrentPageIndex();
             var progressPageIndex = self.getProgressPageIndex();
             flog('[jquery.module] currentPageIndex: ' + currentPageIndex, 'progressPageIndex: ' + progressPageIndex);
-            var btnHideFollowing = $('.btn-show-hide');
+            var btnShowHide = $('.btn-show-hide');
             
             if (currentPageIndex >= progressPageIndex) {
-                btnHideFollowing.on('clicked.showHideButton', function () {
+                initShowHideButton();
+                btnShowHide.on('clicked.showHideButton', function () {
                     self.checkProgressPageVisibility();
                 });
             } else {
                 flog('[jquery.module] Hide .btn-show-hide');
-                btnHideFollowing.hide(); // if we're not using continue buttons, hide them
+                btnShowHide.hide(); // if we're not using continue buttons, hide them
             }
             
             $('div.dropdown').children('h3, h4, h5, h6, span.sprite').click(function (e) {
