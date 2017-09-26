@@ -88,8 +88,10 @@ JBNodes['decision'] = {
         modal.appendTo(document.body);
 
         $.getScriptOnce('/static/query-builder/2.3.3/js/query-builder.standalone.min.js', function () {
+            var fieldsPath = window.location.pathname + '?fields';
+            flog("load fields from", fieldsPath );
             $.ajax({
-                url: window.location.pathname + '?fields',
+                url: fieldsPath,
                 type: 'get',
                 dataType: 'json',
                 success: function (resp) {
