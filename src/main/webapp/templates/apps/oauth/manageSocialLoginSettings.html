@@ -73,7 +73,7 @@
                                 <td>$a.title</td>
                                 <td>
                                     #if($a.linkedTo)
-                                    <span class="label label-success">Linked to $a.linkedTo.formattedName()</span>
+                                    <span class="label label-success label-large">Linked to $a.linkedTo.formattedName() #if($a.displayName)as "$a.displayName"#end</span>
                                     #else
                                     <a href="/oauth?gotoPosterProvider=${a.id}" class="btn btn-success btn-${a.id.replace('kademi_', '')}"><i class="fa fa-${a.id.replace('kademi_', '')}"></i> | Connect with $a.title</a>
                                     #end
