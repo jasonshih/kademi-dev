@@ -395,7 +395,7 @@
             var options = self.getOptions();
             
             var pagesList = $('.pages');
-            var hiddenSections = $('.btnHideFollowing').not('.expanded');
+            var hiddenSections = $('.btn-show-hide').not('.showed-hidden-content');
             var hasHidden = hiddenSections.length > 0;
             var progressPageIndex = self.getProgressPageIndex();
             var currentPageIndex = self.getCurrentPageIndex();
@@ -422,7 +422,7 @@
                 flog('[jquery.module] Not a quiz page, so check if fields completed... = ', isInputsDone);
             }
             
-            // Page nav button is enabled if its index is <= progress page index, or all btnHideFollowing have expanded class and its index = current+1 and current page=progress page
+            // Page nav button is enabled if its index is <= progress page index, or all btnShowHide have expanded class and its index = current+1 and current page=progress page
             // if for some reason progress page is less then current page, then make progress page the current page
             if (progressPageIndex < currentPageIndex) {
                 progressPageIndex = currentPageIndex;
@@ -473,7 +473,6 @@
             self.setLinkEnabled(pagesList.find('a.nextBtn'), nextEnabled);
         },
         
-        
         checkNext: function () {
             flog('[jquery.module] checkNext');
             
@@ -484,7 +483,7 @@
             
             var incompleteInputs = self.findIncompleteInputs();
             
-            var hiddenSections = $('.btnHideFollowing').not('.expanded').filter(':visible');
+            var hiddenSections = $('.btn-show-hide').not('.showed-hidden-content').filter(':visible');
             flog('[jquery.module] hiddenSections', hiddenSections);
             
             if (hiddenSections.length > 0) {
@@ -507,7 +506,7 @@
                 });
                 
                 if (incompleteInput == null) {
-                    first.click();
+                    first.trigger('click');
                 } else {
                     self.showNextPopup(incompleteInputs);
                 }
@@ -533,18 +532,18 @@
             flog('[jquery.module] showNextPopup');
             
             var popout = $('div.pages div.popout');
-            if( popout.length > 0 ) {
+            if (popout.length > 0) {
                 var popoutSpan = popout.find('span');
                 popoutSpan.html('Please enter <a href="#">required fields</a>');
                 popoutSpan.find('a').click(function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-
+                    
                     $('html, body').animate({
                         scrollTop: incompleteInput.first().offset().top
                     }, 1000);
-
-                });            
+                    
+                });
                 popout.show(100);
             } else {
                 alert('Please enter the required fields highlighted in red');
@@ -583,28 +582,16 @@
             var currentPageIndex = self.getCurrentPageIndex();
             var progressPageIndex = self.getProgressPageIndex();
             flog('[jquery.module] currentPageIndex: ' + currentPageIndex, 'progressPageIndex: ' + progressPageIndex);
-            var btnHideFollowing = $('.btnHideFollowing');
+            var btnShowHide = $('.btn-show-hide');
             
             if (currentPageIndex >= progressPageIndex) {
-                var afterBtnHideFollowing = $('.btnHideFollowing').nextAll();
-                flog('[jquery.module] Show .btnHideFollowing', afterBtnHideFollowing);
-                afterBtnHideFollowing.hide(); // initially hide everything after it
-                
-                btnHideFollowing.click(function () {
-                    btnHideFollowing.addClass('expanded');
-                    var toToggle = btnHideFollowing.nextUntil('.btnHideFollowing').not('.linked-modal');
-                    flog('[jquery.module] btnHideFollowing: toggle:', toToggle);
-                    toToggle.show(200);
-                    
-                    // also show the next button, if there is one
-                    var last = toToggle.last();
-                    last.next().not('.linked-modal').show(); // because toToggle is nextUntil .btnHideFollowing, the next after the last should be a btnHideFollowing, or nothing
-                    
+                initShowHideButton();
+                btnShowHide.on('clicked.showHideButton', function () {
                     self.checkProgressPageVisibility();
                 });
             } else {
-                flog('[jquery.module] Hide .btnHideFollowing');
-                btnHideFollowing.hide(); // if we're not using continue buttons, hide them
+                flog('[jquery.module] Hide .btn-show-hide');
+                btnShowHide.hide(); // if we're not using continue buttons, hide them
             }
             
             $('div.dropdown').children('h3, h4, h5, h6, span.sprite').click(function (e) {

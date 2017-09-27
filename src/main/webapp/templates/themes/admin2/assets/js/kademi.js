@@ -1446,7 +1446,7 @@ Kalert.close = function () {
             '                            <span class="loading-text">Initializing editor...</span>' +
             '                        </span>' +
             '                    </div>' +
-            '                    <textarea class="' + (isContentEditor ? 'contenteditor' : 'htmleditor') + '">' + content + '</textarea>' +
+            '                    <textarea  autocomplete="off" class="' + (isContentEditor ? 'contenteditor' : 'htmleditor') + '">' + content + '</textarea>' +
             '                </div>' +
             '            </div>' +
             '            <div class="modal-footer">' +

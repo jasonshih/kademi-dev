@@ -140,7 +140,7 @@
 
                         #if($page.calendar.website)
                             #if ($applicationManager.isActive($applications.calendar, $page.calendar.website.liveBranch()))
-                                <textarea cols="100" name="description" rows="10" class="#if($isKEditor) contenteditor #else htmleditor #end">$!page.description</textarea>
+                                <textarea autocomplete="off" cols="100" name="description" rows="10" class="#if($isKEditor) contenteditor #else htmleditor #end">$!page.description</textarea>
                             #else
                                 <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
                                     <b>$page.calendar.website.name</b> website is disabled. Please enable it at

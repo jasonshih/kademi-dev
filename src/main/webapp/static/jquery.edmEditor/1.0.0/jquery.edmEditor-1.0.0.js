@@ -600,7 +600,8 @@
                 var visRules = form.find(".visible-rules");
                 visRules.on('change', function () {
                     var container = keditor.getSettingContainer();
-                    container.find('.container-bg').attr('data-expr', this.value);
+                    var table = container.find('.keditor-container-inner > table');
+                    table.attr('data-expr', this.value);
                 });                  
                 
                 form.find('.columns-setting').on('change', '.txt-padding', function () {
@@ -797,7 +798,7 @@
                                 {name: 'others', groups: ['others']},
                                 {name: 'about', groups: ['about']}
                             ],
-                            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image',
+                            extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image,kcode',
                             removePlugins: 'table,magicline,tabletools',
                             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
                             enterMode: CKEDITOR.ENTER_DIV,

@@ -28,13 +28,14 @@
         <li><a href="$cal.href">$cal.title</a></li>
         #end
         #if($userResource)
-        #set($calPage = $userResource.href + "Calendars/")
-        #foreach($cal in $page.find($calPage).children.ofType.calendar)
-        #if($foreach.first)
-        <li class="divider"></li>
-        #end
-        <li><a href="$cal.href">$cal.title</a></li>
-        #end
+            #set($calPage = $userResource.href + "Calendars/")
+            #foreach($cal in $page.find($calPage).children.ofType.calendar)
+                #if($foreach.first)
+                    <li class="divider"></li>
+                    <li class="dropdown-header"><strong>Personal calendars</strong></li>
+                #end
+                <li><a href="$cal.href">$cal.title</a></li>
+            #end
         #end
     </ul>
 </div>
