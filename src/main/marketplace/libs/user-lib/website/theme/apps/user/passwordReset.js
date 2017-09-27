@@ -1,6 +1,5 @@
 (function ($) {
-    $(document).ready(function () {
-        
+    $(function () {
         if ($('.panel-password-reset').length > 0) {
             
             $("#passwordResetForm").forms({
