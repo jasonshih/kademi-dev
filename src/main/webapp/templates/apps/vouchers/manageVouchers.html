@@ -4,8 +4,24 @@
     </head>
     <body>
         <div class="">
-            <a href="#" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#sellVouchersModal" ><i class="fa fa-dollar"></i> Sell vouchers</a>
-            <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createVoucherTypeModal" ><i class="fa fa-plus"></i> Create new voucher type</a>
+            <a href="#" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#sellVouchersModal" >
+                <i class="fa fa-dollar"></i> Sell vouchers
+            </a>
+
+            <div class="btn-group">
+                <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createVoucherTypeModal" >
+                    <i class="fa fa-plus"></i> Create new voucher type
+                </a>
+                #if( $request.params.deleted )
+                <a href="$page.href" class="btn btn-sm btn-info">
+                    <i class="fa fa-eye"></i> Show non-deleted
+                </a>
+                #else
+                <a href="$page.href?deleted" class="btn btn-sm btn-info">
+                    <i class="fa fa-eye"></i> Show deleted
+                </a>
+                #end
+            </div>
 
             <hr/>
         </div>
@@ -100,11 +116,11 @@
                             <input type="text" class="form-control required" required="true" id=newTitle name="newTitle" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Create voucher</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Create voucher</button>
+                </div>
             </form>
         </div><!-- /.modal -->
 
@@ -138,11 +154,11 @@
                             <input type="text" class="form-control required" required="true" id="numberToSell" name="numberToSell" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Sell vouchers</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Sell vouchers</button>
+                </div>
             </form>
         </div><!-- /.modal -->
 
