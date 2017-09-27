@@ -87,28 +87,33 @@
 
         function makeTokenPayment() {
             flog("make Token Payment");
-            $.ajax({
-                url: "",
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    makeTokenPayment: true,
-                    productName: $("#productName").val()
-                },
-                success: function (data) {
-                    successResponse(data);
-                },
-                error: function (data) {
-                    errorResponse(data);
-                }
-            });
+            var productName = $("#productName").val();
+            if (productName == !undefined && productName == !"") {
+                $.ajax({
+                    url: "",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        makeTokenPayment: true,
+                        productName: productName
+                    },
+                    success: function (data) {
+                        successResponse(data);
+                    },
+                    error: function (data) {
+                        errorResponse(data);
+                    }
+                });
+            } else {
+                Msg.error("Please, select a item.");
+            }
         }
         function initMakeTokenPayment() {
             $("#showChangePlan").on("click", function () {
                 $(this).hide();
                 $("#changePlanTable").toggle();
             });
-            
+
             $(".makeTokenPayment").on("click", function () {
                 var container = "#" + $(this).data("container");
                 if ($(container).find('input[name=product]:checked').val() !== undefined) {
@@ -162,48 +167,52 @@
         function initPay() {
             $("body").on('click', '#paymentBtn', function (e) {
                 e.preventDefault();
-                $("#paymentProgressBar").show();
+                var productName = $("#productName").val();
+                if (productName == !undefined && productName == !"") {
+                    $("#paymentProgressBar").show();
 
-                var num = $('#Number').val();
-                var cvn = $('#CVN').val();
-                flog("payment", num, cvn);
+                    var num = $('#Number').val();
+                    var cvn = $('#CVN').val();
+                    flog("payment", num, cvn);
+                    $.ajax({
+                        url: "",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            payment: true,
+                            duePayment: $("#duePayment").val(),
+                            name: $('#Name').val(),
+                            expiryMonth: $('#ExpiryMonth').val(),
+                            expiryYear: $('#ExpiryYear').val(),
+                            totalAmount: $('#TotalAmount').val(),
+                            productName: productName,
+                            currencyCode: $('#CurrencyCode').val(),
+                            firstName: $('#firstName').val(),
+                            f: $('#firstName').val(),
+                            surName: $('#surName').val(),
+                            phone: $('#phone').val(),
+                            email: $('#email').val(),
 
-                $.ajax({
-                    url: "",
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        payment: true,
-                        duePayment: $("#duePayment").val(),
-                        name: $('#Name').val(),
-                        expiryMonth: $('#ExpiryMonth').val(),
-                        expiryYear: $('#ExpiryYear').val(),
-                        totalAmount: $('#TotalAmount').val(),
-                        productName: $("#productName").val(),
-                        currencyCode: $('#CurrencyCode').val(),
-                        firstName: $('#firstName').val(),
-                        f: $('#firstName').val(),
-                        surName: $('#surName').val(),
-                        phone: $('#phone').val(),
-                        email: $('#email').val(),
+                            addressLine1: $('#addressLine1').val(),
+                            addressLine2: $('#addressLine2').val(),
+                            city: $('#city').val(),
+                            state: $('#state').val(),
+                            postCode: $('#postCode').val(),
 
-                        addressLine1: $('#addressLine1').val(),
-                        addressLine2: $('#addressLine2').val(),
-                        city: $('#city').val(),
-                        state: $('#state').val(),
-                        postCode: $('#postCode').val(),
+                            number: eCrypt.encryptValue(num),
+                            cvn: eCrypt.encryptValue(cvn)
 
-                        number: eCrypt.encryptValue(num),
-                        cvn: eCrypt.encryptValue(cvn)
-
-                    },
-                    success: function (data) {
-                        successResponse(data);
-                    },
-                    error: function (data) {
-                        errorResponse(data);
-                    }
-                });
+                        },
+                        success: function (data) {
+                            successResponse(data);
+                        },
+                        error: function (data) {
+                            errorResponse(data);
+                        }
+                    });
+                } else {
+                    Msg.error("Please, select a item.");
+                }
             });
         }
 
