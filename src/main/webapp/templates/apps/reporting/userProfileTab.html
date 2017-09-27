@@ -50,8 +50,12 @@
             <td>$!hit.fields.resultCode.value</td>
             <td>$!hit.fields.durationMs.value</td>
             <td>$!hit.fields.numBytes.value</td>
-            <td>$!hit.fields.referrer.value</td>
-            <td>$formatter.toDate($!hit.fields.reqDate.value)</td>
+            <td>
+                #if($hit.fields.referrer.value)
+                <a href="$hit.fields.referrer.value" target="_blank">$formatter.truncate($hit.fields.referrer.value, 18)</a>
+                #end
+            </td>
+            <td>$!formatter.formatDateTime($formatter.toDate($hit.fields.reqDate.value), $rootFolder.organisation.timezone)</td>
         </tr>
         #end
     </tbody>
