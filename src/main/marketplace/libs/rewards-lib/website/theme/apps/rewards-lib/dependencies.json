@@ -57,7 +57,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/rewards-lib/myRewardsComponent.js"
+                "path": "/theme/apps/rewards-lib/myRewards.js"
             }
         },
         {

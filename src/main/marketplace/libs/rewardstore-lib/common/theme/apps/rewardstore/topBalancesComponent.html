@@ -1,0 +1,87 @@
+#if ( !$height )
+#set ( $height = 200 )
+#end
+#if ( !$limit)
+#set ( $height = 10 )
+#end
+
+#if("$!page" != "" && "$!bucket" != "")
+    #set ($limit = $formatter.toInteger($limit))
+
+    #set( $pointsBucket = $applications.rewardStore.findPointsBucket($bucket) )
+    #if( $pointsBucket )
+    <div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i>
+        Top $limit balances in $pointsBucket.title
+    </div>
+    #set( $heightAtt = "" )
+    #if( $height )
+    <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+    #else
+    <div class="panel-body" style="overflow-y: auto;">
+        #end
+        <div class="panel-body" style="$heightAtt; overflow-y: auto;">
+            #set( $topBalances = $applications.rewardStore.findTopBalances($bucket, $limit) )
+
+            #if( $topBalances.size() > 0 )
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th>Balance</th>
+                    <th>User</th>
+                </tr>
+                </thead>
+                <tbody>
+                #foreach( $pt in $topBalances )
+                <tr>
+                    <td>$pt.balance</td>
+                    <td>
+                        #if( $pt.participant.orgId )
+                        $pt.participant.title
+                        #else
+                        $pt.participant.formattedName()
+                        #end
+                    </td>
+                </tr>
+                #end
+                </tbody>
+            </table>
+            #else
+            <p>There are no matching participants</p>
+            #end
+        </div>
+    </div>
+    #end
+#else
+        #fakeUI()
+#end
+
+#macro(fakeUI)
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fa fa-table"></i>
+                Top $limit balances in example
+            </div>
+            <div class="panel-body" style="height: ${height}px; overflow-y: auto;">
+                <div class="panel-body" style="overflow-y: auto;">
+                    <div class="panel-body" style=" overflow-y: auto;">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                            <tr>
+                                <th>Balance</th>
+                                <th>User</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+#end
+
+
+
