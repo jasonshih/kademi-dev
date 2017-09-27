@@ -1,7 +1,15 @@
 {
   "appDependencies": [
         {
+            "appId": "reporting",
+            "branch" : ""
+        },
+        {
             "appId": "salesData",
+            "branch" : ""
+        },
+        {
+            "appId": "search",
             "branch" : ""
         },
         {
