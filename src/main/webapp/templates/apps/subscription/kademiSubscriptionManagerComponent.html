@@ -88,7 +88,7 @@
         function makeTokenPayment() {
             flog("make Token Payment");
             var productName = $("#productName").val();
-            if (productName == !undefined && productName == !"") {
+            if (productName !== undefined && productName !== "") {
                 $.ajax({
                     url: "",
                     type: 'POST',
@@ -168,7 +168,7 @@
             $("body").on('click', '#paymentBtn', function (e) {
                 e.preventDefault();
                 var productName = $("#productName").val();
-                if (productName == !undefined && productName == !"") {
+                if (productName !== undefined && productName !== "") {
                     $("#paymentProgressBar").show();
 
                     var num = $('#Number').val();
