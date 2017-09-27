@@ -25,6 +25,7 @@
         allGroups: [],
         pagePath: null,
         basePath: null,
+        isCustomApp: false,
         onReady: function () {
             
         }
@@ -183,7 +184,7 @@
                 visRules.on('change', function () {
                     var container = keditor.getSettingContainer();
                     container.find('.container-bg').attr('data-expr', this.value);
-                });                
+                });
                 
                 
                 form.find('.bgImagesPreview .btn-edit-image').on('click', function (e) {
@@ -1364,7 +1365,15 @@
                             if (typeof options.onReady === 'function') {
                                 options.onReady.call(null);
                             }
-                        }
+                        },
+                        onBeforeDynamicContentLoad: options.isCustomApp ? function (dynamicElement) {
+                            flog('Force dynamic href begins with "/" for custom app pages');
+                            var dynamicHref = dynamicElement.attr('data-dynamic-href');
+                            if (dynamicHref.indexOf('/') !== 0) {
+                                dynamicHref = '/' + dynamicHref;
+                            }
+                            dynamicElement.attr('data-dynamic-href', dynamicHref)
+                        } : null
                     });
                 });
                 

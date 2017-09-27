@@ -147,7 +147,8 @@ function initKEditor(options) {
                     hideLoadingIcon();
                     $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
                 }, 150);
-            }
+            },
+            isCustomApp: options.isCustomApp
         });
     });
     
