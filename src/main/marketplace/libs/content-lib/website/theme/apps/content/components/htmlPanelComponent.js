@@ -7,7 +7,7 @@
         settingEnabled: true,
         settingTitle: 'Panel Settings',
         init: function (contentArea, container, component, keditor) {
-            this.initCkeditor(keditor, component);
+            this.initCkeditor(keditor, component, contentArea);
         },
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "htmlPanel" component');
@@ -110,10 +110,10 @@
             }
             form.find('.showIcon').prop('checked', showIcon);
         },
-        initCkeditor: function (keditor, component) {
+        initCkeditor: function (keditor, component, contentArea) {
             var that = this;
             var options = keditor.options;
-            var contentArea = component.parents('.keditor-content-area');
+            // var contentArea = component.parents('.keditor-content-area');
             var container = component.parents('.keditor-container');
             component.find('.textEdit').prop('contenteditable', true);
 
@@ -143,10 +143,10 @@
                 console.log( 'Saving...', editor.name, editor.getData() );
 
                 component.attr('data-html', encodeURIComponent(editor.getData()));
-                var dynamicElement = component.find('[data-dynamic-href]');
-                keditor.initDynamicContent(dynamicElement).done(function () {
-                    that.initCkeditor(keditor, component)
-                });
+                // var dynamicElement = component.find('[data-dynamic-href]');
+                // keditor.initDynamicContent(dynamicElement).done(function () {
+                //     that.initCkeditor(keditor, component)
+                // });
             } );
         }
     };
