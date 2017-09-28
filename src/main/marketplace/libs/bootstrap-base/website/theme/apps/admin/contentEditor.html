@@ -157,15 +157,6 @@
                                                     <button type="button" class="btn btn-sm btn-warning btn-add-meta">Add new meta</button>
                                                 </p>
                                                 <div class="meta-wrapper">
-                                                    #foreach($metaName in $file.metaNames)
-                                                        <div class="input-group meta">
-                                                            <input type="text" class="form-control input-sm required" required="required" name="metaName.$foreach.index" placeholder="Meta name" value="$metaName" />
-                                                            <input type="text" class="form-control input-sm required" required="required" name="metaContent.$foreach.index" placeholder="Meta content" value="$file.getMeta($metaName)" />
-                                                            <span class="input-group-btn">
-                                                                <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>
-                                                            </span>
-                                                        </div>
-                                                    #end
                                                 </div>
                                             </div>
                                         </div>
@@ -177,18 +168,6 @@
                                                     <button type="button" class="btn btn-sm btn-warning btn-add-param">Add new data/parameter</button>
                                                 </p>
                                                 <div class="param-wrapper">
-                                                    #foreach($paramName in $file.paramNames)
-                                                        #if ($paramName != 'title' && $paramName != 'itemType' && $paramName != 'category' && $paramName != 'tags' && $paramName !=
-                                                            'metas' && $paramName != 'body' && $paramName != 'cssFiles' && $paramName != 'template')
-                                                            <div class="input-group param">
-                                                                <input type="text" class="form-control input-sm required" required="required" name="paramTitle.$foreach.index" placeholder="Data/parameter title" value="$paramName" />
-                                                                <input type="text" class="form-control input-sm required" required="required" name="paramValue.$foreach.index" placeholder="Data/parameter value" value="$file.getParam($paramName)" />
-                                                                <span class="input-group-btn">
-                                                                    <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>
-                                                                </span>
-                                                            </div>
-                                                        #end
-                                                    #end
                                                 </div>
                                             </div>
                                         </div>
@@ -251,6 +230,19 @@
                     '$group.name': '$formatter.firstNotNull($group.title, $group.name)',
                 #end}
             ;
+            
+            var metas = [];
+            #foreach($metaName in $file.metaNames)
+                metas.push({
+                    'name': '$metaName',
+                    'content': '$!file.getMeta($metaName)'
+                });
+            #end
+            
+            var params = {};
+            #foreach($paramName in $file.paramNames)
+                params['$paramName'] = '$!file.getParam($paramName)';
+            #end
 
             $(function () {
                 initContentEditorPage({

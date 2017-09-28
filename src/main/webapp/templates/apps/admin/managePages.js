@@ -167,36 +167,6 @@ function initAddPageModal() {
     });
 }
 
-function addMetaTag(name, content) {
-    var metaWrapper = $('.meta-wrapper');
-    var id = (new Date()).getTime();
-    
-    metaWrapper.append(
-        '<div class="input-group meta">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (name === 'keywords' || name === 'description' ? 'readonly="readonly"' : '') + ' />' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
-        '    <span class="input-group-btn">' +
-        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (name === 'keywords' || name === 'description' ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
-        '    </span>' +
-        '</div>'
-    );
-}
-
-function addParam(title, value) {
-    var metaWrapper = $('.param-wrapper');
-    var id = (new Date()).getTime();
-    
-    metaWrapper.append(
-        '<div class="input-group param">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="paramValue.' + id + '" placeholder="Data/parameter value" value="' + value + '" />' +
-        '    <span class="input-group-btn">' +
-        '        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>' +
-        '    </span>' +
-        '</div>'
-    );
-}
-
 function showEditModal(name, pageArticle) {
     flog('showEditModal', name, pageArticle);
     
@@ -247,38 +217,8 @@ function showEditModal(name, pageArticle) {
                 modal.find('.newFileName[type=text]').val(name);
             }
             
-            if (data.metas && data.metas.length > 0) {
-                var hasKeywords = false;
-                var hasDescription = false;
-                for (var i = 0; i < data.metas.length; i++) {
-                    addMetaTag(data.metas[i].name, data.metas[i].content);
-                    
-                    if (data.metas[i].name === 'keywords') {
-                        hasKeywords = true;
-                    }
-                    
-                    if (data.metas[i].name === 'description') {
-                        hasDescription = true;
-                    }
-                }
-                
-                if (!hasKeywords) {
-                    addMetaTag('keywords', '');
-                }
-                
-                if (!hasDescription) {
-                    addMetaTag('description', '');
-                }
-            } else {
-                addMetaTag('keywords', '');
-                addMetaTag('description', '');
-            }
-            
-            for (var key in data) {
-                if (key !== 'title' && key !== 'itemType' && key !== 'category' && key !== 'tags' && key !== 'metas' && key !== 'body' && key !== 'cssFiles' && key !== 'template') {
-                    addParam(key, data[key]);
-                }
-            }
+            addMetaTags(data.metas);
+            addParams(data);
             
             modal.modal('show');
         },
@@ -333,4 +273,69 @@ function initPjax() {
             }
         });
     });
+}
+
+// ============================================================
+// Meta and data/param functions
+// ============================================================
+function addParams(paramsData) {
+    $.each(paramsData, function (title, value) {
+        if (paramsData.hasOwnProperty(title)) {
+            if (title !== 'title' && title !== 'itemType' && title !== 'category' && title !== 'tags' && title !== 'metas' && title !== 'body' && title !== 'cssFiles' && title !== 'template') {
+                addParam(title, value);
+            }
+        }
+    });
+}
+
+function addMetaTags(metasData) {
+    var hasKeywords = false;
+    var hasDescription = false;
+    $.each(metasData, function (i, meta) {
+        addMetaTag(meta.name, meta.content);
+        
+        if (meta.name === 'keywords') {
+            hasKeywords = true;
+        }
+        
+        if (meta.name === 'description') {
+            hasDescription = true;
+        }
+    });
+    if (!hasKeywords) {
+        addMetaTag('keywords', '');
+    }
+    if (!hasDescription) {
+        addMetaTag('description', '');
+    }
+}
+
+function addMetaTag(name, content) {
+    var metaWrapper = $('.meta-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group meta">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (name === 'keywords' || name === 'description' ? 'readonly="readonly"' : '') + ' />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (name === 'keywords' || name === 'description' ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
+}
+
+function addParam(title, value) {
+    var metaWrapper = $('.param-wrapper');
+    var id = (new Date()).getTime();
+    
+    metaWrapper.append(
+        '<div class="input-group param">' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="paramValue.' + id + '" placeholder="Data/parameter value" value="' + value + '" />' +
+        '    <span class="input-group-btn">' +
+        '        <button class="btn btn-sm btn-danger btn-remove-param" type="button"><i class="fa fa-remove"></i></button>' +
+        '    </span>' +
+        '</div>'
+    );
 }
