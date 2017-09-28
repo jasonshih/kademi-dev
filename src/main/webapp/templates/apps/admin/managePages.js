@@ -14,7 +14,7 @@ function initCopyCutPaste() {
 
 function initCRUDPages() {
     var container = $('#filesContainer');
-
+    
     container.on('click', '.btn-create-folder', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -26,17 +26,17 @@ function initCRUDPages() {
             });
         });
     });
-
+    
     container.on('click', '.btn-edit-page', function (e) {
         e.preventDefault();
         flog('click edit page', e, this);
-
+        
         var a = $(this);
         var name = a.attr('href');
         var article = a.closest('article');
         showEditModal(name, article);
     });
-
+    
     container.on('click', '.btn-delete-page', function (e) {
         e.stopPropagation();
         e.preventDefault();
@@ -55,12 +55,17 @@ function initCRUDPages() {
 
 function initAddPageModal() {
     flog('initAddPageModal');
-
+    
     var modal = $('#modal-save-page');
     var form = modal.find('form');
     var txtNewFileName = form.find(".newFileName[type=text]");
     var txtNewFileNameHidden = form.find(".newFileName[type=hidden]");
-
+    
+    $('.btn-add-page').on('click', function () {
+        addMetaTag('keywords', '');
+        addMetaTag('description', '');
+    });
+    
     $(document.body).on('hidden.bs.modal', '#modal-save-page', function () {
         modal.find('.btn-history-page').addClass('hidden');
         clearForm(form);
@@ -70,27 +75,28 @@ function initAddPageModal() {
         form.find('.fileNameTrigger').val('1');
         txtNewFileNameHidden.val('index');
         form.find('.fileNameTrigger').trigger('click');
+        form.find('[name=template]').val('theme/page');
     });
-
+    
     form.find('.defaultFolderPageTrigger').on('click', function () {
         flog('Default folder page is clicked!', txtNewFileName, txtNewFileNameHidden);
-
+        
         txtNewFileName.prop('disabled', true).removeClass('required');
         txtNewFileNameHidden.attr('disabled', false);
     });
-
+    
     form.find('.fileNameTrigger').on('click', function () {
         flog('File name is clicked!', txtNewFileName, txtNewFileNameHidden);
-
+        
         txtNewFileName.prop('disabled', false).addClass('required');
         txtNewFileNameHidden.attr('disabled', true);
     });
-
+    
     form.on("input", ".pageTitle", function (e) {
         var inp = $(e.target);
         var val = inp.val();
         var pageName = form.find('[type=hidden][name=pageName]');
-
+        
         if (!pageName.val() && txtNewFileName.is(':enabled')) {
             // new page
             var newVal = val.toLowerCase();
@@ -105,7 +111,7 @@ function initAddPageModal() {
             txtNewFileName.val(newVal);
         }
     });
-
+    
     form.forms({
         beforePostForm: function (form, config, data) {
             var pageName = form.find('[name=pageName]').val();
@@ -114,7 +120,7 @@ function initAddPageModal() {
             } else {
                 form.attr('action', pageName);
             }
-
+            
             return data;
         },
         onSuccess: function (resp) {
@@ -135,28 +141,28 @@ function initAddPageModal() {
             Msg.error('Sorry, an error occured saving your changes. If you have entered editor content that you dont want to lose, please switch the editor to source view, then copy the content. Then refresh the page and re-open the editor and paste the content back in.');
         }
     });
-
+    
     $('.btn-add-meta').on('click', function (e) {
         e.preventDefault();
-
+        
         addMetaTag('', '');
     });
-
+    
     $(document.body).on('click', '.btn-remove-meta', function (e) {
         e.preventDefault();
-
+        
         $(this).closest('.meta').remove();
     });
-
+    
     $('.btn-add-param').on('click', function (e) {
         e.preventDefault();
-
+        
         addParam('', '');
     });
-
+    
     $(document.body).on('click', '.btn-remove-param', function (e) {
         e.preventDefault();
-
+        
         $(this).closest('.param').remove();
     });
 }
@@ -164,13 +170,13 @@ function initAddPageModal() {
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
     var id = (new Date()).getTime();
-
+    
     metaWrapper.append(
         '<div class="input-group meta">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" />' +
+        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (name === 'keywords' || name === 'description' ? 'readonly="readonly"' : '') + ' />' +
         '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
         '    <span class="input-group-btn">' +
-        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button"><i class="fa fa-remove"></i></button>' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (name === 'keywords' || name === 'description' ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
         '    </span>' +
         '</div>'
     );
@@ -179,7 +185,7 @@ function addMetaTag(name, content) {
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
     var id = (new Date()).getTime();
-
+    
     metaWrapper.append(
         '<div class="input-group param">' +
         '    <input type="text" class="form-control input-sm required" required="required" name="paramTitle.' + id + '" placeholder="Data/parameter title" value="' + title + '" />' +
@@ -193,10 +199,10 @@ function addParam(title, value) {
 
 function showEditModal(name, pageArticle) {
     flog('showEditModal', name, pageArticle);
-
+    
     var modal = $('#modal-save-page');
     var form = modal.find('form');
-
+    
     var btnHistoryPage = modal.find('.btn-history-page');
     btnHistoryPage.unbind().removeClass('hidden');
     btnHistoryPage.history({
@@ -204,18 +210,18 @@ function showEditModal(name, pageArticle) {
         showPreview: false,
         modal: $('#modal-history')
     });
-
+    
     $.ajax({
         type: 'GET',
         url: name + '?type=json',
         dataType: 'json',
         success: function (resp) {
             flog('Loaded page data', resp);
-
+            
             var data = resp.data;
-
+            
             var template = data.template || '';
-
+            
             if (!template.endsWith('.html')) {
                 template += '.html';
             }
@@ -227,32 +233,53 @@ function showEditModal(name, pageArticle) {
                     opt.prop('selected', false);
                 }
             });
-
+            
             modal.find('input[name=pageName]').val(name);
             modal.find('input[name=title]').val(data.title);
             modal.find('input[name=itemType]').val(data.itemType);
             modal.find('input[name=category]').val(data.category);
             modal.find('input[name=tags]').val(data.tags);
-
+            
             if (name === 'index.html') {
                 modal.find('.defaultFolderPageTrigger').trigger('click');
             } else {
                 modal.find('.fileNameTrigger').trigger('click');
                 modal.find('.newFileName[type=text]').val(name);
             }
-
+            
             if (data.metas && data.metas.length > 0) {
+                var hasKeywords = false;
+                var hasDescription = false;
                 for (var i = 0; i < data.metas.length; i++) {
                     addMetaTag(data.metas[i].name, data.metas[i].content);
+                    
+                    if (data.metas[i].name === 'keywords') {
+                        hasKeywords = true;
+                    }
+                    
+                    if (data.metas[i].name === 'description') {
+                        hasDescription = true;
+                    }
                 }
+                
+                if (!hasKeywords) {
+                    addMetaTag('keywords', '');
+                }
+                
+                if (!hasDescription) {
+                    addMetaTag('description', '');
+                }
+            } else {
+                addMetaTag('keywords', '');
+                addMetaTag('description', '');
             }
-
+            
             for (var key in data) {
                 if (key !== 'title' && key !== 'itemType' && key !== 'category' && key !== 'tags' && key !== 'metas' && key !== 'body' && key !== 'cssFiles' && key !== 'template') {
                     addParam(key, data[key]);
                 }
             }
-
+            
             modal.modal('show');
         },
         error: function (resp) {
@@ -265,10 +292,10 @@ function showEditModal(name, pageArticle) {
 function initDeleteFolders() {
     $('body').on('click', '.btn-delete-folder', function (e) {
         e.preventDefault();
-
+        
         var btn = $(this);
         var href = btn.attr('href');
-
+        
         confirmDelete(href, href, function () {
             $('#subFoldersList').reloadFragment();
         });
@@ -281,31 +308,26 @@ function initPjax() {
     flog('initPjax', container);
     container.on('click', 'a.pjax', function (e) {
         e.preventDefault();
-
+        
         var a = $(this);
         var href = a.attr('href');
         var name = a.text();
-
+        
         flog('click pjax', a);
-
+        
         container.reloadFragment({
             url: href,
             whenComplete: function (response, status, xhr) {
                 flog('done', response, status, xhr);
-
+                
                 document.title = name;
                 window.history.pushState('', href, href);
-
+                
                 setRecentItem(window.location.pathname, window.location.pathname);
-
+                
                 var dom = $(response);
-                // var pages = $('#pages');
-                // var templates = $('#templates');
-
-                // flog('update pages', pages);
                 container.html(dom.find('#filesContainer > *'));
-                // templates.html(dom.find('#templates > *'));
-
+                
                 initFilesLayout();
                 initCopyCutPaste();
             }
