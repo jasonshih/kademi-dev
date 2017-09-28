@@ -139,7 +139,7 @@
                     options.onComponentReady.call(contentArea, component, editor);
                 }
             });
-            editor.on( 'blur', function() {
+            editor.on( 'change', function() {
                 console.log( 'Saving...', editor.name, editor.getData() );
 
                 component.attr('data-html', encodeURIComponent(editor.getData()));
