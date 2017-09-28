@@ -4,7 +4,7 @@ var win = $(window);
 function initManageEvent() {
     flog('initManageEvent');
     useHash = true;
-
+    
     var form = initEventForm();
     initConfirmationTab();
     initReminder(form);
@@ -12,7 +12,7 @@ function initManageEvent() {
     initCreateEmail();
     initDetailsTab();
     initChosen();
-    initFullscreenEditor($('[name=description]'), '?goto=');
+    initFullscreenEditor($('[name=description]'));
 }
 
 window.onbeforeunload = function () {
@@ -23,7 +23,7 @@ window.onbeforeunload = function () {
 
 function initChosen() {
     flog('initChosen');
-
+    
     $(".chosen-select").chosen({
         search_contains: true
     });
@@ -31,7 +31,7 @@ function initChosen() {
 
 function initDetailsTab() {
     flog('initDetailsTab');
-
+    
     var eventRange = $('#event-range');
     eventRange.exist(function () {
         flog('init report range');
@@ -55,7 +55,7 @@ function initDetailsTab() {
 
 function initCreateEmail() {
     flog('initCreateEmail');
-
+    
     $('.create-email').click(function (e) {
         e.preventDefault();
         showSendEmail();
@@ -71,23 +71,23 @@ function initCreateEmail() {
 
 function initConfirmationTab() {
     flog('initConfirmationTab');
-
+    
     $('#allowRegistration, #emailConfirm, #allowGuests').click(function () {
         checkConfirmation();
     });
-
+    
     checkConfirmation();
 }
 
 function initEventForm() {
     flog('initEventForm');
-
+    
     var form = $('.manageEventForm');
     form.on('change switchChange', function (e) {
         flog('change', e);
         form.addClass('dirty');
     });
-
+    
     form.forms({
         onValid: function (form) {
             // Renumber reminder inputs
@@ -102,22 +102,22 @@ function initEventForm() {
             });
         },
         onSuccess: function () {
-            $('.fullscreen-editor-preview').attr('src', '?goto=');
+            reloadFullscreenEditorPreview($('[name=description]'));
             Msg.info('Saved!');
             form.removeClass('dirty');
         }
     });
-
+    
     return form;
 }
 
 function initReminder(form) {
     flog('initReminder', form);
-
+    
     var reminderModal = $('#reminderDetails');
     var reminderForm = reminderModal.find('form');
     var tbody = $('tbody.reminders');
-
+    
     tbody.on('click', 'a.edit', function (e) {
         e.preventDefault();
         form.addClass('dirty');
@@ -125,7 +125,7 @@ function initReminder(form) {
         var ordinal = tbody.children().index(tr);
         flog('editing row', tr, 'of', tbody, 'ordinal=', ordinal);
         reminderForm.find('input[name=reminderId]').val(ordinal + '');
-
+        
         reminderForm.find('input[name=timerMultiple]').val(tr.find('.timerMultiple').val());
         reminderForm.find('.timer-unit').text(tr.find('.timerUnit').val());
         reminderForm.find('input[name=subject]').val(tr.find('.subject').val());
@@ -133,17 +133,17 @@ function initReminder(form) {
         var html = tr.find('.html').text();
         reminderForm.find('.reminder-content').text(html);
         //reminderForm.find('.reminder-content').html(html);
-
+        
         reminderModal.modal('show');
     });
-
+    
     tbody.on('click', 'a.delete', function (e) {
         e.preventDefault();
         form.addClass('dirty');
         var tr = $(e.target).closest('tr');
         tr.remove();
     });
-
+    
     // Reset the form when add reminder is clicked
     $('.add-reminder').click(function (e) {
         form.addClass('dirty');
@@ -156,16 +156,16 @@ function initReminder(form) {
 // This is when the user saves the reminder modal
 function initReminderModal(form) {
     flog('initReminderModal');
-
+    
     var reminderModal = $('#reminderDetails');
     var reminderForm = reminderModal.find('form');
     var tbody = $('tbody.reminders');
-
+    
     reminderForm.submit(function (e) {
         e.preventDefault();
-
+        
         form.addClass('dirty');
-
+        
         var timerMultiple = reminderForm.find('input[name=timerMultiple]').val();
         var timerUnit = reminderForm.find('.timer-unit').text();
         var subject = reminderForm.find('input[name=subject]').val();
@@ -173,27 +173,27 @@ function initReminderModal(form) {
         var themeSiteName = reminderForm.find('select[name=themeSite] option:selected').text();
         //var html = reminderForm.find('.reminder-content').html();
         var html = reminderForm.find('.reminder-content').val();
-
+        
         if (timerUnit === '') {
             Msg.error('Please select the time units, like how many days, hours, etc');
             return;
         }
-
+        
         if (timerMultiple === '') {
             Msg.error('Please select the number of ' + timerUnit);
             return;
         }
-
+        
         if (subject === '') {
             Msg.error('Please enter a subject for the reminder email');
             return;
         }
-
+        
         if (html.length < 5) {
             Msg.error('Please check your email message, it looks a bit short');
             return;
         }
-
+        
         var ordinal = reminderForm.find('input[name=reminderId]').val();
         var tr;
         if (ordinal === '') {
@@ -211,16 +211,16 @@ function initReminderModal(form) {
         } else {
             status.addClass('fa-exclamation-circle');
         }
-
+        
         tr.find('.timerMultiple').val(timerMultiple).not('input').text(timerMultiple);
         tr.find('.timerUnit').val(timerUnit).text(timerUnit);
         tr.find('.subject').val(subject).text(subject);
         tr.find('.themeSite').val(themeSite).text(themeSiteName);
         tr.find('.html').text(html);
-
+        
         reminderModal.modal('hide');
     });
-
+    
     $('.timer-units li').click(function (e) {
         e.preventDefault();
         var unit = $(e.target).text();
@@ -233,15 +233,15 @@ function checkConfirmation() {
     if ($('#allowRegistration').is(':checked')) {
         // Show everythign, hide anything not applicable
         $('.allowReg, .allowGuests, .emailReg').show();
-
+        
         if ($('#allowGuests').is(':checked')) {
-
+        
         } else {
             $('.allowGuests').hide();
         }
-
+        
         if ($('#emailConfirm').is(':checked')) {
-
+        
         } else {
             $('.emailReg').hide();
         }
@@ -261,7 +261,7 @@ function showSendEmail() {
         success: function (response) {
             log('showSendEmail: got websites', response.data);
             var newList = '';
-
+            
             if (response.data.length === 1) {
                 var websiteName = response.data[0];
                 postCreateEmail(websiteName);
@@ -304,6 +304,6 @@ function postCreateEmail(websiteName) {
             log('error', resp);
             Msg.error('Could not create the group email. Please check your internet connection, and that you have permissions');
         }
-
+        
     });
 }
