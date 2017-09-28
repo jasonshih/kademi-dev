@@ -61,9 +61,15 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/content/jquery.rateyo.min.css"
+            }
+        },
+        {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/content/jquery.barrating.min.js"
+                "path": "/theme/apps/content/jquery.rateyo.min.js"
             }
         },
         {

@@ -27,23 +27,17 @@
         getContent: function (component, keditor) {
             var rating = component.find('.krating').attr('data-rating');
             return '<div class="kratingWrap">\n' +
-                '    <select class="krating" data-rating="'+rating+'">\n' +
-                '        <option value="1">1</option>\n' +
-                '        <option value="2">2</option>\n' +
-                '        <option value="3">3</option>\n' +
-                '        <option value="4">4</option>\n' +
-                '        <option value="5">5</option>\n' +
-                '    </select>\n' +
+                '    <div class="krating" data-rating="' + rating + '">\n' +
+                '    </div>\n' +
                 '</div>';
         },
         initRating: function (component) {
             component.find('.kratingWrap').addClass('editing');
-            component.find('.krating').barrating({
-                theme: 'fontawesome-stars-o',
-                readonly: false,
-                initialRating: component.find('.krating').attr('data-rating'),
-                onSelect:function(value, text, event){
-                    component.find('.krating').attr('data-rating', value)
+            component.find('.krating').rateYo({
+                halfStar: true,
+                rating: component.find('.krating').attr('data-rating'),
+                onSet: function (rating, rateYoInstance) {
+                    component.find('.krating').attr('data-rating', rating)
                 }
             });
         }

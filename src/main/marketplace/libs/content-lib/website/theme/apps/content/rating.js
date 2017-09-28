@@ -1,12 +1,11 @@
-$(function() {
-    if(!$('body').hasClass('content-editor-page')){
+$(function () {
+    if (!$('body').hasClass('content-editor-page')) {
         $('.krating').each(function () {
-            $(this).barrating({
-                theme: 'fontawesome-stars-o',
-                readonly: true,
-                initialRating: $(this).attr('data-rating')
+            $(this).rateYo({
+                halfStar: true,
+                rating: $(this).attr('data-rating'),
+                readOnly: true
             });
         })
     }
-
 });
