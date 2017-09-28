@@ -59,6 +59,18 @@
                 "group": "main",
                 "path": "/theme/apps/content/showHideButton.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/jquery.barrating.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/rating.js"
+            }
         }
     ]
 }
