@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>Leads</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            .table {
+                table-layout:fixed;
+            }
+
+            .table td {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+            }
+
+        </style>
+    </head>
+    <body>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="clip-folder"></i> $page.leads.size() leads
+            </div>
+            <div class="panel-body">           
+                <div class="table-responsive">
+
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>TrackingID</th>
+                                <th>Email</th>
+                                <th>Last attained</th>
+                                <th>Awaiting goal</th>
+                                <th>Timer</th>
+                                <th>Created date</th>
+                                <th>Last attained date</th>
+                                <th>Stage</th>
+                                <th>Source</th>
+                                <th>Funnel version</th>
+                                <th>Team</th>
+                                <th>Assigned to</th>
+                                <th>Deleted date</th>
+                                <th>Closed date</th>
+                                <th>Cancelled</th>
+                                <th>Source Lead Id</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="lead-tbody">
+                            #foreach( $lead in $page.leads )
+                            <tr>
+                                <td>$!lead.trackingId</td>
+                                <td>
+                                    #if( $lead.profile )
+                                    <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $lead.lastAttainedGoal)
+                                    <a href="$lead.lastAttainedGoal">$lead.lastAttainedGoal</a>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $lead.currentGoal )
+                                    <a href="$lead.currentGoal">$lead.currentGoal</a>
+                                    #end
+                                </td>
+                                <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
+                                <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
+                                <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
+                                <td>$!lead.stageName</td>
+                                <td>$!lead.source</td>
+                                <td>$!lead.funnelBranch</td>
+                                <td>$!lead.assignedToOrg.formattedName</td>
+                                <td>$!lead.assignedToProfile.formattedName</td>
+                                <td>$!lead.deletedDate</td>
+                                <td>$!lead.closedDate</td>
+                                <td>$!lead.cancelled</td>
+                                <td>$!lead.sourceLead.id</td>
+                                <td>
+                                    <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
+                                </td>
+                                <td>
+                                    <a href="/leads/$lead.id" class="btn btn-info">
+                                        <span class="fa fa-pencil"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                            #if( $lead.processingStartedAt )
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    #if( $lead.processingStartedAt )
+                                    Processing started at:
+                                    <br />
+                                    <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $lead.completedProcessingAt )
+                                    Completed
+                                    <br />
+                                    <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>
+                                    #end
+                                </td>
+                                <td>
+                                    #if( $lead.numAttempts )
+                                    Num attempts
+                                    <br />
+                                    $lead.numAttempts
+                                    #end
+                                </td>
+                            </tr>
+                            #end
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
