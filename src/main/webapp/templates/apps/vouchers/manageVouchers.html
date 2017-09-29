@@ -255,7 +255,9 @@
                     var name = $(e.target).attr("href");
                     confirmDelete(name, name, function () {
                         Msg.info("Deleted ok");
-                        $('#voucher-types-table').reloadFragment();
+                        $('#voucher-types-table').reloadFragment({
+                            url: window.location.href
+                        });
                     });
                 });
             }
