@@ -1,7 +1,7 @@
-<div class=''>
+#if ($page && $page.name != "contenteditor")
     <div class="module-container">
-        <div class="contentForm panelBox">                       
-                        
+        <div class="contentForm panelBox">
+            
             #if( $folder.ilt )
                 #showIlt()
             #elseif( $folder.assignment )
@@ -9,11 +9,11 @@
             #else
                 #if (!$folder.complete && $folder.completable && $folder.startable)
                 <div class="module-labels">
-                    #showSelfPaced()                                    
+                    #showSelfPaced()
                 </div>
                 #end
-            #end                   
-                
+            #end
+            
 
             <div class="htmleditor" id="body">
                 $!page.body
@@ -23,139 +23,137 @@
             </script>
         </div>
     </div>
-</div>
-
-
-#set($viewMode = !$rc.child.editMode && !$request.params.print )
-#if($viewMode)
-    #portlets("userDataModal")
-    #portlets("modulePageBottom")
-#end
-
-
-
-#macro( showSelfPaced )
-    #if( $folder.complete )
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>
-            You have completed this module.
-        </div>
-    #elseif ( $folder.percentComplete )
-
-    #else
-        #if( $folder.completable )
-            #if( $folder.startable )
-
+    
+    #set($viewMode = !$rc.child.editMode && !$request.params.print )
+    #if($viewMode)
+        #portlets("userDataModal")
+        #portlets("modulePageBottom")
+    #end
+    
+    #macro( showSelfPaced )
+        #if( $folder.complete )
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                You have completed this module.
+            </div>
+        #elseif ( $folder.percentComplete )
+    
+        #else
+            #if( $folder.completable )
+                #if( $folder.startable )
+    
+                #else
+                    <acronym title="You have not completed prequisites">
+                        <div class="alert alert-warning">
+                            <span class="glyphicon glyphicon-lock"></span>
+                            This module is locked because you have not completed the pre-requisites:
+                            <ul>
+                                #foreach($module in $folder.unmetPrerequisites)
+                                    <li>
+                                        <a href="$module.href">$module.title</a>
+                                        -
+                                        #if( $module.inProgress )
+                                            #if( $module.percentComplete == 100 )
+                                                on last page
+                                            #else
+                                                $module.percentComplete
+                                            #end
+                                        #else
+                                            not started
+                                        #end
+                                    </li>
+                                #end
+                            </ul>
+                        </div>
+                    </acronym>
+                #end
             #else
-                <acronym title="You have not completed prequisites">
+                <acronym title="You do not have an enrolement for this module">
                     <div class="alert alert-warning">
                         <span class="glyphicon glyphicon-lock"></span>
-                        This module is locked because you have not completed the pre-requisites:
-                        <ul>
-                            #foreach($module in $folder.unmetPrerequisites)
-                                <li>
-                                    <a href="$module.href">$module.title</a>
-                                    -
-                                    #if( $module.inProgress )
-                                        #if( $module.percentComplete == 100 )
-                                            on last page
-                                        #else
-                                            $module.percentComplete
-                                        #end
-                                    #else
-                                        not started
-                                    #end
-                                </li>
-                            #end
-                        </ul>
+                        This module is view-only. You do not have an enrolement for this module.
                     </div>
                 </acronym>
             #end
-        #else
-            <acronym title="You do not have an enrolement for this module">
-                <div class="alert alert-warning">
-                    <span class="glyphicon glyphicon-lock"></span>
-                    This module is view-only. You do not have an enrolement for this module.
-                </div>
-            </acronym>
         #end
-    #end   
-#end
-
-#macro( showIlt )
-
-    #if( $folder.complete )
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>
-            You have completed this module.
-        </div>
-    #elseif ( $folder.submitted )
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>
-            You have submitted this module.
-        </div>    
-    #elseif( $folder.registeredForIlt )
-        #if( $folder.iltStarted )
-
-        #elseif( $folder.iltAboutToStart )
-        <div class="alert alert-info">
-            <span class="glyphicon glyphicon-ok"></span>
-            The session is starting in $formatter.formatAge($folder.nextIltDate)
-
-        </div>            
+    #end
+    
+    #macro( showIlt )
+        #if( $folder.complete )
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                You have completed this module.
+            </div>
+        #elseif ( $folder.submitted )
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                You have submitted this module.
+            </div>
+        #elseif( $folder.registeredForIlt )
+            #if( $folder.iltStarted )
+    
+            #elseif( $folder.iltAboutToStart )
+            <div class="alert alert-info">
+                <span class="glyphicon glyphicon-ok"></span>
+                The session is starting in $formatter.formatAge($folder.nextIltDate)
+    
+            </div>
+            #else
+            <div class="alert alert-info">
+                <span class="glyphicon glyphicon-ok"></span>
+                There is no session currently available.
+            </div>
+            #end
         #else
-        <div class="alert alert-info">
-            <span class="glyphicon glyphicon-ok"></span>
-            There is no session currently available.
-        </div>            
+            <div class="alert alert-info">
+                <span class="glyphicon glyphicon-ok"></span>
+                You are not registered for this module. Please choose a session:
+                <table class="table table-striped">
+                    <thead>
+                        <th>Date</th>
+                        <th>Location</th>
+                    </thead>
+                    <tbody>
+                    #foreach($event in $folder.upcomingModuleCalEvents )
+                    <tr>
+                        <td>
+                            <abbr class="timeago" title="$formatter.formatDateISO8601($event.calEvent.startDate)">
+                                $event.calEvent.startDate
+                            </abbr>
+                        </td>
+                        <td>$event.calEvent.location</td>
+                        <td>
+                            <a>Register</a>
+                        </td>
+                    </tr>
+                    #end
+                    </tbody>
+                </table>
+                
+            </div>
         #end
-    #else
-        <div class="alert alert-info">
-            <span class="glyphicon glyphicon-ok"></span>
-            You are not registered for this module. Please choose a session:
-            <table class="table table-striped">
-                <thead>
-                    <th>Date</th>
-                    <th>Location</th>
-                </thead>
-                <tbody>
-                #foreach($event in $folder.upcomingModuleCalEvents )
-                <tr>
-                    <td>
-                        <abbr class="timeago" title="$formatter.formatDateISO8601($event.calEvent.startDate)">
-                            $event.calEvent.startDate
-                        </abbr>                        
-                    </td>
-                    <td>$event.calEvent.location</td>
-                    <td>
-                        <a>Register</a>
-                    </td>
-                </tr>
-                #end                    
-                </tbody>
-            </table>
-            
-        </div>                
     #end
-
-#end
-
-#macro( showAssignment )
-
-    #if( $folder.complete )
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>
-            You have completed this module.
-        </div>
-    #elseif ( $folder.submitted )
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>
-            You have submitted this module.
-        </div>    
-    #elseif( $folder.assignmentPastDue )
-        <div class="alert alert-warning">
-            <span class="fa fa-exclamation"></span>
-            The assignment is now past its due date.
-        </div>        
+    
+    #macro( showAssignment )
+        #if( $folder.complete )
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                You have completed this module.
+            </div>
+        #elseif ( $folder.submitted )
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>
+                You have submitted this module.
+            </div>
+        #elseif( $folder.assignmentPastDue )
+            <div class="alert alert-warning">
+                <span class="fa fa-exclamation"></span>
+                The assignment is now past its due date.
+            </div>
+        #end
     #end
+#else
+    <div class="alert alert-warning">
+        Content of module page
+    </div>
 #end
