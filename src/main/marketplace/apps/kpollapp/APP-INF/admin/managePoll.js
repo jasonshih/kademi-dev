@@ -1,3 +1,25 @@
+controllerMappings
+    .adminController()
+    .path('/kpoll/managePolls/(?<pollId>[^/]*)')
+    .enabled(true)
+    .addPathResolver('pollId', 'checkPollId')
+    .defaultView(views.templateView('kpollapp/managePoll.html'))
+    .addMethod('GET', 'managePoll')
+    .addMethod('POST', 'managePollGroups', 'group')
+    .addMethod('POST', 'clearAnswerers', 'clearAnswerers')
+    .title('genTitle')
+    .build();
+
+controllerMappings
+    .adminController()
+    .path('/kpoll/managePolls/(?<pollId>[^/]*)/viewResult')
+    .enabled(true)
+    .addPathResolver('pollId', 'checkPollId')
+    .defaultView(views.templateView('kpollapp/viewResult.html'))
+    .addMethod('GET', 'viewResult')
+    .title('genTitle')
+    .build();
+
 function managePoll(page, params) {
     log.info('managePoll > page={}, param={}', page, params);
     
@@ -94,7 +116,7 @@ function clearAnswerers(page, params) {
     var searchResult = doDBSearch(page, queryJson);
     log.info('There are {} answerer(s)', searchResult.hits.totalHits);
     
-    var kpollDB = getKpollDB(page);
+    var kpollDB = getDB(page);
     for (var i = 0; i < searchResult.hits.hits.length; i++) {
         var anwserer = searchResult.hits.hits[i];
         var record = kpollDB.child(anwserer.getId());

@@ -1,3 +1,14 @@
+controllerMappings
+    .adminController()
+    .path('/kpoll/managePolls/')
+    .enabled(true)
+    .defaultView(views.templateView('kpollapp/managePolls.html'))
+    .addMethod('GET', 'managePolls')
+    .addMethod('POST', 'savePoll', 'isAdd')
+    .addMethod('POST', 'savePoll', 'isEdit')
+    .addMethod('POST', 'deletePolls', 'isDelete')
+    .build();
+
 function managePolls(page, params) {
     log.info('managePolls > {} {}', page, params);
     
@@ -13,12 +24,20 @@ function savePoll(page, params) {
     var data = {
         name: params.name || params.question,
         question: params.question,
-        answers: params.answers.split(','),
         enable: params.enable || false
     };
     
+    // Process answers
+    var answers = [];
+    for (var name in params) {
+        if (name.indexOf('answer') === 0) {
+            answers.push(params[name]);
+        }
+    }
+    data.answers = answers;
+    
     var id = params.id;
-    var kpollDB = getKpollDB(page);
+    var kpollDB = getDB(page);
     
     if (id) {
         log.info('Update detail of poll: {}', id);

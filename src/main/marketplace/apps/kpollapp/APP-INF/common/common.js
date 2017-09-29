@@ -1,41 +1,7 @@
-function getKpollDB(page) {
-    var jsonDB = page.find('/jsondb/');
-    
-    if (isNull(jsonDB)) {
-        page.throwNotFound('KongoDB is disabled. Please enable it for continue with this app!');
-        return;
-    }
-    
-    var kpollDB = jsonDB.child(DB_NAME);
-    
-    if (isNull(kpollDB)) {
-        log.info('Kpoll DB does not exist!');
-        
-        kpollDB = jsonDB.createDb(DB_NAME, DB_TITLE, DB_NAME);
-        setupDB(kpollDB);
-    }
-    
-    if (!kpollDB.allowAccess) {
-        setAllowAccess(kpollDB, true);
-    }
-    
-    return kpollDB;
-}
-
-function setupDB(kpollDB) {
-    var b = formatter.newMapBuilder();
-    b.field(RECORD_TYPES.POLL, JSON.stringify(pollMappings));
-    kpollDB.updateTypeMappings(b);
-    
-    var c = formatter.newMapBuilder();
-    c.field(RECORD_TYPES.ANSWERER, JSON.stringify(answererMappings));
-    kpollDB.updateTypeMappings(c);
-}
-
 function getPolls(page) {
     log.info('getPolls > page={} ', page);
     
-    var kpollDB = getKpollDB(page);
+    var kpollDB = getDB(page);
     var polls = kpollDB.findByType(RECORD_TYPES.POLL);
     
     log.info('Found {} poll(s)', polls.length);
@@ -46,27 +12,10 @@ function getPolls(page) {
 function getPollById(page, pollId) {
     log.info('getPollById > page={}, pollId={}', [page, pollId]);
     
-    var kpollDB = getKpollDB(page);
+    var kpollDB = getDB(page);
     var poll = kpollDB.child(pollId);
     
     return poll;
-}
-
-function doDBSearch(page, queryJson) {
-    log.info('doDBSearch > page={}', page);
-    
-    var kpollDB = getKpollDB(page);
-    var queryString = JSON.stringify(queryJson);
-    log.info('query={}', queryString);
-    
-    var searchResult = kpollDB.search(queryString);
-    if (isNull(searchResult)) {
-        log.info('searchResult=null');
-    } else {
-        log.info('searchResult={}', searchResult);
-    }
-    
-    return searchResult;
 }
 
 function getAnswerByUser(page, pollId, user) {
@@ -175,14 +124,16 @@ function getAnswers(page, pollId) {
     
     log.info('answered={}', JSON.stringify(answered));
     
-    for (var i = 0; i < poll.jsonObject.answers.length; i++) {
-        var ans = poll.jsonObject.answers[i];
-        
-        answers.list.push({
-            answer: ans,
-            hit: answered[ans] ? answered[ans].hit : 0,
-            percent: answered[ans] ? answered[ans].percent : 0,
-        });
+    if (poll.jsonObject.answers && poll.jsonObject.answers[0] && poll.jsonObject.answers.length > 0) {
+        for (var i = 0; i < poll.jsonObject.answers.length; i++) {
+            var ans = poll.jsonObject.answers[i];
+            
+            answers.list.push({
+                answer: ans,
+                hit: answered[ans] ? answered[ans].hit : 0,
+                percent: answered[ans] ? answered[ans].percent : 0,
+            });
+        }
     }
     
     return {
@@ -215,22 +166,6 @@ function editPollData(currentData, newData) {
     }
     
     return data;
-}
-
-function setAllowAccess(jsonDB, allowAccess) {
-    transactionManager.runInTransaction(function () {
-        jsonDB.setAllowAccess(allowAccess);
-    });
-}
-
-function updatePollMapping(page) {
-    var kpollDB = getKpollDB(page);
-    kpollDB.updateTypeMappings(RECORD_TYPES.POLL, JSON.stringify(pollMappings));
-}
-
-function updateAnswerMapping(page) {
-    var kpollDB = getKpollDB(page);
-    kpollDB.updateTypeMappings(RECORD_TYPES.ANSWERER, JSON.stringify(answererMappings));
 }
 
 function checkPollId(rf, groupName, groupVal, mapOfGroups) {

@@ -1,12 +1,4 @@
-var DB_NAME = 'kpollDB';
-var DB_TITLE = 'Kademi Poll DB';
-
-var RECORD_TYPES = {
-    POLL: 'poll',
-    ANSWERER: 'answerer'
-};
-
-var pollMappings = {
+var pollMapping = {
     "properties": {
         "name": {
             "type": "text",
@@ -93,7 +85,7 @@ var pollMappings = {
     }
 };
 
-var answererMappings = {
+var answererMapping = {
     "properties": {
         "user": {
             "type": "keyword",

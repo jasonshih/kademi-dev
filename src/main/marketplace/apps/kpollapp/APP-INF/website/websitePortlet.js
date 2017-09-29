@@ -1,8 +1,21 @@
-function kpollAdminPortlet(page, params) {
-    log.info('kpollAdminPortlet > {} {}', page, params);
-    
-    managePolls(page, params);
-}
+controllerMappings
+    .websiteController()
+    .enabled(true)
+    .path('/kpoll/(?<pollId>[^/]*)/answer')
+    .addMethod('POST', 'answerPoll')
+    .postPriviledge("READ_CONTENT")
+    .build();
+
+// ============================================================================
+// Website portlet
+// ============================================================================
+controllerMappings
+    .websitePortletController()
+    .enabled(true)
+    .portletSection('kpollPortlet')
+    .templatePath('/theme/apps/kpollapp/kpollPortlet.html')
+    .method('kpollPortlet')
+    .build();
 
 function kpollPortlet(page, params, context) {
     log.info('kpollPortlet > {} {}', page, params);
@@ -132,7 +145,7 @@ function answerPoll(page, params, context) {
                     }
                 }
                 
-                var kpollDB = getKpollDB(page);
+                var kpollDB = getDB(page);
                 var data = {
                     user: page.currentUser.name,
                     pollId: pollId,
