@@ -1,67 +1,14 @@
-#set ($rewardStoreFolder = $page)
-#if ($reward && $reward != "")
-#set ($rewardUrl = "/" + $reward)
-#set ($rewardStoreFolder = $page.find($rewardUrl))
-#end
-#set ($rewardStoreId = $rewardStoreFolder.rewardStore.id)
-#set($fromRange = 0)
-#if($params.fromRange)
-#set($fromRange = $formatter.toInteger($params.fromRange))
-#end
-#if ($numberOfProducts && $numberOfProducts != '')
-#set($fromRange = 0)
-#set($toRange = $formatter.toInteger($numberOfProducts))
-#else
-#if($params.toRange)
-#set($toRange = $formatter.toInteger($params.toRange))
-#else
-#set($toRange = $fromRange + 12)
-#end
-#end
-
-#set($startPrice = '')
-#if($params.startPrice)
-#set($startPrice = $formatter.toInteger($params.startPrice))
-#end
-
-#set($endPrice = '')
-#if($params.endPrice)
-#set($endPrice = $formatter.toInteger($params.endPrice))
-#end
-
-
-#if($params.sort)
-#set($sortParam = $params.sort)
-#elseif ($sort)
-#set($sortParam = $sort)
-#else
-#set($sortParam = 'title')
-#end
-#if($params.asc)
-#set($ascParam = $params.asc)
-#elseif ($asc)
-#set($ascParam = $asc)
-#else
-#set($ascParam = false)
-#end
-#set ($category = false)
-#if ($page.is('category'))
-#set ($category = $page.name)
-#end
-
 #set ($prodClass = "col-sm-4")
 #if ($itemsPerRow == 2)
-#set ($prodClass = "col-sm-6")
+    #set ($prodClass = "col-sm-6")
 #elseif ($itemsPerRow == 1)
-#set ($prodClass = "col-sm-12")
+    #set ($prodClass = "col-sm-12")
 #end
 
 #set ($app = $applications.get("rewardstore-lib"))
 
-#set( $products = $app.call(
-"findProducts", $params.q, $category, $rewardStoreId, $fromRange, $toRange, $startPrice, $endPrice, $sortParam, $ascParam ) )
+#set( $products = $app.call("findProducts", $page, $params, $rewardName, $numberOfProducts, $sort, $asc) )
 <div id="products-list" class="rewardStoreCategoryProductsComponent #if ($numberOfProducts) shouldLoadMore #end">
-    #set ($products = $request.attributes.products)
     #if( $products.hits.hits.size() == 0 )
     <p class="alert alert-info">No products were found matching the critieria</p>
     #else
