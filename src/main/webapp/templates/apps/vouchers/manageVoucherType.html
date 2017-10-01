@@ -435,6 +435,7 @@
                             showUnmatched(data.result.data.unmatched);
                             $(".results").show();
                             Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+                            reloadVouchers();
                         } else {
                             Msg.error("Uploading failed: " + data.result.messages);
                         }

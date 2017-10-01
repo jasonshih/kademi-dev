@@ -667,3 +667,16 @@ body .form-control::-webkit-input-placeholder {
 /*
     End of mkhoudary modifications for invoices
 */
+
+/*
+    WT
+    Fix for Rocket.Chat live chat
+*/
+.rocketchat-widget {
+    right: unset !important;
+    left: 10px !important;
+}
+
+.rocketchat-widget[data-state="closed"] {
+    width: 210px !important;
+}

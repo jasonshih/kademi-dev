@@ -9,6 +9,50 @@ controllerMappings
     .enabled(true)
     .build();
 
+function saveSettings(page, params) {
+    log.info('saveSettings > page={}, params={}', page, params);
+    
+    var translationEnabled = params.translationEnabled || '';
+    
+    page.setAppSetting(APP_NAME, 'translationEnabled', translationEnabled);
+    
+    return views.jsonResult(true);
+}
+
+
+function getAppSettings(page) {
+    log.info('getAppSettings > page={}', page);
+    
+    var websiteFolder = page.closest('websiteVersion');
+    var org = page.organisation;
+    var branch = null;
+    
+    if (websiteFolder !== null && typeof websiteFolder !== 'undefined') {
+        branch = websiteFolder.branch;
+    }
+    
+    var app = applications.get(APP_NAME);
+    if (app !== null) {
+        var settings = app.getAppSettings(org, branch);
+        return settings;
+    }
+    
+    return null;
+}
+
+function isTranslationEnabled(page) {
+    log.info('isTranslationEnabled > page={}', page);
+    
+    var translationEnabled = false;
+    var settings = getAppSettings(page);
+    
+    if (isNotNull(settings)) {
+        translationEnabled = settings.translationEnabled === 'true';
+    }
+    
+    return translationEnabled;
+}
+
 function getKToolbar(page, params, context) {
     log.info('getKToolbar');
     

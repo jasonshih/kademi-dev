@@ -232,7 +232,7 @@
                             </div>
                         #else
                         #if ($applicationManager.isActive($applications.blogs, $page.parent.website.liveBranch()))
-                                <textarea class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="">$!page.body</textarea>
+                                <textarea autocomplete="off" class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="" data-preview="?goto=">$!page.body</textarea>
                         #else
                         <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
                             <b>$page.parent.website.name</b> website is disabled. Please enable it at

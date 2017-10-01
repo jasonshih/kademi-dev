@@ -247,7 +247,6 @@
 
                                         <div class="col-md-9">
                                             <select name="template" id="template" class="form-control required">
-                                                <option value="">None</option>
                                                 #foreach($templateEntry in $page.closest("branch").getTemplates($page).entrySet() )
                                                     <option value="$templateEntry.key">$templateEntry.value</option>
                                                 #end

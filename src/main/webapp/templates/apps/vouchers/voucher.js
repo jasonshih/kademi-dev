@@ -1,3 +1,10 @@
+function initVouchersPage() {
+    initSearchVoucher();
+    initDeleteVouchers();
+    initDownloadCSV();
+    initSelectAll();
+}
+
 function doSearch() {
     var newUrl = window.location.pathname + "?q=" + $("#voucher-query").val() + "&status=" + $("#status").val() + "&voucherType=" + $("#voucherType").val();
     flog("New URL ", newUrl);
@@ -15,6 +22,17 @@ function doSearch() {
         error: function (resp) {
             Msg.error("err");
         }
+    });
+}
+
+function initSelectAll() {
+    $('body').on('change', '.selectAll', function (e) {
+        flog($(this).is(":checked"));
+        //$("body").find(":checkbox.product-check").check($(this).is(":checked"));
+        var checkedStatus = this.checked;
+        $('body').find(':checkbox.voucher-check').each(function () {
+            $(this).prop('checked', checkedStatus);
+        });
     });
 }
 

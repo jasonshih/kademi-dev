@@ -1402,20 +1402,51 @@ Kalert.close = function () {
 };
 
 (function ($, window) {
-    window.initFullscreenEditor = function (target, previewLink) {
+    var allGroups = null;
+    window.initFullscreenEditor = function (target) {
         var isContentEditor = target.hasClass('contenteditor');
-        target.addClass('fullscreen-editor').removeClass('contenteditor htmleditor').hide();
+        var isEdmEditor = target.hasClass('edmeditor');
+        var previewLink = target.attr('data-preview');
+        target.addClass('fullscreen-editor').removeClass('contenteditor htmleditor edmeditor').hide();
         
-        if (isContentEditor) {
-            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
-                initFullscreenEditorModal(target, isContentEditor);
-                initFullscreenEditorPreview(target, previewLink);
-            });
+        if (isContentEditor || isEdmEditor) {
+            if (allGroups === null) {
+                $.ajax({
+                    url: '/groups/_DAV/PROPFIND?fields=name,milton:groupTitle',
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (resp) {
+                        allGroups = {};
+                        $.each(resp, function (i, group) {
+                            allGroups[group.name] = group.groupTitle || group.name;
+                        });
+                    }, complete: function () {
+                        initKeditor(target, isContentEditor, isEdmEditor, allGroups);
+                    }
+                });
+            } else {
+                initKeditor(target, isContentEditor, isEdmEditor, allGroups);
+            }
         } else {
-            initFullscreenEditorModal(target, isContentEditor);
+            initFullscreenEditorModal(target, isContentEditor, isEdmEditor);
             initFullscreenEditorPreview(target, previewLink);
         }
     };
+    
+    function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
+        var previewLink = target.attr('data-preview');
+        if (isContentEditor) {
+            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+                initFullscreenEditorPreview(target, previewLink);
+            });
+        } else {
+            $.getScriptOnce('/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js', function () {
+                initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
+                initFullscreenEditorPreview(target, previewLink);
+            });
+        }
+    }
     
     function initFullscreenEditorPreview(target, previewLink) {
         var iframe = $('<iframe border="0" class="fullscreen-editor-preview"></iframe>');
@@ -1424,7 +1455,7 @@ Kalert.close = function () {
         iframe.attr('src', previewLink);
     }
     
-    function initFullscreenEditorModal(target, isContentEditor) {
+    function initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups) {
         var content = target.html() || '';
         var id = target.attr('id');
         if (!id) {
@@ -1433,7 +1464,7 @@ Kalert.close = function () {
         }
         var modalId = 'modal-fullscreen-' + id;
         var modal = $(
-            '<div id="' + modalId + '" class="modal ' + (isContentEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
+            '<div id="' + modalId + '" class="modal ' + (isContentEditor || isEdmEditor ? 'modal-full' : '') + ' fullscreen-editor-modal fade" tabindex="-1">' +
             '    <div class="modal-dialog modal-lg">' +
             '        <div class="modal-content">' +
             '            <div class="modal-body">' +
@@ -1446,7 +1477,7 @@ Kalert.close = function () {
             '                            <span class="loading-text">Initializing editor...</span>' +
             '                        </span>' +
             '                    </div>' +
-            '                    <textarea class="' + (isContentEditor ? 'contenteditor' : 'htmleditor') + '">' + content + '</textarea>' +
+            '                    <textarea autocomplete="off" class="form-control">' + content + '</textarea>' +
             '                </div>' +
             '            </div>' +
             '            <div class="modal-footer">' +
@@ -1465,15 +1496,16 @@ Kalert.close = function () {
         
         var ckeditor;
         var editorLoading = modal.find('.editor-loading');
-        if (isContentEditor) {
+        if (isContentEditor || isEdmEditor) {
             var pageName = getFileName(window.location.href);
             
-            textarea.contentEditor({
+            textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
                 iframeMode: true,
                 snippetsUrl: './_components?fileName=' + pageName,
                 snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
                 basePath: '',
                 pagePath: '',
+                allGroups: allGroups,
                 onReady: function () {
                     editorLoading.hide();
                 }
@@ -1499,8 +1531,8 @@ Kalert.close = function () {
             e.preventDefault();
             
             var content;
-            if (isContentEditor) {
-                content = textarea.contentEditor('getContent');
+            if (isContentEditor || isEdmEditor) {
+                content = textarea[isContentEditor ? 'contentEditor' : 'edmEditor']('getContent');
             } else {
                 content = ckeditor.getData();
             }
@@ -1510,5 +1542,10 @@ Kalert.close = function () {
             modal.modal('hide');
         });
     }
+    
+    window.reloadFullscreenEditorPreview = function (target) {
+        var preview = target.attr('data-preview');
+        target.siblings('.fullscreen-editor-preview').attr('src', preview);
+    };
     
 })(jQuery, window);

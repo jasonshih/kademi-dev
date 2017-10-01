@@ -2,3 +2,4 @@ controllerMappings.addComponent("content/components", "socialLinks", "html", "Di
 controllerMappings.addComponent("content/components", "errorDetails", "html", "Displays detailed error page", "Content App component");
 controllerMappings.addComponent("content/components", "htmlPanel", "html", "Displays panel with text and icon", "Content App component");
 controllerMappings.addComponent("content/components", "showHideButton", "html", "A button which causes all following content to be initially hidden, and is only shown when clicked", "Content App component");
+controllerMappings.addComponent("content/components", "rating", "html", "Shows a rating stars which is predefined by admin", "Content App component");

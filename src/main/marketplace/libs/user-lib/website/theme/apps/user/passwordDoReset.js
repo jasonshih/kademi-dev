@@ -1,5 +1,5 @@
 (function($){
-    $(document).ready(function(){
+    $(function(){
         if($('.password-do-reset-component').length > 0) {
             $("#passwordResetForm").forms({
                 onSuccess: function (resp) {
@@ -14,4 +14,5 @@
             }
         }
     });
+    
 })(jQuery);

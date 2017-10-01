@@ -41,7 +41,7 @@
             #set ($pagePath = "/repositories/" + $file.repository.name + "/" + $file.repository.liveBranch + "/")
         #end
 
-        <textarea id="edm-editor">$!file.body</textarea>
+        <textarea id="edm-editor" autocomplete="off">$!file.body</textarea>
 
         <div id="editor-loading">
             <span>

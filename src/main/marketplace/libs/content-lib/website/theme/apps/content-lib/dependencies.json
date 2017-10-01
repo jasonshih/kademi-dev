@@ -59,6 +59,24 @@
                 "group": "main",
                 "path": "/theme/apps/content/showHideButton.js"
             }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/content/jquery.rateyo.min.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/jquery.rateyo.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/rating.js"
+            }
         }
     ]
 }

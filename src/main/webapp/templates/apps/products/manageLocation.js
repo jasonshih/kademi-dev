@@ -11,6 +11,10 @@
 
             var newStock = prompt('Please enter new stock level', stock);
 
+            if (newStock === null) {
+                return;
+            }
+
             var newStockInt = parseInt(newStock);
             $.ajax({
                 url: href,

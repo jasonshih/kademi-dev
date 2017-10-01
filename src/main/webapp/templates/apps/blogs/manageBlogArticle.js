@@ -6,7 +6,7 @@ function initManageBlogArticle(pagePath) {
     $('.timeago').timeago();
     
     
-    initFullscreenEditor($('[name=body]'), '?goto=');
+    initFullscreenEditor($('[name=body]'));
     
     $('.article-form').forms({
         onSuccess: function (resp, form) {
@@ -14,7 +14,7 @@ function initManageBlogArticle(pagePath) {
             if (resp.nextHref) {
                 window.location = resp.nextHref;
             } else {
-                $('.fullscreen-editor-preview').attr('src', '?goto=');
+                reloadFullscreenEditorPreview($('[name=body]'));
             }
             Msg.info('Saved');
         }

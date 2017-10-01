@@ -146,7 +146,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadProfileCoverComponent.js"
+                "path": "/theme/apps/leadman/leadProfileCover.js"
             }
         },
         {
@@ -158,7 +158,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/leadman/leadQuotesComponent.js"
+                "path": "/theme/apps/leadman/leadQuotes.js"
             }
         },
         {
