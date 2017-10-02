@@ -1254,6 +1254,30 @@
         });
     };
     
+    contentEditor.renderContainerForOldContent = function (content) {
+        var newContainer = $(
+            '<section>' +
+            '    <div class="container-bg background-for">' +
+            '        <div class="container-layout container-fluid">' +
+            '            <div class="container-content-wrapper">' +
+            '                <div class="row">' +
+            '                    <div class="col-sm-12" data-type="container-content">' +
+            '                        <section data-type="component-text">' +
+            '                            <div class="keditor-component-text-content">' +
+            '                                <div class="keditor-component-text-content-inner clearfix"></div>' +
+            '                            </div>' +
+            '                        </section>' +
+            '                    </div>' +
+            '                </div>' +
+            '            </div>' +
+            '        </div>' +
+            '    </div>' +
+            '</section>'
+        );
+        newContainer.find('.keditor-component-text-content-inner').html(content);
+        
+        return newContainer;
+    };
     var methods = {
         init: function (options) {
             options = $.extend({}, contentEditor.DEFAULTS, options);
@@ -1322,36 +1346,27 @@
                             if (content === '') {
                                 contentArea.addClass('empty');
                             }
-                            
-                            var nonContainer = contentArea.children().not('section');
-                            var newContainer = null;
-                            if (nonContainer.length > 0) {
+
+                            var oldContent = contentArea.children().not('section');
+                            var newContainers = [];
+                            if (oldContent.length > 0) {
                                 flog('Wrap all contents which are not container into a text component inside 1 col container');
-                                
-                                newContainer = $(
-                                    '<section>' +
-                                    '    <div class="container-bg background-for">' +
-                                    '        <div class="container-layout container-fluid">' +
-                                    '            <div class="container-content-wrapper">' +
-                                    '                <div class="row">' +
-                                    '                    <div class="col-sm-12" data-type="container-content">' +
-                                    '                        <section data-type="component-text">' +
-                                    '                            <div class="keditor-component-text-content">' +
-                                    '                                <div class="keditor-component-text-content-inner clearfix"></div>' +
-                                    '                            </div>' +
-                                    '                        </section>' +
-                                    '                    </div>' +
-                                    '                </div>' +
-                                    '            </div>' +
-                                    '        </div>' +
-                                    '    </div>' +
-                                    '</section>'
-                                );
-                                newContainer.find('.keditor-component-text-content-inner').html(nonContainer)
-                                contentArea.append(newContainer)
+                                var newContainer = contentEditor.renderContainerForOldContent(oldContent);
+                                contentArea.append(newContainer);
+                                newContainers.push(newContainer);
                             }
                             
-                            return newContainer;
+                            var textNodes = contentArea.contents().filter(function () {
+                                return this.nodeType === 3;
+                            });
+                            if (textNodes.length > 0) {
+                                flog('Wrap all text nodes into a text component inside 1 col container');
+                                var newContainer = contentEditor.renderContainerForOldContent(textNodes);
+                                contentArea.append(newContainer);
+                                newContainers.push(newContainer);
+                            }
+                            
+                            return newContainers;
                         },
                         containerSettingEnabled: true,
                         containerSettingInitFunction: contentEditor.initContainerSetting,
