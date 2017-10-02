@@ -15,9 +15,7 @@
         <div class="row">
             #foreach($p in $products.hits.hits )
                 #set($bg = "/theme/img/photo_holder.png")
-                #if( $p.fields.get('images.hash').value )
-                    #set($bg = "/_hashes/files/$p.fields.get('images.hash').value/alt-640-640.png")
-                #end
+                #set($bg = $p.fields.get('primaryImageHref').value )
         
                 <div class="$prodClass product-item">
                     <div class="thumbnail product">
