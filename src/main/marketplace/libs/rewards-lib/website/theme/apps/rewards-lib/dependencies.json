@@ -65,6 +65,12 @@
                 "group": "main",
                 "path": "/theme/apps/rewards-lib/rewardSelector.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.milton-upload.js"
+            }
         }
     ]
 }
