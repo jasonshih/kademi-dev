@@ -19,7 +19,7 @@
             
             if (!shouldLoadMore) {
                 $(window).scroll(function () {
-                    if (!infiniteLoader.hasClass('limited') && infiniteLoader.is(':hidden') && $(window).scrollTop() == $(document).height() - $(window).height()) {
+                    if (!infiniteLoader.hasClass('limited') && infiniteLoader.is(':hidden') && $(window).scrollTop() >= $(document).height() - $(window).height()) {
                         doPaginate();
                     }
                 });
