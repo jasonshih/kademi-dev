@@ -198,14 +198,15 @@
                                         Add/Remove groups
                                     </a>
                                 </p>
-                                <div class="GroupList blocks-wrapper">
+                                <div class="GroupList blocks-wrapper" id="recipientList">
+                                    <p>Number recipients: $page.numRecipients</p>
                                     #foreach($g in $page.groupRecipients)
                                         <span class="block $g.name">$g.name
                                             #if( $page.status == "Draft" )
                                                 <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
                                             #end
                                         </span>
-                                    #end
+                                    #end                                    
                                 </div>
                             </div>
                             <hr />

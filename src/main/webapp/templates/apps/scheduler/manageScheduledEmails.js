@@ -198,17 +198,7 @@ function setGroupRecipient(name, isRecip) {
             },
             success: function (data) {
                 flog("saved ok", data);
-                if (isRecip) {
-                    $(".GroupList").append(
-                        '<span class="block ' + name + '">' +
-                        name +
-                        '</span>'
-                    );
-                    flog("appended to", $(".GroupList"));
-                } else {
-                    $(".GroupList ." + name).remove();
-                    flog("removed from", $(".GroupList"));
-                }
+                $("#recipientList").reloadFragment();
             },
             error: function (resp) {
                 flog("error", resp);
