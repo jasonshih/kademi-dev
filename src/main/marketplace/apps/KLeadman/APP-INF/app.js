@@ -55,22 +55,22 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
 
 
         // Create an orgtype for customer/lead companies
-        var orgTypeName = "customer-company";
-        var orgType = orgRoot.find("/orgTypes/" + orgTypeName);
+        var custOrgTypeName = "customer-company";
+        var orgType = orgRoot.find("/orgTypes/" + custOrgTypeName);
         if (orgType == null) {
-            orgRoot.createOrgType(orgTypeName, "Company");
+            orgRoot.createOrgType(custOrgTypeName, "Company");
             if (alertsApp) {
-                alertsApp.createAdminAlert("KLeadMan", "We've created an org type called " + orgTypeName + " for your customer companies");
+                alertsApp.createAdminAlert("KLeadMan", "We've created an org type called " + custOrgTypeName + " for your customer companies");
             }
         }
 
         // Create an orgtype for sales teams
-        orgTypeName = "sales-team";
-        orgType = orgRoot.find("/orgTypes/" + orgTypeName);
+        var salesOrgTypeName = "sales-team";
+        orgType = orgRoot.find("/orgTypes/" + salesOrgTypeName);
         if (orgType == null) {
-            orgRoot.createOrgType(orgTypeName, "Sales Team");
+            orgRoot.createOrgType(salesOrgTypeName, "Sales Team");
             if (alertsApp) {
-                alertsApp.createAdminAlert("KLeadMan", "We've created an org type called " + orgTypeName + " for your sales teams.");
+                alertsApp.createAdminAlert("KLeadMan", "We've created an org type called " + salesOrgTypeName + " for your sales teams.");
             }
         }
 
@@ -84,6 +84,8 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
                 alertsApp.createAdminAlert("KLeadMan", "We've created a customer journey for you here - <a href='/funnels/" + funnel.name + "'>Edit journey here</a>");
             }
         }
+
+        leadmanApp.setSettings(salesGroupName, salesOrgTypeName, groupName, custOrgTypeName);
 
 
     } else {
