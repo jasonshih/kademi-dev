@@ -110,6 +110,7 @@ function downloadCSV() {
 
 function reloadVouchers() {
     $("#searchResults").reloadFragment({
+        url: window.location.href,
         whenComplete: function () {
             $('abbr.timeago').timeago();
         }
