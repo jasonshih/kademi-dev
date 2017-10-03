@@ -1346,7 +1346,7 @@
                             if (content === '') {
                                 contentArea.addClass('empty');
                             }
-
+                            
                             var oldContent = contentArea.children().not('section');
                             var newContainers = [];
                             if (oldContent.length > 0) {
@@ -1388,7 +1388,45 @@
                                 dynamicHref = '/' + dynamicHref;
                             }
                             dynamicElement.attr('data-dynamic-href', dynamicHref)
-                        } : null
+                        } : null,
+                        onContainerChanged: function (event, changedContainer) {
+                            changedContainer.find('[data-type="container-content"]').each(function () {
+                                var containerContent = $(this);
+                                
+                                var tileComponents = containerContent.find('.keditor-component').filter(function () {
+                                    var type = $(this).attr('data-type');
+                                    
+                                    return type.indexOf('Tile') !== -1;
+                                });
+                                
+                                if (tileComponents.length > 0) {
+                                    flog('Container content contains tile component', tileComponents);
+                                    
+                                    if (!containerContent.hasClass('row')) {
+                                        flog('Add div.row');
+                                        
+                                        var colClasses = [];
+                                        $.each(containerContent.attr('class').split(' '), function (i, className) {
+                                            if (className && className.indexOf('col-') !== -1) {
+                                                colClasses.push(className);
+                                            }
+                                        });
+                                        
+                                        colClasses = colClasses.join(' ');
+                                        containerContent.removeClass(colClasses).addClass('row');
+                                        containerContent.wrap('<div class="' + colClasses + '"></div>');
+                                    }
+                                } else {
+                                    flog('Container content does not contains tile component');
+                                    
+                                    var parent = containerContent.parent();
+                                    if (containerContent.hasClass('row')) {
+                                        flog('Remove div.row');
+                                        containerContent.addClass(parent.attr('class')).removeClass('row').unwrap();
+                                    }
+                                }
+                            });
+                        }
                     });
                 });
                 
