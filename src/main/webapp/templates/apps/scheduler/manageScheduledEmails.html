@@ -20,10 +20,12 @@
                         <table class="Summary table table-hover">
                             <thead>
                                 <tr>
-                                    <th width="20%">Start</th>
-                                    <th width="20%">End</th>
+                                    <th width="200px">Start</th>
+                                    <th width="200px">End</th>
+                                    <th width="200px">Last ran</th>
+                                    <th width="200px">Next due</th>
                                     <th width="">Title</th>
-                                    <th width="10%">Enabled</th>
+                                    <th width="50px">Enabled</th>
                                     <th width="100px"></th>
                                 </tr>
                             </thead>
@@ -37,8 +39,23 @@
                                 <tr class="emailStatus$!{email.job.enabled}" data-name="$email.name">
                                     <td class="Date">$formatter.formatDate($email.job.startDate, $page.organisation.timezone)</td>
                                     <td class="Date">$formatter.formatDate($email.job.endDate, $page.organisation.timezone)</td>
+                                    <td class="Date">
+                                        #if( $email.lastRunDate )
+                                        <abbr class="timeago" title="$formatter.formatDateISO8601($email.lastRunDate)">$email.lastRunDate</abbr>
+                                        #end
+                                    </td>
+                                    <td class="Date">
+                                        $formatter.formatAge($email.nextRunTime)
+                                    </td>
+                                    
                                     <td class="Name">$formatter.htmlEncode($email.job.title)</td>
-                                    <td><span class="Status">$!email.job.enabled</span></td>
+                                    <td>
+                                        #if( $email.job.enabled ) 
+                                        <span class="fa fa-check text-success fa-2x"></span>
+                                        #else
+                                        <span class="fa fa-stop-circle text-danger fa-2x"></span>
+                                        #end
+                                    </td>
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="$email.name" class="btn btn-sm btn-info btn-sm">
