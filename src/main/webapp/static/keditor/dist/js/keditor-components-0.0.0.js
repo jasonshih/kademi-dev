@@ -310,9 +310,6 @@
 })(jQuery);
 
 /**
- * Created by Anh on 7/27/2016.
- */
-/**
  * KEditor Carousel Component
  * @copyright: Kademi (http://kademi.co)
  * @author: Kademi (http://kademi.co)
@@ -382,6 +379,28 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
+                    
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-prev-icon, .btn-next-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-prev-icon').on('change', function (e) {
+                                var carousel = keditor.getSettingComponent().find('.carousel');
+                                carousel.find('.glyphicon-chevron-left').attr('class', 'fa glyphicon-chevron-left ' + e.icon);
+                            });
+                            
+                            form.find('.btn-next-icon').on('change', function (e) {
+                                var carousel = keditor.getSettingComponent().find('.carousel');
+                                carousel.find('.glyphicon-chevron-right').attr('class', 'fa glyphicon-chevron-right ' + e.icon);
+                            });
+                        });
+                    });
                     
                     var carouselAddImage = form.find('.carouselAddImage');
                     var carouselItemsWrap = form.find('.carouselItemsWrap');
@@ -508,6 +527,14 @@
                         } else {
                             comp.attr('data-wrap', 'false');
                         }
+                    });
+                    
+                    form.find('.select-image-size').on('change', function () {
+                        var carousel = keditor.getSettingComponent().find('.carousel');
+                        
+                        carousel.attr('data-image-size', this.value);
+                        
+                        carousel.find('.carousel-img').css('background-size', this.value === 'centered' ? 'unset' : '');
                     });
                 }
             });
@@ -644,15 +671,29 @@
                 }
             });
             
-            var isWrap = component.find('.carousel').attr('data-wrap');
-            var pause = component.find('.carousel').attr('data-pause');
-            var interval = component.find('.carousel').attr('data-interval');
-            var height = component.find('.carousel').attr('data-height');
+            var carousel = component.find('.carousel');
+            var isWrap = carousel.attr('data-wrap');
+            var pause = carousel.attr('data-pause');
+            var interval = carousel.attr('data-interval');
+            var height = carousel.attr('data-height');
             
             form.find('.carouselPause').val(pause);
             form.find('.carouselInterval').val(interval);
             form.find('.carouselWrap').prop('checked', isWrap === 'true');
             form.find('.carouselHeight').val(height);
+            form.find('.select-image-size').val(carousel.attr('data-image-size') || 'stretched');
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconPrev = carousel.find('.glyphicon-chevron-left').attr('class') || '';
+                    iconPrev = iconPrev.replace('glyphicon-chevron-left', '').replace('fa', '').trim();
+                    form.find('.btn-prev-icon').find('i').attr('class', 'fa ' + iconPrev).end().find('input').val(iconPrev);
+                    
+                    var iconNext = carousel.find('.glyphicon-chevron-right').attr('class') || '';
+                    iconNext = iconNext.replace('glyphicon-chevron-right', '').replace('fa', '').trim();
+                    form.find('.btn-next-icon').find('i').attr('class', 'fa ' + iconNext).end().find('input').val(iconNext);
+                });
+            });
         },
         
         addItemToCarousel: function (component, data) {
@@ -664,6 +705,7 @@
             var index = carouselInner.children().length;
             var cls = index === 0 ? 'active' : '';
             var backgroundUrl = "background-image: url('" + data.src + "')";
+            var backgroundSize = carousel.attr('data-image-size') === 'centered' ? ';background-size: unset' : '';
             
             carousel.find('.carousel-indicators').append(
                 '<li data-target="#' + id + '" data-slide-to="' + index + '" class="' + cls + '"></li>'
@@ -677,7 +719,7 @@
                 itemStr += '</div>';
             } else {
                 itemStr += '<div data-hash="' + data.hash + '" class="item ' + cls + '">';
-                itemStr += '   <div class="carousel-img" style="' + backgroundUrl + '"></div>';
+                itemStr += '   <div class="carousel-img" style="' + backgroundUrl + backgroundSize + '"></div>';
                 itemStr += '   <div class="carousel-caption">' + data.caption + '</div>';
                 itemStr += '</div>';
             }

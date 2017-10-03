@@ -11,20 +11,43 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="photo-responsive" class="col-sm-12">Height</label>
+        <label class="col-sm-12">Height</label>
         <div class="col-sm-12">
             <input type="number" class="form-control carouselHeight" value="200" />
             <small class="help-block">Minimun is <code>200</code></small>
         </div>
     </div>
     <div class="form-group">
-        <label for="photo-responsive" class="col-sm-12">Cycle continuously</label>
+        <label class="col-sm-12">Image size</label>
+        <div class="col-sm-12">
+            <select class="form-control select-image-size">
+                <option selected value="stretched">Stretched</option>
+                <option value="centered">Centered</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Previous Icon</label>
+        
+        <div class="col-sm-12">
+            <button class="btn btn-default btn-prev-icon"></button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Next Icon</label>
+        
+        <div class="col-sm-12">
+            <button class="btn btn-default btn-next-icon"></button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Cycle continuously</label>
         <div class="col-sm-12">
             <input type="checkbox" class="carouselWrap" />
         </div>
     </div>
     <div class="form-group">
-        <label for="photo-align" class="col-sm-12">Pause</label>
+        <label class="col-sm-12">Pause</label>
         <div class="col-sm-12">
             <select class="form-control carouselPause">
                 <option selected value="">No</option>
@@ -33,7 +56,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="photo-height" class="col-sm-12">Interval</label>
+        <label class="col-sm-12">Interval</label>
         <div class="col-sm-12">
             <input type="number" class="form-control carouselInterval" value="5000" />
         </div>
