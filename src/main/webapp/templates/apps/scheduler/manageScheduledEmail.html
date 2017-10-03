@@ -188,18 +188,17 @@
                                 </div>
                             </div>
                             <hr />
-                            <p class="lead">Recipients
-                                <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small>
-                            </p>
+
                             <div class="Recipient Content">
                                 <p class="clearfix">
                                     <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
                                         <i class="fa fa-plus"></i>
-                                        Add/Remove groups
+                                        Add/Remove recipients
                                     </a>
+                                    <small class="text-muted" style="font-size: 14px;"> (Select which user groups to send to)</small>
                                 </p>
                                 <div class="GroupList blocks-wrapper" id="recipientList">
-                                    <p>Number recipients: $page.numRecipients</p>
+                                    <p>Number recipients: <b>$page.numRecipients</b></p>
                                     #foreach($g in $page.groupRecipients)
                                         <span class="block $g.name">$g.name
                                             #if( $page.status == "Draft" )
