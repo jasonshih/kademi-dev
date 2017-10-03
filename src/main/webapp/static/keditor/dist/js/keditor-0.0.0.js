@@ -1061,6 +1061,8 @@
                 if (typeof options.onContentChanged === 'function') {
                     options.onContentChanged.call(self, event, contentArea);
                 }
+                
+                contentArea.removeClass('keditor-highlighted-dropzone');
             },
             start: function () {
                 body.addClass('highlighted-container-content');
@@ -1263,6 +1265,8 @@
                 if (typeof options.onContentChanged === 'function') {
                     options.onContentChanged.call(self, event, contentArea);
                 }
+                
+                contentArea.removeClass('keditor-highlighted-dropzone');
             },
             start: function () {
                 body.addClass('highlighted-container-content');
@@ -1642,6 +1646,7 @@
             
             if (confirm('Are you sure that you want to delete this component? This action can not be undo!')) {
                 var component = btn.closest('.keditor-component');
+                var container = component.closest('.keditor-container');
                 var contentArea = component.closest('.keditor-content-area');
                 
                 if (typeof options.onBeforeComponentDeleted === 'function') {
@@ -1659,7 +1664,7 @@
                 }
                 
                 if (typeof options.onContainerChanged === 'function') {
-                    options.onContainerChanged.call(self, e, component, contentArea);
+                    options.onContainerChanged.call(self, e, container, contentArea);
                 }
                 
                 if (typeof options.onContentChanged === 'function') {
