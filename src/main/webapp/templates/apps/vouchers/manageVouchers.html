@@ -84,7 +84,11 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul role="menu" class="dropdown-menu pull-right">
-                                    <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    #if( $request.params.deleted )
+                                    #else
+                                        <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    #end
+                                    
                                     <li><a href="#" data-vt="$v.name" class="hard-delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Hard Delete Vouchers</a></li>
                                 </ul>
                             </div>
@@ -273,9 +277,7 @@
                         flog("done", resp);
                         createVoucherTypeModal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
-                        $('#voucher-types-table').reloadFragment({
-                            url: window.location.href
-                        });
+                        window.location = window.location.pathname;
                     }
                 });
             }
