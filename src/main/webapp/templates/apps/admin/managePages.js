@@ -317,7 +317,7 @@ function addMetaTag(name, content) {
     metaWrapper.append(
         '<div class="input-group meta">' +
         '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (name === 'keywords' || name === 'description' ? 'readonly="readonly"' : '') + ' />' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
+        '    <input type="text" class="form-control input-sm" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
         '    <span class="input-group-btn">' +
         '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (name === 'keywords' || name === 'description' ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
         '    </span>' +

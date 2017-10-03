@@ -227,7 +227,9 @@
                         form.trigger("reset");
                         modal.modal("hide");
                         Msg.success('Vouchers have been allocated');
-                        $('#voucher-types-table').reloadFragment();
+                        $('#voucher-types-table').reloadFragment({
+                            url: window.location.href
+                        });
                         var displayVoucherIds = soldVouchersModal.find(".displayVoucherIds");
                         displayVoucherIds.val("");
                         flog("show data", resp.data);
@@ -271,7 +273,9 @@
                         flog("done", resp);
                         createVoucherTypeModal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
-                        $('#voucher-types-table').reloadFragment();
+                        $('#voucher-types-table').reloadFragment({
+                            url: window.location.href
+                        });
                     }
                 });
             }
@@ -293,7 +297,9 @@
                         var msj = (resp.messages[0] === undefined) ? "Vouchers were deleted" : resp.messages[0];
                         Msg.success(msj);
                         hardDeleteVouchersModal.modal("hide");
-                        $("#voucher-types-table").reloadFragment();
+                        $("#voucher-types-table").reloadFragment({
+                            url: window.location.href
+                        });
                     },
                     error: function (resp) {
                         flog('Error: ', resp);
