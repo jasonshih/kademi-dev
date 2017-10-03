@@ -27,49 +27,63 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="browse">
                     <div class="container">
+                        #set( $type = "app" )
+                        #set( $type = $request.params.type )
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Type: $type <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=app">Apps</a></li>
+                                <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=theme">Themes</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="$page.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName&type=lib">Code libraries</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <br/>
+                        
                         <div class="row">
-                            <div class="col-md-12">
-                                #foreach($app in $page.children.ofType("app"))
-                                #if( $app.appProvider || $app.themeProvider )
-                                <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
-                                    <div class="thumbnail app">
-                                        <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
-                                            #set($logo = "/theme/apps/marketplace/no_logo.png")
-                                            #if($app.logo)
-                                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                            #foreach($app in $page.children.ofType($type))
+                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-6">
+                                <div class="thumbnail app">
+                                    <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
+                                        #set($logo = "/theme/apps/marketplace/no_logo.png")
+                                        #if($app.logo)
+                                        #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                                        #end
+                                        <img src="$logo" alt="$app.title">
+                                    </a>
+                                    <div class="caption">
+                                        <h4 class="title">
+                                            <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
+                                                $app.title
+                                                <span class="parag-end"></span>
+                                            </a>
+                                        </h4>
+                                        <p>
+                                            #if( $app.brief )
+                                            $app.brief
+                                            #else
+                                            No description.
                                             #end
-                                            <img src="$logo" alt="$app.title">
-                                        </a>
-                                        <div class="caption">
-                                            <h4 class="title">
-                                                <a href="$app.href?websiteBranch=$!request.params.websiteBranch&websiteName=$!request.params.websiteName">
-                                                    $app.title
-                                                    <span class="parag-end"></span>
-                                                </a>
-                                            </h4>
-                                            <p>
-                                                #if( $app.brief )
-                                                $app.brief
-                                                #else
-                                                No description.
-                                                #end
-                                            </p>
-                                        </div>
-                                        <div class="ratings">
-                                            <p class="pull-right">
-                                                #if(!$app.price || $app.price == 0)
-                                                Free
-                                                #else
-                                                $$app.price
-                                                #end
-                                            </p>
-                                            #genRatings(3.5, 14)
-                                        </div>
+                                        </p>
+                                    </div>
+                                    <div class="ratings">
+                                        <p class="pull-right">
+                                            #if(!$app.price || $app.price == 0)
+                                            Free
+                                            #else
+                                            $$app.price
+                                            #end
+                                        </p>
+                                        #genRatings(3.5, 14)
                                     </div>
                                 </div>
-                                #end
-                                #end
                             </div>
+                            #end
                         </div>
                     </div>
                 </div>
