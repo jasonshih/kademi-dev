@@ -1,7 +1,7 @@
 /**
  *
  * jquery.module.js
- * @version: 1.0.0
+ * @version: learner-lib
  *
  * Configuration:
  * @option {String} currentUrl Url address of current module page
@@ -32,7 +32,7 @@
     };
     
     // Version for jquery.module
-    $.module.version = '1.0.0';
+    $.module.version = 'learner-lib';
     
     // Default configuration of jquery.module
     $.module.DEFAULTS = {
@@ -457,10 +457,16 @@
                 // For a non-completable enrolement we allow users to view any page in any order
                 nextEnabled = true;
             } else if (!options.isCompleted && (!isBeyondCurrent || (isBeyondCurrent && !options.isCompleted)) && (quiz.length > 0 || isLastPage)) {
-                $('a.nextBtn').addClass('quizSubmit').find('span').text('Submit');
+                var nextBtn = $('a.nextBtn');
+                nextBtn.addClass('quizSubmit').find('span').text('Submit');
+                nextBtn.find('.submitBtnIcon').show();
+                nextBtn.find('.nextBtnIcon').hide();
                 nextEnabled = true;
             } else {
-                $('a.nextBtn').removeClass('quizSubmit').find('span').text('Next');
+                var nextBtn = $('a.nextBtn');
+                nextBtn.removeClass('quizSubmit').find('span').text('Next');
+                nextBtn.find('.submitBtnIcon').hide();
+                nextBtn.find('.nextBtnIcon').show();
                 var nextLink = pages.filter('.active').next();
                 
                 // if there's a hidden section, clicking next will show it

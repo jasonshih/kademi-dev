@@ -205,7 +205,9 @@
                             <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                        <img src="/_hashes/files/$profile.photoHash" class="img-circle" alt="" />
+                                    #else
+                                        <img src="/templates/apps/user/profile.png" class="img-circle" alt="" />
                                     #end
                                     <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)

@@ -61,116 +61,13 @@ table.list-view {
     }
 }
 
-.clr {
-    clear: both;
-}
-
 .navbar-fixed-top ul.nav-tabs {
     border-bottom: none;
     margin-top: 40px;
 }
 
-.banner {
-    position: relative;
-}
-
-.banner .btn-group {
-    position: absolute;
-    right: 0;
-    top: 10px
-}
-
 .main-content {
     padding-top: @content-padding-top;
-}
-
-.content-header {
-    border-bottom-width: 0;
-}
-
-.content-header, .content-no-header {
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px 6px 0 0;
-}
-
-.content-header .header-inner, .content-no-header .no-header-inner {
-    background-color: #FFFFFF;
-    border-bottom: 1px solid #E8E8E8;
-    border-radius: 5px 5px 0 0;
-    min-height: 20px;
-    padding: 12px;
-}
-
-.content-header h3 {
-    font-size: 18px;
-    font-weight: bold;
-    line-height: 20px;
-    margin: 0;
-    padding: 0;
-}
-
-.banner {
-    form.form-horizontal {
-        margin: 20px 20px 20px 0;
-        .control-group {
-            margin-bottom: 0;
-        }
-        .control-label {
-            //width: 80px;
-        }
-        .controls {
-            //margin-left: 100px;
-        }
-    }
-    a p {
-        margin: 0;
-        padding: 0;
-    }
-}
-
-.comment {
-    .clearfix;
-    border-bottom: solid @input-border 1px;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    
-    .comment-user {
-        float: left;
-        margin-right: 8px;
-        width: 52px;
-    }
-    
-    .comment-user-pic {
-        img {
-            display: block;
-            height: 52px;
-        }
-    }
-    
-    .comment-user-name {
-        text-align: center;
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
-    }
-    
-    .comment-detail {
-        margin: 0 0 0 60px;
-    }
-    
-    .comment-content {
-        margin: 0 0 10px;
-    }
-    
-    .comment-reply {
-        margin-right: 5px;
-    }
-    
-    .comment-replies-wrapper {
-        margin-top: 10px;
-    }
 }
 
 .stream-items {
@@ -205,51 +102,14 @@ table.list-view {
     }
 }
 
-ul.tools {
-    list-style-type: none;
-    margin: 0;
-    li {
-        display: block;
-    }
-    li.modPerc {
-        float: left;
-        font-size: 200%;
-    }
-}
-
 .thumbnails li {
     list-style-type: none;
-}
-
-.dash-primary {
-
 }
 
 .table.vcenter {
     td, th {
         vertical-align: middle;
     }
-}
-
-.form-horizontal.form-horizontal-narrow {
-    .control-label {
-    
-    }
-    .controls {
-    
-    }
-}
-
-.form-horizontal.form-horizontal-narrower {
-    .control-label {
-    
-    }
-    .controls {
-    }
-}
-
-.form-tight.form-horizontal .control-group {
-    margin-bottom: 5px;
 }
 
 .muploadBtn {
@@ -314,16 +174,6 @@ ul.tools {
     margin: 0;
 }
 
-.downloadIcon {
-    background-image: url(/static/common/download.png);
-    display: block;
-    width: 34px;
-    height: 31px;
-    span {
-        visibility: hidden;
-    }
-}
-
 .modal-overflow {
     overflow-y: visible;
 }
@@ -370,7 +220,9 @@ ul.tools {
     display: none !important;
 }
 
+// ================================================================
 // http://stackoverflow.com/questions/18432577/stacked-tabs-in-bootstrap-3
+// ================================================================
 .tabs-below, .tabs-right, .tabs-left {
     .nav-tabs {
         border-bottom: 0;
@@ -581,10 +433,6 @@ span.more {
 // Kill the top margin on headings inside wells to avoid excessive space at top
 .well h1, .well h2, .well h3, .well h4 {
     margin-top: 0;
-}
-
-.user-nickname {
-
 }
 
 // For dropdown hidden panels in editor content
