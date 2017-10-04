@@ -3,6 +3,13 @@ function initVouchersPage() {
     initDeleteVouchers();
     initDownloadCSV();
     initSelectAll();
+    
+    $(".clear-search").on("click", function(e){
+        e.preventDefault();
+        $("#voucherType").val("")
+        $("#status").val("")
+        $("#voucher-query").val("").trigger('change');
+    });
 }
 
 function doSearch() {
