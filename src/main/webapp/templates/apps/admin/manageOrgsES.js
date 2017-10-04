@@ -6,7 +6,7 @@
         $tbody.html('');
 
         $.each(errors, function (i, row) {
-            log('error:', row);
+            flog('error:', row);
 
             var $tr = $('<tr>');
 
@@ -24,7 +24,7 @@
         $tbody.html('');
 
         $.each(unmatched, function (i, row) {
-            log('unmatched', row);
+            flog('unmatched', row);
 
             var $tr = $('<tr>');
 
@@ -53,9 +53,11 @@
 
             self.$form.forms({
                 onSuccess: function (resp) {
-                    log('done', resp);
+                    flog('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
-                    $('#search-results').reloadFragment();
+                    setTimeout(
+                            $('#search-results').reloadFragment()
+                            , 5000);
                     self.hide();
                 }
             });
@@ -77,7 +79,7 @@
 
             $inputs.val('');
             $selectes.val('');
-            log('select', $selectes.val());
+            flog('select', $selectes.val());
             resetValidation($modal);
 
             if (href) {
@@ -86,7 +88,7 @@
                     url: href,
                     dataType: 'json',
                     success: function (response) {
-                        log('success', response);
+                        flog('success', response);
                         for (var key in response.data) {
                             $modal.find('[name="' + key + '"]').val(response.data[key]);
                             $modal.modal('show');
@@ -173,7 +175,7 @@
             url: 'orgIds.csv',
             useJsonPut: false,
             oncomplete: function (data, name, href) {
-                log('oncomplete:', data.result, name, href);
+                flog('oncomplete:', data.result, name, href);
                 if (data.result.status) {
                     $resultUploadOrgidCsv.find('.num-update').text(data.result.data.numUpdated);
                     $resultUploadOrgidCsv.find('.num-errors').text(data.result.data.errors.length);
@@ -196,6 +198,8 @@
 
             confirmDelete(href, getFileName(href), function (resp) {
                 flog(resp);
+                setTimeout($('#search-results').reloadFragment(), 5000);
+
             });
         });
 
