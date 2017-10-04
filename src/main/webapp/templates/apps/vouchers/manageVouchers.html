@@ -8,7 +8,7 @@
                 <i class="fa fa-dollar"></i> Sell vouchers
             </a>
 
-            <div class="btn-group">
+            <div class="btn-group" id="voucher-type-buttons">
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createVoucherTypeModal" >
                     <i class="fa fa-plus"></i> Create new voucher type
                 </a>
@@ -84,7 +84,11 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <ul role="menu" class="dropdown-menu pull-right">
+                                    #if( $request.params.deleted )
+                                    #else
                                     <li><a href="$v.name" class="delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                    #end
+
                                     <li><a href="#" data-vt="$v.name" class="hard-delete-voucher-type"><i class="glyphicon glyphicon-remove"></i> Hard Delete Vouchers</a></li>
                                 </ul>
                             </div>
@@ -273,9 +277,14 @@
                         flog("done", resp);
                         createVoucherTypeModal.modal('hide');
                         Msg.success(form.find('[name=newName]').val() + ' is created!');
-                        $('#voucher-types-table').reloadFragment({
-                            url: window.location.href
-                        });
+                        if (window.location.href.indexOf("deleted") > -1) {
+                            flog("deleted");
+                            window.location = window.location.pathname;
+                        } else {
+                            $('#voucher-types-table').reloadFragment({
+                                url: window.location.href
+                            });
+                        }
                     }
                 });
             }
