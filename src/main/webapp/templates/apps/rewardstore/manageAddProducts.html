@@ -58,7 +58,7 @@
                                     <select name="searchOrg" id="search-library" class="form-control input-sm">
                                         <option value="">My library</option>
                                         #foreach($org in $page.parentOrgsWithProducts)
-                                        <option value="$org.id">$org.title</option>
+                                        $formatter.option($org.id, $org.title, $request.params.l)
                                         #end
                                     </select>
                                 </div>
