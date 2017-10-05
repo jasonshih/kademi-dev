@@ -1,0 +1,76 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Course</label>
+        <div class="col-sm-12">
+            #set($programs = $rootFolder.find("/programs"))
+            <select class="form-control select-course">
+                <option value=""> - None -</option>
+                #foreach($program in $programs.children)
+                    #foreach($course in $program.children.ofType.course)
+                        <option value="$course.href">$program.title \ $course.title</option>
+                    #end
+                #end
+            </select>
+            <small class="help-block">If you want to display all available modules for current user, please leave this field blank</small>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <label><strong>Number of modules</strong></label>
+            <input type="number" class="form-control txt-number-of-modules" />
+            <small class="help-block">If you want to display all modules, please enter <code>0</code></small>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Layout</label>
+        <div class="col-sm-12">
+            <select class="form-control select-layout">
+                <option value="grid" selected="selected">Grid</option>
+                <option value="list">List</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper">
+        <label class="col-sm-12">Items per row</label>
+        <div class="col-sm-12">
+            <select class="form-control items-per-row">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4" selected="selected">4</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper">
+        <label class="col-sm-12">Grid item height</label>
+        <div class="col-sm-12">
+            <input type="number" class="form-control txt-grid-item-height" />
+            <small class="help-block">Minimum <code>200</code></small>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper">
+        <label class="col-sm-12">Grid displays</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="" class="chk-show-time" /> Show time
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="" class="chk-show-cpd" /> Show CPD
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="" class="chk-show-point" /> Show point
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="" class="chk-show-button" /> Show button
+                </label>
+            </div>
+        </div>
+    </div>
+</div>

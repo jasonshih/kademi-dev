@@ -1,0 +1,72 @@
+#if (!$numberOfModules)
+    #set ($numberOfModules = 0)
+#end
+#set ($numberOfModules = $formatter.toInteger( $numberOfModules ))
+
+#if (!$layout)
+    #set ($layout = "list")
+#end
+
+#if (!$itemsPerRow)
+    #set ($itemsPerRow = 4)
+#end
+#set ($itemsPerRow = $formatter.toInteger( $itemsPerRow ))
+
+#if (!$gridItemHeight)
+    #set ($gridItemHeight = 200)
+#end
+#set ($gridItemHeight = $formatter.toInteger( $gridItemHeight ))
+
+#set ($showTime = $formatter.toBool( $showTime ))
+#set ($showCpd = $formatter.toBool( $showCpd ))
+#set ($showPoint = $formatter.toBool( $showPoint ))
+#set ($showButton = $formatter.toBool( $showButton ))
+
+#parse("/theme/apps/learner/moduleMacros.html")
+
+#if ($course && $course != "")
+    #set ($modules = $page.find($course).children.ofType.module)
+    #set ($modules = $rootFolder.find($course).children.ofType.module)
+    <div class="modules-list row">
+        #if ($layout == "grid")
+            #set ($moduleClass = "col-sm-3")
+            #if ($itemsPerRow == 1)
+                #set ($moduleClass = "col-sm-12")
+            #elseif ($itemsPerRow == 2)
+                #set ($moduleClass = "col-sm-6")
+            #elseif ($itemsPerRow == 3)
+                #set ($moduleClass = "col-sm-4")
+            #elseif ($itemsPerRow == 4)
+                #set ($moduleClass = "col-sm-3")
+            #end
+            
+            #set ($count = 0)
+            #foreach($mod in $modules)
+                #set ($count = $count + 1)
+                <div class="$moduleClass">
+                    #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight)
+                </div>
+        
+                #if ($numberOfModules == 0)
+                #elseif ($count >= $numberOfModules)
+                    #break
+                #end
+            #end
+        #else
+            #set ($count = 0)
+            #foreach($mod in $modules)
+                #set ($count = $count + 1)
+                <div class="col-md-12">
+                    #renderModuleListItem($mod $showTime $showCpd $showPoint)
+                </div>
+        
+                #if ($numberOfModules == 0)
+                #elseif ($count >= $numberOfModules)
+                    #break
+                #end
+            #end
+        #end
+    </div>
+#else
+    <p class="alert alert-warning">No course selected</p>
+#end

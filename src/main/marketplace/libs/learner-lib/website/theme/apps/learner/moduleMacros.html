@@ -3,7 +3,47 @@
         <title>Module Macros</title>
     </head>
     <body>
-        #macro (renderModuleListItem $mod $showTime $showCPD $showPoint)
+        #macro (renderModuleInfos $mod $showTime $showCpd $showPoint)
+            #if ($showTime == true)
+                #set($mins = $mod.learningTimeMins)
+                <span class="module-time">
+                    <i class="fa fa-clock-o fa-fw"></i> Time:
+                    #if($mins > 0)
+                        $formatter.formatMinsAsDuration($mins, true)
+                    #else
+                        TBC
+                    #end
+                </span>
+            #end
+            
+            #if ($showCpd == true)
+                #if ($mod.cpdPoints.size() > 0)
+                    <span class="module-cpd">
+                        <i class="fa fa-graduation-cap fa-fw"></i> CPD:
+                        #foreach($certName in $mod.cpdPoints.keySet())
+                            $formatter.formatCurrency($mod.cpdPoints.get($certName), false)
+                            #break
+                        #end
+                    </span>
+                #end
+            #end
+            
+            #if ($showPoint == true)
+                #if ($mod.moduleCompleteActions.size() > 0)
+                    <span class="module-point">
+                        <i class="fa fa-star fa-fw"></i> Points:
+                        #foreach($act in $mod.moduleCompleteActions)
+                            #if ($act.type == "reward")
+                                $formatter.formatCurrency($act.number, false)
+                                #break
+                            #end
+                        #end
+                    </span>
+                #end
+            #end
+        #end
+        
+        #macro (renderModuleListItem $mod $showTime $showCpd $showPoint)
             <div class="module">
                 <div class="module-thumb">
                     #set ($modThumb = "/static/images/photo_holder.png")
@@ -42,51 +82,55 @@
                             #end
                         </div>
                         <div>
-                            #if ($showTime == true)
-                                #set($mins = $mod.learningTimeMins)
-                                <span class="module-time">
-                                    <i class="fa fa-clock-o fa-fw"></i> Time:
-                                    #if($mins > 0)
-                                        $formatter.formatMinsAsDuration($mins, true)
-                                    #else
-                                        TBC
-                                    #end
-                                </span>
-                            #end
-                            
-                            #if ($showCPD == true)
-                                #if ($mod.cpdPoints.size() > 0)
-                                    <span class="module-cpd">
-                                        <i class="fa fa-graduation-cap fa-fw"></i> CPD:
-                                        #foreach($certName in $mod.cpdPoints.keySet())
-                                            $formatter.formatCurrency($mod.cpdPoints.get($certName), false)
-                                            #break
-                                        #end
-                                    </span>
-                                #end
-                            #end
-                            
-                            #if ($showPoint == true)
-                                #if ($mod.moduleCompleteActions.size() > 0)
-                                    <span class="module-point">
-                                        <i class="fa fa-star fa-fw"></i> Points:
-                                        #foreach($act in $mod.moduleCompleteActions)
-                                            #if ($act.type == "reward")
-                                                $formatter.formatCurrency($act.number, false)
-                                                #break
-                                            #end
-                                        #end
-                                    </span>
-                                #end
-                            #end
+                            #renderModuleInfos($mod $showTime $showCpd $showPoint)
                         </div>
                     </div>
                 </div>
-                
             </div>
         #end
         
-        #macro (renderModulePanelItem $module $showTime $showCPD $showPoint $showButton)
+        #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight)
+            <a href="$mod.href">
+                #set ($modThumb = "/static/images/photo_holder.png")
+                #if( $mod.thumb )
+                    #set ($modThumb = "${mod.thumb}/alt-300-300.png")
+                #end
+                <div class="module module-grid" style="height: ${gridItemHeight}px; background-image: url('$modThumb')">
+                    #if ($showButton == true)                    
+                        <div class="module-button">
+                            #if( $mod.complete )
+                                <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Completed</a>
+                            #elseif ( $mod.percentComplete )
+                                <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-pause"></i> Resume</a>
+                            #else
+                                #if( $mod.completable )
+                                    #if( $mod.startable )
+                                        <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-play"></i> Start</a>
+                                    #else
+                                        <a href="$mod.href" class="btn btn-sm btn-primary" title="You have not completed prequisites"><i class="fa fa-lock"></i> Lock</a>
+                                    #end
+                                #else
+                                    <a href="$mod.href" class="btn btn-sm btn-primary" title="You do not have an enrolement for this module"><i class="fa fa-eye"></i> View only</a>
+                                #end
+                            #end
+                        </div>
+                    #end
+                    <div class="module-body">
+                        #set ($modProgress = 0)
+                        #if( $mod.complete )
+                            #set ($modProgress = 100)
+                        #elseif ( $mod.percentComplete )
+                            #set ($modProgress = $mod.percentComplete)
+                        #end
+                        <div class="module-progress" style="width: ${modProgress}%;"></div>
+                        
+                        <h4>$mod.title</h4>
+                        <div class="clearfix">
+                            #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                        </div>
+                    </div>
+                </div>
+            </a>
         #end
     </body>
 </html>

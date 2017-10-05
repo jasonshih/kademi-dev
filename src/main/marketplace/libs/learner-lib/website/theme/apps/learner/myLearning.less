@@ -57,6 +57,7 @@
     border: 1px solid #e4e4e7;
     position: relative;
     padding-left: 160px;
+    margin-bottom: 20px;
     
     .module-thumb {
         position: absolute;
@@ -116,3 +117,46 @@
         }
     }
 }
+
+.module.module-grid {
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+    background: no-repeat 50% 50%;
+    background-size: cover;
+    border: 0;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    padding: 0;
+    
+    .module-body {
+        background: none;
+        padding: 25px;
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
+    
+    .module-progress {
+        top: auto;
+        bottom: 0;
+    }
+    
+    .module-button {
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        
+        .btn {
+            width: 100%;
+            border: 0 !important;
+        }
+        
+        + .module-body {
+            bottom: 39px;
+        }
+    }
+}
+
