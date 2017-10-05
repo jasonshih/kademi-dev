@@ -1,4 +1,4 @@
-<div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3">
+<div class="ktile-wrapper col-xl-3 col-lg-4 col-md-4 col-sm-3" id="autoloader-tile">
     <div class="ktile">
         <div class="ktile-inner">
             <div class="ktile-body">
@@ -10,10 +10,10 @@
                         <div class="ktile-single-value-text">
                             <div class="text-center">
                                 #if($_autoloaderState)
-                                Autoloader running
+                                    Autoloader's running...
                                 #else
-                                Start Autoloader 
-                                <button class="btn btn-sm btn-info btn-start-autoloader">Start</button>
+                                    Autoloader
+                                    <button class="btn btn-sm btn-info btn-start-autoloader">Start</button>
                                 #end
                             </div>
                         </div>
@@ -23,29 +23,28 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript">
     $(function () {
-        $('body')
-                .off('click', '.btn-start-autoloader')
-                .on('click', '.btn-start-autoloader', function (e) {
-                    e.preventDefault();
-
-                    Kalert.confirm('You want to start the Autoloader?', 'Yes', function () {
-                        $.ajax({
-                            url: '/_autoloader',
-                            type: 'POST',
-                            dataType: 'JSON',
-                            data: {
-                                startAutoloader: true
-                            },
-                            success: function (data, textStatus, jqXHR) {
-                                location.reload();
-                            },
-                            error: function () {
-                                Msg.error('Oh No! Something went wrong!');
-                            }
-                        });
-                    });
+        $('body').off('click', '.btn-start-autoloader').on('click', '.btn-start-autoloader', function (e) {
+            e.preventDefault();
+            
+            Kalert.confirm('You want to start the Autoloader?', 'Yes', function () {
+                $.ajax({
+                    url: '/_autoloader',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    data: {
+                        startAutoloader: true
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        $('#autoloader-tile').reloadFragment();
+                    },
+                    error: function () {
+                        Msg.error('Oh No! Something went wrong!');
+                    }
                 });
+            });
+        });
     });
 </script>
