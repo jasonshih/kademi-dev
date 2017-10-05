@@ -442,7 +442,7 @@ function initNewLeadForm() {
         }
     });
 
-    $('.dropdown-menu [class*="nav-menuAddLead"]').click(function (e) {
+    $('.dropdown-menu li:not(.menu-item-menuLeadFromEmail) > [class*="nav-menuAddLead"]').click(function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
