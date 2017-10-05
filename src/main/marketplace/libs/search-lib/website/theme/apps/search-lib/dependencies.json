@@ -9,13 +9,25 @@
         {
             "css": {
                 "cssMedia": "all",
-                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.css"
+                "path": "/theme/apps/search/search.css"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js"
+                "path": "/theme/apps/search/search.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch1.0.0.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch1.0.0.js"
             }
         }
     ]

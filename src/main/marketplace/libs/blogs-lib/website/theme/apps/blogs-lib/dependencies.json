@@ -1,8 +1,12 @@
 {
     "appDependencies": [
-
     ],
     "dependencies": [
-
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.timeago.js"
+            }
+        }
     ]
 }
