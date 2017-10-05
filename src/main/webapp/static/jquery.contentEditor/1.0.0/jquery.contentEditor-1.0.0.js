@@ -1357,7 +1357,7 @@
                             }
                             
                             var textNodes = contentArea.contents().filter(function () {
-                                return this.nodeType === 3;
+                                return this.nodeType === 3 && (this.nodeValue || '').trim() !== '';
                             });
                             if (textNodes.length > 0) {
                                 flog('Wrap all text nodes into a text component inside 1 col container');
