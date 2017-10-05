@@ -1,90 +1,12 @@
-
 <div class="modules">
+    #parse("/theme/apps/learner/moduleMacros.html")
     #set($modules = $curCourse.children.ofType.module.sortByField("order"))
     <hr/>
     <div class="row">
         #foreach($mod in $modules)
-        <div class="col-md-6">
-            <div class="module-inner">                               
-                #if( $mod.thumb )
-                <a class="module-image" href="$mod.href" style="background-image: url('${mod.thumb}/alt-300-300.png')">
-                    #set($mins = $mod.learningTimeMins)                   
-                    <small class="module-image-time label label-default">
-                        <span class="glyphicon glyphicon-time"></span>
-                        #if($mins > 0)
-                        $formatter.formatMinsAsDuration($mins, true)
-                        #else
-                        TBC
-                        #end
-                    </small> 
-                </a>
-                #end                
-
-                <div class="module-info-container">
-                    <div class="module-info"  style="">
-                        <h4 class="media-heading"><a  href="$mod.href">$mod.title</a></h4>
-                        <div class="module-description">
-                            <p>
-                                $mod.brief
-                            </p>            
-                        </div>
-                    </div>
-
-                    <div class="module-status"  style="">
-                        <div class="module-labels pull-right">
-                            #if( $mod.complete )
-                            <div class="label label-success pull-right">
-                                <span class="glyphicon glyphicon-ok"></span>
-                                Complete
-                            </div>
-                            #elseif ( $mod.percentComplete )
-                            <div class="label label-info pull-right">
-                                <span class="glyphicon glyphicon-forward"></span>
-                                In progress
-                            </div>
-                            #else
-                            #if( $mod.completable )
-                            #if( $mod.startable )
-                            <div class="label label-default pull-right">
-                                <span class="glyphicon glyphicon-stop"></span>
-                                Not started
-                            </div>
-                            #else
-                            <acronym title="You have not completed prequisites">
-                                <div class="label label-default pull-right">                                
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                    Locked
-                                </div>
-                            </acronym>
-                            #end
-                            #else
-                            <acronym title="You do not have an enrolement for this module">                            
-                                <div class="label label-warning pull-right">
-                                    <span class="glyphicon glyphicon-lock"></span>
-                                    View only
-                                </div>
-                            </acronym>
-                            #end
-                            #end
-                        </div>
-
-                        #if( $mod.complete )
-
-                        #elseif ( $mod.percentComplete )
-                        <div class="module-progress">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-success module-progress" role="progressbar" data-targetperc="${mod.percentComplete}" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0;">
-                                    <span class="">                                                                        
-                                        ${mod.percentComplete}%                        
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        #end
-                    </div>                    
-                </div>
+            <div class="col-md-6">
+                #renderModuleListItem($mod true true true true)
             </div>
-        </div>
         #end
     </div>
 </div>

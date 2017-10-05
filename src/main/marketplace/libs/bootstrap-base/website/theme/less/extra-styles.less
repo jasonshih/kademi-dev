@@ -1,14 +1,6 @@
-body {
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-abbr[title],
-acronym[title] {
-    text-decoration: none;
-}
-
-// Mixin for form field states
+// ==================================================
+// Mixins
+// ==================================================
 .formFieldState(@textColor: #555, @borderColor: #ccc, @backgroundColor: #f5f5f5) {
     // Set the text color
     .control-label,
@@ -16,6 +8,7 @@ acronym[title] {
     .help-inline {
         color: @textColor;
     }
+    
     // Style inputs accordingly
     .checkbox,
     .radio,
@@ -44,21 +37,48 @@ acronym[title] {
     }
 }
 
-table.list-view {
-    .table;
-    tbody {
-        tr {
-            td {
-                border-bottom: 1px solid darken(@wellBackground, 7%);
-                vertical-align: middle;
-            }
-        }
-        tr:nth-child(even) {
-            td {
-                // background-color: @wellBackground;  // looks rubbish on my learning
-            }
-        }
+// ==================================================
+// Global
+// ==================================================
+body {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+abbr[title],
+acronym[title] {
+    text-decoration: none;
+}
+
+.main-content {
+    padding-top: @content-padding-top;
+}
+
+.thumbnail {
+    position: relative;
+}
+
+// Kill the top margin on headings inside wells to avoid excessive space at top
+.well {
+    h1,
+    h2,
+    h3,
+    h4 {
+        margin-top: 0;
     }
+}
+
+.dropdown-btn.collapsed {
+    display: inline-block; // fit to width of text when collapsed
+}
+
+.navbar-inner .navbar-form {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.page-body {
+    min-height: 300px
 }
 
 .navbar-fixed-top ul.nav-tabs {
@@ -66,17 +86,26 @@ table.list-view {
     margin-top: 40px;
 }
 
-.main-content {
-    padding-top: @content-padding-top;
+.thumbnails li {
+    list-style-type: none;
 }
 
+.table.vcenter {
+    td, th {
+        vertical-align: middle;
+    }
+}
+
+// ==================================================
+//
+// ==================================================
 .stream-items {
     list-style-type: none;
     padding: 0;
     li {
         margin-bottom: 15px;
         padding-bottom: 15px;
-        border-bottom: solid @input-border 1px;
+        border-bottom: 1px solid @input-border;
     }
     p {
         font-size: 85%;
@@ -99,25 +128,6 @@ table.list-view {
             width: 100%;
         }
         
-    }
-}
-
-.thumbnails li {
-    list-style-type: none;
-}
-
-.table.vcenter {
-    td, th {
-        vertical-align: middle;
-    }
-}
-
-.muploadBtn {
-    .btn;
-    .btn-success;
-    overflow: hidden;
-    span {
-        line-height: 25px;
     }
 }
 
@@ -166,10 +176,55 @@ table.list-view {
     min-height: 300px;
 }
 
-.pageMessage {
-    display: none;
+.tile {
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    min-height: 300px;
+    border: 1px solid @panel-inner-border;
+    .border-top-radius((@panel-border-radius - 1));
+    .border-bottom-radius((@panel-border-radius - 1));
+    
+    .tile-content {
+        margin: 15px;
+        p {
+            font-size: 85%;
+        }
+        > div {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 100%;
+        }
+    }
 }
 
+.tile-image {
+    width: 100%;
+    height: 150px;
+    background-size: 100% auto;
+    background-position: center;
+    a {
+        display: block;
+        height: 100%;
+        width: 100%;
+        span {
+            visibility: hidden;
+        }
+    }
+}
+
+.bs-avatar {
+    margin: 0px 15px 15px 0;
+    img {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+// ==================================================
+// Modal
+// ==================================================
 .modal form {
     margin: 0;
 }
@@ -178,8 +233,11 @@ table.list-view {
     overflow-y: visible;
 }
 
-.pagination-centered {
-    text-align: center;
+// ==================================================
+// Typeahead
+// ==================================================
+.twitter-typeahead {
+    background: #fff;
 }
 
 .tt-dropdown-menu {
@@ -190,12 +248,8 @@ table.list-view {
     background-color: @dropdown-bg;
     border: 1px solid #ccc;
     border: 1px solid @dropdown-border;
-    *border-right-width: 2px;
-    *border-bottom-width: 2px;
     border-radius: 6px;
     .box-shadow(0 5px 10px rgba(0, 0, 0, .2));
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
     background-clip: padding-box;
 }
 
@@ -259,6 +313,7 @@ table.list-view {
                 }
             }
         }
+        
         > .active a {
             &, &:hover, &:focus {
                 border-color: transparent #ddd #ddd #ddd;
@@ -327,247 +382,19 @@ table.list-view {
     }
 }
 
-.module-container {
-    margin-bottom: @padding-large-vertical;
-}
-
-// My learning page modules
-.modules {
-    h3 {
-        margin-top: 0; // make the heading flush top with the row
+// ==================================================
+// JWPlayer
+// ==================================================
+.video-wrapper {
+    .clearfix;
+    
+    .jw_container_outer {
+        .clearfix;
     }
-    .media {
-        a {
-            width: 150px;
-            height: 100px;
-            background-size: cover;
-            background-position: center center;
-        }
-    }
-}
-
-.hero {
-    display: table;
-    overflow: hidden;
-    border-radius: 5px;
-    padding: 0;
-    width: 100%;
-    .hero-body {
-        margin: 30px;
-    }
-    .hero-image {
+    
+    .jwplayer-wrapper {
         float: left;
-        margin-right: 30px;
-        display: table-cell;
-        min-height: 200px;
-        height: 100%;
-        width: 200px;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
     }
-}
-
-.with-image {
-    .hero-body {
-        margin-left: 30%; // as above
-    }
-}
-
-.thumbnail {
-    position: relative;
-}
-
-.tile {
-    padding: 0;
-    overflow: hidden;
-    margin-bottom: 20px;
-    min-height: 300px;
-    border: 1px solid @panel-inner-border;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    
-    .tile-content {
-        margin: 15px;
-        p {
-            font-size: 85%;
-        }
-        > div {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            width: 100%;
-        }
-    }
-}
-
-.tile-image {
-    width: 100%;
-    height: 150px;
-    background-size: 100% auto;
-    background-position: center;
-    a {
-        display: block;
-        height: 100%;
-        width: 100%;
-        span {
-            visibility: hidden;
-        }
-    }
-}
-
-.tile-horiz .tile-image {
-    width: 300px;
-}
-
-// For truncating text, see learningDashboardPortlet.html
-span.read-more {
-    cursor: pointer;
-    color: gray;
-}
-
-span.more {
-    display: none;
-}
-
-// Kill the top margin on headings inside wells to avoid excessive space at top
-.well h1, .well h2, .well h3, .well h4 {
-    margin-top: 0;
-}
-
-// For dropdown hidden panels in editor content
-.cke_widget_element.dropdown-btn {
-    border-style: dashed;
-}
-
-.dropdown-btn.collapsed {
-    display: inline-block; // fit to width of text when collapsed
-}
-
-#editor {
-    .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11 {
-        border: dashed grey 1px;
-        min-height: 200px;
-    }
-    .btn {
-        -moz-user-select: text;
-    }
-}
-
-.bs-avatar {
-    margin: 0px 15px 15px 0;
-    img {
-        width: 52px;
-        height: 52px;
-    }
-}
-
-// Learning styles, for My Learning and dashboard
-
-h2.course-selector {
-    box-shadow: none !important;
-}
-
-.program-course-module-mix {
-    .dropdown-menu li > div {
-        padding-bottom: 10px;
-        min-height: 130px;
-    }
-    
-    .dropdown-menu li > div.loading {
-        background: url("/static/images/loading.gif") 50% 50% no-repeat;
-    }
-    
-    .dropdown-menu li > p {
-        border-bottom: 2px solid #ccc;
-        margin-bottom: 0;
-    }
-    .dropdown-menu li > p, .dropdown-menu li a {
-        display: block;
-        padding: 5px;
-        text-decoration: none;
-    }
-    
-    .dropdown-menu li a.active {
-        background: #428BCA;
-        color: #fff;
-    }
-}
-
-.module-inner {
-    border: 1px solid @panel-inner-border;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    position: relative;
-}
-
-.module-status {
-    padding: 0 10px 10px 10px;
-    .progress {
-        margin-bottom: 0;
-    }
-    .module-progress {
-        width: 50%;
-    }
-    .module-labels {
-        width: 50%;
-    }
-}
-
-.module-image {
-    height: 170px;
-    width: 170px;
-    float: left;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    .border-top-radius((@panel-border-radius - 1));
-    .border-bottom-radius((@panel-border-radius - 1));
-    position: relative;
-    
-    .module-image-time {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-    }
-}
-
-.hero {
-    .module-image {
-        height: 200px;
-        width: 250px;
-    }
-    .module-info {
-        min-height: 170px;
-    }
-}
-
-.module-info-container {
-    min-height: 100px;
-    overflow: hidden;
-}
-
-.module-info {
-    min-height: 140px;
-    padding: 15px 15px 0 15px;
-    overflow: hidden;
-}
-
-.module-status {
-    height: 30px;
-}
-
-.module-inner {
-    margin-bottom: 30px;
-}
-
-.hero .module-inner {
-    margin-bottom: 0;
-}
-
-.navbar-inner .navbar-form {
-    margin-top: 0;
-    margin-bottom: 0;
 }
 
 .jw_container_outer {
@@ -576,10 +403,28 @@ h2.course-selector {
     max-width: 720px;
 }
 
-.page-body {
-    min-height: 300px
+// ==================================================
+// CKEditor
+// ==================================================
+#editor {
+    [class*="col-"] {
+        border: 1px dashed grey;
+        min-height: 200px;
+    }
+    
+    .btn {
+        -moz-user-select: text;
+    }
 }
 
+// For dropdown hidden panels in editor content
+.cke_widget_element.dropdown-btn {
+    border-style: dashed;
+}
+
+// ==================================================
+// Content editor
+// ==================================================
 .content-editor-page .page-body {
     border: dashed gray 1px;
 }
@@ -660,18 +505,6 @@ h2.course-selector {
     }
 }
 
-.video-wrapper {
-    .clearfix;
-    
-    .jw_container_outer {
-        .clearfix;
-    }
-    
-    .jwplayer-wrapper {
-        float: left;
-    }
-}
-
 // ==================================================
 // Carousel components
 // ==================================================
@@ -737,13 +570,6 @@ h2.course-selector {
             }
         }
     }
-}
-
-// ==================================================
-// Typeahead
-// ==================================================
-.twitter-typeahead {
-    background: #fff;
 }
 
 // ==================================================

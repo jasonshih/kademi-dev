@@ -15,15 +15,14 @@
 
     #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
     <div class="my-learning-container my-learning-modules" data-course-href="$!curCourse.href">
-        <div class="btn-group program-course-module-mix" style="z-index: 2">
-
-            <button class="btn btn-primary btn-lg course-selector btn-show-mix dropdown-toggle">
+        <div class="btn-group program-course-module-mix">
+            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
                 <span class="current-module">$curProgram.title / $curCourse.title modules </span>
                 <span class="caret"></span>
             </button>
-            <div class="dropdown-menu container">
+            <div class="dropdown-menu">
                 <ul role="menu" class="row list-unstyled">
-                    <li id="programs-wrapper" class="col-md-4">
+                    <li id="programs-wrapper" class="col-md-6">
                         <p>Programs</p>
                         <div class="programs-list">
                             #foreach($program in $programs.availPrograms)
@@ -31,7 +30,7 @@
                             #end
                         </div>
                     </li>
-                    <li id="courses-wrapper" class="col-md-4">
+                    <li id="courses-wrapper" class="col-md-6">
                         <p>Courses</p>
                         <div class="courses-list">
                             #foreach($course in $curProgram.availCourses)
@@ -44,22 +43,18 @@
         </div>
 
         #if ($formatter.toBool($showCourseBody))
-            <hr />
-
             <div class="lead">
                 $!curCourse.body
-                #if (!$curCourse.body)
+                #if (!$curCourse.body || $curCourse.body != "")
                     <p>No description for current course</p>
                 #end
             </div>
         #end
 
-        <div class="" id="myLearningDiv">
-            <div class="">
-                #portlets("myLearning")
-            </div>
+        <div id="myLearningDiv">
+            #portlets("myLearning")
         </div>
-    </div> <!-- end container-fluid -->
+    </div>
     #else
         #fakeUI()
     #end
@@ -68,19 +63,17 @@
 #end
 
 #macro(fakeUI)
-<div class="my-learning-container">
-    <div class="btn-group program-course-module-mix" style="z-index: 2">
-        <button class="btn btn-primary btn-lg course-selector btn-show-mix dropdown-toggle">
-            <span class="current-module">No Modules</span>
-            <span class="caret"></span>
-        </button>
-        <div class="dropdown-menu container">
-            <ul role="menu" class="row list-unstyled">
-
-            </ul>
+    <div class="my-learning-container">
+        <div class="btn-group program-course-module-mix" style="z-index: 2">
+            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+                <span class="current-module">No Modules</span>
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu container">
+                <ul role="menu" class="row list-unstyled"></ul>
+            </div>
         </div>
     </div>
-</div>
 #end
 
 
