@@ -12,15 +12,16 @@
     window.initMultiCalendars = function (target) {
         flog('initMultiCalendars', target);
         
-        var selectedCalendar = target.attr('data-calendar');
-        
+        var selectedCalendars = target.attr('data-calendars');
+        var selectedColors = target.attr('data-colors');
+
         // Init calendar for current year
         target.find('#multi-calendars-current-year .multi-calendars-list').each(function () {
             var list = $(this);
             var year = list.attr('data-year');
             
             list.find('.multi-calendar').each(function () {
-                initMultiFullCalendar($(this), year, selectedCalendar);
+                initMultiFullCalendar($(this), year, selectedCalendars, selectedColors);
             });
         });
         
@@ -33,18 +34,30 @@
                     var year = list.attr('data-year');
                     
                     list.find('.multi-calendar').each(function () {
-                        initMultiFullCalendar($(this), year, selectedCalendar);
+                        initMultiFullCalendar($(this), year, selectedCalendars, selectedColors);
                     });
                 });
             }
         });
     };
     
-    function initMultiFullCalendar(target, year, selectedCalendar) {
-        flog('initMultiFullCalendar', target, year, selectedCalendar);
-        
+    function initMultiFullCalendar(target, year, selectedCalendars, selectedColors) {
+        flog('initMultiFullCalendar', target, year, selectedCalendars, selectedColors);
+        var eventSources = [];
+        if (selectedCalendars){
+            var calendarsArr = selectedCalendars.split(',');
+            var colorsArr = selectedColors.split(',');
+            for (var i = 0; i < calendarsArr.length; i++){
+                var eventsUrl = '/Calendars/' + calendarsArr[i];
+                eventSources.push({
+                    url: eventsUrl, // use the `url` property
+                    color: colorsArr[i]   // an option!
+                });
+            }
+        }
+
         var month = target.attr('data-month');
-        var eventsUrl = selectedCalendar ? '/Calendars/' + selectedCalendar : window.location.pathname;
+
         target.fullCalendar({
             header: {
                 left: '',
@@ -54,7 +67,7 @@
             editable: false,
             allDayDefault: false,
             themeSystem: 'bootstrap3',
-            events: eventsUrl,
+            eventSources: eventSources,
             height: 'auto',
             showNonCurrentDates: false,
             eventAfterAllRender: function () {

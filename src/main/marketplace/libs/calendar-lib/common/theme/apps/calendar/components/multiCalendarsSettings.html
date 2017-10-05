@@ -1,13 +1,16 @@
 <form class="form-horizontal">
     <div class="form-group">
-        <label class="col-sm-12">Calendar</label>
+        <label class="col-sm-12">Calendars</label>
+
         <div class="col-sm-12">
-            <select class="form-control select-calendar">
-                <option value="" selected="selected">- None -</option>
-                #foreach($calendar in $rootFolder.find("/Calendars").children)
-                    <option value="$calendar.name">$calendar.title</option>
-                #end
-            </select>
+            #foreach($calendar in $rootFolder.find("/Calendars").children)
+            <div class="checkbox">
+                <label>
+                    <input data-color="$calendar.color" class="select-calendar" type="checkbox" name="calendar" value="$calendar.name"> $calendar.title
+                </label>
+            </div>
+            #end
         </div>
+
     </div>
 </form>

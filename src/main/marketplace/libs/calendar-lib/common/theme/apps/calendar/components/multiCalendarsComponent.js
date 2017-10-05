@@ -17,11 +17,18 @@
                 success: function (resp) {
                     form.html(resp);
                     
-                    form.find('.select-calendar').on('change', function () {
+                    form.find('.select-calendar').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        
-                        component.attr('data-calendar', this.value);
+                        var calendars = [];
+                        var colors = [];
+                        form.find('.select-calendar').each(function () {
+                           if (this.checked){
+                               calendars.push(this.value);
+                           }
+                        });
+
+                        component.attr('data-calendars', calendars.join(','));
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -32,7 +39,11 @@
             flog('showSettingForm "multiCalendars" component');
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-calendar').val(dataAttributes['data-calendar']);
+            form.find('.select-calendar').each(function () {
+                if (dataAttributes['data-calendars'].indexOf(this.value) != -1){
+                    this.checked = true;
+                }
+            });
         }
     };
     
