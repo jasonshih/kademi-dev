@@ -13,21 +13,21 @@
             }
         },
         {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.css"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/search/search.js"
-            }
-        },
-        {
-            "css": {
-                "cssMedia": "all",
-                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch1.0.0.css"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch1.0.0.js"
             }
         }
     ]
