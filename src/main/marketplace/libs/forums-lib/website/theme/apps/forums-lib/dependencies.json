@@ -25,6 +25,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/js/jquery.autogrow-textarea-1.0.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/forums/jquery.comments.js"
             }
         },
