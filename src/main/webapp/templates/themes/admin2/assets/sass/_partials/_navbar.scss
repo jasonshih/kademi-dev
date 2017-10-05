@@ -61,17 +61,6 @@
 
 .navbar-tools {
     .navbar-form {
-        .input-group-addon {
-            background-color: $panel-bg;
-        }
-
-        //.input-group-addon,
-        //.form-control {
-        //    border-color: $panel-border-color;
-        //}
-    }
-
-    .navbar-form {
         .omni-search-wrapper {
             .omni-search-input {
                 width: 300px;
@@ -323,10 +312,6 @@ ul.notifications, ul.todo, ul.posts {
 }
 
 li.dropdown.current-user {
-    .dropdown-toggle {
-        //padding: 10px 4px 7px 9px;
-    }
-
     > a {
         > img {
             max-width: 34px;

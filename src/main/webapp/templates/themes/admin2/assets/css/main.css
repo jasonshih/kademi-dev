@@ -668,8 +668,6 @@ a.bricky:hover {
 .header-default .navbar {
   position: relative !important; }
 
-.navbar-tools .navbar-form .input-group-addon {
-  background-color: #f0f5f8; }
 .navbar-tools .navbar-form .omni-search-wrapper .omni-search-input {
   width: 300px; }
 .navbar-tools .navbar-form .omni-search-wrapper .omni-search-suggestions {
