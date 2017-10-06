@@ -131,9 +131,9 @@
     #set( $selectedTags = '[' )
     #foreach($m in $page.assignedTags)
         #if ($selectedTags == '[')
-            #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+            #set( $selectedTags = $selectedTags + '{&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $formatter.firstNotNull($m.title, $m.name) + '&quot;}')
         #else
-            #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $m.title + '&quot;}')
+            #set( $selectedTags = $selectedTags + ', {&quot;id&quot;: &quot;' + $m.name + '&quot;, &quot;name&quot;: &quot;' + $formatter.firstNotNull($m.title, $m.name) + '&quot;}')
         #end
     #end
     #set( $selectedTags = $selectedTags + ']' )
