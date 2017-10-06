@@ -48,8 +48,11 @@ function getOwnClaims(page, params) {
 }
 
 function searchProducts(page, params) {
+    log.info('searchProducts > page={}, params={}', page, params);
+    
     var q = params.q;
     var prods = applications.productsApp.searchProducts(q, null);
+    
     return views.jsonObjectView(prods);
 }
 
@@ -125,6 +128,8 @@ function createClaim(page, params, files) {
                 log.info('Profile for anonymous: userName={}, userId={}', enteredUser.name, enteredUser.userId);
                 obj.soldBy = enteredUser.name;
                 obj.soldById = enteredUser.userId;
+            } else {
+                enteredUser = securityManager.currentUser.profile;
             }
             
             securityManager.runAsUser(enteredUser, function () {
