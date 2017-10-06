@@ -249,7 +249,7 @@ function initUploads() {
             return false;
         }
         
-        if (data.step === reviewRow) {
+        if (data.step === reviewRow && data.direction === 'next') {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
                 evt.preventDefault();
