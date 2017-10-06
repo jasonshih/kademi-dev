@@ -15,45 +15,76 @@
     #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
-#if ($profile)
-    #set ($isShow = true)
-    #set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, ""))
-    
-    #if ($beans.empty)
-        #set ($isShow = false)
-    #else
-        #if ($beans.size() == 1)
-            #set ($bean = $beans.get(0))
-            #if(!$bean.childOrgs || $bean.childOrgs.empty)
-                #set ($isShow = false)
+#if ($page)
+    #if ($user)
+        #set ($isShow = true)
+        #set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, ""))
+        
+        #if ($beans.empty)
+            #set ($isShow = false)
+        #else
+            #if ($beans.size() == 1)
+                #set ($bean = $beans.get(0))
+                #if(!$bean.childOrgs || $bean.childOrgs.empty)
+                    #set ($isShow = false)
+                #end
             #end
         #end
+        
+        #if ($isShow)
+            <div class="org-selector">
+                <div class="dropdown">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-search"></i>
+                        </span>
+            
+                        <input type="text" class="form-control selectOrgSearch" value="$!selectedOrg.title" placeholder="Search" />
+            
+                        <div class="input-group-btn orgSelectorWrap">
+                            <a data-orgId="$!selectedOrgId" href="#" class="btn btn-default btn-reporting-clear-selected-org">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                            <button type="button" class="btn btn-default dropdown-toggle btn-select-org-selector" data-toggle="dropdown">
+                                Select
+                                <span class="caret"></span>
+                            </button>
+                            <ul data-groupnames="$!groups" class="dropdown-menu dropdownMenuOrgSelector">
+                                <li><i class="fa fa-spinner fa-spin"></i> Loading</li>
+                            </ul>
+                        </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+        #end
     #end
+#else
+    <div class="org-selector">
+        <div class="dropdown">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </span>
     
-    #if ($isShow)
-        <div class="org-selector">
-            <div class="dropdown">
-                <div class="input-group">
-                    <span class="input-group-addon" id="basic-addon1">
-                        <i class="fa fa-search"></i>
-                    </span>
-        
-                    <input type="text" class="form-control selectOrgSearch" aria-label="Select an organisation" value="$!selectedOrg.title" placeholder="Search" />
-        
-                    <div class="input-group-btn orgSelectorWrap">
-                        <a data-orgId="$!selectedOrgId" href="#" class="btn btn-default btn-reporting-clear-selected-org">
-                            <i class="fa fa-times-circle"></i>
-                        </a>
-                        <button type="button" class="btn btn-default dropdown-toggle btn-select-org-selector" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Select
-                            <span class="caret"></span>
-                        </button>
-                        <ul data-groupnames="$!groups" class="dropdown-menu dropdownMenuOrgSelector" aria-labelledby="dropdownMenuOrgSelector">
-                            <li><i class="fa fa-spinner fa-spin"></i> Loading</li>
-                        </ul>
-                    </div><!-- /btn-group -->
-                </div><!-- /input-group -->
+                <input type="text" class="form-control" value="Current Org" placeholder="Search" />
+    
+                <div class="input-group-btn orgSelectorWrap">
+                    <a  href="#" class="btn btn-default">
+                        <i class="fa fa-times-circle"></i>
+                    </a>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Select
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a><i class="fa fa-check" style="visibility: hidden"></i> Org #1</a></li>
+                        <li><a><i class="fa fa-check" style="visibility: hidden"></i> Org #2</a></li>
+                        <li><a><i class="fa fa-check" style="visibility: hidden"></i> Org #3</a></li>
+                        <li><a><i class="fa fa-check" style="visibility: hidden"></i> Org #4</a></li>
+                        <li><a><i class="fa fa-check" style="visibility: hidden"></i> Org #5</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    #end
+    </div>
 #end

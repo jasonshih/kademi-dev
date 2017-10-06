@@ -1,9 +1,13 @@
+#if ($bgTransparent == "true")
+    #set ($formBgColor = "transparent")
+#end
+
 #if ($page)
     #set($app = $applications.salesDataClaimer )
     #set($isAnonymousAllowed = $app.call("isAnonymousAllowed", $page))
 
     #if ($user || $isAnonymousAllowed)
-        <form class="form-horizontal form-new-claim well" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
+        <form class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" action="/salesDataClaims/" method="post" enctype="multipart/form-data" style="background-color: $formBgColor;">
             #if ($formTitle && $formTitle != "")
                 <h3>$formTitle</h3>
             #end
@@ -74,19 +78,27 @@
                 <label class="control-label sr-only">Receipt</label>
                 
                 <div class="col-sm-12">
-                    <p class="thumbnail">
-                        <img src="/static/images/photo_holder.png" class="img-responsive" />
-                    </p>
-                    <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> Upload receipt</button>
+                    #if ($hidePreviewReceipt != "true")
+                        <p class="thumbnail">
+                            <img src="/static/images/photo_holder.png" class="img-responsive" />
+                        </p>
+                    #end
+                    <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
                     <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
                     <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
                 </div>
             </div>
             <button class="btn btn-primary btn-block" type="submit">Save claim</button>
         </form>
+        <div class="sale-claim-success" style="display: none">
+            <p><i class="fa fa-thumbs-up"></i></p>
+            <h2>Congratulations!</h2>
+            <p class="lead">You've just submitted a claim</p>
+            <button type="button" class="btn btn-info btn-submit-other-claim">Submit another</button>
+        </div>
     #end
 #else
-    <form class="form-horizontal well" style="background-color: $formBgColor;">
+    <div class="form-horizontal form-new-claim #if ($bgTransparent == "true") #else well #end" style="background-color: $formBgColor;">
         #if ($formTitle && $formTitle != "")
             <h3>$formTitle</h3>
         #end
@@ -123,14 +135,16 @@
             <label class="control-label sr-only">Receipt</label>
             
             <div class="col-sm-12">
-                <p class="thumbnail">
-                    <img src="/static/images/photo_holder.png" class="img-responsive" />
-                </p>
-                <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> Upload receipt</button>
+                #if ($hidePreviewReceipt != "true")
+                    <p class="thumbnail">
+                        <img src="/static/images/photo_holder.png" class="img-responsive" />
+                    </p>
+                #end
+                <button type="button" class="btn btn-sm btn-info btn-upload-receipt btn-block"><i class="fa fa-file-picture-o"></i> <span>Upload receipt</span></button>
                 <span class="text-danger img-error" style="display: none;">Selected file is not image!</span>
                 <input type="file" name="receiptImage" class="form-control" style="display: none !important;" />
             </div>
         </div>
         <button class="btn btn-primary btn-block" type="button">Save claim</button>
-    </form>
+    </div>
 #end

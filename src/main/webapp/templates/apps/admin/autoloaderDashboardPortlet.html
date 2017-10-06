@@ -11,6 +11,7 @@
                             <div class="text-center">
                                 #if($_autoloaderState)
                                     Autoloader's running...
+                                    <button class="btn btn-sm btn-info btn-check-autoloader"><i class="fa fa-refresh"></i> Check status</button>
                                 #else
                                     Autoloader
                                     <button class="btn btn-sm btn-info btn-start-autoloader">Start</button>
@@ -26,7 +27,7 @@
 
 <script type="text/javascript">
     $(function () {
-        $('body').off('click', '.btn-start-autoloader').on('click', '.btn-start-autoloader', function (e) {
+        $(document.body).off('click', '.btn-start-autoloader').on('click', '.btn-start-autoloader', function (e) {
             e.preventDefault();
             
             Kalert.confirm('You want to start the Autoloader?', 'Yes', function () {
@@ -45,6 +46,12 @@
                     }
                 });
             });
+        });
+        
+        $(document.body).off('click', '.btn-check-autoloader').on('click', '.btn-check-autoloader', function (e) {
+            e.preventDefault();
+            
+            $('#autoloader-tile').reloadFragment();
         });
     });
 </script>
