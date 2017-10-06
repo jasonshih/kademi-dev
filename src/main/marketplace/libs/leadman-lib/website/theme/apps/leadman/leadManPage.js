@@ -215,10 +215,9 @@
         $('#leadTable')
                 .off('click', 'tbody td')
                 .on('click', 'tbody td', function (e) {
-
-                    editor.inline(this, {
-                        submitOnBlur: true
-                    });
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editor.inline(this);
                 });
 
         for (var i = 0; i < hits.hits.length; i++) {
