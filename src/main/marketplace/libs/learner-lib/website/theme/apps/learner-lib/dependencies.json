@@ -93,7 +93,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/myLearningModules.js"
+                "path": "/theme/apps/learner/myLearning.js"
             }
         }
     ]

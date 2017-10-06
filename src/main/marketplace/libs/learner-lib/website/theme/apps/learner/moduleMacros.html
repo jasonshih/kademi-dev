@@ -3,6 +3,53 @@
         <title>Module Macros</title>
     </head>
     <body>
+        #macro (renderModuleButton $mod $isGrid)
+            #set ($tagName = "a")
+            #if ($isGrid == true)
+                #set ($tagName = "span")
+            #end
+        
+            #if( $mod.complete )
+                <$tagName href="$mod.href" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Completed</$tagName>
+            #elseif ( $mod.percentComplete )
+                <$tagName href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-pause"></i> Resume</$tagName>
+            #else
+                #if( $mod.completable )
+                    #if( $mod.startable )
+                        <$tagName href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-play"></i> Start</$tagName>
+                    #else
+                        <$tagName href="$mod.href" class="btn btn-sm btn-default" title="You have not completed prequisites"><i class="fa fa-lock"></i> Lock</$tagName>
+                    #end
+                #else
+                    <$tagName href="$mod.href" class="btn btn-sm btn-default" title="You do not have an enrolement for this module"><i class="fa fa-eye"></i> View only</$tagName>
+                #end
+            #end
+        #end
+        
+        #macro (renderModuleThumb $mod $isGrid)
+            <div class="module-thumb">
+                #set ($modThumb = "/static/images/photo_holder.png")
+                #if( $mod.thumb )
+                    #set ($modThumb = "${mod.thumb}/alt-300-300.png")
+                #end
+                #if ($isGrid == true)
+                    <span style="background-image: url('$modThumb')"></span>
+                #else
+                    <a href="$mod.href" style="background-image: url('$modThumb')"></a>
+                #end
+            </div>
+        #end
+        
+        #macro (renderModuleProgress $mod)
+            #set ($modProgress = 0)
+            #if( $mod.complete )
+                #set ($modProgress = 100)
+            #elseif ( $mod.percentComplete )
+                #set ($modProgress = $mod.percentComplete)
+            #end
+            <div class="module-progress" style="width: ${modProgress}%;"></div>
+        #end
+        
         #macro (renderModuleInfos $mod $showTime $showCpd $showPoint)
             #if ($showTime == true)
                 #set($mins = $mod.learningTimeMins)
@@ -45,41 +92,14 @@
         
         #macro (renderModuleListItem $mod $showTime $showCpd $showPoint)
             <div class="module">
-                <div class="module-thumb">
-                    #set ($modThumb = "/static/images/photo_holder.png")
-                    #if( $mod.thumb )
-                        #set ($modThumb = "${mod.thumb}/alt-300-300.png")
-                    #end
-                    <a href="$mod.href" style="background-image: url('$modThumb')"></a>
-                </div>
+                #renderModuleThumb($mod)
+                #renderModuleProgress($mod)
                 <div class="module-body">
-                    #set ($modProgress = 0)
-                    #if( $mod.complete )
-                        #set ($modProgress = 100)
-                    #elseif ( $mod.percentComplete )
-                        #set ($modProgress = $mod.percentComplete)
-                    #end
-                    <div class="module-progress" style="width: ${modProgress}%;"></div>
-                    
                     <h4>$mod.title</h4>
                     <p>$!mod.brief</p>
                     <div class="clearfix">
                         <div class="pull-right">
-                            #if( $mod.complete )
-                                <a href="$mod.href" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Completed</a>
-                            #elseif ( $mod.percentComplete )
-                                <a href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-pause"></i> Resume</a>
-                            #else
-                                #if( $mod.completable )
-                                    #if( $mod.startable )
-                                        <a href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-play"></i> Start</a>
-                                    #else
-                                        <a href="$mod.href" class="btn btn-sm btn-default" title="You have not completed prequisites"><i class="fa fa-lock"></i> Lock</a>
-                                    #end
-                                #else
-                                    <a href="$mod.href" class="btn btn-sm btn-default" title="You do not have an enrolement for this module"><i class="fa fa-eye"></i> View only</a>
-                                #end
-                            #end
+                            #renderModuleButton($mod)
                         </div>
                         <div>
                             #renderModuleInfos($mod $showTime $showCpd $showPoint)
@@ -89,48 +109,28 @@
             </div>
         #end
         
-        #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight)
-            <a href="$mod.href">
-                #set ($modThumb = "/static/images/photo_holder.png")
-                #if( $mod.thumb )
-                    #set ($modThumb = "${mod.thumb}/alt-300-300.png")
-                #end
-                <div class="module module-grid" style="height: ${gridItemHeight}px; background-image: url('$modThumb')">
-                    #if ($showButton == true)                    
-                        <div class="module-button">
-                            #if( $mod.complete )
-                                <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-check"></i> Completed</a>
-                            #elseif ( $mod.percentComplete )
-                                <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-pause"></i> Resume</a>
-                            #else
-                                #if( $mod.completable )
-                                    #if( $mod.startable )
-                                        <a href="$mod.href" class="btn btn-sm btn-primary"><i class="fa fa-play"></i> Start</a>
-                                    #else
-                                        <a href="$mod.href" class="btn btn-sm btn-primary" title="You have not completed prequisites"><i class="fa fa-lock"></i> Lock</a>
-                                    #end
-                                #else
-                                    <a href="$mod.href" class="btn btn-sm btn-primary" title="You do not have an enrolement for this module"><i class="fa fa-eye"></i> View only</a>
-                                #end
-                            #end
-                        </div>
-                    #end
-                    <div class="module-body">
-                        #set ($modProgress = 0)
-                        #if( $mod.complete )
-                            #set ($modProgress = 100)
-                        #elseif ( $mod.percentComplete )
-                            #set ($modProgress = $mod.percentComplete)
-                        #end
-                        <div class="module-progress" style="width: ${modProgress}%;"></div>
-                        
+        #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+            <a href="$mod.href" class="module-grid-wrapper">
+                <div class="module module-grid" style="height: ${gridItemHeight}px;">
+                    #renderModuleThumb($mod true)
+                    
+                    <div class="module-body #if ($fullHeightThumb == true) module-body-transparent #end">
+                        #renderModuleProgress($mod)
                         <h4>$mod.title</h4>
                         <div class="clearfix">
-                            #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                            #if ($showButton == true)
+                                <div class="pull-right">
+                                    #renderModuleButton($mod true)
+                                </div>
+                            #end
+                            <div>
+                                #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                            </div>
                         </div>
                     </div>
                 </div>
             </a>
         #end
+        
     </body>
 </html>

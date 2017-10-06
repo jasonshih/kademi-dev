@@ -22,7 +22,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-course', this.value);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.txt-number-of-modules').on('change', function () {
@@ -37,7 +39,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-number-of-modules', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.select-layout').on('change', function () {
@@ -45,7 +49,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-layout', this.value);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                         
                         form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
                     });
@@ -55,7 +61,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-items-per-row', this.value);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.txt-grid-item-height').on('change', function () {
@@ -70,7 +78,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-grid-item-height', number);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.chk-show-time').on('change', function () {
@@ -78,7 +88,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-show-time', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.chk-show-cpd').on('change', function () {
@@ -86,7 +98,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-show-cpd', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.chk-show-point').on('change', function () {
@@ -94,7 +108,9 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-show-point', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                     
                     form.find('.chk-show-button').on('change', function () {
@@ -102,7 +118,19 @@
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
                         component.attr('data-show-button', this.checked);
-                        keditor.initDynamicContent(dynamicElement);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
+                    });
+                    
+                    form.find('.chk-full-height-thumb').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-full-height-thumb', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            adjustHeightModuleGrid();
+                        });
                     });
                 }
             });
@@ -122,6 +150,7 @@
             form.find('.chk-show-cpd').prop('checked', dataAttributes['data-show-cpd'] === 'true');
             form.find('.chk-show-point').prop('checked', dataAttributes['data-show-point'] === 'true');
             form.find('.chk-show-button').prop('checked', dataAttributes['data-show-button'] === 'true');
+            form.find('.chk-full-height-thumb').prop('checked', dataAttributes['data-full-height-thumb'] === 'true');
             
             form.find('.items-per-row-wrapper').css('display', dataAttributes['data-layout'] === 'grid' ? 'block' : 'none');
         }

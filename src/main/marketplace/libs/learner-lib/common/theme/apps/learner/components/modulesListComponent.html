@@ -21,13 +21,14 @@
 #set ($showCpd = $formatter.toBool( $showCpd ))
 #set ($showPoint = $formatter.toBool( $showPoint ))
 #set ($showButton = $formatter.toBool( $showButton ))
+#set ($fullHeightThumb = $formatter.toBool( $fullHeightThumb ))
 
 #parse("/theme/apps/learner/moduleMacros.html")
 
 #if ($course && $course != "")
     #set ($modules = $page.find($course).children.ofType.module)
     #set ($modules = $rootFolder.find($course).children.ofType.module)
-    <div class="modules-list row">
+    <div class="modules-list">
         #if ($layout == "grid")
             #set ($moduleClass = "col-sm-3")
             #if ($itemsPerRow == 1)
@@ -41,24 +42,24 @@
             #end
             
             #set ($count = 0)
-            #foreach($mod in $modules)
-                #set ($count = $count + 1)
-                <div class="$moduleClass">
-                    #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight)
-                </div>
-        
-                #if ($numberOfModules == 0)
-                #elseif ($count >= $numberOfModules)
-                    #break
+            <div class="row">
+                #foreach($mod in $modules)
+                    #set ($count = $count + 1)
+                    <div class="$moduleClass">
+                        #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+                    </div>
+            
+                    #if ($numberOfModules == 0)
+                    #elseif ($count >= $numberOfModules)
+                        #break
+                    #end
                 #end
-            #end
+            </div>
         #else
             #set ($count = 0)
             #foreach($mod in $modules)
                 #set ($count = $count + 1)
-                <div class="col-md-12">
-                    #renderModuleListItem($mod $showTime $showCpd $showPoint)
-                </div>
+                #renderModuleListItem($mod true true true)
         
                 #if ($numberOfModules == 0)
                 #elseif ($count >= $numberOfModules)
