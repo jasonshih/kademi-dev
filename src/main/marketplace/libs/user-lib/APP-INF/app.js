@@ -1,0 +1,2 @@
+controllerMappings.addComponent("user/components", "recentUserRegistrations", "html", "Display recent registrations", "User App component");
+controllerMappings.addComponent("user/components", "recentActiveUsers", "html", "Display recent active users", "User App component");
