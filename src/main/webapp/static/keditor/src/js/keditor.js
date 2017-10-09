@@ -1492,7 +1492,6 @@
             }
         });
         
-        
         body.on('click', '.btn-container-setting', function (e) {
             e.preventDefault();
             
