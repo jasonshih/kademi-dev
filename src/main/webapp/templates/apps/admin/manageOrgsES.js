@@ -505,12 +505,14 @@ function aggFilter() {
 }
 
 function initRemoveOrgs() {
+    Msg.singletonForCategory = true;
+    
     $(".btn-orgs-remove").click(function (e) {
         var node = $(e.target);
         flog("remove orgs", node, node.is(":checked"));
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right");
+            Msg.error("Please select the organisations you want to remove by clicking the checkboxs to the right", 'no-org-selected');
         } else {
             Kalert.confirm("Are you sure you want to remove " + checkBoxes.length + " organisations?", function () {
                 doRemoveOrgs(checkBoxes);
