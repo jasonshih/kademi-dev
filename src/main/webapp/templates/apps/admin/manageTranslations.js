@@ -61,7 +61,6 @@ function initCreateTranslation() {
         },
         error: function (resp) {
             flog('Error: ', resp);
-            $("#addTranslationModal").modal('hide');
         }
     });
 }
