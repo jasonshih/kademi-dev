@@ -8,6 +8,10 @@
 
             var self = this;
 
+
+            component.attr('data-queryname', 'registrationsOverTime');
+            component.attr('data-agg', 'registrations_over_time');
+            component.attr('data-querytype', "query");
             if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
@@ -35,7 +39,7 @@
             $(document.body).trigger('pageDateChanged', ["1/1/2016", "1/1/2017", "This year", null]);
         },
         settingEnabled: true,
-        settingTitle: 'Registrations over time Settings',
+        settingTitle: 'Registrations over time',
         initSettingForm: function (form, keditor) {
             flog('initSettingForm "registrationsOverTime" component');
 
@@ -52,7 +56,7 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
-                        component.attr('data-title', this.value);
+                        component.attr('data-chart-title', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initDateAgg();
                         });
@@ -63,7 +67,7 @@
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "registrationsOverTime" component');
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.txt-title').val(dataAttributes['data-title']);
+            form.find('.txt-title').val(dataAttributes['data-chart-title']);
         }
     };
 })(jQuery);
