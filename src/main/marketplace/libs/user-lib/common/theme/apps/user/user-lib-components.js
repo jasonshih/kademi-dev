@@ -7,8 +7,13 @@ $(function () {
                 subAgg: null,
                 stacked: false,
                 showControls: false,
-                showLegend: false
-            };        
+                showLegend: false,
+                left: 10,
+                right: 10,
+                bottom: 0,
+                top: 0,
+                dateFormat: "%e %b"
+            };
             var queryHref = "/queries/registrationsOverTime";
             var cont = $(n);
             

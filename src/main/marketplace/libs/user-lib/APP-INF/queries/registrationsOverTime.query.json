@@ -12,11 +12,6 @@
                             "lte": "$endDate"
                         }
                     }
-                },
-                {
-                    "term": {
-                        "membershipOrg.id": 1
-                    }
                 }
             ],
             "filter": {
