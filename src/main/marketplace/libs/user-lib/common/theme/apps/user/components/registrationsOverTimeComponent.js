@@ -8,6 +8,10 @@
 
             var self = this;
 
+
+            component.attr('data-queryname', 'registrationsOverTime');
+            component.attr('data-agg', 'registrations_over_time');
+            component.attr('data-querytype', "query");
             if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
