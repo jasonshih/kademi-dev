@@ -1,74 +1,119 @@
+#set ($blogListId = $formatter.randomGuid)
+
 #if($page)
     #set ($articles = $page.articles.sortByDate)
     #if ($filter == "featured")
-    #set ($articles = $page.articles.featured.sortByDate)
+        #set ($articles = $page.articles.featured.sortByDate)
     #elseif ($filter == "nonFeatured")
-    #set ($articles = $page.articles.notFeatured.sortByDate)
+        #set ($articles = $page.articles.notFeatured.sortByDate)
     #end
     #if ($formatter.isNotNull($categories))
-    #set ($articles = $articles.ofTypeOr($categories))
+        #set ($articles = $articles.ofTypeOr($categories))
     #end
     #if ($formatter.isNotNull($tags))
-    #set ($articles = $articles.ofTypeOr($tags))
+        #set ($articles = $articles.ofTypeOr($tags))
     #end
-    #foreach($article in $articles)
-    <div class="hero thumbnail col-md-12">
-        #set($image = false)
-        #set($image = $article.bestSquareImageHref)
-        #if( $image )
-        #set($bg = "background-image: url('${image}/alt-300-300.png')")
-        <div class="hero-image hidden-xs hidden-sm" style="$bg"></div>
-        #end
-
-        <div class="hero-body">
-            <h2 class="hero-heading"><a href="$article.href">$article.title</a></h2>
-
-            $!article.brief
-
-            <div class="clearfix">
-                <abbr class="pull-left timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
-                <div class="pull-right">
-                    #if( $article.category )
-                    <span class="label label-primary">$article.category</span>
+    <div class="blog-articles-list" id="blog-article-list-${blogListId}">
+        #foreach($article in $articles)
+            <div class="media blog-article">
+                <div class="media-left hidden-sm hidden-xs">
+                    #set($bg = "/static/images/photo_holder.png")
+                    #if( $article.bestSquareImageHref )
+                        #set($bg = $article.bestSquareImageHref + "/alt-600-400.png")
                     #end
-                    #foreach($tag in $article.tags)
-                    #if( $article.isSelectedTag( $tag ) )
-                    <span class="label label-primary">$tag</span>
-                    #end
-                    #end
-                    #if($article.featured)
-                    <span class="label label-success">Featured</span>
-                    #end
+                    <a href="$article.href">
+                        <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <a href="$article.href">$article.title</a>
+                    </h4>
+                    <div class="media-content clearfix">
+                        $!formatter.toPlain( $!article.brief )
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($article.articleDate)">$article.articleDate</abbr>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="text-right hidden-sm hidden-xs">
+                                #if( $article.category )
+                                    <span class="label label-primary">$article.category</span>
+                                #end
+                                #foreach($tag in $article.tags)
+                                    #if( $article.isSelectedTag( $tag ) )
+                                        <span class="label label-primary">$tag</span>
+                                    #end
+                                #end
+                                #if($article.featured)
+                                    <span class="label label-success">Featured</span>
+                                #end
+                            </div>
+                            <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                                #if( $article.category )
+                                    <span class="label label-primary">$article.category</span>
+                                #end
+                                #foreach($tag in $article.tags)
+                                    #if( $article.isSelectedTag( $tag ) )
+                                        <span class="label label-primary">$tag</span>
+                                    #end
+                                #end
+                                #if($article.featured)
+                                    <span class="label label-success">Featured</span>
+                                #end
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <hr />
+        #end
     </div>
-    #end
     <script type="text/javascript">
         $(function() {
             $(".timeago").timeago();
         });
     </script>
 #else
-    <div class="hero thumbnail col-md-12">
-        #set($bg = "background-image: url('/static/images/photo_holder.png')")
-        <div class="hero-image " style="$bg"></div>
-        <div class="hero-body">
-            <h2 class="hero-heading"><a href="#">Example Blog Title</a></h2>
-
-            Example Blog Title Brief
-
-            <div class="clearfix">
-                <abbr class="pull-left timeago" title="$formatter.formatDate($formatter.getCurrentDateService().getNow())">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr>
-                <div class="pull-right">
-                    <span class="label label-primary">Example Blog Category</span>
-                    <span class="label label-primary">Example Tag</span>
-                    <span class="label label-success">Featured</span>
+    <div class="blog-articles-list" id="blog-article-list-${blogListId}">
+        #foreach($count in [1..3])
+            <div class="media blog-article">
+                <div class="media-left hidden-sm hidden-xs">
+                    #set($bg = "/static/images/photo_holder.png")
+                    <a>
+                        <img class="media-object" alt="$article.title" src="$bg" width="200" height="" />
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <a>Article #${count}</a>
+                    </h4>
+                    <div class="media-content clearfix">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint incidunt fugit, tempore ipsam praesentium quis, tempora eum. Consectetur deserunt, eum odit enim! Et voluptate, nam vel reprehenderit corporis consequuntur neque!
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($formatter.now)">$formatter.now</abbr>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="text-right hidden-sm hidden-xs">
+                                <span class="label label-primary">Example Blog Category</span>
+                                <span class="label label-primary">Example Tag</span>
+                                <span class="label label-success">Featured</span>
+                            </div>
+                            <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
+                                <span class="label label-primary">Example Blog Category</span>
+                                <span class="label label-primary">Example Tag</span>
+                                <span class="label label-success">Featured</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            <hr />
+        #end
     </div>
-    <div class="clearfix"></div>
 #end
 
 

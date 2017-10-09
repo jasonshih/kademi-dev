@@ -62,7 +62,7 @@
                             <span class="sr-only">$article.title</span>
                         </a>
                         #if($article.featured)
-                            <span class="label label-warning" style="position: absolute; top: 5px; right: 10px;">Featured</span>
+                            <span class="label label-success" style="position: absolute; top: 5px; right: 10px;">Featured</span>
                         #end
                     </div>
                     <div class="caption">
@@ -127,28 +127,28 @@
                         <div class="col-md-8">
                             <div class="text-right hidden-sm hidden-xs">
                                 #if( $article.category )
-                                    <span class="label label-success">$article.category</span>
+                                    <span class="label label-primary">$article.category</span>
                                 #end
                                 #foreach($tag in $article.tags)
                                     #if( $article.isSelectedTag( $tag ) )
-                                        <span class="label label-success">$tag</span>
+                                        <span class="label label-primary">$tag</span>
                                     #end
                                 #end
                                 #if($article.featured)
-                                    <span class="label label-warning">Featured</span>
+                                    <span class="label label-success">Featured</span>
                                 #end
                             </div>
                             <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
                                 #if( $article.category )
-                                    <span class="label label-success">$article.category</span>
+                                    <span class="label label-primary">$article.category</span>
                                 #end
                                 #foreach($tag in $article.tags)
                                     #if( $article.isSelectedTag( $tag ) )
-                                        <span class="label label-success">$tag</span>
+                                        <span class="label label-primary">$tag</span>
                                     #end
                                 #end
                                 #if($article.featured)
-                                    <span class="label label-warning">Featured</span>
+                                    <span class="label label-success">Featured</span>
                                 #end
                             </div>
                         </div>
@@ -190,15 +190,15 @@
 
                             <p>
                                 #if( $article.category )
-                                    <span class="label label-success">$article.category</span>
+                                    <span class="label label-primary">$article.category</span>
                                 #end
                                 #foreach($tag in $article.tags)
                                     #if( $article.isSelectedTag( $tag ) )
-                                        <span class="label label-success">$tag</span>
+                                        <span class="label label-primary">$tag</span>
                                     #end
                                 #end
                                 #if($article.featured)
-                                    <span class="label label-warning">Featured</span>
+                                    <span class="label label-success">Featured</span>
                                 #end
                             </p>
                         </div>
@@ -236,10 +236,10 @@
                     </div>
                     <div class="col-md-8">
                         <div class="text-right hidden-sm hidden-xs">
-                            <span class="label label-warning">Featured</span>
+                            <span class="label label-success">Featured</span>
                         </div>
                         <div class="text-left hidden-md hidden-lg" style="margin-top: 10px;">
-                            <span class="label label-warning">Featured</span>
+                            <span class="label label-success">Featured</span>
                         </div>
                     </div>
                 </div>
