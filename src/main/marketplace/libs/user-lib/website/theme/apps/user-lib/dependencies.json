@@ -59,6 +59,12 @@
                 "group": "main",
                 "path": "/theme/apps/user/loginForm.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/user/user-lib-components.js"
+            }
         }
     ]
 }
