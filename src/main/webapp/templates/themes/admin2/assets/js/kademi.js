@@ -787,11 +787,45 @@ $(function () {
     initEntityFinder();
     initCreateAccount();
     initAddWebsite();
+    initRepoSwitcher();
     
     $('.main-navigation-menu').children('li').children('a[href=#]').on('click', function (e) {
         e.preventDefault();
     });
 });
+
+function initRepoSwitcher() {
+    flog('initRepoSwitcher');
+    
+    var switchers = $('.repo-switcher');
+    
+    if (switchers.length > 0) {
+        $.getStyleOnce('/theme/assets/plugins/bootstrap-chosen/1.0.1/bootstrap-chosen.css');
+        $.getScriptOnce('/static/chosen/1.1.0/chosen.jquery.js', function () {
+            switchers.each(function () {
+                var switcher = $(this);
+                var btn = switcher.find('.btn');
+                var selector = switcher.find('.repo-switcher-selector');
+                
+                selector.chosen({
+                    search_contains: true
+                });
+                
+                btn.on('click', function (e) {
+                    e.preventDefault();
+                    
+                    setTimeout(function () {
+                        switcher.find('.chosen-container-single').trigger('mousedown');
+                    }, 50);
+                });
+                
+                selector.on('change', function () {
+                    window.location.href = this.value;
+                });
+            });
+        });
+    }
+}
 
 function initEmailEventSimulator() {
     $(document.body).on('click', '.simulateEvent a', function (e) {
