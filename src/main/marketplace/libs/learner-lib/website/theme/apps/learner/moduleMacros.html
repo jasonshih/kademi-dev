@@ -30,7 +30,7 @@
             <div class="module-thumb">
                 #set ($modThumb = "/static/images/photo_holder.png")
                 #if( $mod.thumb )
-                    #set ($modThumb = "${mod.thumb}/alt-300-300.png")
+                    #set ($modThumb = "${mod.thumb}")
                 #end
                 #if ($isGrid == true)
                     <span style="background-image: url('$modThumb')"></span>
