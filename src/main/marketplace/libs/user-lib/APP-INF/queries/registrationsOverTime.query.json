@@ -1,0 +1,41 @@
+{
+    "stored_fields": [
+        "membershipOrg.id"
+    ],
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "reqDate": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                },
+                {
+                    "term": {
+                        "membershipOrg.id": 1
+                    }
+                }
+            ],
+            "filter": {
+                "term": {
+                    "_type": "signuplog"
+                }
+            }
+        }
+    },
+    "aggregations": {
+        "registrations_over_time": {
+            "date_histogram": {
+                "field": "reqDate",
+                "interval": "day",
+                "extended_bounds": {
+                    "min": "$startDate",
+                    "max": "$endDate"
+                }
+            }
+        }
+    }
+}
