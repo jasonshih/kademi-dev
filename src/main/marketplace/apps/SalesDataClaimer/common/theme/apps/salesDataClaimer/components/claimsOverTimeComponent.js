@@ -11,6 +11,9 @@
 
             component.attr('data-queryname', 'tableClaimsOverTime');
             component.attr('data-querytype', "queryTable");
+            component.attr('data-left', "80");
+            component.attr('data-top', "30");
+            component.attr('data-bottom', "30");
             if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
