@@ -59,7 +59,7 @@
                                     <div class="form-group">
                                         <label class="col-md-3 control-label" for="fromAddress">Email from address</label>
                                         <div class="col-md-8">
-                                            <input type="text" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" required="true" class="required form-control" />
+                                            <input type="text" name="fromAddress" value="$formatter.htmlEncode( $page.fromAddress )" placeholder="" class="required form-control" />
                                             <span class="block-help"><em class="small text-muted">Eg "Joe Bloggs" &lt;joe@bloggs.com&gt;</em></span>
                                         </div>
                                     </div>
@@ -188,31 +188,31 @@
                                 </div>
                             </div>
                             <hr />
-                            <p class="lead">Recipients
-                                <small class="text-muted" style="font-size: 14px;">(Select which groups to send to)</small>
-                            </p>
+
                             <div class="Recipient Content">
                                 <p class="clearfix">
                                     <a class="btn btn-sm btn-success Add AddGroup" href="#modalGroup" data-toggle="modal">
                                         <i class="fa fa-plus"></i>
-                                        Add/Remove groups
+                                        Add/Remove recipients
                                     </a>
+                                    <small class="text-muted" style="font-size: 14px;"> (Select which user groups to send to)</small>
                                 </p>
-                                <div class="GroupList blocks-wrapper">
+                                <div class="GroupList blocks-wrapper" id="recipientList">
+                                    <p>Number recipients: <b>$page.numRecipients</b></p>
                                     #foreach($g in $page.groupRecipients)
                                         <span class="block $g.name">$g.name
                                             #if( $page.status == "Draft" )
                                                 <a href="$g.name" class="btn btn-xs btn-bricky"><i class="fa fa-times fa fa-white"></i></a>
                                             #end
                                         </span>
-                                    #end
+                                    #end                                    
                                 </div>
                             </div>
                             <hr />
                             <p class="lead">Message template</p>
                             <div class="form-group">
-                                <div class="col-md-12 editor-wrapper">
-                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control edmeditor">$!page.job.html</textarea>
+                                <div class="col-sm-12">
+                                    <textarea cols="100" name="html" rows="10" placeholder="" class="form-control edmeditor" data-preview="?rawBodyHtml">$!page.job.html</textarea>
                                 </div>
                             </div>
                         </div>
@@ -299,13 +299,6 @@
                                     <p>A single email will be sent to these addresses</p>
                                 </div>
                             </div>
-<!--                            <div class="form-group">
-                                <label class="col-md-3 control-label" for="name">Target</label>
-                                <div class="col-md-8">
-                                    <input type="text" name="targetProfile" value="" placeholder="Email address of user to generate email for" class="required email form-control" />
-                                    <p>This profile will be used to generate the content of the email, ie for any dynamic templating</p>
-                                </div>
-                            </div>-->
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
@@ -316,15 +309,9 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="/static/jquery.edmEditor/1.0.0/jquery.edmEditor-1.0.0.js"></script>
         <script type="text/javascript">
             $(function () {
-                var allGroups = {
-                    #foreach ($group in $page.find("/").allGroups)
-                    '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
-                    #end
-                };
-                initManageScheduledEmail(allGroups);
+                initManageScheduledEmail();
             });
         </script>
     </body>

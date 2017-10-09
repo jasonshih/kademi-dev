@@ -1,0 +1,8 @@
+{
+    "appDependencies": [
+        {
+            "appId": "products-lib",
+            "branch": "1.0.3"
+        }
+    ]
+}

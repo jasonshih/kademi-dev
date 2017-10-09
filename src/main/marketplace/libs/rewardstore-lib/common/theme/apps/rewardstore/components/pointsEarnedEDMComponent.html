@@ -2,7 +2,7 @@
     #set( $months = $formatter.toInteger($months) )
     #set( $monthsNeg = $months * -1 )
     #set($startDate = $formatter.addMonths($formatter.now, $monthsNeg))
-    #set( $points = $applications.rewardStore.sumPoints( $profile, $store, $startDate, null) )
+    #set( $points = $applications.rewardStore.sumAllPoints( $profile, $store, $startDate, null) )
 
 <table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="${bgcolor}">
     <tr>

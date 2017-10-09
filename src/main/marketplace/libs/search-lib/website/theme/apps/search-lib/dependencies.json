@@ -1,7 +1,17 @@
 {
     "appDependencies": [
+        {
+            "appId": "search",
+            "branch": ""
+        }
     ],
     "dependencies": [
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/theme/apps/search/search.css"
+            }
+        },
         {
             "css": {
                 "cssMedia": "all",
@@ -12,6 +22,12 @@
             "js": {
                 "group": "main",
                 "path": "/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/search/search.js"
             }
         }
     ]

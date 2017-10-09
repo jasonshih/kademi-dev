@@ -1,0 +1,107 @@
+#if ($page)
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $page, $user))
+#else
+    #set ($availablePolls = $applications.get("kpollapp").call("getAvailablePolls", $rootFolder, $user))
+#end
+
+#if (!$tileSize)
+    #set ($tileSize = "col-sm-6")
+#end
+
+#if (!$numberOfPolls)
+    #set ($numberOfPolls = 0)
+#end
+#set ($numberOfPolls = $formatter.toInteger($numberOfPolls))
+
+#if ($page)
+    #set ($count = 0)
+    #foreach($poll in $availablePolls)
+        #set ($count = $count + 1)
+        <div class="$tileSize">
+            <div class="kpoll-tile component-tile component-info">
+                <form method="post" action="/kpoll/${poll.id}/answer">
+                    <div class="kpoll-question clearfix">
+                        $poll.fields.question.value
+                    </div>
+                    #if ($poll.fields.point.value)
+                        <div class="kpoll-point">
+                            <i class="fa fa-star"></i> $poll.fields.point.value
+                        </div>
+                    #end
+                    <div class="kpoll-anwsers">
+                        #foreach($ans in  $poll.fields.answers.values)
+                            #set ($anwserId = "answer-" + $foreach.index)
+                            <div class="radio kpoll-anwser">
+                                <label for="$anwserId">
+                                    $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
+                                </label>
+                            </div>
+                        #end
+                    </div>
+                    <div class="kpoll-action">
+                        <button type="submit" class="btn btn-primary btn-sm btn-small">Submit</button>
+                    </div>
+                </form>
+                <div class="kpoll-success text-center clearfix" style="display: none;">
+                    <i class="fa fa-thumbs-up fa-4x"></i>
+                    <h3><strong>Thanks!</strong></h3>
+                    <p class="lead">Your answer is submitted</p>
+                </div>
+            </div>
+        </div>
+
+        #if($numberOfPolls == 0)
+        #elseif ($count >= $numberOfPolls)
+            #break
+        #end
+    #end
+#else
+    #set ($count = 0)
+    #set ($exampleData = [1..4])
+    #if ($tileSize == "col-sm-2")
+        #set ($exampleData = [1..12])
+    #elseif ($tileSize == "col-sm-3")
+        #set ($exampleData = [1..8])
+    #elseif ($tileSize == "col-sm-4")
+        #set ($exampleData = [1..6])
+    #elseif ($tileSize == "col-sm-6")
+        #set ($exampleData = [1..4])
+    #elseif ($tileSize == "col-sm-12")
+        #set ($exampleData = [1..2])
+    #end
+
+    #foreach($i in $exampleData)
+        #set ($count = $count + 1)
+        <div class="$tileSize">
+            <div class="kpoll-tile component-tile component-info">
+                <form method="post">
+                    <div class="kpoll-question clearfix">
+                        Question #${count}: Lorem ipsum dolor sit amet?
+                    </div>
+                    <div class="kpoll-point">
+                        <i class="fa fa-star"></i> 300
+                    </div>
+                    <div class="kpoll-anwsers">
+                        <div class="radio kpoll-anwser">
+                            <label for="test-${count}-1">
+                                $formatter.radio("test-${count}-1", "answer", false, "", "required") Answer #1
+                            </label>
+                        </div><div class="radio kpoll-anwser">
+                            <label for="test-${count}-2">
+                                $formatter.radio("test-${count}-2", "answer", false, "", "required") Answer #2
+                            </label>
+                        </div>
+                    </div>
+                    <div class="kpoll-action">
+                        <button type="button" class="btn btn-primary btn-sm btn-small">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        #if($numberOfPolls == 0)
+        #elseif ($count >= $numberOfPolls)
+            #break
+        #end
+    #end
+#end

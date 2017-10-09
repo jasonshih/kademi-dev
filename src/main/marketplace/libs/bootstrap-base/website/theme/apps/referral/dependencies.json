@@ -4,8 +4,5 @@
             "appId": "referral-lib",
             "branch": "1.0.4"
         }
-    ],
-    "dependencies": [
-
     ]
 }

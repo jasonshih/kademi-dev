@@ -1,5 +1,11 @@
 <controllers>
+    <source>/APP-INF/config.js</source>
     <source>/APP-INF/app.js</source>
+    <source>/APP-INF/utils.js</source>
+
+    <settings enabled="true" path="/theme/apps/KToolbar/settings.html">
+        <function>saveSettings</function>
+    </settings>
 </controllers>
             
             

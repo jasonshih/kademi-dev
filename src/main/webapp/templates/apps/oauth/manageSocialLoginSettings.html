@@ -1,0 +1,234 @@
+<html>
+    <head>
+        <title>Social Login Settings</title>
+    </head>
+    <body>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-sign-in fa-fw" aria-hidden="true"></i>
+                        Login Providers
+                    </div>
+                    <div class="panel-body">
+                        <button type="button" class="btn btn-success btn-add-provider"><i class="fa fa-plus"></i> Add a provider</button>
+                        <div id="oauthproviders">
+                            #foreach($p in $page.loginProvidersSettings)
+                            <div class="row clearfix" style="padding-top: 10px;" data-json="$formatter.htmlAttEncode($formatter.toJson($p))">
+                                <div class="col-sm-9">
+                                    <div class="input-group input-group-sm">
+                                        <label class="input-group-addon">Provider</label>
+                                        <input type="text" class="form-control" value="$p.providerId" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="#" class="btn btn-sm btn-success btn-edit-provider"><i class="fa fa-edit"></i></a>
+                                        <a href="#" class="btn btn-sm btn-danger btn-delete-provider" data-id="$p.providerId"><i class="fa fa-times"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-share fa-fw" aria-hidden="true"></i>
+                        Posters
+                    </div>
+                    <div class="panel-body">
+                        <div class="clearfix">
+                            <form id="social-logins-add-poster-form" class="form-inline pull-right">
+                                <div class="form-group">
+                                    <select name="newPosterService" class="form-control required">
+                                        <option>Add a new service</option>
+                                        #foreach($p in $page.socialPostServices)
+                                        $formatter.option($p.id, $p.title, null)
+                                        #end 
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add</button>
+                            </form>
+                        </div>
+                    </div>
+                    <table id="socialPosters-table" class="table">
+                        <colgroup>
+                            <col/>
+                            <col/>
+                            <col width="108px"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($a in $page.availablePostingServices)
+                            <tr data-title="$a.title" data-id="$a.id">
+                                <td>$a.title</td>
+                                <td>
+                                    #if($a.linkedTo)
+                                    <span class="label label-success label-large">Linked to $a.linkedTo.formattedName() #if($a.displayName)as "$a.displayName"#end</span>
+                                    #else
+                                    <a href="/oauth?gotoPosterProvider=${a.id}" class="btn btn-success btn-${a.id.replace('kademi_', '')}"><i class="fa fa-${a.id.replace('kademi_', '')}"></i> | Connect with $a.title</a>
+                                    #end
+                                </td>
+                                <td class="text-right">
+                                    #if($a.availSettings && !$a.availSettings.empty)
+                                    <button type="button" class="btn btn-info btn-edit-poster" data-settings="$formatter.htmlEncode($formatter.toJson($a.settings))" data-fields="$formatter.htmlEncode($formatter.toJson($a.availSettings))"><i class="fa fa-pencil fa-fw"></i></button>
+                                    #end
+                                    <button type="button" class="btn btn-danger btn-delete-poster" title="Delete $a.title"><i class="fa fa-trash fa-fw"></i></button>
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="add-oauth-provider" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form class="form form-horizontal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Add new OAuth2 Provider</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-horizontal">
+                                <input type="hidden" name="providerAction" value="add"/>
+                                <input type="hidden" name="origProviderId" value=""/>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">Templates</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control sel-template">
+                                            $formatter.option(null, "Select a template", null)
+                                            #foreach($entry in $page.oauth2Templates.entrySet())
+                                            $formatter.option($entry.key, $entry.key, null)
+                                            #end
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="providerId">Provider ID</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="providerId" id="providerId"/>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="providerType">Provider type</label>
+                                    <div class="col-sm-7">
+                                        <select name="providerType" class="form-control">
+                                            <option value="oauth2">OAuth2</option>
+                                            <option value="twitter">Twitter</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="clientId">Client ID</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="clientId" id="clientId"/>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="clientSecret">Client Secret</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="clientSecret" id="clientSecret"/>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="authLocation">Authorication URL</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="authLocation" id="authLocation"/>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="tokenLocation">Token URL</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="tokenLocation" id="tokenLocation"/>
+                                    </div>
+                                </div>
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="profileLocation">Profile URL</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="profileLocation" id="profileLocation"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="redirectURI">Redirect URL</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="redirectURI" id="redirectURI"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="displayNamePath">Display Name Path</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="displayNamePath" id="displayNamePath"/>
+                                    </div>
+                                </div>
+
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="permissionScopes">Scope
+                                        <small>Comma separated list</small>
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <textarea type="text" class="form-control" name="permissionScopes" id="permissionScopes"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group oauth-fields">
+                                    <label class="col-sm-4 control-label" for="accountId">Account
+                                        <small>For importing activity</small>
+                                    </label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control" name="accountId" id="accountId"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Add Provider</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="modal-social-poster-edit" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <input type="hidden" name="editPosterSettings" value="true"/>
+                        <input type="hidden" name="posterId" value=""/>
+                        
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Edit <span class="poster-title"></span></h4>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var oauth2Templates = $formatter.toJson($page.oauth2Templates);
+        </script>
+        <script src="/theme/apps/oauth/manageSocialLoginSettings.js" type="text/javascript">//</script>
+    </body>
+</html>

@@ -27,9 +27,9 @@
             table: '#leadTable',
             idSrc: 'leadId',
             fields: [{
-                label: 'Deal Amount',
-                name: 'dealAmount'
-            },
+                    label: 'Deal Amount',
+                    name: 'dealAmount'
+                },
                 {
                     label: 'Stage',
                     name: 'stageName',
@@ -139,42 +139,86 @@
                     }
                 },
                 {
+                    data: 'funnelName',
+                    defaultContent: ""
+                },
+                {
                     data: 'leadId',
                     "orderable": false,
                     render: function (data, type, full, meta) {
                         flog(data, type, full, meta);
-                        return '<a class="btn btn-info" href="' + data + '"><i class="fa fa-eye"></i></a>';
+                        return '<a class="btn btn-info" href="' + data + '"><i class="fa fa-eye"></i></a>' +
+                                '<input class="leadMan-del-lead" value="' + data + '" type="checkbox"/>';
                     }
                 }
             ]
         });
 
-        $('#leadTable').on('focus', 'tbody td select[id^=DTE_Field_]', function () {
-            var field = $(this);
-            var td = field.closest('td');
-            var fieldName = field.attr('id');
+        $('body')
+                .off('click', '.btn-leadMan-del-lead')
+                .on('click', '.btn-leadMan-del-lead', function (e) {
+                    e.preventDefault();
 
-            if (fieldName !== null && typeof fieldName !== 'undefined') {
-                fieldName = field.attr('id').replace('DTE_Field_', '');
-                var row = dataTable.row(td[0]);
-                var leadId = row.data().leadId;
-                switch (fieldName) {
-                    case "stageName":
-                        loadStageNames(leadId);
-                        break;
-                    case "source":
-                        loadSources(leadId);
-                        break;
-                }
-            }
-        });
+                    var chkbs = $('.leadMan-del-lead:checked');
+                    if (chkbs.length > 0) {
+                        if (confirm('Are you sure you want to delete ' + chkbs.length + ' lead' + (chkbs.length > 1 ? 's' : '') + '?')) {
+                            var ids = [];
+                            chkbs.each(function (i, item) {
+                                ids.push(item.value);
+                            });
 
-        $('#leadTable').on('click', 'tbody td', function (e) {
+                            $.ajax({
+                                type: 'POST',
+                                dataType: 'JSON',
+                                url: '/leads/',
+                                data: {
+                                    deleteLeads: ids.join(',')
+                                },
+                                success: function (resp) {
+                                    if (resp.status) {
+                                        Msg.success(resp.messages);
+                                        doSearch();
+                                    } else {
+                                        Msg.warning(resp.messages);
+                                    }
+                                },
+                                error: function () {
+                                    Msg.error('Oh No! Something went wrong!');
+                                }
+                            });
+                        }
+                    }
+                });
 
-            editor.inline(this, {
-                submitOnBlur: true
-            });
-        });
+        $('#leadTable')
+                .off('focus', 'tbody td select[id^=DTE_Field_]')
+                .on('focus', 'tbody td select[id^=DTE_Field_]', function () {
+                    var field = $(this);
+                    var td = field.closest('td');
+                    var fieldName = field.attr('id');
+
+                    if (fieldName !== null && typeof fieldName !== 'undefined') {
+                        fieldName = field.attr('id').replace('DTE_Field_', '');
+                        var row = dataTable.row(td[0]);
+                        var leadId = row.data().leadId;
+                        switch (fieldName) {
+                            case "stageName":
+                                loadStageNames(leadId);
+                                break;
+                            case "source":
+                                loadSources(leadId);
+                                break;
+                        }
+                    }
+                });
+
+        $('#leadTable')
+                .off('click', 'tbody td')
+                .on('click', 'tbody td', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    editor.inline(this);
+                });
 
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
@@ -415,12 +459,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#sourcesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });
@@ -449,12 +493,12 @@
                     .labelType("value")   //Configure what type of data to show in the label. Can be "key", "value" or "percent"
                     .donut(true)          //Turn on Donut mode. Makes pie chart look tasty!
                     .donutRatio(0.35)     //Configure how big you want the donut hole size to be.
-                ;
+                    ;
 
             d3.select("#stagesPie svg")
-                .datum(buckets)
-                .transition().duration(350)
-                .call(chart);
+                    .datum(buckets)
+                    .transition().duration(350)
+                    .call(chart);
 
             return chart;
         });

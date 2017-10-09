@@ -52,7 +52,7 @@
         <link rel="stylesheet" href="/static/bootstrap-tagsinput/1.0.0/bootstrap-tagsinput.css" />
         <link rel="stylesheet" href="/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.css" />
         <link rel="stylesheet" href="/static/perfect-scrollbar/0.6.7/css/perfect-scrollbar.min.css" />
-        <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=21072017" />
+        <link rel="stylesheet" href="/theme/assets/css/kademi.css?v=20171009" />
         <link rel="stylesheet" href="/theme/assets/plugins/bootstrap-sweetalert/1.0.1/dist/sweetalert.css" />
         <!-- end: MAIN CSS -->
 
@@ -102,8 +102,8 @@
         <script type="text/javascript" src="/static/jquery.domFinder/1.0.0/jquery.domFinder-1.0.0.js">//</script>
         <script type="text/javascript" src="/static/jquery.entityFinder/1.0.1/jquery.entityFinder-1.0.1.js">//</script>
         <script type="text/javascript" src="/static/jquery.omniSearch/1.0.0/jquery.omniSearch-1.0.0.js">//</script>
-        <script type="text/javascript" src="/theme/assets/js/main.js?v=20170815">//</script>
-        <script type="text/javascript" src="/theme/assets/js/kademi.js?v=20170815">//</script>
+        <script type="text/javascript" src="/theme/assets/js/main.js?v=20171009">//</script>
+        <script type="text/javascript" src="/theme/assets/js/kademi.js?v=20171009">//</script>
 
         <!-- end: MAIN JAVASCRIPTS -->
         <!-- start: JAVASCRIPTS REQUIRED FOR THIS PAGE ONLY -->
@@ -205,7 +205,9 @@
                             <li class="dropdown current-user">
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                     #if( $profile.photoHash )
-                                        <img src="/_hashes/files/$profile.photoHash" class="circle-img" alt="">
+                                        <img src="/_hashes/files/$profile.photoHash" class="img-circle" alt="" />
+                                    #else
+                                        <img src="/templates/apps/user/profile.png" class="img-circle" alt="" />
                                     #end
                                     <span class="username hidden-xs hidden-sm">
                                         $!formatter.firstNotNull($user.thisProfile.nickName, $user.thisProfile.firstName, $user.thisProfile.email, $user.thisProfile.name)
@@ -397,6 +399,25 @@
                 }
             </script>
             <!--End of Zopim Live Chat Script-->
+            
+            <!-- Start of Rocket.Chat Livechat Script -->
+            <script type="text/javascript">
+                /* Comment out for now untill we can test it correctly
+                (function(w, d, s, u) {
+                        var ua = navigator.userAgent.toLowerCase();
+                        var platform = navigator.platform.toLowerCase();
+                        var platformName = ua.match(/ip(?:ad|od|hone)/) ? 'ios' : (ua.match(/(?:webos|android)/) || platform.match(/mac|win|linux/) || ['other'])[0];
+                        var isMobile = /ios|android|webos/.test(platformName);
+                        if (!isMobile) {
+                            w.RocketChat = function(c) { w.RocketChat._.push(c) }; w.RocketChat._ = []; w.RocketChat.url = u;
+                            var h = d.getElementsByTagName(s)[0], j = d.createElement(s);
+                            j.async = true; j.src = 'https://chat.kademi.co/packages/rocketchat_livechat/assets/rocketchat-livechat.min.js?_=201702160944';
+                            h.parentNode.insertBefore(j, h);
+                        }
+                })(window, document, 'script', 'https://chat.kademi.co/livechat');
+                */
+            </script>
+            <!-- End of Rocket.Chat Livechat Script -->
         #end
 
         <!-- start: NEW USER MODAL -->

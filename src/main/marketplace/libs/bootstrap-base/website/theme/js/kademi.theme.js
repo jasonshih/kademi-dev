@@ -394,13 +394,15 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
     var div = buildJWPlayerContainer(count);
     flog("buildJWPlayer", src, "size=", h, w);
     itemToReplace.replaceWith(div);
+    
     var innerId = div.find(".jw-video").attr("id");
     var isHash = src.indexOf('/_hashes/files/') === 0;
-    flog("HACK using src");
+    var webmUrl = src + (isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm');
+    var m4vUrl = src + (isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v');
+    
+    flog('Url: ' + src + ', webmUrl: ' + webmUrl + ', m4vUrl: ' + m4vUrl);
+    
     jwplayer(innerId).setup({
-//        file: src,
-//        height: h,
-//        image: posterHref,
         flashplayer: "/static/jwplayer/6.10/jwplayer.flash.swf",
         html5player: "/static/jwplayer/6.10/jwplayer.html5.js",
         width: "100%",
@@ -413,21 +415,20 @@ function buildJWPlayer(itemToReplace, count, src, posterHref, aspectratio, autos
             image: posterHref,
             sources: [{
                 file: src
-            }
-                , {
-                    file: src + isHash ? '/alt-640-360.webm' : '/../alt-640-360.webm'
-                }, {
-                    file: src + isHash ? '/alt-640-360.m4v' : '/../alt-640-360.m4v'
-                }]
+            }, {
+                file: webmUrl
+            }, {
+                file: m4vUrl
+            }]
         }]
-        , primary: "flash"
+        ,primary: "flash"
     });
+    
     jwplayer(innerId).onReady(function () {
         var wrapperId = innerId + "_wrapper";
         var wrapper = $("#" + wrapperId);
         wrapper.addClass("jwplayer-wrapper");
     });
-    
 }
 
 function buildJWPlayerContainer(count) {

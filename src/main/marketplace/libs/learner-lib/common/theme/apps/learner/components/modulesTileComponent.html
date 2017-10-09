@@ -1,0 +1,78 @@
+#if (!$tileSize)
+    #set ($tileSize = "col-sm-6")
+#end
+
+#if (!$numberOfModules)
+    #set ($numberOfModules = 0)
+#end
+#set ($numberOfModules = $formatter.toInteger($numberOfModules))
+
+#if($page)
+    #set($modules = $page.find("/programs").availModules)
+    #set ($count = 0)
+    #foreach($mod in $modules)
+        #set ($count = $count + 1)
+        <div class="$tileSize">
+            <div class="module-tile component-tile component-info">
+                <h3 class="module-tile-title">$mod.title</h3>
+                <p class="module-tile-brief">$formatter.toPlain($mod.brief)</p>
+
+                #if ($mod.moduleCompleteActions.size() > 0)
+                    <div class="module-tile-point">
+                        <i class="fa fa-star"></i>
+                        $formatter.formatCurrency($mod.moduleCompleteActions.get(0).number, false)
+                    </div>
+                #end
+
+                <div class="module-tile-action text-right">
+                    #if ($mod.percentComplete)
+                        <a href="$mod.href" class="btn btn-primary btn-sm">Continue</a>
+                    #else
+                        <a href="$mod.href" class="btn btn-primary btn-sm">Start</a>
+                    #end
+                </div>
+            </div>
+        </div>
+
+        #if($numberOfModules == 0)
+        #elseif ($count >= $numberOfModules)
+            #break
+        #end
+    #end
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+    #set ($count = 0)
+    #set ($exampleData = [1..4])
+    #if ($tileSize == "col-sm-2")
+        #set ($exampleData = [1..12])
+    #elseif ($tileSize == "col-sm-3")
+        #set ($exampleData = [1..8])
+    #elseif ($tileSize == "col-sm-4")
+        #set ($exampleData = [1..6])
+    #elseif ($tileSize == "col-sm-6")
+        #set ($exampleData = [1..4])
+    #elseif ($tileSize == "col-sm-12")
+        #set ($exampleData = [1..2])
+    #end
+
+    #foreach($i in $exampleData)
+        #set ($count = $count + 1)
+        <div class="$tileSize">
+            <div class="module-tile component-tile component-info">
+                <h3>Module #${count}</h3>
+                <p class="clearfix">This is brief of module #${count}</p>
+                <div class="text-right">
+                    <a href="#" class="btn btn-primary btn-sm">Start</a>
+                </div>
+            </div>
+        </div>
+
+        #if($numberOfModules == 0)
+        #elseif ($count >= $numberOfModules)
+            #break
+        #end
+    #end
+#end

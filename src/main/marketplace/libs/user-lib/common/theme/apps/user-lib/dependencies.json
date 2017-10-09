@@ -1,0 +1,11 @@
+{
+    "appDependencies": [
+        {
+            "appId": "nvd3-lib",
+            "branch": "1.8.2"
+        }
+    ],
+    "dependencies": [
+
+    ]
+}

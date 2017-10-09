@@ -1,0 +1,226 @@
+#if ($page)
+#set($cApp = $applications.ksurveyapp)
+#if ($params.profileId)
+#set ($currentUserRes = $applications.userApp.findUserResourceById($formatter.toLong($params.profileId)))
+#else
+#set ($currentUserRes = $userResource)
+#end
+
+<div class="container ksurvey ksurveyResult">
+    #set($survey = $page.attributes.survey)
+
+    #if($survey)
+    #if ($survey.jsonObject.groups)
+    #set($accessGroups = $survey.jsonObject.groups.split(','))
+    #set($canAccessSurvey = false)
+    #foreach($groupName in $accessGroups)
+    #if(!$canAccessSurvey)
+    #set($canAccessSurvey = $currentUserRes.isInGroup($groupName))
+    #end
+    #end
+    #else
+    #set($canAccessSurvey = true) ## Groups restrict null so every user can access
+    #end
+
+    #set ($taken = $cApp.call('getSurveyResultByUser', $page, $currentUserRes.name, $survey.name))
+    #if($survey.jsonObject.endTime && $survey.jsonObject.startTime)
+    #set($expired = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.endTime)))
+    #set($openingSoon = $formatter.now.compareTo($formatter.toDate($survey.jsonObject.startTime)))
+    #end
+    #if(!$canAccessSurvey)
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger">
+                <h3><strong>Oops!</strong> You don't have permission to access this survey. <a href="/ksurvey">Click here</a> to go back to survey list!</h3>
+            </div>
+        </div>
+    </div>
+    #elseif($taken.hits.totalHits<1)
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info">
+                <h3><strong>Oops!</strong> You need to complete this survey to view result. <a href="/ksurvey/$survey.name">Click here</a> to go back to survey!</h3>
+            </div>
+        </div>
+    </div>
+    #elseif (!$survey.jsonObject.status)
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger">
+                <h3><strong>Oops!</strong> This survey is currently disabled by administrator. <a href="/ksurvey">Click here</a> to go back to survey list!</h3>
+            </div>
+        </div>
+    </div>
+
+    #elseif($openingSoon && $openingSoon<0)
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-info">
+                <h3><strong>Hello!</strong> This survey is opening in <span id="cowndowntime" data-startTime="$survey.jsonObject.startTime">...</span> </h3>
+            </div>
+        </div>
+    </div>
+    #else
+    <div class="row">
+        <div class="col-sm-12" id="ksurvey-wrap">
+
+            <h3>$survey.jsonObject.title</h3>
+
+            #if($survey.jsonObject.startTime)
+            <div><i class="fa fa-clock-o"></i> <span class="surveytime">$survey.jsonObject.startTime</span> - <span class="surveytime">$survey.jsonObject.endTime</span></div>
+            #end
+            <p>$survey.jsonObject.description</p>
+
+            #set ($surveyStatistic = $cApp.call('getUserSurveyStatsByUserId', $page, $survey.name, $currentUserRes.name))
+            #set ($surveyResult = $surveyStatistic.get('surveyResult'))
+            #set ($totalSubmits = $surveyStatistic.get('totalSubmits'))
+            #set($questions = $page.attributes.questionResult.hits.hits)
+            #set($answers = $page.attributes.answerResult.hits.hits)
+            <hr>
+            #if($page.attributes.questionResult.hits.totalHits > 0)
+            #foreach($question in $questions)
+            <div id="questions">
+
+                <div class="question-item">
+                    <h4>$question.source.title</h4>
+                    <div class="question-description">$question.source.body</div>
+                    #if($question.source.type!='1')
+                    <div class="answers">
+                        #if($page.attributes.answerResult.hits.totalHits > 0)
+                        #set($totalQuestionSubmits = $surveyResult.get($question.id).get('docCount'))
+                        #foreach($answer in $answers)
+                        #if($answer.source.questionId == $question.id)
+                        #set($totalAnswerSubmits = 0)
+                        #if($surveyResult.get($question.id).get('answers').get($answer.id))
+                        #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get($answer.id))
+                        #end
+                        #set($progress = $formatter.toPercent($totalAnswerSubmits, $totalQuestionSubmits) )
+                        #set($surveyCSV = "$surveyCSV$survey.name,$totalSubmits,$question.id,$question.source.title,$answer.id,$answer.source.body,$totalAnswerSubmits,$progress$linebreaker")
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="glyphicon glyphicon-info-sign"></span> $answer.source.body
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="$progress.replace('%','')" aria-valuemin="0" aria-valuemax="100">
+                                        <div>$progress - $totalAnswerSubmits votes</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        #end
+                        #end
+                        #end
+                    </div>
+                    #else
+                    #set($totalAnswerSubmits = $surveyResult.get($question.id).get('answers').get('PLAIN_TEXT_ANSWER'))
+                    <p><a data-question-id="$question.id" data-survey-id="$survey.name" href="#" class="btn btn-default btn-xs btn-view-plain-answer hide">View all <i class="fa fa-arrow-down"></i></a></p>
+                    <div class="plain-answers">
+                        #set ($plainAnswers = $controllers.call('getPlainAnswers', $page, $question.id, $survey.name))
+                        #if($plainAnswers.hits.totalHits > 0)
+                        #foreach($plainAnswer in $plainAnswers.hits.hits)
+                        #if ($currentUserRes.name == $plainAnswer.source.userId)
+                        <p><b>Your answer:</b></p>
+                        <p>$!plainAnswer.source.answerBody</p>
+                        #end
+                        #end
+                        #end
+                    </div>
+                    #end
+                </div>
+                <hr>
+            </div>
+            #end
+            #else
+            <p>No question found</p>
+            #end
+        </div>
+    </div>
+    #end
+    #end
+</div>
+#else
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12" id="ksurvey-wrap">
+
+            <h3>Example Survey</h3>
+
+            <p>Survey</p>
+
+            <p><strong>Total Submissions: 1</strong></p>
+            <hr>
+            <div id="questions">
+
+                <div class="question-item">
+                    <h4>question 1</h4>
+                    <div class="question-description"><p>question 1</p>
+                    </div>
+                    <div class="answers">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="glyphicon glyphicon-info-sign"></span> a
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+                                        <div>100% - 1.0 votes</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="glyphicon glyphicon-info-sign"></span> b
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div>0% - 0 votes</div><div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; color: rgb(51, 51, 51);">
+
+                                </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="glyphicon glyphicon-info-sign"></span> c
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div>0% - 0 votes</div><div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; color: rgb(51, 51, 51);">
+
+                                </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <span class="glyphicon glyphicon-info-sign"></span> d
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="progress">
+                                    <div>0% - 0 votes</div><div class="progress-bar progress-bar-info active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%; color: rgb(51, 51, 51);">
+
+                                </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+#end

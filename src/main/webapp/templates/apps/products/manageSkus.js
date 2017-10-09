@@ -292,7 +292,7 @@
 
             $('#modal-option-img').find('input[name=skuId]').val(skuId);
             $('#modal-option-img').find('.img-list').empty();
-            for (var i in imgHashes) {
+            for (var i = 0; i < imgHashes.length; i++) {
                 var hash = imgHashes[i];
                 var imgDiv = '<div class="col-xs-6 col-md-3 product-image-thumb">'
                         + '    <a href="' + hash + '" class="thumbnail select-opt-img"><img src="/_hashes/files/' + hash + '/alt-150-150.png"/></a>'
@@ -399,8 +399,9 @@
             dataType: "json",
             success: function (resp) {
                 if (resp.status) {
+                    flog("newSku", newSku);
                     Msg.success(resp.messages);
-                    reloadRow(rowId);
+                    reloadRow(rowId, productId);
                 } else {
                     Msg.error(resp.messages);
                 }
@@ -515,7 +516,7 @@
         });
     }
 
-    function reloadRow(reloadId) {
+    function reloadRow(reloadId, productId) {
         flog("Reloading row", reloadId);
         $("#" + reloadId).reloadFragment({
             whenComplete: function () {
@@ -530,7 +531,7 @@
                     initUpCropImage(btn, skuId, rowId);
                 });
             },
-            url: window.location.href
+            url: window.location.href + "?reloadProductId=" + productId
         });
     }
 

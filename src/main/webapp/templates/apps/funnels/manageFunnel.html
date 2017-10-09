@@ -33,7 +33,7 @@
                 PUBLISH
             </a>
             <a href="${currentBranch.parent.href}manageBranches" class="btn btn-sm btn-primary">
-               <i class="fa fa-gear"></i>
+                <i class="fa fa-gear"></i>
                 Manage versions
             </a>
             #end
@@ -123,14 +123,23 @@
                     <form class="form-horizontal form-properties" action="$page.href" method="post">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div><a href="/repositories/$page.name/" class="btn btn-sm btn-success">Edit funnel as Text editor</a></div>
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <a href="/repositories/$folder.name/$page.name/texteditor?fileName=funnel.json" class="btn btn-sm btn-info" target="_blank">
+                                        <span class="fa fa-edit"></span>
+                                        Edit journey
+                                    </a>
+                                    <a href="/repositories/$folder.name/$page.name/" class="btn btn-sm btn-info" target="_blank">
+                                        <span class="fa fa-folder-open"></span>
+                                        File manager
+                                    </a>                                    
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="visible-xs">
-                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-success" type="submit">Save</button>
                                 </div>
                                 <div class="text-right hidden-xs">
-                                    <button class="btn btn-primary" type="submit">Save</button>
+                                    <button class="btn btn-success" type="submit">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -540,9 +549,9 @@
             <p class="lead">$page.leads.size() leads</p>
             <p>
 
-                <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
+                <a class="btn btn-success btn-sm" href="/tableUploaders/leadsUploader?funnelName=$page.funnel.name">
                     <span class="glyphicon glyphicon-upload"></span>
-                    Upload CSV
+                    Upload File
                 </a>
                 <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
                     <span class="glyphicon glyphicon-download"></span>
@@ -889,14 +898,12 @@
 <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
     <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
     <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-    <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
     <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
     <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
     <script src="/theme/apps/funnels/manageFunnel.js?v=3" type="text/javascript">//</script>
 
     <script type="text/javascript">
         $(function () {
-            initUploads();
             initJourneyBuilder();
             initManageFunnel();
             initPublishingMenu('');

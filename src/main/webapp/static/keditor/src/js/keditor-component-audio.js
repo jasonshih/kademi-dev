@@ -71,7 +71,8 @@
             btnAudioFileInput.mselect({
                 contentTypes: ['audio'],
                 bs3Modal: true,
-                pagePath: window.location.pathname.replace('contenteditor', ''),
+                pagePath: keditor.options.pagePath,
+                basePath: keditor.options.basePath,
                 onSelectFile: function (url) {
                     instance.src = url;
                     instance.refreshAudioPlayerPreview();

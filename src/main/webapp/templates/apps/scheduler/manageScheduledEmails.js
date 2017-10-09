@@ -7,7 +7,7 @@ function initManageEmail() {
     initAddJob();
 }
 
-function initManageScheduledEmail(allGroups) {
+function initManageScheduledEmail() {
     flog('initManageScheduledEmail');
     
     initGroupCheckbox();
@@ -18,33 +18,7 @@ function initManageScheduledEmail(allGroups) {
     
     $.timeago.settings.allowFuture = true;
     $('.timeago').timeago();
-    
-    var edmEditor = $('.edmeditor');
-    edmEditor.each(function () {
-        var editor = $(this);
-        var loading = $(
-            '<div class="editor-loading">' +
-            '    <span>' +
-            '        <span class="loading-icon">' +
-            '            <i class="fa fa-spinner fa-spin fa-4x fa-fw"></i>' +
-            '        </span>' +
-            '        <span class="loading-text">Initializing EDM Editor...</span>' +
-            '    </span>' +
-            '</div>'
-        );
-        
-        editor.before(loading);
-        editor.hide();
-        
-        editor.edmEditor({
-            iframeMode: true,
-            allGroups: allGroups,
-            snippetsUrl: '_components',
-            onReady: function () {
-                loading.remove();
-            }
-        });
-    });
+    initFullscreenEditor($('[name=html]'));
     
     $(".show-time-details").click(function (e) {
         e.preventDefault();
@@ -52,13 +26,10 @@ function initManageScheduledEmail(allGroups) {
     });
     
     $("form").forms({
-        onValid: function () {
-            flog(edmEditor.edmEditor('getContent'));
-            edmEditor.val(edmEditor.edmEditor('getContent'));
-        },
         onSuccess: function () {
             $('#textual-description').reloadFragment({
                 whenComplete: function () {
+                    reloadFullscreenEditorPreview($('[name=html]'));
                     flog("Saved Ok!");
                     Msg.success('Saved Ok!');
                 }
@@ -227,17 +198,7 @@ function setGroupRecipient(name, isRecip) {
             },
             success: function (data) {
                 flog("saved ok", data);
-                if (isRecip) {
-                    $(".GroupList").append(
-                        '<span class="block ' + name + '">' +
-                        name +
-                        '</span>'
-                    );
-                    flog("appended to", $(".GroupList"));
-                } else {
-                    $(".GroupList ." + name).remove();
-                    flog("removed from", $(".GroupList"));
-                }
+                $("#recipientList").reloadFragment();
             },
             error: function (resp) {
                 flog("error", resp);

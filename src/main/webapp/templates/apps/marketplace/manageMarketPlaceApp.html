@@ -65,32 +65,31 @@
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade in active" id="description">
+                            <div class="tab-pane fade in active" id="description">
                                 <div class="description">
                                     $!page.description
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="screenshots">
+                            <div class="tab-pane fade" id="screenshots">
                                 <div class="masonry-panel row">
                                     <div class="masonry-sizer col-md-1 col-lg-1 col-sm-1"></div>
-                                        #if($page.screenshots.empty)
-                                        Sorry there are no screenshots available
-                                        #else
+                                    #if($page.screenshots.empty)
+                                        <div class="col-xs-12">Sorry there are no screenshots available</div>
+                                    #else
                                         #foreach($img in $page.screenshots)
-                                        <div class="masonry-item col-sm-3 col-md-4 col-lg-3">
-                                            <img src="$img.name" class="img-responsive img-thumbnail">
-                                        </div>
+                                            <div class="masonry-item col-sm-3 col-md-4 col-lg-3">
+                                                <img src="$img.name" class="img-responsive img-thumbnail" />
+                                            </div>
                                         #end
-                                        #end
-                                    </div>
+                                    #end
                                 </div>
                             </div>
-                            <div role="tabpanel" class="tab-pane fade" id="reviews">
+                            <div class="tab-pane fade" id="reviews">
                                 <div class="text-right">
                                     <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
                                 </div>
 
-                                <div class="row" id="post-review-box" style="display:none;">
+                                <div class="row" id="post-review-box" style="display: none;">
                                     <div class="col-md-12">
                                         <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
                                             <input type="hidden" name="submitReview" value="submitReview"/>
@@ -100,13 +99,13 @@
                                             <div class="text-right">
                                                 <div class="stars starrr" data-rating="0"></div>
                                                 <a class="btn btn-danger btn-sm" href="#" id="close-review-box" style="display:none;">
-                                                    <i class="fa fa-times"></i> Cancel</a>
-                                                <button class="btn btn-success btn-sm" type="submit"> Submit</button>
+                                                    <i class="fa fa-times"></i> Cancel
+                                                </a>
+                                                <button class="btn btn-success btn-sm" type="submit">Submit</button>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-
 
                                 <div class="row">
                                     #if(!$page.appRatings || $page.appRatings.empty)
@@ -117,31 +116,31 @@
                                     <div class="col-md-10">
                                         <section class="comment-list" id="reviews-list">
                                             #foreach($review in $page.appRatings)
-                                            <article class="row">
-                                                <div class="col-md-2 col-sm-2 hidden-xs">
-                                                    <figure class="thumbnail">
-                                                        #set($photoUrl = "/templates/apps/user/profile.png")
-                                                        #if($review.reviewedBy.photoHash)
-                                                        #set($photoUrl = "/_hashes/files/" + $review.reviewedBy.photoHash)
-                                                        #end
-                                                        <img class="img-responsive" src="$photoUrl" />
-                                                    </figure>
-                                                </div>
-                                                <div class="col-md-10 col-sm-10">
-                                                    <div class="panel panel-default arrow left">
-                                                        <div class="panel-body">
-                                                            <header class="text-left">
-                                                                <div class="comment-user"><i class="fa fa-user"></i> $review.reviewedBy.formattedName</div>
-                                                                <div><i class="fa fa-smile-o"></i> #genRating($review.rating)</div>
-                                                                <span><i class="fa fa-clock-o"></i> <abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                                                            </header>
-                                                            <div class="comment-post">
-                                                                <p>$review.review</p>
+                                                <article class="row">
+                                                    <div class="col-md-2 col-sm-2 hidden-xs">
+                                                        <figure class="thumbnail">
+                                                            #set($photoUrl = "/templates/apps/user/profile.png")
+                                                            #if($review.reviewedBy.photoHash)
+                                                            #set($photoUrl = "/_hashes/files/" + $review.reviewedBy.photoHash)
+                                                            #end
+                                                            <img class="img-responsive" src="$photoUrl" />
+                                                        </figure>
+                                                    </div>
+                                                    <div class="col-md-10 col-sm-10">
+                                                        <div class="panel panel-default arrow left">
+                                                            <div class="panel-body">
+                                                                <header class="text-left">
+                                                                    <div class="comment-user"><i class="fa fa-user"></i> $review.reviewedBy.formattedName</div>
+                                                                    <div><i class="fa fa-smile-o"></i> #genRating($review.rating)</div>
+                                                                    <span><i class="fa fa-clock-o"></i> <abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                                                </header>
+                                                                <div class="comment-post">
+                                                                    <p>$review.review</p>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </article>
+                                                </article>
                                             #end
                                         </section>
                                     </div>

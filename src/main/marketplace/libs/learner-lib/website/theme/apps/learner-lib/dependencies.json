@@ -21,6 +21,12 @@
         {
             "less": {
                 "lessMedia": "all",
+                "path": "/theme/apps/learner/myLearning.less"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
                 "path": "/theme/apps/learner/modulesTile.less"
             }
         },
@@ -69,18 +75,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/trainingResultsPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/profileAdminPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/theme/apps/learner/myRewards.js"
             }
         },
@@ -99,13 +93,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/learningAdminDashboardPortlet.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/myLearningModules.js"
+                "path": "/theme/apps/learner/myLearning.js"
             }
         }
     ]

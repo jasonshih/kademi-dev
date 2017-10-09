@@ -402,7 +402,7 @@
                         Msg.info("Created vouchers");
                         $("#createVouchersModal").modal('hide');
                         $("#vouchers-table-body").reloadFragment({
-                            whenComplete: reloadVouchers
+                            whenComplete: setTimeout(reloadVouchers, 500)
                         });
                     }
                 });
@@ -435,6 +435,7 @@
                             showUnmatched(data.result.data.unmatched);
                             $(".results").show();
                             Msg.success("Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of members");
+                            reloadVouchers();
                         } else {
                             Msg.error("Uploading failed: " + data.result.messages);
                         }
@@ -468,7 +469,8 @@
             }
 
             function reloadVouchers() {
-                $("#vouchers-table-body").reloadFragment({
+                $("#vouchers").reloadFragment({
+                    url: window.location.href,
                     whenComplete: function () {
                         $('abbr.timeago').timeago();
                     }

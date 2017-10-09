@@ -3,4 +3,5 @@
         initCalendar();
         initEvents();
     })
+    
 })(jQuery);

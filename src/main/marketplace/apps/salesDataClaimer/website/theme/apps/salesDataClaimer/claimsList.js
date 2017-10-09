@@ -8,6 +8,10 @@
             initModalAddClaim();
             initModalViewClaim();
             initClaimsTable();
+            
+            $(document).on('submitted.salesDataClaimer', function () {
+                reloadClaimsList();
+            });
         }
         
         var formNewClaim = $('.form-new-claim');
@@ -111,6 +115,8 @@
                         
                         if (resp.data.receipt) {
                             modalAdd.find('.thumbnail img').attr('src', resp.data.receipt);
+                            modalAdd.find('.btn-upload-receipt span').html('Upload other receipt');
+                            modalAdd.find('.btn-upload-receipt i').attr('class', 'fa fa-check');
                         }
                         
                         modalAdd.find('.thumbnail img').attr('src')
@@ -198,6 +204,8 @@
         modal.on('hidden.bs.modal', function () {
             form.find('input').not('[name=soldBy], [name=soldById]').val('');
             form.find('.thumbnail img').attr('src', '/static/images/photo_holder.png');
+            form.find('.btn-upload-receipt span').html('Upload receipt');
+            form.find('.btn-upload-receipt i').attr('class', 'fa fa-file-picture-o');
         });
     }
     
@@ -207,6 +215,7 @@
         if (!form.hasClass('initialized')) {
             form.addClass('initialized');
             
+            var successDiv = form.siblings('.sale-claim-success');
             form.find('.date-time-picker').each(function () {
                 var input = $(this);
                 var format = input.attr('data-format') || 'DD/MM/YYYY';
@@ -246,6 +255,7 @@
             
             var inputImage = form.find('[name=receiptImage]');
             var thumbImg = form.find('.thumbnail img');
+            var btnUpload = form.find('.btn-upload-receipt');
             inputImage.on('change', function () {
                 var file = this.files[0];
                 var isImage = $.inArray(file['type'], ['image/gif', 'image/jpeg', 'image/png']) !== -1;
@@ -256,12 +266,14 @@
                     var reader = new FileReader();
                     reader.onload = function (e) {
                         thumbImg.attr('src', e.target.result);
+                        btnUpload.find('span').html('Upload other receipt');
+                        btnUpload.find('i').attr('class', 'fa fa-check');
                     }
                     reader.readAsDataURL(file);
                 }
             });
             
-            form.find('.btn-upload-receipt').on('click', function (e) {
+            btnUpload.on('click', function (e) {
                 e.preventDefault();
                 
                 inputImage.trigger('click');
@@ -275,12 +287,26 @@
                             modal.modal('hide');
                         });
                     } else {
-                        Msg.success('Your claim has been submitted.');
-                        form.find('input').not('[name=soldBy], [name=soldById]').val('');
-                        thumbImg.attr('src', '/static/images/photo_holder.png');
+                        $(document).trigger('submitted.salesDataClaimer');
+                        form.fhide();
+                        successDiv.fshow();
                     }
                 }
             });
+            
+            if (!modal) {
+                successDiv.find('.btn-submit-other-claim').on('click', function (e) {
+                    e.preventDefault();
+                    
+                    form.find('input').not('[name=soldBy], [name=soldById]').val('');
+                    thumbImg.attr('src', '/static/images/photo_holder.png');
+                    btnUpload.find('span').html('Upload receipt');
+                    btnUpload.find('i').attr('class', 'fa fa-file-picture-o');
+                    
+                    form.fshow();
+                    successDiv.fhide();
+                });
+            }
         }
     }
     

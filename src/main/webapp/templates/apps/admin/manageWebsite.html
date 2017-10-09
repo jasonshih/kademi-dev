@@ -102,7 +102,7 @@
                     <div class="well">
                         #set( $marketplaceApps = $page.marketPlaceApps )
                         #if( $marketplaceApps.size() > 0 )
-                        <a style="margin-right: 20px; margin-bottom: 20px" class="btn btn-lg btn-success pull-left" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name">
+                        <a style="margin-right: 20px; margin-bottom: 20px" class="btn btn-lg btn-success pull-left" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=app">
                             <span class="fa fa-cogs"></span>
                             Find more apps
                         </a>
@@ -224,35 +224,35 @@
                         <div class="form-group">
                             <label for="" class="col-sm-3 control-label">Theme</label>
                             <div class="col-sm-9">
-                                <a class="btn btn-blue btn-sm" href="themeSelect">
-                                    #set($theme = $page.currentTheme)
-                                    #set($publicTheme = "")
-                                    #if( $theme )
-                                    #if( $theme.previewImage )
-                                    #set($publicTheme = $theme.name)
-                                    <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
-                                    #else
-                                    #set($publicTheme = $theme.name)
-                                    $theme.title
-                                    #end
-                                    #else
-                                    No selected theme
-                                    #end
-                                    <i class="fa fa-arrow-circle-right"></i>
-                                </a>
+                                <div class="btn-group">
+                                    <a class="btn btn-info" href="$page.href?goto=&gotoPath=/theme-checker" title="Click here to review all styles" target="_blank">
+                                        #set($theme = $page.currentTheme)
+                                        #set($publicTheme = "")
+                                        #if( $theme )
+                                        #if( $theme.previewImage )
+                                        #set($publicTheme = $theme.name)
+                                        <img style="width: 150px" src="/templates/themes/$theme.name/$theme.previewImage" />
+                                        #else
+                                        #set($publicTheme = $theme.name)
+                                        $theme.title
+                                        #end
+                                        #else
+                                        No selected theme
+                                        #end
+                                        <i class="fa fa-check"></i>
+                                    </a>
+
+
+                                    <a class="btn btn-success" href="/marketPlace?websiteBranch=$page.name&websiteName=$page.parent.name&type=theme">
+                                        Browse themes
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </a>
+                                    
+                                </div>                                
                                 <input type="hidden" name="publicTheme" value="$publicTheme"/>
-                                <a class="btn btn-blue btn-sm pull-right" href="themeSelect">Browse the theme library <i class="fa fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-sm-offset-3 col-sm-6">
-                                <a target="_blank" href="$page.href?goto=&gotoPath=/theme-checker" class="btn btn-sm btn-success">
-                                    <i class="fa fa-check"></i>
-                                    Check theme
-                                </a>
-                            </div>
-                        </div>
 
                     </form>
                     <hr/>

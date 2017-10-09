@@ -51,9 +51,27 @@ body.opened-keditor-sidebar {
    highlighted-container-content
    ================================================================================== */
 body.highlighted-container-content {
+    .keditor-container {
+        &:before {
+            display: none !important;
+        }
+    }
+    
     .keditor-container-content {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+    }
+}
+
+.keditor-highlighted-dropzone {
+    &.keditor-container-content {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+
         &:before {
             border-color: @container-content-outline-highlighted;
+            border-width: 2px;
+            z-index: 99;
         }
     }
 }
@@ -492,24 +510,34 @@ body.highlighted-container-content {
 /* ==================================================================================
    Drag n Drop helper
    ================================================================================== */
-.keditor-snippet {
-    // When dragging
-    &.ui-draggable-dragging {
+// When dragging
+.ui-draggable-dragging {
+    &.keditor-snippet {
         .transition(none) !important;
     }
 }
 
 .ui-sortable-placeholder {
-    background: @snippet-placeholder-bg !important;
-    visibility: visible !important;
-    height: 10px !important;
-    margin: 5px 0 !important;
-    float: none !important;
-    outline: none !important;
+    &.keditor-snippet,
+    &.keditor-container,
+    &.keditor-component {
+        background: @snippet-placeholder-bg !important;
+        visibility: visible !important;
+        height: 20px !important;
+        margin: 5px 0 !important;
+        float: none !important;
+        outline: none !important;
+        padding: 0 !important;
+        
+        &:before,
+        &:after {
+            display: none !important;
+        }
+    }
 }
 
-.keditor-section {
-    &.ui-sortable-helper {
+.ui-sortable-helper {
+    &.keditor-section {
         background: @snippet-bg !important;
         opacity: 0.5;
     }

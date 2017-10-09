@@ -2,167 +2,202 @@
 #if($page.isWritable())
     #set($website = $page.closest("website"))
 
-<div id="ktoolbar">
-    <div class="ktoolbarWrap">
-        <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
-        <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
-        <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
-        <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
-        <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
-        <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
-
-        #set( $templatePageName = $formatter.getFileName($templateName) )
-        #set( $themeTemplatePageName = $formatter.getFileName($themeTemplate) )
-
-        <span class="pull-right">
-            <a href="#" class="btn btn-sm btn-link btn-edit-variables"><i class="fa fa-paint-brush"></i> Edit theme variables</a>
-            <a target="_blank" href="/?editTemplate=$themeTemplatePath" class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Theme</a>
-            <a target="_blank" href="/?editTemplate=$templatePath" class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Template</a>
-            #if( $page.is("folder") )
-                <a target="_blank" href="../contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
-            #else
-                <a target="_blank" href="contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
-            #end
-        </span>
-        <!--
-        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-done hide"><i class="fa fa-check-circle"></i> Done</a>
-        <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-save hide"><i class="fa fa-save"></i> Save</a>
-        -->
+    <div id="ktoolbar">
+        <div class="ktoolbarWrap">
+            <a title="Go to Administrator Dashboard" class="btn btn-sm btn-link" href="http://$website.adminDomainName" target="_blank"><i class="fa fa-tachometer"></i> Admin Dashboard</a>
+            <a title="Go to Blogs Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/blogs/" target="_blank"><i class="fa fa-rss"></i> Blog Posts</a>
+            <a title="Go to Websites Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/websites/" target="_blank"><i class="fa fa-laptop"></i> Websites</a>
+            <a title="Go to Files Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageRepos/" target="_blank"><i class="fa fa-folder-open-o"></i> Files</a>
+            <a title="Go to Users Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/manageUsers/" target="_blank"><i class="fa fa-user"></i> Users</a>
+            <a title="Go to Reports Management" class="btn btn-sm btn-link" href="http://$website.adminDomainName/reporting/" target="_blank"><i class="fa fa-bar-chart"></i> Reports</a>
+    
+            #set( $templatePageName = $formatter.getFileName($templateName) )
+            #set( $themeTemplatePageName = $formatter.getFileName($themeTemplate) )
+    
+            <span class="pull-right">
+                <a href="#" class="btn btn-sm btn-link btn-edit-variables"><i class="fa fa-paint-brush"></i> Edit theme variables</a>
+                <a target="_blank" href="/?editTemplate=$themeTemplatePath" class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Theme</a>
+                <a target="_blank" href="/?editTemplate=$templatePath" class="btn btn-sm btn-link btn-inline-edit"><i class="fa fa-pencil"></i> Template</a>
+                #if( $page.is("folder") )
+                    <a target="_blank" href="../contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
+                #else
+                    <a target="_blank" href="contenteditor?fileName=$page.name" class="btn btn-sm btn-link btn-inline-edit hide"><i class="fa fa-pencil"></i> Page</a>
+                #end
+            </span>
+            <!--
+            <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-done hide"><i class="fa fa-check-circle"></i> Done</a>
+            <a href="#" class="pull-right btn btn-sm btn-link btn-inline-edit-save hide"><i class="fa fa-save"></i> Save</a>
+            -->
+        </div>
+        <div class="text-center ktoolbarToggleWrap">
+            <a class="btn btn-default btn-sm ktoolbarToggle" href="#"><i class="fa fa-cog"></i></a>
+        </div>
     </div>
-    <div class="text-center ktoolbarToggleWrap">
-        <a class="btn btn-default btn-sm ktoolbarToggle" href="#"><i class="fa fa-cog"></i></a>
+    
+    <div id="ktoolbar-sidebar">
+        <div class="sidebar-title">Edit theme variables</div>
+        <div class="sidebar-content">
+            <form class="form-horizontal" method="post" action="/">
+                <input type="hidden" name="updateThemeParams" value="true" />
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Primary brand</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-primary")" placeholder="" name="brand-primary" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Info brand</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-info")" placeholder="" name="brand-info" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Success brand</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-success")" placeholder="" name="brand-success" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Danger brand</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-danger")" placeholder="" name="brand-danger" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Warning brand</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-warning")" placeholder="" name="brand-warning" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Font base</label>
+                    <div class="col-sm-7">
+                        <select name="font-family-base" class="form-control">
+                            <option value="" selected="selected">None</option>
+                            #foreach ($entry in $fontFamilyList.entrySet())
+                                <option value="$entry.key" #if ($folder.themeParams.get("font-family-base") == $entry.key) selected="selected" #end>$entry.value</option>
+                            #end
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Font size</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("font-size-base")" placeholder="" name="font-size-base" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Line height</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("line-height-base")" placeholder="" name="line-height-base" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Text color</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("text-color")" placeholder="" name="text-color" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Link color</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("link-color")" placeholder="" name="link-color" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Heading font family</label>
+                    <div class="col-sm-7">
+                        <select name="headings-font-family" class="form-control">
+                            <option value="inherit" selected="selected">Inherit</option>
+                            #foreach ($entry in $fontFamilyList.entrySet())
+                                <option value="$entry.key" #if ($folder.themeParams.get("headings-font-family") == $entry.key) selected="selected" #end>$entry.value</option>
+                            #end
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Heading font weight</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("headings-font-weight")" placeholder="" name="headings-font-weight" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Heading line height</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("headings-line-height")" placeholder="" name="headings-line-height" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Heading color</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("headings-color")" placeholder="" name="headings-color" />
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Border radius</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("border-radius-base")" placeholder="" name="border-radius-base" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Vertical padding <br />
+                        <small class="text-muted">(top &amp; bottom)</small>
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("padding-base-vertical")" placeholder="" name="padding-base-vertical" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-5 control-label">Horizontal padding <br />
+                        <small class="text-muted">(left &amp; right)</small>
+                    </label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" value="$!folder.themeParams.get("padding-base-horizontal")" placeholder="" name="padding-base-horizontal" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="sidebar-action">
+            <button type="submit" class="btn-save">Save</button>
+            <button type="button" class="btn-close">Close</button>
+        </div>
     </div>
-</div>
-
-<div id="ktoolbar-sidebar">
-    <div class="sidebar-title">Edit theme variables</div>
-    <div class="sidebar-content">
-        <form class="form-horizontal" method="post" action="/">
-            <input type="hidden" name="updateThemeParams" value="true" />
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Primary brand</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-primary")" placeholder="" name="brand-primary" />
+    #if ($applications.KToolbar.call("isTranslationEnabled", $page))
+        <button class="btn btn-linnk btn-xs" id="btn-translate" title="Edit translation"><i class="fa fa-language"></i></button>
+        <div id="modal-translate" class="modal fade" tabindex="-1">
+             <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Save translated text</h4>
+                    </div>
+                    <form method="POST" class="form-horizontal" action="/translations/">
+                        <div class="modal-body">
+                            <p class="form-message alert alert-danger" style="display: none;"></p>
+                            <input type="hidden" name="sourceType" value="" />
+                            <input type="hidden" name="sourceId" value="" />
+                            <input type="hidden" name="sourceText" value="" />
+                            <input type="hidden" name="sourceField" value="" />
+                            <input type="hidden" name="langCode" value="" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3">Translated text</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" style="display: none" />
+                                    <textarea type="text" class="form-control" name="translated" placeholder="Enter translated text here..." disabled="disabled" rows="3" style="display: none"></textarea>
+                                    <div class="htmleditor-wrapper" style="display: none;"><textarea type="text" class="form-control htmleditor" disabled="disabled" name="translated" placeholder="Enter translated text here..."></textarea></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit" type="submit">Save</button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Info brand</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-info")" placeholder="" name="brand-info" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Success brand</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-success")" placeholder="" name="brand-success" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Danger brand</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-danger")" placeholder="" name="brand-danger" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Warning brand</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("brand-warning")" placeholder="" name="brand-warning" />
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Font base</label>
-                <div class="col-sm-7">
-                    <select name="font-family-base" class="form-control">
-                        <option value="" selected="selected">None</option>
-                        #foreach ($entry in $fontFamilyList.entrySet())
-                            <option value="$entry.key" #if ($folder.themeParams.get("font-family-base") == $entry.key) selected="selected" #end>$entry.value</option>
-                        #end
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Font size</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("font-size-base")" placeholder="" name="font-size-base" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Line height</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("line-height-base")" placeholder="" name="line-height-base" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Text color</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("text-color")" placeholder="" name="text-color" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Link color</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("link-color")" placeholder="" name="link-color" />
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Heading font family</label>
-                <div class="col-sm-7">
-                    <select name="headings-font-family" class="form-control">
-                        <option value="inherit" selected="selected">Inherit</option>
-                        #foreach ($entry in $fontFamilyList.entrySet())
-                            <option value="$entry.key" #if ($folder.themeParams.get("headings-font-family") == $entry.key) selected="selected" #end>$entry.value</option>
-                        #end
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Heading font weight</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("headings-font-weight")" placeholder="" name="headings-font-weight" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Heading line height</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("headings-line-height")" placeholder="" name="headings-line-height" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Heading color</label>
-                <div class="col-sm-7">
-                    <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("headings-color")" placeholder="" name="headings-color" />
-                </div>
-            </div>
-            <hr />
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Border radius</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("border-radius-base")" placeholder="" name="border-radius-base" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Vertical padding <br />
-                    <small class="text-muted">(top &amp; bottom)</small>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("padding-base-vertical")" placeholder="" name="padding-base-vertical" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-5 control-label">Horizontal padding <br />
-                    <small class="text-muted">(left &amp; right)</small>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" value="$!folder.themeParams.get("padding-base-horizontal")" placeholder="" name="padding-base-horizontal" />
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="sidebar-action">
-        <button type="submit" class="btn-save">Save</button>
-        <button type="button" class="btn-close">Close</button>
-    </div>
-</div>
+             </div>
+        </div>
+    #end
 #end

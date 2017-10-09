@@ -43,7 +43,7 @@
                                 <label for="search-group" class="col-sm-2 control-label">Category</label>
                                 <div class="col-sm-10">
                                     <select name="categoryName" class="category form-control input-sm">
-                                        <option id="">[Any category]</option>
+                                        <option value="">[Any category]</option>
                                         #foreach($cat in $page.categories)
                                         $formatter.option($cat.name, $cat.title, $request.params.categoryName)
                                         #end
@@ -58,7 +58,7 @@
                                     <select name="searchOrg" id="search-library" class="form-control input-sm">
                                         <option value="">My library</option>
                                         #foreach($org in $page.parentOrgsWithProducts)
-                                        <option value="$org.id">$org.title</option>
+                                        $formatter.option($org.id, $org.title, $request.params.l)
                                         #end
                                     </select>
                                 </div>

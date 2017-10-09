@@ -1,0 +1,136 @@
+<html>
+    <head>
+        <title>Module Macros</title>
+    </head>
+    <body>
+        #macro (renderModuleButton $mod $isGrid)
+            #set ($tagName = "a")
+            #if ($isGrid == true)
+                #set ($tagName = "span")
+            #end
+        
+            #if( $mod.complete )
+                <$tagName href="$mod.href" class="btn btn-sm btn-success"><i class="fa fa-check"></i> Completed</$tagName>
+            #elseif ( $mod.percentComplete )
+                <$tagName href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-pause"></i> Resume</$tagName>
+            #else
+                #if( $mod.completable )
+                    #if( $mod.startable )
+                        <$tagName href="$mod.href" class="btn btn-sm btn-info"><i class="fa fa-play"></i> Start</$tagName>
+                    #else
+                        <$tagName href="$mod.href" class="btn btn-sm btn-default" title="You have not completed prequisites"><i class="fa fa-lock"></i> Lock</$tagName>
+                    #end
+                #else
+                    <$tagName href="$mod.href" class="btn btn-sm btn-default" title="You do not have an enrolement for this module"><i class="fa fa-eye"></i> View only</$tagName>
+                #end
+            #end
+        #end
+        
+        #macro (renderModuleThumb $mod $isGrid)
+            <div class="module-thumb">
+                #set ($modThumb = "/static/images/photo_holder.png")
+                #if( $mod.thumb )
+                    #set ($modThumb = "${mod.thumb}")
+                #end
+                #if ($isGrid == true)
+                    <span style="background-image: url('$modThumb')"></span>
+                #else
+                    <a href="$mod.href" style="background-image: url('$modThumb')"></a>
+                #end
+            </div>
+        #end
+        
+        #macro (renderModuleProgress $mod)
+            #set ($modProgress = 0)
+            #if( $mod.complete )
+                #set ($modProgress = 100)
+            #elseif ( $mod.percentComplete )
+                #set ($modProgress = $mod.percentComplete)
+            #end
+            <div class="module-progress" style="width: ${modProgress}%;"></div>
+        #end
+        
+        #macro (renderModuleInfos $mod $showTime $showCpd $showPoint)
+            #if ($showTime == true)
+                #set($mins = $mod.learningTimeMins)
+                <span class="module-time">
+                    <i class="fa fa-clock-o fa-fw"></i> Time:
+                    #if($mins > 0)
+                        $formatter.formatMinsAsDuration($mins, true)
+                    #else
+                        TBC
+                    #end
+                </span>
+            #end
+            
+            #if ($showCpd == true)
+                #if ($mod.cpdPoints.size() > 0)
+                    <span class="module-cpd">
+                        <i class="fa fa-graduation-cap fa-fw"></i> CPD:
+                        #foreach($certName in $mod.cpdPoints.keySet())
+                            $formatter.formatCurrency($mod.cpdPoints.get($certName), false)
+                            #break
+                        #end
+                    </span>
+                #end
+            #end
+            
+            #if ($showPoint == true)
+                #if ($mod.moduleCompleteActions.size() > 0)
+                    <span class="module-point">
+                        <i class="fa fa-star fa-fw"></i> Points:
+                        #foreach($act in $mod.moduleCompleteActions)
+                            #if ($act.type == "reward")
+                                $formatter.formatCurrency($act.number, false)
+                                #break
+                            #end
+                        #end
+                    </span>
+                #end
+            #end
+        #end
+        
+        #macro (renderModuleListItem $mod $showTime $showCpd $showPoint)
+            <div class="module">
+                #renderModuleThumb($mod)
+                #renderModuleProgress($mod)
+                <div class="module-body">
+                    <h4>$mod.title</h4>
+                    <p>$!mod.brief</p>
+                    <div class="clearfix">
+                        <div class="pull-right">
+                            #renderModuleButton($mod)
+                        </div>
+                        <div>
+                            #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #end
+        
+        #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+            <a href="$mod.href" class="module-grid-wrapper">
+                <div class="module module-grid" style="height: ${gridItemHeight}px;">
+                    #renderModuleThumb($mod true)
+                    
+                    <div class="module-body #if ($fullHeightThumb == true) module-body-transparent #end">
+                        #renderModuleProgress($mod)
+                        <h4>$mod.title</h4>
+                        <div class="clearfix">
+                            #if ($showButton == true)
+                                <div class="pull-right">
+                                    #renderModuleButton($mod true)
+                                </div>
+                            #end
+                            <div>
+                                #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        #end
+        
+    </body>
+</html>

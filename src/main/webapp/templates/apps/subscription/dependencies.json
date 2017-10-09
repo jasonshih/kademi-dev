@@ -1,0 +1,22 @@
+{
+    "dependencies": [
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/reload-fragment/1.0.2/jquery.reload-fragment-1.0.2.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css"
+            }
+        }
+    ]
+}

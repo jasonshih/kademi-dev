@@ -1,0 +1,11 @@
+<div class="form-group" >
+    <label class="control-label col-md-2" for="funnelName">Funnel: </label>
+    <div class="col-md-10">
+        <select id="funnelName" name="funnelName" class="form-control required">
+            <option value="">[No Funnel Selected]</option>
+            #foreach( $f in $rootFolder.find("/funnels/").children.ofType.funnel )
+            $formatter.option($f.name, $formatter.firstNotNull($f.title, $f.name), $request.params.funnelName)
+            #end
+        </select>
+    </div>
+</div>

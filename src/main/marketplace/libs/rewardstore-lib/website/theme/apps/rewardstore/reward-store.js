@@ -4,9 +4,9 @@
             e.preventDefault();
             var btn = $(this);
             var href = btn.attr('href');
-
+            
             flog("Add to cart clicked", href);
-
+            
             getOrderForm(href, function (orderForm) {
                 if (orderForm == null) {
                     addToCart(href, 1);
@@ -14,32 +14,32 @@
                     showOrderForm(href, orderForm);
                 }
             });
-
+            
         });
-
+        
         var timer;
         $(window).on('resize', function () {
             clearTimeout(timer);
             timer = setTimeout(function () {
-                // $('.cate-title').dotdotdot({
-                //     height: 44
-                // });
-                //
-                $('.product-title').dotdotdot({
-                    height: 55
-                });
-
-                $('.product-content').dotdotdot({
-                    height: 60
-                });
+                dotdotdotProduct();
             }, 200);
         }).trigger('resize');
     });
-
+    
+    function dotdotdotProduct() {
+        $('.product-title').dotdotdot({
+            height: 55
+        });
+        
+        $('.product-content').dotdotdot({
+            height: 60
+        });
+    }
+    
     function showOrderForm(href, orderForm) {
         createRewardOrderFormModal("orderForm", href, "Enter fields", orderForm);
     }
-
+    
     function addToCart(href, quantity) {
         $.ajax({
             type: 'POST',
@@ -62,7 +62,7 @@
             }
         });
     }
-
+    
     function getOrderForm(href, callback) {
         var link = href;
         if (!link.contains("?")) {
@@ -89,14 +89,14 @@
             }
         });
     }
-
+    
     function createRewardOrderFormModal(id, href, title, formHtml) {
         flog('myPrompt');
         var existing = $('#' + id);
         if (existing) {
             existing.remove();
         }
-
+        
         var modalString = '<div class="modal" tabindex="-1" role="dialog">' +
             '    <div class="modal-dialog" role="document">' +
             '        <div class="modal-content">' +
@@ -118,12 +118,12 @@
             '        </div><!-- /.modal-content -->' +
             '    </div><!-- /.modal-dialog -->' +
             '</div>';
-
-
+        
+        
         var myPromptModal = $(modalString);
         $('body').append(myPromptModal);
         myPromptModal.find("input[name=addItemHref]").val(href);
-
+        
         var form = myPromptModal.find('form');
         form.forms({
             onSuccess: function () {
@@ -133,18 +133,20 @@
                 myPromptModal.modal("hide");
             }
         });
-
+        
         myPromptModal.find(".btn-submit").click(function () {
             flog("clicked");
             form.submit();
         });
-
+        
         flog("show", myPromptModal);
         myPromptModal.modal("show");
         //showModal(myPromptModal);
     }
-
+    
     window.showOrderForm = showOrderForm;
     window.getOrderForm = getOrderForm;
     window.createRewardOrderFormModal = createRewardOrderFormModal;
+    window.dotdotdotProduct = dotdotdotProduct;
+    
 })(jQuery);

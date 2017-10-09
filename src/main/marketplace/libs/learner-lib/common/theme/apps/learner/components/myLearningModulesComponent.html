@@ -1,0 +1,79 @@
+#if($page)
+    #set($programs = $page.find("/programs"))
+    #if($page.is("course"))
+        #set($curCourse = $page)
+        #set($curProgram = $curCourse.parent)
+    #else
+        #set($curCourse = $programs.bestCourse)
+        #if( $curCourse )
+            #set($curProgram = $curCourse.parent)
+        #else
+            #set($curProgram = $programs.bestProgram)
+            #set($curCourse = $curProgram.children.ofType.course.first)
+        #end
+    #end
+
+    #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
+    <div class="my-learning-container my-learning-modules" data-course-href="$!curCourse.href">
+        <div class="btn-group program-course-module-mix">
+            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+                <span class="current-module">$curProgram.title / $curCourse.title modules </span>
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu">
+                <ul role="menu" class="row list-unstyled">
+                    <li id="programs-wrapper" class="col-md-6">
+                        <p>Programs</p>
+                        <div class="programs-list">
+                            #foreach($program in $programs.availPrograms)
+                                <a class="program ${formatter.ifEqual('active','', $curProgram.href, $program.href)}" href="$program.href">$program.title</a>
+                            #end
+                        </div>
+                    </li>
+                    <li id="courses-wrapper" class="col-md-6">
+                        <p>Courses</p>
+                        <div class="courses-list">
+                            #foreach($course in $curProgram.availCourses)
+                                <a class="course ${formatter.ifEqual('active','', $curCourse.href, $course.href)}" href="$course.href" class="">$course.title</a>
+                            #end
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        #if ($formatter.toBool($showCourseBody))
+            <div class="lead">
+                $!curCourse.body
+                #if (!$curCourse.body || $curCourse.body != "")
+                    <p>No description for current course</p>
+                #end
+            </div>
+        #end
+
+        <div id="myLearningDiv">
+            #portlets("myLearning")
+        </div>
+    </div>
+    #else
+        #fakeUI()
+    #end
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+    <div class="my-learning-container">
+        <div class="btn-group program-course-module-mix" style="z-index: 2">
+            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+                <span class="current-module">No Modules</span>
+                <span class="caret"></span>
+            </button>
+            <div class="dropdown-menu container">
+                <ul role="menu" class="row list-unstyled"></ul>
+            </div>
+        </div>
+    </div>
+#end
+
+

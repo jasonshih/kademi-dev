@@ -88,7 +88,7 @@
                             <a href="#" class="btn-add-group">Add membership and organisation</a>
                         </li>
                         <li class="divider"></li>
-                        <li style="padding: 3px 15px"><strong>Quick add</strong></li>
+                        <li class="dropdown-header"><strong>Quick add</strong></li>
                         #foreach($group in $groups)
                             <li class="addGroup">
                                 <a href="$group.name">
@@ -296,7 +296,7 @@
                                 </div>
                                 <div class="panel-body profile-photo">
                                     <div class="clearfix">
-                                        <img src="$page.photoHref" class="img-thumbnail profile-photo" />
+                                        <img src="$page.photoHref" class="img-circle profile-photo" />
                                         <div>
                                             <p>Update your profile image below. This must be less then 10Mb</p>
                                             <button id="btn-change-ava" class="btn btn-success">Change avatar</button>

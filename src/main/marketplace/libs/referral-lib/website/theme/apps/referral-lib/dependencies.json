@@ -6,7 +6,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/referral/referralFormComponent.js"
+                "path": "/theme/apps/referral/referralForm.js"
             }
         }
     ]

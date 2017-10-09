@@ -8,9 +8,23 @@ function initManageEmailHistory() {
         }, 500);
     });
 
+    $("#status").change(function () {
+        typewatch(function () {
+            flog("do search");
+            doSearch();
+        }, 100);
+    });
+
+    $("#job").change(function () {
+        typewatch(function () {
+            flog("do search");
+            doSearch();
+        }, 100);
+    });
+
+
     $(document).on('pageDateChanged', function (e, startDate, endDate) {
         flog("page date changed", startDate, endDate);
-
         doSearch();
     });
 
@@ -111,10 +125,16 @@ function doSearch() {
     flog("doSearch");
 
     var query = $("#email-query").val();
+    var status = $("#status").val();
+    var job = $("#job").val();
+    
+    var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
+    var uri = new URI(newURL);
+    window.history.pushState('', document.title, uri.toString());
 
     $.ajax({
         type: "GET",
-        url: "?emailStats&q=" + query,
+        url: uri.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);

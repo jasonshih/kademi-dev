@@ -1,97 +1,205 @@
-td.modules, div.modules {
-    min-height: 300px;
-}
-body.dashboard div.modules {
-    background-color: white;
-}
-.modules table {
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-}
-.modules col.first, .modules col.last {
-    width: 62px;
-}
-.modules col.title {
-    width: 70%;
-}
-.modules col {
-    width: 90px;
-}
-
-.modules td, .modules table.table tbody tr td {
-    vertical-align: middle;
-}
-.modules td.progress, .modules td.assessment, .modules td.cert {
-    text-align: center;
-}
-
-.modules thead td.last, .modules tbody td.last {
-    padding: 0 23px 0 8px;
-}
-.modules tr.title td {
-    padding-top: 4px;
-    padding-bottom: 4px;
-}
-.modules tbody tr.title.last td, .modules tbody tr.brief.last td, .modules tr.title td {
-    border-bottom:1px solid darken(@wellBackground, 7%);    
-}
-.modules tbody tr.title.last.expanded td {
-    border-bottom: none;
-}
-
-.modules tbody td.first {
-    padding-left: 4px;
-}
-.modules tbody td.title, .modules tr.brief td {
-    padding: 0 5px;    
-}
-.modules tbody td.title {
-    font-weight: bold;
-    line-height: 17px;
-    font-size: 12.5px;
-}
-.modules tbody td.progress {
-    font-size: 12.5px;
-    font-weight: bold;
-}
-.modules tbody tr.brief {
-    display: none;
-}
-.modules tbody .brief td {
-    font-size: 0.7em;   
-    padding-bottom: 0.4em;
+.program-course-module-mix {
+    z-index: 2;
+    
+    .dropdown-menu {
+        width: @container-md / 3 * 2;
+        padding: 15px;
+        
+        @media (min-width: @screen-lg) {
+            width: @container-lg / 3 * 2;
+        }
+        
+        @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+            width: @container-sm;
+        }
+        
+        @media (max-width: @screen-xs-max) {
+            width: 100%;
+        }
+        
+        p {
+            font-weight: bold;
+            font-size: @font-size-large;
+            margin: 0 0 5px;
+        }
+        
+        li {
+            div {
+                min-height: 100px;
+            }
+            
+            .loading {
+                background: url('static/images/loading.gif') 50% 50% no-repeat;
+            }
+            
+            a {
+                display: block;
+                padding: @padding-base-vertical @padding-base-horizontal;
+                text-decoration: none;
+                background: #fcfcfc;
+                color: @text-color;
+                
+                + a {
+                    margin-top: 2px;
+                }
+            }
+            
+            .active {
+                color: #fff;
+                background: @brand-info;
+            }
+        }
+    }
 }
 
-.modules a.title:hover {
-    text-decoration: none;
-}
-.modules tbody tr.title td.first, .modules tbody tr.title td.title {
-    cursor: pointer;
-}
-.modules td p {
-    font-size: 1em;    
+.module {
+    .clearfix;
+    border-bottom: 1px solid #e4e4e7;
+    position: relative;
+    padding: 25px;
+    background: #fff;
+    
+    &:first-child {
+        border-top: 1px solid #e4e4e7;
+    }
+    
+    &:nth-child(2n) {
+        background: #f6f6f8;
+    }
+    
+    .module-thumb {
+        position: absolute;
+        top: 25px;
+        bottom: 25px;
+        left: 25px;
+        width: 160px;
+        
+        > * {
+            width: 100%;
+            height: 100%;
+            background: no-repeat 50% 50%;
+            background-size: cover;
+            display: block;
+        }
+    }
+    
+    .module-body {
+        padding: 0 0 0 20px;
+        position: relative;
+        margin-left: 160px;
+        
+        h4 {
+            margin-top: 0;
+        }
+    }
+    
+    .module-progress {
+        background: @brand-info;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 5px;
+    }
+    
+    .module-time,
+    .module-cpd,
+    .module-point {
+        .small;
+        float: left;
+        margin-right: 20px;
+        
+        i {
+            margin-right: 5px;
+        }
+    }
+    
+    .dashboard-modules-page & {
+        padding: 40px;
+        
+        .module-thumb {
+            width: 250px;
+            top: 40px;
+            bottom: 40px;
+            left: 40px;
+        }
+        
+        .module-body {
+            padding: 0 0 0 30px;
+            margin-left: 250px;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        padding: 0;
+        
+        .module-thumb {
+            position: static;
+            width: auto;
+            
+            > * {
+                height: auto;
+                padding-bottom: 56.25%;
+            }
+        }
+        
+        .module-body {
+            margin-left: 0;
+            padding: 20px 0;
+        }
+    }
 }
 
-.courses .navbar, .courses .well {
-    margin-bottom: 5px;
+.module.module-grid {
+    overflow: hidden;
+    position: relative;
+    min-height: 200px;
+    border: 0;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, .5);
+    padding: 0;
+    margin-bottom: 30px;
+    
+    .module-body {
+        background: @brand-primary;
+        padding: 25px;
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        margin: 0;
+        
+        .module-progress {
+            top: 0;
+            bottom: auto;
+        }
+    }
+    
+    .module-body.module-body-transparent {
+        background: transparent;
+        
+        .module-progress {
+            top: auto;
+            bottom: 0;
+        }
+    }
+    
+    .module-thumb {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: auto;
+    }
+    
+    .module-progress {
+        top: auto;
+        bottom: 0;
+    }
 }
 
-.myLearning td.courses {
-    width: 29%;
-}
-
-
-.time {
-    float:left;
-    font-size: 0.9em;
-    background:url(images/time-icon.gif) top left no-repeat;
-    padding-left:15px;
-    display:block;
-    height:13px;
-    line-height: 13px;
-}
-
-.courses .container {
-    padding: 15px;
+.module-grid-wrapper {
+    display: block;
+    .clearfix;
+    color: #fff !important;
+    text-decoration: none !important;
 }

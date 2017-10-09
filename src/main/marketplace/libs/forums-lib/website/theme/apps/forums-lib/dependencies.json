@@ -5,12 +5,6 @@
 
     "dependencies": [
         {
-            "js": {
-                "group": "main",
-                "path": "/static/autogrow/1.0.3/autogrow.min.js"
-            }
-        },
-        {
             "less": {
                 "lessMedia": "all",
                 "path": "/theme/apps/forums/comment.less"
@@ -25,25 +19,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/forums/init-comments.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/forums/myTopic.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.min.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/jquery.comments/1.0.4/jquery.comments-1.0.4.js"
             }
         },
         {
@@ -55,7 +31,19 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/forums/jquery.comments.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/forums/init-comments.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/forums/myTopic.js"
             }
         },
         {

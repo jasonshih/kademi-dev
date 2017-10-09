@@ -57,13 +57,19 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/rewards-lib/myRewardsComponent.js"
+                "path": "/theme/apps/rewards-lib/myRewards.js"
             }
         },
         {
             "js": {
                 "group": "main",
                 "path": "/theme/apps/rewards-lib/rewardSelector.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/js/jquery.milton-upload.js"
             }
         }
     ]

@@ -1,0 +1,55 @@
+#set($now = $formatter.now)
+#set($currentYear = $formatter.getYear($now))
+#set($nextYear = $formatter.getYear( $formatter.addYears($now, 1) ))
+
+#set ($months = "1,2,3,4,5,6,7,8,9,10,11,12")
+#set ($months = $months.split(","))
+
+#if ($calendars && $calendars != "")
+    #set ($calendarsArr = $!calendars.split(","))
+    #set ($colors = "")
+    #set ($mySize = $calendarsArr.size())
+    #set ($mySize = $mySize - 1)
+    #foreach($cal in $calendarsArr)
+        #set ($calRes = $rootFolder.find("/Calendars").child($cal))
+        #set ($colors = $colors + $calRes.color)
+        #if ($foreach.index < $mySize)
+            #set ($colors = $colors + ",")
+        #end
+    #end
+    <div class="multi-calendars-component" data-colors="$!colors" data-calendars="$!calendars" data-months="$numberOfMonths">
+        <div class="tabbable">
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active">
+                    <a href="#multi-calendars-current-year" data-toggle="tab">$currentYear</a>
+                </li>
+                <li>
+                    <a href="#multi-calendars-next-year" data-toggle="tab">$nextYear</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content">
+                <div class="tab-pane active" id="multi-calendars-current-year">
+                    <div class="row multi-calendars-list" data-year="$currentYear">
+                        #foreach($month in $months)
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <div class="multi-calendar" data-month="$month"></div>
+                            </div>
+                        #end
+                    </div>
+                </div>
+                <div class="tab-pane" id="multi-calendars-next-year">
+                    <div class="row multi-calendars-list" data-year="$nextYear">
+                        #foreach($month in $months)
+                            <div class="col-xs-12 col-sm-6 col-md-4">
+                                <div class="multi-calendar" data-month="$month"></div>
+                            </div>
+                        #end
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+#else
+    <p class="alert alert-warning">Calendar not set</p>
+#end

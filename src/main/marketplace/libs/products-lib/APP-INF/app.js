@@ -1,5 +1,3 @@
-controllerMappings.addComponent("products/components", "topPurchased", "html", "Display the most popular products purchased in table format", "Products");
-
 function findTopPurchased(displayedItems, startDate, endDate) {
     var queryJson = {
         "fields": ["productName", "productTitle", "quantity"],

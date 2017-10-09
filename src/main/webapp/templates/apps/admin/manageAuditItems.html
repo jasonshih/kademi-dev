@@ -59,7 +59,7 @@
                                     <td>$!audit.description</td>
                                     <td class="action">
                                         #if(!$audit.revertUser)
-                                        <button data-title="$page.getClassDisplayName($audit.entityClassName)" data-aid="$audit.id" class="btn btn-success btn-restore-audit"><i class="fa fa-history"></i></button>
+                                        <button data-title="$!page.getClassDisplayName($audit.entityClassName)" data-aid="$audit.id" class="btn btn-success btn-restore-audit"><i class="fa fa-history"></i></button>
                                         #set($canUndoCount = $canUndoCount + 1)
                                         #end
                                     </td>

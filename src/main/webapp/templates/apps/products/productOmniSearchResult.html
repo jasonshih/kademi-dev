@@ -1,0 +1,10 @@
+<li class="omni-search-suggestion">
+    <a href="/products/$!searchResult.source.id/">
+        <span>
+            <i class="text-info fa fa-shopping-bag fa-fw" aria-hidden="true"></i>
+            $!formatter.truncate($formatter.firstNotNull($searchResult.source.title, $searchResult.source.name), 20)
+        </span>
+        &ndash;
+        <span class="text-info">$!formatter.truncate($searchResult.source.name, 20)</span>
+    </a>
+</li>
