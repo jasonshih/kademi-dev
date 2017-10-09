@@ -549,9 +549,9 @@
             <p class="lead">$page.leads.size() leads</p>
             <p>
 
-                <a class="btn btn-success btn-sm" href="#importerWizard" data-toggle="collapse">
+                <a class="btn btn-success btn-sm" href="/tableUploaders/leadsUploader?funnelName=$page.funnel.name">
                     <span class="glyphicon glyphicon-upload"></span>
-                    Upload CSV
+                    Upload File
                 </a>
                 <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
                     <span class="glyphicon glyphicon-download"></span>
@@ -898,14 +898,12 @@
 <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
     <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
     <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-    <script src="/theme/apps/funnels/manageFunnelImports.js" type="text/javascript">//</script>
     <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
     <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
     <script src="/theme/apps/funnels/manageFunnel.js?v=3" type="text/javascript">//</script>
 
     <script type="text/javascript">
         $(function () {
-            initUploads();
             initJourneyBuilder();
             initManageFunnel();
             initPublishingMenu('');
