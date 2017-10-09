@@ -29,6 +29,33 @@
 }
 
 /* ============================================================================
+   repo-switcher
+   ============================================================================ */
+.repo-switcher {
+    position: relative;
+}
+
+.repo-switcher .btn {
+    position: relative;
+    z-index: 2;
+}
+
+.repo-switcher .repo-switcher-selector,
+.repo-switcher .chosen-container {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100% !important;
+}
+
+.repo-switcher .chosen-single {
+    visibility: hidden;
+}
+
+/* ============================================================================
    Carousel
    ============================================================================ */
 .carousel-fixed-height .carousel-inner {
