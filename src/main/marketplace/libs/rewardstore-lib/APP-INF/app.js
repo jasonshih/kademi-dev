@@ -30,6 +30,10 @@ function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {
     if (rewardName) {
         rewardStoreFolder = page.find("/" + rewardName);
     }
+    if( rewardStoreFolder == null ) {
+        log.warn("Could not find reward store: " + rewardName);
+        return null;
+    }
     var rewardStoreName = rewardStoreFolder.rewardStore.name;
     
     
