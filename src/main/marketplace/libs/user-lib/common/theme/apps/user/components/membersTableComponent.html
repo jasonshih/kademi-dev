@@ -21,6 +21,17 @@
         "points.moblix-channel-points" // TODO: Change...  Hardcoded for demo!!!! 
     ];
     
+    var fieldsNames = [];
+    fieldsNames["userId"] = "User ID";
+    fieldsNames["firstName"] = "First Name";
+    fieldsNames["surName"] = "Surname";
+    fieldsNames["email"] = "Email";
+    fieldsNames["phone"] = "Phone";
+    fieldsNames["directOrgIds"] = "Organisation name";
+    fieldsNames["lastVisit"] = "Last visit";
+    fieldsNames["points.moblix-channel-points"] = "Reward point balance";
+    
+    
     var curUser = securityManager.currentUser;
     var queryJson = {
         "query": {
@@ -77,6 +88,7 @@
     templatingContext.searchResults = searchResults;
     templatingContext.fields = selectedFields;
     templatingContext.data = data;
+    templatingContext.fieldsNames = fieldsNames;
 
     log.info("data {}", JSON.stringify(data));
 
@@ -96,7 +108,7 @@
             <table class="table table-striped table-condensed">
                 <thead>
                     #foreach( $f in $fields )    
-                <th>$f</th>
+                <th>$fieldsNames[$f]</th>
                 #end
                 </thead>
                 <tbody>
