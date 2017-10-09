@@ -11,7 +11,7 @@
                     </a>
                     <select class="repo-switcher-selector">
                         #foreach($w in $page.closest("repository").parent.children)
-                            <option value="${w.href}">$w.name</option>
+                            $formatter.option( $w.href, $w.name, $page.closest("repository").href )
                         #end
                     </select>
                 </div>

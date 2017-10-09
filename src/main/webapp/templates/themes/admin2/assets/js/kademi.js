@@ -819,7 +819,7 @@ function initRepoSwitcher() {
                     }, 50);
                 });
                 
-                selector.on('change', function () {
+                selector.trigger('chosen:updated').on('change', function () {
                     window.location.href = this.value;
                 });
             });
