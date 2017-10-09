@@ -1,0 +1,118 @@
+#if( !$height )
+#set( $height = 300 )
+#end
+
+#if( !$title )
+#set( $title = "Members Table" )
+#end
+
+#script()
+<script>
+
+    //This should be a setting to select by the user.
+    var selectedFields = [
+        "userId",
+        "firstName",
+        "surName",
+        "email",
+        "phone",
+        "directOrgIds",
+        "lastVisit"
+    ];
+    
+    var curUser = securityManager.currentUser;
+    var queryJson = {
+        "query": {
+            "bool": {
+                "filter": {
+                    "term": {
+                        "_type": "profile"
+                    }
+                },
+                "must": {
+                    "term": {
+                        "parentOrgs": curUser.organisation.id
+                    }
+                }
+            }
+        },
+        "aggregations": {
+            "by_user": {
+                "terms": {
+                    "field": "userId"
+                }
+            }
+        }
+    };
+
+    queryJson.stored_fields = selectedFields;
+    
+    var startDate = templatingContext.params.startDate;
+    var endDate = templatingContext.params.endDate;
+
+    if (startDate && endDate) {
+        queryJson.query.filtered.filter.bool.must.push({
+            "range": {
+                "lastVisit": {
+                    "gte": new Date(formatter.formatDateISO8601(startDate)).toISOString(),
+                    "lte": new Date(formatter.formatDateISO8601(endDate)).toISOString()
+                }
+            }
+        });
+    }
+
+    var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "profile");
+    var data = [];
+    for (var sh in searchResults.hits.hits) {
+        var r = searchResults.hits.hits[sh];
+        var obj = [];
+        for (var f in selectedFields) {
+            var key = selectedFields[f];
+            obj[key] = (r.fields.get(key) === null) ? "" : r.fields.get(key).value;
+        }
+        data.push(obj);
+    }
+
+    templatingContext.searchResults = searchResults;
+    templatingContext.fields = selectedFields;
+    templatingContext.data = data;
+
+    log.info("data {}", JSON.stringify(data));
+
+</script>
+#end
+
+
+<div class="panel panel-default panel-query-table" id="$queryCompId" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$itemsPerPage" data-queryname="$query" data-querytype="$queryType">
+    <div class="panel-heading">
+        <i class="fa fa-table"></i> $title
+    </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            #if( $searchResults.hits.totalHits == 0 )
+            No current results
+            #else
+            <table class="table table-striped table-condensed">
+                <thead>
+                    #foreach( $f in $fields )    
+                <th>$f</th>
+                #end
+                </thead>
+                <tbody>
+                    #foreach( $row in $data )
+                    <tr>
+                        #foreach( $f in $fields )    
+                        <td>$row.getMember($f)</td>
+                        #end
+                    </tr>
+                    #end
+                </tbody>
+            </table>
+            #end
+        </div>
+    </div>
+    <div class="panel-footer">
+        <ul class="pagination">
+        </ul>
+    </div>
+</div>
