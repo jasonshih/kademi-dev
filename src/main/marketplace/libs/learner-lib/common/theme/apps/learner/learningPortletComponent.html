@@ -5,14 +5,14 @@
 
     #if( $modules.size() > 0 )
         #set($mod = $modules.get(0))
-        <div class="hero panel panel-default">
+        <div class="panel panel-default">
             <div class="panel-body">
                 #if( $mod.inProgress )
-                    <p class='lead'>Continue your training:</p>
+                    <p class="lead">Continue your training:</p>
                 #elseif( $mod.complete )
-                    <p class='lead'>Congratulations, you've completed all of your training</p>
+                    <p class="lead">Congratulations, you've completed all of your training</p>
                 #else
-                    <p class='lead'>Suggested module:</p>
+                    <p class="lead">Suggested module:</p>
                 #end
 
                 #if( !$mod.complete )
