@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "bootstrap-base",
-            "branch": "1.4.3"
+            "branch": "1.4.3b"
         },
         {
             "appId": "content-lib",
