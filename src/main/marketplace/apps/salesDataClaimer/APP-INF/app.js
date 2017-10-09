@@ -1,4 +1,7 @@
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
+controllerMappings.addComponent("salesDataClaimer/components", "claimsMade", "html", "Displays a number of claims made", "Sales Data Claimer");
+controllerMappings.addComponent("salesDataClaimer/components", "claimsPending", "html", "Displays a number of pending claims", "Sales Data Claimer");
+controllerMappings.addComponent("salesDataClaimer/components", "claimsTotalAmount", "html", "Displays the total amount $ of claims", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimForm", "html", "Displays claim form", "Sales Data Claimer");
 
 controllerMappings.addGoalNodeType("claimSubmittedGoal", "salesDataClaimer/claimSubmittedGoalNode.js", "checkSubmittedGoal");

@@ -1,0 +1,38 @@
+#if ($page)
+    #set($app = $applications.salesDataClaimer )
+    #set($searchResult = $app.call('getPendingClaims', $page, $request.params))
+#end
+
+
+#if( !$height )
+#set( $height = 200 )
+#end
+
+#set( $detailHref = "#" )
+#set( $label = "Pending Claims")
+
+#if($searchResult.hits)
+    #set($results = $searchResult.hits.totalHits)
+#else
+    #set($results = "0")
+#end
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <a class="c-white" href="$detailHref">
+                <div class="col-xs-3">
+                    <i class="fa fa-id-card-o fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <h2>
+                       $results
+                    </h2>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="panel-footer text-center">
+        <span class="">$!label</span>
+    </div>
+</div>
