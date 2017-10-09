@@ -1,0 +1,83 @@
+#if( !$height )
+    #set( $height = 200 )
+#end
+
+#set( $detailHref = "#" )
+#set( $label = "Recent active users")
+
+#script()
+<script>
+    var curUser = securityManager.currentUser;
+    var queryJson = {
+        "query": {
+            "bool": {
+                "filter": {
+                    "term": {
+                        "_type": "profile"
+                    }
+                },
+                "must": [
+                    {
+                        "exists": {
+                            "field": "lastVisit"
+                        }
+                    },
+                    {
+                        "term": {
+                            "parentOrgs": curUser.organisation.id
+                        }
+                    }
+                ]
+            }
+        },
+        "aggregations": {
+            "website": {
+                "terms": {
+                    "field": "userName"
+                }
+            }
+        }
+    };
+
+    var startDate = templatingContext.params.startDate;
+    var endDate = templatingContext.params.endDate;
+
+    if (startDate && endDate) {
+        queryJson.query.filtered.filter.bool.must.push({
+            "range": {
+                "lastVisit": {
+                    "gte": new Date(formatter.formatDateISO8601(startDate)).toISOString(),
+                    "lte": new Date(formatter.formatDateISO8601(endDate)).toISOString()
+                }
+            }
+        });
+    }
+    
+    var searchResults = applications.search.searchManager.search(JSON.stringify(queryJson), "profile");
+    templatingContext.searchResults = searchResults;
+</script>
+#end
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="row">
+            <a class="c-white" href="$detailHref">
+                <div class="col-xs-3">
+                    <i class="fa fa-users fa-4x"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <h2>
+                        #if( $searchResults.hits.totalHits == 0 )
+                        No current results
+                        #else
+                        $searchResults.hits.totalHits
+                        #end
+                    </h2>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="panel-footer text-center">
+        <span class="">$!label</span>
+    </div>
+</div>
