@@ -1,13 +1,13 @@
 #if( !$height )
     #set( $height = 200 )
 #end
-#if( !$title )
-    #set( $title = "Registrations over time" )
+#if( !$chartTitle || $chartTitle == "" )
+    #set( $chartTitle = "Registrations over time" )
 #end
 
 <div class="panel panel-default panel-date-histogram panel-registrations-over-time">
     <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> $title
+        <i class="fa fa-bar-chart"></i> $chartTitle
     </div>
     <div class="panel-body">
         <div style="height: $!{height}px" class="query-data-histogram">
