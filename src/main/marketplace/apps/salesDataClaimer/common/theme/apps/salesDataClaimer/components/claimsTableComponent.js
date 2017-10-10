@@ -10,6 +10,7 @@
         init: function (contentArea, container, component, keditor) {
             component.attr('data-query-type', "queryTable");
             component.attr('data-query', "tableClaims");
+            component.attr('data-items-per-page', 100);
         },
 
         initSettingForm: function (form, keditor) {
