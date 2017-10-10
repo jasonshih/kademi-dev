@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-sm-4">
                     <p class="input-group search input-group-sm col-sm-12">
-                        <input type="text" id="translation-query" class="form-control" placeholder="Search for translations here" value="" />
+                        <input type="text" id="translation-query" class="form-control" placeholder="Search for translations here" value="$!request.params.q" />
                         <span class="input-group-btn">
                             <button class="btn btn-sm btn-default" type="button" data-type="clearer" data-target="#translation-query">
                                 <i class="fa fa-times"></i>
@@ -38,7 +38,7 @@
                             <select name="languages" id="search-language" class="form-control input-sm">
                                 <option value="">Filter by language</option>
                                 #foreach( $lang in $rootFolder.languages )
-                                <option value="$lang.code">$lang.title</option>
+                                <option value="$lang.code" #if($!request.params.lang == $lang.code) selected="selected" #end >$lang.title</option>
                                 #end
                             </select>
                         </div>
@@ -59,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody id="translations-list">
-                    #foreach($trans in $page.translations)
+                    #foreach($trans in $page.paginator.records)
                     <tr>
                         <td>$trans.sourceType</td>
                         <td>$trans.langCode</td>
@@ -75,6 +75,13 @@
                     </tr>
                     #end
                 </tbody>
+                <tfoot id="translationsFooter">
+                    <tr>
+                        <td colspan="6">
+                            $!page.paginator.html
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
 

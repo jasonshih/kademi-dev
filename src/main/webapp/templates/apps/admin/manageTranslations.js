@@ -28,7 +28,13 @@ function doTranslationSearch() {
     var lang = $("#search-language").val();
 
     flog("doSearch", query, lang);
-    var newUrl = window.location.pathname + "?q=" + query + "&lang=" + lang;
+    var url = new URL(window.location.href);
+    url.searchParams.set('q', query);
+    url.searchParams.set('lang', lang);
+
+
+    //var newUrl = window.location.href + "?q=" + query + "&lang=" + lang;
+    var newUrl = url.toString();
     window.history.replaceState("", "", newUrl);
     $.ajax({
         type: 'GET',
@@ -55,7 +61,6 @@ function initCreateTranslation() {
         },
         error: function (resp) {
             flog('Error: ', resp);
-            $("#addTranslationModal").modal('hide');
         }
     });
 }
