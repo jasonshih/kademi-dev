@@ -39,6 +39,16 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
+                    form.find('.btn-remove-img-no-level').on('click', function () {
+                        form.find('.img-no-level-previewer').attr('src', '/static/images/photo_holder.png');
+                        
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-img-no-level', '');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
                     form.find('.btn-change-img-no-level').mselect({
                         contentTypes: ['image'],
                         bs3Modal: true,
