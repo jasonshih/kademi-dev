@@ -1,0 +1,17 @@
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Course</label>
+        <div class="col-sm-12">
+            #set($programs = $rootFolder.find("/programs"))
+            <select class="form-control select-course">
+                <option value=""> - None -</option>
+                #foreach($program in $programs.children)
+                    #foreach($course in $program.children.ofType.course)
+                        <option value="$course.href">$program.title \ $course.title</option>
+                    #end
+                #end
+            </select>
+            <small class="help-block">If you want to display description of current course page, please leave this field blank</small>
+        </div>
+    </div>
+</div>

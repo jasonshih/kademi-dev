@@ -1,0 +1,17 @@
+
+#if ($course && $course != "")
+    #set ($courseResource = $page.find($course).children.ofType.module.sortByField("order"))
+    #set ($courseResource = $rootFolder.find($course).children.ofType.module.sortByField("order"))
+#else
+    #if($page.is("course"))
+        #set($courseResource = $page)
+    #end
+#end
+
+<div class="lead">
+    $!courseResource.body
+    
+    #if (!$page && (!$courseResource.body || $courseResource.body != ""))
+        <p>No description for current course</p>
+    #end
+</div>

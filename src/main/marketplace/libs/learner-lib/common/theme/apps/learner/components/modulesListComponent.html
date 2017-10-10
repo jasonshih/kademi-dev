@@ -8,7 +8,7 @@
 #end
 
 #if (!$itemsPerRow)
-    #set ($itemsPerRow = 4)
+    #set ($itemsPerRow = 2)
 #end
 #set ($itemsPerRow = $formatter.toInteger( $itemsPerRow ))
 
@@ -26,48 +26,86 @@
 #parse("/theme/apps/learner/moduleMacros.html")
 
 #if ($course && $course != "")
-    #set ($modules = $page.find($course).children.ofType.module)
-    #set ($modules = $rootFolder.find($course).children.ofType.module)
+    #set ($modules = $page.find($course).children.ofType.module.sortByField("order"))
+    #set ($modules = $rootFolder.find($course).children.ofType.module.sortByField("order"))
+#else
+    #if($page.is("course"))
+        #set ($modules = $page.children.ofType.module.sortByField("order"))
+    #end
+#end
+
+#if ($itemsPerRow == 1)
+    #set ($moduleClass = "col-sm-12")
+#elseif ($itemsPerRow == 2)
+    #set ($moduleClass = "col-sm-6")
+#elseif ($itemsPerRow == 3)
+    #set ($moduleClass = "col-sm-4")
+#elseif ($itemsPerRow == 4)
+    #set ($moduleClass = "col-sm-3")
+#end
+
+#if ($modules.size() > 0)
     <div class="modules-list">
-        #if ($layout == "grid")
-            #set ($moduleClass = "col-sm-3")
-            #if ($itemsPerRow == 1)
-                #set ($moduleClass = "col-sm-12")
-            #elseif ($itemsPerRow == 2)
-                #set ($moduleClass = "col-sm-6")
-            #elseif ($itemsPerRow == 3)
-                #set ($moduleClass = "col-sm-4")
-            #elseif ($itemsPerRow == 4)
-                #set ($moduleClass = "col-sm-3")
-            #end
-            
-            #set ($count = 0)
-            <div class="row">
-                #foreach($mod in $modules)
-                    #set ($count = $count + 1)
-                    <div class="$moduleClass">
-                        #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
-                    </div>
-            
-                    #if ($numberOfModules == 0)
-                    #elseif ($count >= $numberOfModules)
-                        #break
-                    #end
-                #end
-            </div>
-        #else
+        <div class="row">
             #set ($count = 0)
             #foreach($mod in $modules)
                 #set ($count = $count + 1)
-                #renderModuleListItem($mod true true true)
+                #if ($itemsPerRow > 1)
+                <div class="$moduleClass">
+                #end
+                
+                #if ($layout == "grid")
+                    #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+                #else
+                    #renderModuleListItem($mod)
+                #end
+                
+                #if ($itemsPerRow > 1)
+                </div>
+                #end
         
+                #if ($count % $itemsPerRow == 0 && $itemsPerRow > 1)
+                    <div class="clearfix"></div>
+                #end
                 #if ($numberOfModules == 0)
                 #elseif ($count >= $numberOfModules)
                     #break
                 #end
             #end
-        #end
+        </div>
     </div>
 #else
-    <p class="alert alert-warning">No course selected</p>
+    #if ($page)
+        <p class="alert alert-warning">No module found</p>
+    #else
+    <div class="modules-list">
+        <div class="row">
+            #set ($count = 0)
+            #foreach($i in [1..12])
+                #set ($count = $count + 1)
+                #if ($itemsPerRow > 1)
+                <div class="$moduleClass">
+                #end
+                
+                #if ($layout == "grid")
+                    #renderModuleGridItemExample($count $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+                #else
+                    #renderModuleListItemExample($count)
+                #end
+                
+                #if ($itemsPerRow > 1)
+                </div>
+                #end
+        
+                #if ($count % $itemsPerRow == 0 && $itemsPerRow > 1)
+                    <div class="clearfix"></div>
+                #end
+                #if ($numberOfModules == 0)
+                #elseif ($count >= $numberOfModules)
+                    #break
+                #end
+            #end
+        </div>
+    </div>
+    #end
 #end

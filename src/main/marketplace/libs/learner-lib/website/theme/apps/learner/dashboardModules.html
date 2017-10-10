@@ -16,7 +16,7 @@
                     <p class="lead">Suggested module:</p>
                 #end
 
-                #renderModuleListItem($mod true true true)
+                #renderModuleListItem($mod)
             </div>
         </div>
     #end
@@ -41,7 +41,7 @@
         #set($curPage = "")
         #set($curPage = $mod.currentPage)
         <div class="col-md-6">
-            #renderModuleListItem($mod true true true)
+            #renderModuleListItem($mod)
         </div>
         #if( $count > 1 )
             #set($count = 0)
