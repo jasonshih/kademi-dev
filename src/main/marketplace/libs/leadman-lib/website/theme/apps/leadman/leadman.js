@@ -153,7 +153,7 @@ function initLeadsDashLoading() {
 }
 
 function initNewLeadFromEmail() {
-    $('.menu-item-menuLeadFromEmail a').on('click', function () {
+    $('.menu-item-menuLeadFromEmail a, .nav-menuLeadFromEmail').on('click', function () {
         $('#modalLeadFromEmail').modal('show');
     });
 }
@@ -442,7 +442,7 @@ function initNewLeadForm() {
         }
     });
 
-    $('.dropdown-menu li:not(.menu-item-menuLeadFromEmail) > [class*="nav-menuAddLead"]').click(function (e) {
+    $('.dropdown-menu li:not(.nav-menuLeadFromEmail-wrapper) > [class*="nav-menuAddLead"]').click(function (e) {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
