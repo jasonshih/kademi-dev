@@ -11,6 +11,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/js/jquery.milton-upload.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/jquery-knob/1.2.13/dist/jquery.knob.min.js"
             }
         },
