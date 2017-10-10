@@ -1,27 +1,27 @@
 (function ($) {
     var DEFAULT_POINTS_ACTIVITY_OPTIONS = {};
-    
+
     $.fn.pointsActivityChart = function (options) {
         var containers = this;
-        
+
         flog('pointsActivityChart', containers);
         containers.each(function (i, n) {
             var container = $(n);
             var config = $.extend({}, DEFAULT_POINTS_ACTIVITY_OPTIONS, options);
             var queryHref = null;
-            
+
             var component = container.closest('[data-type^=component-]');
             if (component.length > 0) {
                 flog('Is pointsActivityComponent', component);
-                queryHref = '/' + component.attr('data-bucket') + '/';
+                queryHref = component.attr('data-bucket');
                 config.days = +component.attr('data-days');
             }
-            
+
             loadGraphData(queryHref, {}, container, config);
-            
+
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 flog('piechart date change', container, startDate, endDate);
-                
+
                 loadGraphData(queryHref, {
                     startDate: startDate,
                     endDate: endDate
@@ -29,24 +29,25 @@
             });
         });
     };
-    
-    function loadGraphData(href, opts, container, config) {
-        href = href + '?pointsActivity&' + $.param(opts);
-        
+
+    function loadGraphData(pointsBucketName, opts, container, config) {
+        href = '/queries/rewards-points-activity-' + pointsBucketName + '?run';
+        href = href + '&' + $.param(opts);
+
         flog('loadGraphData', container, href);
-        
+
         $.ajax({
             type: 'GET',
             url: href,
             dataType: 'json',
             success: function (resp) {
                 flog('Response from server', resp);
-                
+
                 showPointsActivityChart(resp, container, config);
             }
         });
     }
-    
+
     function showPointsActivityChart(resp, container, config) {
         var svg = container.find('svg');
         svg.empty();
@@ -57,21 +58,21 @@
 
             try {
                 chart = nv.models.multiBarChart()
-                    .margin({top: 0, right: 0, bottom: 0, left: 0})
-                    .showControls(false)
-                    .showLegend(true)
-                    .showYAxis(false)
-                    .showXAxis(false);
+                        .margin({top: 0, right: 0, bottom: 0, left: 0})
+                        .showControls(false)
+                        .showLegend(true)
+                        .showYAxis(false)
+                        .showXAxis(false);
 
                 chart.xAxis     //Chart x-axis settings
-                    .axisLabel('Date')
-                    .tickFormat(function (d) {
-                        return moment(d).format("DD MMM");
-                    });
+                        .axisLabel('Date')
+                        .tickFormat(function (d) {
+                            return moment(d).format("DD MMM");
+                        });
 
                 chart.yAxis     //Chart y-axis settings
-                    .axisLabel('Count')
-                    .tickFormat(d3.format('.02f'));
+                        .axisLabel('Count')
+                        .tickFormat(d3.format('.02f'));
 
                 /* Generate data */
                 var active = [];
@@ -120,8 +121,8 @@
                 expired.sort(dynamicSort('x'));
 
                 d3.select(svg.get(0))
-                    .datum(myData)
-                    .call(chart);
+                        .datum(myData)
+                        .call(chart);
 
                 // Update the chart when window resizes.
                 nv.utils.windowResize(function () {
@@ -149,7 +150,7 @@
         };
     }
 
-    $(function(){
+    $(function () {
         $('[data-type="component-pointsActivity"]').pointsActivityChart();
     });
 })(jQuery);
