@@ -45,7 +45,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/orgsLocator/orgsLocator.js?v=1.0.4"
+                "path": "/theme/apps/orgsLocator/orgsLocator.js"
             }
         }
     ]
