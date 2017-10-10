@@ -9,10 +9,16 @@
 
     <div class="panel-level-achievement">
         #if( $award == $null )
-            #if ($imgNoLevel)
+            #if ($imgNoLevel && $imgNoLevel != "")
                 <p><img src="$imgNoLevel" class="img-responsive" /></p>
             #else
-                <p>No awarded level found</p>
+                #if (!$page)
+                    <p>No awarded level found</p>
+                #else
+                    #if ($showLevelName == 'true')
+                        <p>No awarded level found</p>
+                    #end
+                #end
             #end
         #else
             #if ($showLevelName == 'true')

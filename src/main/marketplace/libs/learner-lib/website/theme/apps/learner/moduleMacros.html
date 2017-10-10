@@ -40,17 +40,22 @@
             </div>
         #end
         
-        #macro (renderModuleProgress $mod)
+        #macro (renderModuleProgress $mod $isExample)
             #set ($modProgress = 0)
             #if( $mod.complete )
                 #set ($modProgress = 100)
             #elseif ( $mod.percentComplete )
                 #set ($modProgress = $mod.percentComplete)
             #end
+
+            #if ($isExample == true)
+                #set ($modProgress = 80)
+            #end
+
             <div class="module-progress" style="width: ${modProgress}%;"></div>
         #end
         
-        #macro (renderModuleInfos $mod $showTime $showCpd $showPoint)
+        #macro (renderModuleInfos $mod $showTime $showCpd $showPoint $isExample)
             #if ($showTime == true)
                 #set($mins = $mod.learningTimeMins)
                 <span class="module-time">
@@ -64,6 +69,12 @@
             #end
             
             #if ($showCpd == true)
+                #if ($isExample == true)
+                    <span class="module-cpd">
+                        <i class="fa fa-graduation-cap fa-fw"></i> CPD: 500
+                    </span>
+                #end
+
                 #if ($mod.cpdPoints.size() > 0)
                     <span class="module-cpd">
                         <i class="fa fa-graduation-cap fa-fw"></i> CPD:
@@ -76,6 +87,12 @@
             #end
             
             #if ($showPoint == true)
+                #if ($isExample == true)
+                    <span class="module-point">
+                        <i class="fa fa-star fa-fw"></i> Points: 600
+                    </span>
+                #end
+
                 #if ($mod.moduleCompleteActions.size() > 0)
                     <span class="module-point">
                         <i class="fa fa-star fa-fw"></i> Points:
@@ -90,7 +107,7 @@
             #end
         #end
         
-        #macro (renderModuleListItem $mod $showTime $showCpd $showPoint)
+        #macro (renderModuleListItem $mod)
             <div class="module">
                 #renderModuleThumb($mod)
                 #renderModuleProgress($mod)
@@ -102,7 +119,26 @@
                             #renderModuleButton($mod)
                         </div>
                         <div>
-                            #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                            #renderModuleInfos($mod true true true)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        #end
+
+        #macro (renderModuleListItemExample $count)
+            <div class="module">
+                #renderModuleThumb($mod)
+                #renderModuleProgress($mod true)
+                <div class="module-body">
+                    <h4>Module #${count}</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam aperiam aliquam fugit laboriosam cum atque</p>
+                    <div class="clearfix">
+                        <div class="pull-right">
+                            #renderModuleButton($mod)
+                        </div>
+                        <div>
+                            #renderModuleInfos($mod true true true true)
                         </div>
                     </div>
                 </div>
@@ -120,11 +156,34 @@
                         <div class="clearfix">
                             #if ($showButton == true)
                                 <div class="pull-right">
-                                    #renderModuleButton($mod true)
+                                    #renderModuleButton($mod)
                                 </div>
                             #end
                             <div>
                                 #renderModuleInfos($mod $showTime $showCpd $showPoint)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        #end
+        
+        #macro (renderModuleGridItemExample $count $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
+            <a href="$mod.href" class="module-grid-wrapper">
+                <div class="module module-grid" style="height: ${gridItemHeight}px;">
+                    #renderModuleThumb($mod true)
+                    
+                    <div class="module-body #if ($fullHeightThumb == true) module-body-transparent #end">
+                        #renderModuleProgress($mod true)
+                        <h4>Module #${count}</h4>
+                        <div class="clearfix">
+                            #if ($showButton == true)
+                                <div class="pull-right">
+                                    #renderModuleButton($mod true)
+                                </div>
+                            #end
+                            <div>
+                                #renderModuleInfos($mod $showTime $showCpd $showPoint true)
                             </div>
                         </div>
                     </div>
