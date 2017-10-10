@@ -20,7 +20,6 @@ function initCreateLanguage() {
         },
         error: function (resp) {
             flog('Error: ', resp);
-            $("#addLanguageModal").modal('hide');
         }
     });
 }
