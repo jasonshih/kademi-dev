@@ -89,19 +89,25 @@
                 <i class="clip-users"></i> Members
             </div>
             <div id="manageGroup" class="panel-body MainContent">
+                #if( $page.rulesGroup == false)
                 <button class="btn btn-sm btn-bricky removeUsers pull-right">Remove</button>
+                #end
                 <div class="btn-group pull-right" style="margin-right: 10px;">
                     <a role="button" href="members.csv" download="members.csv" class="btn btn-info btn-sm">Open CSV</a>
+                    #if( $page.rulesGroup == false)
                     <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
                     </button>
+                    
                     <ul class="dropdown-menu" role="menu">
                         <li class="presentation" role="menuitem"><a href="#" class="btn-upload-users-csv">Upload CSV</a></li>
                         <li class="presentation" role="menuitem"><a role="button" href="members.csv" download="members.csv">Open CSV</a></li>
                         <li class="divider" />
                         <li class="presentation" role="menuitem"><a role="button" href="unsubscribers.csv" download="unsubscribers.csv">Open Unsubscribers CSV</a></li>
                     </ul>
+                    #end    
                 </div>
+                
                 <div class="col-md-3">
                     <h5>
                         <label class="label-control">Showing: </label>
@@ -115,7 +121,6 @@
                 </div>
 
                 #if( $page.rulesGroup )
-                
                 #else
                 <div class="col-md-3">
                     <select id="showUserSelect" class="form-control">
