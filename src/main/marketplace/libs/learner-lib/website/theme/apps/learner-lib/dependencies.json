@@ -51,13 +51,25 @@
         {
             "js": {
                 "group": "main",
+                "path": "/theme/apps/learner/jquery.module.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/learner/moduleSearch.js"
             }
         },
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/moduleList.js"
+                "path": "/theme/apps/learner/modulesList.js"
             }
         },
         {
@@ -75,25 +87,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/learner/myRewards.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/jquery.module.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/static/dotdotdot/1.6.16/jquery.dotdotdot.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
-                "path": "/theme/apps/learner/myLearning.js"
+                "path": "/theme/apps/learner/coursePicker.js"
             }
         }
     ]

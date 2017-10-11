@@ -29,9 +29,17 @@
     #set ($modules = $page.find($course).children.ofType.module.sortByField("order"))
     #set ($modules = $rootFolder.find($course).children.ofType.module.sortByField("order"))
 #else
+    #set($programs = $page.find("/programs"))
     #if($page.is("course"))
-        #set ($modules = $page.children.ofType.module.sortByField("order"))
+        #set($curCourse = $page)
+    #else
+        #set($curCourse = $programs.bestCourse)
+        #if(!$curCourse )
+            #set($curCourse = $programs.bestProgram.children.ofType.course.first)
+        #end
     #end
+
+    #set ($modules = $curCourse.children.ofType.module.sortByField("order"))
 #end
 
 #if ($itemsPerRow == 1)

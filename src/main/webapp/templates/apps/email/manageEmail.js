@@ -1,11 +1,17 @@
 function initManageEmail() {
     initModalAddEmail();
+    initModalAddTemplate();
     initDeleteEmail();
     flog("init dups");
     $("#email-trigger-wrapper").on("click", ".btn-dup-email", function (e) {
         e.preventDefault();
         var name = $(e.target).attr("href");
         duplicate(name);
+    });
+    $("#email-trigger-wrapper").on("click", ".btn-dup-temp-email", function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        duplicate(name, true);
     });
 }
 
@@ -164,6 +170,22 @@ function initModalAddEmail() {
     });
 }
 
+function initModalAddTemplate() {
+    flog("initModalAddTemplate");
+    var modal = $('#modal-add-template');
+    var form = modal.find('form');
+
+    form.forms({
+        onSuccess: function (data) {
+            flog('saved ok', data);
+            modal.modal('hide');
+            form.trigger('reset');
+            Msg.success($('#name').val() + ' is created!');
+            $('#email-template-table').reloadFragment();
+        }
+    });
+}
+
 function initDeleteEmail() {
     //Bind event for Delete email
     $('body').on('click', 'a.btn-delete-email', function (e) {
@@ -275,19 +297,33 @@ function initChooseGroupModal() {
 }
 
 
-function duplicate(href) {
+function duplicate(href, createTemplate) {
     flog("duplicate", href);
     try {
+
+        var data = {};
+        if (createTemplate) {
+            data.createTemplate = true;
+        } else {
+            data.duplicate = true;
+        }
+
         $.ajax({
             type: 'POST',
             url: href,
-            data: {
-                duplicate: "true"
-            },
+            data: data,
             success: function (data) {
                 if (data.status) {
                     flog("saved ok", data);
-                    $("#email-trigger-wrapper").reloadFragment();
+                    if (createTemplate) {
+                        if (data.nextHref) {
+                            window.location.href = data.nextHref;
+                        } else {
+                            $("#email-template-table").reloadFragment();
+                        }
+                    } else {
+                        $("#email-trigger-wrapper").reloadFragment();
+                    }
                 } else {
                     Msg.error('An error occured duplicating the email. Please try again and contact support if its still broke.');
                 }
