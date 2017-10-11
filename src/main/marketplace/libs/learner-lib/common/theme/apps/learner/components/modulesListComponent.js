@@ -24,6 +24,8 @@
                         component.attr('data-course', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -41,6 +43,8 @@
                         component.attr('data-number-of-modules', number);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -51,6 +55,8 @@
                         component.attr('data-layout', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                         
                         form.find('.items-per-row-wrapper').css('display', this.value === 'grid' ? 'block' : 'none');
@@ -63,6 +69,8 @@
                         component.attr('data-items-per-row', this.value);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -80,6 +88,8 @@
                         component.attr('data-grid-item-height', number);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -90,6 +100,8 @@
                         component.attr('data-show-time', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -100,6 +112,8 @@
                         component.attr('data-show-cpd', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -110,6 +124,8 @@
                         component.attr('data-show-point', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -120,6 +136,8 @@
                         component.attr('data-show-button', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                     
@@ -130,6 +148,8 @@
                         component.attr('data-full-height-thumb', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             adjustHeightModuleGrid();
+                            initScrollProgress();
+                            initModuleListItem();
                         });
                     });
                 }

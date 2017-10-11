@@ -14,12 +14,12 @@
     #end
 
     #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
-        <div class="btn-group program-course-module-mix">
-            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+        <div class="dropdown course-picker-wrapper" data-course-href="$curCourse.href">
+            <button class="btn btn-primary btn-lg course-picker-toggler dropdown-toggle">
                 <span class="current-module">$curProgram.title / $curCourse.title modules </span>
                 <span class="caret"></span>
             </button>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu course-picker-dropdown">
                 <ul role="menu" class="row list-unstyled">
                     <li id="programs-wrapper" class="col-md-6">
                         <p>Programs</p>
@@ -48,8 +48,8 @@
 #end
 
 #macro(fakeUI)
-    <div class="btn-group program-course-module-mix" style="z-index: 2">
-        <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+    <div class="btn-group course-picker-wrapper" style="z-index: 2">
+        <button class="btn btn-primary btn-lg course-picker-toggler dropdown-toggle">
             <span class="current-module">No Modules</span>
             <span class="caret"></span>
         </button>
