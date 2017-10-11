@@ -198,7 +198,36 @@
                                     <small class="text-muted" style="font-size: 14px;"> (Select which user groups to send to)</small>
                                 </p>
                                 <div class="GroupList blocks-wrapper" id="recipientList">
-                                    <p>Number recipients: <b>$page.numRecipients</b></p>
+                                                                        
+                                    #if( $page.numRecipients > $page.maxRecipients )
+                                    <div class="alert alert-danger">
+                                        
+                                        <h2>WARNING: Exceeded max recipients</h2>
+                                        
+                                        <p>
+                                            Number recipients: 
+                                            <b>$page.numRecipients</b>
+
+                                            Max: $page.maxRecipients
+                                        </p>
+                                        
+                                        <p>The number of recipients exceeds the configured maximum. This email will not send!</p>                                        
+                                        
+                                        <p>Note that this limit is for your protection, against inadvertently sending emails to customers.</p>
+                                        
+                                        <p>Usually this means you've selected the wrong group. If you're confident that you've selected the correct groups, then
+                                            head on over to the <a href='/manageApps'>manage apps page</a> and edit the settings for the Scheduler app to increase the limit.</p>
+                                    </div>
+                                    #else
+                                    <p>
+                                        Number recipients: 
+                                        <b>$page.numRecipients</b>
+                                        
+                                        Max: $page.maxRecipients
+                                    </p>
+                                    
+                                    #end
+                                    
                                     #foreach($g in $page.groupRecipients)
                                         <span class="block $g.name">$g.name
                                             #if( $page.status == "Draft" )
