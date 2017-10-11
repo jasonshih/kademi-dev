@@ -1,7 +1,11 @@
+#if (!$align)
+    #set ($align = "text-right")
+#end
+
 #set($viewMode = !$rc.child.editMode && !$request.params.print )
 #if($viewMode)
 <div class="panel panel-default panel-module-page-toolbar">
-    <div class="panel-heading text-right">
+    <div class="panel-heading $align">
         <a class="print2 btn" href="#">
             <span class="fa fa-print fa-2x"></span>
             <span>Print</span>
