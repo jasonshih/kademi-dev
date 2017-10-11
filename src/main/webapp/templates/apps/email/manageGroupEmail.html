@@ -2,107 +2,159 @@
     <head>
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageGroupEmail.js?v103">//</script>
-        <script type="text/javascript" src="manageEmail.js?v103">//</script>
+        <script type="text/javascript" src="manageGroupEmail.js?v104">//</script>
+        <script type="text/javascript" src="manageEmail.js?v104">//</script>
     </head>
     <body class="manageEmail">
-        <p class="clearfix">
-            <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-email"><i class="fa fa-plus"></i> Create new email</a>
-        </p>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="fa fa-envelope-o"></i>Group emails
-            </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover" id="email-trigger-wrapper">
-                        <colgroup>
-                            <col class="icon" />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col />
-                            <col style="width: 100px" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th class="icon">Status</th>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>No. emails</th>
-                                <th>Delivered</th>
-                                <th>Opened</th>
-                                <th>Open %</th>
-                                <th>Converted</th>
-                                <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
-                                <th class="action"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            #foreach($email in $page.children)
-                            <tr class="emailStatus$!{email.status}" data-jobid="$email.id" data-jobhref="$email.href">
-                                <td class="icon" title="$!email.status">
-                                    #if($email.status == "Draft" )
-                                    <i class="fa fa-edit text-muted"></i>
-                                    #elseif($email.status == "Preparing" )
-                                    <i class="fa fa-refresh text-warning"></i>
-                                    #elseif($email.status == "Running" )
-                                    <i class="fa fa-circle-o-notch text-warning"></i>
-                                    #elseif($email.status == "Completed" )
-                                    <i class="fa fa-check-circle text-success"></i>
-                                    #elseif($email.status == "Cancelled" )
-                                    <i class="fa fa-times text-danger"></i>
-                                    #else
-                                    $email.status
-                                    #end
-                                </td>
-                                <td>$formatter.formatDate($email.statusDate)</td>
-                                <td>$formatter.htmlEncode($email.title)</td>
-                                <td>
-                                    <span class="groupEmail-totalToSend">$email.numItems</span>
-                                </td>
-                                <td>
-                                    <span class="groupEmail-successful">$email.numDelivered</span>
-                                </td>
-                                <td>
-                                    <span class="groupEmail-opened">$email.numOpened</span>
-                                </td>
-                                <td>
-                                    <span class="groupEmail-openRate">$email.openRate</span>
-                                </td>
-                                <td>
-                                    <span class="groupEmail-converted">$email.numConverted</span>
-                                </td>
-                                <td>
-                                    <span class="groupEmail-conversionRate">$email.conversionRate</span>
-                                </td>
-                                <td class="action" style="">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="$email.name" class="btn btn-sm btn-info btn-sm">
-                                            <i class="fa fa-edit"></i> 
-                                        </a>
-                                        <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            #if($email.status == "Draft" )
-                                            <li><a href="$email.name" class="btn-edit-email" title="Edit"><i class="fa fa-edit"></i> Edit</a></li>
-                                            #else
-                                            <li><a href="$email.name" class="btn-view-email" title="Edit"><i class="clip-eye"></i> View</a></li>
-                                            #end
-                                            <li><a href="$email.name" class="btn-dup-email" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            #end
-                        </tbody>
-                    </table>
+        <div>
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs tab-bricky">
+                <li class="active"><a href="#emails" aria-controls="emails" data-toggle="tab">Emails</a></li>
+                <li ><a href="#templates" aria-controls="templates" data-toggle="tab">Templates</a></li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="emails">
+                    <p class="clearfix">
+                        <a class="btn btn-sm btn-success btn-add-email" data-toggle="modal" href="#modal-add-email"><i class="fa fa-plus"></i> Create new email</a>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="email-trigger-wrapper">
+                            <colgroup>
+                                <col class="icon" />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col />
+                                <col style="width: 100px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th class="icon">Status</th>
+                                    <th>Date</th>
+                                    <th>Name</th>
+                                    <th>No. emails</th>
+                                    <th>Delivered</th>
+                                    <th>Opened</th>
+                                    <th>Open %</th>
+                                    <th>Converted</th>
+                                    <th><acronym title='Percentage of emails which resulted in a click-through to the website'></acronym>Conversion %</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($email in $page.children.ofType.groupEmails)
+                                <tr class="emailStatus$!{email.status}" data-jobid="$email.id" data-jobhref="$email.href">
+                                    <td class="icon" title="$!email.status">
+                                        #if($email.status == "Draft" )
+                                        <i class="fa fa-edit text-muted"></i>
+                                        #elseif($email.status == "Preparing" )
+                                        <i class="fa fa-refresh text-warning"></i>
+                                        #elseif($email.status == "Running" )
+                                        <i class="fa fa-circle-o-notch text-warning"></i>
+                                        #elseif($email.status == "Completed" )
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        #elseif($email.status == "Cancelled" )
+                                        <i class="fa fa-times text-danger"></i>
+                                        #else
+                                        $email.status
+                                        #end
+                                    </td>
+                                    <td>$formatter.formatDate($email.statusDate)</td>
+                                    <td>$formatter.htmlEncode($email.title)</td>
+                                    <td>
+                                        <span class="groupEmail-totalToSend">$email.numItems</span>
+                                    </td>
+                                    <td>
+                                        <span class="groupEmail-successful">$email.numDelivered</span>
+                                    </td>
+                                    <td>
+                                        <span class="groupEmail-opened">$email.numOpened</span>
+                                    </td>
+                                    <td>
+                                        <span class="groupEmail-openRate">$email.openRate</span>
+                                    </td>
+                                    <td>
+                                        <span class="groupEmail-converted">$email.numConverted</span>
+                                    </td>
+                                    <td>
+                                        <span class="groupEmail-conversionRate">$email.conversionRate</span>
+                                    </td>
+                                    <td class="action" style="">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="$email.name" class="btn btn-sm btn-info btn-sm">
+                                                <i class="fa fa-edit"></i> 
+                                            </a>
+                                            <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                #if($email.status == "Draft" )
+                                                <li><a href="$email.name" class="btn-edit-email" title="Edit"><i class="fa fa-edit"></i> Edit</a></li>
+                                                #else
+                                                <li><a href="$email.name" class="btn-view-email" title="Edit"><i class="clip-eye"></i> View</a></li>
+                                                #end
+                                                <li><a href="$email.name" class="btn-dup-email" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
+                                                <li><a href="$email.name" class="btn-dup-temp-email" title="Create Template"><i class="fa fa-wpforms"></i> Create Template</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="templates">
+                    <p class="clearfix">
+                        <a class="btn btn-sm btn-success btn-add-template" data-toggle="modal" href="#modal-add-template"><i class="fa fa-plus"></i> Create new template</a>
+                    </p>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="email-template-table">
+                            <colgroup>
+                                <col />
+                                <col style="width: 100px" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="action"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                #foreach($email in $page.children.ofType.emailTemplate)
+                                <tr data-jobid="$email.id" data-jobhref="$email.href">
+                                    <td>$formatter.htmlEncode($email.title)</td>
+                                    <td class="action">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="$email.name" class="btn btn-sm btn-info btn-sm">
+                                                <i class="fa fa-edit"></i> 
+                                            </a>
+                                            <button class="btn btn-sm btn-info btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li><a href="$email.name" class="btn-view-email" title="Edit"><i class="clip-eye"></i> View</a></li>
+                                                <li><a href="$email.name" class="btn-dup-email" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
+                                                <li class="divider"></li>
+                                                <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                #end
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
         </div>
 
         <div id="modal-add-email" class="modal fade" aria-hidden="true" tabindex="-1">
@@ -119,6 +171,44 @@
                                 <label class="col-md-3 control-label" for="name">Enter email name</label>
                                 <div class="col-md-8">
                                     <input type="text" name="name" id="name" value="" placeholder="A name for the email job" class="required simpleChars form-control" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="templateId">Template</label>
+                                <div class="col-md-8">
+                                    <select name="templateId" class="form-control">
+                                        $formatter.option("", "[ No Template selected ]", null)
+                                        #foreach($email in $page.children.ofType.emailTemplate)
+                                        $formatter.option($email.name, $formatter.htmlEncode($email.title), null)
+                                        #end
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-add-template" class="modal fade" aria-hidden="true" tabindex="-1">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                        <h4 class="modal-title">Create template</h4>
+                    </div>
+                    <form method="POST" action="." class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-message alert alert-danger" style="display: none;"></div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="templateName">Enter template name</label>
+                                <div class="col-md-8">
+                                    <input type="text" name="templateName" id="templateName" value="" placeholder="A name for the email template" class="required simpleChars form-control" />
                                 </div>
                             </div>
                         </div>
