@@ -143,8 +143,11 @@ function loadTableClaims(start, maxRows, rowsResult, rootFolder){
         var hit = resp.hits.hits[i];
         rowsResult.addCell(formatter.formatDate(formatter.toDate(hit.source.soldDate)));
         var user = applications.userApp.findUserResource(hit.source.soldBy);
-
-        rowsResult.addCell(user.firstName + " " + user.surName);
+        if (user){
+            rowsResult.addCell(user.firstName + " " + user.surName);
+        } else {
+            rowsResult.addCell("-");
+        }
         rowsResult.addCell(hit.source.productSku);
         rowsResult.addCell(hit.source.amount);
         var statusArr = {'0': 'New', '1': 'Approved', '-1':'Rejected'};
