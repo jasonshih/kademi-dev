@@ -1,5 +1,5 @@
-controllerMappings.addQuery("/APP-INF/queries/claimsOverTime.query.json", ["salesDataClaimer"], ["ReportsViewer"]);
-controllerMappings.addQuery("/APP-INF/queries/claimsTable.query.json", ["salesDataClaimer"], ["ReportsViewer"]);
+controllerMappings.addQuery("/APP-INF/queries/claimsOverTime.query.json", ["kongo-salesDataClaimer"], ["ReportsViewer"]);
+controllerMappings.addQuery("/APP-INF/queries/claimsTable.query.json", ["kongo-salesDataClaimer"], ["ReportsViewer"]);
 
 controllerMappings.addComponent("salesDataClaimer/components", "claimsList", "html", "Displays list of claims in table format", "Sales Data Claimer");
 controllerMappings.addComponent("salesDataClaimer/components", "claimsMade", "html", "Displays a number of claims made", "Sales Data Claimer");
