@@ -7,18 +7,19 @@
                 <input type="text" class="form-control search-module" placeholder="Search in module">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button">
-                            <span class="glyphicon glyphicon-search"></span>
-                            Search
+                            <span class="fa fa-search"></span> Search
                         </button>
                     </span>
             </div><!-- /input-group -->
         </div>
-        <div class="list-group pages">
-            #foreach($p in $folder.modulePages)
-                <a class="list-group-item modPage" href="${formatter.percentEncode(${p.name})}" title="$formatter.htmlAttEncode($p.title)">
-                    <i class="fa fa-fw fa-circle-o"></i><i class="fa fa-fw fa-check-circle text-success"></i> <span>$foreach.count. $p.title</span>
-                </a>
-            #end
+        <div class="panel-body pages-wrapper">
+            <div class="list-group pages">
+                #foreach($p in $folder.modulePages)
+                    <a class="list-group-item modPage" href="${formatter.percentEncode(${p.name})}" title="$formatter.htmlAttEncode($p.title)">
+                        <i class="fa fa-fw fa-circle-o"></i><i class="fa fa-fw fa-check-circle text-success"></i> <span>$foreach.count. $p.title</span>
+                    </a>
+                #end
+            </div>
         </div>
     </div>
 #end
