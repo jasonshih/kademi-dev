@@ -23,7 +23,11 @@
         {
             "appId": "datetimepicker-lib",
             "branch": "4.17.37"
-        }
+        },
+        {
+            "appId": "nvd3",
+            "branch": "1.8.3"
+        },
     ],
     "dependencies": [
         {
