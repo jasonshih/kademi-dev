@@ -1,4 +1,6 @@
 controllerMappings.addQuery("/APP-INF/queries/registrationsOverTime.query.json", ["signuplog"], ["ReportsViewer"]);
+controllerMappings.addQuery("/APP-INF/queries/membersTable.query.json", ["profile"], ["ReportsViewer"]);
+controllerMappings.addQuery("/APP-INF/queries/membersTableAll.query.json", ["profile"], ["ReportsViewer"]);
 
 controllerMappings.addComponent("user/components", "recentUserRegistrations", "html", "Display recent registrations", "User App component");
 controllerMappings.addComponent("user/components", "recentActiveUsers", "html", "Display recent active users", "User App component");
