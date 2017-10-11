@@ -152,13 +152,23 @@
                                         <div class="col-sm-10">
                                             <select name="categoryName" class="category form-control input-sm">
                                                 <option id="">[Any category]</option>
-                                                #foreach($cat in $page.categories)
-                                                $formatter.option($cat.name, $cat.title, $request.params.categoryName)
-                                                #end
+                                                #genCategories($page.categoryBeans)
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+
+                                #macro(genCategories $categories $i)
+                                #if(!$i) #set($i = 0) #end
+                                #foreach($cat in $categories)
+                                $formatter.option($cat.name, "$formatter.padWith('-', '', $i) $cat.title", $request.params.categoryName)
+
+                                #if($cat.childCategories)
+                                #set($a = $i + 1)
+                                #genCategories($cat.childCategories, $a)
+                                #end
+                                #end
+                                #end
 
                                 <div class="col-md-6">
                                     <div class="pull-right">
@@ -197,10 +207,10 @@
                                     </colgroup>
                                     <thead>
                                         <tr>
-                                            <th>Code</th>
-                                            <th>Title</th>
-                                            <th>Margin</th>
-                                            <th>Pts Multiplier</th>
+                                            <th><a class="sort-field" id="p.name" href="#">Code</a></th>
+                                            <th><a class="sort-field" id="p.title" href="#">Title</a></th>
+                                            <th><a class="sort-field" id="p.baseCost" href="#">Base Cost</a></th>
+                                            <th><a class="sort-field" id="createdDate" href="#">Added Date</a></th>
                                             <th></th>
                                             <th class="text-center">
                                                 <input class="chk-all" type="checkbox" />
@@ -219,8 +229,8 @@
                                         <tr class='in-reward-$p.inReward' id='product-$p.productId'>
                                             <td><a href='/products/$p.productId'>$p.name</a></td>
                                             <td>$formatter.htmlEncode($p.title)</td>
-                                            <td>$!p.margin</td>
-                                            <td>$!p.multiplier</td>
+                                            <td>$!p.baseCost</td>
+                                            <td>$!formatter.formatDateTime($p.createdDate, $rootFolder.organisation.timezone)</td>
                                             <td></td>
                                             <td class="text-center">
                                                 <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
@@ -275,6 +285,7 @@
                 initSearchProduct();
                 initRemoveProducts();
                 initEdit();
+                initSortable();
             });
 
             function initEdit() {
@@ -338,6 +349,57 @@
                     });
 
                 });
+            }
+
+            function initSortable() {
+                $('body').on('click', '.sort-field', function (e) {
+                    e.preventDefault();
+                    var a = $(e.target);
+                    var uri = URI(window.location);
+                    var field = a.attr('id');
+
+                    var dir = 'asc';
+                    if (field == getSearchValue(window.location.search, 'sortfield')
+                            && 'asc' == getSearchValue(window.location.search, 'sortdir')) {
+                        dir = 'desc';
+                    }
+                    uri.setSearch('sortfield', field);
+                    uri.setSearch('sortdir', dir);
+
+                    $.ajax({
+                        type: 'GET',
+                        url: uri.toString(),
+                        success: function (data) {
+                            flog('success', data);
+                            window.history.pushState('', document.title, uri.toString());
+
+                            var newDom = $(data);
+
+                            var $tableContent = newDom.find('#searchResults');
+                            $('#searchResults').replaceWith($tableContent);
+                        },
+                        error: function (resp) {
+                            Msg.error('err');
+                        }
+                    });
+
+                });
+            }
+
+            function getSearchValue(search, key) {
+                if (search.charAt(0) == '?') {
+                    search = search.substr(1);
+                }
+                parts = search.split('&');
+                if (parts) {
+                    for (var i = 0; i < parts.length; i++) {
+                        entry = parts[i].split('=');
+                        if (entry && key == entry[0]) {
+                            return entry[1];
+                        }
+                    }
+                }
+                return '';
             }
 
             function loadProductInReward(href, productInRewardModal) {
