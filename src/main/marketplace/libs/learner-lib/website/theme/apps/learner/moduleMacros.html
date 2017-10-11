@@ -1,7 +1,5 @@
 <html>
-    <head>
-        <title>Module Macros</title>
-    </head>
+    <head></head>
     <body>
         #macro (renderModuleButton $mod $isGrid)
             #set ($tagName = "a")
@@ -52,7 +50,7 @@
                 #set ($modProgress = 80)
             #end
 
-            <div class="module-progress" style="width: ${modProgress}%;"></div>
+            <div class="module-progress" style="width: 0%;" data-target-perc="${modProgress}"></div>
         #end
         
         #macro (renderModuleInfos $mod $showTime $showCpd $showPoint $isExample)
@@ -113,7 +111,7 @@
                 #renderModuleProgress($mod)
                 <div class="module-body">
                     <h4>$mod.title</h4>
-                    <p>$!mod.brief</p>
+                    <p class="module-description">$!mod.brief</p>
                     <div class="clearfix">
                         <div class="pull-right">
                             #renderModuleButton($mod)
@@ -132,7 +130,7 @@
                 #renderModuleProgress($mod true)
                 <div class="module-body">
                     <h4>Module #${count}</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam aperiam aliquam fugit laboriosam cum atque</p>
+                    <p class="module-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veniam aperiam aliquam fugit laboriosam cum atque</p>
                     <div class="clearfix">
                         <div class="pull-right">
                             #renderModuleButton($mod)

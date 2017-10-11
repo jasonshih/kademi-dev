@@ -15,8 +15,8 @@
 
     #if("$!curProgram.title" != "" && "$!curCourse.title" != "")
     <div class="my-learning-container my-learning-modules" data-course-href="$!curCourse.href">
-        <div class="btn-group program-course-module-mix">
-            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+        <div class="btn-group course-picker-wrapper">
+            <button class="btn btn-primary btn-lg course-picker-toggler dropdown-toggle">
                 <span class="current-module">$curProgram.title / $curCourse.title modules </span>
                 <span class="caret"></span>
             </button>
@@ -64,8 +64,8 @@
 
 #macro(fakeUI)
     <div class="my-learning-container">
-        <div class="btn-group program-course-module-mix" style="z-index: 2">
-            <button class="btn btn-primary btn-lg btn-show-mix dropdown-toggle">
+        <div class="btn-group course-picker-wrapper" style="z-index: 2">
+            <button class="btn btn-primary btn-lg course-picker-toggler dropdown-toggle">
                 <span class="current-module">No Modules</span>
                 <span class="caret"></span>
             </button>
