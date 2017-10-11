@@ -229,13 +229,14 @@ function addMetaTags(metasData) {
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
     var id = (new Date()).getTime();
+    var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
         '<div class="input-group meta">' +
-        '    <input type="text" class="form-control input-sm required" required="required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (name === 'keywords' || name === 'description' ? 'readonly="readonly"' : '') + ' />' +
-        '    <input type="text" class="form-control input-sm" required="required" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
+        '    <input type="text" class="form-control input-sm required" name="metaName.' + id + '" placeholder="Meta name" value="' + name + '" ' + (isSeoMeta ? 'readonly="readonly"' : '') + ' />' +
+        '    <input type="text" class="form-control input-sm ' + (isSeoMeta ? '' : 'required') + '" name="metaContent.' + id + '" placeholder="Meta content" value="' + content + '" />' +
         '    <span class="input-group-btn">' +
-        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (name === 'keywords' || name === 'description' ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
+        '        <button class="btn btn-sm btn-danger btn-remove-meta" type="button" ' + (isSeoMeta ? 'disabled="disabled"' : '') + '><i class="fa fa-remove"></i></button>' +
         '    </span>' +
         '</div>'
     );
