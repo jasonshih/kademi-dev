@@ -1,6 +1,6 @@
 (function ($, window) {
     $(function () {
-        var modulesList = $('[data-type="component-modulesList"]');
+        var modulesList = $('.modules-list');
         if (modulesList.length > 0) {
             adjustHeightModuleGrid();
             initScrollProgress();
@@ -57,7 +57,7 @@
     window.initModuleListItem = function () {
         flog('initModuleListItem');
         
-        $('[data-type="component-modulesList"]').each(function () {
+        $('.modules-list').each(function () {
             var modulesList = $(this);
             var isHero = modulesList.closest('.dashboard-modules-page').length > 0;
             
