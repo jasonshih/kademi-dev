@@ -176,6 +176,8 @@ function initCloseDealModal() {
                     $('#all_contacts').html('');
                     initLeadsDashLoading();
                 }
+                // anh
+                setTimeout(reloadDashboard, 400);
                 closeDealModal.modal('hide');
             }
         });
@@ -757,6 +759,7 @@ function initNewTaskForm() {
             }
 
             Msg.info('Created task');
+            reloadTasks()
             modal.modal("hide");
         }
     });
@@ -1675,6 +1678,14 @@ function initSearchFilter() {
         } else {
             suggestionsWrapper.addClass('hide');
             backdrop.addClass('hide');
+        }
+    });
+}
+
+function reloadDashboard() {
+    $('#teamStats').reloadFragment({
+        whenComplete: function () {
+            $(document).trigger('onLeadDashUpdate');
         }
     });
 }

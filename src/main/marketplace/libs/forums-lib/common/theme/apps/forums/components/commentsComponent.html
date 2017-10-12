@@ -1,57 +1,57 @@
 #if ($page)
-<div class="kcommentArea edifyViewMode">
-    <div class="hideBtn"><a href="#" class="">Hide comments</a></div>
-    <div class="kcommentsWrap">
-        <div class="comments-stream">
-            <div class="text-center" style="padding: 15px 0">
-                <img src="/static/common/ajax-loader.gif" />
+    <div class="kcomments-area">
+        <div class="text-center small"><a href="#" class="btnShowHideComment">Hide comments</a></div>
+        <div class="kcomments-wrapper">
+            <div class="kcomments-stream">
+                <div class="text-center panel-body">
+                    <img src="/static/common/ajax-loader.gif" />
+                </div>
             </div>
+            
+            <form action="#" method="post" class="kcomment-form">
+                <div class="form-group">
+                    <p><textarea class="form-control kcomment-textarea" rows="1" placeholder="Ask a question, or offer an answer"></textarea></p>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-success">Post</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        
-        <form action="#" method="post">
-            <div class="form-group">
-                <p><textarea class="form-control commentField" rows="1" placeholder="Ask a question, or offer an answer"></textarea></p>
-                <div class="text-right">
-                    <button type="submit" class="btn btn-success">Post</button>
-                </div>
-            </div>
-        </form>
     </div>
-</div>
 #else
-<div class="kcommentArea edifyViewMode">
-    <div class="hideBtn"><a href="#" class="">Hide comments</a></div>
-    <div class="kcommentsWrap" style="display: block;">
-        <div class="comments-stream">
-            <div class="forumReply comment" id="c1">
-                <div class="comment-user">
-                    <a class="profilePic comment-user-pic" href="#"><img src="/static/images/avatar_holder.png" alt=""></a>
-                    <a class="user comment-user-name" href="#">admin</a>
-                </div>
-                <div class="comment-detail">
-                    <p class="comment-content cmt">Example Comment</p>
-                    <a class="comment-reply small" href="#">Reply</a>
-                    <abbr title="2017-05-16T02:54:00.585Z" class="comment-time auxText small text-muted">16/5/2017 9:54</abbr>
-                    <div class="comment-replies-wrapper" style="display: none;">
-                        <div class="comment-replies"></div>
-                        <textarea class="form-control input-sm comment-reply-text" rows="1" data-parentid="c1" placeholder="Write a reply..."></textarea>
-                        <div class="text-right">
-                            <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>
+    <div class="kcomments-area">
+        <div class="text-center small"><a href="#" class="btnShowHideComment">Hide comments</a></div>
+        <div class="kcomments-wrapper" style="display: block;">
+            <div class="kcomments-stream">
+                <div class="comment" id="c1">
+                    <div class="comment-user">
+                        <a class="comment-user-pic" href="#"><img src="/static/images/avatar_holder.png" alt=""></a>
+                    </div>
+                    <div class="comment-detail">
+                        <p class="comment-content cmt">
+                        <a class="user comment-user-name" href="#">admin</a> Example Comment</p>
+                        <a class="comment-reply small" href="#">Reply</a>
+                        <abbr title="2017-05-16T02:54:00.585Z" class="comment-time auxText small text-muted">16/5/2017 9:54</abbr>
+                        <div class="comment-replies-wrapper" style="display: none;">
+                            <div class="comment-replies"></div>
+                            <textarea class="form-control input-sm comment-reply-text" rows="1" data-parentid="c1" placeholder="Write a reply..."></textarea>
+                            <div class="text-right">
+                                <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+            
             </div>
-        
-        </div>
-        
-        <form action="#" method="post">
-            <div class="form-group">
-                <p><textarea class="form-control commentField" rows="1" placeholder="Ask a question, or offer an answer"></textarea></p>
-                <div class="text-right">
-                    <button type="submit" class="btn btn-success">Post</button>
+            
+            <form action="#" method="post" class="kcomment-form">
+                <div class="form-group">
+                    <p><textarea class="form-control kcomment-textarea" rows="1" placeholder="Ask a question, or offer an answer"></textarea></p>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-success">Post</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 #end

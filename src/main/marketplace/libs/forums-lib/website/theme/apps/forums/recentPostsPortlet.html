@@ -1,23 +1,19 @@
-<div class="panel panel-default">
+<div class="panel panel-default panel-recent-posts">
     <div class="panel-heading">Community comments</div>
-    <div class="panel-body stream-container">
-        <div class="stream">
-            <ul class="barList stream-items">
-                <li>
-                    <em>Loading comments..</em>
-                </li>                                                                     
-            </ul>            
+    <div class="panel-body kcomments-stream">
+        <div class="text-center panel-body">
+            <img src="/static/common/ajax-loader.gif" />
         </div>
     </div>
 </div>
 
 #set($basePath = "/")
 #if( $parentOrg )
-#set($basePath = $parentOrg.href)
+    #set($basePath = $parentOrg.href)
 #end
 
 <script type="text/javascript">
-    pageInitFunctions.push(function() {
+    pageInitFunctions.push(function () {
         initPosts("$basePath");
     });
 </script>

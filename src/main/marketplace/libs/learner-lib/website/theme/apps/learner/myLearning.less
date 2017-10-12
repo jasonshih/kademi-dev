@@ -74,6 +74,7 @@
         bottom: 25px;
         left: 25px;
         width: 160px;
+        z-index: 1;
         
         > * {
             width: 100%;
@@ -145,7 +146,7 @@
         
         .module-body {
             margin-left: 0;
-            padding: 20px 0;
+            padding: 15px;
         }
     }
 }
@@ -168,19 +169,11 @@
         left: 0;
         bottom: 0;
         margin: 0;
+        z-index: 3;
         
         .module-progress {
             top: 0;
             bottom: auto;
-        }
-    }
-    
-    .module-body.module-body-transparent {
-        background: transparent;
-        
-        .module-progress {
-            top: auto;
-            bottom: 0;
         }
     }
     
@@ -196,6 +189,55 @@
         top: auto;
         bottom: 0;
     }
+    
+    &:before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+        background: url('/theme/apps/learner/bg_module_overlay.png') repeat-x 0 100%;
+        content: '';
+        display: block;
+    }
+    
+    &.module-full-height-thumb {
+        .module-body {
+            background: transparent;
+            
+            .module-progress {
+                top: auto;
+                bottom: 0;
+            }
+        }
+    }
+    
+    @media (max-width: 767px) {
+        height: auto !important;
+        
+        &:before {
+            display: none;
+        }
+        
+        .module-thumb {
+            position: static;
+            
+            > span {
+                display: none;
+            }
+            
+            > img {
+                padding: 0;
+            }
+        }
+        
+        .module-body {
+            position: static;
+            padding: 15px;
+            background: @brand-primary !important;
+        }
+    }
 }
 
 .module-grid-wrapper {
@@ -203,4 +245,10 @@
     .clearfix;
     color: #fff !important;
     text-decoration: none !important;
+}
+
+.panel-body.pages-wrapper {
+    .pages {
+        margin-bottom: 0;
+    }
 }

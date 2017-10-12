@@ -433,10 +433,10 @@
             pages.first().closest('li').addClass('limit-end');
             pages.last().closest('li').addClass('limit-end');
             pages.each(function (i) {
-                var modeLink = $(this);
+                var modLink = $(this);
                 var away = Math.abs(currentPageIndex - i);
                 var limited = away > 10 ? 10 : away;
-                var li = modeLink.closest('li');
+                var li = modLink.closest('li');
                 $.each(li.classes(), function (i, n) {
                     if (n.startsWith('away')) {
                         li.removeClass(n);
@@ -446,7 +446,11 @@
                 
                 var enabled = i <= progressPageIndex || i == currentPageIndex || (i == (currentPageIndex + 1) && isInputsDone && !hasHidden);
                 enabled = enabled || !self.isCompletable; // all links enabled for view only (non completable) enrolments
-                self.setLinkEnabled(modeLink, enabled);
+                self.setLinkEnabled(modLink, enabled);
+                
+                var completed = i <= progressPageIndex || i == currentPageIndex;
+                completed = completed || !self.isCompletable; // all links completed for view only (non completable) enrolments
+                self.setLinkCompleted(modLink, completed);
             });
             
             var nextEnabled;
@@ -577,6 +581,16 @@
             } else {
                 a.addClass('disabled');
                 a.removeClass('enabled');
+            }
+        },
+        
+        setLinkCompleted: function (a, isCompleted) {
+            flog('[jquery.module] setLinkCompleted', a, isCompleted);
+            
+            if (isCompleted) {
+                a.addClass('completed');
+            } else {
+                a.removeClass('completed');
             }
         },
         

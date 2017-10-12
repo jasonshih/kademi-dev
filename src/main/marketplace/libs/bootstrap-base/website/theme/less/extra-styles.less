@@ -100,86 +100,22 @@ acronym[title] {
     color: @text-color;
 }
 
-// ==================================================
-//
-// ==================================================
-.stream-items {
-    list-style-type: none;
-    padding: 0;
-    li {
-        margin-bottom: 15px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid @input-border;
-    }
-    p {
-        font-size: 85%;
-        margin-left: 60px;
-        margin-top: 5px;
-        margin-bottom: 0;
-    }
-    abbr {
-        margin-left: 60px;
-        border: medium none;
-        font-size: 80%;
-    }
-    .profilePic {
-        float: left;
-        margin-right: 8px;
-        height: 52px;
-        width: 52px;
-        img {
-            height: 100%;
-            width: 100%;
-        }
-        
-    }
-}
-
-.hideBtn {
-    margin: 0 auto;
-    text-align: center;
-    width: 150px;
-    font-size: 85%;
-}
-
-.commentContainer {
-    textarea {
-        width: 460px;
-        resize: none;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        min-height: 30px;
-    }
-    .commentControls {
-        display: none;
-    }
-    button {
-        float: right;
-    }
-}
-
-// Provides a convenient way to hide comments, just add the hideComments class to the body
-.hideComments .commentArea {
-    display: none;
-}
-
-.centerOuter {
-    float: right;
-    left: -50%;
-    text-align: left;
-    position: relative;
-    
-    .centerInner {
-        left: 50%;
-        position: relative;
-    }
-}
-
 .contentForm {
     min-height: 300px;
 }
 
+.bs-avatar {
+    margin: 0px 15px 15px 0;
+    
+    img {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+// ==================================================
+// Tile
+// ==================================================
 .tile {
     padding: 0;
     overflow: hidden;
@@ -191,9 +127,11 @@ acronym[title] {
     
     .tile-content {
         margin: 15px;
+        
         p {
             font-size: 85%;
         }
+        
         > div {
             position: absolute;
             bottom: 15px;
@@ -208,21 +146,15 @@ acronym[title] {
     height: 150px;
     background-size: 100% auto;
     background-position: center;
+    
     a {
         display: block;
         height: 100%;
         width: 100%;
+        
         span {
             visibility: hidden;
         }
-    }
-}
-
-.bs-avatar {
-    margin: 0px 15px 15px 0;
-    img {
-        width: 52px;
-        height: 52px;
     }
 }
 
