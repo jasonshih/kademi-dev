@@ -152,7 +152,9 @@
                             <th>User ID</th>
                             <th>First name</th>
                             <th>Surname</th>
+                            #if( $page.rulesGroup == false)
                             <th>Organisation</th>
+                            #end
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Password set</th>
@@ -179,7 +181,9 @@
                             </td>
                             <td>$!gm.member.firstName</td>
                             <td>$!gm.member.surName</td>
+                            #if( $page.rulesGroup == false)
                             <td>$!gm.orgTitle</td>
+                            #end
                             <td>$!gm.member.phone</td>
                             <td>$!gm.member.email</td>
                             <td>
