@@ -35,7 +35,7 @@
         }
         
         var userPublicLink = '/users/' +  user.userName+ '/public';
-        var userPhoto = user.photoHash || '/templates/apps/user/profile.png';
+        var userPhoto = user.photoHash ? '/_hashes/files/' + user.photoHash : '/templates/apps/user/profile.png';
         var formattedDate = date.toISOString();
         
         $('.panel-recent-posts .kcomments-stream').append(
