@@ -121,7 +121,7 @@
                                 #foreach($p in $products )
                                 <tr class='in-reward-$p.inReward' id='product-$p.productId'>
                                     <td><a href='/products/$p.productId'>$p.name</a></td>
-                                    <td>$formatter.htmlEncode($p.title)</td>
+                                    <td>$!formatter.htmlEncode($p.title)</td>
                                     <td>$!p.baseCost</td>
                                     <td>$!formatter.formatDateTime($p.createdDate, $rootFolder.organisation.timezone)</td>
                                     <td></td>
