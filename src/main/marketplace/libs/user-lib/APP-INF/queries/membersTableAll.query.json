@@ -1,0 +1,14 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "terms": {
+                        "parentOrgs": "$selectedOrgs"
+                    }
+                }
+            ]
+        }
+    },
+    "size": 10000
+}

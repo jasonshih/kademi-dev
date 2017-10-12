@@ -61,12 +61,43 @@
                     //        //self.initDateAgg();
                     //    });
                     //});
+
+                    form.find('.table-columns').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        var arr = [];
+                        form.find('.table-columns').each(function () {
+                            if (this.checked){
+                                arr.push(this.value);
+                            }
+                        });
+
+                        component.attr('data-columns', arr.join(','));
+                        keditor.initDynamicContent(dynamicElement);
+                    });
                     
                     form.find('.txt-title').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
 
                         component.attr('data-title', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('.includeInactiveUsers').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-inactive-users', this.checked);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find('.points-bucket').on('change', function () {
+                        var selectedQuery = this.value;
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-points-bucket', selectedQuery);
+                        component.attr('data-points-bucket-title', $(this).find(':selected').text());
                         keditor.initDynamicContent(dynamicElement);
                     });
                 }
@@ -80,9 +111,17 @@
             form.find('.select-items-per-page').val(dataAttributes['data-items-per-page']);
             form.find('.query-height').val(dataAttributes['data-height']);
             form.find('.txt-title').val(dataAttributes['data-title']);
+            form.find('.points-bucket').val(dataAttributes['data-points-bucket']);
             form.find('.show-headers').prop("checked", toBool(dataAttributes['data-headers']));
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
+            form.find('.includeInactiveUsers').prop("checked", toBool(dataAttributes['data-inactive-users']));
             form.find('.select-query option').addClass('hide');
+
+            form.find('.table-columns').each(function () {
+                if (dataAttributes['data-columns'].indexOf(this.value) != -1){
+                    this.checked = true;
+                }
+            });
         }
     };
 

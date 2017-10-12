@@ -1,0 +1,22 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                    "range": {
+                        "lastVisit": {
+                            "gte": "$startDate",
+                            "lte": "$endDate"
+                        }
+                    }
+                },
+                {
+                    "terms": {
+                        "parentOrgs": "$selectedOrgs"
+                    }
+                }
+            ]
+        }
+    },
+    "size": 10000
+}

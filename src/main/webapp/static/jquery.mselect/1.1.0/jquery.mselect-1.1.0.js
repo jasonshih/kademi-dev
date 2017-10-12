@@ -335,8 +335,8 @@
         return (
             '<div class="milton-file-select-container">' +
             '    <div class="row">' +
-            '        <div class="col-xs-4"><div class="milton-tree-wrapper"></div></div>' +
-            '        <div class="col-xs-8">' +
+            '        <div class="col-xs-3"><div class="milton-tree-wrapper"></div></div>' +
+            '        <div class="col-xs-9">' +
             '            <div class="milton-file-preview-wrapper">' +
             '                <div class="milton-btn-upload-file"></div>' + extraElement +
             '                <div class="milton-file-progress progress" style="display: none;">' +
