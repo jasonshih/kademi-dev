@@ -240,7 +240,7 @@
         });
 
         editor.on('submitComplete', function (e, json, data) {
-            doSearch();
+            // doSearch();
         });
 
         dataTable.draw();
