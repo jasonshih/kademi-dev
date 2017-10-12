@@ -301,7 +301,7 @@
 
 
                 var productInRewardModal = $("#editProductInRewardModal");
-                $("#table-products").on("click", ".product-inreward-details", function (e) {
+                $("body").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
                     var target = $(e.target).closest("a");
                     loadProductInReward(target.prop("href"), productInRewardModal);
