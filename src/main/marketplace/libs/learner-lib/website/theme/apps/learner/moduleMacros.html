@@ -31,6 +31,7 @@
                     #set ($modThumb = "${mod.thumb}")
                 #end
                 #if ($isGrid == true)
+                    <img src="$modThumb" class="img-responsive visible-xs" />
                     <span style="background-image: url('$modThumb')"></span>
                 #else
                     <a href="$mod.href" style="background-image: url('$modThumb')"></a>
@@ -145,10 +146,10 @@
         
         #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
             <a href="$mod.href" class="module-grid-wrapper">
-                <div class="module module-grid" style="height: ${gridItemHeight}px;">
+                <div class="module module-grid #if ($fullHeightThumb == true) module-full-height-thumb #end" style="height: ${gridItemHeight}px;">
                     #renderModuleThumb($mod true)
                     
-                    <div class="module-body #if ($fullHeightThumb == true) module-body-transparent #end">
+                    <div class="module-body">
                         #renderModuleProgress($mod)
                         <h4>$mod.title</h4>
                         <div class="clearfix">
@@ -168,10 +169,10 @@
         
         #macro (renderModuleGridItemExample $count $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
             <a href="$mod.href" class="module-grid-wrapper">
-                <div class="module module-grid" style="height: ${gridItemHeight}px;">
+                <div class="module module-grid #if ($fullHeightThumb == true) module-full-height-thumb #end" style="height: ${gridItemHeight}px;">
                     #renderModuleThumb($mod true)
                     
-                    <div class="module-body #if ($fullHeightThumb == true) module-body-transparent #end">
+                    <div class="module-body">
                         #renderModuleProgress($mod true)
                         <h4>Module #${count}</h4>
                         <div class="clearfix">
