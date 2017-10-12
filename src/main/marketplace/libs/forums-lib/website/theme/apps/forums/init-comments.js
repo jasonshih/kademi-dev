@@ -1,6 +1,4 @@
-// init-comments.js
-(function($) {
-
+(function ($) {
     /**
      *
      *  Each page should decide what url to pass as the pageUrl, as this can be used
@@ -10,68 +8,65 @@
      *  Eg initComments(window.location.pathname);
      */
     function initComments(pageUrl) {
-        var commentArea = $('.kcommentArea');
-        var comments = commentArea.find(".kcommentsWrap");
-        flog("initComments", pageUrl);
-        commentArea.find(".hideBtn").click(function () {
-            var oldCommentsHidden = commentArea.find(".kcommentsWrap:visible").length == 0;
-            flog("store new comments hidden", oldCommentsHidden);
-            $.cookie("commentsHidden", !oldCommentsHidden, {
-                path: "/"
-            });
-            comments.toggle(100, function () {
-                if (!oldCommentsHidden) {
-                    commentArea.find(".hideBtn a").text("Show comments");
-                    commentArea.find(".hideBtn a").addClass("ishidden");
+        flog('initComments', pageUrl);
+        
+        var commentArea = $('.kcomments-area');
+        var comments = commentArea.find('.kcomments-wrapper');
+        
+        if (comments.length > 0) {
+            var btnShowHideComment = commentArea.find('.btnShowHideComment');
+            btnShowHideComment.click(function (e) {
+                e.preventDefault();
+                
+                var isVisible = commentArea.find('.kcomments-wrapper').is(':visible');
+                flog('store new comments hidden', isVisible);
+                $.cookie('commentsHidden', !isVisible, {
+                    path: '/'
+                });
+                
+                if (isVisible) {
+                    comments.fhide();
+                    btnShowHideComment.text('Show comments').addClass('is-hidden');
                 } else {
-                    commentArea.find(".hideBtn a").text("Hide comments");
-                    commentArea.find(".hideBtn a").removeClass("ishidden");
+                    comments.fshow();
+                    btnShowHideComment.text('Hide comments').removeClass('is-hidden');
                 }
             });
-            return false;
-        });
-        var commentsHidden = jQuery.cookie("commentsHidden", {
-            path: "/"
-        });
-        flog("comments hidden", commentsHidden);
-        if (commentsHidden === "true") {
-            comments.hide();
-            commentArea.find(".hideBtn a").text("Show comments");
-            commentArea.find(".hideBtn a").addClass("ishidden");
-        }
-
-        $("body").on("click focus", ".commentContainer textarea", function (e) {
-            $(e.target).closest("div").find(".commentControls").show();
-        });
-        $('.commentContainer textarea').autogrow()
-
-        var currentUser = {
-            name: userName,
-            href: userUrl,
-            photoHref: "/profile/pic"
-        };
-
-        // This is for deferred logins, ie someone logs in after going to a page with comments
-        $('body').on('userLoggedIn', function (event, userUrl, userName) {
-            currentUser.name = userName;
-            currentUser.href = userUrl;
-        });
-
-
-        if (comments.length > 0) {
+            
+            var commentsHidden = $.cookie('commentsHidden', {
+                path: '/'
+            });
+            
+            if (commentsHidden === 'true') {
+                comments.hide();
+                btnShowHideComment.text('Show comments').addClass('is-hidden');
+            }
+            
+            commentArea.find('textarea').autogrow();
+            
+            var currentUser = {
+                name: userName,
+                href: userUrl,
+                photoHref: '/profile/pic'
+            };
+            
+            // This is for deferred logins, ie someone logs in after going to a page with comments
+            $(document.body).on('userLoggedIn', function (event, userUrl, userName) {
+                currentUser.name = userName;
+                currentUser.href = userUrl;
+            });
+            
             comments.comments({
                 currentUser: currentUser,
                 pageUrl: pageUrl,
-                commentTextSelector: '.commentField'
+                commentTextSelector: '.kcomment-textarea'
             });
         }
     }
-
-    $(document).ready(function(){
+    
+    $(function () {
         initComments(window.location.pathname);
-        $('textarea.autoresize').autogrow();
     });
-
     
 })(jQuery);
 

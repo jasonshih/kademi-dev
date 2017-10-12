@@ -4,7 +4,7 @@
  * @namespace
  * @version forum-lib
  * @property {String} [pageUrl=window.location] The url of the resource to add comments to. Must end with a slash
- * @property {String} [streamSelector=.comments-stream] The selector of stream wrapper which wraps all comments
+ * @property {String} [streamSelector=.kcomments-stream] The selector of stream wrapper which wraps all comments
  * @property {String} [commentTextSelector=#postQuestion] The selector of textbox which contain the comment content
  * @property {Function} renderCommentFn The callback function to render the markup for a comment. Takes the following arguments commentData, config, container
  * @property {Function} clearContainerFn The callback function to clear the comments container. Takes no arguments
@@ -19,7 +19,7 @@
 (function ($) {
     var DEFAULT_COMMENTS_OPTIONS = {
         pageUrl: window.location,
-        streamSelector: '.comments-stream',
+        streamSelector: '.kcomments-stream',
         commentTextSelector: '#postQuestion',
         renderCommentFn: function (commentData, config, container) {
             flog('renderCommentFn', 'commentData=', commentData, 'container=', container);
@@ -39,7 +39,7 @@
                     commentStream = parentComment;
                     isReply = true;
                 }
-                flog('Append new comment block to: ', commentStream, "Selector: ", config.streamSelector);
+                flog('Append new comment block to: ', commentStream, 'Selector: ' + config.streamSelector);
                 
                 var commentString = '';
                 
@@ -50,14 +50,14 @@
                 
                 if (user !== null && typeof user !== 'undefined') {
                     var profilePic = profileImg(user);
-                    commentUserString += '<a class="profilePic comment-user-pic" href="' + user.href + '">' + profilePic + '</a>';
+                    commentUserString += '<a class="comment-user-pic" href="' + user.href + '">' + profilePic + '</a>';
                 
                     // Comment text
                     commentDetailString += '<p class="comment-content cmt">';
                     commentDetailString += '    <a class="user comment-user-name" href="' + user.href + '">' + user.name + '</a> ' + commentText
                     commentDetailString += '</p>';
                 } else {
-                    commentUserString += '<span class="comment-user-pic profilePic"><img src="/templates/apps/user/profile.png" alt="Anonymous" /></span>';
+                    commentUserString += '<span class="comment-user-pic"><img src="/templates/apps/user/profile.png" alt="Anonymous" /></span>';
                 
                     // Comment text
                     commentDetailString += '<p class="comment-content cmt">';
@@ -101,7 +101,7 @@
                 commentString += '</div>';
                 
                 // Append comment block to comment stream
-                var commentClass = 'forumReply comment';
+                var commentClass = 'comment';
                 if (isReply) {
                     commentClass = 'comment comment-sub col-md-offset-1';
                 }
