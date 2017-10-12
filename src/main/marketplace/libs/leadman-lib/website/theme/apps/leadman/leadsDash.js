@@ -35,18 +35,43 @@
         });
     }
 
+    function leadDashUpdate() {
+        flog("dotdotdot", $(".leadInner"));
+        $(".leadInner").dotdotdot({
+            //	configuration goes here
+        });
+        var primaryColor = $('.dashboardPieColor').first().css('background-color');
+        var pieOptions = {
+            animate: {
+                duration: 700,
+                enabled: true
+            },
+            barColor: primaryColor,
+            scaleColor: false,
+            lineCap: 'circle'
+        };
 
-    $(document).ready(function(){
+        $('.easypie').easyPieChart(pieOptions);
+
+        initDonuts();
+    }
+
+    function doLeadSearch(q) {
+        var href = window.location.pathname + "?q=" + q
+        $("#leadsBody").reloadFragment({
+            url: href,
+            whenComplete: function () {
+                window.history.pushState("", href, href);
+                $('abbr.timeago').timeago();
+            }
+        });
+    }
+
+    $(function(){
+
         if($('.lead-dash-page').length > 0) {
             $(document.body).on('onGoogleMapReady', function () {
                 initDonuts();
-            });
-
-            var primaryColor = $('.dashboardPieColor').first().css('background-color');
-
-            flog("dotdotdot", $(".leadInner"));
-            $(".leadInner").dotdotdot({
-                //	configuration goes here
             });
 
             $('#leadQuery').keyup(function () {
@@ -56,29 +81,13 @@
                 }, 500);
             });
 
-            var pieOptions = {
-                animate: {
-                    duration: 700,
-                    enabled: true
-                },
-                barColor: primaryColor,
-                scaleColor: false,
-                lineCap: 'circle'
-            };
-
-            $('.easypie').easyPieChart(pieOptions);
-
-            function doLeadSearch(q) {
-                var href = window.location.pathname + "?q=" + q
-                $("#leadsBody").reloadFragment({
-                    url: href,
-                    whenComplete: function () {
-                        window.history.pushState("", href, href);
-                        $('abbr.timeago').timeago();
-                    }
-                });
-            }
+            leadDashUpdate();
         }
+
+        $(document).on('onLeadDashUpdate', function () {
+            flog('onLeadDashUpdate');
+            leadDashUpdate();
+        })
     });
 
 })(jQuery);
