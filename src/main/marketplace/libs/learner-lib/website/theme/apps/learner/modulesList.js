@@ -27,7 +27,7 @@
     window.adjustHeightModuleGrid = function () {
         $('[data-type="component-modulesList"]').each(function () {
             var gridModules = $(this).find('.module-grid');
-            if (gridModules.length > 0 && gridModules.find('.module-body-transparent').length === 0) {
+            if (gridModules.length > 0 && gridModules.filter('.module-full-height-thumb').length === 0) {
                 gridModules.each(function () {
                     var module = $(this);
                     var thumb = module.find('.module-thumb');
