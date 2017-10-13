@@ -213,8 +213,8 @@
                 });
 
         $('#leadTable')
-                .off('click', 'tbody td')
-                .on('click', 'tbody td', function (e) {
+                .off('click', 'tbody td.editable')
+                .on('click', 'tbody td.editable', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
                     editor.inline(this, {
