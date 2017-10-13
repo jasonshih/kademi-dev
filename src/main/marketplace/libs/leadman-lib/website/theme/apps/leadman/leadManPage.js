@@ -217,7 +217,9 @@
                 .on('click', 'tbody td', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    editor.inline(this);
+                    editor.inline(this, {
+                        onBlur: 'submit'
+                    });
                 });
 
         for (var i = 0; i < hits.hits.length; i++) {
