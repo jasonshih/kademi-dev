@@ -809,7 +809,8 @@
                             stylesSet: 'myStyles:' + stylesPath,
                             line_height: '1;1.2;1.5;2;2.2;2.5',
                             pagePath: options.pagePath,
-                            basePath: options.basePath
+                            basePath: options.basePath,
+                            fullUrl: true
                         },
                         niceScrollEnabled: false,
                         nestedContainerEnabled: false,

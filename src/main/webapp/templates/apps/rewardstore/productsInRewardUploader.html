@@ -1,0 +1,11 @@
+<div class="form-group" >
+    <label class="control-label col-md-2" for="rewardStore">Reward Store: </label>
+    <div class="col-md-10">
+        <select id="rewardStore" name="rewardStore" class="form-control">
+            <option value="">[No Reward Store]</option>
+            #foreach($rs in $rootFolder.find("/reward-store/").rewardStores)
+            $formatter.option($rs.name, $formatter.firstNotNull($rs.title, $rs.name), $request.params.rewardStore)
+            #end
+        </select>
+    </div>
+</div>
