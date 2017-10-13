@@ -172,7 +172,27 @@
 
                                 <div class="col-md-6">
                                     <div class="pull-right">
-                                        <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add</a>
+
+                                        <div class="btn-group" role="group">
+                                            <a href="$page.href?addProducts" class="btn btn-sm btn-success"><i class="fa fa-plus-circle"></i> Add</a>
+                                            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                            </button>
+
+                                            <ul class="dropdown-menu pull-right" role="menu">
+                                                <li>
+                                                    <a href="productsInReward.csv" download="productsInReward.csv">
+                                                        <i class="glyphicon glyphicon-download"></i> Export
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="/tableUploaders/productsInRewardUploader?rewardStore=$page.name" >
+                                                        <i class="glyphicon glyphicon-upload"></i> Import
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                         <div class="btn-group" role="group">
                                             <button class="btn btn-sm btn-info" role="button" id="removeSelected"><i class="fa fa-minus-circle"></i> Remove selected</button>
                                             <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
