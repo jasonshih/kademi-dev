@@ -1064,6 +1064,12 @@ function reloadTasks() {
     if ($('#lead-tasks-page').length) {
         window.doReloadTasksPage();
     }
+
+    reloadTimeline();
+}
+
+function reloadTimeline() {
+    $(document).trigger('onLeadTimelineUpdate');
 }
 
 function takeTask(href) {

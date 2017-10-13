@@ -718,6 +718,12 @@
         
         $("#membershipsContainer .twitter-typeahead").focus();
     }
+
+    function initLeadActivity() {
+        $(document).on('onLeadTimelineUpdate', function () {
+            $('#activity').reloadFragment();
+        })
+    }
     
     // Run init functions
     $(function () {
@@ -738,5 +744,6 @@
         initLeadTimerControls();
         initUnlinkCompany();
         initLeadManEvents();
+        initLeadActivity();
     }
 })();
