@@ -163,7 +163,7 @@
             form.find('.select-course').val(dataAttributes['data-course'] || '');
             form.find('.txt-number-of-modules').val(dataAttributes['data-number-of-modules'] || '0');
             form.find('.select-layout').val(dataAttributes['data-layout'] || 'list');
-            form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || '4');
+            form.find('.items-per-row').val(dataAttributes['data-items-per-row'] || '1');
             form.find('.txt-grid-item-height').val(dataAttributes['data-grid-item-height'] || '200');
             
             form.find('.chk-show-time').prop('checked', dataAttributes['data-show-time'] === 'true');

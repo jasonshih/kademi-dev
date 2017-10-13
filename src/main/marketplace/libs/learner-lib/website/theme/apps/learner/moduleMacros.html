@@ -145,7 +145,7 @@
         #end
         
         #macro (renderModuleGridItem $module $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
-            <a href="$mod.href" class="module-grid-wrapper">
+            <a href="$mod.href">
                 <div class="module module-grid #if ($fullHeightThumb == true) module-full-height-thumb #end" style="height: ${gridItemHeight}px;">
                     #renderModuleThumb($mod true)
                     
@@ -155,7 +155,7 @@
                         <div class="clearfix">
                             #if ($showButton == true)
                                 <div class="pull-right">
-                                    #renderModuleButton($mod)
+                                    #renderModuleButton($mod true)
                                 </div>
                             #end
                             <div>
