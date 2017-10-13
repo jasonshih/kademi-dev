@@ -213,7 +213,7 @@
                                             <th><a class="sort-field" id="createdDate" href="#">Added Date</a></th>
                                             <th></th>
                                             <th class="text-center">
-                                                <input class="chk-all" type="checkbox" />
+                                                <input class="chk-all" type="checkbox" autocomplete="off"/>
                                             </th>
                                             <th></th>
                                         </tr>
@@ -233,7 +233,7 @@
                                             <td>$!formatter.formatDateTime($p.addedDate, $rootFolder.organisation.timezone)</td>
                                             <td></td>
                                             <td class="text-center">
-                                                <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                                <input data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" autocomplete="off"/>
                                             </td>
                                             <td>
                                                 <a href="$p.productId/" class="product-inreward-details">
@@ -273,7 +273,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Create product</button>
+                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
                         </div>
                     </form>
                 </div>
@@ -301,7 +301,7 @@
 
 
                 var productInRewardModal = $("#editProductInRewardModal");
-                $("#table-products").on("click", ".product-inreward-details", function (e) {
+                $("body").on("click", ".product-inreward-details", function (e) {
                     e.preventDefault();
                     var target = $(e.target).closest("a");
                     loadProductInReward(target.prop("href"), productInRewardModal);
