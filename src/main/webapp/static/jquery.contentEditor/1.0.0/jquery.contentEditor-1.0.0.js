@@ -716,7 +716,6 @@
         var visRules = form.find(".visible-rules");
         visRules.val(visRulesExpr);
         
-        
         form.find('.txt-extra-class').val(containerBg.attr('class').replace('container-bg', '').replace('background-for', '').trim());
         form.find('.chk-inverse').prop('checked', containerBg.hasClass('container-inverse'));
         
