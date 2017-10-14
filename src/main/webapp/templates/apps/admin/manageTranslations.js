@@ -36,18 +36,8 @@ function doTranslationSearch() {
     //var newUrl = window.location.href + "?q=" + query + "&lang=" + lang;
     var newUrl = url.toString();
     window.history.replaceState("", "", newUrl);
-    $.ajax({
-        type: 'GET',
-        url: newUrl,
-        success: function (data) {
-            //flog("success", data);
-            var fragment = $(data).find("#translations-list");
-            //flog("frag", fragment, $("#translations-list"));
-            $("#translations-list").replaceWith(fragment);
-        },
-        error: function (resp) {
-            Msg.error("An error occured doing the search. Please check your internet connection and try again");
-        }
+    $('#translationTableContainer').reloadFragment({
+        url: newUrl
     });
 }
 

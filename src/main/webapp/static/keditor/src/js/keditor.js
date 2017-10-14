@@ -1690,9 +1690,7 @@
         var component = dynamicElement.closest('.keditor-component');
         var contentArea = dynamicElement.closest('.keditor-content-area');
         
-        if (!dynamicElement.attr('id')) {
-            dynamicElement.attr('id', self.generateId('dynamic-element'));
-        }
+        dynamicElement.attr('id', self.generateId('dynamic-element'));
         
         if (typeof options.onBeforeDynamicContentLoad === 'function') {
             options.onBeforeDynamicContentLoad.call(self, dynamicElement, component, contentArea);

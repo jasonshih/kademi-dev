@@ -13,6 +13,11 @@ function initManageEmail() {
         var name = $(e.target).attr("href");
         duplicate(name, true);
     });
+    $('body').on('click', '.btn-dup-template', function (e) {
+        e.preventDefault();
+        var name = $(e.target).attr("href");
+        duplicate(name, true);
+    });
 }
 
 
@@ -178,9 +183,9 @@ function initModalAddTemplate() {
     form.forms({
         onSuccess: function (data) {
             flog('saved ok', data);
+            Msg.success(form.find('#templateName').val() + ' is created!');
             modal.modal('hide');
             form.trigger('reset');
-            Msg.success($('#name').val() + ' is created!');
             $('#email-template-table').reloadFragment();
         }
     });

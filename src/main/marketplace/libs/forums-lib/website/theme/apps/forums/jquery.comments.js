@@ -86,13 +86,9 @@
                 
                 // Reply for comment
                 if (!isReply) {
-                    commentDetailString += '<div class="comment-replies-wrapper" style="display: none;">';
-                    commentDetailString += '    <div class="comment-replies"></div>';
-                    commentDetailString += '    <textarea class="form-control input-sm comment-reply-text" rows="1" data-parentid="' + commentId + '" placeholder="Write a reply..."></textarea>';
-                    commentDetailString += '    <div class="text-right">';
-                    commentDetailString += '        <button type="button" class="btn btn-xs btn-info comment-reply-send">Send</button>';
-                    commentDetailString += '    </div>';
-                    commentDetailString += '</div>';
+                    var replyWrapClone = container.siblings('.kcommentsReplyWrap').clone();
+                    replyWrapClone.find('.parentComment').val(commentId);
+                    commentDetailString += replyWrapClone.prop('outerHTML');
                 }
                 
                 // Comment comment detail block
@@ -112,31 +108,47 @@
                 
                 // Event handle for reply text
                 var btnReply = outerDiv.find('.comment-reply');
-                var replyWrapper = outerDiv.find('.comment-replies-wrapper');
+                var replyWrapper = outerDiv.find('.kcommentsReplyWrap');
                 
                 btnReply.on('click', function (e) {
                     e.preventDefault();
-                    
-                    if (replyWrapper.is(':visible')) {
-                        replyWrapper.hide();
-                    } else {
-                        replyWrapper.show();
-                    }
+
+                    replyWrapper.toggleClass('hide');
                 });
-                
-                var btnSendReply = outerDiv.find('.comment-reply-send');
-                var txtReplyText = outerDiv.find('.comment-reply-text');
-                
-                btnSendReply.on('click', function (e) {
-                    e.preventDefault();
-                    
-                    var replyText = txtReplyText.val().trim();
-                    
-                    if (replyText) {
-                        flog('Submit reply text:', replyText);
-                        var replyInput = outerDiv.find('textarea.comment-reply-text');
-                        sendCommentReply(config.pageUrl, replyInput, replyInput.data('parentid'), config.renderCommentFn, config.currentUser, config, container);
-                        replyWrapper.hide();
+
+                var url = config.pageUrl;
+                if (!url.endsWith('/')) {
+                    url += '/';
+                }
+                url += '_comments';
+                replyWrapper.find('.kcomment-replyForm').forms({
+                    postUrl: url,
+                    beforePostForm: function (form, config, data) {
+                        ajaxLoadingOn();
+                        return data;
+                    },
+                    onSuccess: function (resp, form) {
+                        ajaxLoadingOff();
+
+                        flog('resp', resp.status, resp);
+                        if (resp.status) {
+                            var c = resp.data;
+                            c.parentId = form.find('.parentComment').val();
+
+                            invokeRenderFn(c, config.renderCommentFn, config, container);
+                            config.afterReplyFn(c, config, container);
+                        } else {
+                            Msg.error('Sorry, there was a problem posting your comment. Please try again');
+                        }
+                        form.find('input[type=text], textarea').val('');
+                        form.find('input[type=checkbox]').prop('checked', false);
+                        replyWrapper.addClass('hide');
+                    },
+                    onError: function (resp, form) {
+                        ajaxLoadingOff();
+                        // Msg.error('Sorry, we could not process your comment. Please try again later');
+                        form.find('input[type=text], textarea').val('');
+                        form.find('input[type=checkbox]').prop('checked', false);
                     }
                 });
             } else {
@@ -236,20 +248,41 @@
         var container = this;
         var config = $.extend({}, DEFAULT_COMMENTS_OPTIONS, options);
         
-        var form = container.find('form');
+        var form = container.find('form.kcomment-form');
         flog('Register submit event: ', form);
-        
-        form.submit(function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            try {
-                sendNewForumComment(config.pageUrl, container.find(config.commentTextSelector), config.renderCommentFn, config.currentUser, config, container);
-            } catch (e) {
-                flog('Exception sending forum comment', e);
+
+        var url = config.pageUrl;
+        if (!url.endsWith('/')) {
+            url += '/';
+        }
+        url += '_comments';
+
+        form.forms({
+            postUrl: url,
+            beforePostForm: function (form, config, data) {
+                ajaxLoadingOn();
+                return data;
+            },
+            onSuccess: function (resp) {
+                ajaxLoadingOff();
+
+                flog('resp', resp.status, resp);
+                if (resp.status) {
+                    var c = resp.data;
+                    invokeRenderFn(c, config.renderCommentFn, config, container);
+                    config.afterCommentFn(c, config, container);
+                } else {
+                    Msg.error('Sorry, there was a problem posting your comment. Please try again');
+                }
+                form.trigger('reset');
+            },
+            onError: function () {
+                ajaxLoadingOff();
+                // Msg.error('Sorry, we could not process your comment. Please try again later');
+                form.trigger('reset');
             }
-            return false;
         });
+
         initWebsockets(config, container);
         
         loadComments(config, container);
@@ -282,57 +315,6 @@
         }
     }
 })(jQuery);
-
-function sendNewForumComment(pageUrl, commentInput, renderComment, currentUser, config, container) {
-    flog('sendNewForumComment', pageUrl, commentInput, renderComment, currentUser, config, container);
-    
-    var comment = commentInput.val();
-    commentInput.removeClass('errorField');
-    
-    if (comment.trim().length < 1) {
-        commentInput.addClass('errorField');
-        return;
-    }
-    
-    var url = pageUrl;
-    if (!url.endsWith('/')) {
-        url += '/';
-    }
-    url += '_comments';
-    
-    var data = {
-        newComment: comment
-    };
-    
-    ajaxLoadingOn();
-    
-    $.ajax({
-        type: 'POST',
-        url: url,
-        data: data,
-        dataType: 'json',
-        success: function (resp) {
-            ajaxLoadingOff();
-            
-            commentInput.val('');
-            commentInput.keyup();
-            
-            flog('resp', resp.status, resp);
-            if (resp.status) {
-                var c = resp.data;
-                
-                invokeRenderFn(c, renderComment, config, container);
-                config.afterCommentFn(c, config, container);
-            } else {
-                alert('Sorry, there was a problem posting your comment. Please try again');
-            }
-        },
-        error: function () {
-            ajaxLoadingOff();
-            alert('Sorry, we could not process your comment. Please try again later');
-        }
-    });
-}
 
 function loadComments(config, container) {
     flog('loadComments');

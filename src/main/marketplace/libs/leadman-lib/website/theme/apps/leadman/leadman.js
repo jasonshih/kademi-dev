@@ -176,6 +176,8 @@ function initCloseDealModal() {
                     $('#all_contacts').html('');
                     initLeadsDashLoading();
                 }
+                // anh
+                setTimeout(reloadDashboard, 400);
                 closeDealModal.modal('hide');
             }
         });
@@ -757,6 +759,7 @@ function initNewTaskForm() {
             }
 
             Msg.info('Created task');
+            reloadTasks()
             modal.modal("hide");
         }
     });
@@ -1061,6 +1064,12 @@ function reloadTasks() {
     if ($('#lead-tasks-page').length) {
         window.doReloadTasksPage();
     }
+
+    reloadTimeline();
+}
+
+function reloadTimeline() {
+    $(document).trigger('onLeadTimelineUpdate');
 }
 
 function takeTask(href) {
@@ -1675,6 +1684,14 @@ function initSearchFilter() {
         } else {
             suggestionsWrapper.addClass('hide');
             backdrop.addClass('hide');
+        }
+    });
+}
+
+function reloadDashboard() {
+    $('#teamStats').reloadFragment({
+        whenComplete: function () {
+            $(document).trigger('onLeadDashUpdate');
         }
     });
 }

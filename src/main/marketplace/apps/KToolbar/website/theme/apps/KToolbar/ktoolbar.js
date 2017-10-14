@@ -1,6 +1,6 @@
 (function ($) {
     function initKToolbarInlineBtns() {
-        var htmleditor = $('.htmleditor');
+        var htmleditor = $('.content-page .htmleditor');
         var ktoolbar = $('#ktoolbar');
         var btnEditInline = ktoolbar.find('.btn-inline-edit');
         var btnSave = ktoolbar.find('.btn-inline-edit-save');

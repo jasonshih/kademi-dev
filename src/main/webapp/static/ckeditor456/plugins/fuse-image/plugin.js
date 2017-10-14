@@ -49,7 +49,7 @@
                             onSelectFile: function (url, relativeUrl, fileType, hash) {
                                 flog('[CKEDITOR.fuse-image] onSelectFile', url, relativeUrl, fileType, hash);
                                 
-                                var imageUrl = '/_hashes/files/' + hash;
+                                var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
                                 var previewImg = previewContainer.find('img');
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);

@@ -25,6 +25,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/jquery.forms/1.1.6/jquery.forms-1.1.6.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/js/jquery.autogrow-textarea-1.0.0.js"
             }
         },
