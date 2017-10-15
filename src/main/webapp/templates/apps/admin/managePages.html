@@ -70,7 +70,9 @@
                         <form method="POST" action="" class="">
                             <div class="article-wrapper" id="page-list">
                                 #set ($isKEditor = false)
-                                #if ($page.theme.editorName == "keditor")
+                                #set( $editorName = $page.closest("branch").theme.editorName )
+                                editor - $editorName
+                                #if ($editorName == "keditor")
                                     #set ($isKEditor = true)
                                 #end
 
