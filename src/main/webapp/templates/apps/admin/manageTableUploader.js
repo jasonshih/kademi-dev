@@ -185,6 +185,8 @@ function initUploads() {
                 type: 'post',
                 dataType: 'json',
                 success: function (resp) {
+                    flog(resp);
+
                     if (resp.status && resp.data) {
                         $('#myWizard').wizard('selectedItem', {step: reviewRow});
                         form.find('[type=submit]').removeClass('hide');
@@ -200,12 +202,16 @@ function initUploads() {
                         invalidRowsBody.html("");
                         if (resp.data.invalidRows) {
                             for (var i = 0; i < resp.data.invalidRows.length; i++) {
+                                var type = "td";
+                                if (i === 0) {
+                                    type = "th";
+                                }
                                 var row = resp.data.invalidRows[i];
                                 flog("row", row);
                                 var tr = $("<tr>");
                                 for (var col = 0; col < row.length; col++) {
                                     var colText = row[col];
-                                    tr.append("<td>" + colText + "</td>");
+                                    tr.append('<' + type + '>' + colText + '</' + type + '>');
                                 }
                                 invalidRowsBody.append(tr);
                             }
