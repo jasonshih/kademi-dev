@@ -2,7 +2,7 @@
     #set( $height = 200 )
 #end
 
-#set ($panelCls = "panel-default")
+#set ($panelCls = "panel panel-default")
 #set ($panelBodyCls = "panel-body")
 #if ($bordered && $bordered != "true" && $bordered != "")
 #set ($panelCls = "")
@@ -23,7 +23,7 @@
 #if (!$hasTitle || $hasTitle == "")
 #set ($hasTitle = "true")
 #end
-<div class="panel $!panelCls $!noGrid $!invertedPanel panel-kpi-visualisation">
+<div class="$!panelCls $!noGrid $!invertedPanel panel-kpi-visualisation">
     <div class="fillColor hide $!fillColor"></div>
     #if ($hasTitle == "true")
     <div class="panel-heading">
