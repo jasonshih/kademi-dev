@@ -70,7 +70,9 @@
                         <form method="POST" action="" class="">
                             <div class="article-wrapper" id="page-list">
                                 #set ($isKEditor = false)
-                                #if ($page.theme.editorName == "keditor")
+                                #set( $editorName = $page.closest("branch").theme.editorName )
+                                
+                                #if ($editorName == "keditor")
                                     #set ($isKEditor = true)
                                 #end
 
@@ -88,8 +90,7 @@
                                         <i class="clip-folder"></i>
                                         <a href="$f.href" class="article-name pjax">$f.name</a>
                                         <aside class="article-action">
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="javascript:void(0)" class="btn btn-sm btn-info" title="Edit Folder"><i class="fa fa-cog"></i></a>
+                                            <div class="btn-group btn-group-sm">                                                
                                                 <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                                                 <ul class="dropdown-menu pull-right" role="menu">
                                                     <!--<li><a href="$page.href" class="btn-rename"><span class="fa fa-edit"></span> Rename</a></li>-->
