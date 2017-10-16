@@ -1,7 +1,6 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-
     KEditor.components['kpiVis'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "kpiVis" component', contentArea, container, component, keditor);
@@ -99,10 +98,10 @@
                         });
                     });
 
-                    form.find('.noTitle').on('click', function () {
+                    form.find('.hasTitle').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-no-title', this.checked);
+                        component.attr('data-has-title', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initKpiVis();
                         });
@@ -111,7 +110,7 @@
                     form.find('.bordered').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-no-bordered', this.checked);
+                        component.attr('data-bordered', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initKpiVis();
                         });
@@ -120,7 +119,7 @@
                     form.find('.gridtick').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-                        component.attr('data-no-grid', this.checked);
+                        component.attr('data-grid', this.checked);
                         keditor.initDynamicContent(dynamicElement).done(function () {
                             self.initKpiVis();
                         });
@@ -155,9 +154,9 @@
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
-            form.find('.noTitle').prop("checked", dataAttributes['data-no-title'] == "true");
-            form.find('.bordered').prop("checked", dataAttributes['data-no-bordered'] == "true");
-            form.find('.gridtick').prop("checked", dataAttributes['data-no-grid'] == "true");
+            form.find('.hasTitle').prop("checked", dataAttributes['data-has-title'] != "false");
+            form.find('.bordered').prop("checked", dataAttributes['data-bordered'] != "false");
+            form.find('.gridtick').prop("checked", dataAttributes['data-grid'] != "false");
             form.find('.inverted').prop("checked", dataAttributes['data-inverted'] == "true");
             form.find('.fillcolor').val(dataAttributes['data-fill-color'] || 'bg-primary');
         }

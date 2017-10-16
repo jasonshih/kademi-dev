@@ -52,7 +52,7 @@
                     }
                 }
             }
-            config.fillColor = [container.find('.fillColor').css('background-color')];
+            config.fillColor = [container.parents('.panel-kpi-visualisation').find('.fillColor').css('background-color')];
             
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 loadKpiSeriesGraphData(kpiHref, opts, cont, visType, config);
@@ -253,7 +253,7 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
                 .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
                 .showLegend(false)
                 .showYAxis(false)
-                // .color(config.fillColor)
+                .color(config.fillColor)
                 .clipEdge(true);
             
             chart.xAxis.tickFormat(function (d) {

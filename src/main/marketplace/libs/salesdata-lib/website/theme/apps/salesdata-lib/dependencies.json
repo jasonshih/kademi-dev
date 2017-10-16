@@ -107,7 +107,7 @@
         {
             "less": {
                 "lessMedia": "all",
-                "path": "/theme/apps/salesdata/circleSales.less"
+                "path": "/theme/apps/salesdata/salesdata.less"
             }
         }
     ]
