@@ -1,6 +1,6 @@
 #if ($page)
     #set($app = $applications.salesDataClaimer )
-    #set($searchResult = $app.call('getPendingClaims', $page, $request.params))
+    #set($searchResult = $app.call('getPendingClaims', $page))
 #end
 
 
