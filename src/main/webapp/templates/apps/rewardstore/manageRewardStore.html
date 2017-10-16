@@ -326,13 +326,6 @@
                     var target = $(e.target).closest("a");
                     loadProductInReward(target.prop("href"), productInRewardModal);
                 });
-                productInRewardModal.find("form").forms({
-                    onSuccess: function () {
-                        Msg.info("Saved");
-                        productInRewardModal.modal("hide");
-                    }
-                });
-
             }
 
             function initRemoveProducts() {
@@ -414,12 +407,20 @@
                     url: href,
                     success: function (data) {
                         flog("success", data);
-                        var $fragment =
-                                $(data).find("#product-in-reward-fields");
+                        var $fragment = $(data).find("#product-in-reward-fields");
                         flog("frag", $fragment);
                         var form = productInRewardModal.find("form");
                         form.find('.form-content').html($fragment);
                         form.attr("action", href);
+
+                        productInRewardModal.find("form").forms({
+                            onSuccess: function (resp) {
+                                flog(resp);
+                                Msg.success(resp.messages);
+                                productInRewardModal.modal("hide");
+                            }
+                        });
+
                         productInRewardModal.modal("show");
                     },
                     error: function (resp) {
