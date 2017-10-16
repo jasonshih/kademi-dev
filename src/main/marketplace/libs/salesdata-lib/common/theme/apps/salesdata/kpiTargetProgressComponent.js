@@ -2,9 +2,9 @@
     var KEditor = $.keditor;
     var flog = KEditor.log;
 
-    KEditor.components['kpiVis'] = {
+    KEditor.components['kpiTargetProgress'] = {
         init: function (contentArea, container, component, keditor) {
-            flog('init "kpiVis" component', contentArea, container, component, keditor);
+            flog('init "kpiTargetProgress" component', contentArea, container, component, keditor);
             
             var self = this;
 
@@ -30,7 +30,7 @@
 
         settingEnabled: true,
 
-        settingTitle: 'KPI Visualisation Settings',
+        settingTitle: 'KPI Target Settings',
 
         initKpiProgress: function () {
             flog('initKpiProgress');
@@ -46,7 +46,7 @@
         },
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "kpiVis" component');
+            flog('initSettingForm "kpiTargetProgress" component');
 
             var self = this;
 
@@ -125,7 +125,7 @@
         },
 
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "kpiVis" component');
+            flog('showSettingForm "kpiTargetProgress" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-kpi').val(dataAttributes['data-href']);

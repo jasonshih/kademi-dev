@@ -95,23 +95,23 @@
         tbody.html(tbodyStr);
         tfoot.html(tfootStr);
         
-        try {
-            table.unbind('appendCache applyWidgetId applyWidgets sorton update updateCell')
-                .removeClass('tablesorter')
-                .find('thead th')
-                .unbind('click mousedown')
-                .removeClass('header headerSortDown headerSortUp');
-
-            if (table.find('tbody').children().length>0){
-                setTimeout(function () {
-                    table.tablesorter({
-                        headers: { 2: { sorter: 'fancyNumber'}},
-                        sortList: [[2, 1]]
-                    });
-                }, 200);
-            }
-        } catch (e) {
-        }
+        // try {
+        //     table.unbind('appendCache applyWidgetId applyWidgets sorton update updateCell')
+        //         .removeClass('tablesorter')
+        //         .find('thead th')
+        //         .unbind('click mousedown')
+        //         .removeClass('header headerSortDown headerSortUp');
+        //
+        //     if (table.find('tbody').children().length>0){
+        //         setTimeout(function () {
+        //             table.tablesorter({
+        //                 headers: { 2: { sorter: 'fancyNumber'}},
+        //                 sortList: [[[2, 1]]]
+        //             });
+        //         }, 200);
+        //     }
+        // } catch (e) {
+        // }
     }
     
 

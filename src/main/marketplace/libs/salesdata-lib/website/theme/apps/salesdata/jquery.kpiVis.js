@@ -52,6 +52,7 @@
                     }
                 }
             }
+            config.fillColor = [container.parents('.panel-kpi-visualisation').find('.fillColor').css('background-color')];
             
             $(document).on('pageDateChanged', function (e, startDate, endDate) {
                 loadKpiSeriesGraphData(kpiHref, opts, cont, visType, config);
@@ -247,11 +248,12 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
         //flog("myData", kpiTitle, myData);
         if (visType === "dateHistogram") {
             chart = nv.models.multiBarChart()
-                .margin({right: 50, left: 0, bottom: 30, top: 0})
+                .margin({right: 0, left: 0, bottom: 30, top: 0})
                 .rightAlignYAxis(true)      //Let's move the y-axis to the right side.
                 .showControls(false)       //Allow user to choose 'Stacked', 'Stream', 'Expanded' mode.
                 .showLegend(false)
                 .showYAxis(false)
+                .color(config.fillColor)
                 .clipEdge(true);
             
             chart.xAxis.tickFormat(function (d) {
@@ -278,7 +280,7 @@ function showKpiSeriesHistogram(resp, container, visType, config) {
             
         } else if (visType == "sparkline") {
             chart = nv.models.sparkline().height(100);
-            chart.margin({right: 0, left: 0, bottom: 00, top: 0})
+            chart.margin({right: 0, left: 0, bottom: 0, top: 0})
             chart.color(["#4caf50"]);
             myData = myData[0].values;
             chart.x(function (d) {

@@ -29,7 +29,7 @@
 
 <p class="lead">Other courses and modules</p>
 
-<div class="modules-list row">
+<div class="modules-list row modules-list-2">
     #if( $items )
     #else
         #set( $courses = $applicationManager.learning.findDashboardCourses() )
@@ -40,7 +40,7 @@
     #foreach($mod in $items)
         #set($curPage = "")
         #set($curPage = $mod.currentPage)
-        <div class="col-md-6 module-wrapper">
+        <div class="col-md-6 module-wrapper module-wrapper-list">
             #renderModuleListItem($mod)
         </div>
         #if( $count > 1 )
