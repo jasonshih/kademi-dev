@@ -56,7 +56,7 @@
                     flog('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
                     setTimeout(
-                            $('#search-results').reloadFragment()
+                            $('#searchResults').reloadFragment()
                             , 5000);
                     self.hide();
                 }
@@ -198,7 +198,7 @@
 
             confirmDelete(href, getFileName(href), function (resp) {
                 flog(resp);
-                setTimeout($('#search-results').reloadFragment(), 5000);
+                setTimeout($('#searchResults').reloadFragment(), 5000);
 
             });
         });
@@ -255,46 +255,47 @@ function initMove() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
+            Msg.singletonForCategory = true;
             Msg.error("Please select the organisations you want to move by clicking the checkboxs to the right");
             return;
+        } else {
+            var tbody = modal.find(".orgsMoveTableBody");
+            var destSelect = modal.find("select[name=moveDest]");
+            tbody.html("");
+            var moveIds = "";
+            checkBoxes.each(function (i, n) {
+                var tr = $("<tr>");
+                var chk = $(n);
+                var selected = chk.closest("tr");
+                var orgid = selected.find(".org-orgid").text();
+                var title = selected.find(".org-title").text();
+                var numMembers = selected.find(".org-members").text();
+                var internalId = selected.data("id");
+                moveIds += internalId + ",";
+
+                var td = $("<td>");
+                td.text(orgid);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(title);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(numMembers + "");
+                tr.append(td);
+
+                tbody.append(tr);
+
+                var opt = $("<option>");
+                opt.attr("value", internalId);
+                opt.text(orgid + " - " + title);
+                destSelect.append(opt);
+            });
+            modal.find("textarea").val(moveIds);
+
+            modal.modal("show");
         }
-
-        var tbody = modal.find(".orgsMoveTableBody");
-        var destSelect = modal.find("select[name=moveDest]");
-        tbody.html("");
-        var moveIds = "";
-        checkBoxes.each(function (i, n) {
-            var tr = $("<tr>");
-            var chk = $(n);
-            var selected = chk.closest("tr");
-            var orgid = selected.find(".org-orgid").text();
-            var title = selected.find(".org-title").text();
-            var numMembers = selected.find(".org-members").text();
-            var internalId = selected.data("id");
-            moveIds += internalId + ",";
-
-            var td = $("<td>");
-            td.text(orgid);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(title);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(numMembers + "");
-            tr.append(td);
-
-            tbody.append(tr);
-
-            var opt = $("<option>");
-            opt.attr("value", internalId);
-            opt.text(orgid + " - " + title);
-            destSelect.append(opt);
-        });
-        modal.find("textarea").val(moveIds);
-
-        modal.modal("show");
     });
 }
 
@@ -317,42 +318,43 @@ function initAssignToOrgType() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
+            Msg.singletonForCategory = true;
             Msg.error("Please select the organisations you want to assign by clicking the checkboxs to the right");
             return;
+        } else {
+            var tbody = modal.find(".assignOrgTypeTableBody");
+
+            tbody.html("");
+            var moveIds = "";
+            checkBoxes.each(function (i, n) {
+                var tr = $("<tr>");
+                var chk = $(n);
+                var selected = chk.closest("tr");
+                var orgid = selected.find(".org-orgid").text();
+                var title = selected.find(".org-title").text();
+                var orgType = selected.find(".org-type").text() === "" ? "-" : selected.find(".org-type").text();
+                var internalId = selected.data("id");
+                moveIds += internalId + ",";
+
+                var td = $("<td>");
+                td.text(orgid);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(title);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(orgType);
+                tr.append(td);
+
+                tbody.append(tr);
+            });
+
+            modal.find("textarea").val(moveIds);
+
+            modal.modal("show");
         }
-
-        var tbody = modal.find(".assignOrgTypeTableBody");
-
-        tbody.html("");
-        var moveIds = "";
-        checkBoxes.each(function (i, n) {
-            var tr = $("<tr>");
-            var chk = $(n);
-            var selected = chk.closest("tr");
-            var orgid = selected.find(".org-orgid").text();
-            var title = selected.find(".org-title").text();
-            var orgType = selected.find(".org-type").text() === "" ? "-" : selected.find(".org-type").text();
-            var internalId = selected.data("id");
-            moveIds += internalId + ",";
-
-            var td = $("<td>");
-            td.text(orgid);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(title);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(orgType);
-            tr.append(td);
-
-            tbody.append(tr);
-        });
-
-        modal.find("textarea").val(moveIds);
-
-        modal.modal("show");
     });
 }
 
@@ -375,45 +377,46 @@ function initMerge() {
         e.preventDefault();
         var checkBoxes = $('#searchResults').find('input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
+            Msg.singletonForCategory = true;
             Msg.error("Please select the organisations you want to merge by clicking the checkboxs to the right");
+        } else {
+            var tbody = modal.find(".orgsMergeTableBody");
+            var destSelect = modal.find("select[name=mergeDest]");
+            tbody.html("");
+            var mergeIds = "";
+            checkBoxes.each(function (i, n) {
+                var tr = $("<tr>");
+                var chk = $(n);
+                var selected = chk.closest("tr");
+                var orgid = selected.find(".org-orgid").text();
+                var title = selected.find(".org-title").text();
+                var numMembers = selected.find(".org-members").text();
+                var internalId = selected.data("id");
+                mergeIds += internalId + ",";
+
+                var td = $("<td>");
+                td.text(orgid);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(title);
+                tr.append(td);
+
+                td = $("<td>");
+                td.text(numMembers + "");
+                tr.append(td);
+
+                tbody.append(tr);
+
+                var opt = $("<option>");
+                opt.attr("value", internalId);
+                opt.text(orgid + " - " + title);
+                destSelect.append(opt);
+            });
+            modal.find("textarea").val(mergeIds);
+
+            modal.modal("show");
         }
-
-        var tbody = modal.find(".orgsMergeTableBody");
-        var destSelect = modal.find("select[name=mergeDest]");
-        tbody.html("");
-        var mergeIds = "";
-        checkBoxes.each(function (i, n) {
-            var tr = $("<tr>");
-            var chk = $(n);
-            var selected = chk.closest("tr");
-            var orgid = selected.find(".org-orgid").text();
-            var title = selected.find(".org-title").text();
-            var numMembers = selected.find(".org-members").text();
-            var internalId = selected.data("id");
-            mergeIds += internalId + ",";
-
-            var td = $("<td>");
-            td.text(orgid);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(title);
-            tr.append(td);
-
-            td = $("<td>");
-            td.text(numMembers + "");
-            tr.append(td);
-
-            tbody.append(tr);
-
-            var opt = $("<option>");
-            opt.attr("value", internalId);
-            opt.text(orgid + " - " + title);
-            destSelect.append(opt);
-        });
-        modal.find("textarea").val(mergeIds);
-
-        modal.modal("show");
     });
 }
 
@@ -483,7 +486,7 @@ function doSearchAndSort(field, direction) {
 }
 
 function reloadSearchResults(newUrl) {
-    $("#search-results").reloadFragment({
+    $("#searchResults").reloadFragment({
         url: newUrl,
         whenComplete: function (response) {
             window.history.pushState("", document.title, newUrl);
@@ -506,7 +509,7 @@ function aggFilter() {
 
 function initRemoveOrgs() {
     Msg.singletonForCategory = true;
-    
+
     $(".btn-orgs-remove").click(function (e) {
         var node = $(e.target);
         flog("remove orgs", node, node.is(":checked"));

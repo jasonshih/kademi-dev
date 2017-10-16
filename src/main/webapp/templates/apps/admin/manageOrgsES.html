@@ -4,13 +4,13 @@
         <link href="manageWebsite.css" rel="stylesheet" type="text/css" />
         <link href="manageOrgs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="manageOrgsES.js?v00001" bottom="true">//</script>
+        <script type="text/javascript" src="manageOrgsES.js?v00002" bottom="true">//</script>
     </head>
     <body class="manage-business-unit">
         <div class="row">
             <div class="col-md-3">
                 <div class="input-group">
-                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="$!request.params.q" />
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query">
                             <i class="fa fa-times"></i>
@@ -52,7 +52,7 @@
                     <div class="col-lg-9">
                         <div class="row">
 
-                            <table id="search-results" class="table table-striped table-hover">
+                            <table class="table table-striped table-hover">
                                 <colgroup>
                                     <col style="width: 150px" />
                                     <col/>
