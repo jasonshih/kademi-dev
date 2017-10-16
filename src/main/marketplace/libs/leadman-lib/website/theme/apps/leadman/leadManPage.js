@@ -6,7 +6,8 @@
         leadType: null,
         tags: [],
         assignedTo: [],
-        sources: []
+        sources: [],
+        journeys: []
     };
 
     var dataTable = null;
@@ -309,6 +310,7 @@
             e.preventDefault();
             e.stopPropagation();
             var filterName = $(this).find('a').attr('data-filter');
+            flog("leadDropFilter > filterName: ", filterName);
             $(this).find('a').toggleClass('filterSelected');
             $(this).find('i').toggleClass('hide');
             var groupId = $(this).find('a').attr('href');

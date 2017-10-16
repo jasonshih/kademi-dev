@@ -91,6 +91,20 @@
                 </div>
             </div>
 
+            <div class="form-group leadDropFilter" id="journeysDropWrap">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="journeysDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Journey
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="journeysDrop">
+                        #foreach( $funnel in $page.find("/leads/").funnels)
+                            <li><a data-filter="journeys" class="$formatter.ifTrue($params.contains($funnel), 'filterSelected', '')" href="$funnel.name"><span class="checkIcon"><i class="fa fa-check $formatter.ifTrue($params.contains($funnel), '', 'hide')"></i></span> $funnel.name</a></li>
+                        #end
+                    </ul>
+                </div>
+            </div>
+
             <div class="form-group div-leadMan-del-lead pull-right">
                 <button type="button" class="btn btn-danger btn-leadMan-del-lead">Delete Leads</button>
             </div>
