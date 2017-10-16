@@ -6,11 +6,6 @@
         <script type="text/javascript" src="/theme/apps/salesDataClaimer/viewClaims.js"></script>
     </head>
     <body>
-        #set ($isAdmin = false)
-        #if ($user.isInGroup("administrators") || $user.isInGroup("administrator") || $user.isInGroup("admin"))
-            #set ($isAdmin = true)
-        #end
-        
         <div class="claims-list-component">
             <div class="row">
                 <div class="col-sm-3">
