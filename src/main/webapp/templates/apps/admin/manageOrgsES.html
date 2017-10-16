@@ -8,7 +8,17 @@
     </head>
     <body class="manage-business-unit">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-3">
+                <div class="input-group">
+                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
 
                 <div class="btn-group">
                     <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new organisations</a>
@@ -28,26 +38,7 @@
                         <li class="presentation" role="menuitem"><a class="" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a></li>
                         <li class="presentation" role="menuitem"><a class="" href="orgIds.csv">Open OrgIDs CSV</a></li>
                         <li class="presentation" role="menuitem"><a class="" href="/tableUploaders/organisationsUploader">Import wizard (beta)</a></li>
-                        <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
-                        <li><a href="#" class="btn-orgs-merge">Merge selected..</a></li>
-                        <li><a href="#" class="btn-orgs-move">Move to parent..</a></li>
                     </ul>
-                </div>
-            </div>
-            <div class="col-md-1">
-                <button type="button" class="btn btn-sm btn-danger dropdown-toggle btn-orgs-remove" data-toggle="dropdown">
-                    <i class="fa fa-trash"></i>
-                    Remove
-                </button>
-            </div>
-            <div class="col-md-3">
-                <div class="input-group">
-                    <input type="text" id="org-query" class="form-control" placeholder="Search for organisations here" value="" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="button" data-type="clearer" data-target="#org-query">
-                            <i class="fa fa-times"></i>
-                        </button>
-                    </span>
                 </div>
             </div>
 
@@ -55,10 +46,8 @@
 
         <br />
 
-        <div class="panel panel-default">
-            <div class="panel-heading"><i class="clip-folder"></i> Organisations</div>
+        <div class="">
             <div class="panel-body">
-
                 <div class="row fuelux">
                     <div class="col-lg-9">
                         <div class="row">
@@ -84,14 +73,30 @@
                                         <th><a class="sort-field" id="phone" href="#">Phone</a></th>
                                         <th><a class="sort-field" id="address" href="#">Address</a></th>
                                         <th>Members</th>
-                                        <th class="action">Action</th>
+                                        <th class="action">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-default btn-orgs-remove">
+                                                    <i class="fa fa-trash"></i>
+                                                    Remove
+                                                </button>
+                                                <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                                    <li><a href="#" class="btn-orgs-assign-orgtype">Assign to org type</a></li>
+                                                    <li><a href="#" class="btn-orgs-merge">Merge selected..</a></li>
+                                                    <li><a href="#" class="btn-orgs-move">Move to parent..</a></li>
+                                                </ul>
+
+                                            </div>
+                                        </th>
                                         <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
                                     </tr>
                                 </thead>
                                 <tbody id="searchResults" class="search-results">
                                     #if( $page.paginator.isEmpty() )
                                     <tr>
-                                        <td colspan="8">No profiles found</td>
+                                        <td colspan="8">No organisations found</td>
                                     </tr>
                                     #else
                                     #foreach($org in $page.paginator.records)
@@ -542,7 +547,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div id="modal-assign-orgtype" tabindex="-1" class="modal fade" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
