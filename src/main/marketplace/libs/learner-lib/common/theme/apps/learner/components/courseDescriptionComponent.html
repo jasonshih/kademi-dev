@@ -1,9 +1,15 @@
 #if ($course && $course != "")
-    #set ($courseResource = $page.find($course).children.ofType.module.sortByField("order"))
-    #set ($courseResource = $rootFolder.find($course).children.ofType.module.sortByField("order"))
+    #set ($courseResource = $page.find($course))
+    #set ($courseResource = $rootFolder.find($course))
 #else
+    #set($programs = $page.find("/programs"))
     #if($page.is("course"))
         #set($courseResource = $page)
+    #else
+        #set($courseResource = $programs.bestCourse)
+        #if(!$courseResource )
+            #set($courseResource = $programs.bestProgram.children.ofType.course.first)
+        #end
     #end
 #end
 
