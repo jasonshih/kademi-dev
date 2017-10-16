@@ -17,6 +17,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/jquery.tablesorter/jquery.tablesorter.min.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/static/jquery-knob/1.2.13/dist/jquery.knob.min.js"
             }
         },
