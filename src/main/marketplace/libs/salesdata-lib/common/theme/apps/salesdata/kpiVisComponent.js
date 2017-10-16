@@ -8,7 +8,7 @@
             
             var self = this;
 
-            if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
+            if ($('[href="/static/nvd3/1.8.3/nv.d3.min.css"]').length === 0) {
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
 
@@ -98,6 +98,52 @@
                             self.initKpiVis();
                         });
                     });
+
+                    form.find('.noTitle').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-no-title', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.bordered').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-no-bordered', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.gridtick').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-no-grid', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.inverted').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-inverted', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.fillcolor').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-fill-color', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
                 }
             });
         },
@@ -109,6 +155,11 @@
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
+            form.find('.noTitle').prop("checked", dataAttributes['data-no-title'] == "true");
+            form.find('.bordered').prop("checked", dataAttributes['data-no-bordered'] == "true");
+            form.find('.gridtick').prop("checked", dataAttributes['data-no-grid'] == "true");
+            form.find('.inverted').prop("checked", dataAttributes['data-inverted'] == "true");
+            form.find('.fillcolor').val(dataAttributes['data-fill-color'] || 'bg-primary');
         }
     };
 

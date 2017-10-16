@@ -103,6 +103,12 @@
                 "lessMedia": "all",
                 "path": "/theme/apps/salesdata/circleSales.less"
             }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/salesdata/circleSales.less"
+            }
         }
     ]
 }
