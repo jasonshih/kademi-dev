@@ -480,6 +480,25 @@ function initNewLeadForm() {
     });
 
     form.forms({
+        validate: function (form, config) {
+            flog('validating ... ', form);
+            var ret = {
+                error: 0,
+                errorFields: [],
+                errorMessages: []
+            };
+            var taskDescription = form.find('textarea[name=taskDescription]').val();
+            if (taskDescription !== undefined && taskDescription !== "") {
+                var title = $("#title").val();
+                if(title === undefined || title === ""){
+                    ret.error = 1;
+                    ret.errorFields.push($("#title"));
+                    ret.errorMessages.push("Please complete the task title.");
+                }
+            }
+            flog("ret , ", ret);
+            return ret;
+        },
         beforePostForm: function (form, config, data) {
             flog('beforePost', data);
             data += '&assignedToOrgId=' + $.cookie('org');
@@ -1719,7 +1738,7 @@ function initStatsSummaryComponents() {
             url: '/_leadManStatsSummary?funnelName=' + funnelName,
             dataType: 'JSON',
             success: function (resp) {
-                flog('initStatsSummaryComponents Resp', resp );
+                flog('initStatsSummaryComponents Resp', resp);
 
                 if (resp.status) {
                     var completedTasksCount = (resp.data.tasks != null ? resp.data.tasks.completedTasks.doc_count : 0) || 0;
