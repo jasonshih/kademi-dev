@@ -1,0 +1,109 @@
+#if($page)
+<div class="row">
+    #set( $rewards = $applications.rewards.rewardsHome )
+
+    #set( $activeRewards = $rewards.activeRewards )
+    #if( $activeRewards.isEmpty() )
+    #else
+    #foreach( $reward in $rewards.activeRewards )
+
+    #if( $reward.imageHash )
+    #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+    #else
+    #set($bg = "/_hashes/files/97cc71bec03a8e881ce02e90e485f99f55e4aaea")
+    #end
+
+    #set ($col = "col-md-6 col-lg-4")
+    #if ($featured && $featured.contains($reward.name))
+    #set ($col = "col-md-12 col-lg-8")
+    #set ($hero = "promotionTileHero")
+    #end
+    <div class="$!col">
+        <div class="thumbnail rewardItem rewardTile" >
+            <a href="$!reward.href" class="promotionTile $!hero" style="background-image: url($bg);">
+                <div class="rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><strong>$reward.title</strong></h3>
+
+                    #if( $reward.endDate )
+                    <div class="product-content rewardItemDate text-italic">
+                        <i class="fa fa-calendar-o"></i>
+                        Closes
+                        <abbr title="$formatter.formatDateISO8601($reward.endDate)" class="timeago">$!reward.endDate</abbr>
+                    </div>
+                    #end
+                </div>
+            </a>
+
+        </div>
+    </div>
+    #end
+    #end
+
+    #set( $closedRewards = $rewards.viewableRewards )
+    #if( $closedRewards.isEmpty() )
+    #else
+    #foreach( $reward in $rewards.viewableRewards )
+    #if ($reward.status == 'e')
+    #if( $reward.imageHash )
+    #set( $bg = "/_hashes/files/$reward.imageHash/alt-300-300.png" )
+    #else
+    #set($bg = "/_hashes/files/97cc71bec03a8e881ce02e90e485f99f55e4aaea")
+    #end
+
+    <div class="col-md-6 col-lg-4">
+        <div class="thumbnail rewardItem rewardTile">
+            <a href="$!reward.href" class="promotionTile" style="background-image: url($bg);">
+                <div class="rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><strong>$reward.title</strong></h3>
+                    #if ($reward.winners)
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    #else
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    #end
+                </div>
+            </a>
+        </div>
+    </div>
+    #end
+    #end
+    #end
+
+</div>
+#else
+<div class="row">
+
+    #set($bg = "/_hashes/files/97cc71bec03a8e881ce02e90e485f99f55e4aaea")
+
+    <div class="col-md-12 col-lg-8">
+        <div class="thumbnail rewardItem rewardTile" >
+            <a href="$!reward.href" class="promotionTile promotionTileHero" style="background-image: url($bg);">
+                <div class="rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><strong>Sample title</strong></h3>
+
+                    <div class="product-content rewardItemDate text-italic" style="word-wrap: break-word;">
+                        <i class="fa fa-calendar-o"></i>
+                        Closes
+                        <abbr title="2017-10-24" class="timeago">6 days from now</abbr>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="col-md-6 col-lg-4">
+        <div class="thumbnail rewardItem rewardTile">
+            <a href="$!reward.href" class="promotionTile" style="background-image: url($bg);">
+                <div class="rewardItemCaption">
+                    <h3 class="product-title rewardItemTitle" title="$reward.title"><strong>Sample title</strong></h3>
+                    #if (!$reward.winners)
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Winner announced.</div>
+                    #else
+                    <div class="rewardItemContent"><i class="fa fa-info-circle"></i> Closed. Winner pending.</div>
+                    #end
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+#end
