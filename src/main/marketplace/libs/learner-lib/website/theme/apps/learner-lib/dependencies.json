@@ -3,7 +3,10 @@
         {
             "appId": "forums",
             "branch": "1.0.1"
-        }
+        },
+        {
+            "appId": "userDashboardApp"
+        }        
     ],
     "dependencies": [
         {
