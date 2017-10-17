@@ -16,7 +16,7 @@
 <div class="lead">
     $!courseResource.body
     
-    #if (!$page && (!$courseResource.body || $courseResource.body != ""))
+    #if (!$page && (!$courseResource.body || $courseResource.body == ""))
         <p>No description for current course</p>
     #end
 </div>
