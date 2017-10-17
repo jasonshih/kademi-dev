@@ -30,7 +30,7 @@
         <i class="fa fa-bar-chart"></i> 
         #set( $kpiTitle = $rootFolder.find($href).title )
         #if( $kpiTitle )
-        <a href="$href">$kpiTitle</a>
+        $kpiTitle
         #else
         Please select a KPI
         #end
