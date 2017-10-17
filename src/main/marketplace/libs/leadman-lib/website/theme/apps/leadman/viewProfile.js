@@ -25,6 +25,47 @@ function initNewProfileLeadForm() {
     });
 }
 
+function initDeleteCustomer() {
+    function showSweetAlert(option) {
+        swal({
+            title: option.title || 'Are you sure?',
+            text: option.message,
+            type: option.type || 'warning',
+            showCancelButton: true,
+            confirmButtonClass: option.btnClass,
+            confirmButtonText: option.btnText,
+            closeOnConfirm: true,
+            showLoaderOnConfirm: false
+        }, typeof option.callback === 'function' ? option.callback : null);
+    }
+
+    function removeCustomer() {
+        $.ajax({
+            url: window.location.href,
+            method: "DELETE",
+            dataType: "json",
+            success: function (data) {
+                Msg.success('Customer removed successfully');
+                window.location.href = "/custs";
+            }
+        });
+    }
+
+    $(".deleteCustomer").click(function (e) {
+        flog("click deleteCustomer");
+        e.preventDefault();
+        var option = {
+            title: "Are you sure you want to remove this customer?",
+            message: "",
+            type: 'warning',
+            btnClass: 'btn-danger',
+            btnText: "Remove",
+            callback: removeCustomer
+        };
+        showSweetAlert(option);
+    });
+}
+
 function initAssignOrg() {
     var modal = $('#assignOrgModal');
     var form = modal.find('form');
@@ -63,13 +104,13 @@ function initAssignOrg() {
                 '</div>'
             ].join('\n'),
             suggestion: Handlebars.compile(
-                '<div>'
-                + '<strong>{{title}}</strong>'
-                + '</br>'
-                + '<span>{{phone}}</span>'
-                + '</br>'
-                + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
-                + '</div>')
+                    '<div>'
+                    + '<strong>{{title}}</strong>'
+                    + '</br>'
+                    + '<span>{{phone}}</span>'
+                    + '</br>'
+                    + '<span>{{address}}, {{addressLine2}}, {{addressState}}, {{postcode}}</span>'
+                    + '</div>')
         }
     });
 

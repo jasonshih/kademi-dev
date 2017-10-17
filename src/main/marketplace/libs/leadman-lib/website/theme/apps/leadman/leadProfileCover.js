@@ -8,6 +8,7 @@
                 }
             });
             initNewProfileLeadForm();
+            initDeleteCustomer();
             initAssignOrg();
 
             $('.modal').on('hidden.bs.modal', function () {
