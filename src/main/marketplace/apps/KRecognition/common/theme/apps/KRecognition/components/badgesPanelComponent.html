@@ -2,17 +2,45 @@
 #set( $badges = $recognitionService.getAwardedBadges($topic) )
 #set( $topic = $recognitionService.getTopic($topic) )
 
+#if (!$badgesPerRows)
+    #set ($badgesPerRows = 4)
+#end
+#if ($mostRecentBadge)
+    #set ($badgesPerRows = 1)
+#end
+#set ($badgesPerRows = $formatter.toInteger( $badgesPerRows ))
 
-<h1>$topic.title</h1>
-#if( !$badges or $badges.empty)
-NO BADGES
-#else
-
-#foreach($b in $badges)
-    $b.recognition.title
-    #if ($b.recognition.imageHash)
-    <img src="/_hashes/files/$b.recognition.imageHash"/>
-    #end
+#if ($badgesPerRows == 1)
+    #set ($badgeClass = "col-sm-12")
+#elseif ($badgesPerRows == 2)
+    #set ($badgeClass = "col-sm-6")
+#elseif ($badgesPerRows == 3)
+    #set ($badgeClass = "col-sm-4")
+#elseif ($badgesPerRows == 4)
+    #set ($badgeClass = "col-sm-3")
+#elseif ($badgesPerRows == 6)
+    #set ($badgeClass = "col-sm-2")
+#elseif ($badgesPerRows == 12)
+    #set ($badgeClass = "col-sm-1")
 #end
 
+#if( !$badges or $badges.empty)
+    #if (!$page)
+        NO BADGES
+    #end
+#else
+    <div class="badges-list row row-sm">
+        #foreach($b in $badges)
+            <div class="$badgeClass">
+                #if ($b.recognition.imageHash)
+                    <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive" alt="$b.recognition.title" />
+                #else
+                    <img src="/static/images/photo_holder_squared.png" class="img-responsive" alt="$b.recognition.title" />
+                #end
+                #if ($showBadgeTitle == true)
+                    $b.recognition.title
+                #end
+            </div>
+        #end
+    </div>
 #end
