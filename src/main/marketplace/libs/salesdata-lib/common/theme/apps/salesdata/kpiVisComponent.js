@@ -98,6 +98,16 @@
                         });
                     });
 
+                    form.find('.chart-title').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-chart-title', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
                     form.find('.hasTitle').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -154,6 +164,7 @@
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
+            form.find('.chart-title').val(dataAttributes['data-chart-title']);
             form.find('.hasTitle').prop("checked", dataAttributes['data-has-title'] != "false");
             form.find('.bordered').prop("checked", dataAttributes['data-bordered'] != "false");
             form.find('.gridtick').prop("checked", dataAttributes['data-grid'] != "false");
