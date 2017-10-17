@@ -1,5 +1,5 @@
 ## KToolbar for logged in user with admin or content author role
-#if($page.isWritable())
+#if($user and $page.isWritable())
     #set($website = $page.closest("website"))
 
     <div id="ktoolbar">
