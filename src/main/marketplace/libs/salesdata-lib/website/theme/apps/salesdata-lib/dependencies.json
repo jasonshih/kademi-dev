@@ -23,12 +23,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/salesdata/kpis.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
             }
         },
