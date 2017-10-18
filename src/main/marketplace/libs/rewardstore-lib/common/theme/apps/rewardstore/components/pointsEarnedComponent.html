@@ -29,14 +29,14 @@
                                 #end
                             #end
 
-                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $queryManager.commonStartDate, $queryManager.commonFinishDate))
+                            #set($points = $applications.rewardStore.sumPoints( $be, $pointsBucket, $pointsEarnedTag, $queryManager.commonStartDate, $formatter.endofDay($queryManager.commonFinishDate)))
 
                             #if(!$points)
                             #set($points = 0)
                             #end
+                            
+                            $points
                         #end
-
-                        $points
                     </h2>
                 </div>
             </div>
