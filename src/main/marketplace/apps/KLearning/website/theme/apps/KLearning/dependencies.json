@@ -6,7 +6,7 @@
         },
         {
             "appId": "learner-lib",
-            "branch": "1.1.1"
+            "branch": "1.1.8"
         },
         {
             "appId": "forums",
@@ -14,7 +14,7 @@
         },
         {
             "appId": "forums-lib",
-            "branch": "1.0.5"
+            "branch": "1.1.0"
         }
   ]
 }
