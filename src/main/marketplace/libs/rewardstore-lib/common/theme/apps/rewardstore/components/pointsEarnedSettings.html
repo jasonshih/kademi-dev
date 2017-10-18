@@ -1,0 +1,39 @@
+<form class="form-horizontal">
+    <div class="form-group">
+        <label class="col-sm-12">Store</label>
+        <div class="col-sm-12">
+            <select class="form-control points-earned-select-store">
+                <option value="" selected="selected">- None -</option>
+                #foreach($store in $applications.rewardStore.pointsBuckets)
+                <option value="$store.name">$store.title</option>
+                #end
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">Points Tag</label>
+        <div class="col-sm-12">
+            <select class="form-control points-earned-select-tag">
+                <option value="" selected="selected">- None -</option>
+                #foreach($pt in $applications.rewardStore.pointsTags)
+                <option value="$pt.name">$formatter.firstNotNull($pt.title, $pt.name)</option>
+                #end
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-12">Label</label>
+        <div class="col-sm-12">
+            <input type="text" class="form-control value-label" value=""/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-12">Icon</label>
+        <div class="col-sm-12">
+            <!-- TODO: use this - https://itsjaviaguilar.com/fontawesome-iconpicker/ -->
+            <button class="btn btn-default value-icon"><i class=""></i></button>
+        </div>
+    </div>
+</form>

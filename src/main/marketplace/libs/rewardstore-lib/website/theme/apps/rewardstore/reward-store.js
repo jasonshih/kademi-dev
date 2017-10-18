@@ -1,12 +1,12 @@
-(function () {
+(function ($) {
     $(function () {
         $(document.body).on('click', '.btn-add-to-cart', function (e) {
             e.preventDefault();
             var btn = $(this);
             var href = btn.attr('href');
-            
+
             flog("Add to cart clicked", href);
-            
+
             getOrderForm(href, function (orderForm) {
                 if (orderForm == null) {
                     addToCart(href, 1);
@@ -14,9 +14,9 @@
                     showOrderForm(href, orderForm);
                 }
             });
-            
+
         });
-        
+
         var timer;
         $(window).on('resize', function () {
             clearTimeout(timer);
@@ -25,21 +25,35 @@
             }, 200);
         }).trigger('resize');
     });
-    
+
+    function initPointsEarnedComponents() {
+        flog('initPointsEarnedComponents');
+        var components = $('.rewardstore-pointsEarned-component');
+        if (components.length > 0) {
+            components.each(function (i, elem) {
+                var item = $(elem);
+                var div = item.closest('[data-dynamic-href="_components/pointsEarned"]');
+                $('body').on('pageDateChanged', function () {
+                    div.reloadFragment();
+                });
+            });
+        }
+    }
+
     function dotdotdotProduct() {
         $('.product-title').dotdotdot({
             height: 55
         });
-        
+
         $('.product-content').dotdotdot({
             height: 60
         });
     }
-    
+
     function showOrderForm(href, orderForm) {
         createRewardOrderFormModal("orderForm", href, "Enter fields", orderForm);
     }
-    
+
     function addToCart(href, quantity) {
         $.ajax({
             type: 'POST',
@@ -62,7 +76,7 @@
             }
         });
     }
-    
+
     function getOrderForm(href, callback) {
         var link = href;
         if (!link.contains("?")) {
@@ -89,41 +103,41 @@
             }
         });
     }
-    
+
     function createRewardOrderFormModal(id, href, title, formHtml) {
         flog('myPrompt');
         var existing = $('#' + id);
         if (existing) {
             existing.remove();
         }
-        
+
         var modalString = '<div class="modal" tabindex="-1" role="dialog">' +
-            '    <div class="modal-dialog" role="document">' +
-            '        <div class="modal-content">' +
-            '            <div class="modal-header">' +
-            '                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-            '                <h4 class="modal-title">' + title + '</h4>' +
-            '            </div>' +
-            '            <div class="modal-body">' +
-            '             <form method="post" action="/checkout" style="min-height: 50px" class="form-horizontal">' +
-            '                 <input type="hidden" name="addItemHref" value="" />' +
-            '                 <input type="hidden" name="addItemQuantity" value="1" />' +
-            '                 <div class="order-form-body">' + formHtml + '</div>' +
-            '             </form>' +
-            '            </div>' +
-            '            <div class="modal-footer">' +
-            '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
-            '                <button type="button" class="btn btn-primary btn-submit">OK</button>' +
-            '            </div>' +
-            '        </div><!-- /.modal-content -->' +
-            '    </div><!-- /.modal-dialog -->' +
-            '</div>';
-        
-        
+                '    <div class="modal-dialog" role="document">' +
+                '        <div class="modal-content">' +
+                '            <div class="modal-header">' +
+                '                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                '                <h4 class="modal-title">' + title + '</h4>' +
+                '            </div>' +
+                '            <div class="modal-body">' +
+                '             <form method="post" action="/checkout" style="min-height: 50px" class="form-horizontal">' +
+                '                 <input type="hidden" name="addItemHref" value="" />' +
+                '                 <input type="hidden" name="addItemQuantity" value="1" />' +
+                '                 <div class="order-form-body">' + formHtml + '</div>' +
+                '             </form>' +
+                '            </div>' +
+                '            <div class="modal-footer">' +
+                '                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+                '                <button type="button" class="btn btn-primary btn-submit">OK</button>' +
+                '            </div>' +
+                '        </div><!-- /.modal-content -->' +
+                '    </div><!-- /.modal-dialog -->' +
+                '</div>';
+
+
         var myPromptModal = $(modalString);
         $('body').append(myPromptModal);
         myPromptModal.find("input[name=addItemHref]").val(href);
-        
+
         var form = myPromptModal.find('form');
         form.forms({
             onSuccess: function () {
@@ -133,20 +147,24 @@
                 myPromptModal.modal("hide");
             }
         });
-        
+
         myPromptModal.find(".btn-submit").click(function () {
             flog("clicked");
             form.submit();
         });
-        
+
         flog("show", myPromptModal);
         myPromptModal.modal("show");
         //showModal(myPromptModal);
     }
-    
+
     window.showOrderForm = showOrderForm;
     window.getOrderForm = getOrderForm;
     window.createRewardOrderFormModal = createRewardOrderFormModal;
     window.dotdotdotProduct = dotdotdotProduct;
-    
+
+    // Run Init Methods
+    $(function () {
+        initPointsEarnedComponents();
+    });
 })(jQuery);
