@@ -52,7 +52,7 @@
                     <div class="col-lg-9">
                         <div class="row">
 
-                            <table class="table table-striped table-hover">
+                            <table class="table table-striped table-hover" id="searchResults">
                                 <colgroup>
                                     <col style="width: 150px" />
                                     <col/>
@@ -93,7 +93,7 @@
                                         <th><input type="checkbox" name="toRemoveId" class="chk-all" /></th>
                                     </tr>
                                 </thead>
-                                <tbody id="searchResults" class="search-results">
+                                <tbody class="search-results">
                                     #if( $page.paginator.isEmpty() )
                                     <tr>
                                         <td colspan="8">No organisations found</td>
