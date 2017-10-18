@@ -1,0 +1,21 @@
+#if($page && "$!page.title" != "")
+    <div class="auction-detail">
+        <div class="page-header">
+            <h2>$page.title <br />
+                <small>Created By <a href="$page.createdBy.href">$page.createdBy.name</a></small>
+            </h2>
+        </div>
+    </div>
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+    <div class="auction-detail">
+        <div class="page-header">
+            <h2>Page title <br />
+                <small>Created By <a href="javascript:void(0)">admin</a></small>
+            </h2>
+        </div>
+    </div>
+#end
