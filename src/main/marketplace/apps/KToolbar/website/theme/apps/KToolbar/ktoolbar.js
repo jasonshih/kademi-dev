@@ -138,11 +138,30 @@
             sidebar.removeClass('showed');
         });
     }
-    
+
+    function initHeadingColor() {
+        var value = $('.headingColor').val();
+        if (value && value != 'inherit'){
+            $('.txtHeadingColor').prop('disabled', false);
+            $('.headingColor').prop('checked', false);
+        } else {
+            $('.txtHeadingColor').prop('disabled', true);
+            $('.headingColor').prop('checked', true);
+        }
+        $('.headingColor').on('click', function () {
+            $('.txtHeadingColor').prop('disabled', this.checked);
+            if (this.checked){
+                $('.headingColor').val('');
+                $('.txtHeadingColor').val('');
+                $('.txtHeadingColor').parent().find('i').css('background-color', 'transparent');
+            }
+        })
+    }
     $(function () {
         initKToolbarInlineBtns();
         initKToolbarToggler();
         initKToolbarSideBar();
+        initHeadingColor();
         
         window.onbeforeunload = function () {
             var body = $("body");
