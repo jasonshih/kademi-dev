@@ -78,6 +78,10 @@
             var a = $(this);
             if (!a.hasClass('active')) {
                 var href = a.attr('href');
+                var selectProgramTitle = wrapper.find('.program.active').html()
+                var courseTitle = a.html();
+                
+                wrapper.find('.course-picker-text').html(selectProgramTitle + ' / ' + courseTitle);
                 
                 $.pjax({
                     selector: 'a.course:not(.pjaxdone)',
