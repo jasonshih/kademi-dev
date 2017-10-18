@@ -43,11 +43,11 @@
 /* ===========================================================================
    Row small for panel setting
    =========================================================================== */
-.row.row-sm {
+#keditor-setting-forms .row.row-sm {
     margin: 0 -2px;
 }
 
-.row.row-sm > div {
+#keditor-setting-forms .row.row-sm > div {
     padding: 0 2px;
 }
 

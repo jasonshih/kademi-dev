@@ -149,7 +149,7 @@
                         modalContent.modal('show');
                     });
                     
-                    $(document.body).on('click', '.carouselItem a.btn-remove-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-remove-item', function (e) {
                         e.preventDefault();
                         
                         if (confirm('Are you sure that you want to delete this image?')) {
@@ -164,7 +164,7 @@
                         }
                     });
                     
-                    $(document.body).on('click', '.carouselItem a.btn-edit-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-edit-item', function (e) {
                         e.preventDefault();
                         
                         var carouselItem = $(this).closest('.carouselItem');
@@ -180,7 +180,7 @@
                     });
                     
                     
-                    $(document.body).on('click', '.carouselItem a.btn-edit-caption-item', function (e) {
+                    form.on('click', '.carouselItem a.btn-edit-caption-item', function (e) {
                         e.preventDefault();
                         
                         var carouselItem = $(this).closest('.carouselItem');
