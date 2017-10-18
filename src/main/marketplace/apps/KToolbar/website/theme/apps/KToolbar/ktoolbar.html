@@ -132,7 +132,10 @@
                 <div class="form-group">
                     <label class="col-sm-5 control-label">Heading color</label>
                     <div class="col-sm-7">
-                        <input type="text" class="color-picker form-control" value="$!folder.themeParams.get("headings-color")" placeholder="" name="headings-color" />
+                        <div class="checkbox">
+                            <label><input type="checkbox" name="headings-color" value="$!folder.themeParams.get('headings-color')" class="headingColor"> Inherit</label>
+                        </div>
+                        <input type="text" class="color-picker form-control txtHeadingColor" value="$!folder.themeParams.get('headings-color')" placeholder="" name="headings-color" />
                     </div>
                 </div>
                 <hr />
