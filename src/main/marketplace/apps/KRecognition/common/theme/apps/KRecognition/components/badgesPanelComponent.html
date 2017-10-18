@@ -1,5 +1,3 @@
-#set( $recognitionService = $applications.userApp.recognitionService )
-#set( $badges = $recognitionService.getAwardedBadges($topic) )
 
 #if (!$badgesPerRows)
     #set ($badgesPerRows = 4)
@@ -23,29 +21,38 @@
     #set ($badgeClass = "col-sm-1")
 #end
 
-#if( !$badges or $badges.empty)
-    #if (!$page)
-        NO BADGES
+#if ($topic && $topic != "")
+    #set( $recognitionService = $applications.userApp.recognitionService )
+    #set( $badges = $recognitionService.getAwardedBadges($topic) )
+    
+    #if( !$badges or $badges.empty)
+        #if (!$page)
+            NO BADGES
+        #end
+    #else
+        #set ($badges = $formatter.sortByProperty($badges, "createdDate"))
+        #set ($badges = $formatter.sortReverse($badges))
+        <div class="kbadges-list row row-sm">
+            #foreach($b in $badges)
+                <div class="$badgeClass kbadge">
+                    #if ($b.recognition.imageHash)
+                        <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
+                    #else
+                        <img src="/static/images/photo_holder_squared.png" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
+                    #end
+                    #if ($showBadgeTitle == true)
+                        <div class="kbadge-title">$b.recognition.title</div>
+                    #end
+                </div>
+            
+                #if ($mostRecentBadge == "true")
+                    #break
+                #end
+            #end
+        </div>
     #end
 #else
-    #set ($badges = $formatter.sortByProperty($badges, "createdDate"))
-    #set ($badges = $formatter.sortReverse($badges))
-    <div class="kbadges-list row row-sm">
-        #foreach($b in $badges)
-            <div class="$badgeClass kbadge">
-                #if ($b.recognition.imageHash)
-                    <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
-                #else
-                    <img src="/static/images/photo_holder_squared.png" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
-                #end
-                #if ($showBadgeTitle == true)
-                    <div class="kbadge-title">$b.recognition.title</div>
-                #end
-            </div>
-        
-            #if ($mostRecentBadge == "true")
-                #break
-            #end
-        #end
-    </div>
+    #if (!$page)
+        <p class="alert alert-warning">No topic selected</p>
+    #end
 #end
