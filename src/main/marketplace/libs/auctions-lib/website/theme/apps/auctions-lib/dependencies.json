@@ -34,9 +34,9 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/auctions/comingUpAuction.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/auctions/comingUpAuction.less"
             }
         },
         {

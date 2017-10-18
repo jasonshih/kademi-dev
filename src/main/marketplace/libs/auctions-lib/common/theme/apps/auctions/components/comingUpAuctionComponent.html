@@ -20,8 +20,12 @@
             </div>
             <div class="panel-info">
                 <div class="panel-heading">
+                    <div class="auction-info">
+                        <div class="text-center"><strong>$auction.title</strong></div>
+                    </div>
                     <div class="auction-countdown">
                         <div class="countdown text-center" data-end="$formatter.formatDateISO8601($auction.auctionEndDate)" data-wSUri="$auction.wSUri">
+                            00:00:00:<span>00</span>
                         </div>
                     </div>
                     <div class="auction-info">
@@ -35,8 +39,9 @@
                     </div>
                 </div>
             </div>
-            <div class="panel-default">
-                <div class="panel-heading">
+            #if ($showDescription == "true")
+                <div class="panel-body">
+                    <div class="clearfix">$!auction.description</div>
                     <form action="/auctions/$auction.name" method="post" class="form-horizontal">
                         <div class="form-group">
                             <div class="col-sm-12">
@@ -50,7 +55,24 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            #else
+                <div class="panel-default">
+                    <div class="panel-heading">
+                        <form action="/auctions/$auction.name" method="post" class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control required regex" value="" id="bidValue" name="auctionBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
+                                        <span class="input-group-btn">
+                                            <button type="submit" class="btn btn-success">Bid</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            #end
 
             #set($isAvailable = true)
             #break
