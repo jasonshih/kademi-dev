@@ -30,16 +30,16 @@
 #else
     #set ($badges = $formatter.sortByProperty($badges, "createdDate"))
     #set ($badges = $formatter.sortReverse($badges))
-    <div class="badges-list row row-sm">
+    <div class="kbadges-list row row-sm">
         #foreach($b in $badges)
-            <div class="$badgeClass">
+            <div class="$badgeClass kbadge">
                 #if ($b.recognition.imageHash)
-                    <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive" alt="$b.recognition.title" />
+                    <img src="/_hashes/files/$b.recognition.imageHash" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
                 #else
-                    <img src="/static/images/photo_holder_squared.png" class="img-responsive" alt="$b.recognition.title" />
+                    <img src="/static/images/photo_holder_squared.png" class="img-responsive kbadge-photo" alt="$b.recognition.title" />
                 #end
                 #if ($showBadgeTitle == true)
-                    $b.recognition.title
+                    <div class="kbadge-title">$b.recognition.title</div>
                 #end
             </div>
         
