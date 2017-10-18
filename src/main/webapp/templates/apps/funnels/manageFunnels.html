@@ -23,7 +23,7 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table id="reward-stores-table" class="table table-striped table-hover">
+                    <table id="funnels-table" class="table table-striped table-hover">
                         <colgroup>
                             <col width="60" />
                             <col width="" />
@@ -43,9 +43,9 @@
                             <tr>
                                 <td>
                                     #if ($v.funnel.hiddenToSales)
-                                        <i class="fa fa-2x fa-eye-slash text-danger" title="Hidden to Sales"></i>
+                                    <i class="fa fa-2x fa-eye-slash text-danger" title="Hidden to Sales"></i>
                                     #else
-                                        <i class="fa fa-2x fa-eye text-success" title="Visible to Sales"></i>
+                                    <i class="fa fa-2x fa-eye text-success" title="Visible to Sales"></i>
                                     #end
                                 </td>
                                 <td><a href="$v.name/$v.liveVersion">$v.title</a></td>
@@ -59,7 +59,7 @@
                                             <span class="sr-only">Toggle Dropdown</span>
                                         </button>
                                         <ul role="menu" class="dropdown-menu pull-right">
-                                            <li><a class="delete-store" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
+                                            <li><a class="delete-funnel" href="$v.name"><i class="glyphicon glyphicon-remove"></i> Delete</a></li>
                                         </ul>
                                     </div>
                                 </td>
@@ -86,11 +86,11 @@
                             <input name="newTitle" class="form-control" id="rewardName" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Create funnel</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Create funnel</button>
+                </div>
             </form>
         </div>
 
@@ -108,11 +108,11 @@
                             <input type="file" name="file" />
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button class="btn btn-sm btn-primary" type="submit">Upload</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Upload</button>
+                </div>
             </form>
         </div>
 
@@ -130,12 +130,14 @@
                     }
                 });
 
-                $("#reward-stores-table").on("click", ".delete-store", function (e) {
+                $("#funnels-table").on("click", ".delete-funnel", function (e) {
                     e.preventDefault();
                     var href = $(e.target).closest("a").attr("href");
-                    confirmDelete(href, getFileName(href), function () {
-                        Msg.success("Deleted funnel");
-                        reloadFunnels();
+                    var msj = "Deleting a journey will permanently delete your journey steps, funnel and all leads associated with your funnel. Are you sure you want to continue?";
+                    Kalert.confirm(msj, 'Delete', function () {
+                        deleteFile(href);
+                        Msg.success("Funnel deleted");
+                        setTimeout(reloadFunnels, 500);
                     });
                 });
 

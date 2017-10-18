@@ -42,15 +42,7 @@
     #set ($modules = $curCourse.children.ofType.module.sortByField("order"))
 #end
 
-#if ($itemsPerRow == 1)
-    #set ($moduleClass = "col-sm-12")
-#elseif ($itemsPerRow == 2)
-    #set ($moduleClass = "col-sm-6")
-#elseif ($itemsPerRow == 3)
-    #set ($moduleClass = "col-sm-4")
-#elseif ($itemsPerRow == 4)
-    #set ($moduleClass = "col-sm-3")
-#end
+`
 
 #if ($modules.size() > 0)
     <div class="modules-list row modules-list-${itemsPerRow}">
