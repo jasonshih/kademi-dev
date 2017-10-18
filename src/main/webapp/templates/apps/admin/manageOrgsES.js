@@ -475,7 +475,7 @@ function initSearchOrg() {
 
 
 function doSearch() {
-    var newUrl = window.location.pathname + "?q=" + $("#org-query").val() + "&parentOrgId=" + $("#org-query-parent").val();
+    var newUrl = window.location.pathname + "?q=" + $("#org-query").val();
     reloadSearchResults(newUrl);
 }
 
