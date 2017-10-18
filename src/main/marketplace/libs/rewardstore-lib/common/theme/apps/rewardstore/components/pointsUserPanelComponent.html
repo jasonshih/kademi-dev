@@ -70,9 +70,9 @@
                             #else
                                 #if ($myPoint)
                                 #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
-                                <h2>
+                                <p class="lead">
                                     <span id="user-total-points" title="$myPointString">$myPointString</span>
-                                </h2>
+                                </p>
                                 <small>
                                     #if ($reward.title && $reward.title != " ")
                                     $reward.title

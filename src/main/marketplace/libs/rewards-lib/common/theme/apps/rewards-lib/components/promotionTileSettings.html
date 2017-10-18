@@ -1,0 +1,13 @@
+<form class="form-horizontal">
+    <div class="row">
+        <label class="col-sm-12"><strong>Featured</strong></label>
+    </div>
+    #set( $rewards = $applications.rewards.rewardsHome )
+    #set( $activeRewards = $rewards.activeRewards )
+    #set( $closedRewards = $rewards.viewableRewards )
+    #foreach($a in $activeRewards)
+    <div class="checkbox">
+        <label><input type="checkbox" value="$a.name" class="featured"> $a.title</label>
+    </div>
+    #end
+</form>

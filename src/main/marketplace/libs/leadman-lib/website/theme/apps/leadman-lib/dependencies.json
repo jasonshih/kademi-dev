@@ -266,6 +266,18 @@
             "less": {
                 "path": "/theme/apps/leadman/leadsDash.less"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.js"
+            }
+        },
+        {
+            "css": {
+                "cssMedia": "all",
+                "path": "/static/bootstrap-sweetalert/1.0.1/dist/sweetalert.css"
+            }
         }
     ]
 }
