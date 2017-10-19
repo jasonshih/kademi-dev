@@ -39,8 +39,8 @@
         #set ($isAchieved = false)
     #end
 #else
-    ## no assessed result, so need to forecast
-    #set( $forecastLevel = $selectedKpi.progressLevel($formatter.addDays($startDate, 1), $endDate) )
+    <!-- no assessed result, so need to forecast -->
+    #set( $forecastLevel = $selectedKpi.progressLevel)
     #set ($currentAggs = $selectedKpi.getProgressAndBaseline($currentStartDate, $currentEndDate))
     #set ($targetAmount = $selectedKpi.getTargetForLevel($kpiLevel))
     
