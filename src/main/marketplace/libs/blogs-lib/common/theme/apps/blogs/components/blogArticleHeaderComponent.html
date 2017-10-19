@@ -1,45 +1,45 @@
-<style>
-    .blog-article-body {
-        margin-top: 30px;
-    }
-</style>
-
 #if($page)
-    <h2>
-        #if( $page.title )
-        <a href="$page.href">$page.title</a>
-        #else
-        <a href="#">Page title</a>
-        #end
-    </h2>
-    <div class="clearfix">
-        #set( $artDate = $formatter.ifNull($page.articleDate, $formatter.now) )
-        <span class="pull-left timeago" title="$formatter.formatDateISO8601($artDate)">
-            $artDate
-        </span>
-        <div class="pull-right">
-            #if( $page.category )
-            <span class="label label-primary">$page.category</span>
+    <div class="blog-article-header">
+        <h2>
+            #if( $page.title )
+                <a href="$page.href">$page.title</a>
+            #else
+                <a href="#">Page title</a>
             #end
-            #foreach($tag in $page.tags)
-            #if ($page.isSelectedTag($tag))
-            <span class="label label-primary">$tag</span>
-            #end
-            #end
-            #if($page.featured)
-            <span class="label label-success">Featured</span>
-            #end
+        </h2>
+        <div class="clearfix">
+            #set( $artDate = $formatter.ifNull($page.articleDate, $formatter.now) )
+            <span class="pull-left timeago" title="$formatter.formatDateISO8601($artDate)">
+                $artDate
+            </span>
+            <div class="pull-right">
+                #if( $page.category )
+                    <span class="label label-primary">$page.category</span>
+                #end
+                #foreach($tag in $page.tags)
+                    #if ($page.isSelectedTag($tag))
+                        <span class="label label-primary">$tag</span>
+                    #end
+                #end
+                #if($page.featured)
+                    <span class="label label-success">Featured</span>
+                #end
+            </div>
         </div>
     </div>
+    <hr/>
 #else
-    <h2><a href="$page.href">Page title</a></h2>
-    <div class="clearfix">
-        <span class="pull-left timeago" title="">$formatter.formatDate($formatter.getCurrentDateService().getNow())</span>
-        <div class="pull-right">
-            <span class="label label-primary">Category</span>
-            <span class="label label-primary">tag1</span>
-            <span class="label label-primary">tag2</span>
-            <span class="label label-success">Featured</span>
+    <div class="blog-article-header">
+        <h2><a href="$page.href">Page title</a></h2>
+        <div class="clearfix">
+            <span class="pull-left timeago" title="">$formatter.formatDate($formatter.getCurrentDateService().getNow())</span>
+            <div class="pull-right">
+                <span class="label label-primary">Category</span>
+                <span class="label label-primary">tag1</span>
+                <span class="label label-primary">tag2</span>
+                <span class="label label-success">Featured</span>
+            </div>
         </div>
     </div>
+    <hr/>
 #end

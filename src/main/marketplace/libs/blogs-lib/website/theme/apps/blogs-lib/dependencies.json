@@ -3,6 +3,12 @@
     ],
     "dependencies": [
         {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/blogs/blogArticle.less"
+            }
+        },
+        {
             "js": {
                 "group": "main",
                 "path": "/static/js/jquery.timeago.js"

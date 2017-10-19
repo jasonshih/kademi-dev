@@ -1,0 +1,1 @@
+controllerMappings.addComponent("blogs/components", "blogArticleFiles", "html", "Shows files list of current blog article", "Blogs App");
