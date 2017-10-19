@@ -1,7 +1,11 @@
+/* HTML Components */
 controllerMappings.addComponent("rewardstore/components", "rewardProduct", "html", "Shows reward product with image, points and add to card button", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "recentlyViewedProducts", "html", "Shows products sliders which are recently viewed by current user", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "pointsRangeList", "html", "Shows points ranges list", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "productSort", "html", "Shows products sorting dropdown list", "Reward Store");
+controllerMappings.addComponent("rewardstore/components", "pointsEarned", "html", "Shows points earned for the current participant, for a selected points bucket and optionally filtered by a points tag", "Reward Store");
+
+/* EDM Components */
 controllerMappings.addComponent("rewardstore/components", "singleProductEDM", "edm", "Show single product for EDM Editor", "Reward Store");
 controllerMappings.addComponent("rewardstore/components", "rewardCategoriesListEDM", "edm", "Show reward store categories list for EDM Editor", "Reward Store");
 
@@ -19,58 +23,58 @@ function getPointsBalance() {
 
 function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {
     log.info('findProducts > page={}, params={}, rewardName={}, numberOfProducts={}, sort={}, asc={}', page, params, rewardName, numberOfProducts, sort, asc);
-    
+
     if (!numberOfProducts) {
         numberOfProducts = 12;
     } else {
         numberOfProducts = +numberOfProducts;
     }
-    
+
     var rewardStoreFolder = page;
     if (rewardName) {
         rewardStoreFolder = page.find("/" + rewardName);
     }
-    if( rewardStoreFolder == null ) {
+    if (rewardStoreFolder == null) {
         log.warn("Could not find reward store: " + rewardName);
         return null;
     }
     var rewardStoreName = rewardStoreFolder.rewardStore.name;
-    
-    
+
+
     var fromRange = 0;
-    if(params.fromRange) {
+    if (params.fromRange) {
         fromRange = +params.fromRange;
     }
-    
+
     var startPrice = null;
-    if(params.startPrice) {
+    if (params.startPrice) {
         startPrice = +params.startPrice;
     }
-    
+
     var endPrice = null;
-    if(params.endPrice) {
+    if (params.endPrice) {
         endPrice = +params.endPrice;
     }
-    
+
     var sortParam = 'title';
     if (params.sort) {
         sortParam = params.sort;
     } else if (sort) {
         sortParam = sort;
     }
-    
+
     var ascParam = true;
     if (params.asc) {
         ascParam = params.asc === 'true';
     } else if (asc) {
         ascParam = sort;
     }
-    
+
     var category = null;
     if (page.is('category')) {
         category = page.name;
     }
-    
+
 
     return applications.rewardStore.productSearch(rewardStoreName, params.q, category, startPrice, endPrice, fromRange, numberOfProducts, sortParam, ascParam);
 }

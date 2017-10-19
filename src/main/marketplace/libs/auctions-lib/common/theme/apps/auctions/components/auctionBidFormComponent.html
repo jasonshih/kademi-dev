@@ -1,0 +1,77 @@
+#if($page)
+    <div class="panel panel-default panel-auction-bid-form" data-ws-uri="$page.wSUri">
+        <div class="panel-heading">
+            <div class="panel-title">
+                #if(!$page.auctionClosed)
+                    Bid Form
+                #else
+                    Auction is ended
+                #end
+            </div>
+        </div>
+        <div class="panel-body">
+            #if(!$page.auctionClosed)
+                <form method="POST" action="." class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-md btn-primary">
+                                        Place Bid
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+    
+                <p><i class="fa fa-dollar fa-fw"></i>
+                    #if($page.currentBidValue)
+                        Current Bid: $<span id="auction-current-bid-value">$!page.currentBidValue</span>
+                    #else
+                        Current Bid: $<span id="auction-current-bid-value">$!page.auctionStartValue</span>
+                    #end
+                </p>
+    
+                <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="auction-bid-count">$!page.auctionBidCount</span></p>
+    
+                <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$!page.auctionEndDate</abbr></p>
+            #else
+                <h3>Won by <a href="/users/$page.wonBy.userName/public" target="_blank">$!page.wonBy.name</a>!</h3>
+            #end
+        </div>
+    </div>
+#else
+    <div id="panel-auction-bid-form" class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Bid Form</div>
+        </div>
+        <div class="panel-body">
+            <form method="POST" action="." class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-8">
+                        <p><input class="regex required form-control" type="text" size="5" name="auctionBidValue" value="$!page.currentBidValue" data-regex="^[0-9-.]+$" /></p>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-md btn-primary">
+                            Place Bid
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <p><i class="fa fa-dollar fa-fw"></i>
+                Current Bid: $<span id="auction-current-bid-value">0</span>
+            </p>
+
+            <p><i class="fa fa-list-ol fa-fw"></i> Bid Count: <span id="bidCount">10</span></p>
+
+            <p><i class="fa fa-clock-o fa-fw"></i> End at: <abbr class="timeago" title="$formatter.formatDateISO8601($page.auctionEndDate)">$formatter.formatDate($formatter.getCurrentDateService().getNow())</abbr></p>
+        </div>
+    </div>
+#end
+
+
+
+

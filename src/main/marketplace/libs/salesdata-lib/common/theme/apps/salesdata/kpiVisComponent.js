@@ -1,14 +1,13 @@
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
-
     KEditor.components['kpiVis'] = {
         init: function (contentArea, container, component, keditor) {
             flog('init "kpiVis" component', contentArea, container, component, keditor);
             
             var self = this;
 
-            if ($('[href="/static/nvd3/1.8.2/nv.d3.min.css"]').length === 0) {
+            if ($('[href="/static/nvd3/1.8.3/nv.d3.min.css"]').length === 0) {
                 $('head').append('<link href="/static/nvd3/1.8.2/nv.d3.min.css" rel="stylesheet" type="text/css" />');
             }
 
@@ -98,6 +97,62 @@
                             self.initKpiVis();
                         });
                     });
+
+                    form.find('.chart-title').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-chart-title', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.hasTitle').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-has-title', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.bordered').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-bordered', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.gridtick').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-grid', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.inverted').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-inverted', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
+
+                    form.find('.fillcolor').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+
+                        component.attr('data-fill-color', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            self.initKpiVis();
+                        });
+                    });
                 }
             });
         },
@@ -109,6 +164,12 @@
             form.find('.select-kpi').val(dataAttributes['data-href']);
             form.find('.select-type').val(dataAttributes['data-visualisation']);
             form.find('.kpi-height').val(dataAttributes['data-height']);
+            form.find('.chart-title').val(dataAttributes['data-chart-title']);
+            form.find('.hasTitle').prop("checked", dataAttributes['data-has-title'] != "false");
+            form.find('.bordered').prop("checked", dataAttributes['data-bordered'] != "false");
+            form.find('.gridtick').prop("checked", dataAttributes['data-grid'] != "false");
+            form.find('.inverted').prop("checked", dataAttributes['data-inverted'] == "true");
+            form.find('.fillcolor').val(dataAttributes['data-fill-color'] || 'bg-primary');
         }
     };
 

@@ -53,21 +53,18 @@
 #end
 
 #if ($modules.size() > 0)
-    <div class="modules-list row">
+    <div class="modules-list row modules-list-${itemsPerRow}">
         #set ($count = 0)
         #foreach($mod in $modules)
             #set ($count = $count + 1)
-            <div class="$moduleClass module-wrapper module-${layout}-wrapper">
+            <div class="$moduleClass module-wrapper module-wrapper-${layout}">
                 #if ($layout == "grid")
                     #renderModuleGridItem($mod $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
                 #else
                     #renderModuleListItem($mod)
                 #end
             </div>
-    
-            #if ($count % $itemsPerRow == 0 && $itemsPerRow > 1)
-                <div class="clearfix"></div>
-            #end
+        
             #if ($numberOfModules == 0)
             #elseif ($count >= $numberOfModules)
                 #break
@@ -78,21 +75,18 @@
     #if ($page)
         <p class="alert alert-warning">No module found</p>
     #else
-    <div class="modules-list row">
+    <div class="modules-list row modules-list-${itemsPerRow}">
         #set ($count = 0)
         #foreach($i in [1..12])
             #set ($count = $count + 1)
-            <div class="$moduleClass module-wrapper">
+            <div class="$moduleClass module-wrapper module-wrapper-${layout}">
                 #if ($layout == "grid")
                     #renderModuleGridItemExample($count $showTime $showCpd $showPoint $showButton $gridItemHeight $fullHeightThumb)
                 #else
                     #renderModuleListItemExample($count)
                 #end
             </div>
-    
-            #if ($count % $itemsPerRow == 0 && $itemsPerRow > 1)
-                <div class="clearfix"></div>
-            #end
+        
             #if ($numberOfModules == 0)
             #elseif ($count >= $numberOfModules)
                 #break

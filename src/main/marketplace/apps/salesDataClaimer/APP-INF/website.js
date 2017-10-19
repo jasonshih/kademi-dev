@@ -52,8 +52,8 @@ function getClaims(page, params) {
     return searchClaims(page, null, null);
 }
 
-function getPendingClaims(page, params) {
-    log.info('getClaims > page={}, params={}', page, params);
+function getPendingClaims(page) {
+    log.info('getPendingClaims > page={}', page);
     return searchClaims(page, 0, null);
 }
 

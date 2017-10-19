@@ -23,12 +23,6 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/salesdata/kpis.js"
-            }
-        },
-        {
-            "js": {
-                "group": "main",
                 "path": "/theme/apps/salesdata/kpiPeriodPicker.js"
             }
         },
@@ -102,6 +96,12 @@
             "less": {
                 "lessMedia": "all",
                 "path": "/theme/apps/salesdata/circleSales.less"
+            }
+        },
+        {
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/salesdata/salesdata.less"
             }
         }
     ]

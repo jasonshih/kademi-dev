@@ -45,7 +45,7 @@ function initCreateTranslation() {
     jQuery("form.createTranslation").forms({
         onSuccess: function (resp) {
             flog("The operation was successfully", resp);
-            Msg.success("The operation was successfully");
+            Msg.success(resp.messages[0]);
             $('#translationTableContainer').reloadFragment();
             $("#addTranslationModal").modal('hide');
         },

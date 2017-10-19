@@ -1,3 +1,14 @@
+#if (!$pointsTag || $pointsTag == "")
+#set ($pointsTag = "h2")
+#end
+
+#if (!$panelClass || $panelClass == "")
+#set ($panelClass = "panel-primary")
+#end
+
+#if (!$inverted || $inverted == "" || $inverted == "true")
+#set ($invertedClass = "panel-heading-inverted")
+#end
 #if ($userResource)
 <div class="pointsUserPanel">
     <div class="panel panel-default">
@@ -37,26 +48,50 @@
             #end
 
             #if ($availablePanel > 0)
-                <div class="panel-primary text-center">
-                    <div class="panel-heading user-total-points">
+                <div class="$!panelClass text-center">
+                    <div class="panel-heading $!invertedClass user-total-points">
                         #foreach($reward in $pointsBuckets)
+
+                            #set ($inGroup = false)
+                            #foreach($g in $reward.groupRewards)
+                                #if ($userResource.isInGroup($g.groupToReward))
+                                    #set ($inGroup = true)
+                                    #break
+                                #end
+                            #end
+
                             #set ($rewardPath = "/" + $reward.name)
                             #set( $rewardFolder = $page.find($rewardPath))
                             #set( $myPoint = false )
                             #set( $myPoint =  $rewardStoreApp.calcPointsBalance($profile, $reward.name) )
-    
-                            #if ($myPoint)
+                            #if ($reward.groupRewards.size() > 0)
+                                #if ($myPoint && $inGroup)
+                                    #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
+                                    <$!pointsTag>
+                                        <span id="user-total-points" title="$myPointString">$myPointString</span>
+                                    </$!pointsTag>
+                                    <small>
+                                        #if ($reward.title && $reward.title != " ")
+                                            $reward.title
+                                        #else
+                                            Points
+                                        #end
+                                    </small>
+                                #end
+                            #else
+                                #if ($myPoint)
                                 #set( $myPointString = $formatter.formatCurrency($myPoint, false) )
-                                <h2>
+                                <$!pointsTag>
                                     <span id="user-total-points" title="$myPointString">$myPointString</span>
-                                </h2>
+                                </$!pointsTag>
                                 <small>
                                     #if ($reward.title && $reward.title != " ")
-                                        $reward.title
+                                    $reward.title
                                     #else
-                                        Points
+                                    Points
                                     #end
                                 </small>
+                                #end
                             #end
                         #end
                     </div>

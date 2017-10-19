@@ -58,7 +58,7 @@ function getSearchClaimsQuery(page, status, user) {
         });
     }
 
-    if (status) {
+    if (isNotBlank(status) && !isNaN(status)) {
         queryJson.query.bool.must.push({
             'term': {'status': +status}
         });

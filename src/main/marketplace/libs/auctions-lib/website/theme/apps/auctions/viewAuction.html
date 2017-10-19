@@ -1,28 +1,37 @@
 <html>
-<head>
-    <title>Auction Detail - $title</title>
-</head>
-<body>
-<section>
-    <div class="container-bg background-for">
-        <div class="container-layout container">
-            <div class="container-content-wrapper">
-                <div class="row">
-                    <div class="col-sm-8" data-type="container-content">
-                        <section data-type="component-auctionDetail">
-                            <div data-dynamic-href="_components/auctionDetail"></div>
-                        </section>
-                    </div>
-
-                    <div class="col-sm-4" data-type="container-content">
-                        <section data-type="component-auctionBidInfo">
-                            <div data-dynamic-href="_components/auctionBidInfo"></div>
-                        </section>
+    <head>
+        <title>Auction Detail - $title</title>
+    </head>
+    <body>
+        <section>
+            <div class="container-bg background-for">
+                <div class="container-layout container">
+                    <div class="container-content-wrapper">
+                        <div class="row">
+                            <div class="col-sm-8" data-type="container-content">
+                                <section data-type="component-auctionTitle">
+                                    <div data-dynamic-href="_components/auctionTitle" id="default-auctionTitle"></div>
+                                </section>
+                                <section data-type="component-auctionImage">
+                                    <div data-dynamic-href="_components/auctionImage" id="default-auctionImage"></div>
+                                </section>
+                                <section data-type="component-auctionDescription">
+                                    <div data-dynamic-href="_components/auctionDescription" id="default-auctionDescription"></div>
+                                </section>
+                            </div>
+                            
+                            <div class="col-sm-4" data-type="container-content">
+                                <section data-type="component-auctionBidForm">
+                                    <div data-dynamic-href="_components/auctionBidForm" id="default-auctionBidForm"></div>
+                                </section>
+                                <section data-type="component-auctionBidHistory">
+                                    <div data-dynamic-href="_components/auctionBidHistory" id="default-auctionBidHistory"></div>
+                                </section>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</section>
-</body>
+        </section>
+    </body>
 </html>

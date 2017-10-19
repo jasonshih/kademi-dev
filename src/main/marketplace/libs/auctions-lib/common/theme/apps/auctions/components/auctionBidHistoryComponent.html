@@ -1,0 +1,41 @@
+#if($page)
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Bid History</div>
+        </div>
+        <table id="auction-bid-history" class="table table-hover table-striped">
+            <tbody class="small">
+                #if ($page.bidHistory.size() > 0)
+                    #foreach($c in $page.bidHistory)
+                        <tr>
+                            <td>$!c.bidValue</td>
+                            <td><abbr title="$formatter.formatDateISO8601($c.changeDate)" class="timeago">$!c.changeDate</abbr></td>
+                            <td><a href="/users/$c.changedBy.userName/public" target="_blank">$!c.changedBy.name</a></td>
+                        </tr>
+                    #end
+                #else
+                    <tr>
+                        <td colspan="99">No bid history</td>
+                    </tr>
+                #end
+            </tbody>
+        </table>
+    </div>
+#else
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">Bid History</div>
+        </div>
+        <table id="auction-bid-history" class="table table-hover table-striped">
+            <tbody class="small">
+                <tr>
+                    <td colspan="99">No bid history</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+#end
+
+
+
+

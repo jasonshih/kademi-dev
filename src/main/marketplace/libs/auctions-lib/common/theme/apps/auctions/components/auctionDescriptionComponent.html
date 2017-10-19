@@ -1,0 +1,19 @@
+#if($page && "$!page.title" != "")
+    <div class="auction-detail">
+        <div class="clearfix auction-body">
+            $!page.body
+        </div>
+    </div>
+#else
+    #fakeUI()
+#end
+
+#macro(fakeUI)
+    <div class="auction-detail">
+        <div class="clearfix auction-body">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facilis laborum molestias, odit asperiores nemo natus voluptate distinctio est sunt neque iste, quidem architecto, quos dolor repudiandae autem quae tenetur. Beatae officia, quas inventore nesciunt blanditiis quia, quidem repudiandae velit! Fugiat adipisci debitis eveniet, laudantium ipsam pariatur, dolorem eum tempore unde?
+        </div>
+    </div>
+#end
+
+

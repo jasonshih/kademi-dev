@@ -357,7 +357,9 @@
                     </div>
 
                     <div class="tab-pane" id="groups">
-                        <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        <p>
+                            <button class="btn btn-sm btn-primary Add AddGroup" data-toggle="modal" data-target="#modalGroup"><i class="fa fa-plus"></i> Add/remove groups</button>
+                        </p>
                         <div class="well margin-top-10">Add user groups to auction to allow these users to directly access the auction.</div>
                         <div class="GroupList">
                             #foreach($g in $page.selectedGroups)
@@ -368,9 +370,11 @@
                     </div>
 
                     <div class="tab-pane" id="organisations">
-                        <button class="btn btn-sm btn-primary Add AddOrganisation" data-toggle="modal" data-target="#modalOrganisations">
-                            <i class="fa fa-plus"></i> Add/remove organisations
-                        </button>
+                        <p>
+                            <button class="btn btn-sm btn-primary Add AddOrganisation" data-toggle="modal" data-target="#modalOrganisations">
+                                <i class="fa fa-plus"></i> Add/remove organisations
+                            </button>
+                        </p>
                         <div class="well margin-top-10">Add organisations to auction to allow these users to directly access the auction.</div>
                         <div id="OrganisationList" class="OrganisationList">
                             #foreach($g in $page.selectedOrganisations)

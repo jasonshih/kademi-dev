@@ -1,17 +1,45 @@
 #if( !$height )
     #set( $height = 200 )
 #end
-<div class="panel panel-default panel-kpi-visualisation">
+
+#set ($panelCls = "panel panel-default")
+#set ($panelBodyCls = "panel-body")
+#if ($bordered && $bordered != "true" && $bordered != "")
+#set ($panelCls = "")
+#set ($panelBodyCls = "")
+#end
+
+#if ($grid != "true")
+#set ($noGrid = "noGrid")
+#end
+
+#if ($inverted == "true")
+#set ($invertedPanel = "invertedPanel")
+#end
+
+#if (!$fillColor)
+#set ($fillColor = "bg-primary")
+#end
+#if (!$hasTitle || $hasTitle == "")
+#set ($hasTitle = "true")
+#end
+<div class="$!panelCls $!noGrid $!invertedPanel panel-kpi-visualisation">
+    <div class="fillColor hide $!fillColor"></div>
+    #if ($hasTitle == "true")
     <div class="panel-heading">
         <i class="fa fa-bar-chart"></i> 
         #set( $kpiTitle = $rootFolder.find($href).title )
+        #if ($chartTitle && $chartTitle != "")
+        #set( $kpiTitle = $chartTitle)
+        #end
         #if( $kpiTitle )
-        <a href="$href">$kpiTitle</a>
+        $kpiTitle
         #else
         Please select a KPI
         #end
     </div>
-    <div class="panel-body">
+    #end
+    <div class="$!panelBodyCls">
         <div style="height: $!{height}px" data-href="$href" data-visualisation="$visualisation" class="kpiVis">
             #if( $visualisation == "kpiLeaderboard" )
             <table class="table table-striped">

@@ -78,14 +78,23 @@
             var a = $(this);
             if (!a.hasClass('active')) {
                 var href = a.attr('href');
+                var selectProgramTitle = wrapper.find('.program.active').html()
+                var courseTitle = a.html();
+                
+                wrapper.find('.course-picker-text').html(selectProgramTitle + ' / ' + courseTitle);
                 
                 $.pjax({
                     selector: 'a.course:not(.pjaxdone)',
-                    fragment: '.container-my-learning',
-                    container: '.container-my-learning',
+                    fragment: '[data-dynamic-href="_components/modulesList"]',
+                    container: '[data-type="component-modulesList"]',
                     timeout: 5000,
                     url: href,
-                    debug: true
+                    debug: true,
+                    success: function (data) {
+                        var newDom = $('<div />').html(data);
+                        
+                        $('[data-type="component-courseDescription"] [data-dynamic-href]').html(newDom.find('[data-dynamic-href="_components/courseDescription"]'));
+                    }
                 });
                 
                 wrapper.find('a.course.active').removeClass('active');

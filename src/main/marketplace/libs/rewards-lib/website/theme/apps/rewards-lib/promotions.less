@@ -18,7 +18,6 @@
 }
 
 .rewardItem .rewardItemTitle {
-    font-size: 22px;
     margin-top: 0;
 }
 
@@ -29,9 +28,11 @@
     text-overflow: ellipsis;
     display: block;
 }
+.rewardItem [class^="bg-"] .rewardItemTitle a{
+    color: #fff;
+}
 
 .rewardItem .rewardItemDate {
-    font-size: 15px;
     font-style: italic;
 }
 
@@ -41,6 +42,7 @@
     right: 11px;
     padding: 10px 15px;
     z-index: 1;
+    color: #fff;
 }
 
 .rewardItem .embed-responsive-item {
@@ -48,12 +50,44 @@
     background-size: cover;
 }
 
+.promotionTile{
+    position: relative;
+    &:before{
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.3);
+        z-index: 1;
+    }
+    .rewardItemCaption{
+        position: absolute;
+        z-index: 2;
+        bottom: 0;
+    }
+    background-position: center;
+    background-size: cover;
+    height: 0;
+    padding-bottom: ~"calc((100% + @{grid-gutter-width}) * 0.8)";
+    display: block;
+    &.promotionTileHero{
+        padding-bottom: ~"calc((100% + @{grid-gutter-width}) * 0.4)";
+    }
+
+    &:hover{
+        text-decoration: none;
+    }
+}
+
 .rewardItem .rewardItemActions {
     margin-top: 25px;
 }
 
-.rewardItem .caption {
+.rewardItemCaption {
     padding: 20px;
+    color: #fff;
 }
 
 .promotion-photos {

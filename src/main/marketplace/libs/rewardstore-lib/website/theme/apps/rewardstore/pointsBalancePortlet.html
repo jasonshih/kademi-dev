@@ -1,12 +1,30 @@
 #if ($profile)
-#set ($rewardStoreApp = $applications.rewardStore)
-#set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
-#foreach($p in $pointsBuckets)
-<li class="points-link" title="$p.title">
-    <a href="javascript:void(0)" class="">
-        <i class="fa fa-star"></i>
-        $formatter.formatCurrency($rewardStoreApp.calcPointsBalance($profile, $p.name), false)
-    </a>
-</li>
-#end
+    #set ($rewardStoreApp = $applications.rewardStore)
+    #set ($pointsBuckets = $rewardStoreApp.pointsBuckets)
+    #foreach($p in $pointsBuckets)
+        #set ($inGroup = false)
+        #foreach($g in $p.groupRewards)
+            #if ($userResource.isInGroup($g.groupToReward))
+            #set ($inGroup = true)
+            #break
+            #end
+        #end
+        #if ($p.groupRewards.size() > 0)
+            #if ($inGroup)
+            <li class="points-link" title="$p.title">
+                <a href="javascript:void(0)" class="">
+                    <i class="fa fa-star"></i>
+                    $formatter.formatCurrency($rewardStoreApp.calcPointsBalance($profile, $p.name), false)
+                </a>
+            </li>
+            #end
+        #else
+            <li class="points-link" title="$p.title">
+                <a href="javascript:void(0)" class="">
+                    <i class="fa fa-star"></i>
+                    $formatter.formatCurrency($rewardStoreApp.calcPointsBalance($profile, $p.name), false)
+                </a>
+            </li>
+        #end
+    #end
 #end

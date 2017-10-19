@@ -878,7 +878,7 @@ function promptRenameModal(id, url, title, instructions, caption, buttonName, bu
         '               <div class="form-group">' +
         '                   <label for="' + inputId + '" class="control-label col-md-3">' + caption + '</label>' +
         '                   <div class="col-md-8">' +
-        '                       <input type="text" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />' +
+        '                       <input type="text" value="'+currentName+'" class="required form-control ' + inputClass + '" id="' + inputId + '" name="' + buttonName + '" placeholder="' + inputPlaceholder + '" />' +
         '                   </div>' +
         '               </div>' +
         '           </div>' +

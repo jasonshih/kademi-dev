@@ -13,6 +13,7 @@ function initLeadManEvents() {
     initNewLeadFromEmail();
     initNewQuickLeadForm();
     initNewContactForm();
+    initDeleteCust();
     initNewTaskForm();
     initNewQuoteForm();
     initNewNoteForm();
@@ -480,6 +481,25 @@ function initNewLeadForm() {
     });
 
     form.forms({
+        validate: function (form, config) {
+            flog('validating ... ', form);
+            var ret = {
+                error: 0,
+                errorFields: [],
+                errorMessages: []
+            };
+            var taskDescription = form.find('textarea[name=taskDescription]').val();
+            if (taskDescription !== undefined && taskDescription !== "") {
+                var title = $("#title").val();
+                if (title === undefined || title === "") {
+                    ret.error = 1;
+                    ret.errorFields.push($("#title"));
+                    ret.errorMessages.push("Please complete the task title.");
+                }
+            }
+            flog("ret , ", ret);
+            return ret;
+        },
         beforePostForm: function (form, config, data) {
             flog('beforePost', data);
             data += '&assignedToOrgId=' + $.cookie('org');
@@ -738,6 +758,76 @@ function initNewContactForm() {
         $(this).addClass("clicked");
     });
 }
+
+function initDeleteCust() {
+    function showSweetAlert(option) {
+        swal({
+            title: option.title || 'Are you sure?',
+            text: option.message,
+            type: option.type || 'warning',
+            showCancelButton: true,
+            confirmButtonClass: option.btnClass,
+            confirmButtonText: option.btnText,
+            closeOnConfirm: true,
+            showLoaderOnConfirm: false
+        }, typeof option.callback === 'function' ? option.callback : null);
+    }
+
+    $(".select-all-cust").click(function (e) {
+        var node = $(e.target);
+        flog("selectall", node, node.is(":checked"));
+        $("#searchResults").find("input[type=checkbox][name=custId]").each(function (index) {
+            $(this).prop("checked", true);
+        });
+    });
+
+    function removeCustomers() {
+        var checkBoxes = $('#searchResults').find('input[type=checkbox][name=custId]:checked');
+        var ids = [];
+        checkBoxes.each(function (a, item) {
+            ids.push($(item).val());
+        });
+        flog("Going to remove: ", ids);
+        $.ajax({
+            url: "/custs",
+            method: "POST",
+            dataType: "json",
+            data: {
+                deleteContacts: ids.join(',')
+            },
+            success: function (data) {
+                if (data.status) {
+                    Msg.success('Customers removed successfully');
+                    $("#searchResults").reloadFragment();
+                } else {
+                    if (data.messages.length > 0) {
+                        Msg.error(data.messages[0]);
+                    } else {
+                        Msg.error('Could not remove customers');
+                    }
+                }
+            }
+        });
+    }
+
+    $(".deleteCust").click(function (e) {
+        var checkBoxes = $('#searchResults').find('input[type=checkbox][name=custId]:checked');
+        if (checkBoxes.length === 0) {
+            Msg.error("Please select the customers you want to remove by clicking the checkboxs to the right", 'no-cust-selected');
+        } else {
+            var option = {
+                title: "Are you sure you want to remove " + checkBoxes.length + " customers?",
+                message: "",
+                type: 'warning',
+                btnClass: 'btn-danger',
+                btnText: "Remove",
+                callback: removeCustomers
+            };
+            showSweetAlert(option);
+        }
+    });
+}
+
 
 function initNewTaskForm() {
     var modal = $('#quickTaskModal');
@@ -1719,7 +1809,7 @@ function initStatsSummaryComponents() {
             url: '/_leadManStatsSummary?funnelName=' + funnelName,
             dataType: 'JSON',
             success: function (resp) {
-                flog('initStatsSummaryComponents Resp', resp );
+                flog('initStatsSummaryComponents Resp', resp);
 
                 if (resp.status) {
                     var completedTasksCount = (resp.data.tasks != null ? resp.data.tasks.completedTasks.doc_count : 0) || 0;

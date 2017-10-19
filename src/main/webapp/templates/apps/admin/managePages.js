@@ -6,10 +6,31 @@ function initManagePages() {
     setRecentItem(window.location.pathname, window.location.pathname);
     initPjax();
     initDeleteFolders();
+    initRenameFolders();
 }
 
 function initCopyCutPaste() {
     $('#pages-inner').cutcopy();
+}
+
+function initRenameFolders() {
+    var container = $('#filesContainer');
+    container.on('click', '.btn-rename', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var target = $(this);
+        var href = target.attr('href');
+
+        promptRenameModal("renameFileFolder", "", "Rename folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href, function (sourceHref, destHref) {
+            var sourceName = getFileName(sourceHref);
+            var destName = getFileName(destHref);
+            $('#page-list').reloadFragment({
+                url: window.location.href
+            });
+            Msg.success(sourceName + ' is renamed to ' + destName);
+        });
+    });
 }
 
 function initCRUDPages() {
@@ -312,7 +333,7 @@ function addMetaTags(metasData) {
 
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
-    var id = (new Date()).getTime();
+    var id = Base64.encode(uuid4());
     var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
@@ -325,6 +346,14 @@ function addMetaTag(name, content) {
         '</div>'
     );
 }
+
+var uuid4 = function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, _uuid4);
+};
+//// OPTIMIZATION - cache callback
+var _uuid4 = function(cc) {
+    var rr = Math.random() * 16 | 0; return (cc === 'x' ? rr : (rr & 0x3 | 0x8)).toString(16);
+};
 
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');

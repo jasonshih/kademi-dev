@@ -1,43 +1,82 @@
+#set( $comingUpAuction = false )
+
 #set($auctionFolder = $rootFolder.find("/auctions"))
 #if ($auctionFolder && $auctionFolder.isReadable())
-<div class="panel panel-default panel-coming-up-auction">
-    <div class="panel-heading">
-        <div class="panel-title">Live Auction</div>
-    </div>
     #set($auctions = $auctionFolder.childrenWithPermission.sortByExpr("auctionEndDate"))
-    #set($isAvailable = false)
     #foreach($auction in $auctions)
         #if($auction.isInGroup() && $auction.auctionState == "open")
-            <div class="panel-body">
-                #set($bg = "/theme/img/photo_holder.png")
-                #if( $auction.bestSquareImageHref )
-                    #set($bg = $auction.bestSquareImageHref + "/alt-600-400.png")
-                #end
+    
+            #set($comingUpAuction = $auction)
+            #break
+        #end
+    #end
+#end
 
-                <div class="embed-responsive embed-responsive-4by3">
-                    <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+#if ($comingUpAuction == false)
+    #if (!$page)
+        <div class="panel panel-default panel-coming-up-auction">
+            <div class="panel-heading">
+                <div class="panel-title">Live Auction</div>
+            </div>
+            <div class="panel-body">
+                <h3>No coming up auction found</h3>
+            </div>
+        </div>
+    #end
+#else
+    <div class="panel panel-default panel-coming-up-auction auction">
+        <div class="panel-heading">
+            <div class="panel-title">Live Auction</div>
+        </div>
+        #set($bg = "/theme/img/photo_holder.png")
+        #if( $comingUpAuction.bestSquareImageHref )
+            #set($bg = $comingUpAuction.bestSquareImageHref + "/alt-600-400.png")
+        #end
+
+        <div class="embed-responsive embed-responsive-4by3">
+            <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+        </div>
+        <div class="panel-info">
+            <div class="panel-heading">
+                <div class="auction-info">
+                    <div class="text-center"><strong>$comingUpAuction.title</strong></div>
+                </div>
+                <div class="auction-countdown">
+                    <div class="countdown text-center" data-end="$formatter.formatDateISO8601($comingUpAuction.auctionEndDate)" data-wSUri="$comingUpAuction.wSUri">
+                        00:00:00:<span>00</span>
+                    </div>
+                </div>
+                <div class="auction-info">
+                    <div class="text-center">Current Bid:
+                        #if($comingUpAuction.currentBidValue)
+                            <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($comingUpAuction.currentBidValue, "#[[#,###]]#")</strong>
+                        #else
+                            <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($comingUpAuction.auctionStartValue, "#[[#,###]]#")</strong>
+                        #end
+                    </div>
                 </div>
             </div>
-            <div class="panel-info">
-                <div class="panel-heading">
-                    <div class="auction-countdown">
-                        <div class="countdown text-center" data-end="$formatter.formatDateISO8601($auction.auctionEndDate)" data-wSUri="$auction.wSUri">
+        </div>
+        #if ($showDescription == "true")
+            <div class="panel-body">
+                <div class="clearfix">$!comingUpAuction.description</div>
+                <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input type="number" class="form-control required regex" value="" id="bidValue" name="auctionBidValue" data-regex="^[0-9-.]+$" data-message="Amount bid must be digits" />
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-success">Bid</button>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="auction-info">
-                        <div class="text-center">Current Bid:
-                            #if($auction.currentBidValue)
-                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.currentBidValue, "#[[#,###]]#")</strong>
-                            #else
-                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.auctionStartValue, "#[[#,###]]#")</strong>
-                            #end
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
+        #else
             <div class="panel-default">
                 <div class="panel-heading">
-                    <form action="/auctions/$auction.name" method="post" class="form-horizontal">
+                    <form action="/auctions/$comingUpAuction.name" method="post" class="form-horizontal">
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <div class="input-group">
@@ -51,18 +90,6 @@
                     </form>
                 </div>
             </div>
-
-            #set($isAvailable = true)
-            #break
         #end
-    #end
-
-    #if (!$isAvailable)
-        <div class="panel-body">
-            <br />
-            <h3 class="text-center">There are <br /> no available <br /> auctions.</h3>
-            <br />
-        </div>
-    #end
-</div>
+    </div>
 #end

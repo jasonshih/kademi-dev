@@ -1,75 +1,86 @@
-function initViewAuction(WSUri) {
-    $('abbr.timeago').timeago();
-    bidForm();
-    initWebsockets(WSUri);
-}
-
-function initWebsockets(WSUri) {
-    try {
-        var port = parseInt(window.location.port || 80) + 1;
-        var proto = 'ws://';
-        if (window.location.protocol === 'https:') {
-            proto = 'wss://';
-            port = parseInt(window.location.port || 443) + 1;
-        }
-        var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + WSUri;
-
-        flog("initWebsockets", window.location.hostname, wsPath);
-
-        wsocket = new WebSocket(wsPath);
-        wsocket.onmessage = function (evt) {
-            var c = $.parseJSON(evt.data);
-            if (c.beanType != null && c.beanType == "auctionBid") {
-                log("onMessage", c);
-                var dt = moment(c.bidDate);
-                flog("Received Date: ", dt);
-                processReceivedBid(c);
-            }else{ // Bid must be closing
-                $("#bidFromDiv").hide();
-                Msg.info("Auction is closing, no more bids will be accepted.")
-            }
-        };
-        log("done initWebsockets");
-    } catch (e) {
-        // TODO: setup polling to load comments every minute or so
-        log("Websocket initialisation failed. Live bid stream is not available");
-    }
-}
-
-function processReceivedBid(c) {
-    var dt = moment(c.bidDate);
-    $('#bidHistory tbody').prepend('<tr><td>' + c.bidValue.toFixed(2) + '</td><td><abbr title="' + dt.format(moment.ISO_8601) + '" class="timeago">' + dt.format() + '</abbr></td><td><a href="' + c.bidderHref + '" > ' + c.bidderName + ' </a></td></tr>');
-    if($('#bidHistory tr').length > 5){
-        $('#bidHistory tr:last').remove();
-    }
-    $('abbr.timeago').timeago();
-    $('#bidCurrentValue').text(c.auctionCurrentBidValue);
-    $('#bidCount').text(c.auctionCurrentBidCount);
-}
-
-function bidForm() {
-    $("#bidForm").forms({
-        onSuccess: function (resp) {
-            flog("done", resp);
-            console.log(resp);
-            if (!window.WebSocket) {
-                $("#BidInfo").reloadFragment({
-                    whenComplete: function () {
-                        $('abbr.timeago').timeago();
-                        bidForm();
-                    }
-                });
-            }
-            Msg.success('Bid Placed');
+(function ($) {
+    $(function () {
+        var panelBidForm = $('.panel-auction-bid-form');
+        
+        if (panelBidForm.length > 0) {
+            panelBidForm.find('.timeago').timeago();
+            initBidForm(panelBidForm);
+            initWebsockets(panelBidForm.attr('data-ws-uri'), panelBidForm);
         }
     });
-}
-
-function getAuctionPath(path) {
-    path = stripFragment(path); // remove any fragment like #section
-    if (path.endsWith('/')) {
-        path = path.substring(0, path.length - 1);
+    
+    function initBidForm(panel) {
+        flog('initBidForm', panel);
+        
+        panel.find('form').forms({
+            onSuccess: function (resp) {
+                if (!window.WebSocket) {
+                    panel.closest('[data-dynamic-href]').reloadFragment({
+                        whenComplete: function () {
+                            panel.find('.timeago').timeago();
+                            initBidForm(panel);
+                        }
+                    });
+                }
+                
+                Msg.success('Bid Placed');
+            }
+        });
     }
-    var pos = path.lastIndexOf('/');
-    return path.substring(pos + 1);
-}
+    
+    function initWebsockets(wsUri, panel) {
+        try {
+            var port = parseInt(window.location.port || 80) + 1;
+            var proto = 'ws://';
+            if (window.location.protocol === 'https:') {
+                proto = 'wss://';
+                port = parseInt(window.location.port || 443) + 1;
+            }
+            var wsPath = proto + window.location.hostname + ':' + port + '/comments/' + window.location.hostname + '/auctionBid/' + wsUri;
+            
+            flog('initWebsockets', window.location.hostname, wsPath);
+            
+            var wsocket = new WebSocket(wsPath);
+            wsocket.onmessage = function (evt) {
+                var data = $.parseJSON(evt.data);
+                if (data.beanType != null && data.beanType == 'auctionBid') {
+                    processReceivedBid(data, panel);
+                } else {
+                    Msg.info('Auction is closing, no more bids will be accepted.')
+                    panel.closest('[data-dynamic-href]').reloadFragment({
+                        whenComplete: function () {
+                            panel.find('.timeago').timeago();
+                        }
+                    });
+                }
+            };
+        } catch (e) {
+            flog('Websocket initialisation failed. Live bid stream is not available');
+        }
+    }
+    
+    function processReceivedBid(data, panel) {
+        var dt = moment(data.bidDate);
+        
+        var bidHistoryBody = $('#auction-bid-history tbody');
+        if (bidHistoryBody.length > 0) {
+            if (bidHistoryBody.find('[colspan]').length > 0) {
+                bidHistoryBody.html('');
+            }
+            
+            bidHistoryBody.prepend(
+                '<tr>' +
+                '    <td>' + data.bidValue.toFixed(2) + '</td>' +
+                '    <td><abbr title="' + dt.toISOString() + '" class="timeago">' + dt.format() + '</abbr></td>' +
+                '    <td><a href="' + data.bidderHref + '" target="_blank"> ' + data.bidderName + ' </a></td>' +
+                '</tr>'
+            );
+            
+            bidHistoryBody.find('.timeago').timeago();
+        }
+        
+        panel.find('#auction-current-bid-value').text(data.auctionCurrentBidValue);
+        panel.find('#auction-bid-count').text(data.auctionCurrentBidCount);
+    }
+    
+})(jQuery);
