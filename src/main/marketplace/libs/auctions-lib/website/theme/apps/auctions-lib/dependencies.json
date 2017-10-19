@@ -28,6 +28,12 @@
             }
         },
         {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/auctions/viewAuctions.js"
+            }
+        },
+        {
             "css": {
                 "cssMedia": "all",
                 "path": "/theme/apps/auctions/viewAuction.css"
@@ -36,7 +42,7 @@
         {
             "less": {
                 "lessMedia": "all",
-                "path": "/theme/apps/auctions/comingUpAuction.less"
+                "path": "/theme/apps/auctions/auctions.less"
             }
         },
         {

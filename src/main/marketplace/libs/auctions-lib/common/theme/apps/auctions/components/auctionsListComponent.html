@@ -1,35 +1,34 @@
+#set ($clsName = "col-sm-3")
+#if ($itemsPerRow == 1)
+    #set ($clsName = "col-sm-12")
+#elseif ($itemsPerRow == 2)
+    #set ($clsName = "col-sm-6")
+#elseif ($itemsPerRow == 3)
+    #set ($clsName = "col-sm-4")
+#elseif ($itemsPerRow == 4)
+    #set ($clsName = "col-sm-3")
+#elseif ($itemsPerRow == 6)
+    #set ($clsName = "col-sm-2")
+#end
+
 #if($page)
     <div class="row" id="auctions-list">
-        #foreach($auction in $page.childrenWithPermission)
-        #set($bg = "/theme/img/photo_holder.png")
-        #if( $auction.bestSquareImageHref )
-        #set($bg = $auction.bestSquareImageHref)
+        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionEndDate"))
+            #if (!$auction.auctionClosed && $auction.auctionState == 'open')
+                #renderAuction($auction $clsName)
+            #end
         #end
-
-        <div class="col-sm-6 col-md-4 auction-item">
-            <div class="thumbnail auction">
-                <a href="$auction.href">
-                    <div class="embed-responsive embed-responsive-4by3">
-                        <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
-                    </div>
-                </a>
-
-                <div class="caption">
-                    <h3 class="auction-title" title="$auction.title"><a href="$auction.href">$auction.title</a></h3>
-
-                    <p><i class="fa fa-clock-o"></i> <abbr class="timeago" title="$formatter.formatDateISO8601($auction.auctionEndDate)">$auction.auctionEndDate</abbr></p>
-
-                    <p class="auction-content">$!auction.description</p>
-
-                    <div class="auction-actions">
-                        <a href="$auction.href" class="btn btn-primary btn-sm" role="button">Bid now</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionStartDate"))
+            #if (!$auction.auctionClosed && $auction.auctionState == 'active')
+                #renderAuction($auction $clsName)
+            #end
+        #end
+        #foreach($auction in $page.childrenWithPermission.sortByExpr("auctionEndDate"))
+            #if ($auction.auctionClosed)
+                #renderAuction($auction $clsName)
+            #end
         #end
     </div>
-
 #else
     <div class="row" id="fake-auctions-list">
 
@@ -53,6 +52,81 @@
                         <a href="#" class="btn btn-primary btn-sm" role="button">Bid now</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+#end
+
+#macro (renderAuction $auction $clsName)
+    <div class="$clsName auction">
+        <div class="panel panel-default">
+            #set($bg = "/theme/img/photo_holder.png")
+            #if( $auction.bestSquareImageHref )
+                #set($bg = $auction.bestSquareImageHref + "/alt-600-400.png")
+            #end
+
+            <div class="embed-responsive embed-responsive-4by3">
+                <span class="embed-responsive-item" style="background-image: url('$bg');"></span>
+            </div>
+            <div class="panel-info">
+                <div class="panel-heading">
+                    <div class="auction-info">
+                        <div class="text-center"><strong>$auction.title</strong></div>
+                    </div>
+                    <div class="auction-countdown">
+                        #if($auction.auctionClosed)
+                            <div class="countdown text-center">
+                                $formatter.formatDate($auction.auctionEndDate)
+                            </div>
+                        #else
+                            #if ($auction.auctionState == 'active')
+                                <div class="countdown text-center" data-end="$formatter.formatDateISO8601($auction.auctionStartDate)" data-wSUri="$auction.wSUri">
+                                    00:00:00:<span>00</span>
+                                </div>
+                            #else
+                                <div class="countdown text-center" data-end="$formatter.formatDateISO8601($auction.auctionEndDate)" data-wSUri="$auction.wSUri">
+                                    00:00:00:<span>00</span>
+                                </div>
+                            #end
+                        #end
+                    </div>
+                    <div class="auction-info">
+                        <div class="text-center">
+                            #if($auction.auctionClosed)
+                                Final Bid:
+                            #else
+                                Current Bid:
+                            #end
+                            #if($auction.currentBidValue)
+                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.currentBidValue, "#[[#,###]]#")</strong>
+                            #else
+                                <strong class="bidUnit">$</strong><strong class="bidValue">$formatter.formatNumeric($auction.auctionStartValue, "#[[#,###]]#")</strong>
+                            #end
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body auction-actions">
+                #if($auction.auctionClosed)
+                    #if ($auction.wonBy)
+                        <h3 class="text-center">Won by <a href="/users/$auction.wonBy.userName/public" target="_blank">$!auction.wonBy.name</a>!</h3>
+                    #else
+                        <h3 class="text-center">No winner</h3>
+                    #end
+                #else
+                    #if ($showDescription == "true")
+                        <div class="clearfix">$!auction.description</div>
+                    #end
+                    <div class="#if ($showDescription == "true") text-right #else text-center #end">
+                        <a href="$auction.href" class="btn btn-primary btn-sm" role="button">
+                            #if ($auction.auctionState == 'active')
+                                Opening soon
+                            #else
+                                Bid now
+                            #end
+                        </a>
+                    </div>
+                #end
             </div>
         </div>
     </div>
