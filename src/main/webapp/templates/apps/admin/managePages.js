@@ -6,10 +6,29 @@ function initManagePages() {
     setRecentItem(window.location.pathname, window.location.pathname);
     initPjax();
     initDeleteFolders();
+    initRenameFolders();
 }
 
 function initCopyCutPaste() {
     $('#pages-inner').cutcopy();
+}
+
+function initRenameFolders() {
+    var container = $('#filesContainer');
+    container.on('click', '.btn-rename', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var target = $(this);
+        var href = target.attr('href');
+
+        promptRenameModal("renameFileFolder", "", "Rename folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href, function (sourceHref, destHref) {
+            var sourceName = getFileName(sourceHref);
+            var destName = getFileName(destHref);
+            $('#page-list').reloadFragment();
+            Msg.success(sourceName + ' is renamed to ' + destName);
+        });
+    });
 }
 
 function initCRUDPages() {
