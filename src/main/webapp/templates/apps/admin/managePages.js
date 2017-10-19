@@ -331,7 +331,7 @@ function addMetaTags(metasData) {
 
 function addMetaTag(name, content) {
     var metaWrapper = $('.meta-wrapper');
-    var id = (new Date()).getTime();
+    var id = Base64.encode(uuid4());
     var isSeoMeta = name === 'keywords' || name === 'description';
     
     metaWrapper.append(
@@ -344,6 +344,14 @@ function addMetaTag(name, content) {
         '</div>'
     );
 }
+
+var uuid4 = function() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, _uuid4);
+};
+//// OPTIMIZATION - cache callback
+var _uuid4 = function(cc) {
+    var rr = Math.random() * 16 | 0; return (cc === 'x' ? rr : (rr & 0x3 | 0x8)).toString(16);
+};
 
 function addParam(title, value) {
     var metaWrapper = $('.param-wrapper');
