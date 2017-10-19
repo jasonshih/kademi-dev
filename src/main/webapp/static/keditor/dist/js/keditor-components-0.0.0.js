@@ -5,6 +5,13 @@
  * @version: 0.0.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor accordion Component
  * @copyright: Kademi (http://kademi.co)
@@ -156,13 +163,62 @@
                         comp.attr('data-panel-style', this.value);
                         comp.find('.panel').removeClass(old).addClass(this.value);
                     });
+                    
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-collapsed-icon, .btn-expanded-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-expanded-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                component.attr('data-expanded-icon', e.icon);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                        });
+                    });
+                   
+                    form.find('.btn-collapsed-icon').on('change', function (e) {
+                                var comp = keditor.getSettingComponent();
+                                var old = comp.attr('data-panel-colapss') || 'fa-chevron-down';
+                                comp.attr('data-panel-colapss', e.icon);
+                                comp.find('.panelIcon1').removeClass(old).addClass(e.icon);
+                            });
+                            
+                   
+                     form.find('.btn-expanded-icon').on('change', function (e) {
+                                var comp = keditor.getSettingComponent();
+                                var old = comp.attr('data-panel-expanded') || 'fa-chevron-up';
+                                comp.attr('data-panel-expanded', e.icon);
+                                comp.find('.panelIcon2').removeClass(old).addClass(e.icon);
+                            });
+                   
                 }
             });
         },
-
+  
         showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "Accordion" component');
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            
             form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
             form.find('.panelStyle').val(component.attr('data-panel-style'));
+            form.find('.btn-collapsed-icon').val(component.attr('data-panel-colapss'));
+            form.find('.btn-expanded-icon').val(component.attr('data-panel-expanded'));
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconCollapsed = dataAttributes['data-collapsed-icon'] || 'fa-caret-up';
+                    form.find('.btn-collapsed-icon').find('i').attr('class', 'fa ' + iconCollapsed).end().find('input').val(iconCollapsed);
+                    var iconExpanded = dataAttributes['data-expanded-icon'] || 'fa-caret-down';
+                    form.find('.btn-expanded-icon').find('i').attr('class', 'fa ' + iconExpanded).end().find('input').val(iconExpanded);
+                });
+            });
         }
     };
 })(jQuery);

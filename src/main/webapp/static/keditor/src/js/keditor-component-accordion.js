@@ -1,3 +1,10 @@
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor accordion Component
  * @copyright: Kademi (http://kademi.co)
@@ -149,13 +156,54 @@
                         comp.attr('data-panel-style', this.value);
                         comp.find('.panel').removeClass(old).addClass(this.value);
                     });
+                    
+                    $.getStyleOnce('/static/bootstrap-iconpicker/1.7.0/css/bootstrap-iconpicker.min.css');
+                    $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                        $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                            form.find('.btn-collapsed-icon, .btn-expanded-icon').iconpicker({
+                                iconset: 'fontawesome',
+                                cols: 10,
+                                rows: 4,
+                                placement: 'left'
+                            });
+                            
+                            form.find('.btn-collapsed-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                
+                                component.attr('data-collapsed-icon', e.icon);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                            
+                            form.find('.btn-expanded-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                
+                                component.attr('data-expanded-icon', e.icon);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                        });
+                    });
+                            
                 }
             });
         },
 
         showSettingForm: function (form, component, keditor) {
+            flog('showSettingForm "Accordion" component');
+            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
+            
             form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
             form.find('.panelStyle').val(component.attr('data-panel-style'));
+            
+            $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
+                $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
+                    var iconCollapsed = dataAttributes['data-collapsed-icon'] || 'fa-caret-up';
+                    form.find('.btn-collapsed-icon').find('i').attr('class', 'fa ' + iconCollapsed).end().find('input').val(iconCollapsed);
+                    var iconExpanded = dataAttributes['data-expanded-icon'] || 'fa-caret-down';
+                    form.find('.btn-expanded-icon').find('i').attr('class', 'fa ' + iconExpanded).end().find('input').val(iconExpanded);
+                });
+            });
         }
     };
 })(jQuery);
