@@ -74,7 +74,7 @@
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
                                     '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
-                                    '    <span class="input-group-addon">Widthh</span>' +
+                                    '    <span class="input-group-addon">Width</span>' +
                                     '    <input type="text" class="form-control txt-width" placeholder="Image width" />' +
                                     '</div>'
                                 );
