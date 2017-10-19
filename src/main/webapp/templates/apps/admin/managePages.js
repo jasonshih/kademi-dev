@@ -25,7 +25,9 @@ function initRenameFolders() {
         promptRenameModal("renameFileFolder", "", "Rename folder", "", "Enter new name", "newName", "Rename", "simpleChars", "Enter file or folder name", href, function (sourceHref, destHref) {
             var sourceName = getFileName(sourceHref);
             var destName = getFileName(destHref);
-            $('#page-list').reloadFragment();
+            $('#page-list').reloadFragment({
+                url: window.location.href
+            });
             Msg.success(sourceName + ' is renamed to ' + destName);
         });
     });
