@@ -26,7 +26,7 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
             orgRoot.addGroupToWebsite(group, website);
             log.info("Created sales group '" + salesGroupName + "'");
             if (alertsApp) {
-                alertsApp.createAdminAlert("KLeadMan", "We've created a group called " + group.name + " for your sales people. Please be sure to <a href='/groups/" + groupName + "'>check the settings here</a>.");
+                alertsApp.createAdminAlert("KLeadMan", "We've created a group called " + group.name + " for your sales people. Please be sure to <a href='/groups/" + group.name + "'>check the settings here</a>.");
             }
         }
 
@@ -38,7 +38,7 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
             orgRoot.addGroupToWebsite(group, website);
             log.info("Created sales group '" + managerGroupName + "'");
             if (alertsApp) {
-                alertsApp.createAdminAlert("KLeadMan", "We've created a group called " + group.name + " for your sales managers. Please be sure to <a href='/groups/" + groupName + "'>check the settings here</a>.");
+                alertsApp.createAdminAlert("KLeadMan", "We've created a group called " + group.name + " for your sales managers. Please be sure to <a href='/groups/" + group.name + "'>check the settings here</a>.");
             }
         }
 
@@ -81,7 +81,8 @@ function initLeadManApp(orgRoot, webRoot, enabled, repoDir) {
             var hash = col.hash;
             var funnel = leadmanApp.createFunnel("journey1", hash);
             if (alertsApp) {
-                alertsApp.createAdminAlert("KLeadMan", "We've created a customer journey for you here - <a href='/funnels/" + funnel.name + "'>Edit journey here</a>");
+                existingFunnel = orgRoot.find('/funnels/journey1');
+                alertsApp.createAdminAlert("KLeadMan", "We've created a customer journey for you here - <a href='/funnels/" + existingFunnel.name + "/"+ existingFunnel.liveVersion +"'>Edit journey here</a>");
             }
         }
 
