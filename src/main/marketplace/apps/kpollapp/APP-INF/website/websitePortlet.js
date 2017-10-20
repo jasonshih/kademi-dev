@@ -128,21 +128,12 @@ function answerPoll(page, params, context) {
             
             if (isNull(answer)) {
                 if (poll.jsonObject.pointSystem && poll.jsonObject.point && !isNaN(poll.jsonObject.point)) {
-                    var pointSystems = page.find('/rewards');
-                    var pointSystem = pointSystems.child(poll.jsonObject.pointSystem);
+                    var reason = 'Answered poll with name="' + poll.jsonObject.name + '"';
                     
-                    if (isNull(pointSystem)) {
-                        log.warn('Point system named="{}" does not exist! Adding point is skipped!', poll.jsonObject.pointSystem);
-                    } else {
-                        if (pointSystem.isInGroup()) {
-                            var reason = 'Answered poll with name="' + poll.jsonObject.name + '"';
-                            
-                            pointSystem.addPoint(page.currentUser, poll.jsonObject.point, reason);
-                            log.info('Added "{}" point for user "{}" to "{}" with description: {}', poll.jsonObject.point, page.currentUser.name, poll.jsonObject.pointSystem, reason);
-                        } else {
-                            log.warn('Current user is not in any groups of Point system named="{}"', poll.jsonObject.pointSystem);
-                        }
-                    }
+                    applications.rewardStore.addPoint(poll.jsonObject.pointSystem, page.currentUser, poll.jsonObject.point, reason, page.parent.website.name);
+                    log.info('Added "{}" point for user "{}" to "{}" with description: {}', poll.jsonObject.point, page.currentUser.name, poll.jsonObject.pointSystem, reason);
+                } else {
+                    log.warn('Point system ({}) is not selected or award point ({}) is invalid. Skip adding point!', poll.jsonObject.pointSystem, poll.jsonObject.poin);
                 }
                 
                 var kpollDB = getDB(page);
