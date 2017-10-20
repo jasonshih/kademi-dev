@@ -46,7 +46,7 @@
                             #if ($row.source.points.size() > 0)
                             <td>$!row.source.points[0].get($pointsBucket)</td>
                             #else
-                            <td></td>
+                            <td>-</td>
                             #end
                         #elseif ($f == "lastVisit")
                         <td>$formatter.formatDate($formatter.toDate($row.source.get($f)))</td>
@@ -65,7 +65,7 @@
                                     <tbody>
                                     #foreach ($m in $row.source.memberships)
                                     <tr>
-                                        <td>$m.get("groupName")</td>
+                                        <td>$formatter.ifNull($m.get("groupName"), "-") </td>
                                     </tr>
                                     #end
                                     </tbody>
@@ -77,7 +77,7 @@
                                 <tbody>
                                 #foreach ($m in $row.source.memberships)
                                 <tr>
-                                    <td>$m.get("orgTitle")</td>
+                                    <td>$formatter.ifNull($m.get("orgTitle"), "-")</td>
                                 </tr>
                                 #end
                                 </tbody>
@@ -89,7 +89,7 @@
                                 <tbody>
                                 #foreach ($m in $row.source.memberships)
                                 <tr>
-                                    <td>$!rootOrg.childOrg($m.get("org")).parent.title</td>
+                                    <td>$formatter.ifNull($!rootOrg.childOrg($m.get("org")).parent.title, "-")</td>
                                 </tr>
                                 #end
                                 </tbody>
@@ -101,7 +101,7 @@
                                 <tbody>
                                 #foreach ($m in $row.source.memberships)
                                 <tr>
-                                    <td>$m.get("orgAddress")</td>
+                                    <td>$formatter.ifNull($m.get("orgAddress"), "-")</td>
                                 </tr>
                                 #end
                                 </tbody>
