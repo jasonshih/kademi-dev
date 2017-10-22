@@ -49,7 +49,25 @@
                             that.initCkeditor(keditor, component)
                         });
                     });
-
+                    contentEditor.initColorPicker(form.find('.textcolor'), function (color) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-textcolor', color);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            that.initCkeditor(keditor, component)
+                        });
+                    });
+                    
+                    
+                    form.find('.textcolor').on('change', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-textcolor', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            that.initCkeditor(keditor, component)
+                        });
+                    });
+                    
                     form.find('.iconSize').on('change', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -58,7 +76,7 @@
                             that.initCkeditor(keditor, component)
                         });
                     });
-
+                    
                     form.find('.customIconColor').on('click', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -72,7 +90,7 @@
                             that.initCkeditor(keditor, component)
                         });
                     });
-
+                    
                     form.find('.bgstyle').on('change', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -81,7 +99,7 @@
                             that.initCkeditor(keditor, component)
                         });
                     });
-
+                   
                     form.find('.showIcon').on('click', function (e) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
@@ -91,6 +109,17 @@
                             that.initCkeditor(keditor, component)
                         });
                     });
+                    
+                    form.find('.paddingpanel').on('change', function (e) {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-paddingpanel', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            that.initCkeditor(keditor, component)
+                        });
+                    });
+                     
+                   
                 }
             });
         },
@@ -102,6 +131,8 @@
             form.find('.value-icon').find('i').attr('class', 'fa ' + dataAttributes['data-icon']);
             form.find('.iconSize').val(dataAttributes['data-icon-size'])
             form.find('.bgstyle').val(dataAttributes['data-bg'])
+            form.find('.textcolor').val(dataAttributes['data-textcolor']).colorpicker('setValue', dataAttributes['data-textcolor'])
+            form.find('.paddingpanel').val(dataAttributes['data-paddingpanel'])
             form.find('.iconColor').val(dataAttributes['data-icon-color']).colorpicker('setValue', dataAttributes['data-icon-color']);
             form.find('.customIconColor').prop('checked', dataAttributes['data-custom-icon-color'] == 'true');
             var showIcon = true;

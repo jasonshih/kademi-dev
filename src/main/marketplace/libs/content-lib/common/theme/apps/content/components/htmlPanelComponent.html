@@ -10,8 +10,8 @@
 #if (!$showIcon)
 #set ($showIcon = "true")
 #end
-<div class="panel $!panelStyle">
-    <div class="htmlPanel panel-body $!bg">
+<div class="panel $!panelStyle" >
+    <div class="htmlPanel panel-body $!bg" style="padding: #if ($paddingpanel) $paddingpanel #else 15px #end ; #if ($textcolor) color: $textcolor #else #end">
         #if ($showIcon == "true")
         <div class="panelIconWrap">
             #if ($customIconColor == "true")
