@@ -187,7 +187,7 @@
                                 var comp = keditor.getSettingComponent();
                                 var old = comp.attr('data-panel-colapss') || 'fa-chevron-down';
                                 comp.attr('data-panel-colapss', e.icon);
-                                comp.find('.panelIcon1').removeClass(old).addClass(e.icon);
+                                comp.find('.panelIconCollapsed').removeClass(old).addClass(e.icon);
                             });
                             
                    
@@ -195,7 +195,7 @@
                                 var comp = keditor.getSettingComponent();
                                 var old = comp.attr('data-panel-expanded') || 'fa-chevron-up';
                                 comp.attr('data-panel-expanded', e.icon);
-                                comp.find('.panelIcon2').removeClass(old).addClass(e.icon);
+                                comp.find('.panelIconExpanded').removeClass(old).addClass(e.icon);
                             });
                    
                 }

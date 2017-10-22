@@ -40,7 +40,23 @@
         padding-top: 30px;
     }
 }
-.panel-heading .collapsed .panelIcon1   {display:block;}
-.panel-heading .collapsed .panelIcon2   {display:none;}
-.panel-heading a:not(collapsed) .panelIcon2{display:block;}
-.panel-heading a:not(collapsed) .panelIcon1{display:none;}
+.panel-heading
+{
+    .collapsed
+    {
+        .panelIconCollapsed {
+            display: block;
+        } 
+        .panelIconExpanded{
+            display: none;
+        }
+    }
+    a:not(collapsed){
+        .panelIconCollapsed {
+            display: none;
+        } 
+        .panelIconExpanded{
+            display: block;
+        }
+    }
+}
