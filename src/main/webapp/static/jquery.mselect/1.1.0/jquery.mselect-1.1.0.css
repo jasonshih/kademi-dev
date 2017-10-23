@@ -50,13 +50,18 @@
 /* ============================================================================
    Milton tree
    ============================================================================ */
+.milton-file-select-container .milton-tree-wrapper {
+    position: relative;
+    height: 100%;
+}
+
 .milton-file-select-container .milton-tree {
     border: 1px solid #ddd !important;
     overflow: auto !important;
     position: absolute;
     top: 45px;
-    left: 15px;
-    right: 15px;
+    left: 0;
+    right: 0;
     bottom: 0;
     height: auto !important;
 }
