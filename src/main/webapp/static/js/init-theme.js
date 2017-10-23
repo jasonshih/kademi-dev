@@ -35,9 +35,7 @@ function initTheme() {
     initNav();
     initActiveNav(".initActive");
     initHelp();
-    //initModal();
     initTabPanel();
-    //initRotation();
     initPlaceholder();
     initPseudoClasses();
     initPrintLink();
@@ -111,104 +109,120 @@ function initNav() {
  * See /static/js/toolbars.js
  */
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
-    flog("static: initHtmlEditors: elements=", elements, "editorSkin", editorSkin);
+    var fullUrl = false;
+    if ($.isPlainObject(height)) {
+        var options = $.extend({}, height);
+        height = options.height;
+        width = options.width;
+        extraPlugins = options.extraPlugins;
+        removePlugins = options.removePlugins;
+        callback = options.callback;
+        fullUrl = options.fullUrl;
+    }
     
-    if (!elements) {
-        elements = $(".htmleditor");
-    }
-    if (!extraPlugins) {
-        extraPlugins = standardExtraPlugins; // see toolbars.js
-    }
-    if (!removePlugins) {
-        removePlugins = standardRemovePlugins;
-    }
+    flog('initHtmlEditors', elements, height, width, extraPlugins, removePlugins);
     
-    flog("prepare html editors", elements, "using templates:", templatesPath); // see toolbars.js for templatesPath
-    elements.each(function (i, n) {
-        var inp = $(n);
-        
-        var inputClasses = inp.attr("class");
-        var id = inp.attr("id");
-        // Add id for editor if dont have id
-        if (!id) {
-            id = 'editor-' + Math.round(Math.random() * 123456789);
-            inp.attr('id', id);
-        }
-        var toolbar = "Default";
-        if (inputClasses) {
-            c = inputClasses.split(" ");
-            for (i = 0; i < c.length; i++) {
-                var s = c[i];
-                if (s.startsWith("toolbar-")) {
-                    s = s.substring(8);
-                    toolbar = s;
-                    break;
+    $.getScriptOnce('/static/ckeditor456/ckeditor.js', function () {
+        $.getScriptOnce('/static/ckeditor456/adapters/jquery.js', function () {
+            $.getScriptOnce('/static/js/toolbars.js', function () {
+                if (!elements) {
+                    elements = $('.htmleditor');
                 }
-            }
-        }
-        
-        //toolbar = "Default"; // HACK!!
-        flog("using toolbar", toolbar, "=>", toolbarSets[toolbar]);
-        flog("using templates and styles", templatesPath, stylesPath);
-        
-        themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
-        themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
-        
-        var config = {
-            skin: editorSkin,
-            allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
-            contentsCss: themeCssFiles, // mainCssFile,
-            bodyId: "editor",
-            templates_files: [templatesPath],
-            templates_replaceContent: false,
-            toolbarGroups: toolbarSets[toolbar],
-            extraPlugins: extraPlugins,
-            removePlugins: removePlugins,
-            enterMode: "P",
-            forceEnterMode: true,
-            filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
-            filebrowserUploadUrl: '/uploader/upload',
-            format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
-            format_p2: {
-                element: 'p',
-                attributes: {
-                    'class': 'lessSpace'
+                if (!extraPlugins) {
+                    extraPlugins = standardExtraPlugins;
                 }
-            },
-            minimumChangeMilliseconds: 100
-        };
-        
-        if (height) {
-            if (height !== 'auto') {
-                config.height = height;
-            }
-        } else {
-            config.height = "300";
-        }
-        if (width) {
-            config.width = width;
-        }
-        
-        config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
-        flog("create editor", inp, config);
-        var editor = inp.ckeditor(config).editor;
-        
-        editor.on('instanceReady', function (evt) {
-            if (!ADDED_EXTRA_CSS) {
-                var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
-                flog("loading ckeditor extra css");
-                $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo("head");
+                if (!removePlugins) {
+                    removePlugins = standardRemovePlugins;
+                }
                 
-                ADDED_EXTRA_CSS = true;
-            }
-            
-            if (typeof callback === 'function') {
-                callback.call(this, editor);
-            }
+                flog('Prepare html editors using templates=' + templatesPath + ' and styles=' + stylesPath); // see toolbars.js for templatesPath
+                elements.each(function () {
+                    var element = $(this);
+                    
+                    // Add id for editor if dont have id
+                    if (!element.attr('id')) {
+                        element.attr('id', 'editor-' + Math.round(Math.random() * 123456789));
+                    }
+                    
+                    var inputClasses = element.attr('class');
+                    var toolbar = 'Default';
+                    if (inputClasses) {
+                        inputClasses = inputClasses.split(' ');
+                        for (var i = 0; i < inputClasses.length; i++) {
+                            var s = inputClasses[i];
+                            if (s.startsWith('toolbar-')) {
+                                s = s.substring(8);
+                                toolbar = s;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    flog('Using toolbar=' + toolbar + ' => ', toolbarSets[toolbar]);
+                    
+                    themeCssFiles.push('/static/bootstrap/3.3.7/css/bootstrap.min.css');
+                    themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
+                    
+                    var config = {
+                        skin: editorSkin,
+                        allowedContent: true, // DISABLES Advanced Content Filter. This is so templates with classes are allowed through
+                        contentsCss: themeCssFiles, // mainCssFile,
+                        bodyId: 'editor',
+                        templates_files: [templatesPath],
+                        templates_replaceContent: false,
+                        toolbarGroups: toolbarSets[toolbar],
+                        extraPlugins: extraPlugins,
+                        removePlugins: removePlugins,
+                        enterMode: 'P',
+                        forceEnterMode: true,
+                        filebrowserBrowseUrl: '/static/fckfilemanager/browser/default/browser.html?Type=Image&Connector=/fck_connector.html',
+                        filebrowserUploadUrl: '/uploader/upload',
+                        format_tags: 'p;h1;h2;h3;h4;h5;h6', // removed p2
+                        format_p2: {
+                            element: 'p',
+                            attributes: {
+                                'class': 'lessSpace'
+                            }
+                        },
+                        minimumChangeMilliseconds: 100,
+                        fullUrl: fullUrl
+                    };
+                    
+                    if (height) {
+                        if (height !== 'auto') {
+                            config.height = height;
+                        }
+                    } else {
+                        config.height = '300';
+                    }
+                    if (width) {
+                        config.width = width;
+                    }
+                    
+                    config.stylesSet = 'myStyles:' + stylesPath; // See toolbars.js, or overridden elsewhere
+                    
+                    flog('Create editor', element, config);
+                    var editor = element.ckeditor(config).editor;
+                    
+                    editor.on('instanceReady', function () {
+                        if (!ADDED_EXTRA_CSS) {
+                            var cssCkeditorExtra = '/static/ckeditor456/skins/bootstrapck/editor_extra.css';
+                            flog('Loading ckeditor extra css');
+                            $('<link href="' + cssCkeditorExtra + '" rel="stylesheet">').appendTo('head');
+                            
+                            ADDED_EXTRA_CSS = true;
+                        }
+                        
+                        if (typeof callback === 'function') {
+                            callback.call(this, editor);
+                        }
+                    });
+                });
+                
+                CKEDITOR.dtd.$removeEmpty['i'] = false;
+            });
         });
     });
-    
-    CKEDITOR.dtd.$removeEmpty['i'] = false;
 }
 
 // Event for tab panel
@@ -279,43 +293,6 @@ var typewatch = (function () {
         timer = setTimeout(callback, ms);
     }
 })();
-
-/**
- * Finds the parent of the source, then looks inside it for a .modal and shows it
- *
- * @param {type} source
- * @returns {Boolean}
- *
- */
-function showAddItem(source) {
-    flog("showAddItem: source=", source);
-    var modal = $(source).parent().find(".modal");
-    showModal(modal);
-    return false;
-}
-
-function initRotation() {
-    $(function () {
-        log("initRotation");
-        try {
-            var rotateDegrees = 0;
-            
-            setInterval(function () {
-                if (rotateDegrees === 360) {
-                    rotateDegrees = 0;
-                } else {
-                    rotateDegrees += 2;
-                }
-                
-                $('.rotate.anticlockwise').rotate(-rotateDegrees);
-                $('.rotate.clockwise').rotate(rotateDegrees);
-            }, 50);
-        } catch (e) {
-            log("initRotation - exception: " + e);
-            alert("exception in init rotation");
-        }
-    });
-}
 
 function initPlaceholder() {
     if ($.placeholder) {
