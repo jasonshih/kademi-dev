@@ -1156,6 +1156,7 @@ function reloadTasks() {
     }
 
     reloadTimeline();
+    reloadDashboard();
 }
 
 function reloadTimeline() {

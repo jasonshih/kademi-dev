@@ -372,12 +372,10 @@
                 });
                 
                 var txtBgColor = form.find('.txt-bg-color');
-                var txtBgColorPreview = txtBgColor.prev().find('i');
-                txtBgColor.on('change', function () {
+                contentEditor.initColorPicker(txtBgColor, function (color) {
                     var container = keditor.getSettingContainer();
                     var target = contentEditor.getContainerBgElement(container, form);
-                    target.css('background-color', this.value);
-                    txtBgColorPreview.css('color', this.value);
+                    target.css('background-color', color);
                 });
                 
                 form.find('.select-bg-repeat').on('change', function () {
