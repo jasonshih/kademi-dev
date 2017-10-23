@@ -51,11 +51,16 @@
                                 
                                 var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
                                 var previewImg = previewContainer.find('img');
+                                var width = previewImg.width();
+                                var height = previewImg.height();
+                                
                                 that.element.setAttribute('src', imageUrl);
                                 that.element.setAttribute('data-hash', hash);
                                 that.element.setAttribute('align', previewImg.attr('align') || '');
-                                that.element.$.style.width = previewImg.width() + 'px';
-                                that.element.$.style.height = previewImg.height() + 'px';
+                                that.element.setAttribute('width', width);
+                                that.element.setAttribute('height', height);
+                                that.element.$.style.width = width + 'px';
+                                that.element.$.style.height = height + 'px';
                                 that.element.$.removeAttribute('data-cke-saved-src');
                                 that.element.addClass('img-responsive');
                                 
@@ -105,6 +110,9 @@
                                 cbbAlign = modalBody.find('.cbb-align');
                                 var updateImageSize = function (width, height) {
                                     previewContainer.find('img').css({
+                                        width: width,
+                                        height: height
+                                    }).attr({
                                         width: width,
                                         height: height
                                     });
