@@ -159,15 +159,16 @@
                                 </div>
 
                                 #macro(genCategories $categories $i)
-                                #if(!$i) #set($i = 0) #end
-                                #foreach($cat in $categories)
-                                $formatter.option($cat.name, "$formatter.padWith('-', '', $i) $cat.title", $request.params.categoryName)
+                                    #if(!$i) #set($i = 0) #end
+                                    #foreach($cat in $categories)
+                                        #set( $size = $cat.childCategories.size())
+                                        $formatter.option($cat.name, "$formatter.padWith('-', '', $i) $cat.title", $request.params.categoryName)
 
-                                #if($cat.childCategories)
-                                #set($a = $i + 1)
-                                #genCategories($cat.childCategories, $a)
-                                #end
-                                #end
+                                        #if( $size > 0 )
+                                            #set($a = $i + 1)
+                                            #genCategories($cat.childCategories, $a)
+                                        #end
+                                    #end
                                 #end
 
                                 <div class="col-md-6">
