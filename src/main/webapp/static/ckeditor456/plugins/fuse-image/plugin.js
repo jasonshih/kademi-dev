@@ -87,18 +87,15 @@
                                 
                                 // Extra textboxes for plugin
                                 modalBody.find('.milton-btn-upload-file').after(
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px;">' +
-                                    '    <span class="input-group-addon">Width</span>' +
-                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" />' +
+                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px;">' +
+                                    '    <input type="text" class="form-control txt-width" placeholder="Image width" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
-                                    '    <span class="input-group-addon">Height</span>' +
-                                    '    <input type="text" class="form-control txt-height" placeholder="Image width" />' +
+                                    '<div class="input-group" style="float: left; width: 120px; margin: 0 10px 0 0">' +
+                                    '    <input type="text" class="form-control txt-height" placeholder="Image height" title="Image height" />' +
                                     '</div>' +
-                                    '<div class="input-group" style="float: left; width: 170px; margin: 0 10px 0 0">' +
-                                    '    <span class="input-group-addon">Align</span>' +
-                                    '    <select class="form-control cbb-align">' +
-                                    '        <option value=""> - None - </option>' +
+                                    '<div class="input-group" style="float: left; width: 180px; margin: 0 10px 0 0">' +
+                                    '    <select class="form-control cbb-align" title="Image align">' +
+                                    '        <option value="">[No align selected]</option>' +
                                     '        <option value="left">Left</option>' +
                                     '        <option value="right">Right</option>' +
                                     '    </select>' +
