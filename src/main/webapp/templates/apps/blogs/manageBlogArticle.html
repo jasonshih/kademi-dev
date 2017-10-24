@@ -180,14 +180,14 @@
                                 #end
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group ">
                             <label class="control-label col-md-3" for="articleDate">Article Date</label>
 
                             <div class="col-sm-5">
-                                <div class='input-group'>
+                                <div class='input-group datetimepickerpopup'>
                                     <input type="text" id="articleDate" name="articleDateDate" data-format="DD/MM/YYYY HH:mm" placeholder="Start date" value="$!page.articleDate" class="form-control DateTime" />
                                     <span class="input-group-addon">
-                                        <a href="#articleDate" data-role="date-picker-trigger">
+                                        <a href="" data-role="date-picker-trigger">
                                             <i class="fa fa-calendar"></i>
                                         </a>
                                     </span>
@@ -516,9 +516,9 @@
                                 <label class="col-sm-3 control-label" for="newTagName">Embargo Date</label>
 
                                 <div class="col-sm-8">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control datetimepicker" id="embargoDate" placeholder="Embargo date" value="" name="embargoDate" />
-                                        <span class="input-group-addon"> <a href="#embargoDate" data-role="date-picker-trigger"><i class="fa fa-calendar"></i></a> </span>
+                                    <div class="input-group datetimepickerpopup" >
+                                        <input type="text" class="form-control datetimepicker" id="" placeholder="Embargo date" value="" name="" />
+                                        <span class="input-group-addon"> <a  data-role="date-picker-trigger"><i class="fa fa-calendar"></i></a> </span>
                                     </div>
                                     <br />
                                     <i>Enter a date for the article to become available, or leave blank to publish immediately</i>
@@ -587,6 +587,10 @@
         <script type="text/javascript">
             $(function () {
                 initManageBlogArticle('/repositories/${page.article.blog.name}/${page.article.blog.liveBranch}/');
+            });
+             $(function () {
+                $('.datetimepickerpopup').datetimepicker({
+                });
             });
         </script>
     </body>
