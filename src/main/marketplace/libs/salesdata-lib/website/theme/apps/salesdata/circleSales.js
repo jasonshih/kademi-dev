@@ -45,7 +45,7 @@
             knob.attr({
                 'data-width': '100%',
                 'data-displayinput': 'false',
-                'data-thickness': '.1',
+                'data-thickness': '.09',
                 'data-bgColor': 'rgba(0, 0, 0, .2)',
                 'data-fgColor': fgColor
             }).knob({

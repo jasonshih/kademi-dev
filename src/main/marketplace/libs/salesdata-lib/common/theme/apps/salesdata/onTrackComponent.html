@@ -25,8 +25,10 @@
 #set( $percent = 0 )
 
 #set ($isAchieved = false)
+#set ($isAssessed = false)
 #if( $result )
-    #set( $percent = 100 + $result.assessedAmount)
+    #set ($isAssessed = true)
+    #set( $percent =  ($result.assessedAmount / $result.levelAmount) * 100)
     
     ## we have an assessed result, so display results
     #if( $result.achievedLevelName == $kpiLevel)
@@ -43,7 +45,7 @@
     #else
         #set ($isAchieved = false)
     #end
-    #set( $percent = 100 + $forecastLevel.actual)
+    #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
 #end
 
 #if ($selectedKpi)
@@ -62,11 +64,11 @@
                 </div>
                 <div class="circle-sales-label">
                     #if ($isAchieved == true)
-                    <i class="fa fa-check fa-3x"></i>
-                    <span>You're<br />On track</span>
+                        <i class="fa fa-check fa-3x"></i>
+                        <span>You're<br />#if ($isAssessed == true) Achieved #else On track #end</span>
                     #else
-                    <i class="fa fa-times fa-3x"></i>
-                    <span>You're<br />Not On track</span>
+                        <i class="fa fa-times fa-3x"></i>
+                        <span>You're<br />#if ($isAssessed == true) Not achieved #else Not On track #end</span>
                     #end
                 </div>
             </div>
