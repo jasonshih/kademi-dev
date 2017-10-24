@@ -116,7 +116,7 @@
         #end
     #else
         ## no assessed result, so need to forecast
-        #set( $forecastLevel = $selectedKpi.progressLevel($formatter.addDays($startDate, 1), $endDate) )
+        #set( $forecastLevel = $selectedKpi.progressLevel)
         
         #if ($forecastLevel.actual > $forecastLevel.target)
             #set ($isAchieved = true)
