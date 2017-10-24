@@ -1235,32 +1235,33 @@
     
     contentEditor.initColorPicker = function (target, onChange) {
         flog('[jquery.contentEditor] initColorPicker', target);
-        var inputColor = target.val();
-        var strVar = "";
-        strVar += "<div class=\"input-group colorpicker-component\">";
-        strVar += "    <span class=\"input-group-addon\"><i><\/i><\/span>";
-        strVar += "<\/div>";
         
-        var newElement = $($.parseHTML(strVar));
-        newElement.append(target.clone());
+        target.wrap('<div class="input-group"></div>');
+        target.before('<span class="input-group-addon"><i class="fa fa-stop" style="color: transparent;"></i></span>');
         
-        target.replaceWith(newElement);
+        var previewer = target.prev().find('i');
         
-        newElement.colorpicker({
+        target.colorpicker({
             format: 'hex',
+            container: target.parent(),
+            component: '.input-group-addon',
             align: 'left',
-            color: inputColor,
-            customClass: 'edm-color-picker',
-            container: newElement.parent()
-        });
-        
-        
-        newElement.find('input').on({
-            change: function () {
-                var color = newElement.colorpicker('getValue', "#fff");
-                if (typeof onChange === 'function') {
-                    onChange.call(target, color);
-                }
+            color: target.val(),
+            colorSelectors: {
+                'transparent': 'transparent'
+            }
+        }).on('changeColor.colorpicker', function (e) {
+            var colorHex = e.color.toHex();
+            
+            if (!target.val() || target.val().trim().length === 0) {
+                colorHex = '';
+                previewer.css('color', 'transparent');
+            } else {
+                previewer.css('color', colorHex);
+            }
+            
+            if (typeof onChange === 'function') {
+                onChange.call(target, colorHex);
             }
         });
     };
