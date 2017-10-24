@@ -62,16 +62,17 @@
                             id: 'text',
                             label: 'Number of star' + required_string,
                             items: [
-                                ['0.5 form 5', '/theme/apps/content/img/stars/half.png'],
-                                ['1 form 5', '/theme/apps/content/img/stars/one.png'],
-                                ['1.5 form 5', '/theme/apps/content/img/stars/oneHalf.png'],
-                                ['2 form 5', '/theme/apps/content/img/stars/two.png'],
-                                ['2.5 form 5', '/theme/apps/content/img/stars/twoHalf.png'],
-                                ['3 form 5', '/theme/apps/content/img/stars/three.png'],
-                                ['3.5 form 5', '/theme/apps/content/img/stars/threeHalf.png'],
-                                ['4 form 5', '/theme/apps/content/img/stars/four.png'],
-                                ['4.5 form 5', '/theme/apps/content/img/stars/fourHalf.png'],
-                                ['5 form 5', '/theme/apps/content/img/stars/five.png']
+                                ['0 star', 'no-star'],
+                                ['0.5 star', 'half-star'],
+                                ['1 star', 'one-star'],
+                                ['1.5 stars', 'one-half'],
+                                ['2 stars', 'two-stars'],
+                                ['2.5 stars', 'two-half'],
+                                ['3 stars', 'three-stars'],
+                                ['3.5 stars', 'three-half'],
+                                ['4 stars', 'four-stars'],
+                                ['4.5 stars', 'four-half'],
+                                ['5 stars', 'five-stars']
                             ],
                             required: true,
                             setup: function (data) {
@@ -119,14 +120,14 @@
                         this.commitContent(data);
                         flog('Selected element=', this._.selectedElement);
 
-                        var ratingString = '<img width="150" src="' + data.text + '" ' + '/>';
+                        var ratingString = '<span class="rating-stars ' + data.text + '">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>';
                         
 
                         if (this._.selectedElement) {
                             var target = this._.selectedElement;
                             var id = target.getAttribute('href').replace('#', '');
                             var rating = editor.document.getById(id);
-                            target.setHtml(data.text);
+                            target.setHtml(ratingString);
 
                             if (rating === null) {
                                 rating = editor.document.createElement('span');
@@ -138,12 +139,23 @@
                                 editor.insertElement(target);
                             }
 
-                            rating.setHtml(ratingString);
                         } else {
+                            var link = editor.document.createElement('a');
                             var rating = editor.document.createElement('span');
-                           
-                            rating.setHtml(ratingString);
+                            var id = 'rating-' + Math.round(Math.random() * 1000000).toString() + '-' + (new Date()).getTime();
+                            flog('Create new rating with id=' + id, link, rating);
 
+                            link.setHtml(ratingString);
+                            link.setAttributes({
+                                'href': '#' + id,
+                                'data-toggle': 'rating'
+                            });
+
+                            rating.setAttributes({
+                                'id': id
+                            });
+
+                            editor.insertElement(link);
                             editor.insertElement(rating);
 
                             flog('Appended new div', rating);
