@@ -6,7 +6,7 @@
         if (!redirectUrl || redirectUrl === 'null') {
             redirectUrl = null;
         }
-        var isAutoRedirect = panel.attr('data-auto-redirect') === 'true';
+        var isAutoRedirect = panel.attr('data-auto-redirect') === 'true' && !location.pathname.endsWith('/contenteditor');
         var loginContainer = panel.find('.login-container')
         
         flog('initLoginPanel | Redirect url: ' + redirectUrl + ', isAutoRedirect: ' + isAutoRedirect);
