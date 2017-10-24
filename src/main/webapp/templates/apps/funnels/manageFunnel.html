@@ -168,15 +168,15 @@
                             <select class="form-control required" name="leadsGroup">
                                 <option value="">[No group selected]</option>
                                 #foreach ($g in $page.find("/groups").children)
-                                    #if( $g.group.isSubscription() == true || $g.group.primary == true)
-                                    <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
-                                        #if ($g.groupTitle)
-                                            $g.groupTitle
-                                        #else
-                                            $g.name
-                                        #end
-                                    </option>
+                                #if( $g.group.isSubscription() == true || $g.group.primary == true)
+                                <option #if ($g.name == $page.funnel.leadsGroup) selected #end value="$g.name">
+                                    #if ($g.groupTitle)
+                                    $g.groupTitle
+                                    #else
+                                    $g.name
                                     #end
+                            </option>
+                            #end
                             #end
                         </select>
                     </div>
@@ -378,6 +378,9 @@
                                         <span class="input-group-addon">
                                             <input type="checkbox" name="extraFieldAggregate" /> Include in search
                                         </span>
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldFileUpload" /> File Upload
+                                        </span>
                                         <span class="input-group-btn">
                                             <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>
                                         </span>
@@ -400,6 +403,9 @@
                                         </span>
                                         <span class="input-group-addon">
                                             <input type="checkbox" name="extraFieldAggregate" #if ($ef.aggregate == "true") checked="checked" #end /> Include in search
+                                        </span>
+                                        <span class="input-group-addon">
+                                            <input type="checkbox" name="extraFieldFileUpload" #if ($ef.fileUpload == "true") checked="checked" #end /> File Upload
                                         </span>
                                         <span class="input-group-btn">
                                             <button class="btn btn-danger btn-remove-extraField" type="button"><i class="fa fa-times"></i></button>

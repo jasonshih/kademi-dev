@@ -97,7 +97,8 @@ function initPropertiesForm() {
                     name: extraField.find('[name=extraFieldName]').val().trim(),
                     title: extraField.find('[name=extraFieldTitle]').val().trim(),
                     required: extraField.find('[name=extraFieldRequired]').is(':checked'),
-                    aggregate: extraField.find('[name=extraFieldAggregate]').is(':checked')
+                    aggregate: extraField.find('[name=extraFieldAggregate]').is(':checked'),
+                    fileUpload: extraField.find('[name=extraFieldFileUpload]').is(':checked')
                 });
             });
 
