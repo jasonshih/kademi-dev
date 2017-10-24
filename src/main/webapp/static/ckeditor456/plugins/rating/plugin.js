@@ -53,7 +53,8 @@
 
                 return {
                     title: 'rating Properties',
-                    minWidth: 600,
+                    minWidth: 300,
+                    height:100,
                     contents: [{
                         id: 'general',
                         label: 'Settings',
