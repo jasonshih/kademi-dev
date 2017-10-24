@@ -187,6 +187,7 @@ function initModalAddTemplate() {
             modal.modal('hide');
             form.trigger('reset');
             $('#email-template-table').reloadFragment();
+            $('#modal-add-email-templates').reloadFragment();
         }
     });
 }
@@ -206,6 +207,7 @@ function initDeleteEmail() {
             flog('remove', btn);
             btn.closest('tr').remove();
             Msg.success(href + ' is deleted!');
+            $('#modal-add-email-templates').reloadFragment();
         });
     });
 }
@@ -325,6 +327,7 @@ function duplicate(href, createTemplate) {
                             window.location.href = data.nextHref;
                         } else {
                             $("#email-template-table").reloadFragment();
+                            $('#modal-add-email-templates').reloadFragment();
                         }
                     } else {
                         $("#email-trigger-wrapper").reloadFragment();
