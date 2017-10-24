@@ -1,18 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Inventory Management</title>
-
-        <style>
-            .upload-results {
-                display: none;
-            }
-            
-            #searchContainer {
-                width: 500px;
-                float: right;
-            }
-        </style>
-        
         <script type="text/javascript" src="/static/paginator/1.0.0/jquery.paginator-1.0.0.js">//</script>
     </head>
     <body>
@@ -21,28 +9,32 @@
             <table>
             #renderProduct($product)
             </table>
-        #else        
-        <p>
-        <div class="btn-group" role="group">
-            <a href="/product-images/" class="btn btn-sm btn-info" role="button"><i class="fa fa-picture-o"></i> Product images</a>
-            <button id="newProduct" type="button" class="btn btn-sm btn-success"><i class="fa fa-gear"></i> Import/Export</button>
-            <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu pull-right" role="menu">
-                <li>
-                    <a href="#" title="Import stock levels" id="uploadProductsCsv" data-toggle="modal" data-target="#modal-upload-csv">
-                        <i class="glyphicon glyphicon-upload"></i> Upload CSV
-                    </a>
-                </li>
-                <li><a href="skus.csv" title="Export products CSV" class="btn-export-points"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
-            </ul>
+        #else
+        <div class="row">
+            <div class="col-sm-6">
+                <p class="btn-group" role="group">
+                    <a href="/product-images/" class="btn btn-sm btn-info" role="button"><i class="fa fa-picture-o"></i> Product images</a>
+                    <button id="newProduct" type="button" class="btn btn-sm btn-success"><i class="fa fa-gear"></i> Import/Export</button>
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li>
+                            <a href="#" title="Import stock levels" id="uploadProductsCsv" data-toggle="modal" data-target="#modal-upload-csv">
+                                <i class="glyphicon glyphicon-upload"></i> Upload CSV
+                            </a>
+                        </li>
+                        <li><a href="skus.csv" title="Export products CSV" class="btn-export-points"><i class="glyphicon glyphicon-download"></i> Export CSV</a></li>
+                    </ul>
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <div class="input-group" id="searchContainer">
+                    <label for="data-query" class="input-group-addon">Search</label>
+                    <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
+                </div>
+            </div>
         </div>
-        <div class="input-group" id="searchContainer">
-            <label for="data-query" class="input-group-addon">Search</label>
-            <input type="text" id="data-query" placeholder="Search" value="" class="form-control" />
-        </div>
-        </p>
         
         <div class="panel panel-default">
             <div id="productsTableContainer" class="panel-body">
@@ -128,7 +120,7 @@
                             -->
                         </div>
                         <br />
-                        <div class="upload-results">
+                        <div class="upload-results" style="display: none;">
                             <p>
                                 <strong>No. updated:</strong>
                                 <span class="badge badge-success num-updated">-</span>
