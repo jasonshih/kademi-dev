@@ -32,7 +32,7 @@
     ##set( $percent =  ($result.assessedAmount / $result.levelAmount) * 100)
     
     ## we have an assessed result, so display results
-    #if( $result.achievedLevelName == $kpiLevel)
+    #if( $percent >= 100)
         #set ($isAchieved = true)
     #else
         #set ($isAchieved = false)
