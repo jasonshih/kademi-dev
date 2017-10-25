@@ -164,9 +164,43 @@
                     }
                 };
             });
+           // ===========================================================
+            // Context menu for plugin
+            // ===========================================================
+            if (editor.contextMenu) {
+                editor.addMenuGroup('imageGroup');
+                
+                editor.addMenuItem('ratingItem', {
+                    label: 'Edit rating',
+                    icon: this.path + 'images/rating.png',
+                    command: 'insertratingLink',
+                    group: 'imageGroup'
+                });
+                
+                editor.contextMenu.addListener(function (element) {
+                    if (CKEDITOR.plugins.rating.isEditablerating(element))
+                        return {
+                            ratingItem: CKEDITOR.TRISTATE_ON
+                        };
+                    return null;
+                });
+            } 
+            
         }
     });
-
+ CKEDITOR.plugins.rating = {
+        isEditablerating: function (element) {
+            return CKEDITOR.plugins.rating.israting(element) && !element.isReadOnly();
+        },
+        israting: function (element) {
+            if (element) {
+                element = element.getAscendant('a', true);
+            }
+            
+            return element && element.getName() === 'a' && element.getAttribute('href') && element.getChildCount() && element.getAttribute('data-toggle') === 'rating' ;
+        }
+    };
+    
     CKEDITOR.plugins.ratingLink = {
         getSelectedLink: function (editor) {
             try {
