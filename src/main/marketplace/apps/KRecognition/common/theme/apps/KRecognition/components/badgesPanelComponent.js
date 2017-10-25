@@ -23,11 +23,11 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('.select-badges-per-rows').on('change', function () {
+                    form.find('.select-badges-per-row').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-badges-per-rows', this.value);
+                        component.attr('data-badges-per-row', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
@@ -56,7 +56,7 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-topic').val(dataAttributes['data-topic']);
-            form.find('.select-badges-per-rows').val(dataAttributes['data-badges-per-rows'] || '4');
+            form.find('.select-badges-per-row').val(dataAttributes['data-badges-per-row'] || '4');
             form.find('.chk-show-badge-title').prop('checked', dataAttributes['show-badge-title'] === 'true');
             form.find('.chk-most-recent-badge').prop('checked', dataAttributes['most-recent-badge'] === 'true');
             form.find('.most-recent-badge-wrapper').css('display', dataAttributes['most-recent-badge'] === 'true' ? 'none' : 'block');
