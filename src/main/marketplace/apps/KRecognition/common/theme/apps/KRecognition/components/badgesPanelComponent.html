@@ -1,23 +1,23 @@
 
-#if (!$badgesPerRows)
-    #set ($badgesPerRows = 4)
+#if (!$badgesPerRow)
+    #set ($badgesPerRow = 4)
 #end
 #if ($mostRecentBadge == "true")
-    #set ($badgesPerRows = 1)
+    #set ($badgesPerRow = 1)
 #end
-#set ($badgesPerRows = $formatter.toInteger( $badgesPerRows ))
+#set ($badgesPerRow = $formatter.toInteger( $badgesPerRow ))
 
-#if ($badgesPerRows == 1)
+#if ($badgesPerRow == 1)
     #set ($badgeClass = "col-sm-12")
-#elseif ($badgesPerRows == 2)
+#elseif ($badgesPerRow == 2)
     #set ($badgeClass = "col-sm-6")
-#elseif ($badgesPerRows == 3)
+#elseif ($badgesPerRow == 3)
     #set ($badgeClass = "col-sm-4")
-#elseif ($badgesPerRows == 4)
+#elseif ($badgesPerRow == 4)
     #set ($badgeClass = "col-sm-3")
-#elseif ($badgesPerRows == 6)
+#elseif ($badgesPerRow == 6)
     #set ($badgeClass = "col-sm-2")
-#elseif ($badgesPerRows == 12)
+#elseif ($badgesPerRow == 12)
     #set ($badgeClass = "col-sm-1")
 #end
 
