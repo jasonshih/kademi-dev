@@ -40,13 +40,13 @@
 #else
     ## no assessed result, so need to forecast
     #set( $forecastLevel = $selectedKpi.progressLevel)
+    #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
     
-    #if ($forecastLevel.actual > $forecastLevel.target)
+    #if ($percent >= 100)
         #set ($isAchieved = true)
     #else
         #set ($isAchieved = false)
     #end
-    #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
 #end
 
 #if ($selectedKpi)

@@ -108,10 +108,10 @@
     #set ($isAssessed = false)
     #if( $result )
         #set ($isAssessed = true)
-        #set( $percent = 100 + $result.assessedAmount)
+        #set( $percent = $selectedKpi.getAssessedResultPerc($result, $kpiLevel) )
         
         ## we have an assessed result, so display results
-        #if( $result.achievedLevelName == $kpiLevel)
+        #if( $percent >= 100)
             #set ($isAchieved = true)
         #else
             #set ($isAchieved = false)
@@ -119,13 +119,13 @@
     #else
         ## no assessed result, so need to forecast
         #set( $forecastLevel = $selectedKpi.progressLevel)
+        #set( $percent = $selectedKpi.getProgressOfLevelPerc($kpiLevel) )
         
-        #if ($forecastLevel.actual > $forecastLevel.target)
+        #if ($percent >= 100)
             #set ($isAchieved = true)
         #else
             #set ($isAchieved = false)
         #end
-        #set( $percent = 100 + $forecastLevel.actual)
     #end
 
     <div class="circle-sales-wrapper text-center">

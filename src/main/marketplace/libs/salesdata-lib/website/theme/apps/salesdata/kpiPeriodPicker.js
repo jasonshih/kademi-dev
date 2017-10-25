@@ -9,6 +9,8 @@
             var selectedPeriod = a.text();
             var kpiPeriodPicker = a.closest('.kpiPeriodPicker');
             
+            flog('KPI period is selected: ' + selectedPeriod + ' (' + startDate + ' - ' + endDate + ')');
+            
             $.cookie('pageDatePicker-startDate', startDate);
             $.cookie('pageDatePicker-endDate', endDate);
             $.cookie('kpiPeriodPicker-text', selectedPeriod);
@@ -23,6 +25,8 @@
         var kpiPeriodPicker = $('.kpiPeriodPicker');
         var cookiePeriod = $.cookie('kpiPeriodPicker-text');
         if (!cookiePeriod) {
+            flog('No cookie for kpiPeriodPicker');
+            
             setTimeout(function () {
                 kpiPeriodPicker.find('ul li a.current').trigger('click');
             }, 250);
