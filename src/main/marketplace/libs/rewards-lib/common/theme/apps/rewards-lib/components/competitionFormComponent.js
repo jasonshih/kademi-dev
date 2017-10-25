@@ -41,51 +41,51 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
     
-                    form.find('#chkFirstName').on('click', function () {
+                    form.find('.chkShowFirstName').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
         
-                        component.attr('data-first-name', this.checked);
+                        component.attr('data-show-first-name', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#chkSurname').on('click', function () {
+                    form.find('.chkShowSurname').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-sur-name', this.checked);                        
+                        component.attr('data-show-sur-name', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#chkEmail').on('click', function () {
+                    form.find('.chkShowEmail').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-email', this.checked);                        
+                        component.attr('data-show-email', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#chkCompany').on('click', function () {
+                    form.find('.chkShowCompany').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-company', this.checked);                        
+                        component.attr('data-show-company', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#chkPhone').on('click', function () {
+                    form.find('.chkShowPhone').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-phone', this.checked);                        
+                        component.attr('data-show-phone', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#chkMessage').on('click', function () {
+                    form.find('.chkShowMessage').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-message', this.checked);                        
+                        component.attr('data-show-message', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
 
@@ -147,12 +147,12 @@
             form.find('.select-promotion').val(dataAttributes['data-promotion'] || '');
             form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '2');
             form.find('.chk-show-user-photo').prop('checked', dataAttributes['data-show-user-photo'] === 'true');
-            form.find('#chkFirstName').prop('checked', dataAttributes['data-first-name'] === 'true');
-            form.find('#chkSurname').prop('checked', dataAttributes['data-sur-name'] === 'true');
-            form.find('#chkEmail').prop('checked', dataAttributes['data-email'] === 'true');
-            form.find('#chkCompany').prop('checked', dataAttributes['data-company'] === 'true');
-            form.find('#chkPhone').prop('checked', dataAttributes['data-phone'] === 'true');
-            form.find('#chkMessage').prop('checked', dataAttributes['data-message'] === 'true');
+            form.find('.chkShowFirstName').prop('checked', dataAttributes['data-first-name'] === 'true');
+            form.find('.chkShowSurname').prop('checked', dataAttributes['data-sur-name'] === 'true');
+            form.find('.chkShowEmail').prop('checked', dataAttributes['data-email'] === 'true');
+            form.find('.chkShowCompany').prop('checked', dataAttributes['data-company'] === 'true');
+            form.find('.chkShowPhone').prop('checked', dataAttributes['data-phone'] === 'true');
+            form.find('.chkShowMessage').prop('checked', dataAttributes['data-message'] === 'true');
             form.find('#txtSubmitText').val(dataAttributes['data-submit-text']);
             form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size']);
             form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
