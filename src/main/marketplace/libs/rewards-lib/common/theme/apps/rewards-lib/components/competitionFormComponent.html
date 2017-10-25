@@ -34,29 +34,37 @@
                 #end
             </div>
             #if( !$promotionPage.onePerRecipient || $promotionPage.entriesForUser.size() == 0 )
-                <form class="entryForm" method="POST" action="$request.absolutePath">
+                <form class="entryForm" method="POST" action="$promotionPage.href">
                     <input type="hidden" name="entry" value="true" />
                     <div class="alert alert-danger pageMessage"></div>
                     
                     #if( $user )
                         <p class="lead">Submit as $user.formattedName</p>
                     #else
+                        #if ($showFirstName == "true")
                         <div class="form-group">
                             <label class="control-label" for="firstName">First name</label>
                             <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
                         </div>
+                        #end
+                        #if ($showSurName == "true")
                         <div class="form-group">
                             <label class="control-label" for="surName">Surname</label>
                             <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
                         </div>
+                        #end
+                        #if ($showEmail == "true")
                         <div class="form-group">
                             <label class="control-label" for="email">Email</label>
                             <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
                         </div>
+                        #end
+                        #if ($showPhone == "true")
                         <div class="form-group">
                             <label class="control-label" for="phone">Phone</label>
                             <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
                         </div>
+                        #end
                         
                         #if( $contactPage.hasOptins() )
                             <div class="form-group">
@@ -98,7 +106,6 @@
                         </div>
                     #end
                     
-                    
                     #if($promotionPage.userUploadEnabled )
                         <div class="entryFormItem uploadItem">
                             <h3>Photo Gallery</h3>
@@ -107,7 +114,7 @@
                                     #if ($showUserPhoto == "true")
                                         #set ($userPhoto = "/static/images/photo_holder_squared.png")
                                         #if( $promotionPage.userAttachmentHash )
-                                            #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-150-150.png")
+                                            #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-640-640.png")
                                         #end
                                         <div class="$photoClass promotion-photo promotion-photo-user">
                                             <div class="viewUploaded promotion-photo-inner #if( !$promotionPage.userAttachmentHash ) noImage #end" style="background-image: url('$userPhoto')"></div>

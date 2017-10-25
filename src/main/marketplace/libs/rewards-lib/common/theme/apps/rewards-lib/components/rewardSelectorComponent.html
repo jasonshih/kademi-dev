@@ -8,12 +8,11 @@
 #end
 
 #foreach($reward in $rewards)
-  #if ($selectedRewardName == $reward.name)
-    #set ($selectedReward = $reward)
-    #break
-  #end
+    #if ($selectedRewardName == $reward.name)
+        #set ($selectedReward = $reward)
+        #break
+    #end
 #end
-
 
 <div class="reward-selector">
     <div class="dropdown">
@@ -26,18 +25,18 @@
             <span class="caret"></span>
         </button>
         <ul class="dropdown-menu rewardSelectorWrap" aria-labelledby="dropdownMenuRewardSelector">
-          #if( $rewards.isEmpty() )
-              <li>No selections available</li>
-          #else
-            <li><a data-reward="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> Clear selection</a></li>
-            #foreach( $reward in $rewards)
-              #if ($reward.name == $selectedRewardName)
-                  <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $reward.title</a></li>
-              #else
-                  <li><a data-reward="$!reward.name" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $reward.title</a></li>
-              #end
+            #if( $rewards.isEmpty() )
+                <li>No selections available</li>
+            #else
+                <li><a data-reward="" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> Clear selection</a></li>
+                #foreach( $reward in $rewards)
+                    #if ($reward.name == $selectedRewardName)
+                        <li><a href="javascript:void (0)"><i class="fa fa-check text-success"></i> $reward.title</a></li>
+                    #else
+                        <li><a data-reward="$!reward.name" href="javascript:void (0)"><i class="fa fa-check" style="visibility: hidden"></i> $reward.title</a></li>
+                    #end
+                #end
             #end
-          #end
         </ul>
     </div>
 </div>
