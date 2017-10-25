@@ -24,6 +24,7 @@ function initLeadManEvents() {
     initDateTimePikersForModal();
     initTasks();
     initImmediateUpdate();
+    initExtraFieldFileUploads();
     initCloseDealModal();
     initCancelLeadModal();
     initCancelTaskModal();
@@ -282,6 +283,64 @@ function initImmediateUpdate() {
     });
     $(document.body).on("dp.change", ".immediateUpdate", function (e) {
         onchange(e);
+    });
+}
+
+function initExtraFieldFileUploads() {
+    var modal = $('#uploadExtraFieldFileModal');
+    var form = modal.find('form');
+
+    $('body').on('click', '.btn-upload-file', function (e) {
+        e.preventDefault();
+        var name = $(e.target).data("name");
+        modal.find("#extraField").val(name);
+        modal.modal('show');
+    });
+
+    $('#default-leadDetailForm').on('click', '.btn-delete-file', function (e) {
+        e.preventDefault();
+        var btn = $(this);
+        var name = btn.data('name');
+        var fname = btn.data('fname');
+        if (confirm("Are you sure you want to delete " + fname + "?")) {
+
+            var data = {
+                deleteExtraFieldFile: true,
+                extraField: name,
+                name: fname
+            };
+            flog(data);
+            $.ajax({
+                url: window.location.href,
+                method: "POST",
+                dataType: "json",
+                data: data,
+                success: function (data) {
+                    reloadFileList();
+                    $("#default-leadDetailForm").reloadFragment();
+                }
+            });
+        }
+    });
+
+    function reloadFileList() {
+        var body = $('#files-body');
+        if (body !== undefined) {
+            $('#files-body').reloadFragment({
+                whenComplete: function () {
+                    $('#files-body abbr.timeago').timeago();
+                }
+            });
+        }
+    }
+
+    form.forms({
+        onSuccess: function (resp) {
+            Msg.info('Files Uploaded');
+            reloadFileList();
+            $("#default-leadDetailForm").reloadFragment();
+            modal.modal('hide');
+        }
     });
 }
 
