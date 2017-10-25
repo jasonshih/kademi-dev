@@ -316,6 +316,7 @@ function initExtraFieldFileUploads() {
                 dataType: "json",
                 data: data,
                 success: function (data) {
+                    Msg.info('File deleted');
                     reloadFileList();
                     $("#default-leadDetailForm").reloadFragment();
                 }
