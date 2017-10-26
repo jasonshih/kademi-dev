@@ -36,7 +36,7 @@
                                 #end
                                 $categories
                             </td>
-                            <td>$!item.skuTitle</td>
+                            <td>$!formatter.firstNotNull($item.skuTitle, $item.productSku)</td>
                             <td>
                                 #if( $item.amount )
                                     $item.amount
