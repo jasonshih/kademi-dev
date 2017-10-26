@@ -23,6 +23,7 @@
                         <th>Experiment</th>
                         <th>Samples</th>
                         <th></th>
+                        <th><input type="checkbox" class="check-all" ></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,6 +35,9 @@
                             <a href="/experiments/$experiment.name" class="btn btn-info">
                                 <i class="fa fa-pencil"></i>
                             </a>
+                        </td>
+                        <td>
+                            <input type="checkbox" data-id="$experiment.experiment.id" class="experiment-check" >
                         </td>
                     </tr>
                     #end

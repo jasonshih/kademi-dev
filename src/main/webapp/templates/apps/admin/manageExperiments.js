@@ -4,7 +4,8 @@ function initManageExperiments() {
 }
 
 function initManageExperiment() {
-    initUpdateExperiment();    
+    initUpdateExperiment();
+    initDeleteExperiment();
 }
 
 function initUpdateExperiment() {
@@ -16,8 +17,8 @@ function initUpdateExperiment() {
             flog('Error: ', resp);
             $("#addExperimentModal").modal('hide');
         }
-    });    
-        
+    });
+
     $("form.createVariant").forms({
         onSuccess: function (resp) {
             Msg.success("The operation was successfully");
@@ -26,18 +27,18 @@ function initUpdateExperiment() {
             flog('Error: ', resp);
             $("#addVariantModal").modal('hide');
         }
-    });    
-    
-    $("body").on("click", ".btn-edit-variant", function(e) {
+    });
+
+    $("body").on("click", ".btn-edit-variant", function (e) {
         e.preventDefault();
         var btn = $(e.target);
         var id = btn.data("id");
         var perc = btn.closest("tr").find(".variant-perc").text();
         var newPerc = prompt("Please enter the new percentage for this variant", perc);
-        if( newPerc ) {
+        if (newPerc) {
             updateVariant(id, newPerc);
         }
-        
+
     });
 }
 
@@ -56,6 +57,24 @@ function initCreateExperiment() {
     });
 }
 
+function initDeleteExperiment() {
+    flog("initDeleteExperiment");
+    $('body').on('click', '.btn-delete-experiment', function (e) {
+        e.preventDefault();
+        var listToDelete = [];
+        var id = $('body').find('.experiment-check').data("id");
+        listToDelete.push(id);
+        flog("List To Delete", listToDelete.join(','));
+        if (confirm("Are you sure you want to delete this experiment?")) {
+            deleteExperiments(listToDelete.join(','), function () {
+                var oldUrl = window.location.href;
+                var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
+                window.location.href = newUrl;
+            });
+        }
+    });
+}
+
 
 
 function initDeleteExperiments() {
@@ -70,7 +89,14 @@ function initDeleteExperiments() {
         flog("List To Delete", listToDelete.join(','));
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " experiments?")) {
             $('body').find('.check-all').check(false).change();
-            deleteExperiments(listToDelete.join(','));
+            deleteExperiments(listToDelete.join(','), function (data) {
+                if (data.status) {
+                    Msg.info(data.messages);
+                    $("#experimentTableContainer").reloadFragment();
+                } else {
+                    Msg.error("An error occured deleting the experiments. Please check your internet connection");
+                }
+            });
         } else {
             Msg.error('Please select the experiments you want to remove by clicking the checkboxes on the right');
         }
@@ -85,22 +111,18 @@ function initDeleteExperiments() {
     });
 }
 
-function deleteExperiments(listToDelete) {
+function deleteExperiments(listToDelete, callback) {
+    var oldUrl = window.location.pathname;
+    var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
+
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: window.location.pathname,
+        url: newUrl,
         data: {
             deleteExperiments: listToDelete,
         },
-        success: function (data) {
-            if (data.status) {
-                Msg.info(data.messages);
-                $("#experimentTableContainer").reloadFragment();
-            } else {
-                Msg.error("An error occured deleting the experiments. Please check your internet connection");
-            }
-        },
+        success: callback,
         error: function (resp) {
             Msg.error("An error occured deleting the experiments");
         }
@@ -113,8 +135,8 @@ function updateVariant(id, perc) {
         dataType: 'json',
         url: window.location.pathname,
         data: {
-            variantId : id,
-            percent : perc
+            variantId: id,
+            percent: perc
         },
         success: function (data) {
             if (data.status) {
