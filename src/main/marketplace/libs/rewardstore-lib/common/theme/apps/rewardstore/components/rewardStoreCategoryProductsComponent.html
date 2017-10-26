@@ -7,6 +7,10 @@
 
 #set ($app = $applications.get("rewardstore-lib"))
 
+#if( ($page.is("rewardStore") || $page.is("category")) && formatter.isNull($rewardName) )
+    #set($rewardName = $page.rewardStore.name)
+#end
+
 #set( $products = $app.call("findProducts", $page, $params, $rewardName, $numberOfProducts, $sort, $asc) )
 <div id="products-list" class="rewardStoreCategoryProductsComponent #if ($numberOfProducts) shouldLoadMore #end">
     #if( $products.hits.hits.size() == 0 )
