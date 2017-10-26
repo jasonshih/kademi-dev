@@ -29,8 +29,7 @@
             </div>
 
             <div class="btn-group pull-right" role="group">
-                <input type="hidden" data-id="$page.experiment.id" class="experiment-check" >
-                <a href="#" class="btn btn-danger btn-delete-experiment" role="button"><i class="fa fa-times"></i> Delete</a>
+                <a href="#" class="btn btn-danger btn-delete-variants" role="button"><i class="fa fa-times"></i> Delete</a>
             </div>
         </div>        
         <br/>
@@ -44,6 +43,7 @@
                         <th>Converted</th>
                         <th>Conversion %</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,6 +53,7 @@
                         <td>$!page.numControlSamples</td>
                         <td>$!page.numControlConverted</td>
                         <td>$!page.controlConversionRate</td>
+                        <td></td>
                         <td></td>
                     </tr>                    
                     #foreach($variant in $page.variants)
@@ -66,6 +67,9 @@
                             <button class="btn btn-sm btn-info btn-edit-variant" data-id="$variant.id">
                                 <span class="fa fa-pencil"></span>
                             </button>
+                        </td>
+                        <td>
+                            <input type="checkbox" data-id="$variant.id" class="variant-check" >
                         </td>
                     </tr>
                     #end

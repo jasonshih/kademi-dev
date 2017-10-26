@@ -5,7 +5,7 @@ function initManageExperiments() {
 
 function initManageExperiment() {
     initUpdateExperiment();
-    initDeleteExperiment();
+    initDeleteVariants();
 }
 
 function initUpdateExperiment() {
@@ -18,7 +18,7 @@ function initUpdateExperiment() {
             $("#addExperimentModal").modal('hide');
         }
     });
-    
+
     $("form.createVariant").forms({
         onSuccess: function (resp) {
             Msg.success("The operation was successfully");
@@ -28,7 +28,7 @@ function initUpdateExperiment() {
             $("#addVariantModal").modal('hide');
         }
     });
-    
+
     $("body").on("click", ".btn-edit-variant", function (e) {
         e.preventDefault();
         var btn = $(e.target);
@@ -38,7 +38,7 @@ function initUpdateExperiment() {
         if (newPerc) {
             updateVariant(id, newPerc);
         }
-        
+
     });
 }
 
@@ -57,19 +57,25 @@ function initCreateExperiment() {
     });
 }
 
-function initDeleteExperiment() {
-    flog("initDeleteExperiment");
-    $('body').on('click', '.btn-delete-experiment', function (e) {
+function initDeleteVariants() {
+    flog("initDeleteVariants");
+    $('body').on('click', '.btn-delete-variants', function (e) {
         e.preventDefault();
         var listToDelete = [];
-        var id = $('body').find('.experiment-check').data("id");
-        listToDelete.push(id);
+        $('body').find(':checkbox.variant-check:checked').each(function () {
+            var s = $(this);
+            var id = s.data("id");
+            listToDelete.push(id);
+        });
         flog("List To Delete", listToDelete.join(','));
-        if (confirm("Are you sure you want to delete this experiment?")) {
-            deleteExperiments(listToDelete.join(','), function () {
-                var oldUrl = window.location.href;
-                var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
-                window.location.href = newUrl;
+        if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " variants?")) {
+            deleteElements(listToDelete.join(','), function (data) {
+                if (data.status) {
+                    Msg.info(data.messages);
+                    $("#experimentTableContainer").reloadFragment();
+                } else {
+                    Msg.error("An error occured deleting the variants. Please check your internet connection");
+                }
             });
         }
     });
@@ -88,7 +94,8 @@ function initDeleteExperiments() {
         flog("List To Delete", listToDelete.join(','));
         if (listToDelete.length > 0 && confirm("Are you sure you want to delete " + listToDelete.length + " experiments?")) {
             $('body').find('.check-all').check(false).change();
-            deleteExperiments(listToDelete.join(','), function (data) {
+            deleteElements(listToDelete.join(','), function (data) {
+                flog(data);
                 if (data.status) {
                     Msg.info(data.messages);
                     $("#experimentTableContainer").reloadFragment();
@@ -100,7 +107,7 @@ function initDeleteExperiments() {
             Msg.error('Please select the experiments you want to remove by clicking the checkboxes on the right');
         }
     });
-    
+
     $('body').on('change', '.check-all', function (e) {
         flog($(this).is(":checked"));
         var checkedStatus = this.checked;
@@ -110,20 +117,22 @@ function initDeleteExperiments() {
     });
 }
 
-function deleteExperiments(listToDelete, callback) {
+function deleteElements(listToDelete, callback) {
     var oldUrl = window.location.pathname;
     var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
-    
+
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: newUrl,
+        url: window.location.pathname,
         data: {
-            deleteExperiments: listToDelete,
+            toDelete: listToDelete,
         },
-        success: callback,
+        success: function (resp) {
+            callback(resp);
+        },
         error: function (resp) {
-            Msg.error("An error occured deleting the experiments");
+            Msg.error("An error occured on the delete.");
         }
     });
 }
