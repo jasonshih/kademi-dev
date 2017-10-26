@@ -8,18 +8,24 @@ $(function () {
             f.closest('.competitionForm').find('.thankyou').show(1000);
         }
     });
-    
+
     var myPromotionUpload = $('#myPromotionUpload');
     var uploadUrl = myPromotionUpload.attr('data-url');
     $('#myPromotionUpload').mupload({
         url: uploadUrl,
         buttonText: 'Upload a photo',
         oncomplete: function (data, name, href) {
-            $('form input[name=userAttachmentHash]').val(name);
+            // Using the hash, if not the name
+            if (href.indexOf("uploads/") > 0) {
+                var hash = href.split("uploads/")[1]
+                $('form input[name=userAttachmentHash]').val(hash);
+            } else {
+                $('form input[name=userAttachmentHash]').val(name);
+            }
             $('div.viewUploaded').css('background-image', 'url("' + href + '/alt-150-150.png' + '")');
         }
     });
-    
+
     var rewardQuizes = $('.viewQuiz');
     rewardQuizes.each(function (i, n) {
         var quiz = $(n);
@@ -33,10 +39,10 @@ $(function () {
         });
         quiz.show();
     });
-    
+
     initOrgSearchPromo();
     initSkuSearchPromo();
-    
+
     $('.go-again').click(function (e) {
         e.preventDefault();
         var f = $(e.target);
@@ -56,7 +62,7 @@ function initOrgSearchPromo() {
             wildcard: '%QUERY'
         }
     });
-    
+
     $('.relatedOrgTitlePromo').typeahead({
         highlight: true
     }, {
@@ -68,11 +74,11 @@ function initOrgSearchPromo() {
             suggestion: Handlebars.compile('<div><strong>{{title}}</strong></div>')
         }
     });
-    
+
     $('.relatedOrgTitlePromo').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-        
+
         form.find('input[name=relatedOrg]').val(sug.orgId);
     });
 }
@@ -93,7 +99,7 @@ function initSkuSearchPromo() {
             }
         }
     });
-    
+
     $('.relatedProductSkuTitlePromo').typeahead({
         highlight: true
     }, {
@@ -105,11 +111,11 @@ function initSkuSearchPromo() {
             suggestion: Handlebars.compile('<div><span>{{skuTitle}}</span></div>')
         }
     });
-    
+
     $('.relatedProductSkuTitlePromo').bind('typeahead:select', function (ev, sug) {
         var inp = $(this);
         var form = inp.closest('form');
-        
+
         form.find('input[name=relatedProductSku]').val(sug.value);
     });
 }
