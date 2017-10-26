@@ -32,14 +32,26 @@
                             initCircleSales(component);
                         });
                     });
+                    
+                    form.find('.chk-show-topic-name').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-show-topic-name', this.checked);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            initCircleSales(component);
+                        });
+                    });
                 }
             });
         },
+        
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "levelProgressPanel" component');
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-topic').val(dataAttributes['data-topic']);
+            form.find('.chk-show-topic-name').prop('checked', dataAttributes['data-show-topic-name'] === 'true');
         }
     };
     
