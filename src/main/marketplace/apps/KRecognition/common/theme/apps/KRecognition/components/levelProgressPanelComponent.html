@@ -13,7 +13,7 @@
     <div class="circle-sales-wrapper text-center">
         <div class="circle-sales">
             <div class="circle-sales-knob-wrapper">
-                <input class="circle-sales-knob" value="$formatter.formatCurrency($percent)" data-color="${levelStatus.nextLevel.colour}" />
+                <input class="circle-sales-knob" value="$formatter.formatCurrency($percent)" data-color="$formatter.ifNull($levelStatus.nextLevel.colour, $levelStatus.currentLevel.colour)" />
             </div>
             <div class="circle-sales-label">
                 <label class="label label-achievement" style="background-color: ${levelStatus.currentLevel.colour};">$formatter.ifNull($levelStatus.currentLevel.title, "No level")</label>
