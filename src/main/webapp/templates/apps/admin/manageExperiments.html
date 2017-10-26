@@ -16,8 +16,8 @@
             </div>
         </div>
         <br/>
-        <div id="experimentTableContainer" class="panel-body">
-            <table class="table table-striped" id="experimentTableContainer">
+        
+        <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>Experiment</th>
@@ -26,7 +26,7 @@
                         <th><input type="checkbox" class="check-all" ></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="experimentTableContainer">
                     #foreach($experiment in $page.children)
                     <tr id="$experiment.id">
                         <td>$experiment.title</td>
@@ -43,7 +43,7 @@
                     #end
                 </tbody>
             </table>
-        </div>
+        
         <div id="addExperimentModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

@@ -18,7 +18,7 @@ function initUpdateExperiment() {
             $("#addExperimentModal").modal('hide');
         }
     });
-
+    
     $("form.createVariant").forms({
         onSuccess: function (resp) {
             Msg.success("The operation was successfully");
@@ -28,7 +28,7 @@ function initUpdateExperiment() {
             $("#addVariantModal").modal('hide');
         }
     });
-
+    
     $("body").on("click", ".btn-edit-variant", function (e) {
         e.preventDefault();
         var btn = $(e.target);
@@ -38,12 +38,12 @@ function initUpdateExperiment() {
         if (newPerc) {
             updateVariant(id, newPerc);
         }
-
+        
     });
 }
 
 function initCreateExperiment() {
-    jQuery("form.createExperiment").forms({
+    $("form.createExperiment").forms({
         onSuccess: function (resp) {
             flog("The operation was successfully", resp);
             Msg.success("The operation was successfully");
@@ -76,7 +76,6 @@ function initDeleteExperiment() {
 }
 
 
-
 function initDeleteExperiments() {
     $('body').on('click', '.btn-delete-experiments', function (e) {
         e.preventDefault();
@@ -101,7 +100,7 @@ function initDeleteExperiments() {
             Msg.error('Please select the experiments you want to remove by clicking the checkboxes on the right');
         }
     });
-
+    
     $('body').on('change', '.check-all', function (e) {
         flog($(this).is(":checked"));
         var checkedStatus = this.checked;
@@ -114,7 +113,7 @@ function initDeleteExperiments() {
 function deleteExperiments(listToDelete, callback) {
     var oldUrl = window.location.pathname;
     var newUrl = oldUrl.substr(0, oldUrl.lastIndexOf('/'));
-
+    
     $.ajax({
         type: 'POST',
         dataType: 'json',
