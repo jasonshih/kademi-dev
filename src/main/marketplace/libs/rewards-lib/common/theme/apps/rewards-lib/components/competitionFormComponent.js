@@ -146,7 +146,7 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-promotion').val(dataAttributes['data-promotion'] || '');
             form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '2');
-            form.find('.chk-show-user-photo').prop('checked', dataAttributes['data-show-user-photo'] === 'true');
+            form.find('.chk-show-user-photo').prop('checked', dataAttributes['data-show-user-photo'] !== 'false');
             form.find('.chkShowFirstName').prop('checked', dataAttributes['data-first-name'] === 'true');
             form.find('.chkShowSurname').prop('checked', dataAttributes['data-sur-name'] === 'true');
             form.find('.chkShowEmail').prop('checked', dataAttributes['data-email'] === 'true');

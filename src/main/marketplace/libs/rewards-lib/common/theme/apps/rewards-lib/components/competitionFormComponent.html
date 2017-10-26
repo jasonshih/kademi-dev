@@ -111,7 +111,7 @@
                             <h3>Photo Gallery</h3>
                             <div class="promotion-photos">
                                 <div class="row">
-                                    #if ($showUserPhoto == "true")
+                                    #if ($showUserPhoto != "false")
                                         #set ($userPhoto = "/static/images/photo_holder_squared.png")
                                         #if( $promotionPage.userAttachmentHash )
                                             #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-640-640.png")
