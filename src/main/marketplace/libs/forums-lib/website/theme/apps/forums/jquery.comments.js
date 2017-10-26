@@ -23,14 +23,14 @@
         commentTextSelector: '#postQuestion',
         renderCommentFn: function (commentData, config, container) {
             flog('renderCommentFn', 'commentData=', commentData, 'container=', container);
-            
+
             var user = commentData.user;
             var date = new Date(commentData.date);
             var commentText = commentData.comment;
             var commentId = commentData.id;
             var parentId = commentData.parentId;
             var outerDiv = $('#' + commentId);
-            
+
             if (outerDiv.length === 0) {
                 var commentStream = container.find(config.streamSelector);
                 var parentComment = $('#' + parentId);
@@ -40,25 +40,25 @@
                     isReply = true;
                 }
                 flog('Append new comment block to: ', commentStream, 'Selector: ' + config.streamSelector);
-                
+
                 var commentString = '';
-                
+
                 // User's name and profile picture
                 var commentUserString = '';
                 // Comment content and time
                 var commentDetailString = '';
-                
+
                 if (user !== null && typeof user !== 'undefined') {
                     var profilePic = profileImg(user);
                     commentUserString += '<a class="comment-user-pic" href="' + user.href + '">' + profilePic + '</a>';
-                
+
                     // Comment text
                     commentDetailString += '<p class="comment-content cmt">';
                     commentDetailString += '    <a class="user comment-user-name" href="' + user.href + '">' + user.name + '</a> ' + commentText
                     commentDetailString += '</p>';
                 } else {
                     commentUserString += '<span class="comment-user-pic"><img src="/templates/apps/user/profile.png" alt="Anonymous" /></span>';
-                
+
                     // Comment text
                     commentDetailString += '<p class="comment-content cmt">';
                     commentDetailString += '    <a class="user comment-user-name">Anonymous</a> ' + commentText
@@ -67,12 +67,12 @@
                 commentString += '<div class="comment-user">';
                 commentString += commentUserString;
                 commentString += '</div>';
-                
+
                 // Comment reply button
                 if (!isReply) {
                     commentDetailString += '<a class="comment-reply small" href="#">Reply</a>';
                 }
-                
+
                 // Comment datetime
                 flog('Comment datetime: ', date);
                 var dt = {
@@ -83,33 +83,33 @@
                     minute: date.getMinutes()
                 };
                 commentDetailString += '<abbr title="' + date.toISOString() + '" class="comment-time auxText small text-muted">' + toDisplayDateNoTime(dt) + '</abbr>';
-                
+
                 // Reply for comment
                 if (!isReply) {
                     var replyWrapClone = container.siblings('.kcommentsReplyWrap').clone();
                     replyWrapClone.find('.parentComment').val(commentId);
                     commentDetailString += replyWrapClone.prop('outerHTML');
                 }
-                
+
                 // Comment comment detail block
                 commentString += '<div class="comment-detail">';
                 commentString += commentDetailString;
                 commentString += '</div>';
-                
+
                 // Append comment block to comment stream
                 var commentClass = 'comment';
                 if (isReply) {
                     commentClass = 'comment comment-sub col-md-offset-1';
                 }
                 commentStream.append(
-                    '<div class="' + commentClass + '" id="' + commentId + '">' + commentString + '</div>'
-                );
+                        '<div class="' + commentClass + '" id="' + commentId + '">' + commentString + '</div>'
+                        );
                 outerDiv = $('#' + commentId);
-                
+
                 // Event handle for reply text
                 var btnReply = outerDiv.find('.comment-reply');
                 var replyWrapper = outerDiv.find('.kcommentsReplyWrap');
-                
+
                 btnReply.on('click', function (e) {
                     e.preventDefault();
 
@@ -118,9 +118,11 @@
 
                 var url = config.pageUrl;
                 if (!url.endsWith('/')) {
-                    url += '/';
+                    url = url.substr(0, url.length - 1);
                 }
+                url = url.substr(0, url.lastIndexOf('/') + 1);
                 url += '_comments';
+
                 replyWrapper.find('.kcomment-replyForm').forms({
                     postUrl: url,
                     beforePostForm: function (form, config, data) {
@@ -153,11 +155,11 @@
                 });
             } else {
                 flog('Update existing comment');
-                
+
                 // Just update
                 outerDiv.find('.cmt, .comment-content').html(commentText);
             }
-            
+
             jQuery('abbr.auxText, .comment-time', outerDiv).timeago();
         },
         clearContainerFn: function (config, container) {
@@ -173,44 +175,44 @@
         itemsPerPage: 10,
         paginateFn: function (comments, config, container) {
             flog('paginateFn-104-standard', comments, config, container);
-            
+
             var totalComments = 0;
             for (var i = 0; i < comments.length; i++) {
                 var comment = comments[i];
-                
+
                 if (!comment.parentId) {
                     totalComments++;
                 }
             }
             var itemsPerPage = config.itemsPerPage;
-            
+
             if (totalComments > itemsPerPage) {
                 container.prepend(
-                    '<div class="well well-sm text-center">' +
-                    '    <a href="" class="btn-show-more">Show previous comments</a>' +
-                    '</div>'
-                );
-                
+                        '<div class="well well-sm text-center">' +
+                        '    <a href="" class="btn-show-more">Show previous comments</a>' +
+                        '</div>'
+                        );
+
                 var commentWrappers = container.find('.comment').not('.comment-sub');
-                
+
                 // Show 10 last comments
                 commentWrappers.filter(':lt(' + (totalComments - itemsPerPage) + ')').hide().addClass('hidden-comment');
-                
+
                 container.find('.btn-show-more').click(function (e) {
                     e.preventDefault();
-                    
+
                     var hiddenCommentWrappers = commentWrappers.filter('.hidden-comment');
                     var totalHiddenComments = hiddenCommentWrappers.length;
-                    
+
                     hiddenCommentWrappers.filter(':gt(' + (totalHiddenComments - itemsPerPage - 1) + ')').show().removeClass('hidden-comment');
-                    
+
                     if (totalHiddenComments <= itemsPerPage) {
                         $(this).parent().hide();
                     }
                 });
             }
         },
-        aggregated: false,  // if true will list all comments under the given page,
+        aggregated: false, // if true will list all comments under the given page,
         afterCommentFn: function (commentData, config, container) {
             flog('afterCommentFn-104-standard', commentData, config, container);
         },
@@ -218,7 +220,7 @@
             flog('afterReplyFn-104-standard', commentData, config, container);
         }
     };
-    
+
     /**
      * See (http://jquery.com/).
      * @name $
@@ -226,7 +228,7 @@
      * See the jQuery Library (http://jquery.com/) for full details. This just
      * documents the function and classes that are added to jQuery by this plug-in.
      */
-    
+
     /**
      * See (http://jquery.com/)
      * @name fn
@@ -235,7 +237,7 @@
      * documents the function and classes that are added to jQuery by this plug-in.
      * @memberOf $
      */
-    
+
     /**
      * Show comments
      * @name comments
@@ -247,14 +249,15 @@
     $.fn.comments = function (options) {
         var container = this;
         var config = $.extend({}, DEFAULT_COMMENTS_OPTIONS, options);
-        
+
         var form = container.find('form.kcomment-form');
         flog('Register submit event: ', form);
 
         var url = config.pageUrl;
         if (!url.endsWith('/')) {
-            url += '/';
+            url = url.substr(0, url.length - 1);
         }
+        url = url.substr(0, url.lastIndexOf('/') + 1);
         url += '_comments';
 
         form.forms({
@@ -284,14 +287,14 @@
         });
 
         initWebsockets(config, container);
-        
+
         loadComments(config, container);
     };
-    
+
     function initWebsockets(config, container) {
         var path = window.location.pathname;
         flog('initWebsockets', window.location.host, path);
-        
+
         var b64ContentId = Base64.encode(path);
         try {
             var port = parseInt(window.location.port || 80) + 1;
@@ -304,10 +307,10 @@
             wsocket.onmessage = function (evt) {
                 var comment = $.parseJSON(evt.data);
                 flog('onMessage', comment);
-                
+
                 config.renderCommentFn(comment, config, container);
             };
-            
+
             flog('Done initWebsockets');
         } catch (e) {
             // TODO: setup polling to load comments every minute or so
@@ -318,16 +321,18 @@
 
 function loadComments(config, container) {
     flog('loadComments');
-    
+
     var page = config.pageUrl;
     var clearContainerFn = config.clearContainerFn;
-    
+
     var url = page;
     if (!url.endsWith('/')) {
-        url += '/';
+        url = url.substr(0, url.length - 1);
     }
+    url = url.substr(0, url.lastIndexOf('/') + 1);
     url += '_comments';
-    
+
+
     $.getJSON(url, function (response) {
         flog('Got comments response', response);
         clearContainerFn(config, container);
@@ -335,7 +340,7 @@ function loadComments(config, container) {
     }).fail(function () {
         flog('Failed to load comments', container);
         clearContainerFn(config, container);
-        
+
         if (container) {
             container.hide();
         }
@@ -345,11 +350,11 @@ function loadComments(config, container) {
 function processComments(comments, config, container) {
     if (comments) {
         comments.sort(dateOrd);
-        
+
         $.each(comments, function (i, comment) {
             invokeRenderFn(comment, config.renderCommentFn, config, container);
         });
-        
+
         config.paginateFn(comments, config, container);
     }
 }
