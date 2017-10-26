@@ -14,5 +14,12 @@
         }
     ],
     "dependencies": [
+        {
+
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/KRecognition/levels.less"
+            }
+        }
     ]
 }

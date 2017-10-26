@@ -2,33 +2,35 @@
     #set ($levelNameTag = "h3")
 #end
 
-#set( $recognitionService = $applications.userApp.recognitionService )
-#set( $levelStatus = $recognitionService.getLevelStatus($topic) )
-#set( $award = $levelStatus.currentLevel.title )
-#set( $topic = $recognitionService.getTopic($topic) )
+#if ($topic && $topic != "")
+    #set( $recognitionService = $applications.userApp.recognitionService )
+    #set($award = $recognitionService.getHighestLevelAward($topic) )
+    #set( $topic = $recognitionService.getTopic($topic) )
 
-
-#set( $percent = $levelStatus.percent )
-
-
-<div class="panel-circle-sales panel-on-track">
-    <div class="circle-sales-colors" style="display: none !important;">
-        <button type="button" class="btn btn-primary"></button>
-        <button type="button" class="btn btn-info"></button>
-        <button type="button" class="btn btn-success"></button>
-        <button type="button" class="btn btn-warning"></button>
-        <button type="button" class="btn btn-danger"></button>
+    <div class="panel-level-achievement">
+        #if( $award == $null )
+            #if ($imgNoLevel && $imgNoLevel != "")
+                <p><img src="$imgNoLevel" class="img-responsive" /></p>
+            #else
+                #if (!$page)
+                    <p>No awarded level found</p>
+                #else
+                    #if ($showLevelName == 'true')
+                        <p>No awarded level found</p>
+                    #end
+                #end
+            #end
+        #else
+            #if ($showLevelName == 'true')
+                <$levelNameTag>$award.recognition.title</$levelNameTag>
+            #end
+    
+            <p><img src="/_hashes/files/$award.recognition.imageHash" class="img-responsive" alt="$award.recognition.title" /></p>
+    
+        #end
     </div>
-    <div class="circle-sales-wrapper text-center">
-        <div class="circle-sales">
-            <div class="circle-sales-knob-wrapper">
-                <input class="circle-sales-knob #if($isAchieved == true) circle-sales-success #else circle-sales-warning #end" value="$formatter.formatCurrency($percent)" />
-            </div>
-            <div class="circle-sales-label">
+#else
+    <p class="alert alert-warning">No topic was selected</p>
+#end
 
-                <span><b>You've reached the $levelStatus.currentLevel.title level</b></span>
-                <span>You're ${formatter.toInteger($levelStatus.percentage)}% of the way to $levelStatus.nextLevel.title</span>
-            </div>
-        </div>
-    </div>
-</div>
+
