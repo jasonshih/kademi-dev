@@ -103,6 +103,7 @@
                                 data-levelname="$!formatter.htmlEncode($level.name)"
                                 data-leveltitle="$!formatter.htmlEncode($level.title)"
                                 data-levelamount="$!level.levelAmount"
+                                data-colour="$!level.colour"
                                 >
                                 <td>
                                     #if($level.imageHash)
@@ -387,6 +388,15 @@
                                         <input type="number" step="0.01" name="levelAmount" class="form-control required" placeholder="The amount needed to reach this level"/>
                                     </div>
                                 </div>
+                                
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Color</label>
+
+                                    <div class="col-md-8">
+                                        <input type="text" name="colour" class="form-control" placeholder="Select a color for this level"/>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -400,6 +410,6 @@
 
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js?v=$formatter.now.time">//</script>
+        <script type="text/javascript" src="/theme/apps/KRecognition/manageTopic.js">//</script>
     </body>
 </html>
