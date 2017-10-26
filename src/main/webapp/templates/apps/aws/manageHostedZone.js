@@ -11,15 +11,13 @@
                 modal.modal('hide');
             }
         });
-    }
 
-    function initRecordTypeSelect() {
-        $('#record-type').on('change', function (e) {
+        modal.find('#record-type').on('change', function (e) {
             var inp = $(this);
 
-            $('[id^=record-type-]').hide();
+            modal.find('[id^=record-type-]').hide();
 
-            $('#record-type-' + inp.val()).show();
+            modal.find('#record-type-' + inp.val()).show();
         });
     }
 
@@ -70,6 +68,9 @@
             modal.find('#record-type').val(record.type);
             modal.find('#origType').val(record.type);
 
+            modal.find('[id^=record-type-]').hide();
+            modal.find('#record-type-' + record.type).show();
+
             modal.find('#ttl').val(record.TTL);
 
             var values = "";
@@ -102,7 +103,6 @@
 
     $(function () {
         initNewRecordModal();
-        initRecordTypeSelect();
         initDeleteRecord();
         initUpdateRecord();
     });
