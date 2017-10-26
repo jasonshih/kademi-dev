@@ -1,10 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Funnels</title>
-        <!-- Import leads wizard -->
-        <link href="/static/fuelux/3.13.0/css/fuelux.min.css" rel="stylesheet" />
-        <script src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
-        <script src="/static/jQuery-Smart-Wizard/3.3.1/js/jquery.smartWizard.js">//</script>
         <script src="/static/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js">//</script>
         <script src="/static/jquery.fullscreen/0.4.1/jquery.fullscreen-0.4.1.js"></script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
@@ -13,6 +9,8 @@
         #set($currentBranch = $page.find("/repositories/${folder.name}/${page.name}"))
 
         <div class="btn-group publishing pull-right">
+            <a href="leads/" class="btn btn-sm btn-info">View journeys</a>
+            
             <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info" title="View repository history and revert changes">
                 <i class="fa fa-clock-o"></i>
             </a>
@@ -61,7 +59,7 @@
                 #end
             </ul>
         </div>
-
+        
         <div class="clearfix"></div>
 
         <div class="tabbable clearfix">
@@ -69,7 +67,6 @@
                 <ul class="nav nav-tabs tab-bricky">
                     <li class="active"><a data-toggle="tab" href="#journeyBuilder">Journey Builder</a></li>
                     <li><a data-toggle="tab" href="#properties">Properties</a></li>
-                    <li><a data-toggle="tab" href="#lead">Leads</a></li>
                 </ul>
             </div>
             <div class="tab-content">
@@ -552,307 +549,7 @@
                     </div>
                 </div>
             </form>
-        </div>
-        <div id="lead" class="tab-pane">
-            <p class="lead">$page.leads.size() leads</p>
-            <p>
-
-                <a class="btn btn-success btn-sm" href="/tableUploaders/leadsUploader?funnelName=$page.funnel.name">
-                    <span class="glyphicon glyphicon-upload"></span>
-                    Upload File
-                </a>
-                <a class="btn btn-info btn-sm btn-export-points" href="export-leads.csv">
-                    <span class="glyphicon glyphicon-download"></span>
-                    Export to CSV
-                </a>
-                <a class="btn btn-info btn-sm btn-refresh-leads" href="$page.href#leads-tab">
-                    <span class="fa fa-refresh"></span>
-                    Refresh leads
-                </a>
-
-            </p>
-            <hr />
-            <div class="row fuelux collapse" id="importerWizard" style="margin-bottom:30px; margin-top: 10px;">
-                <div class="col-lg-12">
-                    <div class="wizard" id="myWizard">
-                        <div class="steps-container">
-                            <ul class="steps">
-                                <li data-step="1" data-name="upload" class="active">
-                                    <span class="badge">1</span>Upload
-                                    <span class="chevron"></span>
-                                </li>
-                                <li data-step="2">
-                                    <span class="badge">2</span>Select columns
-                                    <span class="chevron"></span>
-                                </li>
-                                <li data-step="3" data-name="import">
-                                    <span class="badge">3</span>Import
-                                    <span class="chevron"></span>
-                                </li>
-                                <li data-step="4" data-name="processing">
-                                    <span class="badge">4</span>Processing
-                                    <span class="chevron"></span>
-                                </li>
-                                <li data-step="5" data-name="complete">
-                                    <span class="badge">5</span>Complete
-                                    <span class="chevron"></span>
-                                </li>
-
-                            </ul>
-                        </div>
-                        <div class="actions">
-                            <button type="button" class="btn btn-default btn-prev">
-                                <span class="glyphicon glyphicon-arrow-left"></span>Prev
-                            </button>
-                            <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
-                                <span class="glyphicon glyphicon-arrow-right"></span>
-                            </button>
-                        </div>
-                        <form method="post" action="">
-                            <div class="step-content">
-                                <div class="step-pane active sample-pane alert" data-step="1">
-                                    <h4>Upload CSV File</h4>
-
-                                    <div id='btn-upload' class="pull-left"></div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="step-pane sample-pane alert" data-step="2">
-                                    <h4>Select columns</h4>
-
-                                    <input type="hidden" name="fileHash" value="" />
-
-                                    <p>Please select which destination field each column should be imported into:</p>
-
-                                    <div class="row">
-                                        <div class="col-sm-12">
-                                            <div class="form-horizontal">
-                                                <div class="form-group">
-                                                    <label class="control-label col-md-2" for="startRow" style="text-align: left !important;">Start row</label>
-
-                                                    <div class="controls col-md-3">
-                                                        <input type="text" name="startRow" id="startRow" class="form-control" value="" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto">
-                                        <table class="table table-bordered table-striped" id="importerTable">
-                                            <thead>
-                                                <tr id="importerHead">
-                                                    <th>Please wait...</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="importerBody">
-                                                <tr>
-                                                    <td>Loading...</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="step-pane sample-pane alert" data-step="3">
-                                    <h4>Start importing</h4>
-
-                                    <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
-                                        so may take some time depending on the size of the file</p>
-
-                                    <p class="beforeImportInfo text-info" style="margin-bottom: 5px"></p>
-
-                                    <hr/>
-
-                                    <div id="processing">
-                                        <h4>Processing the file validations. Please wait...</h4>
-                                    </div>
-
-                                    <div id="result">
-                                        <button type="submit" class="btn btn-success btn-large">
-                                            <span class="fa fa-arrow-circle-right"></span>
-                                            Import now
-                                        </button>
-
-                                        <span id="noValidRow">There are no valid row in the file, please review it</span>
-                                        <span id="toManyErrors">There are to many errors in the file, please review it</span>
-
-                                        <hr/>
-
-                                        <table class="table">
-                                            <tr>
-                                                <th>New leads to be inserted</th>
-                                                <td class="beforeImportNumNew"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Existing leads to be updated</th>
-                                                <td class="beforeImportNumExisting"></td>
-                                            </tr>
-                                            <tr>
-                                                <th>Invalid records</th>
-                                                <td class="beforeImportNumInvalid"></td>
-                                            </tr>
-                                        </table>
-
-                                        <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
-                                        <div class="table-responsive" style="max-height: 300px">
-                                            <table class="table table-bordered table-striped">
-                                                <tbody class="beforeImportInvalidRows">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="step-pane sample-pane alert" data-step="4">
-                                    <h4>Import running</h4>
-
-                                    <div class="progress" id="importProgressbar">
-                                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                        </div>
-                                    </div>
-                                    <div class="process-results">
-                                        <p>
-                                            <strong>Process Status:</strong>
-                                            <strong id='job-status'></strong>
-                                        </p>
-
-                                        <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
-                                    </div>
-
-                                </div>
-                                <div class="step-pane sample-pane alert" data-step="5">
-                                    <table
-                                        class="table table-bordered">
-                                        <tr>
-                                            <th>Number created</th>
-                                            <td class="createdCount"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Number updated:</th>
-                                            <td class="updatedCount"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Number with
-                                                errors</th>
-                                            <td class="errorCount"></td>
-                                        </tr>
-                                        <tr>
-                                            <th>Errors file</th>
-                                            <td class=""><a
-                                                    href=""
-                                                    class="errorRows btn btn-warning">
-                                                    <span
-                                                        class="fa fa-download"></span>
-                                                </a></td>
-                                        </tr>
-                                    </table>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>TrackingID</th>
-                            <th>Email</th>
-                            <th>Last attained</th>
-                            <th>Awaiting goal</th>
-                            <th>Timer</th>
-                            <th>Created date</th>
-                            <th>Last attained date</th>
-                            <th>Stage</th>
-                            <th>Source</th>
-                            <th>Funnel version</th>
-                            <th>Team</th>
-                            <th>Assigned to</th>
-                            <th>Deleted date</th>
-                            <th>Closed date</th>
-                            <th>Cancelled</th>
-                            <th>Source Lead Id</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="lead-tbody">
-                        #foreach( $lead in $page.leads )
-                        <tr>
-                            <td>$!lead.trackingId</td>
-                            <td>
-                                #if( $lead.profile )
-                                <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
-                                #end
-                            </td>
-                            <td>
-                                #if( $lead.lastAttainedGoal)
-                                <a href="$lead.lastAttainedGoal">$page.nodeTitle($lead.lastAttainedGoal)</a>
-                                #end
-                            </td>
-                            <td>
-                                #if( $lead.currentGoal )
-                                <a href="$lead.currentGoal">$page.nodeTitle($lead.currentGoal)</a>
-                                ($lead.currentGoal)
-                                #end
-                            </td>
-                            <td><abbr class="timeago" title="$lead.timerDate">$formatter.formatDateTime( $lead.timerDate )</abbr></td>
-                            <td><abbr class="timeago" title="$lead.createDate">$formatter.formatDate( $lead.createDate )</abbr></td>
-                            <td><abbr class="timeago" title="$lead.lastAttainedDate">$formatter.formatDate( $lead.lastAttainedDate )</abbr></td>
-                            <td>$!lead.stageName</td>
-                            <td>$!lead.source</td>
-                            <td>$!lead.funnelBranch</td>
-                            <td>$!lead.assignedToOrg.formattedName</td>
-                            <td>$!lead.assignedToProfile.formattedName</td>
-                            <td>$!lead.deletedDate</td>
-                            <td>$!lead.closedDate</td>
-                            <td>$!lead.cancelled</td>
-                            <td>$!lead.sourceLead.id</td>
-                            <td>
-                                <button data-leadid="$lead.id" type="button" class="btn btn-danger btn-del-lead"><i class="fa fa-trash"></i></button>
-                            </td>
-                            <td>
-                                <a href="/leads/$lead.id" class="btn btn-info">
-                                    <span class="fa fa-pencil"></span>
-                                </a>
-                            </td>
-                        </tr>
-                        #if( $lead.processingStartedAt )
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>
-                                #if( $lead.processingStartedAt )
-                                Processing started at:
-                                <br />
-                                <abbr class="timeago" title="$lead.processingStartedAt">$formatter.formatDate( $lead.processingStartedAt )</abbr>
-                                #end
-                            </td>
-                            <td>
-                                #if( $lead.completedProcessingAt )
-                                Completed
-                                <br />
-                                <abbr class="timeago" title="$lead.completedProcessingAt">$formatter.formatDate( $lead.completedProcessingAt )</abbr>
-                                #end
-                            </td>
-                            <td>
-                                #if( $lead.numAttempts )
-                                Num attempts
-                                <br />
-                                $lead.numAttempts
-                                #end
-                            </td>
-                        </tr>
-                        #end
-                        #end
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </div>        
     </div>
 </div>
 
