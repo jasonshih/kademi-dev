@@ -126,8 +126,8 @@
         flog("initExtraFieldFileUploads");
         var modal = $('#uploadExtraFieldFileModal');
         var form = modal.find('form');
-        
-        $('.btn-upload-file').on('click', function (e) {
+
+        $('body').on('click', '.btn-upload-file', function (e) {
             e.preventDefault();
             flog("btn-upload-file");
             var name = $(e.target).data("name");
@@ -136,7 +136,7 @@
         });
 
         flog($('.btn-delete-file'));
-        $('.btn-delete-file').on('click', function (e) {
+        $('body').on('click', '.btn-delete-file', function (e) {
             e.preventDefault();
             var btn = $(this);
             var name = btn.data('name');

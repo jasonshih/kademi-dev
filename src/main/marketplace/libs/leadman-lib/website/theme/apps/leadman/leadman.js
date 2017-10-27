@@ -297,7 +297,7 @@ function initExtraFieldFileUploads() {
         modal.modal('show');
     });
 
-    $('#default-leadDetailForm').on('click', '.btn-delete-file', function (e) {
+    $('body').on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
         var btn = $(this);
         var name = btn.data('name');
