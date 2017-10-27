@@ -4,6 +4,22 @@
     #set ($salesData =  $rootFolder.find("/sales"))
 #end
 
+#if (!$achievedText)
+    #set ($achievedText = "Achieved")
+#end
+
+#if (!$notAchievedText)
+    #set ($notAchievedText = "Not achieved")
+#end
+
+#if (!$onTrackText)
+    #set ($onTrackText = "On track")
+#end
+
+#if (!$offTrackText)
+    #set ($offTrackText = "Off track")
+#end
+
 #if (!$itemsPerRow)
     #set ($itemsPerRow = "3")
 #end
@@ -89,10 +105,10 @@
             <div class="circle-sales-label">
                 #if ($isAchieved == true)
                     <i class="fa fa-check fa-3x"></i>
-                    <span>On track</span>
+                    <span>$onTrackText</span>
                 #else
                     <i class="fa fa-times fa-3x"></i>
-                    <span>Not On track</span>
+                    <span>$offTrackText</span>
                 #end
             </div>
         </div>
@@ -136,10 +152,10 @@
             <div class="circle-sales-label">
                 #if ($isAchieved == true)
                     <i class="fa fa-check fa-3x"></i>
-                    <span>#if ($isAssessed == true) Achieved #else On track #end</span>
+                    <span>#if ($isAssessed == true) $achievedText #else $onTrackText #end</span>
                 #else
                     <i class="fa fa-times fa-3x"></i>
-                    <span>#if ($isAssessed == true) Not achieved #else Not On track #end</span>
+                    <span>#if ($isAssessed == true) $notAchievedText #else $offTrackText #end</span>
                 #end
             </div>
         </div>

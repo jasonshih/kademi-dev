@@ -32,6 +32,46 @@
                             initCircleSales(dynamicElement);
                         });
                     });
+                    
+                    form.find('.txt-achieved-text').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-achieved-text', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            initCircleSales(dynamicElement);
+                        });
+                    });
+                    
+                    form.find('.txt-not-achieved-text').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-not-achieved-text', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            initCircleSales(dynamicElement);
+                        });
+                    });
+                    
+                    form.find('.txt-on-track-text').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-on-track-text', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            initCircleSales(dynamicElement);
+                        });
+                    });
+                    
+                    form.find('.txt-off-track-text').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-off-track-text', this.value);
+                        keditor.initDynamicContent(dynamicElement).done(function () {
+                            initCircleSales(dynamicElement);
+                        });
+                    });
                 }
             });
         },
@@ -40,6 +80,10 @@
             
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             form.find('.select-items-per-row').val(dataAttributes['data-items-per-row'] || '3');
+            form.find('.txt-achieved-text').val(dataAttributes['data-achieved-text'] || '');
+            form.find('.txt-not-achieved-text').val(dataAttributes['data-not-achieved-text'] || '');
+            form.find('.txt-on-track-text').val(dataAttributes['data-on-track-text'] || '');
+            form.find('.txt-off-track-text').val(dataAttributes['data-off-track-text'] || '');
         }
     };
     
