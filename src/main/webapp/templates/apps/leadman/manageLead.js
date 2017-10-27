@@ -4,6 +4,7 @@
         initEditTaskModal();
         initImmediateUpdate();
         initLeadTimerControls();
+        initExtraFieldFileUploads();
     });
 
     function initEditTaskModal() {
@@ -118,6 +119,68 @@
 
         $(document.body).on('hidden.bs.modal', '.modal', function () {
             $(this).removeData('bs.modal');
+        });
+    }
+
+    function initExtraFieldFileUploads() {
+        flog("initExtraFieldFileUploads");
+        var modal = $('#uploadExtraFieldFileModal');
+        var form = modal.find('form');
+        
+        $('.btn-upload-file').on('click', function (e) {
+            e.preventDefault();
+            flog("btn-upload-file");
+            var name = $(e.target).data("name");
+            modal.find("#extraField").val(name);
+            modal.modal('show');
+        });
+
+        flog($('.btn-delete-file'));
+        $('.btn-delete-file').on('click', function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var name = btn.data('name');
+            var fname = btn.data('fname');
+            if (confirm("Are you sure you want to delete " + fname + "?")) {
+
+                var data = {
+                    deleteExtraFieldFile: true,
+                    extraField: name,
+                    name: fname
+                };
+                flog(data);
+                $.ajax({
+                    url: window.location.href,
+                    method: "POST",
+                    dataType: "json",
+                    data: data,
+                    success: function (data) {
+                        Msg.info('File deleted');
+                        reloadFileList();
+                        $(".extraFieldsUploadDetails").reloadFragment();
+                    }
+                });
+            }
+        });
+
+        function reloadFileList() {
+            var body = $('#files-body');
+            if (body !== undefined) {
+                $('#files-body').reloadFragment({
+                    whenComplete: function () {
+                        $('#files-body abbr.timeago').timeago();
+                    }
+                });
+            }
+        }
+
+        form.forms({
+            onSuccess: function (resp) {
+                Msg.info('Files Uploaded');
+                reloadFileList();
+                $(".extraFieldsUploadDetails").reloadFragment();
+                modal.modal('hide');
+            }
         });
     }
 
