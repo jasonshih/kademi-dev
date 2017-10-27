@@ -297,7 +297,7 @@ function initExtraFieldFileUploads() {
         modal.modal('show');
     });
 
-    $('#default-leadDetailForm').on('click', '.btn-delete-file', function (e) {
+    $('body').on('click', '.btn-delete-file', function (e) {
         e.preventDefault();
         var btn = $(this);
         var name = btn.data('name');
@@ -318,7 +318,7 @@ function initExtraFieldFileUploads() {
                 success: function (data) {
                     Msg.info('File deleted');
                     reloadFileList();
-                    $("#default-leadDetailForm").reloadFragment();
+                    $(".extraFieldsUploadDetails").reloadFragment();
                 }
             });
         }
@@ -339,7 +339,7 @@ function initExtraFieldFileUploads() {
         onSuccess: function (resp) {
             Msg.info('Files Uploaded');
             reloadFileList();
-            $("#default-leadDetailForm").reloadFragment();
+            $(".extraFieldsUploadDetails").reloadFragment();
             modal.modal('hide');
         }
     });

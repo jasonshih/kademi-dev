@@ -86,7 +86,7 @@
                     #foreach($field in $page.extraFields)
                     <div class="col-sm-12 col-md-12 col-lg-6">
                         <div class="form-group" style="padding-right: 15px">
-                            <label>$field.title:</label>
+                            <label class="control-label col-sm-4">$field.title:</label>
                             $field.html($field.value, ' immediateUpdate', 'extraField_')
                             <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>-->
                         </div>

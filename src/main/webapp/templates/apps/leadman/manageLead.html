@@ -208,8 +208,8 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     #foreach($field in $page.extraFields)
+                                    #if($field.fileUpload == false)
                                     <div class="form-group">
                                         <label class="control-label col-sm-3">$field.title</label>
                                         <div class="col-sm-8">
@@ -217,7 +217,21 @@
                                         </div>
                                     </div>
                                     #end
+                                    #end
                                 </form>
+
+                                <div class="form-horizontal">
+                                    #foreach($field in $page.extraFields)
+                                    #if($field.fileUpload == true)
+                                    <div class="form-group">
+                                        <label class="control-label col-sm-3">$field.title</label>
+                                        <div class="col-sm-8">
+                                            $field.html($field.value, ' immediateUpdate form-control', 'extraField_')
+                                        </div>
+                                    </div>
+                                    #end
+                                    #end
+                                </div>
 
                             </div>
                             <div class="col-sm-4">
@@ -1245,6 +1259,34 @@
     #end
     <span title="$file.contentType"><i class="fa fa-2x $fIcon"></i></span>
     #end
+
+    <div class="modal fade" id="uploadExtraFieldFileModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title">Upload Files</h4>
+                </div>
+                <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
+                    <input type="hidden" name="uploadExtraFieldFileModal" value="uploadExtraFieldFileModal" />
+                    <input type="hidden" id="extraField" name="extraField" value="" />
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <label for="exampleInputFile"></label>
+                                <input name="files" type="file" multiple="true" class="required" id="exampleInputFile" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
+
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
 
 </body>
 </html>
