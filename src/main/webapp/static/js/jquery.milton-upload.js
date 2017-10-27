@@ -82,6 +82,9 @@
                 maxFiles: config.maxFiles,
                 uploadMultiple: false,
                 init: function () {
+                    this.on("processing", function (file) {
+                        this.options.url = form.attr('action');
+                    });
                     
                     if (config.maxFiles == 1) {
                         this.hiddenFileInput.removeAttribute('multiple'); // click file chooser btn allow select one
