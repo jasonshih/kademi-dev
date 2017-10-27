@@ -175,7 +175,7 @@ function initMasonryPanel() {
 }
 
 function initIframeContentEditor(target, allGroups, snippetsUrl) {
-    $.getScriptOnce('/static/jquery.contentEditor/1.0.1/jquery.contentEditor-1.0.1.js', function () {
+    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
         if (!target) {
             target = $('.contenteditor');
         }
@@ -1470,7 +1470,7 @@ Kalert.close = function () {
     function initKeditor(target, isContentEditor, isEdmEditor, allGroups) {
         var previewLink = target.attr('data-preview');
         if (isContentEditor) {
-            $.getScriptOnce('/static/jquery.contentEditor/1.0.1/jquery.contentEditor-1.0.1.js', function () {
+            $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
                 initFullscreenEditorModal(target, isContentEditor, isEdmEditor, allGroups);
                 initFullscreenEditorPreview(target, previewLink);
             });

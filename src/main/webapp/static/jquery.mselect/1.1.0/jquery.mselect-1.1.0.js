@@ -356,7 +356,7 @@
         var id = 'modal-milton-file-select-' + (new Date()).getTime();
         $(document.body).append(
             '<div id="' + id + '" class="modal fade" aria-hidden="true" tabindex="-1">' +
-            '   <div class="modal-dialog modal-md">' +
+            '   <div class="modal-dialog modal-lg">' +
             '       <div class="modal-content">' +
             '           <div class="modal-header">' +
             '               <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>' +
