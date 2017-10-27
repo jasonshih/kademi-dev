@@ -326,6 +326,8 @@ function initUploads() {
             });
         });
     });
+
+    checkProcessStatus();
 }
 
 function populateImportTable(form, data) {
@@ -415,26 +417,39 @@ function checkProcessStatus() {
             if (result.status) {
                 resultStatus.text(result.messages[0]);
                 if (result.data) {
+
+                    if (!result.data.statusInfo.complete && !result.data.statusInfo.cancelledDate) {
+                        $('#myWizard').wizard('selectedItem', {step: reviewRow + 1});
+                    }
+
+                    var totalRows = 0;
+                    var currentRow = 0;
                     var state = result.data.state;
                     flog("state", state);
+
+                    if (state !== null && typeof state !== 'undefined') {
+                        if (typeof state.updatedCount !== 'undefined') {
+                            $('#myWizard').find('.updatedCount').text(state.updatedCount);
+                        }
+                        if (typeof state.createdCount !== 'undefined') {
+                            $('#myWizard').find('.createdCount').text(state.createdCount);
+                        }
+                        if (typeof state.deletedCount !== 'undefined') {
+                            $('#myWizard').find('.deletedCount').text(state.deletedCount);
+                        }
+                        if (typeof state.errorCount !== 'undefined') {
+                            $('#myWizard').find('.errorCount').text(state.errorCount);
+                        }
+                        
+                        totalRows = state.totalRows;
+                        currentRow = state.currentRow;
+                    }
 
                     if (result.data.statusInfo.complete) {
                         var dt = result.data.statusInfo.completedDate;
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        if (typeof state.updatedCount !== 'undefined') {
-                            $('#myWizard').find('.updatedCount').text(state.updatedCount)
-                        }
-                        if (typeof state.createdCount !== 'undefined') {
-                            $('#myWizard').find('.createdCount').text(state.createdCount)
-                        }
-                        if (typeof state.deletedCount !== 'undefined') {
-                            $('#myWizard').find('.deletedCount').text(state.deletedCount)
-                        }
-                        if (typeof state.errorCount !== 'undefined') {
-                            $('#myWizard').find('.errorCount').text(state.errorCount)
-                        }
                         flog("finished state", state, state.resultHash);
                         if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
                             var href = "/_hashes/files/" + state.resultHash + ".csv";
@@ -444,8 +459,6 @@ function checkProcessStatus() {
                         }
 
                         $('#myWizard').wizard("next");
-                        $('#table-Orgs-body').reloadFragment({url: '/organisations/'});
-                        $('#aggregationsContainer').reloadFragment({url: '/organisations/'});
                         importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
                         importTotalCount = 0;
@@ -454,7 +467,7 @@ function checkProcessStatus() {
                         // running
                         flog("Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
-                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
+                        var percentComplete = currentRow / totalRows * 100;
                         if (isNaN(percentComplete)) {
                             percentComplete = 0;
                         }

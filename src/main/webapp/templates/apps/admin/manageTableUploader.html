@@ -209,6 +209,25 @@
                                         <strong id='job-status'></strong>
                                     </p>
 
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <th>Number created</th>
+                                            <td class="createdCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number updated:</th>
+                                            <td class="updatedCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number deleted:</th>
+                                            <td class="deletedCount"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Number with errors</th>
+                                            <td class="errorCount"></td>
+                                        </tr>
+                                    </table>
+
                                     <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
                                 </div>
 
@@ -280,7 +299,7 @@
 
         <script type="text/javascript" src="/static/fuelux/3.13.0/js/fuelux.min.js">//</script>
         <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
-        <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js?_=0003">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/manageTableUploader.js?_=0004">//</script>
         <script type="text/javascript">
             $(function () {
                 #set($hcf = $page.customFormSupported || $page.hasDateField)
