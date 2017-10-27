@@ -162,9 +162,9 @@
                 var target = $(e.target);
                 var newSkuTitle = target.val();
                 var row = target.closest('tr');
-            var td = row.find('td:first-child');
-            var rowId = row.attr('id');
-            var skuId = td.data('skuid');
+                var td = row.find('td:first-child');
+                var rowId = row.attr('id');
+                var skuId = td.data('skuid');
                 
                 updateSkuTitle(skuId, newSkuTitle, rowId);
             }
@@ -237,6 +237,8 @@
             var row = btn.closest('tr');
             var td = row.find('td:first-child');
             var skuId = td.data('skuid');
+            var selectedImage = td.find('.thumbnail').attr('data-select-image');
+            selectedImage = selectedImage.replace('/_hashes/files/', '');
             var imgHashes = (td.attr('data-selectableimg') || '').trim();
             imgHashes = imgHashes === '' ? [] : imgHashes.split(',');
             
@@ -247,16 +249,26 @@
             for (var i = 0; i < imgHashes.length; i++) {
                 var hash = imgHashes[i];
                 
-                imgsStr += '<div class="col-xs-6 col-md-3 product-image-thumb">';
-                imgsStr += '    <a href="' + hash + '" class="thumbnail select-opt-img"><img src="/_hashes/files/' + hash + '/alt-150-150.png"/></a>';
-                imgsStr += '    <a class="btn-image-selected btn btn-xs btn-success" style="display: none;" href="/_hashes/files/' + hash + '">';
-                imgsStr += '        <span class="fa fa-check"></span>';
-                imgsStr += '    </a>';
+                imgsStr += '<div class="col-xs-6 col-md-3">';
+                imgsStr += '    <a href="javascript:void(0)" data-hash="' + hash + '" class="thumbnail btn-select-img ' + (hash === selectedImage ? 'active' : '') + '"><img src="/_hashes/files/' + hash + '/alt-150-150.png"/></a>';
                 imgsStr += '</div>';
             }
             
             modalChangeImg.find('.img-list').html(imgsStr);
             modalChangeImg.modal('show');
+        });
+        
+        modalChangeImg.on('click', '.btn-select-img', function (e) {
+            e.preventDefault();
+            
+            var btn = $(this);
+            
+            if (!btn.hasClass('active')) {
+                var hash = btn.attr('data-hash');
+                modalChangeImg.find('.thumbnail.active').removeClass('active');
+                btn.addClass('active');
+                modalChangeImg.find('input[name=updateSkuImageHash]').val(hash);
+            }
         });
         
         var modalUpCrop;
