@@ -97,7 +97,7 @@ function initKEditor(options) {
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
     
-    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
+    $.getScriptOnce('/static/jquery.contentEditor/1.0.1/jquery.contentEditor-1.0.1.js', function () {
         var timer;
         win.on('resize', function () {
             clearTimeout(timer);
