@@ -53,37 +53,103 @@
 
                 return {
                     title: 'rating Properties',
-                    minWidth: 300,
-                    height:100,
+                    minWidth: 400,
+                    height:300,
                     contents: [{
                         id: 'general',
                         label: 'Settings',
                         elements: [{
-                            type: 'select',
-                            id: 'text',
-                            label: 'Number of star' + required_string,
-                            items: [
-                                ['0 star', 'no-star'],
-                                ['0.5 star', 'half-star'],
-                                ['1 star', 'one-star'],
-                                ['1.5 stars', 'one-half'],
-                                ['2 stars', 'two-stars'],
-                                ['2.5 stars', 'two-half'],
-                                ['3 stars', 'three-stars'],
-                                ['3.5 stars', 'three-half'],
-                                ['4 stars', 'four-stars'],
-                                ['4.5 stars', 'four-half'],
-                                ['5 stars', 'five-stars']
-                            ],
-                            required: true,
+                            type: 'text',
+                            id: 'starsall',
+                            label: 'Number of all star' + required_string,
+                            validate: CKEDITOR.dialog.validate.notEmpty('you must fill the field numbers!'),
+                            required : true,
                             setup: function (data) {
-                                flog('setup text', data);
-                                if (data.text) {
-                                    this.setValue(data.text);
+                                flog('setup starsall', data);
+                                if (data.starsall) {
+                                    this.setValue(data.starsall);
                                 }
                             },
                             commit: function (data) {
-                                data.text = this.getValue();
+                                data.starsall = this.getValue();
+                            }
+                        },
+                        {
+                            type: 'text',
+                            id: 'starsfill',
+                            label: 'Number of Colorful Stars' + required_string,
+                            validate: CKEDITOR.dialog.validate.notEmpty('you must fill the field numbers!'),
+                            required : true,
+                            setup: function (data) {
+                                flog('setup text', data);
+                                if (data.starsfill) {
+                                    this.setValue(data.starsfill);
+                                }
+                            },
+                            commit: function (data) {
+                                data.starsfill = this.getValue();
+                            }
+                        },
+                         {
+                            type: 'text',
+                            id: 'color',
+                            label: 'Color of Stars',
+                            default: 'yellow',
+                            setup: function (data) {
+                                flog('setup color', data);
+                                if (data.color) {
+                                    this.setValue(data.color);
+                                }
+                            },
+                            commit: function (data) {
+                                data.color = this.getValue();
+                            }
+                        },
+                        {
+                            type: 'select',
+                            id: 'size',
+                            label: 'Size of Stars',
+                            default: 'inherit',
+                            items: [
+                                ['inherit', 'inherit'],
+                                ['11 px', '11'],
+                                ['13 px', '13'],
+                                ['15 px', '15'],
+                                ['17 px', '17'],
+                                ['20 px', '20'],
+                                ['24 px', '24'],
+                                ['30 px', '30'],
+                                ['36 px', '36']
+                            ],
+                            setup: function (data) {
+                                flog('setup size', data);
+                                if (data.size) {
+                                    this.setValue(data.size);
+                                }
+                            },
+                            commit: function (data) {
+                                data.size = this.getValue();
+                            }
+                        }
+                        ,
+                        {
+                            type: 'select',
+                            id: 'half',
+                            label: 'there is half',
+                            items: [
+                                ['Yes', '1'],
+                                ['No', '0']
+                            ],
+                            
+                            default: '0',
+                            setup: function (data) {
+                                flog('setup half', data);
+                                if (data.half) {
+                                    this.setValue(data.half);
+                                }
+                            },
+                            commit: function (data) {
+                                data.half = this.getValue();
                             }
                         }
                          ]
@@ -93,7 +159,7 @@
 
                         var editor = this.getParentEditor();
                         var selection = editor.getSelection();
-                        var text = selection.getSelectedText();
+                            var text = selection.getStartElement();
                         var element = null;
                         flog('rating plugin | text=' + text, 'selected', this._.selectedElement);
 
@@ -119,11 +185,27 @@
                         var data = {};
 
                         this.commitContent(data);
-                        flog('Selected element=', this._.selectedElement);
-
-                        var ratingString = '<span class="rating-stars ' + data.text + '">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>';
+                        flog('Selected element=', this._.selectedElement);    
+                    var stars = parseInt(data.starsfill),
+                        half = parseInt(data.half) ,
+                        total = parseInt(data.starsall),
+                        starsall = '',
+                        i;
+                alert(total);
+                    for (i = 0; i < stars; i++) {
+                        starsall += '<i class="fa fa-star" style="color:' + data.color + ';"></i>';  
+                    }   
+                        for (i = stars; i < total; i++) {   
+                            if( half === 1 &&  i === stars){
+                                starsall += '<i class="fa fa-star-half-o" style="color:' + data.color + '"></i>';
+                            } else{
+                                
+                                starsall += '<i class="fa fa-star-o" style="color:#333;"></i>';
+                            }
+                        }
+               
+                        var ratingString = '<span  class="rating " style="font-size:' + data.size +'px;display: inline-flex;">' + starsall + '</span></p>';
                         
-
                         if (this._.selectedElement) {
                             var target = this._.selectedElement;
                             var id = target.getAttribute('href').replace('#', '');
@@ -133,8 +215,7 @@
                             if (rating === null) {
                                 rating = editor.document.createElement('span');
                                 rating.setAttributes({
-                                    'id': id,
-                                    'class': 'rating fade'
+                                    'id': id
                                 });
                                 editor.insertElement(rating);
                                 editor.insertElement(target);
@@ -190,9 +271,9 @@
     });
  CKEDITOR.plugins.rating = {
         isEditablerating: function (element) {
-            return CKEDITOR.plugins.rating.israting(element) && !element.isReadOnly();
+            return CKEDITOR.plugins.rating.isRating(element) && !element.isReadOnly();
         },
-        israting: function (element) {
+        isRating: function (element) {
             if (element) {
                 element = element.getAscendant('a', true);
             }
