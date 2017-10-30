@@ -468,7 +468,7 @@
                         <div id="addNewScoringFactorWrap" class="hide">
                             #if ($params.addNewScoringFactor)
                             <div class="scoringFactor panel panel-default">
-                                <input type="hidden" class="leadScoringFactorTypeId" value="$!sf.leadScoringFactorTypeId">
+                                <input type="hidden" class="leadScoringFactorTypeId" value="$!params.addNewScoringFactor">
                                 #set( $scoringType = $page.engagementScoringFactorType($params.addNewScoringFactor) )
                                 <div class="panel-heading">
                                     <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
