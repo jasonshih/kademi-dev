@@ -460,27 +460,68 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     #foreach($sft in $page.scoringTypesMap.entrySet())
-                                    <li><a href="$sft.key">$sft.value.label</a></li>
+                                    <li><a class="addEngagement" href="$sft.key">$sft.value.label</a></li>
                                     #end
                                 </ul>
                             </div>
                         </p>
-                        <div class="lostReason-wrapper">
-                            #foreach ($sf in $page.funnel.scoringFactors)
-                            <div class="form-group lostReason">
-                                #set( $scoringType = $page.engagementScoringFactorType($sf.leadScoringFactorTypeId) )
-                                <div class="col-sm-12">
-                                    <h3>$scoringType.label</h3>
-                                    Boost: $sf.boost
-                                    <br/>
-                                    Properties: 
+                        <div id="addNewScoringFactorWrap" class="hide">
+                            #if ($params.addNewScoringFactor)
+                            <div class="scoringFactor panel panel-default">
+                                <input type="hidden" class="leadScoringFactorTypeId" value="$!sf.leadScoringFactorTypeId">
+                                #set( $scoringType = $page.engagementScoringFactorType($params.addNewScoringFactor) )
+                                <div class="panel-heading">
+                                    <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Boost</label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control boost" step="0.5" type="number" name="boost" value="$!sf.boost">
+                                        </div>
+                                    </div>
+                                    <h5>Properties:</h5>
                                     #foreach( $prop in $scoringType.properties)
-                                    <div class="label label-info">$prop.text : $!sf.properties($prop.name)</div>
+                                    <div class="form-group">
+                                        <label class="col-sm-12">$prop.text</label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="$!sf.properties.get($prop.name)">
+                                        </div>
+                                    </div>
                                     #end
-                                    
                                 </div>
                             </div>
                             #end
+                        </div>
+
+                        <div class="scoringFactorsWrapper">
+                            #foreach ($sf in $page.funnel.scoringFactors)
+                            <div class="scoringFactor panel panel-default">
+                                <input type="hidden" class="leadScoringFactorTypeId" value="$!sf.leadScoringFactorTypeId">
+                                #set( $scoringType = $page.engagementScoringFactorType($sf.leadScoringFactorTypeId) )
+                                <div class="panel-heading">
+                                    <i class="fa fa-list"></i> $scoringType.label <a href="javascript:void(0)" class="pull-right deleteScoringFactor"><i class="fa fa-trash"></i></a>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Boost</label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control boost" step="0.5" type="number" name="boost" value="$!sf.boost">
+                                        </div>
+                                    </div>
+                                    <h5>Properties:</h5>
+                                    #foreach( $prop in $scoringType.properties)
+                                    <div class="form-group">
+                                        <label class="col-sm-12">$prop.text</label>
+                                        <div class="col-sm-12">
+                                            <input class="form-control scoringTypeProp" type="text" name="$prop.name" value="$!sf.properties.get($prop.name)">
+                                        </div>
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                            #end
+                            <div id="scoringFactorEnd" style="height: 1px"></div>
                         </div>
                     </div>
                 </div>
@@ -637,8 +678,10 @@
     </div>
 </div>
 
-<link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
+    <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
+    <link rel="stylesheet" href="/static/bootstrap3-editable/css/bootstrap-editable.css">
     <script src="/static/jsplump/2.1.4/jsPlumb-2.1.4.js">//</script>
+    <script src="/static/bootstrap3-editable/js/bootstrap-editable.min.js">//</script>
     <script type="text/javascript" src="/static/js/jquery.milton-upload.js">//</script>
     <script src="jb-handlers.js?v=28072016" type="text/javascript">//</script>
     <script src="/theme/apps/funnels/journeyBuilder.js?v=28072016" type="text/javascript">//</script>
@@ -649,6 +692,7 @@
             initJourneyBuilder();
             initManageFunnel();
             initPublishingMenu('');
+            initEngagementScoring();
 
             $("body").on("click", ".btn-refresh-leads", function (e) {
                 e.preventDefault();
