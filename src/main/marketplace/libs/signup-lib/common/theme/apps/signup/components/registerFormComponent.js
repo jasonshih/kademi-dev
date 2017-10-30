@@ -76,6 +76,13 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
 
+                    form.find('[name=labelAlign]').on('change', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-label-align', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
                 }
             });
         },
@@ -91,6 +98,7 @@
             form.find('[name=successTitle]').val(dataAttributes['data-success-title']);
             form.find('[name=successBody]').val(dataAttributes['data-success-body']);
             form.find('[name=group]').val(dataAttributes['data-group']);
+            form.find('[name=labelAlign]').val(dataAttributes['data-label-align']);
         }
     };
 
