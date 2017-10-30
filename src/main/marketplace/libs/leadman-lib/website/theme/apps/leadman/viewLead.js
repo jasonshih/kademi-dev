@@ -389,7 +389,11 @@
                             btnSaveCompany.html('Save details');
                             Msg.success('New company is created');
                         } else {
-                            Msg.success('Company details is saved')
+                            if (leadOrgDetailsForm.find('[name=title]').val() === ''){
+                                Msg.success('Company is unlinked');
+                            } else {
+                                Msg.success('Company details is saved')
+                            }
                         }
                         
                         if (leadOrgDetailsForm.find('[name=title]').val() === '') {
@@ -570,7 +574,6 @@
             form.find('input[name=leadOrgId]').val('');
             form.find('[name=country]').val('');
             form.find('.btn-unlink-company').css('display', 'none');
-            
             form.trigger('submit');
         });
     }
