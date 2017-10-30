@@ -20,132 +20,124 @@
 
 <form data-eway-encrypt-key="$!page.find('/eway').encryptionKey" style="display: none;"></form>
 <form method="post" id="registerForm" action="$formUrl" enctype="multipart/form-data" class="form-horizontal register-form-component" >
-    <div class="row">
-        #if (!$applicationManager.isActive($applicationManager.oauth, $website.branch))
-        <div class="col-md-8 col-md-offset-2">
-            #else
-            <div class="col-md-8">
-                #end            
-            <div class="control-group form-group">
-                <label class="control-label col-md-3" for="email">Email</label>
-                <div class="controls col-md-9">
-                    <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
-                </div>
-            </div>
-            <div class="control-group form-group">
-                <label class="control-label col-md-3" for="nickName">Nickname</label>
-                <div class="controls col-md-9">
-                    <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
-                </div>
-            </div>
-            #if ($displayName)
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="firstName">First name</label>
-
-                    <div class="controls col-md-9">
-                        <input class="required form-control" name="firstName" placeholder="Your first name" />
-                    </div>
-                </div>
-            
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="surName">Surname</label>
-
-                    <div class="controls col-md-9">
-                        <input class="required form-control" name="surName" placeholder="Your last name" />
-                    </div>
-                </div>
-            #end
-            
-            #if ($displayPwd)
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="password">Password</label>
-
-                    <div class="controls col-md-9">
-                        <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
-                    </div>
-                </div>
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="confirmPassword">Confirm</label>
-
-                    <div class="controls col-md-9">
-                        <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
-                    </div>
-                </div>
-            #end
-
-            #if ($showXtraFields)
-                #foreach($field in $pageExtraFields)
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="confirmPassword">$field.text</label>
-
-                    <div class="controls col-md-9">
-                        $field.html
-                    </div>
-                </div>
-                #end
-            #end
-
-            #if( ($page.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
-                #if( $groupRegoPage.regoOrgType )
-                #set($orgType = $groupRegoPage.regoOrgType)
-                #else
-                #set($orgType = "Organisation")
-                #end
-
-                <div class="control-group form-group">
-                    <label class="control-label col-md-3" for="orgName">$orgType</label>
-
-                    <div class="controls col-md-9">
-                        <input type="hidden" name="orgId" id="orgId" />
-                        <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
-                    </div>
-                </div>
-            #end
-
-            #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
-                <div class="control-group form-group">
-                    <div class="controls col-md-9 col-md-offset-3">
-                        #foreach($optin in $pageOptins)
-                        <label for="optins_${optin.optinGroup.name}">
-                            <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
-                            $optin.message
-                        </label>
-                        #end
-                    </div>
-                </div>
-            #end
-
-            #set($product = $pageRelatedProduct)
-            #if( $product )
-                #if( $pagePaymentProvider )
-                <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId" />
-                <hr />
-                <h2>Payment details</h2>
-
-                <div class="payment-form">
-                    $pagePaymentProvider.memberPaymentForm
-                </div>
-                #end
-            #end
-
-            <div class="control-group form-group">
-                <div class="controls col-md-9 col-md-offset-3" >
-                    <button type="submit" class="btn btn-primary">Register</button>
-                    <a href="/index.html" class="btn">Cancel</a>
-                </div>
-            </div>
-
-            $!folder.find($path).body
-
-            <br class="clearfix" />
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="email">Email</label>
+        <div class="controls col-md-9">
+            <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
         </div>
-
-            #if ($applicationManager.isActive($applicationManager.oauth, $website.branch))
-            <div class="col-md-4">
-                #portlets("socialLoginPage")
-            </div>
-            #end
     </div>
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="nickName">Nickname</label>
+        <div class="controls col-md-9">
+            <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
+        </div>
+    </div>
+    #if ($displayName)
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="firstName">First name</label>
+
+        <div class="controls col-md-9">
+            <input class="required form-control" name="firstName" placeholder="Your first name" />
+        </div>
+    </div>
+
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="surName">Surname</label>
+
+        <div class="controls col-md-9">
+            <input class="required form-control" name="surName" placeholder="Your last name" />
+        </div>
+    </div>
+    #end
+
+    #if ($displayPwd)
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="password">Password</label>
+
+        <div class="controls col-md-9">
+            <input class="required form-control" type="password" name="password" id="password" placeholder="Your preferred password" />
+        </div>
+    </div>
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="confirmPassword">Confirm</label>
+
+        <div class="controls col-md-9">
+            <input class="required form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm your password" />
+        </div>
+    </div>
+    #end
+
+    #if ($showXtraFields)
+    #foreach($field in $pageExtraFields)
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="confirmPassword">$field.text</label>
+
+        <div class="controls col-md-9">
+            $field.html
+        </div>
+    </div>
+    #end
+    #end
+
+    #if( ($page.hasOrgs || $groupSignupPage.hasOrgs) && $showOrgs)
+    #if( $groupRegoPage.regoOrgType )
+    #set($orgType = $groupRegoPage.regoOrgType)
+    #else
+    #set($orgType = "Organisation")
+    #end
+
+    <div class="control-group form-group">
+        <label class="control-label col-md-3" for="orgName">$orgType</label>
+
+        <div class="controls col-md-9">
+            <input type="hidden" name="orgId" id="orgId" />
+            <input class="required form-control" type="text" name="orgName" id="orgName" autocomplete="off" placeholder="Choose your $orgType" />
+        </div>
+    </div>
+    #end
+
+    #if( ($page.hasOptins() || $groupSignupPage.hasOptins()) && $showOptins)
+    <div class="control-group form-group">
+        <div class="controls col-md-9 col-md-offset-3">
+            #foreach($optin in $pageOptins)
+            <label for="optins_${optin.optinGroup.name}">
+                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                $optin.message
+            </label>
+            #end
+        </div>
+    </div>
+    #end
+
+    #set($product = $pageRelatedProduct)
+    #if( $product )
+    #if( $pagePaymentProvider )
+    <input type="hidden" name="paymentProvider" value="$page.paymentProvider.instanceId" />
+    <hr />
+    <h2>Payment details</h2>
+
+    <div class="payment-form">
+        $pagePaymentProvider.memberPaymentForm
+    </div>
+    #end
+    #end
+
+    <div class="control-group form-group">
+        <div class="controls col-md-9 col-md-offset-3" >
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a href="/index.html" class="btn">Cancel</a>
+        </div>
+    </div>
+
+    $!folder.find($path).body
+
+    <br class="clearfix" />
+
+    #if ($applicationManager.isActive($applicationManager.oauth, $website.branch))
+    <div class="socialLoginPortlet">
+        #portlets("socialLoginPage")
+    </div>
+    #end
 </form>
 <div id="pending" class="modal">
     <div class="modal-dialog">
