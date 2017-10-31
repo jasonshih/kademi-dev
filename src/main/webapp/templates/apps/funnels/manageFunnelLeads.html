@@ -37,6 +37,7 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>Score</th>
                             <th>Email</th>
                             <th>Last goal</th>
                             <th>Next goal</th>
@@ -53,8 +54,10 @@
                         </tr>
                     </thead>
                     <tbody id="lead-tbody">
-                        #foreach( $lead in $page.leads )
+                        #foreach( $leadBean in $page.leadsRanked )                        
                         <tr>
+                            #set( $lead = $leadBean.lead )
+                            <td>$leadBean.score</td>
                             <td>
                                 #if( $lead.profile )
                                 <a href="/manageUsers/$lead.profile.id">$!lead.profile.email</a>
@@ -88,7 +91,7 @@
                                 </a>
                             </td>
                         </tr>
-                        #if( $lead.processingStartedAt )
+                        <!--
                         <tr>
                             <td></td>
                             <td></td>
@@ -116,7 +119,8 @@
                                 #end
                             </td>
                         </tr>
-                        #end
+                        -->
+
                         #end
                     </tbody>
                 </table>
@@ -170,12 +174,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="">
-            <pre>
-                $page.leadsRanked
-            </pre>
         </div>
         
         <link rel="stylesheet" href="/theme/apps/funnels/journeyBuilder.css?v=10">
