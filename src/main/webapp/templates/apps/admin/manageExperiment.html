@@ -6,20 +6,19 @@
         <script type="text/javascript" src="manageExperiments.js">//</script>
     </head>
     <body>
-
         <h1>$page.experiment.title</h1>
         <hr/>
         <p class="lead">
         #if( $page.numSamples > 0 )
-        #set( $best = $page.bestVariant )
-        #if( $best ) 
-        The best performing variant is <b>$best.title</b> with a <b>$page.conversionRate($best) %</b> conversion rate, 
-        compared to the control rate of $!page.controlConversionRate %
+            #set( $best = $page.bestVariant )
+            #if( $best )
+                The best performing variant is <b>$best.title</b> with a <b>$page.conversionRate($best) %</b> conversion rate,
+                compared to the control rate of $!page.controlConversionRate %
+            #else
+                According to current data the control option is currently best.
+            #end
         #else
-        According to current data the control option is currently best.
-        #end
-        #else
-        No data yet.
+            No data yet.
         #end
         </p>
         <hr/>
@@ -33,49 +32,47 @@
             </div>
         </div>        
         <br/>
-        <div id="experimentTableContainer" class="panel-body">
-            <table class="table table-striped" id="experimentTableContainer">
-                <thead>
-                    <tr>
-                        <th>Variant</th>
-                        <th>Percent</th>
-                        <th>No. samples</th>
-                        <th>Converted</th>
-                        <th>Conversion %</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>A - Control</td>
-                        <td></td>
-                        <td>$!page.numControlSamples</td>
-                        <td>$!page.numControlConverted</td>
-                        <td>$!page.controlConversionRate</td>
-                        <td></td>
-                        <td></td>
-                    </tr>                    
-                    #foreach($variant in $page.variants)
-                    <tr>
-                        <td>$variant.title</td>
-                        <td class="variant-perc">$!variant.percent</td>
-                        <td>$!page.numVariantSamples($variant)</td>
-                        <td>$!page.numVariantConverted($variant)</td>
-                        <td>$!page.conversionRate($variant)</td>
-                        <td>
-                            <button class="btn btn-sm btn-info btn-edit-variant" data-id="$variant.id">
-                                <span class="fa fa-pencil"></span>
-                            </button>
-                        </td>
-                        <td>
-                            <input type="checkbox" data-id="$variant.id" class="variant-check" >
-                        </td>
-                    </tr>
-                    #end
-                </tbody>
-            </table>
-        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Variant</th>
+                    <th>Percent</th>
+                    <th>No. samples</th>
+                    <th>Converted</th>
+                    <th>Conversion %</th>
+                    <th width="100"></th>
+                    <th width="40"></th>
+                </tr>
+            </thead>
+            <tbody id="experimentTableContainer">
+                <tr>
+                    <td>A - Control</td>
+                    <td></td>
+                    <td>$!page.numControlSamples</td>
+                    <td>$!page.numControlConverted</td>
+                    <td>$!page.controlConversionRate</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                #foreach($variant in $page.variants)
+                <tr>
+                    <td>$variant.title</td>
+                    <td class="variant-perc">$!variant.percent</td>
+                    <td>$!page.numVariantSamples($variant)</td>
+                    <td>$!page.numVariantConverted($variant)</td>
+                    <td>$!page.conversionRate($variant)</td>
+                    <td>
+                        <button class="btn btn-sm btn-info btn-edit-variant" data-id="$variant.id">
+                            <span class="fa fa-pencil"></span> Edit
+                        </button>
+                    </td>
+                    <td>
+                        <input type="checkbox" data-id="$variant.id" class="variant-check" >
+                    </td>
+                </tr>
+                #end
+            </tbody>
+        </table>
         <div id="addVariantModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

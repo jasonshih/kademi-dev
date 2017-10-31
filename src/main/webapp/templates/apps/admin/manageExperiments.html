@@ -22,8 +22,8 @@
                 <tr>
                     <th>Experiment</th>
                     <th>Samples</th>
-                    <th></th>
-                    <th><input type="checkbox" class="check-all" ></th>
+                    <th width="100"></th>
+                    <th width="40"><input type="checkbox" class="check-all" ></th>
                 </tr>
             </thead>
             <tbody id="experimentTableContainer">
@@ -32,8 +32,8 @@
                     <td>$experiment.title</td>
                     <td>$!experiment.numSamples</td>
                     <td>
-                        <a href="/experiments/$experiment.name" class="btn btn-info">
-                            <i class="fa fa-pencil"></i>
+                        <a href="/experiments/$experiment.name" class="btn btn-info btn-sm">
+                            <i class="fa fa-pencil"></i> Edit
                         </a>
                     </td>
                     <td>
