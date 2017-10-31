@@ -18,6 +18,7 @@
         if (dataTable !== null) {
             dataTable.clear(false);
         }
+        flog('hitsssssssss', hits);
 
         $('#leadBody').empty();
 
@@ -148,11 +149,21 @@
                     "orderable": false,
                     render: function (data, type, full, meta) {
                         flog(data, type, full, meta);
-                        return '<a class="btn btn-info" href="' + data + '"><i class="fa fa-eye"></i></a>' +
-                                '<input class="leadMan-del-lead" value="' + data + '" type="checkbox"/>';
+                        return '<a class="btn btn-info btn-xs" href="' + data + '"><i class="fa fa-eye"></i></a>';
+                    }
+                },
+                {
+                    data: 'leadIdCheckbox',
+                    orderable: false,
+                    render: function (data, type, full, meta) {
+                        return '<input class="leadMan-del-lead" value="' + data + '" type="checkbox"/>';
                     }
                 }
             ]
+        });
+
+        $(document.body).on('click', '#leadsCheckAll', function (e) {
+            $('#leadTable').find('.leadMan-del-lead').prop('checked', this.checked);
         });
 
         $('body')
@@ -178,7 +189,9 @@
                                 success: function (resp) {
                                     if (resp.status) {
                                         Msg.success(resp.messages);
-                                        doSearch();
+                                        setTimeout(function () {
+                                            doSearch();
+                                        },500);
                                     } else {
                                         Msg.warning(resp.messages);
                                     }
@@ -226,6 +239,7 @@
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
             var _source = hit._source;
+            _source.leadIdCheckbox = _source.leadId;
             dataTable.row.add(_source);
         }
 
@@ -533,7 +547,9 @@
 
     w.doSearchLeadmanPage = function () {
         searchOptions.query = '';
-        doSearch();
+        setTimeout(function () {
+            doSearch();
+        },500)
     };
 
 })(this);
