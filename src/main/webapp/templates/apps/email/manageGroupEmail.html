@@ -3,7 +3,7 @@
         <title>$view.title</title>
         <link href="manageGroupEmail.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="manageGroupEmail.js?v106">//</script>
-        <script type="text/javascript" src="manageEmail.js?v106">//</script>
+        <script type="text/javascript" src="manageEmail.js?v107">//</script>
     </head>
     <body class="manageEmail">
         <div>
@@ -100,7 +100,7 @@
                                                 <li><a href="$email.name" class="btn-dup-email" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
                                                 <li><a href="$email.name" class="btn-dup-temp-email" title="Create Template"><i class="fa fa-wpforms"></i> Create Template</a></li>
                                                 <li class="divider"></li>
-                                                <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                                <li><a data-title="$!email.title" href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
                                             </ul>
                                         </div>
                                     </td>
@@ -143,7 +143,7 @@
                                                 <li><a href="$email.name" class="btn-view-email" title="Edit"><i class="clip-eye"></i> View</a></li>
                                                 <li><a href="$email.name" class="btn-dup-template" title="Duplicate"><i class="fa fa-copy"></i> Duplicate</a></li>
                                                 <li class="divider"></li>
-                                                <li><a href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
+                                                <li><a data-title="$!email.title" href="$email.name" class="btn-delete-email" title="Delete"><i class="fa fa-times"></i> Delete</a></li>
                                             </ul>
                                         </div>
                                     </td>

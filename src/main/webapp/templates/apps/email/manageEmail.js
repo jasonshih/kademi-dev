@@ -197,16 +197,16 @@ function initDeleteEmail() {
     $('body').on('click', 'a.btn-delete-email', function (e) {
         e.preventDefault();
 
-        var btn = $(e.target);
+        var btn = $(this);
         flog('do it', btn);
 
         var href = btn.attr('href');
-        var name = getFileName(href);
+        var name = btn.attr('data-title');
 
         confirmDelete(href, name, function () {
             flog('remove', btn);
             btn.closest('tr').remove();
-            Msg.success(href + ' is deleted!');
+            Msg.success(name + ' is deleted!');
             $('#modal-add-email-templates').reloadFragment();
         });
     });
@@ -333,12 +333,12 @@ function duplicate(href, createTemplate) {
                         $("#email-trigger-wrapper").reloadFragment();
                     }
                 } else {
-                    Msg.error('An error occured duplicating the email. Please try again and contact support if its still broke.');
+                    Msg.error('An error occurred duplicating the email. Please try again and contact support if its still broke.');
                 }
             },
             error: function (resp) {
                 flog("error", resp);
-                Msg.error('An error occured duplicating the email. Please try again and contact support if its still broke.');
+                Msg.error('An error occurred duplicating the email. Please try again and contact support if its still broke.');
             }
         });
     } catch (e) {
