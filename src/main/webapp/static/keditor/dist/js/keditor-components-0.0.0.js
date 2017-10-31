@@ -174,42 +174,34 @@
                                 placement: 'left'
                             });
                             
+                            form.find('.btn-collapsed-icon').on('change', function (e) {
+                                var component = keditor.getSettingComponent();
+                                var dynamicElement = component.find('[data-dynamic-href]');
+                                
+                                component.attr('data-collapsed-icon', e.icon);
+                                keditor.initDynamicContent(dynamicElement);
+                            });
+                            
                             form.find('.btn-expanded-icon').on('change', function (e) {
                                 var component = keditor.getSettingComponent();
                                 var dynamicElement = component.find('[data-dynamic-href]');
+                                
                                 component.attr('data-expanded-icon', e.icon);
                                 keditor.initDynamicContent(dynamicElement);
                             });
                         });
                     });
-                   
-                    form.find('.btn-collapsed-icon').on('change', function (e) {
-                                var comp = keditor.getSettingComponent();
-                                var old = comp.attr('data-panel-colapss') || 'fa-chevron-down';
-                                comp.attr('data-panel-colapss', e.icon);
-                                comp.find('.panelIconCollapsed').removeClass(old).addClass(e.icon);
-                            });
                             
-                   
-                     form.find('.btn-expanded-icon').on('change', function (e) {
-                                var comp = keditor.getSettingComponent();
-                                var old = comp.attr('data-panel-expanded') || 'fa-chevron-up';
-                                comp.attr('data-panel-expanded', e.icon);
-                                comp.find('.panelIconExpanded').removeClass(old).addClass(e.icon);
-                            });
-                   
                 }
             });
         },
-  
+
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "Accordion" component');
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             
             form.find('.collapsedAll').prop('checked', component.attr('data-initial-collapsed') == 'true');
             form.find('.panelStyle').val(component.attr('data-panel-style'));
-            form.find('.btn-collapsed-icon').val(component.attr('data-panel-colapss'));
-            form.find('.btn-expanded-icon').val(component.attr('data-panel-expanded'));
             
             $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/iconset/iconset-fontawesome-4.2.0.min.js', function () {
                 $.getScriptOnce('/static/bootstrap-iconpicker/1.7.0/js/bootstrap-iconpicker.min.js', function () {
