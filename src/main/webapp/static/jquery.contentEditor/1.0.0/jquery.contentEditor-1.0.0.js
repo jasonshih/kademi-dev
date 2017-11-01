@@ -1378,6 +1378,18 @@
                                 newContainers.push(newContainer);
                             }
                             
+                            // Fix html structure: https://github.com/Kademi/kademi-dev/issues/4241
+                            contentArea.find('[data-type^=component]').each(function () {
+                                var component = $(this);
+                                var componentContent = component.find('.keditor-component-content');
+                                
+                                if (componentContent.length > 1) {
+                                    flog('Component has incorrect HTML structure. Prepare structure');
+                                    var realContent = componentContent.last().children().detach();
+                                    componentContent.first().html(realContent);
+                                }
+                            });
+                            
                             return newContainers;
                         },
                         containerSettingEnabled: true,
