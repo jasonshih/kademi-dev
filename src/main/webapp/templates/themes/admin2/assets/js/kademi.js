@@ -1537,8 +1537,8 @@ Kalert.close = function () {
         var editorLoading = modal.find('.editor-loading');
         if (isContentEditor || isEdmEditor) {
             var pageName = getFileName(window.location.href);
-            var pagePath = textarea.attr('data-page-path') || '';
-            var basePath = textarea.attr('data-base-path') || '';
+            var pagePath = target.attr('data-page-path') || '';
+            var basePath = target.attr('data-base-path') || '';
             
             textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
                 iframeMode: true,
