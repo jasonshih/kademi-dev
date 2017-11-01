@@ -11,9 +11,9 @@
     ],
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/kpollapp/kpollPortlet.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/kpollapp/kpoll.less"
             }
         },
         {
@@ -31,7 +31,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/kpollapp/kpollPortlet.js"
+                "path": "/theme/apps/kpollapp/kpoll.js"
             }
         },
         {
