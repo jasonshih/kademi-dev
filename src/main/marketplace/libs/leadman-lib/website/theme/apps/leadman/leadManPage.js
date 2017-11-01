@@ -192,7 +192,7 @@
                                         Msg.success(resp.messages);
                                         setTimeout(function () {
                                             doSearch();
-                                        },500);
+                                        },800);
                                     } else {
                                         Msg.warning(resp.messages);
                                     }
@@ -550,7 +550,7 @@
         searchOptions.query = '';
         setTimeout(function () {
             doSearch();
-        },500)
+        },800)
     };
 
 })(this);
