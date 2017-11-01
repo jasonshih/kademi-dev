@@ -1677,19 +1677,6 @@
                         }
                     });
                     
-                    var photoEdit = form.find('#photo-edit');
-                    photoEdit.mselect({
-                        contentTypes: ['image'],
-                        bs3Modal: true,
-                        pagePath: keditor.options.pagePath,
-                        basePath: keditor.options.basePath,
-                        onSelectFile: function (url, relativeUrl, fileType, hash) {
-                            var img = keditor.getSettingComponent().find('img');
-                            img.attr('src', "/_hashes/files/" + hash);
-                            self.showSettingForm(form, keditor.getSettingComponent(), options);
-                        }
-                    });
-                    
                     var inputAlign = form.find('#photo-align');
                     inputAlign.on('change', function () {
                         var panel = keditor.getSettingComponent().find('.photo-panel');
@@ -1753,6 +1740,30 @@
                             'width': newWidth
                         });
                         inputWidth.val(newWidth);
+                    });
+                    
+                    var photoEdit = form.find('#photo-edit');
+                    photoEdit.mselect({
+                        contentTypes: ['image'],
+                        bs3Modal: true,
+                        pagePath: keditor.options.pagePath,
+                        basePath: keditor.options.basePath,
+                        onSelectFile: function (url, relativeUrl, fileType, hash) {
+                            var img = keditor.getSettingComponent().find('img');
+                            var src = '/_hashes/files/' + hash;
+                            
+                            $('<img />').attr('src', src).load(function () {
+                                img.attr('src', src).css({
+                                    width: this.width,
+                                    height: this.height
+                                })
+                                self.ratio = this.width / this.height;
+                                self.width = this.width;
+                                self.height = this.height;
+                                inputWidth.val(this.width);
+                                inputHeight.val(this.height);
+                            });
+                        }
                     });
                 }
             });
