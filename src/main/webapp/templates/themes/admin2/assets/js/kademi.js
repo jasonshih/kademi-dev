@@ -1537,13 +1537,15 @@ Kalert.close = function () {
         var editorLoading = modal.find('.editor-loading');
         if (isContentEditor || isEdmEditor) {
             var pageName = getFileName(window.location.href);
+            var pagePath = textarea.attr('data-page-path') || '';
+            var basePath = textarea.attr('data-base-path') || '';
             
             textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
                 iframeMode: true,
                 snippetsUrl: './_components?fileName=' + pageName,
                 snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
-                basePath: '',
-                pagePath: '',
+                basePath: basePath,
+                pagePath: pagePath,
                 allGroups: allGroups,
                 onReady: function () {
                     editorLoading.hide();
