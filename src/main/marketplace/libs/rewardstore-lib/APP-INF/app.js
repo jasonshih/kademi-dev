@@ -75,7 +75,6 @@ function findProducts(page, params, rewardName, numberOfProducts, sort, asc) {
         category = page.name;
     }
 
-
     return applications.rewardStore.productSearch(rewardStoreName, params.q, category, startPrice, endPrice, fromRange, numberOfProducts, sortParam, ascParam);
 }
 

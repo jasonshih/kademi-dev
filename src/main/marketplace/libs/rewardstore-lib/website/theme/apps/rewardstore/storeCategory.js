@@ -1,14 +1,10 @@
 (function ($, window) {
     var startFrom = 12;
     var currentURI = new URI(window.location.href);
-    var infiniteLoader;
-    
-    window.initProduct
     
     $(function () {
         var shouldLoadMore = $('.shouldLoadMore').length > 0;
         var shouldInit = $('.rewardStoreCategoryProductsComponent').length > 0;
-        infiniteLoader = $('#infiniteLoader');
         
         if (!$(document.body).hasClass('content-editor-page') && shouldInit) {
             initPointsRanges();
@@ -19,17 +15,17 @@
             
             if (!shouldLoadMore) {
                 $(window).scroll(function () {
+                    var infiniteLoader = $('#infiniteLoader');
                     if (!infiniteLoader.hasClass('limited') && infiniteLoader.is(':hidden') && ($(window).scrollTop() + 100) >= $(document).height() - $(window).height()) {
                         doPaginate();
                     }
                 });
             }
-            
         }
     });
     
     function initLoadMore() {
-        $('.btn-load-more').on('click', function (e) {
+        $(document.body).on('click', '.btn-load-more', function (e) {
             e.preventDefault();
             doPaginate();
         });
@@ -112,17 +108,15 @@
             type: 'GET',
             url: window.location.href,
             success: function (data) {
-                var fragment = $(data).find("#products-list");
-                $("#products-list").replaceWith(fragment);
+                var fragmentProducts = $(data).find('#products-list');
+                var fragmentTools = $(data).find('#products-list-tools');
+                $('#products-list').replaceWith(fragmentProducts);
+                $('#products-list-tools').replaceWith(fragmentTools);
                 dotdotdotProduct();
                 startFrom = 12;
             },
             error: function (resp) {
                 Msg.error("An error occurred doing the product search. Please check your internet connection and try again");
-            },
-            complete: function () {
-                hideProductLoading();
-                enableProductLoader();
             }
         });
     }
@@ -137,25 +131,19 @@
             url: newUrl.toString(),
             success: function (data) {
                 flog("success");
-                var fragment = $(data).find("#products-list");
-                var products = fragment.find('.product-item');
+                var products = $(data).find('#products-list').find('.product-item');
+                var fragmentTools = $(data).find('#products-list-tools');
+                
+                $('#products-list-tools').replaceWith(fragmentTools);
                 
                 if (products.length > 0) {
                     $("#products-list .row").append(products);
                     startFrom = startFrom + 12;
                     dotdotdotProduct();
-                } else {
-                    disableProductLoader();
                 }
             },
             error: function (resp) {
                 Msg.error("An error occured doing the product search. Please check your internet connection and try again");
-            },
-            complete: function () {
-                hideProductLoading();
-                if (infiniteLoader.hasClass('limited')) {
-                    disableProductLoader();
-                }
             }
         });
     }
@@ -188,22 +176,7 @@
     }
     
     function showProductLoading() {
-        infiniteLoader.show();
-        $('.btn-load-more-wrapper').hide();
-    }
-    
-    function hideProductLoading() {
-        infiniteLoader.hide();
-        $('.btn-load-more-wrapper').show();
-    }
-    
-    function enableProductLoader() {
-        infiniteLoader.removeClass('limited');
-        $('.btn-load-more-wrapper').show();
-    }
-    
-    function disableProductLoader() {
-        infiniteLoader.addClass('limited');
+        $('#infiniteLoader').show();
         $('.btn-load-more-wrapper').hide();
     }
     

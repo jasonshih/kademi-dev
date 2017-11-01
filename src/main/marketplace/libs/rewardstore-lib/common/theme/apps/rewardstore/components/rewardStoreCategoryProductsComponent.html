@@ -7,7 +7,7 @@
 
 #set ($app = $applications.get("rewardstore-lib"))
 
-#if( ($page.is("rewardStore") || $page.is("category")) && formatter.isNull($rewardName) )
+#if( ($page.is("rewardStore") || $page.is("category")) && !$rewardName && $rewardName == "" )
     #set($rewardName = $page.rewardStore.name)
 #end
 
@@ -48,13 +48,26 @@
     #end
 </div>
 
-<p id="infiniteLoader" class="text-center" style="display: none; padding: 20px 0">
-    <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
-</p>
-<div class="row btn-load-more-wrapper">
-    <p class="col-sm-4 col-sm-offset-4">
-        <button type="button" class="btn btn-default btn-block btn-load-more">Load more</button>
+#set ($showLoadMore = false)
+#if ($numberOfProducts && $numberOfProducts != "")
+    #if ($products.hits.hits.size() > 0 && $products.hits.hits.size() >= $formatter.toInteger($numberOfProducts))
+        #set ($showLoadMore = true)
+    #end
+#else
+    #if ($products.hits.hits.size() > 0 && $products.hits.hits.size() >= 12)
+        #set ($showLoadMore = true)
+    #end
+#end
+
+<div id="products-list-tools">
+    <p id="infiniteLoader" class="text-center #if (!$showLoadMore) limited #end" style="display: none; padding: 20px 0">
+        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
     </p>
+    <div class="row btn-load-more-wrapper" #if (!$showLoadMore) style="display: none;" #end>
+        <p class="col-sm-4 col-sm-offset-4">
+            <button type="button" class="btn btn-default btn-block btn-load-more">Load more</button>
+        </p>
+    </div>
 </div>
 
 #macro(fakeUI)
