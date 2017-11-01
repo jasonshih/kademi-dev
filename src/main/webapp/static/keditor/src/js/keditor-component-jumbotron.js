@@ -73,15 +73,6 @@
                         comp.find('.jumbotron')[this.checked ? 'addClass' : 'removeClass']('jumbotron-inverse');
                     });
                     
-                    form.find('[name=rounded]').on('click', function (e) {
-                        var comp = keditor.getSettingComponent();
-                        if (this.value == 'false') {
-                            comp.find('.jumbotron').css('border-radius', '0');
-                        } else {
-                            comp.find('.jumbotron').css('border-radius', '');
-                        }
-                    });
-                    
                     var buttonColorPicker = form.find('.button-color-picker');
                     contentEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                         var comp = keditor.getSettingComponent();
@@ -134,7 +125,6 @@
                 $(this).val(component.find('.jumbotron').css($(this).attr('name')).replace('px', ''));
             });
             form.find('[name=showButton][value=false]').prop('checked', component.find('a').hasClass('hide'));
-            form.find('[name=rounded][value=false]').prop('checked', component.find('.jumbotron').css('border-radius').replace('px', '') === '0');
             form.find('.chk-inverse').prop('checked', component.find('.jumbotron').hasClass('jumbotron-inverse'));
         },
         
