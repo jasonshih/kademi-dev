@@ -416,8 +416,11 @@ function updateSelectedConfig(loadOptions) {
 
 function checkProcessStatus() {
     flog("checkProcessStatus");
+    
     var jobTitle = $(".job-title");
     var resultStatus = $('#job-status');
+    var wizard = $('#myWizard');
+    
     $.ajax({
         type: 'GET',
         dataType: "json",
@@ -426,10 +429,10 @@ function checkProcessStatus() {
             flog("success", result);
             if (result.status) {
                 resultStatus.text(result.messages[0]);
+                
                 if (result.data) {
-                    
                     if (!result.data.statusInfo.complete && !result.data.statusInfo.cancelledDate) {
-                        $('#myWizard').wizard('selectedItem', {step: reviewRow + 1});
+                        wizard.wizard('selectedItem', {step: reviewRow + 1});
                     }
                     
                     var totalRows = 0;
@@ -439,16 +442,16 @@ function checkProcessStatus() {
                     
                     if (state !== null && typeof state !== 'undefined') {
                         if (typeof state.updatedCount !== 'undefined') {
-                            $('#myWizard').find('.updatedCount').text(state.updatedCount);
+                            wizard.find('.updatedCount').text(state.updatedCount);
                         }
                         if (typeof state.createdCount !== 'undefined') {
-                            $('#myWizard').find('.createdCount').text(state.createdCount);
+                            wizard.find('.createdCount').text(state.createdCount);
                         }
                         if (typeof state.deletedCount !== 'undefined') {
-                            $('#myWizard').find('.deletedCount').text(state.deletedCount);
+                            wizard.find('.deletedCount').text(state.deletedCount);
                         }
                         if (typeof state.errorCount !== 'undefined') {
-                            $('#myWizard').find('.errorCount').text(state.errorCount);
+                            wizard.find('.errorCount').text(state.errorCount);
                         }
                         
                         totalRows = state.totalRows;
@@ -463,16 +466,19 @@ function checkProcessStatus() {
                         flog("finished state", state, state.resultHash);
                         if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
                             var href = "/_hashes/files/" + state.resultHash + ".csv";
-                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                            wizard.find('.errorRows').prop("href", href).closest("a").show();
                         } else {
-                            $('#myWizard').find('.errorRows').closest("a").hide();
+                            wizard.find('.errorRows').closest("a").hide();
                         }
                         
-                        $('#myWizard').wizard("next");
-                        importWizardStarted = false;
-                        $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
-                        importTotalCount = 0;
-                        return; // dont poll again
+                        var selectedItem = wizard.wizard('selectedItem');
+                        if (selectedItem.step !== 1) {
+                            wizard.wizard("next");
+                            importWizardStarted = false;
+                            $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
+                            importTotalCount = 0;
+                            return; // dont poll again
+                        }
                     } else {
                         // running
                         flog("Message", result.messages[0]);
