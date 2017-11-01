@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <div class="col-sm-12">
                         <label for="website">Website</label>
-                        <select name="website" id="themeSiteId" class="form-control">
+                        <select name="website" id="themeSiteId" class="form-control required">
                             $formatter.option("", "[Website]", $websiteId)
                         #foreach($w in $rootFolder.websites)
                             $formatter.option($w.id, $w.name, $websiteId)
@@ -151,7 +151,7 @@
                                     <div class="form-group">
                                         <label class="control-label col-md-4" for="website">Website</label>
                                         <div class="col-md-8">
-                                            <select name="website" class="form-control required-if-shown">
+                                            <select name="website" class="form-control required">
                                                 $formatter.option("", "[Please select]", $websiteId)
                                             #foreach($website in $rootFolder.websites)
                                                 $formatter.option($website.id, $website.name, $websiteId)

@@ -115,7 +115,8 @@
                         <div class="form-group">
                             <label class="control-label col-md-3" for="themeSiteId">Choose a website</label>
                             <div class="col-md-4">
-                                <select name="themeSiteId" id="themeSiteId" class="form-control">
+                                <select name="themeSiteId" id="themeSiteId" class="form-control required">
+                                    <option value="">Select a website</option>
                                     #foreach($website in $page.websites)
                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
                                     #end
