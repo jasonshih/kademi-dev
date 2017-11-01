@@ -1200,7 +1200,7 @@
         showSettingForm: function (form, component, keditor) {
             var self = this;
             
-            var maptype = component.attr('data-maptype');
+            var maptype = component.attr('data-maptype') || 'embed';
             var place = component.attr('data-place');
             
             var ratio = component.find('.embed-responsive').hasClass('embed-responsive-16by9') ? '16by9' : '4by3';
