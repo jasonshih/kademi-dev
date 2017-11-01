@@ -10,9 +10,9 @@ var reviewRow = 3;
 function initManageTableUploader(hcf) {
     initUploads();
     initSaveMappings();
-
+    
     hasCustomForm = hcf;
-
+    
     if (hasCustomForm) {
         optionsRow = 2;
         mapColumnsRow++;
@@ -23,19 +23,19 @@ function initManageTableUploader(hcf) {
 function initSaveMappings() {
     var modal = $('#modal-tableUploader-saveMapping');
     var form = modal.find('form');
-
+    
     var importerHead = $('#importerHead');
-
+    
     form.forms({
         onValid: function (form, config) {
             var selectedCols = [];
-
+            
             importerHead.find('select').each(function () {
                 if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
-
+            
             if (!selectedCols.length) {
                 Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
@@ -44,12 +44,12 @@ function initSaveMappings() {
         },
         beforePostForm: function (form, config, data) {
             var fields = $("#importerWizard .customForm :input").serializeArray();
-
+            
             for (var i in fields) {
                 var f = fields[i];
                 f.name = 'options-' + f.name;
             }
-
+            
             return data + '&' + importerHead.find(':input').serialize() + '&' + $.param(fields);
         },
         onSuccess: function (resp) {
@@ -57,43 +57,45 @@ function initSaveMappings() {
             Msg.success(resp.messages);
             $('#savedMappings').reloadFragment();
         }
-
+        
     });
 }
 
 function initUploads() {
+    var importer = $("#importerWizard");
     var form = $("#importerWizard form");
-
-    $('#myWizard').wizard();
-    $('#importerWizard').on('show.bs.collapse', function () {
-        var curStep = $('#myWizard').wizard('selectedItem');
+    var wizard = $('#myWizard');
+    
+    wizard.wizard();
+    importer.on('show.bs.collapse', function () {
+        var curStep = wizard.wizard('selectedItem');
         if (!form.find('input[name=fileHash]').val()) {
             curStep = {step: 1};
         }
-        $('#myWizard').wizard('selectedItem', curStep);
+        wizard.wizard('selectedItem', curStep);
     });
-    $('#myWizard').on('finished.fu.wizard', function (evt, data) {
+    wizard.on('finished.fu.wizard', function (evt, data) {
         $('.btn-upload-Orgs-csv').trigger('click');
-        $('#myWizard').wizard('selectedItem', {step: 1});
-        $('#myWizard').find('form').trigger('reset');
+        wizard.wizard('selectedItem', {step: 1});
+        wizard.find('form').trigger('reset');
         form.find("input[name=fileHash]").val('');
         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
         importTotalCount = 0;
         var resultStatus = $('#job-status');
         resultStatus.text('');
     });
-
-    $('#myWizard').on('changed.fu.wizard', function (evt, data) {
+    
+    wizard.on('changed.fu.wizard', function (evt, data) {
         if (data.step === 1) {
             // IE 11 fix
-            var ul = $('#myWizard').find('ul.steps');
+            var ul = wizard.find('ul.steps');
             if (ul.css('margin-left') !== '0') {
                 ul.css('margin-left', '0');
             }
         }
     });
-
-    $('#myWizard').on('actionclicked.fu.wizard', function (evt, data) {
+    
+    wizard.on('actionclicked.fu.wizard', function (evt, data) {
         if (data.step === 1) {
             if (form.find("input[name=fileHash]").val() == "") {
                 if ($('#btn-upload').length) {
@@ -102,20 +104,20 @@ function initUploads() {
                 evt.preventDefault();
             }
         }
-
+        
         if (hasCustomForm && data.step === optionsRow && data.direction === 'next') {
             var fileHash = form.find('[name=fileHash]').val();
             var formData = {fetchTableHeaders: 'fetchTableHeaders', fileHash: fileHash};
-
+            
             var fields = $("#importerWizard .customForm :input").serializeArray();
-
+            
             for (var i in fields) {
                 var f = fields[i];
                 formData[f.name] = f.value;
             }
-
+            
             flog('Data', formData);
-
+            
             $.ajax({
                 url: importUrl,
                 data: formData,
@@ -124,20 +126,20 @@ function initUploads() {
                 success: function (resp, textStatus, jqXHR) {
                     if (resp.status && resp.data) {
                         populateImportTable($('#importerWizard'), resp.data);
-
+                        
                         updateSelectedConfig(false);
-
-                        $('#myWizard').wizard('selectedItem', {step: mapColumnsRow});
+                        
+                        wizard.wizard('selectedItem', {step: mapColumnsRow});
                     } else {
                         Msg.error(resp.messages);
                     }
                 }
             });
-
+            
             evt.preventDefault();
             return false;
         }
-
+        
         if (data.step === mapColumnsRow && data.direction === 'next') {
             var startRow = $('#startRow').val();
             if (!startRow) {
@@ -148,23 +150,23 @@ function initUploads() {
             } else {
                 $('#startRow').parents('.form-group').removeClass('has-error');
             }
-
+            
             var importerHead = $('#importerHead');
             var selectedCols = [];
-
+            
             importerHead.find('select').each(function () {
                 if (this.value) {
                     selectedCols.push(this.value);
                 }
             });
-
+            
             if (!selectedCols.length) {
                 Msg.error('Please select at least 1 destination field to continue.');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
                 return false;
             }
-
+            
             var fileHash = form.find('[name=fileHash]').val();
             var startRow = form.find('[name=startRow]').val();
             var formData = {beforeImport: 'beforeImport', fileHash: fileHash, startRow: startRow};
@@ -175,10 +177,10 @@ function initUploads() {
             });
             form.find('#noValidRow').addClass('hide');
             form.find('[type=submit]').addClass('hide');
-
+            
             $('#processing').show();
             $('#result').hide();
-
+            
             $.ajax({
                 url: importUrl,
                 data: formData,
@@ -186,9 +188,9 @@ function initUploads() {
                 dataType: 'json',
                 success: function (resp) {
                     flog(resp);
-
+                    
                     if (resp.status && resp.data) {
-                        $('#myWizard').wizard('selectedItem', {step: reviewRow});
+                        wizard.wizard('selectedItem', {step: reviewRow});
                         form.find('[type=submit]').removeClass('hide');
                         form.find(".beforeImportNumNew").text(resp.data.newImportsCount);
                         form.find(".beforeImportNumExisting").text(resp.data.existingImportsCount);
@@ -197,7 +199,7 @@ function initUploads() {
                             invalidRows--;
                         }
                         form.find(".beforeImportNumInvalid").text(invalidRows);
-
+                        
                         var invalidRowsBody = form.find(".beforeImportInvalidRows");
                         invalidRowsBody.html("");
                         if (resp.data.invalidRows) {
@@ -216,14 +218,14 @@ function initUploads() {
                                 invalidRowsBody.append(tr);
                             }
                         }
-
+                        
                         importTotalCount = resp.data.newImportsCount + resp.data.existingImportsCount;
-
+                        
                         $('#result').show();
                         $('#processing').hide();
                         if (importTotalCount == 0 || resp.data.toManyErrors) {
                             form.find('[type=submit]').attr('disabled', true);
-
+                            
                             if (resp.data.toManyErrors) {
                                 $('#toManyErrors').show();
                             } else {
@@ -242,7 +244,7 @@ function initUploads() {
                         msg += '</ul>';
                         Msg.error(msg);
                     } else {
-                        $('#myWizard').wizard('selectedItem', {step: reviewRow});
+                        wizard.wizard('selectedItem', {step: reviewRow});
                         form.find(".beforeImportInfo").text('Cannot verify data to import');
                     }
                 },
@@ -250,11 +252,11 @@ function initUploads() {
                     form.find(".beforeImportInfo").text('Cannot verify data to import');
                 }
             });
-
+            
             evt.preventDefault();
             return false;
         }
-
+        
         if (data.step === reviewRow && data.direction === 'next') {
             if (!importWizardStarted) {
                 Msg.error("Importing process hasn't been started yet");
@@ -263,37 +265,45 @@ function initUploads() {
             }
         }
     });
-
+    
+    importer.on('show.bs.collapse', function () {
+        var curStep = wizard.wizard('selectedItem');
+        if (!form.find('input[name=fileHash]').val()) {
+            curStep = {step: 1};
+        }
+        wizard.wizard('selectedItem', curStep);
+    });
+    
     flog("Init importer form", form);
     form.forms({
         postUrl: importUrl,
         validate: function () {
             if (importWizardStarted) {
-                $('#myWizard').wizard("next");
-
+                wizard.wizard("next");
+                
                 var resultCustomValidate = {
                     error: 1,
                     errorMessages: [" That task is already in progress. Please cancel it or wait until it finishes"]
                 };
-
+                
                 return resultCustomValidate;
             }
         },
         onError: function (resp, form, config) {
             Msg.error(resp.messages[0]);
             checkProcessStatus();
-            $('#myWizard').wizard("next");
+            wizard.wizard("next");
         },
         beforePostForm: function (form, config, data) {
             importWizardStarted = true;
             return data;
         },
         onSuccess: function (resp, form, config) {
-            $('#myWizard').wizard("next");
+            wizard.wizard("next");
             checkProcessStatus();
         }
     });
-
+    
     $('#btn-upload').mupload({
         url: importUrl,
         useJsonPut: false,
@@ -301,15 +311,15 @@ function initUploads() {
         acceptedFiles: '.csv,.xlsx,.xls,.txt',
         oncomplete: function (resp, name, href) {
             flog("oncomplete", resp, name, href);
-
+            
             populateImportTable(form, resp.result.data);
-
+            
             updateSelectedConfig(true);
-
-            $('#myWizard').wizard("next");
+            
+            wizard.wizard("next");
         }
     });
-
+    
     $('#btn-cancel-import').on('click', function (e) {
         e.preventDefault();
         Kalert.confirm('Are you sure you want to cancel this process?', function () {
@@ -326,7 +336,7 @@ function initUploads() {
             });
         });
     });
-
+    
     checkProcessStatus();
 }
 
@@ -346,15 +356,15 @@ function populateImportTable(form, data) {
         thead.append(td);
         var select = $("<select class='form-control' name='col" + col + "'>");
         select.append("<option value=''>[Do not import]</option>");
-
+        
         for (var field in fields) {
             select.append("<option value='" + field + "'>" + fields[field] + "</option>");
         }
-
+        
         td.append(select);
     }
     flog("done head", thead);
-
+    
     var tbody = $("#importerBody");
     tbody.html("");
     var numRows = 0;
@@ -376,13 +386,13 @@ function populateImportTable(form, data) {
 
 function updateSelectedConfig(loadOptions) {
     var importerHead = $('#importerHead');
-
+    
     var opt = $('#savedMappings');
     var val = opt.val();
-
+    
     if (val !== '[NONE]') {
         var json = JSON.parse(val);
-
+        
         var mappings = json.mappings;
         for (var i in mappings) {
             var cols = mappings[i];
@@ -390,12 +400,12 @@ function updateSelectedConfig(loadOptions) {
                 importerHead.find('[name=col' + cols[o] + ']').val(i).change();
             }
         }
-
+        
         if (loadOptions) {
             var options = json.options;
             if (options !== null && typeof options !== 'undefined') {
                 var inputs = $("#importerWizard .customForm");
-
+                
                 for (var o in options) {
                     inputs.find('[name=' + o + ']').val(options[o]);
                 }
@@ -417,16 +427,16 @@ function checkProcessStatus() {
             if (result.status) {
                 resultStatus.text(result.messages[0]);
                 if (result.data) {
-
+                    
                     if (!result.data.statusInfo.complete && !result.data.statusInfo.cancelledDate) {
                         $('#myWizard').wizard('selectedItem', {step: reviewRow + 1});
                     }
-
+                    
                     var totalRows = 0;
                     var currentRow = 0;
                     var state = result.data.state;
                     flog("state", state);
-
+                    
                     if (state !== null && typeof state !== 'undefined') {
                         if (typeof state.updatedCount !== 'undefined') {
                             $('#myWizard').find('.updatedCount').text(state.updatedCount);
@@ -444,12 +454,12 @@ function checkProcessStatus() {
                         totalRows = state.totalRows;
                         currentRow = state.currentRow;
                     }
-
+                    
                     if (result.data.statusInfo.complete) {
                         var dt = result.data.statusInfo.completedDate;
                         flog("Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
-
+                        
                         flog("finished state", state, state.resultHash);
                         if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
                             var href = "/_hashes/files/" + state.resultHash + ".csv";
@@ -457,7 +467,7 @@ function checkProcessStatus() {
                         } else {
                             $('#myWizard').find('.errorRows').closest("a").hide();
                         }
-
+                        
                         $('#myWizard').wizard("next");
                         importWizardStarted = false;
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', 0).css('width', '0%');
@@ -480,7 +490,7 @@ function checkProcessStatus() {
                     jobTitle.text("Waiting for process job to start ...");
                 }
                 window.setTimeout(checkProcessStatus, 2500);
-
+                
             } else {
                 flog("No task");
             }
@@ -495,14 +505,14 @@ function sortObjectByValue(obj) {
     var sorted = {};
     var prop;
     var arr = [];
-
+    
     for (prop in obj) {
         if (obj.hasOwnProperty(prop)) {
             var o = {key: prop, value: obj[prop]};
             arr.push(o);
         }
     }
-
+    
     arr.sort(function (a, b) {
         if (a.value > b.value)
             return 1;
@@ -510,10 +520,10 @@ function sortObjectByValue(obj) {
             return -1;
         return 0;
     });
-
+    
     for (i = 0; i < arr.length; i++) {
         sorted[arr[i].key] = arr[i].value;
     }
-
+    
     return sorted;
 }
