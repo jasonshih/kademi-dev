@@ -24,15 +24,14 @@
                 });
             }
         },
+        
         getContent: function (component, keditor) {
             flog('getContent "googlemap" component', component);
+            
             var componentContent = component.children('.keditor-component-content');
             componentContent.find('.googlemap-cover').remove();
-            var place = component.attr('data-place');
-            var maptype = component.attr('data-maptype');
             component.find('.kgooglemap').html('');
-            var script = '<script>$(function(){if(!$(document.body).hasClass("content-editor-page")){var apiKey="AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs";var s=document.createElement("script");s.type="text/javascript";s.async=true;s.defer=true;s.src="https://maps.googleapis.com/maps/api/js?key="+apiKey+"&callback=kgooglemapInit&libraries=places";$("head").append(s);window.kgooglemapInit=function(){var mapdiv=$(".kgooglemap").not(".hide");mapdiv.each(function(){var parent=$(this).parents("[data-type=component-googlemap]");if(parent.attr("data-maptype")!=="manually")return;var map=new google.maps.Map(this,{zoom:13,mapTypeId:"roadmap"});var place=parent.attr("data-place");var input=parent.find("input")[0];input.value=place;var searchBox=new google.maps.places.SearchBox(input);map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);setTimeout(function(){google.maps.event.trigger(input,"focus");google.maps.event.trigger(input,"keydown",{keyCode:13});},500);map.addListener("bounds_changed",function(){searchBox.setBounds(map.getBounds());});var markers=[];searchBox.addListener("places_changed",function(){var places=searchBox.getPlaces();if(places.length==0){return;}markers.forEach(function(marker){marker.setMap(null);});markers=[];var bounds=new google.maps.LatLngBounds();places.forEach(function(place){if(!place.geometry){console.log("Returned place contains no geometry");return;}var icon={url:place.icon,size:new google.maps.Size(71,71),origin:new google.maps.Point(0,0),anchor:new google.maps.Point(17,34),scaledSize:new google.maps.Size(25,25)};markers.push(new google.maps.Marker({map:map,icon:icon,title:place.name,position:place.geometry.location}));if(place.geometry.viewport){bounds.union(place.geometry.viewport);}else{bounds.extend(place.geometry.location);}});map.fitBounds(bounds);});})}}});</script>';
-            component.find('.embed-responsive').append(script);
+            
             return componentContent.html();
         },
         
@@ -59,34 +58,37 @@
                         mapjs + resp
                     );
                     
-                    form.find('.mapType').on('click', function (e) {
-                        if (this.checked) {
-                            $('.' + this.value).removeClass('hide');
-                            var cls = form.find('.mapType').not(this).val();
-                            $('.' + cls).addClass('hide');
-                            var comp = keditor.getSettingComponent();
-                            comp.attr('data-maptype', this.value);
-                            if (this.value === 'manually') {
-                                comp.find('iframe').addClass('hide');
-                                comp.find('.kgooglemap').removeClass('hide');
-                                if (comp.find('.kgooglemap').data('map')) {
-                                    google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
-                                } else {
-                                    self.initAutocomplete(comp, form);
-                                    var input = form.find('[name=mapAddress]')[0];
-                                    var i = setInterval(function () {
-                                        if (comp.find('.kgooglemap').data('map')) {
-                                            clearInterval(i);
-                                            google.maps.event.trigger(input, 'focus')
-                                            google.maps.event.trigger(input, 'keydown', {
-                                                keyCode: 13
-                                            });
-                                        }
-                                    }, 100);
-                                }
+                    var mapTypes = form.find('.map-type');
+                    form.find('.mapType').on('click', function () {
+                        mapTypes.hide().filter('.' + this.value).show();
+                        
+                        var component = keditor.getSettingComponent();
+                        var iframe = component.find('iframe');
+                        var kgooglemap = component.find('.kgooglemap');
+                        component.attr('data-maptype', this.value);
+                        
+                        iframe[this.value === 'manually' ? 'hide' : 'show']();
+                        kgooglemap[this.value === 'manually' ? 'show' : 'hide']();
+                        
+                        if (this.value === 'manually') {
+                            var mapData = kgooglemap.data('map');
+                            
+                            if (mapData) {
+                                google.maps.event.trigger(mapData, 'resize');
                             } else {
-                                comp.find('iframe').removeClass('hide');
-                                comp.find('.kgooglemap').addClass('hide');
+                                self.initAutocomplete(component, form);
+                                var input = form.find('[name=mapAddress]')[0];
+                                
+                                var i = setInterval(function () {
+                                    if (mapData) {
+                                        clearInterval(i);
+                                        
+                                        google.maps.event.trigger(input, 'focus');
+                                        google.maps.event.trigger(input, 'keydown', {
+                                            keyCode: 13
+                                        });
+                                    }
+                                }, 100);
                             }
                         }
                     });
@@ -101,31 +103,15 @@
                         }
                     });
                     
-                    var btn169 = form.find('.btn-googlemap-169');
-                    var btn43 = form.find('.btn-googlemap-43');
-                    
-                    btn169.on('click', function (e) {
-                        e.preventDefault();
-                        $(this).addClass('btn-primary').removeClass('btn-default');
-                        btn43.removeClass('btn-primary').addClass('btn-default');
-                        keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-4by3').addClass('embed-responsive-16by9');
-                        var comp = keditor.getSettingComponent();
-                        if (comp.attr('maptype') === 'manually') {
-                            if (comp.find('.kgooglemap').data('map')) {
-                                google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
-                            }
-                        }
-                    });
-                    
-                    btn43.on('click', function (e) {
-                        e.preventDefault();
-                        $(this).addClass('btn-primary').removeClass('btn-default');
-                        btn169.removeClass('btn-primary').addClass('btn-default');
-                        keditor.getSettingComponent().find('.embed-responsive').removeClass('embed-responsive-16by9').addClass('embed-responsive-4by3');
-                        var comp = keditor.getSettingComponent();
-                        if (comp.attr('maptype') === 'manually') {
-                            if (comp.find('.kgooglemap').data('map')) {
-                                google.maps.event.trigger(comp.find('.kgooglemap').data('map'), "resize");
+                    form.find('[name=mapRatio]').on('click', function () {
+                        var component = keditor.getSettingComponent();
+                        
+                        component.find('.embed-responsive').removeClass('embed-responsive-4by3 embed-responsive-16by9').addClass('embed-responsive-' + this.value);
+                        
+                        if (component.attr('data-maptype') === 'manually') {
+                            var mapData = component.find('.kgooglemap').data('map');
+                            if (mapData) {
+                                google.maps.event.trigger(mapData, "resize");
                             }
                         }
                     });
@@ -134,17 +120,14 @@
         },
         showSettingForm: function (form, component, keditor) {
             var self = this;
-            var maptype = component.attr('data-maptype');
+            
+            var maptype = component.attr('data-maptype') || 'embed';
             var place = component.attr('data-place');
-            var ratio169 = component.find('.embed-responsive').hasClass('embed-responsive-16by9');
-            var ratio43 = component.find('.embed-responsive').hasClass('embed-responsive-4by3');
-            if (ratio43) {
-                form.find('.btn-googlemap-43').addClass('btn-primary').removeClass('btn-default');
-            }
-            if (ratio169) {
-                form.find('.btn-googlemap-169').addClass('btn-primary').removeClass('btn-default');
-            }
+            
+            var ratio = component.find('.embed-responsive').hasClass('embed-responsive-16by9') ? '16by9' : '4by3';
+            form.find('.mapRatio[value=' + ratio + ']').prop('checked', true);
             form.find('.mapType[value=' + maptype + ']').prop('checked', true);
+            
             var src = component.find('iframe').attr('src');
             var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
             if (!place) {
@@ -152,10 +135,11 @@
             }
             form.find('[name=mapAddress]').val(place);
             form.find('[name=mapEmbedCode]').val(iframe);
+            
+            form.find('.map-type').hide().filter('.' + maptype).show();
+            
             var firstLoad = component.attr('data-firstLoad');
             if (maptype === 'manually') {
-                form.find('.manually').removeClass('hide').siblings('.embed').addClass('hide');
-                
                 if (!firstLoad && place) {
                     var i = setInterval(function () {
                         if (window.googleMapInitialized) {
@@ -172,8 +156,6 @@
                         }
                     }, 100);
                 }
-            } else {
-                form.find('.manually').addClass('hide').siblings('.embed').removeClass('hide');
             }
         },
         
@@ -182,11 +164,13 @@
                 alert('google map is not initialized');
                 return;
             }
+            
             var mapdiv = component.find('.kgooglemap')[0];
             var map = new google.maps.Map(mapdiv, {
                 zoom: 13,
                 mapTypeId: 'roadmap'
             });
+            
             // Create the search box and link it to the UI element.
             var input = form.find('[name=mapAddress]')[0];
             var searchBox = new google.maps.places.SearchBox(input);
@@ -255,4 +239,5 @@
     window.initKeditorMapSetting = function () {
         window.googleMapInitialized = true;
     }
+    
 })(jQuery);
