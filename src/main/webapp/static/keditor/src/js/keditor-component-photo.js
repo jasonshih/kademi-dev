@@ -47,7 +47,7 @@
                     var txtLink = form.find('#photo-link');
                     txtLink.on('change', function () {
                         var link = this.value.trim();
-                        var pattern = new RegExp('^[a-zA-Z0-9_/%:/./-]+$');
+                        var pattern =  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/;
                         var span = txtLink.next();
                         var formGroup = txtLink.closest('.form-group');
                         
