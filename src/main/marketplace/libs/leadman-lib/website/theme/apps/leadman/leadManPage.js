@@ -35,7 +35,8 @@
                 {
                     label: 'Stage',
                     name: 'stageName',
-                    type: 'select'
+                    type: 'select',
+                    placeholder: 'Choose stage'
                 },
                 {
                     label: 'Source',
