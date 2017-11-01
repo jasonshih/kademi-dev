@@ -40,7 +40,8 @@
                 {
                     label: 'Source',
                     name: 'source',
-                    type: 'select'
+                    type: 'select',
+                    placeholder: 'Choose source'
                 },
                 {
                     label: 'Assigned To',
