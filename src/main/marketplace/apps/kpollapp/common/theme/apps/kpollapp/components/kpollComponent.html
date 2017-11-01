@@ -15,7 +15,7 @@
 
     #if ($user && $poll)
         #if (!$answer)
-        <form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
+        <form method="post" action="/kpoll/${pollName}/answer" class="form-kpoll">
             <div class="kpoll">
                 <div class="kpoll-question clearfix">
                     $poll.jsonObject.question
@@ -23,7 +23,7 @@
                 <hr />
                 <div class="kpoll-anwsers">
                     #foreach($ans in $poll.jsonObject.answers)
-                        #set ($anwserId = "answer-" + $foreach.index)
+                        #set ($anwserId = "answer-" + $pollName + "-" + $foreach.index)
                         <div class="radio kpoll-anwser">
                             <label for="$anwserId">
                                 $formatter.radio($anwserId, "answer", false, $ans, "required") $ans
@@ -39,7 +39,7 @@
         </form>
         #end
 
-        <div id="poll-result" #if (!$answer) style="display: none" #end>
+        <div class="poll-result" #if (!$answer) style="display: none" #end>
             <div class="kpoll">
                 #if ($answer)
                     <p class="alert alert-info lead"><i class="glyphicon glyphicon-info-sign"></i> You already answered this poll!</p>
@@ -78,7 +78,7 @@
         <p class="alert alert-info">You don't have any poll for now.</p>
     #end
 #else
-    <form method="post" action="/kpoll/${pollName}/answer" id="form-kpoll">
+    <form method="post" action="/kpoll/${pollName}/answer" class="form-kpoll">
         <div class="kpoll">
             <div class="kpoll-question clearfix">
                 Example Poll

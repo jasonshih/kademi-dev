@@ -201,10 +201,15 @@ function initIframeContentEditor(target, allGroups, snippetsUrl) {
             editor.before(loading);
             editor.hide();
             
+            var pagePath = editor.attr('data-page-path');
+            var basePath = editor.attr('data-base-path');
+            
             editor.contentEditor({
                 iframeMode: true,
                 allGroups: allGroups,
                 snippetsUrl: snippetsUrl || '_components',
+                basePath: basePath,
+                pagePath: pagePath,
                 onReady: function () {
                     loading.remove();
                 }
@@ -1532,13 +1537,15 @@ Kalert.close = function () {
         var editorLoading = modal.find('.editor-loading');
         if (isContentEditor || isEdmEditor) {
             var pageName = getFileName(window.location.href);
+            var pagePath = target.attr('data-page-path') || '';
+            var basePath = target.attr('data-base-path') || '';
             
             textarea[isContentEditor ? 'contentEditor' : 'edmEditor']({
                 iframeMode: true,
                 snippetsUrl: './_components?fileName=' + pageName,
                 snippetsHandlersUrl: './_components?handlers&fileName=' + pageName,
-                basePath: '',
-                pagePath: '',
+                basePath: basePath,
+                pagePath: pagePath,
                 allGroups: allGroups,
                 onReady: function () {
                     editorLoading.hide();

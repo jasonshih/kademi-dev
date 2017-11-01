@@ -799,7 +799,7 @@
                                 {name: 'about', groups: ['about']}
                             ],
                             extraPlugins: 'sourcedialog,lineheight,onchange,fuse-image,kcode',
-                            removePlugins: 'table,magicline,tabletools',
+                            removePlugins: 'resize,image,save,newpage,preview,tliyoutube,image2,pbckcode,googledocs,language,table,magicline,tabletools',
                             removeButtons: 'Save,NewPage,Preview,Print,Templates,PasteText,PasteFromWord,Find,Replace,SelectAll,Scayt,Form,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Outdent,Indent,Blockquote,CreateDiv,Language,Table,HorizontalRule,Smiley,SpecialChar,PageBreak,Iframe,Styles,Maximize,About,ShowBlocks,BidiLtr,BidiRtl,Flash,Image,Subscript,Superscript,Anchor',
                             enterMode: CKEDITOR.ENTER_DIV,
                             forceEnterMode: true,
