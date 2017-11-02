@@ -217,8 +217,9 @@
                         </table>
                     </div>
 
+                    #set ($rewardsRepo = $page.find("/repositories/rewards/").live.href)
                     <div class="tab-pane Details" id="rewardContent">
-                        <textarea id="body" name="body" class="contenteditor" cols="100" rows="5" autocomplete="off" data-base-path="$!page.find("/repositories/rewards/").live.href" data-page-path="$!page.find("/repositories/rewards/").live.href" data-preview="?goto=">$!page.body</textarea>
+                        <textarea id="body" name="body" class="contenteditor" cols="100" rows="5" autocomplete="off" data-base-path="$!rewardsRepo" data-page-path="$!rewardsRepo" data-preview="?goto=">$!page.body</textarea>
 
                         <br />
                         <i>This copy will be displayed to the winners.</i>
