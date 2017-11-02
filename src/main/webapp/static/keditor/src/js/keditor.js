@@ -1,90 +1,11 @@
-/**!
- * Configuration:
- * @option {Boolean} niceScrollEnabled Enable niceScroll or not
- * @option {Boolean} nestedContainerEnabled Enable nested container or not
- * @option {String} btnMoveContainerText Text content for move button of container
- * @option {String} btnMoveComponentText Text content for move button of component
- * @option {String} btnSettingContainerText Text content for setting button of container
- * @option {String} btnSettingComponentText Text content for setting button of component
- * @option {String} btnDuplicateContainerText Text content for duplicate button of container
- * @option {String} btnDuplicateComponentText Text content for duplicate button of component
- * @option {String} btnDeleteContainerText Text content for delete button of container
- * @option {String} btnDeleteComponentText Text content for delete button of component
- * @option {String} tabContainersText Text for Containers tab
- * @option {String} tabContainersTitle Title for Containers tab
- * @option {String} tabComponentsText Text for Components tab
- * @option {String} tabComponentsTitle Title for Components tab
- * @option {Boolean} tabTooltipEnabled Bootstrap Tooltip is enabled for Component and Container tab or not
- * @option {Object} extraTabs Extra tabs besides Containers and Components tabs in sidebar
- * Example: {
- *     tabName: {
- *         text: 'My Extra Tab #1',
- *         title: 'My Extra Tab #1',
- *         content: 'Here is content of My Extra Tab #1'
- *     }
- * }
- * @option {String|Function} defaultComponentType Default component type of component. If type of component does not exist in KEditor.components, will be used 'defaultComponentType' as type of this component. If is function, argument is component
- * @option {String} snippetsUrl Url to snippets file
- * @option {String} snippetsListId Id of element which contains snippets. As default, value is "keditor-snippets-list" and KEditor will render snippets sidebar automatically. If you specific other id, only snippets will rendered and put into your element
- * @option {Boolean} snippetsTooltipEnabled Bootstrap tooltip is enable for snippet or not
- * @option {String} snippetsTooltipPosition Position of Bootstrap tooltip for snippet. Can be 'left', 'right', 'top' and 'bottom'
- * @option {Boolean} snippetsFilterEnabled Enable filtering snippets by categories and text searching or not
- * @option {String} snippetsCategoriesSeparator The separator character between each categories
- * @option {Boolean} iframeMode KEditor is created inside an iframe or not. KEditor is created inside an iframe or not. Keditor will add all elements which have 'data-type=keditor-style' for iframe stylesheet. These elements can be 'link', 'style' or any tags. If these elements have 'href' attribute, will create link tag with href. If these elements do not have 'href' attribute, will create style tag with css rule is html code inside element
- * @option {Array<Object>} contentStyles Content styles for iframe mode
- * Example: [
- *     {
- *         href: '/path/to/style/file'
- *     }, {
- *         content: 'a { color: red; }'
- *     }
- * ]
- * @option {String} contentAreasSelector Selector of content areas. If is null or selector does not match any elements, will create default content area and wrap all content inside it.
- * @option {String} contentAreasWrapper The wrapper element for all contents inside iframe or new div which will contains content of textarea. It's just for displaying purpose. If you want all contents inside iframe are appended into body tag, just leave it as blank
- * @option {Boolean} containerSettingEnabled Enable setting panel for container
- * @option {Function} containerSettingInitFunction Method will be called when initializing setting panel for container
- * @option {Function} containerSettingShowFunction Method will be called when setting panel for container is showed
- * @option {Function} containerSettingHideFunction Method will be called when setting panel for container is hidden
- * @option {Function} onReady Callback will be called after keditor instance is ready
- * @option {Function} onInitFrame Callback will be called after iframe and content areas wrapper inside it are created. Arguments: frame, frameHead, frameBody
- * @option {Function} onSidebarToggled Callback will be called after toggled sidebar. Arguments: isOpened
- * @option {Function} onInitContentArea Callback will be called when initializing content area. It can return array of jQuery objects which will be initialized as container in content area. By default, all first level sections under content area will be initialized. Arguments: contentArea
- * @option {Function} onContentChanged Callback will be called when content is changed. Includes add, delete, duplicate container or component. Or content of a component is changed. Arguments: event, contentArea
- * @option {Function} onInitContainer Callback will be called when initializing container. It can return array of jQuery objects which will be initialized as editable components in container content (NOTE: these objects MUST be under elements which have attribute data-type="container-content"). By default, all first level sections under container content will be initialized. Arguments: container, contentArea
- * @option {Function} onBeforeContainerDeleted Callback will be called before container is deleted. Arguments: event, selectedContainer, contentArea
- * @option {Function} onContainerDeleted Callback will be called after container and its components are already deleted. Arguments: event, selectedContainer, contentArea
- * @option {Function} onContainerChanged Callback will be called when content of container is changed. It can be when container received new component from snippet or from other container. Or content of any components are changed or any components are deleted or duplicated. Arguments: event, changedContainer, contentArea
- * @option {Function} onContainerDuplicated Callback will be called when a container is duplicated. Arguments: event, originalContainer, newContainer, contentArea
- * @option {Function} onContainerSelected Callback will be called when a container is selected. Arguments: event, selectedContainer, contentArea
- * @option {Function} onContainerSnippetDropped Callback will be called when a container snippet is dropped into content area. Arguments: event, newContainer, droppedSnippet, contentArea
- * @option {Function} onComponentReady Callback will be called after component is initialized. This callback is available or not is depend on component type handler.
- * @option {Function} onInitComponent Callback will be called when initializing component. Arguments: component, contentArea
- * @option {Function} onBeforeComponentDeleted Callback will be called before a component is deleted. Arguments: event, selectedComponent, contentArea
- * @option {Function} onComponentDeleted Callback will be called after a component is deleted. Arguments: event, selectedComponent, contentArea
- * @option {Function} onComponentChanged Callback will be called when content of a component is changed. Arguments: event, changedComponent, contentArea
- * @option {Function} onComponentDuplicated Callback will be called when a component is duplicated. Arguments: event, originalComponent, newComponent, contentArea
- * @option {Function} onComponentSelected Callback will be called when a component is selected. Arguments: event, selectedComponent, contentArea
- * @option {Function} onComponentSnippetDropped Callback will be called after a component snippet is dropped into a container. Arguments: event, newComponent, droppedSnippet, contentArea
- * @option {Function} onBeforeDynamicContentLoad Callback will be called before loading dynamic content. Arguments: dynamicElement, component, contentArea
- * @option {Function} onDynamicContentLoaded Callback will be called after dynamic content is loaded. Arguments: dynamicElement, response, status, xhr, contentArea
- * @option {Function} onDynamicContentError Callback will be called if loading dynamic content is error, abort or timeout. Arguments: dynamicElement, response, status, xhr, contentArea
- */
 (function ($) {
-    // Log function will print log message when "KEditor.debug" equals "true"
+    // Log function will print log message
     var flog = function () {
         if (typeof (console) !== 'undefined' && KEditor.debug === true) {
-            if (navigator.appName == 'Microsoft Internet Explorer') {
-                // BM: Previous used JSON, but that crashed IE sometimes. So this is pretty crap, but at least safer
-                if (arguments.length == 1) {
-                    console.log('[KEditor]', arguments[0]);
-                } else if (arguments.length == 2) {
-                    console.log('[KEditor]', arguments[0], arguments[1]);
-                } else if (arguments.length > 2) {
-                    console.log('[KEditor]', arguments[0], arguments[1], arguments[2]);
-                }
-            } else {
-                console.log(['KEditor'], arguments);
-            }
+            var args = Array.prototype.slice.apply(arguments);
+            args.unshift('[KEditor]');
+            
+            console.log.apply(console, args);
         }
     };
     
@@ -156,9 +77,15 @@
         },
         onSidebarToggled: function (isOpened) {
         },
+        onContentChanged: function (event, contentArea) {
+        },
+        
+        onBeforeInitContentArea: function (contentArea) {
+        },
         onInitContentArea: function (contentArea) {
         },
-        onContentChanged: function (event, contentArea) {
+        
+        onBeforeInitContainer: function (container, contentArea) {
         },
         onInitContainer: function (container, contentArea) {
         },
@@ -174,7 +101,10 @@
         },
         onContainerSnippetDropped: function (event, newContainer, droppedSnippet, contentArea) {
         },
+        
         onComponentReady: function (component) {
+        },
+        onBeforeInitComponent: function (component, contentArea) {
         },
         onInitComponent: function (component, contentArea) {
         },
@@ -190,6 +120,7 @@
         },
         onComponentSnippetDropped: function (event, newComponent, droppedSnippet, contentArea) {
         },
+        
         onBeforeDynamicContentLoad: function (dynamicElement, component, contentArea) {
         },
         onDynamicContentLoaded: function (dynamicElement, response, status, xhr, contentArea) {
@@ -416,7 +347,7 @@
                 dataType: 'html',
                 url: options.snippetsUrl,
                 success: function (resp) {
-                    flog('Success in getting snippets', resp);
+                    flog('Success in getting snippets');
                     
                     self.renderSnippets(resp);
                     self.initSnippets();
@@ -448,7 +379,7 @@
     };
     
     KEditor.prototype.initSnippetsFilter = function (type) {
-        flog('initSnippetsFilter', type);
+        flog('initSnippetsFilter for ' + type);
         
         var self = this;
         var options = self.options;
@@ -571,7 +502,7 @@
     };
     
     KEditor.prototype.renderSnippets = function (resp) {
-        flog('renderSnippets', resp);
+        flog('renderSnippets');
         
         var self = this;
         var options = self.options;
@@ -592,8 +523,6 @@
             var title = snippet.attr('data-keditor-title');
             var snippetHtml = '';
             var categories = snippet.attr('data-keditor-categories') || '';
-            
-            flog('Snippet #' + i + ' type=' + type + ' categories=' + categories, previewUrl, content);
             
             snippetHtml += '<section class="keditor-ui keditor-snippet" data-snippet="#keditor-snippet-' + i + '" data-type="' + type + '" ' + (options.snippetsTooltipEnabled ? 'data-toggle="tooltip" data-placement="' + options.snippetsTooltipPosition + '"' : '') + ' title="' + title + '" data-keditor-categories="' + categories + '">';
             snippetHtml += '   <img class="keditor-ui keditor-snippet-preview" src="' + previewUrl + '" />';
@@ -630,8 +559,6 @@
     };
     
     KEditor.prototype.beautifyCategories = function (categories) {
-        flog('beautifyCategories', categories);
-        
         var newArray = [];
         for (var i = 0; i < categories.length; i++) {
             var category = categories[i] || '';
@@ -1010,6 +937,10 @@
         
         contentArea.addClass('keditor-content-area');
         
+        if (typeof options.onBeforeInitContentArea === 'function') {
+            options.onBeforeInitContentArea.call(self, contentArea);
+        }
+        
         flog('Initialize $.fn.sortable for content area');
         contentArea.sortable({
             handle: '.keditor-toolbar-container:not(.keditor-toolbar-sub-container) .btn-container-reposition',
@@ -1115,6 +1046,10 @@
         
         if (!container.hasClass('keditor-initialized-container') || !container.hasClass('keditor-initializing-container')) {
             container.addClass('keditor-initializing-container');
+            
+            if (typeof options.onBeforeInitContainer === 'function') {
+                options.onBeforeInitContainer.call(self, container, contentArea);
+            }
             
             if (isNested) {
                 container.addClass('keditor-sub-container');
@@ -1312,8 +1247,6 @@
     };
     
     KEditor.prototype.getDataAttributes = function (target, ignoreAttributes, isArray) {
-        flog('getDataAttributes', target, ignoreAttributes, isArray);
-        
         var dataAttributes = isArray ? [] : {};
         if (!ignoreAttributes) {
             ignoreAttributes = [];
@@ -1374,6 +1307,10 @@
         if (!component.hasClass('keditor-initialized-component') || !component.hasClass('keditor-initializing-component')) {
             component.addClass('keditor-initializing-component');
             component.attr('id', self.generateId('component'));
+            
+            if (typeof options.onBeforeInitComponent === 'function') {
+                options.onBeforeInitComponent.call(self, component, contentArea);
+            }
             
             var componentContent = component.children('.keditor-component-content');
             componentContent.attr('id', self.generateId('component-content'));
