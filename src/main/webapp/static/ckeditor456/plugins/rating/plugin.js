@@ -32,11 +32,11 @@
 
                     this._.selectedElement = element;
                     if (rating !== null) {
-                        var starsAll = element.getAttribute('data-startsall');
-                        var starsFill = element.getAttribute('data-starsfill');
-                        var starsColor = element.getAttribute('data-color');
-                        var starsSize = element.getAttribute('data-size');
-                        var starsHalf = element.getAttribute('data-half');
+                        var starsAll = element.findOne('.rating').getAttribute('data-starsall');
+                        var starsFill = element.findOne('.rating').getAttribute('data-starsfill');
+                        var starsColor = element.findOne('.rating').getAttribute('data-color');
+                        var starsSize = element.findOne('.rating').getAttribute('data-size');
+                        var starsHalf = element.findOne('.rating').getAttribute('data-half');
                         return {
                             starsall: starsAll,
                             starsfill: starsFill,
@@ -213,7 +213,7 @@
                             }
                         }
                         //the result
-                        var ratingString = '<span  class="rating" style="font-size:' + data.size + 'px ;display: inline-flex;">' + starsall + '</span>';
+                        var ratingString = '<span data-starsall="' + data.starsall + '"  data-starsfill="' + data.starsfill + '"  data-color="' + data.color + '"  data-size="' + data.size + '"  data-half="' + data.half + '" class="rating" style="font-size:' + data.size + 'px ;display: inline-flex;">' + starsall + '</span>';
 
                         if (this._.selectedElement) {
                             var target = this._.selectedElement;
@@ -239,13 +239,7 @@
                             link.setHtml(ratingString);
                             link.setAttributes({
                                 'href': '#' + id,
-                                'data-toggle': 'rating',
-                                'data-startsall': data.starsall,
-                                'data-starsfill': data.starsfill,
-                                'data-color': data.color,
-                                'data-size': data.size,
-                                'data-half': data.half
-
+                                'data-toggle': 'rating'
                             });
 
                             rating.setAttributes({
