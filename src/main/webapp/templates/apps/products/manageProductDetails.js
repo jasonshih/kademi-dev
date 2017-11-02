@@ -43,8 +43,8 @@ function initProductContentsTab(editorType, allGroups) {
                 iframeMode: true,
                 allGroups: allGroups,
                 snippetsUrl: '_components',
-                pagePath: '/repositories/products/',
-                basePath: '/repositories/products/',
+                pagePath: editor.attr('data-page-path'),
+                basePath: editor.attr('data-base-path'),
                 onReady: function () {
                     loading.remove();
                 }
