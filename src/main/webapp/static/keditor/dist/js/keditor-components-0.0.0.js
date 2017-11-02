@@ -1084,24 +1084,17 @@
  * @version: @{version}
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
  */
-(function ($) {
+(function ($, window) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
     
     KEditor.components['googlemap'] = {
         init: function (contentArea, container, component, keditor) {
-            var script = component.find('script');
-            if (script.length) {
-                script.remove();
-            }
-            component.removeAttr('data-firstLoad');
-            var place = component.attr('data-place');
-            var maptype = component.attr('data-maptype');
-            if (place && maptype === 'manually') {
-                $(window).on('load', function () {
-                    component.find('.btn-component-setting').trigger('click');
-                });
-            }
+            flog('init "googlemap" component', component);
+            
+            this.callWhenGoogleMapReady(function () {
+                initKGoogleMap(component);
+            });
         },
         
         getContent: function (component, keditor) {
@@ -1127,15 +1120,12 @@
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
-                    var apiKey = 'AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs';
-                    var mapjs = '<script src="https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&callback=initKeditorMapSetting&libraries=places" async defer></script>';
-                    if (window.google && window.google.maps && google.maps.places) {
-                        mapjs = '';
-                    }
+                    form.html(resp);
                     
-                    form.append(
-                        mapjs + resp
-                    );
+                    self.callWhenGoogleMapReady(function () {
+                        var component = keditor.getSettingComponent();
+                        self.initAutocomplete(component, form);
+                    });
                     
                     var mapTypes = form.find('.map-type');
                     form.find('.mapType').on('click', function () {
@@ -1150,25 +1140,7 @@
                         kgooglemap[this.value === 'manually' ? 'show' : 'hide']();
                         
                         if (this.value === 'manually') {
-                            var mapData = kgooglemap.data('map');
-                            
-                            if (mapData) {
-                                google.maps.event.trigger(mapData, 'resize');
-                            } else {
-                                self.initAutocomplete(component, form);
-                                var input = form.find('[name=mapAddress]')[0];
-                                
-                                var i = setInterval(function () {
-                                    if (mapData) {
-                                        clearInterval(i);
-                                        
-                                        google.maps.event.trigger(input, 'focus');
-                                        google.maps.event.trigger(input, 'keydown', {
-                                            keyCode: 13
-                                        });
-                                    }
-                                }, 100);
-                            }
+                            self.makeGoogleMapFresh(form, component);
                         }
                     });
                     
@@ -1186,140 +1158,150 @@
                         var component = keditor.getSettingComponent();
                         
                         component.find('.embed-responsive').removeClass('embed-responsive-4by3 embed-responsive-16by9').addClass('embed-responsive-' + this.value);
-                        
-                        if (component.attr('data-maptype') === 'manually') {
-                            var mapData = component.find('.kgooglemap').data('map');
-                            if (mapData) {
-                                google.maps.event.trigger(mapData, "resize");
-                            }
-                        }
                     });
                 }
             });
         },
-        showSettingForm: function (form, component, keditor) {
+        
+        callWhenGoogleMapReady: function (callback) {
             var self = this;
+            var apiKey = 'AIzaSyBUcuZxwpBXCPztG7ot-rITXJbycPuS7gs';
+            var url = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=places';
             
-            var maptype = component.attr('data-maptype') || 'embed';
-            var place = component.attr('data-place');
-            
-            var ratio = component.find('.embed-responsive').hasClass('embed-responsive-16by9') ? '16by9' : '4by3';
-            form.find('.mapRatio[value=' + ratio + ']').prop('checked', true);
-            form.find('.mapType[value=' + maptype + ']').prop('checked', true);
-            
-            var src = component.find('iframe').attr('src');
-            var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
-            if (!place) {
-                place = 'Hanoi, Vietnam';
-            }
-            form.find('[name=mapAddress]').val(place);
-            form.find('[name=mapEmbedCode]').val(iframe);
-            
-            form.find('.map-type').hide().filter('.' + maptype).show();
-            
-            var firstLoad = component.attr('data-firstLoad');
-            if (maptype === 'manually') {
-                if (!firstLoad && place) {
-                    var i = setInterval(function () {
-                        if (window.googleMapInitialized) {
-                            clearInterval(i);
-                            self.initAutocomplete(component, form);
-                            setTimeout(function () {
-                                var input = form.find('[name=mapAddress]')[0];
-                                google.maps.event.trigger(input, 'focus')
-                                google.maps.event.trigger(input, 'keydown', {
-                                    keyCode: 13
-                                });
-                                component.attr('data-firstLoad', 'false');
-                            }, 1000);
-                        }
-                    }, 100);
-                }
+            if (window.google && window.google.maps && google.maps.places) {
+                callback.call(self);
+            } else {
+                $.getScriptOnce(url, function () {
+                    callback.call(self);
+                });
             }
         },
         
-        initAutocomplete: function (component, form) {
-            if (!window.googleMapInitialized) {
-                alert('google map is not initialized');
-                return;
-            }
-            
-            var mapdiv = component.find('.kgooglemap')[0];
-            var map = new google.maps.Map(mapdiv, {
-                zoom: 13,
-                mapTypeId: 'roadmap'
-            });
-            
-            // Create the search box and link it to the UI element.
+        makeGoogleMapFresh: function (form, component) {
             var input = form.find('[name=mapAddress]')[0];
-            var searchBox = new google.maps.places.SearchBox(input);
-            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
             
-            // Bias the SearchBox results towards current map's viewport.
-            map.addListener('bounds_changed', function () {
-                searchBox.setBounds(map.getBounds());
-            });
-            
-            var markers = [];
-            // Listen for the event fired when the user selects a prediction and retrieve
-            // more details for that place.
-            
-            searchBox.addListener('places_changed', function () {
-                var places = searchBox.getPlaces();
-                
-                if (places.length == 0) {
-                    return;
-                }
-                
-                // Clear out the old markers.
-                markers.forEach(function (marker) {
-                    marker.setMap(null);
+            setTimeout(function () {
+                google.maps.event.trigger(input, 'focus');
+                google.maps.event.trigger(input, 'keydown', {
+                    keyCode: 13
                 });
-                markers = [];
-                // For each place, get the icon, name and location.
-                var bounds = new google.maps.LatLngBounds();
-                places.forEach(function (place) {
-                    if (!place.geometry) {
-                        console.log("Returned place contains no geometry");
+            }, 1000);
+            
+            var map = component.find('.kgooglemap').data('map');
+            setTimeout(function () {
+                google.maps.event.trigger(map, "resize");
+            }, 100);
+        },
+        
+        showSettingForm: function (form, component, keditor) {
+            var self = this;
+            
+            self.callWhenGoogleMapReady(function () {
+                var maptype = component.attr('data-maptype') || 'embed';
+                var place = component.attr('data-place');
+                
+                var ratio = component.find('.embed-responsive').hasClass('embed-responsive-16by9') ? '16by9' : '4by3';
+                form.find('.mapRatio[value=' + ratio + ']').prop('checked', true);
+                form.find('.mapType[value=' + maptype + ']').prop('checked', true);
+                
+                var src = component.find('iframe').attr('src');
+                var iframe = '<iframe class="embed-responsive-item" src="' + src + '"></iframe>';
+                if (!place) {
+                    place = 'Hanoi, Vietnam';
+                }
+                form.find('[name=mapAddress]').val(place);
+                form.find('[name=mapEmbedCode]').val(iframe);
+                
+                form.find('.map-type').hide().filter('.' + maptype).show();
+                
+                if (!component.find('.kgooglemap').data('map')) {
+                    self.initAutocomplete(component, form);
+                    
+                    if (maptype === 'manually') {
+                        self.makeGoogleMapFresh(form, component);
+                    }
+                } else {
+                    if (maptype === 'manually') {
+                        self.makeGoogleMapFresh(form, component);
+                    }
+                }
+            });
+        },
+        
+        initAutocomplete: function (component, form) {
+            if (component.find('.kgooglemap').data('map')) {
+                this.makeGoogleMapFresh(form, component);
+            } else {
+                var mapDiv = component.find('.kgooglemap')[0];
+                var map = new google.maps.Map(mapDiv, {
+                    zoom: 13,
+                    mapTypeId: 'roadmap'
+                });
+                
+                // Create the search box and link it to the UI element.
+                var input = form.find('[name=mapAddress]')[0];
+                var searchBox = new google.maps.places.SearchBox(input);
+                
+                // Bias the SearchBox results towards current map's viewport.
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+                
+                var markers = [];
+                searchBox.addListener('places_changed', function () {
+                    var places = searchBox.getPlaces();
+                    
+                    if (places.length == 0) {
                         return;
                     }
                     
-                    var icon = {
-                        url: place.icon,
-                        size: new google.maps.Size(71, 71),
-                        origin: new google.maps.Point(0, 0),
-                        anchor: new google.maps.Point(17, 34),
-                        scaledSize: new google.maps.Size(25, 25)
-                    };
+                    // Clear out the old markers.
+                    markers.forEach(function (marker) {
+                        marker.setMap(null);
+                    });
+                    markers = [];
                     
-                    // Create a marker for each place.
-                    markers.push(new google.maps.Marker({
-                        map: map,
-                        icon: icon,
-                        title: place.name,
-                        position: place.geometry.location
-                    }));
-                    
-                    if (place.geometry.viewport) {
-                        // Only geocodes have viewport.
-                        bounds.union(place.geometry.viewport);
-                    } else {
-                        bounds.extend(place.geometry.location);
-                    }
+                    // For each place, get the icon, name and location.
+                    var bounds = new google.maps.LatLngBounds();
+                    places.forEach(function (place) {
+                        if (!place.geometry) {
+                            console.log("Returned place contains no geometry");
+                            return;
+                        }
+                        
+                        var icon = {
+                            url: place.icon,
+                            size: new google.maps.Size(71, 71),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(17, 34),
+                            scaledSize: new google.maps.Size(25, 25)
+                        };
+                        
+                        // Create a marker for each place.
+                        markers.push(new google.maps.Marker({
+                            map: map,
+                            icon: icon,
+                            title: place.name,
+                            position: place.geometry.location
+                        }));
+                        
+                        if (place.geometry.viewport) {
+                            // Only geocodes have viewport.
+                            bounds.union(place.geometry.viewport);
+                        } else {
+                            bounds.extend(place.geometry.location);
+                        }
+                    });
+                    map.fitBounds(bounds);
+                    component.attr('data-place', input.value);
                 });
-                map.fitBounds(bounds);
-                component.attr('data-place', input.value);
-            });
-            
-            component.find('.kgooglemap').data('map', map);
+                
+                component.find('.kgooglemap').data('map', map);
+            }
         }
     };
     
-    window.initKeditorMapSetting = function () {
-        window.googleMapInitialized = true;
-    }
-    
-})(jQuery);
+})(jQuery, window);
 
 /**
  * KEditor Jumbotron Component
