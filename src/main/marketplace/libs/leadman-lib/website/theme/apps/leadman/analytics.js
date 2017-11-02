@@ -206,14 +206,15 @@
     }
 
     function appendTextToSVG(svgSelector, width, height, text) {
-        d3.select('#' + svgSelector).attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-                .append("text")
-                .attr("style", "font-size:35px")
-                .attr("text-anchor", "middle")
-                .text(text);
+        var svg = d3.select('#' + svgSelector);
+        svg.attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + $(svg[0]).parent().width() / 2 + "," + height / 2 + ")")
+            .append("text")
+            .attr("style", "font-size:35px")
+            .attr("text-anchor", "middle")
+            .text(text);
     }
 
     function initPies(aggs) {
@@ -223,7 +224,6 @@
         var newLeadsgAgg = [aggs.summary.aggregations.newLeads];
         var cancelledAgg = aggs.summary.aggregations.cancelledReasons.buckets;
         var closedAgg = [aggs.summary.aggregations.closed];
-        
 
         var colors = ['#ee145b', '#3e3e3e', '#4d9acc', '#60b87e', '#FF1493', '#FF4500', '#EE82EE', '#ADFF2F', '#FFDEAD', '#F0FFFF', '#FFF0F5', '#DC143C', '#FFC0CB'];
         flog('initPies', newLeadsgAgg);
