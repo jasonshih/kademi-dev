@@ -20,13 +20,14 @@
         
         #macro (renderVersionController $managePage)
             #set($currentBranch = $page.closest("branch"))
+            #set($currentWebsite = $page.closest("website"))
             <div class="btn-group publishing pull-right">
                 <a href="${currentBranch.href}commits" class="publish btn btn-sm btn-info">
                     <i class="fa fa-clock-o"></i>
                     History
                 </a>
                 #if( $currentBranch.live )
-                    <a href="../manageBranches" class="islive btn-sm btn btn-danger">
+                    <a href="${currentWebsite.href}manageBranches" class="islive btn-sm btn btn-danger">
                         <i class="fa fa-gear"></i>
                         LIVE
                     </a>
@@ -35,7 +36,7 @@
                         <i class="glyphicon glyphicon-ok-sign"></i>
                         PUBLISH
                     </a>
-                    <a href="../manageBranches" class="btn btn-sm btn-primary">
+                    <a href="${currentWebsite.href}manageBranches" class="btn btn-sm btn-primary">
                         <i class="fa fa-gear"></i>
                         Manage versions
                     </a>
