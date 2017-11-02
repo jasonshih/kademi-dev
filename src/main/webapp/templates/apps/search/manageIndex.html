@@ -30,11 +30,12 @@
                     #end
 
                     <textarea id="queryText" style="width: 100%; height: 200px" name="query">
-$page.queryJson
+                        $page.queryJson
                     </textarea>
                     <button class="btn btn-success runQuery">Run</button>
                     <button class="btn btn-warning resetQuery">Reset</button>
                     <button class="btn btn-primary saveQuery">Save</button>
+                    <button class="btn btn-primary createQuery">Create Query</button>
                     <hr/>
                     <div id="queryResults" class="col-lg-12">
                         #if( $page.queryError )
@@ -111,6 +112,27 @@ $page.queryJson
                             data: {
                                 fileName: name,
                                 query: json
+                            },
+                            dataType: "json",
+                            url: "",
+                            success: function (data) {
+                                Msg.info("Saved");
+                            },
+                            error: function (resp) {
+                                Msg.error("err");
+                            }
+                        });
+                    }
+                });
+
+                $("body").on("click", ".createQuery", function (e) {
+                    var name = prompt("Please enter the file name to save as. Should not have a file extension");
+                    if (name) {
+                        $.ajax({
+                            type: 'POST',
+                            data: {
+                                fileName: name,
+                                queryBuilder: true
                             },
                             dataType: "json",
                             url: "",
