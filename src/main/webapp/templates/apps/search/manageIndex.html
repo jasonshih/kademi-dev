@@ -126,12 +126,14 @@
                 });
 
                 $("body").on("click", ".createQuery", function (e) {
+                    var json = $("#queryText").val();
                     var name = prompt("Please enter the file name to save as. Should not have a file extension");
                     if (name) {
                         $.ajax({
                             type: 'POST',
                             data: {
                                 fileName: name,
+                                query: json,
                                 queryBuilder: true
                             },
                             dataType: "json",
