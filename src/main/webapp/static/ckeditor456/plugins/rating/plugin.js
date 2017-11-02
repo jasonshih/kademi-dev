@@ -31,6 +31,32 @@
                     flog('parseratingLink', rating);
 
                     this._.selectedElement = element;
+                    if (rating !== null) {
+                        var starsAll = element.getAttribute('data-startsall');
+                        var starsFill = element.getAttribute('data-starsfill');
+                        var starsColor = element.getAttribute('data-color');
+                        var starsSize = element.getAttribute('data-size');
+                        var starsHalf = element.getAttribute('data-half');
+                        return {
+                            starsall: starsAll,
+                            starsfill: starsFill,
+                            color: starsColor,
+                            size: starsSize,
+                            half: starsHalf
+                        };
+                    } else {
+                        flog('parseRatingLink | no rating');
+
+                        return {
+                            starsall: starsAll,
+                            starsfill: starsFill,
+                            color: starsColor,
+                            size: starsSize,
+                            half: starsHalf
+
+                        };
+
+                    }
                 };
 
                 return {
@@ -187,7 +213,7 @@
                             }
                         }
                         //the result
-                        var ratingString = '<span  class="rating " style="font-size:' + data.size + 'px ;display: inline-flex;">' + starsall + '</span>';
+                        var ratingString = '<span  class="rating" style="font-size:' + data.size + 'px ;display: inline-flex;">' + starsall + '</span>';
 
                         if (this._.selectedElement) {
                             var target = this._.selectedElement;
@@ -213,7 +239,13 @@
                             link.setHtml(ratingString);
                             link.setAttributes({
                                 'href': '#' + id,
-                                'data-toggle': 'rating'
+                                'data-toggle': 'rating',
+                                'data-startsall': data.starsall,
+                                'data-starsfill': data.starsfill,
+                                'data-color': data.color,
+                                'data-size': data.size,
+                                'data-half': data.half
+
                             });
 
                             rating.setAttributes({
@@ -228,7 +260,7 @@
                     }
                 };
             });
-            
+
             // ===========================================================
             // Context menu for plugin
             // ===========================================================
@@ -250,7 +282,7 @@
                     return null;
                 });
             }
-            
+
             // ===========================================================
             //edit by double click on stars 
             // ===========================================================
