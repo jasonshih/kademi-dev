@@ -339,7 +339,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                        <h4 class="modal-title">Edit Organisation</h4>
+                        <h4 class="modal-title">Add Organisation</h4>
                     </div>
                     <form method="post" action="" class="form-horizontal">
                         <div class="modal-body">
@@ -376,7 +376,7 @@
                                 <div class="col-md-4">
                                     <select name="orgTypeName" class="form-control" id="orgTypeName">
                                         <option value="">[None]</option>
-                                        #foreach($orgType in $page.orgTypes)
+                                        #foreach($orgType in $rootFolder.orgTypes)
                                         $formatter.option($orgType.name, $orgType.displayName, "")
                                         #end
                                     </select>
