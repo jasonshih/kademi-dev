@@ -258,6 +258,7 @@
                     .showLabels(false)
                     .showLegend(false);
 
+            d3.select('#newLeadsCreated svg').selectAll("*").remove();
             d3.select('#newLeadsCreated svg')
                     .datum(newLeadsgAgg)
                     .transition().duration(1200)
@@ -265,8 +266,8 @@
 
             appendTextToSVG("newLeadsCreated svg", 250, 281, newLeadsgAgg[0].doc_count);
 
-            d3.select('#leadsLost svg')
-                    .datum(cancelledAgg)
+            d3.select('#leadsLost svg').selectAll("*").remove();
+            d3.select('#leadsLost svg').datum(cancelledAgg)
                     .transition().duration(1200)
                     .call(chartLost);
             var total = 0;
@@ -275,6 +276,7 @@
             }
             appendTextToSVG("leadsLost svg", 250, 281, total);
 
+            d3.select('#leadsClosed svg').selectAll("*").remove();
             d3.select('#leadsClosed svg')
                     .datum(closedAgg)
                     .transition().duration(1200)
@@ -295,6 +297,7 @@
                     .color(colors)
                     .showLabels(false);
 
+            d3.select('#closedByOrgPie svg').selectAll("*").remove();
             d3.select('#closedByOrgPie svg')
                     .datum(closedByOrgAgg)
                     .transition().duration(1200)
@@ -312,6 +315,7 @@
                     .color(colors)
                     .showLabels(false);
 
+            d3.select('#conversionRatePie svg').selectAll("*").remove();
             d3.select('#conversionRatePie svg')
                     .datum(lostByOrgAgg)
                     .transition().duration(1200)

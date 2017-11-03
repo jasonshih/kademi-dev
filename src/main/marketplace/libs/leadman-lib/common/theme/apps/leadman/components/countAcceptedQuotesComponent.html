@@ -10,13 +10,13 @@
 #set ($iconfont = "fa-info-circle")
 #end
 
-#set( $detailHref = "#" )
-#set( $detailHref = "$link" )
+#set( $detailHref = "javascript:void(0)" )
+#set( $detailHref = $link )
 
 <div class="panel panel-default">
     <div class="panel-body">
         <div class="row">
-            <a class="c-white" href="$detailHref">
+            <a class="c-white" href="$!detailHref">
                 <div class="col-xs-3">
                     <i class="fa $iconfont fa-3x"></i>
                 </div>
