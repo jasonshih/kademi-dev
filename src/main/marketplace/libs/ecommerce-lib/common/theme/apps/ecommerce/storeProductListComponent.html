@@ -1,6 +1,7 @@
 #if($page)
-    #if ("$!store" == "")
-        #set($store = $page.store.name)
+    #if ($store && $store != "")
+    #else
+    #set($store = $page.store.name)
     #end
 
     #set($fromRange = 0)
@@ -18,12 +19,10 @@
         #end
     #end
 
-    #set($startPrice = '')
     #if($params.startPrice)
         #set($startPrice = $formatter.toInteger($params.startPrice))
     #end
 
-    #set($endPrice = '')
     #if($params.endPrice)
         #set($endPrice = $formatter.toInteger($params.endPrice))
     #end
@@ -51,7 +50,7 @@
 
     #set ($ecommerceApp = $applications.ecommerce)
 
-    #if("$!startPrice" != "" && "$endPrice" != "")
+    #if($startPrice && $endPrice)
         #set ($prods = $applications.ecommerce.searchProducts($store, $params.q, $category, $startPrice, $endPrice, $sortParam, $ascParam))
     #else
         #set ($prods = $applications.ecommerce.searchProducts($store, $params.q, $category, $sortParam, $ascParam))
@@ -60,7 +59,7 @@
 
     #set ($prodsListId = $formatter.randomGuid)
 
-    #if("$!store" != "")
+    #if($store && $store != "")
         #if( $prods.size() > 0 )
             #if ($prods.size() > $numberOfProducts)
                 #set( $prods =  $prods.subList(0, $numberOfProducts))
