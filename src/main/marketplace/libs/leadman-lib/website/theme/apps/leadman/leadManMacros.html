@@ -1,15 +1,21 @@
-#macro( showLead $lead $hideButtons )
+#macro( showLead $lead $hideButtons $score )
 <div class="media" id="$lead.id">
     <div class="media-left hidden-xs">
         <div class="avatar avatar-away">
             <img alt="..." src="/theme/apps/leadman/user-placeholder.png" class="img img-circle" style="width: 100px" />
             <i class="avatar avatar-busy"></i>
         </div>
+        #if( $score )
+        <br/>
+        <p class="text-center">
+            SCORE: $score
+        </p>                
+        #end
+
     </div>
     <div class="media-body" style="padding-left: 20px; position: relative">
         <h3 class="media-heading">
-            <a class="text-success" href="/leads/$lead.id/">
-
+            <a class="text-success" href="/leads/$lead.id/">                
                 #if( $lead.profile )
                     $lead.profile.formattedName
                     #if($lead.organisation)
