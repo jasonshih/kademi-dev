@@ -376,7 +376,7 @@
                                 <div class="col-md-4">
                                     <select name="orgTypeName" class="form-control" id="orgTypeName">
                                         <option value="">[None]</option>
-                                        #foreach($orgType in $page.orgTypes)
+                                        #foreach($orgType in $rootFolder.orgTypes)
                                         $formatter.option($orgType.name, $orgType.displayName, "")
                                         #end
                                     </select>
