@@ -16,13 +16,12 @@
 #set ($end = $start + $limit)
 
 
+
 <ul class="list-group leadsList" id="dashLeadsList">
-    #foreach($lead in $leads)
-        #if ($foreach.index >= $start && $foreach.index < $end)
-            <li class="list-group-item">
-                #showLead($lead)
-            </li>
-        #end
+    #foreach($leadRanked in $leadsPage.leadsRanked($start, $limit))
+    <li class="list-group-item">
+        #showLead($leadRanked.lead, false, $leadRanked.score)
+    </li>
     #end
 </ul>
 #if( $leads.size() > 0 )
