@@ -18,7 +18,7 @@
         if (dataTable !== null) {
             dataTable.clear(false);
         }
-        flog('hitsssssssss', hits);
+        flog('leads hits', hits);
 
         $('#leadBody').empty();
 
@@ -28,7 +28,12 @@
             },
             table: '#leadTable',
             idSrc: 'leadId',
-            fields: [{
+            fields: [
+                {
+                    label: 'Score',
+                    name: 'score'
+                },
+                {
                     label: 'Deal Amount',
                     name: 'dealAmount'
                 },
@@ -69,6 +74,11 @@
                 [7, 'desc']
             ],
             columns: [
+                {
+                    data: 'score',
+                    name: 'score',
+                    defaultContent: ""
+                },
                 {
                     data: 'organisation.title',
                     name: 'orgTitle',
@@ -216,13 +226,14 @@
                     if (fieldName !== null && typeof fieldName !== 'undefined') {
                         fieldName = field.attr('id').replace('DTE_Field_', '');
                         var row = dataTable.row(td[0]);
+                        var cellData = dataTable.cell( td[0] ).data();
                         var leadId = row.data().leadId;
                         switch (fieldName) {
                             case "stageName":
-                                loadStageNames(leadId);
+                                loadStageNames(leadId, cellData);
                                 break;
                             case "source":
-                                loadSources(leadId);
+                                loadSources(leadId, cellData);
                                 break;
                         }
                     }
@@ -242,6 +253,7 @@
             var hit = hits.hits[i];
             var _source = hit._source;
             _source.leadIdCheckbox = _source.leadId;
+            _source.score = hit._score.toFixed(2);
             dataTable.row.add(_source);
         }
 
@@ -266,7 +278,7 @@
     }
 
 
-    function loadStageNames(leadId) {
+    function loadStageNames(leadId, currentValue) {
         $.ajax({
             url: '/leads/?stageNames=' + leadId,
             dataType: 'json'
@@ -279,12 +291,12 @@
                     }
                 });
                 flog('Stages', stages);
-                editor.field('stageName').update(stages);
+                editor.field('stageName').update(stages).set(currentValue);
             }
         });
     }
 
-    function loadSources(leadId) {
+    function loadSources(leadId, currentValue) {
         $.ajax({
             url: '/leads/?sourceNames=' + leadId,
             dataType: 'json'
@@ -297,7 +309,7 @@
                     }
                 });
                 flog('Sources', sources);
-                editor.field('source').update(sources);
+                editor.field('source').update(sources).set(currentValue);
             }
         });
     }
