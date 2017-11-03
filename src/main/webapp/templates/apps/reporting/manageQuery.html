@@ -11,33 +11,16 @@
     <body>
         <div class="panel panel-default">
             #set($qbbPage = $page.isQueryBuilderQuery())
+            <input name="fieldsSelected" id="fieldsSelected" vlaue="" type="hidden" />
             <div class="panel-heading"><i class="fa fa-database"></i>Query: $page.name  - <b>Indexes: </b>
                 #foreach( $index in $page.indexes)
                 <a href="/manageSearch/$index" class="label label-primary">$index</a>
                 #end
             </div>
             <div class="panel-body">
-                <div class="btn-group pull-right">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-pencil"></i>
-                        Edit default page <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Select a site</a></li>
-                        <li role="separator" class="divider"></li>
-                        #foreach( $website in $rootFolder.websites )
-                        <li><a target="_blank" href="$page.href?contenteditor=&website=$website.name">$website.name</a></li>
-                        #end
-                    </ul>
-                </div>
                 #if($qbbPage)
-                <input name="fieldsSelected" id="fieldsSelected" vlaue="" type="hidden" />
-                <b><button class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-select-fields"><i class="fa fa-plus"></i> Select fields</button></b><br/>
                 <div class="row" style="min-height: 300px; clear: both;">
                     <div id="query-builder"></div>
-                    <h4>Size:</h4>
-                    <input type="text" value="" id="qbbSize" placeholder=""/>
-                    <br/>
                     <h4>Aggregation:</h4>
                     <div id="query-builder" class="query-builder form-inline">
                         <dl id="aggregation" class="rules-group-container">
@@ -118,10 +101,26 @@
                     <li class="active"><a data-toggle="tab" href="#queryResult">Results</a></li>
                     <li><a data-toggle="tab" href="#queryRawResult">Raw Output</a></li>
                     #if($qbbPage)<li><a data-toggle="tab" href="#queryJSON">JSON</a></li>#end
+                    #if($qbbPage)<li><a data-toggle="tab" href="#queryAggregation">Aggregation</a></li>#end
                 </ul>
             </div>
             <div class="tab-content">
                 <div id="queryResult" class="tab-pane active">
+                    #if($qbbPage)
+                    <div class="container">
+                        <div class="row">   
+
+                            <div class="col-md-2">
+                                <label><b>Size:</b></label>
+                                <input type="text" value="" id="qbbSize" placeholder=""/>
+                            </div>
+                            <div class="col-md-2">
+                                <b><button class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-select-fields"><i class="fa fa-plus"></i> Select fields</button></b>
+                            </div>
+                        </div>
+                    </div>
+                    #end
+                    
                     <div id="query">
                         #set( $resp = $page.records )
                         <!--button class="btn btn-primary saveQuery">Save</button-->
@@ -145,7 +144,7 @@
                                                 <i class="#if($selected) clip-minus-circle #end"></i> $field
                                             </a>
                                             #else
-                                                $field
+                                            $field
                                             #end
                                         </th>
                                         #end
@@ -170,12 +169,37 @@
                 <div id="queryRawResult" class="tab-pane">
                     <h2>Raw output</h2>
                     <pre id="">
-                        $page.records
+$page.records
                     </pre>
                 </div>
 
                 <div id="queryJSON" class="tab-pane">
                     <div id="queryText" style="width: 100%; height: 200px" name="query">$page.queryJson</div>
+                </div>
+
+                <div id="queryAggregation" class="tab-pane">
+                    #set ($map = $page.aggregations)
+                    #foreach ($mapAgg in $map.entrySet())
+                    <h3>$mapAgg.key</h3>
+
+                    #set ($map = $mapAgg.value)
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach ($mapEntry in $map.entrySet())
+                            <tr>
+                                <td>$mapEntry.key</td>
+                                <td>$mapEntry.value</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                    #end
                 </div>
             </div>
         </div>
@@ -211,8 +235,6 @@
                 </div>
             </div>
         </div>
-
-
         <script type="text/javascript" src="/static/query-builder/2.3.3/js/query-builder.standalone.min.js">//</script>
         <script type="text/javascript" src="/static/jquery-querybuilder-elasticsearch/query-builder-elasticsearch.js">//</script>
         <script type="text/javascript" src="/theme/apps/reporting/manageQueryQueryBuilder.js">//</script>
