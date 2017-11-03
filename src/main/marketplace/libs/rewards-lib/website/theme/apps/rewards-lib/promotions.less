@@ -57,6 +57,7 @@
 
 .promotionTile {
     position: relative;
+    
     &:before {
         content: '';
         position: absolute;
@@ -67,16 +68,19 @@
         background-color: rgba(0, 0, 0, 0.3);
         z-index: 1;
     }
+    
     .rewardItemCaption {
         position: absolute;
         z-index: 2;
         bottom: 0;
     }
+    
     background-position: center;
     background-size: cover;
     height: 0;
     padding-bottom: ~"calc((100% + @{grid-gutter-width}) * 0.8)";
     display: block;
+    
     &.promotionTileHero {
         padding-bottom: ~"calc((100% + @{grid-gutter-width}) * 0.4)";
     }
@@ -95,8 +99,9 @@
     color: #fff;
 }
 
-.promotion-photos {
+.promotion-photos .promotion-photo {
     margin-bottom: 20px;
+    overflow: hidden;
 }
 
 .promotion-photos .promotion-photo .promotion-photo-inner {
@@ -106,6 +111,7 @@
     background-size: cover;
     border: 1px solid #ddd;
     box-shadow: 0 0 1px rgba(0, 0, 0, .15);
+    display: block;
 }
 
 #myPromotionUpload {

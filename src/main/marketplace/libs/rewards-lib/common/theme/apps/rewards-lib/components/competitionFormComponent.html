@@ -20,6 +20,25 @@
     #set ($photoClass = "col-sm-3")
 #end
 
+#if (!$submitText)
+    #set ($submitText = "Submit your entry")
+#end
+#if (!$submitAnotherText)
+    #set ($submitAnotherText = "Submit another")
+#end
+#if (!$buttonSize)
+    #set ($buttonSize = "btn-md")
+#end
+#if (!$buttonColor)
+    #set ($buttonColor = "btn-default")
+#end
+#if (!$thanksTitle)
+    #set ($thanksTitle = "Good Work!")
+#end
+#if (!$thanksMessage)
+    #set ($thanksMessage = "Your submission has been received.")
+#end
+
 #set ($uploadPath = $promotionPage.href + "uploads")
 
 <div class="panel panel-default">
@@ -27,10 +46,10 @@
         <div class="competitionForm">
             <div style="display: none" class="thankyou bg-success text-center">
                 <h1><i class="fa fa-thumbs-o-up fa-3x"></i></h1>
-                <h1>Good Work!</h1>
-                <p>Your submission has been received.</p>
+                <h1>$!thanksTitle</h1>
+                <p>$!thanksMessage</p>
                 #if( !$promotionPage.onePerRecipient )
-                    <button class="go-again btn btn-lg btn-primary">Submit another</button>
+                    <button class="go-again btn $!buttonSize $!buttonColor $!buttonClass" type="button">$!submitAnotherText</button>
                 #end
             </div>
             #if( !$promotionPage.onePerRecipient || $promotionPage.entriesForUser.size() == 0 )
@@ -119,12 +138,16 @@
                                         <div class="$photoClass promotion-photo promotion-photo-user">
                                             <div class="viewUploaded promotion-photo-inner #if( !$promotionPage.userAttachmentHash ) noImage #end" style="background-image: url('$userPhoto')"></div>
                                             
-                                            <div id="myPromotionUpload" data-url="${uploadPath}/"></div>
+                                            <div id="myPromotionUpload" data-url="${uploadPath}/">
+                                                #if (!$page)
+                                                    <span class="btn btn-success btn-block">Upload a photo</span>
+                                                #end
+                                            </div>
                                             <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash" />
                                         </div>
                                     #end
                                     #foreach($entry in $promotionPage.child("uploads").children)
-                                        <div class="$photoClass promotion-photo"><a href="${uploadPath}/$entry.name/alt-600-400.png" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-150-150.png')"></a></div>
+                                        <div class="$photoClass promotion-photo"><a href="${uploadPath}/$entry.name/alt-600-400.png" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')"></a></div>
                                     #end
                                 </div>
                             </div>
@@ -146,9 +169,7 @@
                             </div>
                         #end
                         <div class="text-right">
-                            <button class="enter btn btn-primary" type="submit"><i class="fa fa-check"></i> Submit your
-                                entry
-                            </button>
+                            <button class="enter btn $!buttonSize $!buttonColor $!buttonClass" type="submit">$!submitText</button>
                         </div>
                     #else
                         <i>Not enterable</i>

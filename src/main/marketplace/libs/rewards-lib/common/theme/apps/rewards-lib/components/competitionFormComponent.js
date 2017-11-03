@@ -93,39 +93,55 @@
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-submit-text', this.value || 'Send message');
+                        component.attr('data-submit-text', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#cbbSubmitSize').on('change', function () {
+                    form.find('#txtSubmitAnotherText').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-submit-size', this.value);
+                        component.attr('data-submit-another-text', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#cbbSubmitColor').on('change', function () {
+                    form.find('#cbbButtonSize').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-submit-color', this.value);
+                        component.attr('data-button-size', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#txtSubmitClass').on('change', function () {
+                    form.find('#cbbButtonColor').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-submit-class', this.value);
+                        component.attr('data-button-color', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('#thankYou').on('change', function () {
+                    form.find('#txtButtonClass').on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-thank-you', this.value);
+                        component.attr('data-button-class', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('#txtThanksTitle').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-thanks-title', this.value);
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+                    
+                    form.find('#txtThanksMessage').on('change', function () {
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        
+                        component.attr('data-thanks-message', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
@@ -152,12 +168,14 @@
             form.find('.chkShowSurname').prop('checked', dataAttributes['data-show-sur-name'] === 'true');
             form.find('.chkShowEmail').prop('checked', dataAttributes['data-show-email'] === 'true');
             form.find('.chkShowPhone').prop('checked', dataAttributes['data-show-phone'] === 'true');
-            form.find('#txtSubmitText').val(dataAttributes['data-submit-text']);
-            form.find('#cbbSubmitSize').val(dataAttributes['data-submit-size']);
-            form.find('#cbbSubmitColor').val(dataAttributes['data-submit-color']);
-            form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
-            form.find('#thankYou').val(dataAttributes['data-thank-you']);
-            form.find('#path').val(dataAttributes['data-path']);
+            form.find('#txtSubmitText').val(dataAttributes['data-submit-text'] || 'Submit your entry');
+            form.find('#txtSubmitAnotherText').val(dataAttributes['data-submit-another-text'] || 'Submit another');
+            form.find('#cbbButtonSize').val(dataAttributes['data-button-size'] || 'btn-md');
+            form.find('#cbbButtonColor').val(dataAttributes['data-button-color'] || 'btn-default');
+            form.find('#txtButtonClass').val(dataAttributes['data-button-class'] || '');
+            form.find('#txtThanksTitle').val(dataAttributes['data-thanks-title'] || 'Good Work!');
+            form.find('#txtThanksMessage').val(dataAttributes['data-thanks-message'] || 'Your submission has been received.');
+            form.find('#path').val(dataAttributes['data-path'] || '');
         }
     };
     
