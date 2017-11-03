@@ -35,7 +35,14 @@ $(document).ready(function () {
                 * editor.renderer.lineHeight
                 + editor.renderer.scrollBar.getWidth();
 
-        $('#queryText').height(newHeight.toString() + "px");
+        if (newHeight.toString() === undefined || newHeight.toString() === "" || newHeight.toString() === "0") {
+            flog("Default Height: 360px");
+            $('#queryText').height("360px");
+        } else {
+            flog("New Height", newHeight.toString());
+            $('#queryText').height(newHeight.toString() + "px");
+        }
+
 
         // This call is required for the editor to fix all of
         // its inner structure for adapting to a change in size
@@ -55,7 +62,7 @@ $(document).ready(function () {
             var dateOptions = getPageDateRange();
             flog("Saved, now run", dateOptions);
             var newHref = window.location.pathname;
-            if( dateOptions ) {
+            if (dateOptions) {
                 newHref += "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
             }
             flog("Saved, now run2", newHref);

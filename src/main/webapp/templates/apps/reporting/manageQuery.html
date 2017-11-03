@@ -94,7 +94,6 @@
             </div>
         </div>
 
-
         <div class="tabbable clearfix" id="queryData">
             <div class="clearfix">
                 <ul class="nav nav-tabs tab-bricky">
@@ -120,7 +119,7 @@
                         </div>
                     </div>
                     #end
-                    
+
                     <div id="query">
                         #set( $resp = $page.records )
                         <!--button class="btn btn-primary saveQuery">Save</button-->
@@ -174,7 +173,7 @@ $page.records
                 </div>
 
                 <div id="queryJSON" class="tab-pane">
-                    <div id="queryText" style="width: 100%; height: 200px" name="query">$page.queryJson</div>
+                    <div id="queryText" style="width: 100%; height: 300px">$page.queryJson</div>
                 </div>
 
                 <div id="queryAggregation" class="tab-pane">
@@ -239,6 +238,7 @@ $page.records
         <script type="text/javascript" src="/static/jquery-querybuilder-elasticsearch/query-builder-elasticsearch.js">//</script>
         <script type="text/javascript" src="/theme/apps/reporting/manageQueryQueryBuilder.js">//</script>
         <script type="text/javascript">
+            
         </script>
         #end
     </body>

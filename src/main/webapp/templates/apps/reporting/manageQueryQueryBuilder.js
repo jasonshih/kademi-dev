@@ -124,7 +124,6 @@ $(function () {
         };
 
         flog("Data ", data);
-        /* */
         $.ajax({
             url: window.location.pathname,
             type: 'POST',
@@ -132,19 +131,28 @@ $(function () {
             data: data,
             success: function (resp) {
                 $("#modal-select-fields").modal("hide");
+                var dateOptions = getPageDateRange();
+                flog("Saved, now run", dateOptions);
+                var newHref = window.location.pathname;
+                if (dateOptions) {
+                    newHref += "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
+                }
                 $("#queryData").reloadFragment({
+                    url: newHref,
                     whenComplete: function () {
                         initTableResults();
+                        loadQueryData();
                     }
                 });
                 $("#modal-select-fields").reloadFragment({
+                    url: newHref,
                     whenComplete: function () {
                         initModalFields();
                     }
                 });
+
             }
         });
-        /* */
     }
 
     $(".saveRules").on("click", function () {
@@ -190,10 +198,10 @@ $(function () {
             $("#fieldsSelected").val(newVal);
             saveQuery();
         });
-
     }
 
     function loadQueryData() {
+        flog("Loading query data...");
         $.ajax({
             url: window.location.pathname + '?fields',
             type: 'GET',
@@ -206,6 +214,7 @@ $(function () {
                 };
                 fields = resp.data.filters;
                 $("#fieldsSelected").val(resp.data.fields);
+                flog("Query Size: ", resp.data.size);
                 $("#qbbSize").val(resp.data.size);
 
                 if (resp.data.aggregationSource !== "") {
@@ -247,5 +256,4 @@ $(function () {
     loadQueryData();
     initTableResults();
     initModalFields();
-
 });
