@@ -510,8 +510,8 @@ function initNewLeadForm() {
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
         form.find("select[name=funnel]").val(funnelName).change();
+        $('#source-frm').val('').trigger("change");
         modal.modal("show");
-
     });
 
     $('select[name=funnel]', form).on('change', function (e) {
