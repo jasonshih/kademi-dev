@@ -178,9 +178,7 @@ $page.records
 
                 <div id="queryAggregation" class="tab-pane">
                     #set ($map = $page.aggregations)
-                    
-                    aggs: $map
-                    
+                                        
                     #foreach ($mapAgg in $map.entrySet())
                     <h3>$mapAgg.key</h3>
 
