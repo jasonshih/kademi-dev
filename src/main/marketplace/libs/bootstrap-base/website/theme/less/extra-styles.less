@@ -396,6 +396,49 @@ acronym[title] {
 }
 
 // ==================================================
+// Navbar transparent
+// ==================================================
+.navbar-transparent {
+    .navbar-nav {
+        > li {
+            > a {
+                color: #fff;
+                text-shadow: 0 0 1px rgba(0, 0, 0, .4);
+                position: relative;
+                background: none !important;
+                
+                &:before {
+                    position: absolute;
+                    left: 15px;
+                    right: 15px;
+                    bottom: 0;
+                    height: 2px;
+                    background: #fff;
+                    box-shadow: 0 0 1px rgba(0, 0, 0, .4);
+                    content: '';
+                    display: none;
+                }
+                
+                &:hover {
+                    &:before {
+                        display: block;
+                    }
+                }
+            }
+            
+            &.active,
+            &.open {
+                a {
+                    &:before {
+                        display: block;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ==================================================
 // Navbrand
 // ==================================================
 .navbar-brand {
