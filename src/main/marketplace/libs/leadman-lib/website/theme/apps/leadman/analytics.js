@@ -97,7 +97,12 @@
                 var filters = searchOptions.aggr + '=' + name;
                 uri.setSearch('filters', filters);
                 history.pushState(null, null, uri.toString());
-
+                $('#leadsContainer').reloadFragment({
+                    url: uri.toString(),
+                    whenComplete: function () {
+                        initDataTable();
+                    }
+                });
                 loadFunnel();
 
             }
@@ -352,6 +357,12 @@
             uri.setSearch('stage', searchOptions.stage);
             history.pushState(null, null, uri.toString());
             loadFunnel();
+            $('#leadsContainer').reloadFragment({
+                url: uri.toString(),
+                whenComplete: function () {
+                    initDataTable();
+                }
+            });
         });
     }
 
