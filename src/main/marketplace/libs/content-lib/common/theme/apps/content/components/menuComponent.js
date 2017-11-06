@@ -15,22 +15,6 @@
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-
-                    form.find('.navbar-layout').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-navbar-layout', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-                    form.find('#logopadding').on('change', function () {
-                        var component = keditor.getSettingComponent();
-                        var dynamicElement = component.find('[data-dynamic-href]');
-
-                        component.attr('data-logopadding', this.value);
-                        keditor.initDynamicContent(dynamicElement);
-                    });
-                    
                     
                     contentEditor.initDefaultMenuControls(form, keditor);
                 }
@@ -40,9 +24,6 @@
             flog('showSettingForm "menu" component');
 
             contentEditor.showDefaultMenuControls(form, component, keditor);
-            var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.navbar-layout').val(dataAttributes['data-navbar-layout'] || 'container-fluid');
-            form.find('#logopadding').val(dataAttributes['data-logopadding']);
         }
         
     };
