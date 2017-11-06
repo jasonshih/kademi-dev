@@ -53,7 +53,7 @@
                             <td>$poll.jsonObject.name</td>
                             <td>
                                 #set ($createdBy = $users.find($!poll.jsonObject.createdBy))
-                                <a href="/manageUsers/$createdBy.userId" target="_blank">$createdBy.name</a>
+                                <a href="/manageUsers/$createdBy.userId" target="_blank">$createdBy.extProfileBean.formattedName()</a>
                             </td>
                             <td>
                                 <abbr class="timeago" title="$!poll.jsonObject.created">$!poll.jsonObject.created</abbr>

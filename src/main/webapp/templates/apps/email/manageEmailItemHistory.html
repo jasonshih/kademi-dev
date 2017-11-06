@@ -107,6 +107,7 @@
                         <col width="" />
                         <col width="120px" />
                         <col data-sort="false" width="60px" />
+                        <col width="" />
                         <col width="10px"/>
                     </colgroup>
                     <thead>
@@ -139,7 +140,7 @@
             {{#each hits.hits}}
             <tr>
             <td>
-            <a href='/manageUsers/{{fields.recipient_id}}'><i class='fa fa-user'></i> {{fields.recipientAddress}}</a>
+            <a href='/manageUsers/{{fields.recipient_id}}'>{{fields.recipientAddress}}</a>
             </td>
             <td>
             <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
