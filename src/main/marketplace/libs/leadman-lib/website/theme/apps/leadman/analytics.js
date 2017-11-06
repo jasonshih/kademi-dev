@@ -64,11 +64,8 @@
                 if (data.id > 0) {
                     name = data.id;
                 }
-                //searchOptions.filters = (searchOptions.aggr + '=' + name);
-                //loadFunnel();
-                var uri = URI(window.location.pathname);
-                var filters = searchOptions.aggr + '=' + name;
-                uri.setSearch('filters', filters);
+                var uri = URI(window.location.href);
+                searchOptions.stage = stage.name;
                 uri.setSearch('stage', stage.name);
                 history.pushState(null, null, uri.toString());
                 $('#leadsContainer').reloadFragment({
@@ -77,6 +74,7 @@
                         initDataTable();
                     }
                 });
+                loadFunnel();
             },
             onGroupClick: function (data, value) {
                 flog('onGroupClick', data, value);
@@ -93,7 +91,7 @@
                 var newAggName = nextAgg.attr('href');
                 flog('newAggName', newAggName);
                 //searchOptions.aggr = newAggName;
-                var uri = URI(window.location.pathname);
+                var uri = URI(window.location.href);
                 var filters = searchOptions.aggr + '=' + name;
                 uri.setSearch('filters', filters);
                 history.pushState(null, null, uri.toString());
