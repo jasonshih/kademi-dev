@@ -33,11 +33,11 @@
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
-                    form.find('.chk-show-user-photo').on('click', function () {
+                    form.find('.chk-show-others-photo').on('click', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         
-                        component.attr('data-show-user-photo', this.checked);
+                        component.attr('data-show-others-photo', this.checked);
                         keditor.initDynamicContent(dynamicElement);
                     });
                     
@@ -162,8 +162,8 @@
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
             
             form.find('.select-promotion').val(dataAttributes['data-promotion'] || '');
-            form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '2');
-            form.find('.chk-show-user-photo').prop('checked', dataAttributes['data-show-user-photo'] !== 'false');
+            form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '3');
+            form.find('.chk-show-others-photo').prop('checked', dataAttributes['data-show-others-photo'] === 'true');
             form.find('.chkShowFirstName').prop('checked', dataAttributes['data-show-first-name'] === 'true');
             form.find('.chkShowSurname').prop('checked', dataAttributes['data-show-sur-name'] === 'true');
             form.find('.chkShowEmail').prop('checked', dataAttributes['data-show-email'] === 'true');

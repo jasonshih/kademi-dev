@@ -254,7 +254,7 @@
                 flog('typeahead:render Is suggestion available: ' + isSuggestionAvailable, ttMenu.find('.empty-message'));
                 
                 if (!isSuggestionAvailable) {
-                    btnSaveCompany.html('Create new company');
+                    form.find('.btn-save-company').html('Create new company');
                     form.find('.btn-company-details').css('display', 'none');
                     form.find('input[name=leadOrgId]').val('');
                 }

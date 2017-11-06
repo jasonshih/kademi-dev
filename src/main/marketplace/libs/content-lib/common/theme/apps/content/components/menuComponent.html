@@ -1,3 +1,5 @@
+#parse("/theme/apps/content/components/menuMacros.html")
+
 #if( $menu )
 #else
     #set( $menu = $menuManager.rootMenuItem )
@@ -23,11 +25,6 @@
     #set( $showSearch = false )
 #end
 
-#if( $inverseMenu )
-#else
-    #set( $inverseMenu = false )
-#end
-
 #if( $showSubMenuOnHover )
 #else
     #set( $showSubMenuOnHover = false )
@@ -48,11 +45,15 @@
     #set ($navbarLayout = "container-fluid")
 #end
 
+#if (!$navbarStyle)
+    #set ($navbarStyle = "navbar-default")
+#end
+
 #if (!$displayMenuItem)
     #set ($displayMenuItem = "text")
 #end
 
-<div class="navbar #if ($inverseMenu == true) navbar-inverse #else navbar-default #end" role="navigation">
+<div class="navbar $navbarStyle" role="navigation">
     <div class="$navbarLayout">
         <div class="navbar-header">
             <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-main-collapse">
@@ -170,55 +171,3 @@
         </div><!--/.nav-collapse -->
     </div>
 </div>
-
-#macro( showMenuItem $item $isSubmenu)
-    #if( $item.visible.isEmpty() )
-    <li class="$formatter.ifTrue($item.active, 'active', '') nav-${item.id}-wrapper" title="${item.text}">
-        <a class="nav-${item.id} translatable" href="$item.href" shape="rect" title="$formatter.translate($item.text)" 
-           data-source-type="nav" 
-           data-source-id="nav-$item.id" 
-           data-source-field="nav-$item.id" 
-           data-source-text="$item.text">
-            #if ($isSubmenu)
-                $formatter.translate($item.text)
-            #else
-                #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
-                    <i class="$item.cssClass"></i>
-                #end
-                #if ($displayMenuItem == "icon")
-                    <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
-                #end
-                #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
-                    $formatter.translate($item.text)
-                #end
-            #end
-        </a>
-    </li>
-    #else
-    <li class="dropdown  nav-${item.id}-wrapper">
-        <a href="#" class="dropdown-toggle nav-${item.id}" data-toggle="dropdown" $formatter.ifTrue($showSubMenuOnHover,
-            'data-hover="dropdown"', '') title="$formatter.translate($item.text)"
-           data-source-type="nav" 
-           data-source-id="nav-$item.id" 
-           data-source-field="nav-$item.id" 
-           data-source-text="$item.text"
-            >
-            #if ($displayMenuItem == "icon" || $displayMenuItem == "text-icon")
-                <i class="$item.cssClass"></i>
-            #end
-            #if ($displayMenuItem == "icon")
-                <span class="visible-xs-inline visible-sm-inline">$formatter.translate($item.text)</span>
-            #end
-            #if ($displayMenuItem == "text" || $displayMenuItem == "text-icon")
-                $formatter.translate($item.text)
-            #end
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            #foreach( $subitem in $item.visible )
-                #showMenuItem( $subitem, true )
-            #end
-        </ul>
-    </li>
-    #end
-#end
