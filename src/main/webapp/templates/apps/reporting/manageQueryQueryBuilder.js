@@ -1,5 +1,4 @@
 $(function () {
-    var builder = $('#query-builder');
     var aggFields = $("#aggFields");
 
     var fields = [];
@@ -42,7 +41,6 @@ $(function () {
         $("#aggInterval").val("");
         $("#aggregationType").val("");
         $("#aggFields").val("");
-        $("#aggName").val("");
     });
 
     $("body").on("change", "#aggregationType", function () {
@@ -102,21 +100,23 @@ $(function () {
     });
 
     function saveQuery() {
+        var builder = $('#query-builder');
+        flog("Builder: ", builder);
         var rules = builder.queryBuilder('getRules');
         var query = builder.queryBuilder('getESBool');
         flog("Save Rules: ", rules, query);
-        $("#rulesInput1").val(JSON.stringify(query));
+        var querySize = ($.isNumeric($("#qbbSize").val())) ? $("#qbbSize").val() : 1000;
+        var aggSize = ($.isNumeric($("#aggSize").val())) ? $("#aggSize").val() : 1000;
 
         var data = {
             queryBuilder: true,
             qbbRules: JSON.stringify(rules),
             qbbQuery: JSON.stringify(query),
-            qbbSize: $("#qbbSize").val(),
+            qbbSize: querySize,
             qbbFieldsSelected: $("#fieldsSelected").val(),
             qbbAggType: $("#aggregationType").val(),
             qbbAggField: $("#aggFields").val(),
-            qbbAggName: $("#aggName").val(),
-            qbbAggSize: $("#aggSize").val(),
+            qbbAggSize: aggSize,
             qbbAggFormat: $("#aggFormat").val(),
             qbbAggInterval: $("#aggInterval").val(),
             qbbAggTo: $("#aggTo").val(),
@@ -198,9 +198,11 @@ $(function () {
             $("#fieldsSelected").val(newVal);
             saveQuery();
         });
+        setTab();
     }
 
     function loadQueryData() {
+        var builder = $('#query-builder');
         flog("Loading query data...");
         $.ajax({
             url: window.location.pathname + '?fields',
@@ -209,6 +211,7 @@ $(function () {
             success: function (resp) {
                 flog("Response: ", resp);
                 var builderConf = {
+                    allow_empty: true,
                     plugins: ['bt-tooltip-errors'],
                     filters: resp.data.filters
                 };
@@ -223,7 +226,6 @@ $(function () {
                     $("#aggregationType").val(agg.aggType);
                     $("#aggregationType").change();
                     $("#aggFields").val(agg.aggField);
-                    $("#aggName").val(agg.aggName);
                     $("#aggSize").val(agg.aggSize);
 
                     if (agg.ranges !== undefined) {
@@ -243,13 +245,23 @@ $(function () {
                     }
                 }
 
-                if (resp.data.rules !== "") {
-                    builderConf.rules = JSON.parse(resp.data.rules);
+                var rulesJson = {rules: [], condition: "AND"};
+                if (resp.data.rules !== "" && resp.data.rules !== "{}" && resp.data.rules !== {}) {
+                    rulesJson = JSON.parse(resp.data.rules);
                 }
-
+                flog("Rules Json", rulesJson)
+                builderConf.rules = rulesJson;
+                flog("Builder conf", builderConf);
                 builder.queryBuilder(builderConf);
             }
         });
+    }
+
+    function setTab() {
+        var target = window.location.hash.replace('-tab', "");
+        if (target) {
+            jQuery('a[href=' + target + ']').click().parent().trigger('keydown');
+        }
     }
 
     $.getStyleOnce('/static/query-builder/2.3.3/css/query-builder.default.min.css');
