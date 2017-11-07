@@ -495,10 +495,16 @@ function reloadSearchResults(newUrl) {
             flog('complete', response);
             var inner = $(response).find('#aggregationsContainer > *');
             $('#aggregationsContainer').html(inner);
+            var innerSearchStats = $(response).find('#searchStats > *');
+            $('#searchStats').html(innerSearchStats);
+            
             aggFilter();
             initManageOrgs();
+
+            
         }
     });
+
 }
 function aggFilter() {
     $(".agg-filter-link").on("click", function (e) {
@@ -642,7 +648,7 @@ function initAggregations() {
     var body = $('body');
     body.on('click', '.aggClearer', function (e) {
         e.preventDefault();
-        
+
         var input = $($(this).data('target'));
         flog('aggs clearer click', input);
         input.val('');
@@ -651,11 +657,11 @@ function initAggregations() {
         var uri = URI(window.location);
         uri.removeSearch('filter-'.concat(name));
         history.pushState(null, null, uri.toString());
-        
+
         $('#aggregationsContainer').reloadFragment({
             url: window.location
         });
-        
+
     });
     body.on('change', '.agg-filter', function (e) {
         var input = $(e.target);
@@ -675,9 +681,9 @@ function aggSearch(input) {
     flog('initAggregations: do agg search', 'name=', name, 'value=', value);
     var uri = URI(window.location);
     uri.setSearch('filter-'.concat(name), value);
-    
+
     history.pushState(null, null, uri.toString());
-    
+
     $('#aggregationsContainer').reloadFragment({
         url: window.location
     });
