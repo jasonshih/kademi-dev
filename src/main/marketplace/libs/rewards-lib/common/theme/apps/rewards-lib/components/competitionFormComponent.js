@@ -163,11 +163,11 @@
             
             form.find('.select-promotion').val(dataAttributes['data-promotion'] || '');
             form.find('.select-photos-per-row').val(dataAttributes['data-photos-per-row'] || '3');
-            form.find('.chk-show-others-photo').prop('checked', dataAttributes['data-show-others-photo'] === 'true');
-            form.find('.chkShowFirstName').prop('checked', dataAttributes['data-show-first-name'] === 'true');
-            form.find('.chkShowSurname').prop('checked', dataAttributes['data-show-sur-name'] === 'true');
-            form.find('.chkShowEmail').prop('checked', dataAttributes['data-show-email'] === 'true');
-            form.find('.chkShowPhone').prop('checked', dataAttributes['data-show-phone'] === 'true');
+            form.find('.chk-show-others-photo').prop('checked', dataAttributes['data-show-others-photo'] === 'true' || true);
+            form.find('.chkShowFirstName').prop('checked', dataAttributes['data-show-first-name'] === 'true' || true);
+            form.find('.chkShowSurname').prop('checked', dataAttributes['data-show-sur-name'] === 'true' || true);
+            form.find('.chkShowEmail').prop('checked', dataAttributes['data-show-email'] === 'true' || true);
+            form.find('.chkShowPhone').prop('checked', dataAttributes['data-show-phone'] === 'true' || true);
             form.find('#txtSubmitText').val(dataAttributes['data-submit-text'] || 'Submit your entry');
             form.find('#txtSubmitAnotherText').val(dataAttributes['data-submit-another-text'] || 'Submit another');
             form.find('#cbbButtonSize').val(dataAttributes['data-button-size'] || 'btn-md');
