@@ -185,7 +185,7 @@
                     <span style="float: right; width: 50%">
                         #if ( $agg.name != "action" )
                         <span class="input-group input-group-sm">
-                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$agg.filter" />
+                            <input id="$agg.name" class="agg-filter form-control" type="text" name="$agg.name" placeholder="Search / Filter" value="$!params.get("filter-$agg.name")" />
                             <span class="input-group-btn">
                                 <button class="btn btn-sm btn-default aggClearer" type="button" data-target="#$agg.name"><i class="fa fa-times"></i></button>
                             </span>
