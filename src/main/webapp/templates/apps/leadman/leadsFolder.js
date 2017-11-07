@@ -18,6 +18,7 @@ $(function () {
         } else {
             Kalert.confirm('Are you sure you want to delete ' + ids.length + ' lead' + (ids.length > 1 ? 's' : '') + '?', 'Delete', function () {
                 $.ajax({
+                    url: window.location.origin+"/leads",
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
