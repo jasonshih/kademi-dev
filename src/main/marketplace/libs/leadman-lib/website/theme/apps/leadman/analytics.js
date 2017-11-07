@@ -67,14 +67,13 @@
                 var uri = URI(window.location.href);
                 searchOptions.stage = stage.name;
                 uri.setSearch('stage', stage.name);
-                history.pushState(null, null, uri.toString());
+                // history.pushState(null, null, uri.toString());
                 $('#leadsContainer').reloadFragment({
                     url: uri.toString(),
                     whenComplete: function () {
                         initDataTable();
                     }
                 });
-                loadFunnel();
             },
             onGroupClick: function (data, value) {
                 flog('onGroupClick', data, value);
@@ -94,15 +93,13 @@
                 var uri = URI(window.location.href);
                 var filters = searchOptions.aggr + '=' + name;
                 uri.setSearch('filters', filters);
-                history.pushState(null, null, uri.toString());
+                // history.pushState(null, null, uri.toString());
                 $('#leadsContainer').reloadFragment({
                     url: uri.toString(),
                     whenComplete: function () {
                         initDataTable();
                     }
                 });
-                loadFunnel();
-
             }
         });
     }
@@ -363,14 +360,25 @@
             });
         });
     }
+    
+    function initClearLeadsTableFilter() {
+        $(document).on('click', '.btnClearFunnelLeadFilter', function () {
+            $('#leadsContainer').reloadFragment({
+                url: window.location.pathname,
+                whenComplete: function () {
+                    initDataTable();
+                }
+            });
+        });
+    }
 
     function initLeadManAnalytics() {
         initAggrSelect();
         initDataTable();
         initClearFilters();
-        initFunnel();
+        initFunnel()
+        initClearLeadsTableFilter();
     }
-    ;
 
     $(document).ready(function () {
         if ($('.lead-analytics-funnel-component').length > 0) {
