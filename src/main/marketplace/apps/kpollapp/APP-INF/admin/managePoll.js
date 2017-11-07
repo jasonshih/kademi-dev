@@ -1,14 +1,44 @@
 controllerMappings
     .adminController()
-    .path('/kpoll/managePolls/(?<pollId>[^/]*)')
+    .pathSegmentName('kpoll')
     .enabled(true)
-    .addPathResolver('pollId', 'checkPollId')
-    .defaultView(views.templateView('kpollapp/managePoll.html'))
-    .addMethod('GET', 'managePoll')
-    .addMethod('POST', 'managePollGroups', 'group')
-    .addMethod('POST', 'clearAnswerers', 'clearAnswerers')
-    .title('genTitle')
+    .child(
+        controllerMappings
+            .adminController()
+            .pathSegmentName('managePolls')
+            .enabled(true)
+            .defaultView(views.templateView('kpollapp/managePolls.html'))
+            .addMethod('GET', 'managePolls')
+            .addMethod('POST', 'savePoll', 'isAdd')
+            .addMethod('POST', 'savePoll', 'isEdit')
+            .addMethod('POST', 'deletePolls', 'isDelete')
+            .child(
+                controllerMappings
+                    .adminController()
+                    .pathSegmentResolver('pollId', 'checkPollId')
+                    .mountRepository("poll-content")
+                    .enabled(true)
+                    .defaultView(views.templateView('kpollapp/managePoll.html'))
+                    .addMethod('GET', 'managePoll')
+                    .addMethod('POST', 'managePollGroups', 'group')
+                    .addMethod('POST', 'clearAnswerers', 'clearAnswerers')
+                    .title('genTitle')
+            )
+    )
     .build();
+
+
+// controllerMappings
+//     .adminController()
+//     .path('/kpoll/managePolls/(?<pollId>[^/]*)')
+//     .enabled(true)
+//     .addPathResolver('pollId', 'checkPollId')
+//     .defaultView(views.templateView('kpollapp/managePoll.html'))
+//     .addMethod('GET', 'managePoll')
+//     .addMethod('POST', 'managePollGroups', 'group')
+//     .addMethod('POST', 'clearAnswerers', 'clearAnswerers')
+//     .title('genTitle')
+//     .build();
 
 controllerMappings
     .adminController()
