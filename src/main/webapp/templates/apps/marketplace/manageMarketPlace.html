@@ -19,9 +19,12 @@
                 <li class="active">
                     <a href="#browse" data-toggle="tab"><i class="fa fa-cart-plus"></i> Browse</a>
                 </li>
+                #if( $request.params.websiteName )
+                #else                
                 <li class="">
                     <a href="#purchased" data-toggle="tab"><i class="fa fa-download"></i> Installed</a>
                 </li>
+                #end
             </ul>
 
             <div class="tab-content">
@@ -85,6 +88,8 @@
                         #end
                     </div>
                 </div>
+                #if( $request.params.websiteName )
+                #else
                 <div class="tab-pane" id="purchased">
                     <div class="row">
                         #foreach($app in $page.installed)
@@ -117,6 +122,7 @@
                         #end
                         </div>
                     </div>
+                #end
                 </div>
             </div>
         </div>
