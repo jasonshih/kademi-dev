@@ -171,9 +171,14 @@
                                 "count": json.stages[t].sources[i].count
                             }
                         );
-                        name_set.push(itemName);
+
                     }
                 }
+
+                for(var i = 0; i < json.sources.length; i++){
+                    name_set.push(json.sources[i].name);
+                }
+
 
                 //for (var t = 0; t < size; t++) {
                 //    svg.append("text")

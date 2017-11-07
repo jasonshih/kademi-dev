@@ -1039,6 +1039,30 @@
         
         form.find('.menuList .menuList .menuList .btnAddMenuItem').remove();
         
+        form.find('.navbar-layout').on('change', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-navbar-layout', this.value);
+            keditor.initDynamicContent(dynamicElement);
+        });
+        
+        form.find('.navbar-style').on('change', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-navbar-style', this.value);
+            keditor.initDynamicContent(dynamicElement);
+        });
+        
+        form.find('.logo-padding').on('change', function () {
+            var component = keditor.getSettingComponent();
+            var dynamicElement = component.find('[data-dynamic-href]');
+            
+            component.attr('data-logopadding', this.value);
+            keditor.initDynamicContent(dynamicElement);
+        });
+        
         form.find('.logo-edit').mselect({
             contentTypes: ['image'],
             bs3Modal: true,
@@ -1161,6 +1185,10 @@
         form.find('.chk-inverse-menu').prop('checked', dataAttributes['data-inverse-menu'] === 'true');
         form.find('.chk-show-search').prop('checked', dataAttributes['data-show-search'] === 'true');
         form.find('.chk-show-sub-menu-on-hover').prop('checked', dataAttributes['data-show-sub-menu-on-hover'] === 'true');
+        
+        form.find('.navbar-layout').val(dataAttributes['data-navbar-layout'] || 'container-fluid');
+        form.find('.logo-padding').val(dataAttributes['data-logopadding'] || '');
+        form.find('.navbar-style').val(dataAttributes['data-navbar-style'] || 'navbar-default');
         
         var tree = $('.menuTree ol.menuList').not('.rootMenuList');
         
