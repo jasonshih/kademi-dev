@@ -104,76 +104,77 @@ $page.records
 
                         <div id="queryAggregation" class="tab-pane">
                             <div class="row" style="min-height: 300px; clear: both;">
-                                <h4>Aggregation:</h4>
                                 <div id="query-builder" class="query-builder form-inline">
-                                    <dl id="aggregation" class="rules-group-container">
-                                        <dd class="rules-group-body">
-                                            <ul class="rules-list">
-                                                <li class="rule-container">
-                                                    <div class="rule-filter-container">
-                                                        <select class="form-control" id="aggregationType">
-                                                            <option value="-1">------</option>
-                                                            <option value="AVG">AVG</option>
-                                                            <option value="MAX">MAX</option>
-                                                            <option value="MIN">MIN</option>
-                                                            <option value="SUM">SUM</option>
-                                                            <option value="COUNT">COUNT</option>
-                                                            <option value="TERMS">TERMS</option>
-                                                            <option value="RANGE">RANGE</option>
-                                                            <option value="DATE_RANGE">DATE_RANGE</option>
-                                                            <option value="DATE_HISTOGRAM">DATE_HISTOGRAM</option>
-                                                            <option value="PERCENTILES">PERCENTILES</option>
-                                                            <option value="GEO_BOUND">GEO_BOUND</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="rule-operator-container">
-                                                        <select class="form-control" id="aggFields"></select>                    
-                                                    </div>
-                                                    <div class="rule-operator-container" style="display: none;">
-                                                        <label>Size</label>
-                                                        <input type="text" value="" id="aggSize" placeholder=""/>
-                                                    </div>
-                                                    <div class="rule-operator-container" style="display: none;">
-                                                        <label>Format</label>
-                                                        <input type="text" value="" id="aggFormat" placeholder=""/>
-                                                    </div>
-                                                    <div class="rule-operator-container" style="display: none;">
-                                                        <label>Interval</label>
-                                                        <input type="text" value="" id="aggInterval" placeholder=""/>
-                                                    </div>
-                                                    <div class="rule-operator-container" style="display: none;">
-                                                        <label>To</label>
-                                                        <input type="text" value="" id="aggTo" placeholder=""/>
-                                                        <label>From</label>
-                                                        <input type="text" value="" id="aggFrom" placeholder=""/>
-                                                    </div>
-                                                    <div class="btn-group pull-right rule-actions">       
-                                                        <button type="button" class="btn btn-xs btn-danger clearAgg"><i class="glyphicon glyphicon-remove"></i> Delete</button>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </dd>
-                                    </dl>
+                                    <form id="aggregationForm">
+                                        <dl id="aggregation" class="rules-group-container">
+                                            <dd class="rules-group-body">
+                                                <ul class="rules-list" id="aggregations-ul">
+                                                    <li class="rule-container">
+                                                        <div class="rule-filter-container">
+                                                            <select class="form-control aggregationType" name="aggType[]">
+                                                                <option value="-1">------</option>
+                                                                <option value="AVG">AVG</option>
+                                                                <option value="MAX">MAX</option>
+                                                                <option value="MIN">MIN</option>
+                                                                <option value="SUM">SUM</option>
+                                                                <option value="COUNT">COUNT</option>
+                                                                <option value="TERMS">TERMS</option>
+                                                                <option value="RANGE">RANGE</option>
+                                                                <option value="DATE_RANGE">DATE_RANGE</option>
+                                                                <option value="DATE_HISTOGRAM">DATE_HISTOGRAM</option>
+                                                                <option value="PERCENTILES">PERCENTILES</option>
+                                                                <option value="GEO_BOUND">GEO_BOUND</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="rule-operator-container">
+                                                            <select class="form-control aggFields" name="aggFields[]"></select>                    
+                                                        </div>
+                                                        <div class="rule-operator-container" style="display: none;">
+                                                            <label>Size</label>
+                                                            <input type="text" value="" class="form-control aggSize" name="aggSize[]"/>
+                                                        </div>
+                                                        <div class="rule-operator-container" style="display: none;">
+                                                            <label>Format</label>
+                                                            <input type="text" value="" class="form-control aggFormat" name="aggFormat[]"/>
+                                                        </div>
+                                                        <div class="rule-operator-container" style="display: none;">
+                                                            <label>Interval</label>
+                                                            <input type="text" value="" class="form-control aggInterval" name="aggInterval[]"/>
+                                                        </div>
+                                                        <div class="rule-operator-container" style="display: none;">
+                                                            <label>To</label>
+                                                            <input type="text" value="" class="form-control aggTo" name="aggTo[]"/>
+                                                            <label>From</label>
+                                                            <input type="text" value="" class="form-control aggFrom" name="aggFrom[]"/>
+                                                        </div>
+                                                        <div class="btn-group pull-right rule-actions">       
+                                                            <button type="button" class="btn btn-xs btn-success addAgg"><i class="glyphicon glyphicon-plus"></i> Add Aggregation</button>
+                                                            <button type="button" class="btn btn-xs btn-danger clearAgg"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </form>
                                 </div>
                             </div>
 
                             #set ($map = $page.aggregations)
                             #foreach ($mapAgg in $map.entrySet())
-                            <h3>$mapAgg.key</h3>
-
                             #set ($map = $mapAgg.value)
-                            <table class="table table-responsive">
+                            <h5>$mapAgg.key</h5>
+                            <table class="table table-condensed table-bordered" style="margin-bottom: 30px">
                                 <thead>
                                     <tr>
-                                        <td>Name</td>
+                                        <th>Name</th>
                                         <th>Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     #foreach ($mapEntry in $map.entrySet())
                                     <tr>
-                                        <td>$mapEntry.key</td>
-                                        <td>$mapEntry.value</td>
+                                        <td class="col-md-6">$mapEntry.key</td>
+                                        <td class="col-md-6">$mapEntry.value</td>
                                     </tr>
                                     #end
                                 </tbody>

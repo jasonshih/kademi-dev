@@ -84,7 +84,7 @@ $(document).ready(function () {
             endDate: endDate
         };
         var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
-        Msg.info("Running..", newHref);
+        Msg.info("Running...", newHref);
         $("#queryResults").reloadFragment({
             url: newHref,
             whenComplete: function () {
