@@ -234,7 +234,7 @@
                         #if ($applicationManager.isActive($applications.blogs, $page.parent.website.liveBranch()))
                                 <textarea autocomplete="off" class="#if ($isKEditor) contenteditor #else htmleditor #end" cols="100" name="body" rows="20" placeholder="" data-preview="?goto=">$!page.body</textarea>
                         #else
-                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Calendar App of
+                        <p class="alert alert-warning lead"><i class="fa fa-warning"></i> Blogs app of
                             <b>$page.parent.website.name</b> website is disabled. Please enable it at
                             <a href="/websites/${page.parent.website.name}/${page.parent.website.liveBranch}/#panel_apps-tab" class="text-warning"><b>here</b></a>.</p>
                         #end
