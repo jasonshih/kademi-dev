@@ -163,7 +163,6 @@ $(function () {
         var newLi = ul.find('li:first').clone(true);
         var elementId = "li-" + ul.find("li").size();
         newLi.attr("id", elementId);
-        newLi.find(".addAgg").remove().end();
         newLi.find(".clearAgg").attr("data-li", elementId)
         return newLi;
     }
