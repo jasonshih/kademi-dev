@@ -292,9 +292,17 @@ function initExtraFieldFileUploads() {
 
     $('body').on('click', '.btn-upload-file', function (e) {
         e.preventDefault();
-        var name = $(e.target).data("name");
-        modal.find("#extraField").val(name);
-        modal.modal('show');
+        var name = $(this).data("name");
+        if (name === undefined) {
+            name = $(e.target).data("name");
+        }
+        flog("Extra field name: ", name);
+        if (name !== undefined) {
+            modal.find("#extraField").val(name);
+            modal.modal('show');
+        } else {
+            Msg.error('There was a problem. Please refresh the page.');
+        }
     });
 
     $('body').on('click', '.btn-delete-file', function (e) {
