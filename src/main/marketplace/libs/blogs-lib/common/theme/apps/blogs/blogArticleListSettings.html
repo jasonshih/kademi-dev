@@ -9,10 +9,10 @@
                 #end
             </select>
             
-            <div class="text-muted small"><em>If you want to display list of articles in blog page, please leave this field blank</em></div>
+            <small class="help-block">If you want to display list of articles in blog page, please leave this field blank</small>
         </div>
     </div>
-    
+    <hr />
     <div class="form-group">
         <label class="col-sm-12">Layout</label>
         <div class="col-sm-12">
@@ -32,7 +32,34 @@
                 <option value="3" selected="selected">3</option>
                 <option value="4">4</option>
             </select>
-            <em class="small text-muted help-block">If you want to display all, please set <code>0</code></em>
+            <small class="help-block">If you want to display all, please set <code>0</code></small>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper" style="display: none;">
+        <label class="col-sm-12">Height</label>
+        <div class="col-sm-12">
+            <input type="number" value="" class="form-control txt-grid-height" />
+            <small class="help-block">Minimum is <code>200</code></small>
+        </div>
+    </div>
+    <div class="form-group items-per-row-wrapper" style="display: none;">
+        <label class="col-sm-12">Display options</label>
+        <div class="col-sm-12">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-show-time" /> Show time
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-show-cate-tag" /> Show categories and tags
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" class="chk-show-full-height-thumbnail" /> Show full-height thumbnail
+                </label>
+            </div>
         </div>
     </div>
     <div class="form-group">
@@ -43,6 +70,7 @@
             <div class="text-muted small"><em>If you want to display all articles, please leave this field <code>0</code></em></div>
         </div>
     </div>
+    <hr />
     <div class="form-group">
         <label class="col-sm-12">Sort by</label>
         

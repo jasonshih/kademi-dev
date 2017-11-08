@@ -231,6 +231,7 @@
         initMove();
         initAssignToOrgType();
         aggFilter();
+        initAggregations();
     };
 
 })(jQuery, window, document);
@@ -494,10 +495,16 @@ function reloadSearchResults(newUrl) {
             flog('complete', response);
             var inner = $(response).find('#aggregationsContainer > *');
             $('#aggregationsContainer').html(inner);
+            var innerSearchStats = $(response).find('#searchStats > *');
+            $('#searchStats').html(innerSearchStats);
+            
             aggFilter();
             initManageOrgs();
+
+            
         }
     });
+
 }
 function aggFilter() {
     $(".agg-filter-link").on("click", function (e) {
@@ -634,5 +641,50 @@ function updateOrgPath(orgId, newPath) {
         error: function (resp) {
             Msg.error("An error occurred updating the organisation. You might not have permission to do this");
         }
+    });
+}
+
+function initAggregations() {
+    var body = $('body');
+    body.on('click', '.aggClearer', function (e) {
+        e.preventDefault();
+
+        var input = $($(this).data('target'));
+        flog('aggs clearer click', input);
+        input.val('');
+        var name = input.attr('name');
+        // We want to remove the parameter from the query string entirely
+        var uri = URI(window.location);
+        uri.removeSearch('filter-'.concat(name));
+        history.pushState(null, null, uri.toString());
+
+        $('#aggregationsContainer').reloadFragment({
+            url: window.location
+        });
+
+    });
+    body.on('change', '.agg-filter', function (e) {
+        var input = $(e.target);
+        aggSearch(input);
+    });
+    body.on('keyup', '.agg-filter', function (e) {
+        var input = $(e.target);
+        typewatch(function () {
+            aggSearch(input);
+        }, 500);
+    });
+}
+
+function aggSearch(input) {
+    var name = input.attr('name');
+    var value = input.val();
+    flog('initAggregations: do agg search', 'name=', name, 'value=', value);
+    var uri = URI(window.location);
+    uri.setSearch('filter-'.concat(name), value);
+
+    history.pushState(null, null, uri.toString());
+
+    $('#aggregationsContainer').reloadFragment({
+        url: window.location
     });
 }
