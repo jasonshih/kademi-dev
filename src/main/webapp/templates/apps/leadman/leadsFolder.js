@@ -87,6 +87,8 @@ $(function () {
                 window.history.pushState("", document.title, newUrl);
                 Msg.info('Refreshed', 1500)
                 flog('complete', response);
+                var $footer = newDom.find('#leadsFooter');
+                $('#leadsFooter').replaceWith($footer);
             }
         });
 
