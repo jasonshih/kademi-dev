@@ -1,4 +1,6 @@
 $(function () {
+    initSort();
+
     $(".check-all").on('change', function (e) {
         var checkedStatus = this.checked;
         flog("check-all ", checkedStatus);
@@ -18,7 +20,7 @@ $(function () {
         } else {
             Kalert.confirm('Are you sure you want to delete ' + ids.length + ' lead' + (ids.length > 1 ? 's' : '') + '?', 'Delete', function () {
                 $.ajax({
-                    url: window.location.origin+"/leads",
+                    url: window.location.origin + "/leads",
                     type: 'POST',
                     dataType: 'JSON',
                     data: {
@@ -52,5 +54,58 @@ $(function () {
     $(".btn-remove-leads").on('click', function (e) {
         deleteLeads(false);
     });
-    
+
+    function initSort() {
+        flog('initSort()');
+        $('.sort-field').on('click', function (e) {
+            e.preventDefault();
+            var a = $(e.target);
+            var search = window.location.search;
+            flog(search);
+            var field = a.attr('id');
+            var dir = 'asc';
+            if (field == getSearchValue(search, 'sortfield')) {
+                if (getSearchValue(search, 'sortdir') == 'asc') {
+                    dir = 'desc';
+                } else {
+                    dir = 'asc'
+                }
+            }
+            doSearchAndSort(field, dir);
+        });
+    }
+
+    function doSearchAndSort(field, direction) {
+        var newUrl = window.location.pathname + "?sortfield=" + field + "&sortdir=" + direction;
+        reloadSearchResults(newUrl);
+    }
+
+    function reloadSearchResults(newUrl) {
+        $("#lead-tbody").reloadFragment({
+            url: newUrl,
+            whenComplete: function (response) {
+                window.history.pushState("", document.title, newUrl);
+                Msg.info('Refreshed', 1500)
+                flog('complete', response);
+            }
+        });
+
+    }
+
+    function getSearchValue(search, key) {
+        if (search.charAt(0) == '?') {
+            search = search.substr(1);
+        }
+        parts = search.split('&');
+        if (parts) {
+            for (var i = 0; i < parts.length; i++) {
+                entry = parts[i].split('=');
+                if (entry && key == entry[0]) {
+                    return entry[1];
+                }
+            }
+        }
+        return '';
+    }
+
 });
