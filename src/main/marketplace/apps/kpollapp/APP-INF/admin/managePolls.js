@@ -1,13 +1,13 @@
-controllerMappings
-    .adminController()
-    .path('/kpoll/managePolls/')
-    .enabled(true)
-    .defaultView(views.templateView('kpollapp/managePolls.html'))
-    .addMethod('GET', 'managePolls')
-    .addMethod('POST', 'savePoll', 'isAdd')
-    .addMethod('POST', 'savePoll', 'isEdit')
-    .addMethod('POST', 'deletePolls', 'isDelete')
-    .build();
+// controllerMappings
+//     .adminController()
+//     .path('/kpoll/managePolls/')
+//     .enabled(true)
+//     .defaultView(views.templateView('kpollapp/managePolls.html'))
+//     .addMethod('GET', 'managePolls')
+//     .addMethod('POST', 'savePoll', 'isAdd')
+//     .addMethod('POST', 'savePoll', 'isEdit')
+//     .addMethod('POST', 'deletePolls', 'isDelete')
+//     .build();
 
 function managePolls(page, params) {
     log.info('managePolls > {} {}', page, params);

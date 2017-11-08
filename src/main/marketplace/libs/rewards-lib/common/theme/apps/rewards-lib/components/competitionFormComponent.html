@@ -43,6 +43,22 @@
 
 #set ($uploadPath = $promotionPage.href + "uploads")
 
+#if( !$showFirstName )
+    #set($showFirstName = "true")
+#end
+
+#if( !$showSurName )
+    #set($showSurName = "true")
+#end
+
+#if( !$showEmail )
+    #set($showEmail = "true")
+#end
+
+#if( !$showPhone )
+    #set($showPhone = "true")
+#end
+
 <div class="panel panel-default">
     <div class="panel-body competitionFormWrap">
         <div class="competitionForm">
@@ -54,7 +70,7 @@
                     <button class="go-again btn $!buttonSize $!buttonColor $!buttonClass" type="button">$!submitAnotherText</button>
                 #end
             </div>
-            #if( !$promotionPage.onePerRecipient || $promotionPage.entriesForUser.size() == 0 )
+            #if( !$promotionPage.onePerRecipient || $promotionPage.entriesForUser.size() == 0 || $promotionPage.isAllowAnon())
                 <form class="entryForm" method="POST" action="$promotionPage.href">
                     <input type="hidden" name="entry" value="true" />
                     <div class="alert alert-danger pageMessage"></div>
