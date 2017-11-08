@@ -1,5 +1,3 @@
-#parse("/theme/masterTemplate.html")
-#@render()
 <html>
     <head>
         <title>Blog Articles</title>
@@ -12,8 +10,8 @@
                     <div class="container-content-wrapper">
                         <div class="row">
                             <div class="col-sm-9" data-type="container-content">
-                                <section data-filter="" data-categories="" data-tags="" data-type="component-blogPageArticles">
-                                    <div data-dynamic-href="_components/blogPageArticles" id="default-blogPageArticles"></div>
+                                <section data-filter="" data-categories="" data-tags="" data-type="component-blogArticleList" data-layout="list">
+                                    <div data-dynamic-href="_components/blogArticleList" id="default-blogArticleList"></div>
                                 </section>
                             </div>
 
@@ -32,4 +30,3 @@
         </section>
     </body>
 </html>
-#end
