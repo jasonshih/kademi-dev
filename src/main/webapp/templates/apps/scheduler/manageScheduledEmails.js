@@ -630,6 +630,8 @@ function initSendTest(){
         $("#modal-send-test").modal();
     });
     
+    
+    
     $('body').on('click', '.test', function (e) {
         e.preventDefault();
         flog("sendTest");
@@ -652,6 +654,26 @@ function initSendTest(){
                 flog("error", resp);
                 Msg.error("Failed to send test message");
                 $("#modal-send-test").modal('hide');
+            }
+        });
+    });
+
+    $('body').on('click', '.btn-reschedule', function (e) {
+        e.preventDefault();
+        flog("reschedule");
+        var data = {runNow: true};
+
+        $.ajax({
+            type: 'POST',
+            url: window.location.href,
+            data: data,
+            success: function (data) {
+                Msg.success("Rescheduled");
+                window.location.reload();
+            },
+            error: function (resp) {
+                flog("error", resp);
+                Msg.error("Failed to reschedule");
             }
         });
     });
