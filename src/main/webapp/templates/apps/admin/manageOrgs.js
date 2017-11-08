@@ -55,7 +55,7 @@
                 onSuccess: function (resp) {
                     log('done', resp);
                     Msg.success('Created organisation');
-                    $('#search-results').reloadFragment();
+                    $('.search-results').reloadFragment();
                     self.hide();
                 }
             });
