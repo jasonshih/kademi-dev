@@ -35,7 +35,7 @@ $(function () {
                         } else {
                             Msg.warning(resp.messages);
                         }
-                        $("#lead-tbody").reloadFragment();
+                        setTimeout(reloadSearchResults, 500);
                     },
                     error: function () {
                         Kalert.close();
@@ -81,17 +81,24 @@ $(function () {
     }
 
     function reloadSearchResults(newUrl) {
+        if (newUrl === undefined) {
+            newUrl = window.location.href;
+        }
+        $(".check-all").prop('checked', false);
         $("#lead-tbody").reloadFragment({
             url: newUrl,
             whenComplete: function (response) {
+                $('.timeago').timeago();
                 window.history.pushState("", document.title, newUrl);
                 Msg.info('Refreshed', 1500)
                 flog('complete', response);
-                var $footer = newDom.find('#leadsFooter');
+                var $heading = response.find("#leadsHeading");
+                $("#leadsHeading").replaceWith($heading);
+
+                var $footer = response.find('#leadsFooter');
                 $('#leadsFooter').replaceWith($footer);
             }
         });
-
     }
 
     function getSearchValue(search, key) {
