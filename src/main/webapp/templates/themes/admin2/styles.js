@@ -2,101 +2,58 @@
  Copyright (c) 2003-2011, CKSource - Frederico Knabben. All rights reserved.
  For licensing, see LICENSE.html or http://ckeditor.com/license
  */
-
 CKEDITOR.stylesSet.add('myStyles',
     [
-        /* Block Styles */
+        // Block Styles
+        {name: 'Muted text', element: 'p', attributes: {'class': 'text-muted'}},
+        {name: 'Primary text', element: 'p', attributes: {'class': 'text-primary'}},
+        {name: 'Success text', element: 'p', attributes: {'class': 'text-success'}},
+        {name: 'Info text', element: 'p', attributes: {'class': 'text-info'}},
+        {name: 'Warning text', element: 'p', attributes: {'class': 'text-warning'}},
+        {name: 'Danger text', element: 'p', attributes: {'class': 'text-danger'}},
 
-        // These styles are already available in the "Format" combo ("format" plugin),
-        // so they are not needed here by default. You may enable them to avoid
-        // placing the "Format" combo in the toolbar, maintaining the same features.
-        /*
-         { name: 'Paragraph',		element: 'p' },
-         { name: 'Heading 1',		element: 'h1' },
-         { name: 'Heading 2',		element: 'h2' },
-         { name: 'Heading 3',		element: 'h3' },
-         { name: 'Heading 4',		element: 'h4' },
-         { name: 'Heading 5',		element: 'h5' },
-         { name: 'Heading 6',		element: 'h6' },
-         { name: 'Preformatted Text',element: 'pre' },
-         { name: 'Address',			element: 'address' },
-         */
+        {name: 'Primary background', element: 'p', attributes: {'class': 'bg-primary'}},
+        {name: 'Success background', element: 'p', attributes: {'class': 'bg-success'}},
+        {name: 'Info background', element: 'p', attributes: {'class': 'bg-info'}},
+        {name: 'Warning background', element: 'p', attributes: {'class': 'bg-warning'}},
+        {name: 'Danger background', element: 'p', attributes: {'class': 'bg-danger'}},
 
-        {name: 'Italic Title', element: 'h2', styles: {'font-style': 'italic'}},
-        {name: 'Subtitle', element: 'h3', styles: {'color': '#aaa', 'font-style': 'italic'}},
-        {
-            name: 'Special Container',
-            element: 'div',
-            styles: {
-                padding: '5px 10px',
-                background: '#eee',
-                border: '1px solid #ccc'
-            }
-        },
+        {name: 'Code', element: 'pre', attributes: {'class': 'prettyprint'}},
+        {name: 'Lead paragraph', element: 'p', attributes: {'class': 'lead'}},
 
-        /* Inline Styles */
+        {name: 'Success alert', element: 'div', attributes: {'class': 'alert alert-success'}},
+        {name: 'Info alert', element: 'div', attributes: {'class': 'alert alert-info'}},
+        {name: 'Warning alert', element: 'div', attributes: {'class': 'alert alert-warning'}},
+        {name: 'Danger alert', element: 'div', attributes: {'class': 'alert alert-danger'}},
 
-        // These are core styles available as toolbar buttons. You may opt enabling
-        // some of them in the Styles combo, removing them from the toolbar.
-        // (This requires the "stylescombo" plugin)
-        /*
-         { name: 'Strong',			element: 'strong', overrides: 'b' },
-         { name: 'Emphasis',			element: 'em'	, overrides: 'i' },
-         { name: 'Underline',		element: 'u' },
-         { name: 'Strikethrough',	element: 'strike' },
-         { name: 'Subscript',		element: 'sub' },
-         { name: 'Superscript',		element: 'sup' },
-         */
+        {name: 'Jumbotron', element: 'div', attributes: {'class': 'jumbotron'}},
+        {name: 'Page header', element: 'div', attributes: {'class': 'page-header'}},
 
-        {name: 'Marker', element: 'span', attributes: {'class': 'marker'}},
+        // Inline Styles
+        {name: 'Alternate heading', element: ["h1", "h2", "h3", "h4", "h5"], attributes: {'class': 'h-alternate'}},
+        {name: 'Defalt label', element: 'span', attributes: {'class': 'label label-default'}},
+        {name: 'Primary label', element: 'span', attributes: {'class': 'label label-primary'}},
+        {name: 'Success label', element: 'span', attributes: {'class': 'label label-success'}},
+        {name: 'Info label', element: 'span', attributes: {'class': 'label label-info'}},
+        {name: 'Warning label', element: 'span', attributes: {'class': 'label label-warning'}},
+        {name: 'Danger label', element: 'span', attributes: {'class': 'label label-danger'}},
+        {name: 'Muted text', element: 'span', attributes: {'class': 'text-muted'}},
+        {name: 'Primary text', element: 'span', attributes: {'class': 'text-primary'}},
+        {name: 'Success text', element: 'span', attributes: {'class': 'text-success'}},
+        {name: 'Info text', element: 'span', attributes: {'class': 'text-info'}},
+        {name: 'Warning text', element: 'span', attributes: {'class': 'text-warning'}},
+        {name: 'Danger text', element: 'span', attributes: {'class': 'text-danger'}},
 
-        {name: 'Big', element: 'big'},
-        {name: 'Small', element: 'small'},
-        {name: 'Typewriter', element: 'tt'},
+        {name: 'Badge', element: 'span', attributes: {'class': 'badge'}},
 
-        {name: 'Computer Code', element: 'code'},
-        {name: 'Keyboard Phrase', element: 'kbd'},
-        {name: 'Sample Text', element: 'samp'},
-        {name: 'Variable', element: 'var'},
+        // Object Styles
+        {name: 'Striped table', element: 'table', attributes: {'class': 'table table-striped'}},
+        {name: 'Bordered table', element: 'table', attributes: {'class': 'table table-bordered'}},
+        {name: 'Unstyled list', element: 'ol', attributes: {'class': 'list-unstyled'}},
+        {name: 'Inline list', element: 'ol', attributes: {'class': 'list-inline'}},
 
-        {name: 'Deleted Text', element: 'del'},
-        {name: 'Inserted Text', element: 'ins'},
-
-        {name: 'Cited Work', element: 'cite'},
-        {name: 'Inline Quotation', element: 'q'},
-
-        {name: 'Language: RTL', element: 'span', attributes: {'dir': 'rtl'}},
-        {name: 'Language: LTR', element: 'span', attributes: {'dir': 'ltr'}},
-
-        /* Object Styles */
-
-        {
-            name: 'Styled image (left)',
-            element: 'img',
-            attributes: {'class': 'left'}
-        },
-
-        {
-            name: 'Styled image (right)',
-            element: 'img',
-            attributes: {'class': 'right'}
-        },
-
-        {
-            name: 'Compact table',
-            element: 'table',
-            attributes: {
-                cellpadding: '5',
-                cellspacing: '0',
-                border: '1',
-                bordercolor: '#ccc'
-            },
-            styles: {
-                'border-collapse': 'collapse'
-            }
-        },
-
-        {name: 'Borderless Table', element: 'table', styles: {'border-style': 'hidden', 'background-color': '#E6E6FA'}},
-        {name: 'Square Bulleted List', element: 'ul', styles: {'list-style-type': 'square'}}
-
+        {name: 'Responsive image', element: 'img', attributes: {'class': 'img-responsive'}},
+        {name: 'Rounded image', element: 'img', attributes: {'class': 'img-rounded'}},
+        {name: 'Circle image', element: 'img', attributes: {'class': 'img-circle'}},
+        {name: 'Thumbnail image', element: 'img', attributes: {'class': 'img-thumbnail'}}
     ]);

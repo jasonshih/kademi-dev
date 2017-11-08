@@ -158,14 +158,14 @@
                 },
                 {
                     data: 'leadId',
-                    "orderable": false,
+                    orderable: false,
                     render: function (data, type, full, meta) {
                         flog(data, type, full, meta);
                         return '<a class="btn btn-info btn-xs" href="' + data + '"><i class="fa fa-eye"></i></a>';
                     }
                 },
                 {
-                    data: 'leadIdCheckbox',
+                    data: 'leadId',
                     orderable: false,
                     render: function (data, type, full, meta) {
                         return '<input class="leadMan-del-lead" value="' + data + '" type="checkbox"/>';
@@ -252,8 +252,7 @@
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
             var _source = hit._source;
-            _source.leadIdCheckbox = _source.leadId;
-            _source.score = hit._score.toFixed(2);
+            // _source.score = hit._score.toFixed(2);
             dataTable.row.add(_source);
         }
 
