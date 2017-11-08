@@ -20,22 +20,23 @@
                     </p>
                     <div class="btn-group btn-group-sm" style="margin-bottom: 5px;">
                         <a class="btn btn-sm btn-success btn-add-org" href="#" title="Create a new organisation, such as a store or department"><i class="fa fa-plus"></i> Add new organisations</a>
-                        <a class="btn btn-sm btn-warning btn-add-account" data-toggle="modal" data-target="#modal-create-account" data- href="#" title="Create a new Kademi account">
-                            <i class="fa fa-plus"></i> Create account
-                        </a>
-
-                        <a class="btn btn-sm btn-info" href="map"><i class="fa fa-map-marker"></i> Map</a>
                         <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-list"></i>
                             Tools
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li class="presentation" role="menuitem">
+                                <a class="btn-add-account" data-toggle="modal" data-target="#modal-create-account" data- href="#" title="Create a new Kademi account">
+                                    Create account
+                                </a>
+                            </li>
                             <li class="presentation" role="menuitem"><a class="" href="#modal-upload-csv" data-toggle="modal" data-target="#modal-upload-csv">Import</a></li>
                             <li class="presentation" role="menuitem"><a class="" href="orgs.csv">Export</a></li>
                             <li class="presentation" role="menuitem"><a class="" href="#modal-upload-orgid-csv" data-toggle="modal">Upload OrgIDs CSV</a></li>
                             <li class="presentation" role="menuitem"><a class="" href="orgIds.csv">Open OrgIDs CSV</a></li>
                             <li class="presentation" role="menuitem"><a class="" href="/tableUploaders/organisationsUploader">Import wizard (beta)</a></li>
+                            <li class="presentation" role="menuitem"><a href="map">Map</a></li>
                         </ul>
                     </div>
                 </div>
@@ -186,7 +187,7 @@
             </table>
             #end
         </div>
- 
+
         #macro( showAggregation $agg )
         #if( $agg.buckets.size() > 0 || $params.get("filter-$agg.name") )
         <tbody id="agg-$agg.name">
