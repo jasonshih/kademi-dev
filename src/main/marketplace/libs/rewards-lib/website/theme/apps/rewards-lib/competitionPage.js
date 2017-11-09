@@ -62,13 +62,17 @@
         component.find('.go-again').click(function (e) {
             e.preventDefault();
             
-            viewUploaded.parent().after(
-                '<div class="' + viewUploaded.attr('data-class') + ' promotion-photo promotion-photo-user">' +
-                '    <a href="' + viewUploaded.attr('data-url') + '" class=" promotion-photo-inner" style="background-image: url(\"' + viewUploaded.attr('data-url') + '/alt-640-640.png\")">' +
-                '        <span class="promotion-photo-label">My photo</span>' +
-                '    </a>' +
-                '</div>'
-            )
+            var currentUploadedUrl = viewUploaded.attr('data-url');
+            var existingImg = form.find('.promotion-photo-inner[href="' + currentUploadedUrl + '"]');
+            if (existingImg.length === 0) {
+                viewUploaded.parent().after(
+                    '<div class="' + viewUploaded.attr('data-class') + ' promotion-photo promotion-photo-user">' +
+                    '    <a href="' + currentUploadedUrl + '" class="promotion-photo-inner" style="background-image: url(\"' + currentUploadedUrl + '/alt-640-640.png\")">' +
+                    '        <span class="promotion-photo-label">My photo</span>' +
+                    '    </a>' +
+                    '</div>'
+                )
+            }
             viewUploaded.css('background-image', 'url("/static/images/photo_holder_squared.png")');
             viewUploaded.attr('data-url', '');
             
