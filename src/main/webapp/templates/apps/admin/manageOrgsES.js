@@ -56,8 +56,11 @@
                     flog('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
                     setTimeout(
-                            $('#searchResults').reloadFragment()
-                            , 5000);
+                            function() {
+                                flog("reload");
+                                $('#searchResults').reloadFragment()                                
+                            }
+                            , 500);
                     self.hide();
                 }
             });
