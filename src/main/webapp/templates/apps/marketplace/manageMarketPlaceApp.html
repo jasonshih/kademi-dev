@@ -24,24 +24,33 @@
                     <img class="img-responsive" src="$banner" alt="">
                     <div class="caption-full">
                         <h4 class="pull-right">
+                            #set( $notEnabled = true )
+                            #if( $request.params.websiteName )
+                                #if( $page.installed )
+                                    #if( $page.isEnabled($request.params.websiteName, $request.params.websiteBranch) )
+                                        #set( $notEnabled = false )
+                                    #end                                    
+                                #end
+                            #end
+                            
                             <p class="pull-right">
+                            #if( $notEnabled )
                             <button type="button" data-title="$page.title" data-websitename="$!request.params.websiteName" data-websitebranch="$!request.params.websiteBranch" class="btn btn-lg btn-green btn-install-app pull-right">
                                 <span class="fa fa-check"></span>
-                                #if(!$page.price || $page.price == 0)
+                                Install
                                 #if( $request.params.websiteName )
-                                    #if( $page.installed )
-                                    Enable
-                                    #else
-                                    Install
-                                    #end
                                     in $request.params.websiteName
+                                #end                              
+                                
+                                #if(!$page.price || $page.price == 0)
+                                    - (Free)
                                 #else
-                                Install now
+                                     - $$page.price
                                 #end
-                                #else
-                                $$page.price
-                                #end
-                            </button>                            
+                            </button>   
+                            #else
+                            <i>Already installed</i>
+                            #end
                             </p>
                         </h4>
                             <br />
