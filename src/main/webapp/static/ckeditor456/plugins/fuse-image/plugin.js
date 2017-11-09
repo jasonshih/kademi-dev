@@ -49,8 +49,9 @@
                             onSelectFile: function (url, relativeUrl, fileType, hash) {
                                 flog('[CKEDITOR.fuse-image] onSelectFile', url, relativeUrl, fileType, hash);
                                 
-                                var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
                                 var previewImg = previewContainer.find('img');
+                                hash = hash || previewImg.attr('data-hash');
+                                var imageUrl = (editor.config.fullUrl ? 'http://' + window.location.host : '') + '/_hashes/files/' + hash;
                                 var width = previewImg.width();
                                 var height = previewImg.height();
                                 
