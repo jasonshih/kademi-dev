@@ -56,11 +56,11 @@
                     flog('done', resp);
                     Msg.success($('#orgTitle').val() + ' is saved!');
                     setTimeout(
-                            function() {
+                            function () {
                                 flog("reload");
-                                $('#searchResults').reloadFragment()                                
+                                $('#searchResults').reloadFragment()
                             }
-                            , 500);
+                    , 500);
                     self.hide();
                 }
             });
@@ -500,11 +500,11 @@ function reloadSearchResults(newUrl) {
             $('#aggregationsContainer').html(inner);
             var innerSearchStats = $(response).find('#searchStats > *');
             $('#searchStats').html(innerSearchStats);
-            
+
             aggFilter();
             initManageOrgs();
 
-            
+
         }
     });
 
@@ -570,7 +570,7 @@ function doRemoveOrgs(checkBoxes) {
 }
 
 function initEditPath() {
-    $('body').on('click', '.btn-edit-path', function (e) {
+    $(document.body).off('click', '.btn-edit-path').on('click', '.btn-edit-path', function (e) {
         e.preventDefault();
         var btn = $(this);
         var path = btn.data("path");
