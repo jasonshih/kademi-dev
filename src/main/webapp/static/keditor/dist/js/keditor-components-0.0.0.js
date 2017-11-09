@@ -2148,7 +2148,7 @@
                     form.html(resp);
                     
                     var selectPicker = form.find('.select-border-style');
-                    selectPicker.selectpicker().on('changed.bs.select', function () {
+                    selectPicker.on('change', function () {
                         self.borderStyle = this.value;
                         keditor.getSettingComponent().find('.video-wrapper').css('border-style', this.value);
                     });
