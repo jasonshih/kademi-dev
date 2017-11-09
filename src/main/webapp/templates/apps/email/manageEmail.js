@@ -115,7 +115,7 @@ function loadEmailItemDetails(target, id) {
 }
 
 function doSendTest() {
-    flog("doSendTest");
+    flog("doSendTest", window.location.pathname);
     $.ajax({
         type: 'POST',
         url: window.location.pathname,

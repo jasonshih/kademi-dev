@@ -108,13 +108,13 @@
                 <div class="tabbable">
                     <ul class="nav nav-tabs tab-bricky">
                         <li class=""><a data-toggle="tab" href="#summary">Summary</a></li>
-                        <li class=""><a data-toggle="tab" href="#sendInfo">Send information</a></li>
                         <li class=""><a data-toggle="tab" href="#message">Message</a></li>
                         <li class=""><a data-toggle="tab" href="#history">History</a></li>
                     </ul>
 
                     <div class="tab-content">
                         <div id="summary" class="tab-pane">
+                            #if( $page.numEmails > 0 )
                             <a id="export-stats" href="emailStats.csv" class="btn btn-success">Export CSV</a>
 
                             <div class="row">
@@ -133,7 +133,6 @@
                                         <svg></svg>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row">
@@ -143,9 +142,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            
+                            <hr/>
+                            #end
 
-                        <div id="sendInfo" class="tab-pane">
                             <div class="row">
                                 <div class="col-md-6 col-md-push-6">
                                     <div class="form-group">
