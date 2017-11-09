@@ -94,7 +94,12 @@
                 showUnmatched(resultUploadCsv, data.result.data.unmatched);
                 resultUploadCsv.show();
                 Msg.success('Upload completed. Please review any unmatched members below, or refresh the page to see the updated list of products');
-                $('#productsTableContainer').reloadFragment();
+                setTimeout(
+                        function() {
+                            $('#productsTableContainer').reloadFragment();
+                        }
+                        , 500);                
+                
             }
         });
     }
