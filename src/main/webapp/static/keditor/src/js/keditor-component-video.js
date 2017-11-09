@@ -87,39 +87,22 @@
                         keditor.getSettingComponent().find('.video-wrapper').css('border-width', width);
                     });
                     
-                    var colorPicker = form.find('.color-picker');
-                    var input = colorPicker.find('input');
-                    var previewer = colorPicker.find('.input-group-addon i');
-                    colorPicker.colorpicker({
-                        format: 'hex',
-                        container: colorPicker.parent(),
-                        component: '.input-group-addon',
-                        align: 'left',
-                        colorSelectors: {
-                            'transparent': 'transparent'
-                        }
-                    }).on('changeColor.colorpicker', function (e) {
-                        var colorHex = e.color.toHex();
-                        
-                        if (!input.val() || input.val().trim().length === 0) {
-                            colorHex = '';
-                            previewer.css('background-color', '');
-                        }
-                        
-                        self.borderColor = colorHex;
-                        keditor.getSettingComponent().find('.video-wrapper').css('border-color', colorHex);
+                    var colorPicker = form.find('.borderColor');
+                    $.contentEditor.initColorPicker(colorPicker, function (color) {
+                        self.borderColor = color;
+                        keditor.getSettingComponent().find('.video-wrapper').css('border-color', color);
                     });
                     
                     form.find('.chk-border').on('click', function () {
-                        selectPicker.prop('disabled', !this.checked).selectpicker('refresh');
+                        selectPicker.prop('disabled', !this.checked);
                         txtBorderWidth.prop('disabled', !this.checked);
-                        colorPicker.colorpicker(this.checked ? 'enable' : 'disable');
+                        colorPicker.prop('disabled', !this.checked);
                         
                         if (!this.checked) {
                             keditor.getSettingComponent().find('.video-wrapper').css('border', '');
-                            selectPicker.selectpicker('val', '');
+                            selectPicker.val('');
                             txtBorderWidth.val('');
-                            colorPicker.colorpicker('setValue', 'transparent');
+                            colorPicker.val('');
                         }
                     });
                     
@@ -177,7 +160,7 @@
             var selectPicker = form.find('.select-border-style');
             
             chkBorder.prop('checked', isBorderEnabled);
-            selectPicker.prop('disabled', !isBorderEnabled).selectpicker('refresh').selectpicker('val', wrapper.css('border-style'));
+            selectPicker.prop('disabled', !isBorderEnabled).val(wrapper.css('border-style'));
             txtBorderWidth.prop('disabled', !isBorderEnabled).val(isBorderEnabled ? borderWidth.replace('px', '') : '');
             colorPicker.colorpicker(isBorderEnabled ? 'enable' : 'disable').colorpicker('setValue', isBorderEnabled ? wrapper.css('border-color') : '');
             
