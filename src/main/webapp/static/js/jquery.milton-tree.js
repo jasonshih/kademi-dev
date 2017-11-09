@@ -51,8 +51,7 @@
                 );
                 container.find('.btn-delete-tree').on('click', function (e) {
                     e.preventDefault();
-
-                    var selectedItem = container.find('li.jstree-leaf');
+                    var selectedItem = $(config.selectedItem);
 
                     flog('Selected item:', selectedItem);
 
