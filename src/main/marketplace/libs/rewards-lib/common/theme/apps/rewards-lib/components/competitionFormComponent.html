@@ -59,6 +59,8 @@
     #set($showPhone = "true")
 #end
 
+#set ($randomId = $formatter.randomGuid)
+
 <div class="panel panel-default">
     <div class="panel-body competitionFormWrap">
         <div class="competitionForm">
@@ -80,26 +82,26 @@
                     #else
                         #if ($showFirstName == "true")
                         <div class="form-group">
-                            <label class="control-label" for="firstName">First name</label>
-                            <input type="text" name="firstName" id="firstName" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
+                            <label class="control-label" for="firstName-${randomId}">First name</label>
+                            <input type="text" name="firstName" id="firstName-${randomId}" class="required form-control" placeholder="Enter your first name" value="$!user.firstName" />
                         </div>
                         #end
                         #if ($showSurName == "true")
                         <div class="form-group">
-                            <label class="control-label" for="surName">Surname</label>
-                            <input type="text" name="surName" id="surName" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
+                            <label class="control-label" for="surName-${randomId}">Surname</label>
+                            <input type="text" name="surName" id="surName-${randomId}" class="form-control" placeholder="Enter your surname" value="$!user.surName" />
                         </div>
                         #end
                         #if ($showEmail == "true")
                         <div class="form-group">
-                            <label class="control-label" for="email">Email</label>
-                            <input type="text" name="email" id="email" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
+                            <label class="control-label" for="email-${randomId}">Email</label>
+                            <input type="text" name="email" id="email-${randomId}" class="required form-control" placeholder="Enter your email address" value="$!user.email" />
                         </div>
                         #end
                         #if ($showPhone == "true")
                         <div class="form-group">
-                            <label class="control-label" for="phone">Phone</label>
-                            <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
+                            <label class="control-label" for="phone-${randomId}">Phone</label>
+                            <input type="text" name="phone" id="phone-${randomId}" class="form-control" placeholder="Enter your best contact number" value="$!user.phone" />
                         </div>
                         #end
                         
@@ -108,8 +110,8 @@
                                 <div class="col-sm-12">
                                     <div class="checkbox">
                                         #foreach($optin in $contactPage.optins)
-                                            <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
-                                                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                                            <label class="col-sm-9" for="optins_${optin.optinGroup.name}-${randomId}">
+                                                <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}-${randomId}" />
                                                 $optin.message
                                             </label>
                                         #end
@@ -149,28 +151,41 @@
                             <div class="promotion-photos">
                                 <div class="row">
                                     #set ($userPhoto = "/static/images/photo_holder_squared.png")
-                                    #if( $promotionPage.userAttachmentHash )
-                                        #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-640-640.png")
-                                    #end
                                     <div class="$photoClass promotion-photo promotion-photo-user">
-                                        <div class="viewUploaded promotion-photo-inner #if( !$promotionPage.userAttachmentHash ) noImage #end" style="background-image: url('$userPhoto')"></div>
+                                        <div class="viewUploaded promotion-photo-inner" data-class="$photoClass" style="background-image: url('$userPhoto')"></div>
                                         
-                                        <div id="myPromotionUpload" data-url="${uploadPath}/">
+                                        <div class="promotion-photo-uploader" data-url="${uploadPath}/">
                                             #if (!$page)
                                                 <span class="btn btn-success btn-block">Upload a photo</span>
                                             #end
                                         </div>
                                         <input type="hidden" class="reset-on-resubmit" name="userAttachmentHash" value="$!page.userAttachmentHash" />
                                     </div>
-                                    #if ($showOthersPhoto != "false")
-                                        #if ($page)
-                                            #foreach($entry in $promotionPage.child("uploads").children)
-                                                <div class="$photoClass promotion-photo"><a href="${uploadPath}/$entry.name/alt-600-400.png" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')"></a></div>
+                                    #if ($page)
+                                        #foreach($entry in $promotionPage.child("uploads").children)
+                                            #set ($shouldBeShowed = true)
+                                            #if ($showOthersPhoto != "true")
+                                                #if ($entry.rewardEntry.awardedTo != $userResource.thisProfile)
+                                                    #set ($shouldBeShowed = false)
+                                                #end
                                             #end
-                                        #else
-                                            <div class="$photoClass promotion-photo"><a href="/static/images/ballon_flight_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/ballon_flight_squared.jpg')"></a></div>
-                                            <div class="$photoClass promotion-photo"><a href="/static/images/basketball_net_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/basketball_net_squared.jpg')"></a></div>
-                                            <div class="$photoClass promotion-photo"><a href="/static/images/beach_house_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/beach_house_squared.jpg')"></a></div>
+                                            #if ($shouldBeShowed == true)
+                                                #if ($entry.rewardEntry.awardedTo == $userResource.thisProfile)
+                                                    <div class="$photoClass promotion-photo promotion-photo-user">
+                                                        <a href="${uploadPath}/$entry.name" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')" target="_blank">
+                                                            <span class="promotion-photo-label">My photo</span>
+                                                        </a>
+                                                    </div>
+                                                #else
+                                                    <div class="$photoClass promotion-photo" target="_blank"><a href="${uploadPath}/$entry.name" class=" promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')"></a></div>
+                                                #end
+                                            #end
+                                        #end
+                                    #else
+                                        #if ($showOthersPhoto == "true")
+                                            <div class="$photoClass promotion-photo"><a href="/static/images/ballon_flight_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/ballon_flight_squared.jpg')" target="_blank"></a></div>
+                                            <div class="$photoClass promotion-photo"><a href="/static/images/basketball_net_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/basketball_net_squared.jpg')" target="_blank"></a></div>
+                                            <div class="$photoClass promotion-photo"><a href="/static/images/beach_house_squared.jpg" class=" promotion-photo-inner" style="background-image: url('/static/images/beach_house_squared.jpg')" target="_blank"></a></div>
                                         #end
                                     #end
                                 </div>
@@ -203,8 +218,8 @@
                             </div>
                     
                             <div class="form-group">
-                                <label for="terms">
-                                    <input id="terms" name="terms" required="true" class="required" type="checkbox" />
+                                <label>
+                                    <input name="terms" required="true" class="required" type="checkbox" />
                                     Please check this box to confirm you have read our terms and conditions*
                                     <a href="#${modalTerms}" target="_blank" data-toggle="modal"> Click here to view full terms and conditions. </a>
                                 </label>
@@ -219,27 +234,28 @@
                 </form>
             #else
                 <div class="entered">
-                    <p class="lead">Thank you for entering!</p>
+                    <p class="lead alert alert-success"><i class="fa fa-check-circle"></i> Thank you for entering!</p>
                     #if($promotionPage.userUploadEnabled )
                         <div class="entryFormItem uploadItem readOnly">
                             <h3>Photo Gallery</h3>
-                            <ul class="photos clearfix">
-                                <li class="first">
-                                    <div class="viewUploaded">
-                                        #if( $promotionPage.userAttachmentHash )
-                                            <img src="uploads/$promotionPage.userAttachmentHash/alt-150-150.png" />
-                                        #end
+                            <div class="promotion-photos">
+                                <div class="row">
+                                    #set ($userPhoto = "/static/images/photo_holder_squared.png")
+                                    #if( $promotionPage.userAttachmentHash )
+                                        #set ($userPhoto = "${uploadPath}/$promotionPage.userAttachmentHash/alt-640-640.png")
+                                    #end
+                                    <div class="$photoClass promotion-photo promotion-photo-user">
+                                        <a href="${uploadPath}/$promotionPage.userAttachmentHash" class="viewUploaded promotion-photo-inner" style="background-image: url('$userPhoto')" target="_blank">
+                                            <span class="promotion-photo-label">My photo</span>
+                                        </a>
                                     </div>
-                                    <strong>My photo</strong>
-                                </li>
-                                #foreach($entry in $promotionPage.child("uploads").children)
-                                    <li>
-                                        #if( $entry.rewardEntry.awardedTo != $user.thisUser )
-                                            <a href="uploads/$entry.name/alt-600-400.png"><img src="uploads/$entry.name/alt-150-150.png" /></a>
+                                    #if ($showOthersPhoto == "true")
+                                        #foreach($entry in $promotionPage.child("uploads").children)
+                                            <div class="$photoClass promotion-photo $photoExtraClass"><a href="${uploadPath}/$entry.name" class="promotion-photo-inner" style="background-image: url('${uploadPath}/$entry.name/alt-640-640.png')" target="_blank"></a></div>
                                         #end
-                                    </li>
-                                #end
-                            </ul>
+                                    #end
+                                </div>
+                            </div>
                         </div>
                     #end
                 </div>
