@@ -252,7 +252,7 @@
         for (var i = 0; i < hits.hits.length; i++) {
             var hit = hits.hits[i];
             var _source = hit._source;
-            // _source.score = hit._score.toFixed(2);
+            _source.score = hit._score.toFixed(2);
             dataTable.row.add(_source);
         }
 
