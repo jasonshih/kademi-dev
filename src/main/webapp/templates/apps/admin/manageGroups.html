@@ -16,44 +16,44 @@
         <div id="groups-folders">
             <div id="folder-wrapper" class="panel-folder">
                 #foreach($folder in $page.groupFolders)
-                    <div data-name="$folder.name" class="panel panel-default folder">
-                        #set ($folderId = "folder-${foreach.count}")
-                        #set ($groupWrapperId = "${folderId}-wrapper")
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#folder-wrapper" data-target="#${folderId}">
-                            <i class="clip-folder"></i>
-                            <span class="folder-name clickable">$folder.name</span>
-                            <div class="btn-group btn-group-xs">
-                                <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul role="menu" class="dropdown-menu">
-                                    <li><a href="" class="btn-rename-folder">Rename this folder</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="$folder.name" class="btn-delete-folder">Delete this folder</a></li>
-                                </ul>
-                            </div>
-                            <div class="panel-tools">
-                                <div class="btn-group">
-                                    <a class="btn btn-info btn-sm"><span class="group-count">$page.getChildrenInFolder($folder).size()</span> Groups </a>
-                                </div>
-                            </div>
+                <div data-name="$folder.name" class="panel panel-default folder">
+                    #set ($folderId = "folder-${foreach.count}")
+                    #set ($groupWrapperId = "${folderId}-wrapper")
+                    <div class="panel-heading" data-toggle="collapse" data-parent="#folder-wrapper" data-target="#${folderId}">
+                        <i class="clip-folder"></i>
+                        <span class="folder-name clickable">$folder.name</span>
+                        <div class="btn-group btn-group-xs">
+                            <button data-toggle="dropdown" class="btn btn-sm btn-default btn-squared dropdown-toggle" type="button">
+                                <span class="caret"></span>
+                            </button>
+                            <ul role="menu" class="dropdown-menu">
+                                <li><a href="" class="btn-rename-folder">Rename this folder</a></li>
+                                <li class="divider"></li>
+                                <li><a href="$folder.name" class="btn-delete-folder">Delete this folder</a></li>
+                            </ul>
                         </div>
-                        <div id="${folderId}" class="collapse">
-                            <div class="panel-body">
-                                <div id="$groupWrapperId" class="panel-group" style="margin: 0; min-height: 50px">
-                                    #foreach($group in $page.getChildrenInFolder($folder))
-                                        #genGroups($group $groupWrapperId $folder)
-                                    #end
-                                </div>
+                        <div class="panel-tools">
+                            <div class="btn-group">
+                                <a class="btn btn-info btn-sm"><span class="group-count">$page.getChildrenInFolder($folder).size()</span> Groups </a>
                             </div>
                         </div>
                     </div>
+                    <div id="${folderId}" class="collapse">
+                        <div class="panel-body">
+                            <div id="$groupWrapperId" class="panel-group" style="margin: 0; min-height: 50px">
+                                #foreach($group in $page.getChildrenInFolder($folder))
+                                #genGroups($group $groupWrapperId $folder)
+                                #end
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 #end
             </div>
             <div id="group-wrapper" class="panel-group">
                 #foreach($group in $page.children)
-                    #if(!$group.groupFolder)
-                    #genGroups($group "group-wrapper" false)
+                #if(!$group.groupFolder)
+                #genGroups($group "group-wrapper" false)
                 #end
                 #end
             </div>
@@ -71,32 +71,34 @@
                         <input type="hidden" name="group" value="" />
                         <div class="modal-body">
                             <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <div class="form-horizontal">
-                                <div class="form-group">
-                                    <label class="label-control col-md-12" for="title"><b>What will this group be used for?</b></label>
-                                    <div class="col-sm-12">
-                                        <div class="radio">
-                                            <label for="groupTypePrimary">
-                                                $formatter.radioEq("groupTypePrimary", "groupType", "", "P", "required")
-                                                Primary group, representing the type of the user.
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label for="groupTypeSubscription">
-                                                $formatter.radioEq("groupTypeSubscription", "groupType", "", "S", "required")
-                                                Mailing list, which can have additional custom fields <br /><i>Formerly called 'Subscription group'</i>
-                                            </label>
-                                        </div>
-                                        <div class="radio">
-                                            <label for="groupTypeMailing">
-                                                $formatter.radioEq("groupTypeMailing", "groupType", "", "M", "required")
-                                                User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage
-                                                <br /><i>Formerly called a 'mailing list' group</i>
-                                            </label>
+                            <div class="form-horizontal" >
+                                <div id="groupTypeSelection">
+                                    <div class="form-group">
+                                        <label class="label-control col-md-12" for="title"><b>What will this group be used for?</b></label>
+                                        <div class="col-sm-12">
+                                            <div class="radio">
+                                                <label for="groupTypePrimary">
+                                                    $formatter.radioEq("groupTypePrimary", "groupType", "", "P", "required")
+                                                    Primary group, representing the type of the user.
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label for="groupTypeSubscription">
+                                                    $formatter.radioEq("groupTypeSubscription", "groupType", "", "S", "required")
+                                                    Mailing list, which can have additional custom fields <br /><i>Formerly called 'Subscription group'</i>
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label for="groupTypeMailing">
+                                                    $formatter.radioEq("groupTypeMailing", "groupType", "", "M", "required")
+                                                    User tag, or opt-in group. Can be added without additional information,. Logged in users can self-manage
+                                                    <br /><i>Formerly called a 'mailing list' group</i>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
+                                    <hr />
                                 </div>
-                                <hr />
                                 <div class="form-group">
                                     <label class="label-control col-md-4" for="title">Group Title</label>
                                     <div class="col-md-8">
@@ -172,8 +174,8 @@
                                     <div id="groupFoldersSelect" class="col-md-8">
                                         <select class="form-control" type="text" name="folderName" id="name" value="" placeholder="Folder name">
                                             #foreach($folder in $page.groupFolders)
-                                    $formatter.option($folder.name, $folder.name, null)
-                                    #end
+                                            $formatter.option($folder.name, $folder.name, null)
+                                            #end
                                         </select>
                                     </div>
                                 </div>
@@ -222,7 +224,7 @@
                                     <select name="sourceGroup" id="selectSourceGroup" class="form-control">
                                         <option value="">[None]</option>
                                         #foreach($group in $page.organisation.groups)
-                                            <option value="$group.name">$group.name</option>
+                                        <option value="$group.name">$group.name</option>
                                         #end
                                     </select>
                                     <p>Select the group to copy members from.</p>
