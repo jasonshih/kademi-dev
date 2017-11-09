@@ -51,4 +51,5 @@
     max-height: 26px;      /* fallback */
     -webkit-line-clamp: 1; /* number of lines to show */
     -webkit-box-orient: vertical;
+    margin-bottom: 6px;
 }
