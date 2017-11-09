@@ -16,38 +16,38 @@ function initPanelHeader() {
 
 function initCRUDGroup() {
     var body = $(document.body);
-    
+
     $('.btn-add-group').on('click', function (e) {
         e.preventDefault();
         flog('addGroupButton: click');
         showGroupModal('Group', 'Add new group', 'Add');
     });
-    
+
     $('.btn-add-groupFolder').on('click', function (e) {
         e.preventDefault();
         flog('addGroupFolderButton: click');
         showGroupFolderModal('Folder', 'Add new folder', 'Add', "createFolder");
     });
-        
+
     $('.btn-add-rule-group').on('click', function (e) {
         e.preventDefault();
         var name = prompt("Enter a name for the new rules-based group");
-        if( name ) {
+        if (name) {
             flog("create ", name);
             createRuleBasedGroup(name);
         }
     });
-    
-    
+
+
     // Bind event for Delete forum
     body.on('click', '.btn-delete-group', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var selectedGroup = btn.closest('div.group');
         var name = selectedGroup.data('name');
         var href = $.URLEncode(name);
-        
+
         flog('delete', href);
         confirmDelete(href, name, function () {
             flog('remove ', this);
@@ -56,17 +56,17 @@ function initCRUDGroup() {
             folder.find(".group-count").text(folder.find(".group").size());
         });
     });
-    
+
     body.on('click', '.btn-rename-group', function (e) {
         e.preventDefault();
-        
+
         var btn = $(this);
         var selectGroup = btn.parents('div.group');
         var groupName = selectGroup.data('name');
         var groupTitle = selectGroup.data('title');
         var groupNotes = selectGroup.data('notes');
         var groupType = selectGroup.data('type');
-        
+
         flog("groupName", groupName);
         showGroupModal('Group', 'Rename group', 'Rename', {
             name: groupName,
@@ -76,7 +76,7 @@ function initCRUDGroup() {
             type: groupType
         });
     });
-    
+
     body.on('input', '#modal-group [name=title]', function () {
         var titleInput = body.find('#modal-group [name=title]');
         var nameInput = body.find('#modal-group [name=name]');
@@ -116,7 +116,7 @@ function createRuleBasedGroup(name) {
         });
     } catch (e) {
         flog('exception in createJob', e);
-    }    
+    }
 }
 
 function initPermissionCheckboxes() {
@@ -170,28 +170,28 @@ function addOrderProgramList() {
     var tempControl = $('#modalListController').html();
     $('#modalGroup tr[rel=Program] ul.ListItem li').each(function (i) {
         $(this)
-            .attr('data-program', i)
-            .append(tempControl)
-            .find('label', 'input')
-            .each(function () {
-                var _this = $(this);
-                var randomId = Math.round(Math.random() * 100000);
-                var _for = _this.attr('for') || null;
-                var _name = _this.attr('name') || null;
-                var _id = _this.attr('id') || null;
-                
-                if (_for) {
-                    _this.attr('for', _for + randomId);
-                }
-                
-                if (_name) {
-                    _this.attr('name', _name + randomId);
-                }
-                
-                if (_id) {
-                    _this.attr('id', _id + randomId);
-                }
-            });
+                .attr('data-program', i)
+                .append(tempControl)
+                .find('label', 'input')
+                .each(function () {
+                    var _this = $(this);
+                    var randomId = Math.round(Math.random() * 100000);
+                    var _for = _this.attr('for') || null;
+                    var _name = _this.attr('name') || null;
+                    var _id = _this.attr('id') || null;
+
+                    if (_for) {
+                        _this.attr('for', _for + randomId);
+                    }
+
+                    if (_name) {
+                        _this.attr('name', _name + randomId);
+                    }
+
+                    if (_id) {
+                        _this.attr('id', _id + randomId);
+                    }
+                });
     });
 }
 
@@ -204,7 +204,7 @@ function addOrderPermissionList() {
 
 function resetModalControl() {
     var modal = $('#modal-group');
-    
+
     modal.find('input[type=text]').val('');
     modal.find('input[type=radio]').prop('checked', false);
     modal.attr('data-group', '');
@@ -212,54 +212,72 @@ function resetModalControl() {
 
 function showGroupModal(name, title, type, data) {
     resetModalControl();
-    
+
     var modal = $('#modal-group');
     flog('showGroupModal', modal);
-    
+
     modal.find('.modal-title').html(title);
     modal.find('.btn-save-group').text(type);
     modal.find('input[name=groupActionType]').val(type);
-    
+
     if (data) {
         if (data.name) {
             modal.find('input[name=name]').val(data.name);
         }
-        
+
         if (data.title) {
             modal.find('input[name=title]').val(data.title);
         }
-        
+
         if (data.notes) {
             modal.find('textarea[name=notes]').html(data.notes);
         }
-        
+
         if (data.group) {
             modal.attr('data-group', data.group);
             modal.find('input[name=group]').val(data.group);
         }
-        
+
         if (data.type) {
             modal.find('[name=groupType][value="' + data.type + '"]').prop('checked', true);
+            var groupTypeSelection = modal.find("#groupTypeSelection");
+            if (data.type == "R") {
+                groupTypeSelection.hide();
+                groupTypeSelection.find("input").removeClass("required");
+                var input = $('<input>').attr({
+                    type: 'hidden',
+                    id: 'groupTypeDynamic',
+                    name: 'groupTypeDynamic',
+                    value: "R"
+                });
+                input.appendTo(groupTypeSelection);
+            } else {
+                groupTypeSelection.show();
+                groupTypeSelection.find("input").addClass("required");
+                if (modal.find("#groupTypeDynamic") !== undefined) {
+                    modal.find("#groupTypeDynamic").remove();
+                }
+            }
         }
     } else {
         // Need to reset fields
         modal.find('input[type=hidden][name=group]').val('');
     }
-    
+
     modal.modal('show');
 }
 
 function showGroupFolderModal(name, title, type, action, data) {
     resetModalControl();
-    
+
     var modal = $('#modal-groupFolder');
     flog('showGroupFolderModal', modal);
-    
+
     modal.find('.modal-title').html(title);
     modal.find('.btn-save-group').text(type);
-    
+
     $("#folderModalAction").attr("name", action);
-    
+
     if (typeof data !== "undefined") {
         flog(data);
         if (data.oldFolderName !== null) {
@@ -270,7 +288,7 @@ function showGroupFolderModal(name, title, type, action, data) {
     } else {
         modal.find('[name="oldFolderName"]').remove();
     }
-    
+
     modal.modal('show');
 }
 
@@ -279,15 +297,15 @@ function maxOrderGroup() {
     $('div.Group').each(function () {
         _order.push($(this).attr('data-group'));
     });
-    
+
     _order.sort().reverse();
-    
+
     return (parseInt(_order[0]) + 1);
 }
 
 function initGroupModal() {
     var modal = $('#modal-group');
-    
+
     modal.find('form').forms({
         onSuccess: function (resp) {
             reloadGroupFolders();
@@ -348,11 +366,11 @@ function setRegoMode(currentRegoModeLink, selectedRegoModeLink) {
 function initCopyMembers() {
     var body = $(document.body);
     var modal = $('#modal-copy-members');
-    
+
     body.on('click', '.btn-copy-member', function (e) {
         flog('click', this);
         e.preventDefault();
-        
+
         var btn = $(this);
         var href = btn.closest('div.group').find('span.group-name').text().trim();
         modal.find('span.group-name').text(href);
@@ -360,7 +378,7 @@ function initCopyMembers() {
         modal.find('form').attr('action', href);
         modal.modal('show');
     });
-    
+
     modal.find('form').forms({
         onSuccess: function (resp) {
             flog('done', resp);
@@ -376,7 +394,7 @@ function initGroupFolder() {
     body.on('click', '.btn-remove-from-folder', function (e) {
         flog('click', this);
         e.preventDefault();
-        
+
         var btn = $(this);
         var href = btn.closest('div.group').find('span.group-name').text().trim();
         var folderName = btn.attr("href");
@@ -389,11 +407,11 @@ function initGroupFolder() {
             $('#groups-folders').reloadFragment();
         });
     });
-    
+
     body.on('click', ".btn-delete-folder", function (e) {
         flog('click', this);
         e.preventDefault();
-        
+
         var btn = $(this);
         var href = "";
         var folderName = btn.attr("href");
@@ -408,13 +426,13 @@ function initGroupFolder() {
             });
         });
     });
-    
+
     var addGroupToFolder = $('#modal-addGroupToFolder');
-    
+
     body.on('click', '.btn-add-to-folder', function (e) {
         flog('click', this);
         e.preventDefault();
-        
+
         var btn = $(this);
         var href = btn.closest('div.group').find('span.group-name').text().trim();
         flog(href);
@@ -423,7 +441,7 @@ function initGroupFolder() {
         addGroupToFolder.find('form').attr('action', href);
         addGroupToFolder.modal('show');
     });
-    
+
     addGroupToFolder.find('form').forms({
         onSuccess: function (resp) {
             flog('done', resp);
@@ -432,15 +450,15 @@ function initGroupFolder() {
             $('#groups-folders').reloadFragment();
         }
     });
-    
+
     var groupFolder = $('#modal-groupFolder');
     groupFolder.find('form').submit(function (e) {
         e.preventDefault();
-        
+
         var btn = groupFolder.find(".btn-save-group");
         var type = btn.html();
         flog('Click add/edit group folder', btn, type);
-        
+
         var name = $(groupFolder.find("[name=folderName]")).val();
         if (checkSimpleChars(groupFolder.find('form'))) {
             if (type === 'Add') {
@@ -449,9 +467,9 @@ function initGroupFolder() {
                     window.location.reload();
                     groupFolder.modal('hide');
                     resetModalControl();
-                    
+
                 });
-                
+
             } else { // If is editing Group
                 var name = $(groupFolder.find("[name=newFolderName]")).val();
                 addGroupFolder(name, window.location.pathname, groupFolder.find('form').serialize(), function (name, resp) {
@@ -459,12 +477,12 @@ function initGroupFolder() {
                     window.location.reload();
                     groupFolder.modal('hide');
                     resetModalControl();
-                    
+
                 });
             }
         }
     });
-    
+
     body.on('click', ".btn-rename-folder", function (e) {
         e.preventDefault();
         var folderName = $(e.target.closest(".folder")).data("name");
@@ -496,7 +514,7 @@ function initDnD() {
             }
         }
     });
-    
+
     var checkTimer;
     $('.folder').droppable({
         accept: '.group',
@@ -505,35 +523,35 @@ function initDnD() {
             var groupName = ui.draggable.attr("id");
             var currentFolder = $(this);
             var folderName = currentFolder.data("name");
-            
+
             if (currentFolder.is(ui.draggable.closest('.folder'))) {
                 flog('The draged item is already in this element!');
                 ui.draggable.animate({
                     'top': 0
                 }, 500);
-                
+
                 return;
             }
-            
+
             currentFolder.find(".panel-group").append(
-                ui.draggable.css({
-                    position: "relative",
-                    top: "",
-                    left: ""
-                })
-            );
-            
+                    ui.draggable.css({
+                        position: "relative",
+                        top: "",
+                        left: ""
+                    })
+                    );
+
             addGroupFolder(groupName, groupName, "addToFolder=addToFolder&folderName=" + folderName, function (name, resp) {
                 Msg.success("Moved " + groupName + " to " + folderName);
             });
-            
+
             currentFolder.find(".group-count").text(currentFolder.find(".group").size());
-            
+
             setTimeout(function () {
                 flog(currentFolder.find(".group").size());
                 currentFolder.find(".group-count").text(currentFolder.find(".group").size());
             }, 150);
-            
+
             flog(currentFolder.find(".group").size());
         },
         over: function (event, ui) {
@@ -542,11 +560,11 @@ function initDnD() {
         out: function (event, ui) {
         }
     });
-    
+
     $(".container").droppable({
         accept: function (draggableElement) {
             var isInFolder = draggableElement.closest('.folder').length > 0;
-            
+
             return isInFolder;
         },
         greedy: true,
