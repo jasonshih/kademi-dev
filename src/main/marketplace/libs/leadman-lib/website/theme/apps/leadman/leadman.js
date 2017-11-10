@@ -503,6 +503,7 @@ function initNewLeadForm() {
     modal.on('hidden.bs.modal', function () {
         form.trigger('reset');
         $('input[name=newOrgId]', form).val('');
+        $('#source-frm').val('').trigger("change");
     });
 
     $('#newOrgTitle', form).on('change', function () {
@@ -517,8 +518,8 @@ function initNewLeadForm() {
         e.preventDefault();
         var funnelName = $(e.target).closest("a").attr("href");
         flog("initNewLeadForm - click. funnelName=", funnelName, e.target);
-        form.find("select[name=funnel]").val(funnelName).change();
         $('#source-frm').val('').trigger("change");
+        form.find("select[name=funnel]").val(funnelName).change();
         modal.modal("show");
     });
 
@@ -582,6 +583,11 @@ function initNewLeadForm() {
             if (btn.hasClass("btnCreateAndClose")) {
                 Msg.info('Saved new lead');
                 modal.modal("hide");
+
+                $('#source-frm').val('').trigger("change");
+                $('#newLeadStage').val('').trigger("change");
+                form.trigger('reset');
+
                 if ($('#all_contacts').length) {
                     $('#all_contacts').html('');
                     initLeadsDashLoading();
@@ -612,10 +618,7 @@ function initNewLeadForm() {
                 }
                 modal.modal("hide");
             }
-            
-            form.trigger('reset');
-            $('#source-frm').val('').trigger("change");
-            $('#newLeadStage').val('').trigger("change");
+
         }
     });
     form.find("button").click(function (e) {
