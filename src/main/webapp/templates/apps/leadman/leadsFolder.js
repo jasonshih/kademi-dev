@@ -92,10 +92,10 @@ $(function () {
                 window.history.pushState("", document.title, newUrl);
                 Msg.info('Refreshed', 1500)
                 flog('complete', response);
-                var $heading = response.find("#leadsHeading");
+                var $heading = $(response).find("#leadsHeading");
                 $("#leadsHeading").replaceWith($heading);
 
-                var $footer = response.find('#leadsFooter');
+                var $footer = $(response).find('#leadsFooter');
                 $('#leadsFooter').replaceWith($footer);
             }
         });
