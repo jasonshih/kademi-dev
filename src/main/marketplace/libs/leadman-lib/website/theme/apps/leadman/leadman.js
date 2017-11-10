@@ -612,6 +612,8 @@ function initNewLeadForm() {
                 }
                 modal.modal("hide");
             }
+            
+            form.trigger('reset');
         }
     });
     form.find("button").click(function (e) {
