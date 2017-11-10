@@ -614,6 +614,8 @@ function initNewLeadForm() {
             }
             
             form.trigger('reset');
+            $('#source-frm').val('').trigger("change");
+            $('#newLeadStage').val('').trigger("change");
         }
     });
     form.find("button").click(function (e) {
