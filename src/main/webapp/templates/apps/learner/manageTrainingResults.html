@@ -6,21 +6,20 @@
 
         <h1>Training Results</h1>
 
-        <div class="pull-left">
-
-            <div class="pull-right" >
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-cog"></i> Tools
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu pull-right">
-                        <li><a class="btn-training-csv" href="trainingResults.csv" download="trainingResults.csv"><i class="fa fa-download"></i> Export to CSV</a></li>
-                        <li><a href="/tableUploaders/moduleStatusUploader"><i class="fa fa-upload"></i> Upload</a></li>
-                    </ul>
-                </div>
+        <div class="pull-right" >
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-cog"></i> Tools
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu pull-right">
+                    <li><a class="btn-training-csv" href="trainingResults.csv" download="trainingResults.csv"><i class="fa fa-download"></i> Export to CSV</a></li>
+                    <li><a href="/tableUploaders/moduleStatusUploader"><i class="fa fa-upload"></i> Upload</a></li>
+                </ul>
             </div>
+        </div>
 
+        <div class="row">
             <div class="col-md-4">
                 <p class="input-group input-group-sm">
                     <input type="text" id="training-query" class="form-control" placeholder="Search for user here" value="$!request.params.q" />
@@ -31,7 +30,6 @@
                     </span>
                 </p>
             </div>
-
         </div>
 
         <div class="clearfix"></div>
