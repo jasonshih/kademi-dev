@@ -81,13 +81,13 @@ function initExpireAllPoints() {
                     flog("success", data);
                     if (data.status) {
                         $('#tablePointsBody').reloadFragment();
-                        Msg.success("All points have been expired");
+                        Msg.success("All points have been expired", "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem expiring points. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem expiring points. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -111,9 +111,9 @@ function initFormPointsSystem() {
         onSuccess: function (resp) {
             flog("done");
             if (resp.status) {
-                Msg.info("Saved");
+                Msg.info("Saved", "managePointsSystem");
             } else {
-                Msg.error("Sorry, couldnt save");
+                Msg.error("Sorry, couldnt save", "managePointsSystem");
             }
 
         }
@@ -135,14 +135,14 @@ function initReconcile() {
                     flog("success", data);
                     if (data.status) {
                         $('#tablePointsBody').reloadFragment();
-                        Msg.success(data.messages);
+                        Msg.success(data.messages, "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem doing reconciliation. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                     updateReconcileStatus();
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                     updateReconcileStatus();
                 }
             });
@@ -229,12 +229,12 @@ function setGroupRecipient(name, groupType, isRecip) {
                     }
                 } else {
                     flog("error", data);
-                    Msg.error("Sorry, couldnt save " + data);
+                    Msg.error("Sorry, couldnt save " + data, "managePointsSystem");
                 }
             },
             error: function (resp) {
                 flog("error", resp);
-                Msg.error("Sorry, couldnt save - " + resp);
+                Msg.error("Sorry, couldnt save - " + resp, "managePointsSystem");
             }
         });
     } catch (e) {
@@ -270,7 +270,7 @@ function initRemovePoints() {
         flog("initRemoveSalesData", node, node.is(":checked"));
         var checkBoxes = $('#tablePoints').find('tbody input[name=toRemoveId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the points you want to remove by clicking the checkboxes on the right");
+            Msg.error("Please select the points you want to remove by clicking the checkboxes on the right", "managePointsSystem");
         } else {
             if (confirm("Are you sure you want to remove " + checkBoxes.length + " points?")) {
                 doRemovePoints(checkBoxes);
@@ -302,14 +302,14 @@ function initClearAllPoints() {
                 success: function (data) {
                     flog("success", data);
                     if (data.status) {
-                        Msg.success("Submitted");
+                        Msg.success("Submitted", "managePointsSystem");
                         $("#points").reloadFragment();
                     } else {
-                        Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems.");
+                        Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems.", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing points. You might not have permission to do this");
+                    Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -318,7 +318,7 @@ function initClearAllPoints() {
 
 
 function doRemovePoints(checkBoxes) {
-    Msg.info("Deleting...", 2000);
+    Msg.info("Deleting...", "managePointsSystem", 2000);
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -327,21 +327,21 @@ function doRemovePoints(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                Msg.success("Removed points ok");
+                Msg.success("Removed points ok", "managePointsSystem");
                 $("#tablePointsBody").reloadFragment();
             } else {
-                Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems");
+                Msg.error("There was a problem removing points. Please try again and contact the administrator if you still have problems", "managePointsSystem");
             }
         },
         error: function (resp) {
-            Msg.error("An error occurred removing points. You might not have permission to do this");
+            Msg.error("An error occurred removing points. You might not have permission to do this", "managePointsSystem");
         }
     });
 }
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search debits...", 'searchHistory', 2000);
+    Msg.info("Doing search debits...", 'managePointsSystem', 2000);
 
     var dataQuery = $('#data-query').val();
 
@@ -361,7 +361,7 @@ function doHistorySearch() {
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search debits complete", 'searchHistory', 2000);
+            Msg.success("Search debits complete", 'managePointsSystem');
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
             history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
@@ -384,7 +384,7 @@ function initDeleteDebits() {
         e.preventDefault();
         var checkBoxes = $('#table-debits').find('tbody input[name=removeDebitsId]:checked');
         if (checkBoxes.length === 0) {
-            Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right");
+            Msg.error("Please select the debits you want to remove by clicking the checkboxs to the right", "managePointsSystem");
         } else {
             if (confirm("Are you sure you want to remove " + checkBoxes.length + " debits?")) {
                 doRemoveDebits(checkBoxes);
@@ -394,7 +394,7 @@ function initDeleteDebits() {
 }
 
 function doRemoveDebits(checkBoxes) {
-    Msg.info("Deleting...", 'removeDebits', 2000);
+    Msg.info("Deleting...", "managePointsSystem", 2000);
     $.ajax({
         type: 'POST',
         data: checkBoxes,
@@ -402,14 +402,14 @@ function doRemoveDebits(checkBoxes) {
         success: function (data) {
             flog("success", data);
             if (data.status) {
-                Msg.success("Removed debits ok", 'removeDebits');
+                Msg.success("Removed debits ok", "managePointsSystem");
                 $("#table-debits").reloadFragment();
             } else {
-                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", 'removeDebits');
+                Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", "managePointsSystem");
             }
         },
         error: function (resp) {
-            Msg.error("An error occurred removing debits. You might not have permission to do this", 'removeDebits');
+            Msg.error("An error occurred removing debits. You might not have permission to do this", "managePointsSystem");
         }
     });
 }
@@ -430,13 +430,13 @@ function initClearAllDebits() {
                     flog("success", data);
                     if (data.status) {
                         $('#table-debits tbody').empty();
-                        Msg.success("Removed points ok");
+                        Msg.success("Removed points ok", "managePointsSystem");
                     } else {
-                        Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems");
+                        Msg.error("There was a problem removing debits. Please try again and contact the administrator if you still have problems", "managePointsSystem");
                     }
                 },
                 error: function (resp) {
-                    Msg.error("An error occurred removing debits. You might not have permission to do this");
+                    Msg.error("An error occurred removing debits. You might not have permission to do this", "managePointsSystem");
                 }
             });
         }
@@ -465,7 +465,7 @@ function initLeaderboardSearch() {
 
 function doLeaderboardSearch() {
     flog('doLeaderboardSearch');
-    Msg.info("Doing search leaderboard...", 'leaderboardSearch', 2000);
+    Msg.info("Doing search leaderboard...", "managePointsSystem");
 
     var leaderboardLimit = parseInt($('#leaderboard-limit').val(), 10);
     if (Number.isNaN(leaderboardLimit)) {
@@ -489,7 +489,7 @@ function doLeaderboardSearch() {
         data: data,
         success: function (content) {
             flog('response', content);
-            Msg.success("Search leaderboard complete", 'leaderboardSearch', 2000);
+            Msg.success("Search leaderboard complete", "managePointsSystem");
             var newBody = $(content).find("#table-leaderboard");
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();
