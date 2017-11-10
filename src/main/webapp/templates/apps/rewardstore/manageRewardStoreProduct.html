@@ -6,34 +6,60 @@
         <form action="$page.href" method="POST" class="form-horizontal details-form">
             <div id='product-in-reward-fields'>
                 <p>You an override the default margin and points multiplier for this product:</p>
-                <div class="form-group">
-                    <label class="col-md-3 control-label" for="margin">Your Margin</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.margin' class="form-control required-if numeric" type="text" name="margin" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="margin">Your Margin</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.margin' class="form-control required-if numeric" type="text" name="margin" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
+                            </div>
+                        </div>
                     </div>
-                    <label class="col-md-3 control-label" for="margin2">Client Margin</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.margin2' class="form-control required-if numeric" type="text" name="margin2" maxlength="20" placeholder="Client margin as decimal, eg 0.05 for 5%" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label" for="gstRate">GST</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.gstRate' class="form-control required-if numeric" type="text" name="gstRate" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
-                    </div>
-                    <label class="col-md-3 control-label" for="freightCost">Freight Cost</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.freightCost' class="form-control required-if numeric" type="text" name="freightCost" maxlength="20" placeholder="Freight Cost" />
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="margin2">Client Margin</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.margin2' class="form-control required-if numeric" type="text" name="margin2" maxlength="20" placeholder="Client margin as decimal, eg 0.05 for 5%" />
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-3 control-label" for="multiplier">Points multiplier</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.multiplier' class="form-control required-if numeric" type="text" name="multiplier" maxlength="20" placeholder="Multiplies cost to get points value" />
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="gstRate">GST</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.gstRate' class="form-control required-if numeric" type="text" name="gstRate" maxlength="250" placeholder="Margin as decimal, eg 0.05 for 5%" />
+                            </div>
+                        </div>
                     </div>
-                    <label class="col-md-3 control-label" for="pointsOverride">Final points</label>
-                    <div class="col-md-3">
-                        <input value='$!page.productInReward.pointsOverride' class="form-control required-if numeric" type="text" name="pointsOverride" maxlength="20" placeholder="Final points value, optional" />
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="freightCost">Freight Cost</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.freightCost' class="form-control required-if numeric" type="text" name="freightCost" maxlength="20" placeholder="Freight Cost" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="multiplier">Points multiplier</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.multiplier' class="form-control required-if numeric" type="text" name="multiplier" maxlength="20" placeholder="Multiplies cost to get points value" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-md-6 control-label" for="pointsOverride">Final points</label>
+                            <div class="col-md-6">
+                                <input value='$!page.productInReward.pointsOverride' class="form-control required-if numeric" type="text" name="pointsOverride" maxlength="20" placeholder="Final points value, optional" />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="">
