@@ -1,5 +1,7 @@
 function initHtmlEditor(form) {
-    initHtmlEditors(form.find('.htmleditor'), getStandardEditorHeight() + 'px', null, null, 'autogrow');
+    initHtmlEditors(form.find('.htmleditor'), getStandardEditorHeight() + 'px', null, null, 'autogrow', function (editor) {
+        editor.config.pagePath = window.location.pathname;
+    });
 }
 
 function initDateRange() {
