@@ -99,6 +99,7 @@
 
                             #foreach($entry in $list)
                             #if( !$entry.requestData )
+                            #if( $entry.threadState != "WAITING" )
                             <tr class="state-$entry.key.state">
                                 <td>
                                     $entry.threadName
@@ -118,6 +119,7 @@
                                     </div>
                                 </td>
                             </tr>
+                            #end
                             #end
                             #end
                         </tbody>
