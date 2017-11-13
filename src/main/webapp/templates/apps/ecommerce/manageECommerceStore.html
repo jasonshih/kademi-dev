@@ -27,10 +27,16 @@
 
                 <div id="products" class="tab-pane active">
                     <div class="clearfix form-horizontal">
-                        <a href="$page.href?goto" class="btn btn-info pull-right" target="_blank">
-                            <span class="glyphicon glyphicon-eye-open"></span>
-                            View
-                        </a>
+                        <div class="pull-right">
+                            <a href="$page.href?addProducts" class="btn btn-success">
+                                <i class="fa fa-plus-circle"></i> Add
+                            </a>
+                            
+                            <a href="$page.href?goto" class="btn btn-info" target="_blank">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                View
+                            </a>
+                        </div>
 
                         <div class="row">
                             <div class="col-sm-3">
@@ -62,7 +68,7 @@
                                         <select name="searchOrg" id="search-library" class="form-control input-sm">
                                             <option value="">My library</option>
                                             #foreach($org in $page.parentOrgsWithProducts)
-                                                <option value="$org.id">$org.title</option>
+                                            <option value="$org.id">$org.title</option>
                                             #end
                                         </select>
                                     </div>
@@ -98,27 +104,27 @@
                             <tbody id="products-list">
                                 #set($products = $page.searchProducts($request.params.query, $request.params.showAll, $request.params.orgId))
                                 #if( $products.isEmpty() )
-                                    <tr>
-                                        <td colspan="6">No products were found matching the critieria</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="6">No products were found matching the critieria</td>
+                                </tr>
                                 #else
-                                    #foreach($p in $products )
-                                        <tr class='in-store-$p.inStore' id='product-$p.productId'>
-                                            <td><a href='/products/$p.productId'>$p.name</a></td>
-                                            <td>$formatter.htmlEncode($p.title)</td>
-                                            <td>$!p.margin</td>
-                                            <td>$!p.baseCost</td>
-                                            <td></td>
-                                            <td class="text-center">
-                                                <input $formatter.ifTrue( $p.inStore, "checked", "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
-                                            </td>
-                                            <td>
-                                                <a href="$p.productId" class="product-instore-details">
-                                                    <span class="glyphicon glyphicon-cog"></span>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    #end
+                                #foreach($p in $products )
+                                <tr class='in-store-$p.inStore' id='product-$p.productId'>
+                                    <td><a href='/products/$p.productId'>$p.name</a></td>
+                                    <td>$formatter.htmlEncode($p.title)</td>
+                                    <td>$!p.margin</td>
+                                    <td>$!p.baseCost</td>
+                                    <td></td>
+                                    <td class="text-center">
+                                        <input $formatter.ifTrue( $p.inStore, "checked", "" ) data-pid="$p.productId" class="product-toggle" type="checkbox" value="true" />
+                                    </td>
+                                    <td>
+                                        <a href="$p.productId" class="product-instore-details">
+                                            <span class="glyphicon glyphicon-cog"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                                #end
                                 #end
                             </tbody>
                         </table>
