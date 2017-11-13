@@ -215,7 +215,8 @@
             form.find('.textcolor').val(dataAttributes['data-textcolor']).colorpicker('setValue', dataAttributes['data-textcolor'])
             form.find('.paddingpanel').val(dataAttributes['data-paddingpanel'])
             form.find('.customIconColor').prop('checked', dataAttributes['data-custom-icon-color'] === 'true');
-            form.find('.iconColor').val(dataAttributes['data-icon-color']).colorpicker('setValue', dataAttributes['data-icon-color']).prop('disabled', dataAttributes['data-custom-icon-color'] !== 'true');
+            form.find('.iconColor').val(dataAttributes['data-icon-color']).colorpicker('setValue', dataAttributes['data-icon-color']);
+            form.find('.iconColor').prop('disabled', dataAttributes['data-custom-icon-color'] !== 'true');
             var showIcon = true;
             if (dataAttributes['data-show-icon'] && dataAttributes['data-show-icon'] != 'true') {
                 showIcon = false;
