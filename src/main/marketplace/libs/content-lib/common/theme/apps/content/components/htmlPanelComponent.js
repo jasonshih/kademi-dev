@@ -52,7 +52,7 @@
             flog('init "htmlPanel" component', component);
             
             var self = this;
-            if (component.find('.panel-html-wrapper').length === 0) {
+            if (component.find('.htmlPanel').length === 0) {
                 var componentContent = component.find('.keditor-component-content');
                 var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
                 var htmlContent = decodeURIComponent(dataAttributes['data-html'] || '');
