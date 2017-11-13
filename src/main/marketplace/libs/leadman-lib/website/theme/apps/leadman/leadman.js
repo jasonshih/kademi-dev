@@ -825,6 +825,7 @@ function initNewContactForm() {
 
             Msg.info('Created contact');
             modal.modal("hide");
+            $(document).trigger('leadContactCreated');
         }
     });
 

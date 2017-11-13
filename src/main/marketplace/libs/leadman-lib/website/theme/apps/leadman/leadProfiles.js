@@ -290,6 +290,10 @@ function initSearchLead() {
     $('#search-group').change(function () {
         doLeadSearch();
     });
+
+    $(document).on('leadContactCreated', function () {
+        doLeadSearch(true);
+    });
 }
 
 function doLeadSearch(forceSearch) {
