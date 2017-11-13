@@ -1,0 +1,7 @@
+<controllers>
+    <source>/APP-INF/app.js</source>
+
+    <settings enabled="true" path="/theme/apps/facebookPixel/settings.html">
+        <function>_saveSettings</function>
+    </settings>
+</controllers>
