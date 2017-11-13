@@ -112,6 +112,12 @@
         {
             "js": {
                 "group": "main",
+                "path": "/static/milton-upload/1.0.1/jquery.milton-upload.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
                 "path": "/theme/apps/leadman/jquery.kfunnel.js"
             }
         },

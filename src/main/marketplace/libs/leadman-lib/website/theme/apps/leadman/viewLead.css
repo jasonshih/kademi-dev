@@ -103,3 +103,7 @@
     -webkit-box-orient: vertical;
     margin-bottom: 6px;
 }
+
+.text-white{
+    color: #fff;
+}

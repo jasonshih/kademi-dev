@@ -21,10 +21,14 @@
                     <div class="row">
                         <div class="col-md-11">
                         <h3 class="media-heading">
-                            #if($p.fields.firstName.value && $p.fields.surName.value)
+                            #if($p.fields.nickName.value)
                             <a href="$p.fields.userName.value">
-                                $formatter.htmlEncode($p.fields.firstName.value)
-                                $formatter.htmlEncode($p.fields.surName.value)
+                                $formatter.htmlEncode($p.fields.nickName.value)
+                            </a>
+                            #elseif($p.fields.firstName.value)
+                            <a href="$p.fields.userName.value">
+                                $!formatter.htmlEncode($p.fields.firstName.value)
+                                $!formatter.htmlEncode($p.fields.surName.value)
                             </a>
                             #else
                             <a href="$p.fields.userName.value">No Name</a>
@@ -37,8 +41,8 @@
                     </div>
 
                     <p>
-                        <i aria-hidden="true" class="fa fa-map-marker"></i>
                         #if( $p.fields.email.value )
+                        <i aria-hidden="true" class="fa fa-map-marker"></i>
                         $p.fields.email.value
                         #end
 
@@ -61,20 +65,22 @@
                     <small class="pull-right">Last contact: <abbr class="timeago" title="$formatter.formatDateISO8601($cd, $page.organisation.timezone)">$formatter.formatDateISO8601($cd, $page.organisation.timezone)</abbr></small>
                     #end
                     <div class="text-muted leadContactMethods">
-                        <a href="mailto:$lead.profile.email" class="text-muted">
+                        #if( $p.fields.email.value )
+                        <a href="mailto:$p.fields.email.value" class="text-muted">
                             <em aria-hidden="true" class="fa fa-envelope"></em>
                         </a>
+                        #end
                         #if( $p.fields.phone.value )
                         <a href="tel:$p.fields.phone.value" class="text-muted">
                             <em aria-hidden="true" class="fa fa-mobile"></em>
                         </a>
                         #end
-                        <a href="javascript:void(0)" class="text-muted">
-                            <i aria-hidden="true" class="fa fa-twitter"></i>
-                        </a>
-                        <a href="javascript:void(0)" class="text-muted">
-                            <i aria-hidden="true" class="fa fa-facebook"></i>
-                        </a>
+                        <!--<a href="javascript:void(0)" class="text-muted">-->
+                            <!--<i aria-hidden="true" class="fa fa-twitter"></i>-->
+                        <!--</a>-->
+                        <!--<a href="javascript:void(0)" class="text-muted">-->
+                            <!--<i aria-hidden="true" class="fa fa-facebook"></i>-->
+                        <!--</a>-->
                     </div>
                 </div>
             </div>
