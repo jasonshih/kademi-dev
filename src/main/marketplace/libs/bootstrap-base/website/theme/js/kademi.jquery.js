@@ -1,85 +1,23 @@
 (function ($) {
-    $.cachedScript = function (url, callback, options) {
-        options = $.extend(options || {}, {
-            dataType: 'script',
-            cache: true,
+    $.getScriptOnce = function (url, onSuccess, onError) {
+        return $.ajax({
             url: url,
+            cache: true,
+            dataType: 'script',
             success: function (script, textStatus, jqXHR) {
-                if (callback) {
-                    callback.call(this, url, script, textStatus, jqXHR);
+                if (typeof onSuccess === 'function') {
+                    onSuccess.call(this, url, script, textStatus, jqXHR);
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 flog('Error when loading script: ' + url, jqXHR, textStatus, errorThrown);
-            }
-        });
-        
-        // Use $.ajax() since it is more flexible than $.getScript
-        // Return the jqXHR object so we can chain callbacks
-        return $.ajax(options);
-    };
-    
-    $.getScriptOnce = function (url, callback) {
-        var scriptMeta = $.getScriptOnce.loaded[url];
-        if (scriptMeta === null || scriptMeta === undefined) {
-            scriptMeta = {
-                url: url,
-                loaded: false,
-                callbacks: []
-            };
-            $.getScriptOnce.loaded[url] = scriptMeta;
-            if (callback === undefined) {
-                return $.cachedScript(url);
-            } else {
-                return $.ajax({
-                    dataType: 'script',
-                    cache: true,
-                    url: url,
-                    success: function (script, textStatus, jqXHR) {
-                        scriptMeta.loaded = true;
-                        
-                        callback.call(this, url, script, textStatus, jqXHR);
-                        
-                        for (var i = 0; i < scriptMeta.callbacks.length; i++) {
-                            scriptMeta.callbacks[i].call(this, url, script, textStatus, jqXHR);
-                        }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        flog('Error when loading script: ' + url, jqXHR, textStatus, errorThrown);
-                    }
-                });
-            }
-        } else {
-            if (callback === undefined) {
-                // do nothing
-            } else {
-                if (!scriptMeta.loaded) {
-                    scriptMeta.callbacks.push(callback);
-                } else {
-                    callback.call(this, url)
+                
+                if (typeof onError === 'function') {
+                    onError.call(this, url, jqXHR, textStatus, errorThrown);
                 }
             }
-            return false;
-        }
+        });
     };
-    
-    $.getScriptOnce.loaded = {};
-    
-    $(function () {
-        var scripts = document.getElementsByTagName('script');
-        for (var i = 0; i < scripts.length; i++) {
-            var scr = scripts[i];
-            var url = $(scr).attr('src') || '';
-            
-            if (url.trim() !== '') {
-                $.getScriptOnce.loaded[url] = {
-                    url: url,
-                    loaded: true,
-                    callbacks: []
-                };
-            }
-        }
-    });
     
 }(jQuery));
 
