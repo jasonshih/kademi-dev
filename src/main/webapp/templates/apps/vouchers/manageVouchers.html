@@ -292,7 +292,7 @@
             function hardDelete() {
                 var hardDeleteVouchersModal = $("#hardDeleteVouchers");
 
-                $(".hard-delete-voucher-type").on("click", function () {
+                $("body").on("click", ".hard-delete-voucher-type", function () {
                     var vt = $(this).data("vt");
                     hardDeleteVouchersModal.find("#vt").val(vt);
                     hardDeleteVouchersModal.modal("show");
