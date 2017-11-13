@@ -18,6 +18,7 @@ function initManagePointsSystem() {
     initDebitsPjax();
     initExpireFields();
     initReconcile();
+    initTabs();
 
     $("select.pointsType").click(function () {
         showHidePointsOrgType();
@@ -42,9 +43,27 @@ function initManagePointsSystem() {
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
+        if (window.location.hash.indexOf('#points') != -1){
+            doHistorySearch();
+        } else if (window.location.hash.indexOf('#leaderboard') != -1){
+            doLeaderboardSearch();
+        }
+    });
+}
 
-        doHistorySearch();
-        doLeaderboardSearch();
+function initTabs() {
+    $('.TabNav a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var href = $(this).attr('href');
+        var clicked = $(this).hasClass('clicked');
+        if (!clicked){
+            $(this).addClass('clicked');
+            if (href == "#points"){
+                doHistorySearch();
+            }
+            if (href == "#leaderboard"){
+                doLeaderboardSearch();
+            }
+        }
     });
 }
 
@@ -341,7 +360,7 @@ function doRemovePoints(checkBoxes) {
 
 function doHistorySearch() {
     flog('doHistorySearch');
-    Msg.info("Doing search debits...", 'managePointsSystem', 2000);
+    Msg.info("Doing search...", 'managePointsSystem', 1000);
 
     var dataQuery = $('#data-query').val();
 
@@ -361,7 +380,9 @@ function doHistorySearch() {
         dataType: 'html',
         success: function (content) {
             flog('response', content);
-            Msg.success("Search debits complete", 'managePointsSystem');
+            setTimeout(function () {
+                Msg.success("Search completed", 'managePointsSystem', 1000);
+            },1000)
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
             history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
@@ -465,7 +486,7 @@ function initLeaderboardSearch() {
 
 function doLeaderboardSearch() {
     flog('doLeaderboardSearch');
-    Msg.info("Doing search leaderboard...", "managePointsSystem");
+    Msg.info("Doing search...", "managePointsSystem", 1000);
 
     var leaderboardLimit = parseInt($('#leaderboard-limit').val(), 10);
     if (Number.isNaN(leaderboardLimit)) {
@@ -489,7 +510,9 @@ function doLeaderboardSearch() {
         data: data,
         success: function (content) {
             flog('response', content);
-            Msg.success("Search leaderboard complete", "managePointsSystem");
+            setTimeout(function () {
+                Msg.success("Search completed", "managePointsSystem", 1000);
+            }, 1000);
             var newBody = $(content).find("#table-leaderboard");
             target.replaceWith(newBody);
             $("abbr.timeago").timeago();
