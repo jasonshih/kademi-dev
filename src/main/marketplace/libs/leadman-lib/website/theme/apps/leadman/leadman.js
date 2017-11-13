@@ -1361,12 +1361,12 @@ function updateField(href, fieldName, fieldValue, form) {
         data: data,
         dataType: 'json',
         success: function (resp) {
-            var fieldLabel = fieldName;
-            var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
-            if (label.length) {
-                fieldLabel = label.text().replace(':', '');
-            }
-            Msg.info("Saved " + fieldLabel);
+            // var fieldLabel = fieldName;
+            // var label = form.find('[name=' + fieldName + ']').parents('.form-group').find('label');
+            // if (label.length) {
+            //     fieldLabel = label.text().replace(':', '');
+            // }
+            Msg.info("Saved");
             reloadTasks();
         },
         error: function (resp) {
