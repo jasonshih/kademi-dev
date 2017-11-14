@@ -1,4 +1,4 @@
-#set($contactPage = $folder.find("/contactus"))
+#set($contactPage = $rootFolder.find("/contactus"))
 <div class="contactFormComponent">
     <div class="row">
         <div class="col-sm-12">
@@ -54,19 +54,20 @@
                 </div>
                 #end
 
-
-
-                #if( $contactPage.hasOptins() )
+                #if( $contactPage.hasOptins() && $showOptins == "true" && $formatter.isNotNull($optins))
+                #set ($optinsArr = $optins.split(","))
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-12">
+                        #foreach($optin in $contactPage.optins)
+                        #if ($optinsArr.contains($optin.optinGroup.name))
                         <div class="checkbox">
-                            #foreach($optin in $contactPage.optins)
                             <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
                                 <input type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
                                 $optin.message
                             </label>
-                            #end
                         </div>
+                        #end
+                        #end
                     </div>
                 </div>
                 #end
