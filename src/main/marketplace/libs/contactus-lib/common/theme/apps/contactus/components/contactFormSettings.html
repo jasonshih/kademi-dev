@@ -23,8 +23,8 @@
         <div class="col-sm-12">
             #foreach($optin in $contactPage.optins)
             <div class="checkbox">
-                <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
-                    <input class="optins" type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                <label class="col-sm-9" for="settings_optins_${optin.optinGroup.name}">
+                    <input class="optins" type="checkbox" name="optins" value="$optin.optinGroup.name" id="settings_optins_${optin.optinGroup.name}" />
                     $optin.optinGroup.title
                 </label>
             </div>
