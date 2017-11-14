@@ -98,6 +98,9 @@ function Kademi_GetValue(dataModel) {
             }
             var resp = doPropFind(['milton:currentPage']);
             var d = resp[0];
+            if( d.currentPage == null ) {
+                d.currentPage = "";
+            }
             flog('cmi.location', d.currentPage);
             moduleCache['currentPage'] = d.currentPage;
             return d.currentPage;
