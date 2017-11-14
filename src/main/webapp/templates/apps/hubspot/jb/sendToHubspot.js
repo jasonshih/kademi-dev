@@ -29,9 +29,12 @@ JBNodes['sendToHubspot'] = {
         }
         href = href + node.nodeId + '?mode=settings';
 
+        flog(node.hapiKey);
+        flog(form.find("#hapiKey"));
+        
         form.load(href + ' #frmDetails > *', function () {
             form.attr('action', href);
-
+            $("#hapiKey").val(node.hapiKey || "");
             JBApp.showSettingPanel(node);
         });
     }
