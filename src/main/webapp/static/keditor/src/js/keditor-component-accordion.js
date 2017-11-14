@@ -44,10 +44,10 @@
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
             componentContent.find('.panel-footer, .btnAddAccordionItem').removeClass('hide');
-            componentContent.find('.panel-title a div').prop('contenteditable', true);
+            componentContent.find('.panel-title a .accHeadingText').prop('contenteditable', true);
             componentContent.find('.panel-collapse .panel-body').prop('contenteditable', true);
 
-            componentContent.find('.panel-title a div, .panel-collapse .panel-body').on('input', function (e) {
+            componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').on('input', function (e) {
                 if (typeof options.onComponentChanged === 'function') {
                     options.onComponentChanged.call(contentArea, e, component);
                 }
@@ -57,11 +57,11 @@
                 }
 
                 if (typeof options.onContentChanged === 'function') {
-                    options.onContentChanged.call(contentArea, e);
+                    // options.onContentChanged.call(contentArea, e);
                 }
             });
 
-            var editor = componentContent.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+            var editor = componentContent.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
             editor.on('instanceReady', function () {
                 flog('CKEditor is ready', component);
 
@@ -122,7 +122,10 @@
                 });
             }
             componentContent.find('.panel-footer, .btnAddAccordionItem').addClass('hide');
-
+            componentContent.find('[contenteditable]').removeAttr('contenteditable');
+            componentContent.find('.accHeadingText').each(function () {
+               $(this).css('outline', 'none').text($(this).text());
+            });
             return componentContent.html();
         },
 
@@ -169,18 +172,18 @@
                             
                             form.find('.btn-collapsed-icon').on('change', function (e) {
                                 var component = keditor.getSettingComponent();
-                                var dynamicElement = component.find('[data-dynamic-href]');
-                                
                                 component.attr('data-collapsed-icon', e.icon);
-                                keditor.initDynamicContent(dynamicElement);
+                                component.find('.panelIconCollapsed').each(function () {
+                                    this.className = "panelIconCollapsed fa "+ e.icon;
+                                })
                             });
                             
                             form.find('.btn-expanded-icon').on('change', function (e) {
                                 var component = keditor.getSettingComponent();
-                                var dynamicElement = component.find('[data-dynamic-href]');
-                                
                                 component.attr('data-expanded-icon', e.icon);
-                                keditor.initDynamicContent(dynamicElement);
+                                component.find('.panelIconExpanded').each(function () {
+                                    this.className = "panelIconExpanded fa "+ e.icon;
+                                })
                             });
                         });
                     });
