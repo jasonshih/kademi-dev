@@ -1,5 +1,37 @@
 <form class="form-horizontal">
     <div class="form-group">
+        <label class="col-sm-12">Show Optins</label>
+        <div class="col-sm-12">
+            <div class="radio">
+                <label>
+                    <input type="radio" name="showOptins" value="true" checked>
+                    Show
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="showOptins" value="false">
+                    Dont show
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        #set ($contactPage = $rootFolder.find("/contactus"))
+
+        <label class="col-sm-12">Optins group</label>
+        <div class="col-sm-12">
+            #foreach($optin in $contactPage.optins)
+            <div class="checkbox">
+                <label class="col-sm-9" for="optins_${optin.optinGroup.name}">
+                    <input class="optins" type="checkbox" name="optins" value="$optin.optinGroup.name" id="optins_${optin.optinGroup.name}" />
+                    $optin.optinGroup.title
+                </label>
+            </div>
+            #end
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-12"><strong>Available fields</strong></label>
         <div class="col-sm-12">
             <div class="checkbox">

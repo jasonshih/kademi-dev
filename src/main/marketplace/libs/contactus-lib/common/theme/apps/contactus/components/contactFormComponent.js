@@ -112,6 +112,27 @@
                         component.attr('data-path', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
+
+                    form.find('[name=showOptins]').on('click', function(e){
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-show-optins', this.value === 'true');
+                        keditor.initDynamicContent(dynamicElement);
+                    });
+
+                    form.find(".optins").on('click', function () {
+                        var optins = form.find('.optins');
+                        var arr = [];
+                        optins.each(function () {
+                            if (this.checked){
+                                arr.push(this.value);
+                            }
+                        });
+                        var component = keditor.getSettingComponent();
+                        var dynamicElement = component.find('[data-dynamic-href]');
+                        component.attr('data-optins', arr.join(","));
+                        keditor.initDynamicContent(dynamicElement);
+                    })
                 }
             });
         },
@@ -132,6 +153,12 @@
             form.find('#txtSubmitClass').val(dataAttributes['data-submit-class']);
             form.find('#thankYou').val(dataAttributes['data-thank-you']);
             form.find('#path').val(dataAttributes['data-path']);
+            form.find('[name=showOptins][value='+dataAttributes['data-show-optins']+']').prop('checked', true);
+            form.find('.optins').each(function () {
+                if (dataAttributes['data-optins'].indexOf(this.value) != -1){
+                    this.checked = true;
+                }
+            })
         }
     };
 
