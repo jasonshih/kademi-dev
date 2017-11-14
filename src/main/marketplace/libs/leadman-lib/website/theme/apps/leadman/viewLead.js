@@ -357,7 +357,7 @@
                             flog('Resp:', resp);
 
                             if (resp && resp.status) {
-                                Msg.success('Created date is saved!');
+                                Msg.info('Saved');
                             } else {
                                 if (resp.messages && resp.messages.length > 0) {
                                     Msg.error(resp.messages[0]);
