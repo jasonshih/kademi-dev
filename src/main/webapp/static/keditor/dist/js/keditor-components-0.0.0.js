@@ -42,11 +42,7 @@
                 var panelCollapseId = keditor.generateId('collapse' + index);
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
-                var title = p.find('a[data-toggle]').html();
                 p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
-                if (title.indexOf('<div>') === -1) {
-                    p.find('a[data-toggle]').html('<div>' + title + '</div>');
-                }
             });
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
@@ -99,7 +95,7 @@
                 clone.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 clone.find('a[data-toggle]').attr('href', '#' + panelCollapseId);
                 componentContent.find('.accordionWrap .panel-group').append(clone);
-                var editor = clone.find('.panel-title a div, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
+                var editor = clone.find('.panel-title a .accHeadingText, .panel-collapse .panel-body').ckeditor(options.ckeditorOptions).editor;
                 editor.on('instanceReady', function () {
                     flog('CKEditor is ready', component);
 
@@ -112,10 +108,6 @@
 
         getContent: function (component, keditor) {
             var componentContent = component.children('.keditor-component-content');
-            componentContent.find('.panel-title a div').each(function () {
-                var h = $(this).html();
-                $(this).parent('a').html(h);
-            });
             componentContent.find('.panel-collapse .panel-body').each(function () {
                 var h = $(this).html();
                 $(this).replaceWith('<div class="panel-body">' + h + '</div>');
