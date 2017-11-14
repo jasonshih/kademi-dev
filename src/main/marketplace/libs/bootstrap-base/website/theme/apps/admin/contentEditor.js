@@ -97,35 +97,33 @@ function initKEditor(options) {
         themeCssFiles.push('/static/bootstrap/ckeditor/bootstrap-ckeditor.css');
     }
     
-    $.getScriptOnce('/static/jquery.contentEditor/1.0.0/jquery.contentEditor-1.0.0.js', function () {
-        var timer;
-        win.on('resize', function () {
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                var paddingTop = $(document.body).css('padding-top');
-                if (paddingTop) {
-                    paddingTop = paddingTop.replace('px', '');
-                    $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
-                }
-            }, 100);
-        });
-        
-        var basePath = window.location.pathname.replace('contenteditor', '');
-        $('#content-area').contentEditor({
-            snippetsUrl: options.snippetsUrl,
-            snippetsHandlersUrl: options.snippetsHandlersUrl,
-            allGroups: options.allGroups,
-            basePath: basePath,
-            pagePath: basePath,
-            onReady: function () {
-                win.trigger('resize');
-                setTimeout(function () {
-                    hideLoadingIcon();
-                    $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
-                }, 150);
-            },
-            isCustomApp: options.isCustomApp
-        });
+    var timer;
+    win.on('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            var paddingTop = $(document.body).css('padding-top');
+            if (paddingTop) {
+                paddingTop = paddingTop.replace('px', '');
+                $('#content-area .keditor-content-area').css('min-height', win.height() - paddingTop);
+            }
+        }, 100);
+    });
+    
+    var basePath = window.location.pathname.replace('contenteditor', '');
+    $('#content-area').contentEditor({
+        snippetsUrl: options.snippetsUrl,
+        snippetsHandlersUrl: options.snippetsHandlersUrl,
+        allGroups: options.allGroups,
+        basePath: basePath,
+        pagePath: basePath,
+        onReady: function () {
+            win.trigger('resize');
+            setTimeout(function () {
+                hideLoadingIcon();
+                $('#editor-loading').addClass('loading').find('.loading-text').html('Saving...');
+            }, 150);
+        },
+        isCustomApp: options.isCustomApp
     });
     
     // Stop prevent reloading page or redirecting to other pages
