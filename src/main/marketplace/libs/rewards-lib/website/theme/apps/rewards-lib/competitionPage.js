@@ -65,13 +65,12 @@
             var currentUploadedUrl = viewUploaded.attr('data-url');
             var existingImg = form.find('.promotion-photo-inner[href="' + currentUploadedUrl + '"]');
             if (existingImg.length === 0) {
-                viewUploaded.parent().after(
-                    '<div class="' + viewUploaded.attr('data-class') + ' promotion-photo promotion-photo-user">' +
-                    '    <a href="' + currentUploadedUrl + '" class="promotion-photo-inner" style="background-image: url(\"' + currentUploadedUrl + '/alt-640-640.png\")">' +
-                    '        <span class="promotion-photo-label">My photo</span>' +
-                    '    </a>' +
-                    '</div>'
-                )
+                var bg = currentUploadedUrl + '/alt-640-640.png';
+                var a = $('<a href="' + currentUploadedUrl + '" class="promotion-photo-inner" )><span class="promotion-photo-label">My photo</span></a>');
+                a.css('background-image', "url('"+bg+"')");
+                var div = $('<div class="' + viewUploaded.attr('data-class') + ' promotion-photo promotion-photo-user"></div>');
+                div.append(a);
+                viewUploaded.parent().after(div);
             }
             viewUploaded.css('background-image', 'url("/static/images/photo_holder_squared.png")');
             viewUploaded.attr('data-url', '');
