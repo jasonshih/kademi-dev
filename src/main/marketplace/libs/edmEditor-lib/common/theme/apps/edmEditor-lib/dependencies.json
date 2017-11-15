@@ -1,0 +1,16 @@
+{
+    "appDependencies": [
+        {
+            "appId": "keditor-lib",
+            "branch": "1.0.0"
+        }
+    ],
+    "dependencies": [
+        {
+            "js": {
+                "group": "admin",
+                "path": "/theme/apps/edmEditor-lib/jquery.edmEditor.js"
+            }
+        }
+    ]
+}
