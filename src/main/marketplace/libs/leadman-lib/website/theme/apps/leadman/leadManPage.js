@@ -203,7 +203,7 @@
                                         Msg.success(resp.messages);
                                         setTimeout(function () {
                                             doSearch();
-                                        },800);
+                                        }, 800);
                                     } else {
                                         Msg.warning(resp.messages);
                                     }
@@ -226,7 +226,7 @@
                     if (fieldName !== null && typeof fieldName !== 'undefined') {
                         fieldName = field.attr('id').replace('DTE_Field_', '');
                         var row = dataTable.row(td[0]);
-                        var cellData = dataTable.cell( td[0] ).data();
+                        var cellData = dataTable.cell(td[0]).data();
                         var leadId = row.data().leadId;
                         switch (fieldName) {
                             case "stageName":
@@ -562,7 +562,7 @@
         searchOptions.query = '';
         setTimeout(function () {
             doSearch();
-        },800)
+        }, 800)
     };
 
 })(this);
