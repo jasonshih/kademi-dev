@@ -1,3 +1,10 @@
+/**!
+ * KEditor - Kademi content editor
+ * @copyright: Kademi (http://kademi.co)
+ * @author: Kademi (http://kademi.co)
+ * @version: 0.0.0
+ * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
+ */
 /**
  * KEditor Button Component
  * @copyright: Kademi (http://kademi.co)
