@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="utf-8">
+        <link rel="template" href="reallyPlain" />
+
+        <link rel="stylesheet" href="/static/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" href="/static/bootstrap-msg/0.4.0/dist/css/bootstrap-msg-0.4.0.min.css" type="text/css" />
+        <link href="/theme/apps/admin/edmEditor.css" rel="stylesheet" type="text/css" />
+
+        <script type="text/javascript" src="/static/jquery/1.11.0/jquery-1.11.0.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap/3.3.7/js/bootstrap.min.js">//</script>
+        <script type="text/javascript" src="/static/js/common.js">//</script>
+        <script type="text/javascript" src="/static/jquery.cookie/1.4.0/jquery.cookie.min-1.4.0.js">//</script>
+        <script type="text/javascript" src="/theme/toolbars.js">//</script>
+        <script type="text/javascript" src="/static/js/keymap.js">//</script>
+        <script type="text/javascript" src="/static/bootstrap-msg/0.4.0/dist/js/bootstrap-msg-0.4.0.min.js">//</script>
+        <script type="text/javascript" src="/static/js/init-theme.js">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/edmEditor.js" bottom="true">//</script>
+    </head>
+    <body class="edm-editor-page">
+        <!-- Injected JS sources -->
+        #foreach($groupEntry in $templater.jsSources.entrySet())
+            #if ($groupEntry.key == "admin")
+                #foreach($jsFile in $groupEntry.value)
+                    <script type="text/javascript" src="$jsFile">//</script>
+                #end
+            #end
+        #end
+        <!-- End injected CSS sources -->
+        
+        #set($fname = $params.fileName)
+        #set($file = $folder.child($fname))
+        #set($useHash = $params.useHash)
+
+        <nav class="edm-editor-nav">
+            <span class="edm-editor-file">$params.fileName</span>
+            <ul class="edm-editor-navbar">
+                #if (!$params.iframe)
+                    <li><a href="./" title="Back to parent folder"><i class="fa fa-reply"></i></a></li>
+                #end
+                <li><a href="#" class="btn-save-file" title="Save"><i class="fa fa-save"></i></a></li>
+                #if (!$params.iframe)
+                    <li><a href="texteditor?fileName=$params.fileName" title="Edit with text editor"><i class="fa fa-edit"></i></a></li>
+                #end
+            </ul>
+        </nav>
+
+        #if($file.repository.repoType == 'FR')
+            #set ($pagePath = "/repositories/" + $file.repository.name + "/" + $file.repository.liveBranch + "/")
+        #end
+
+        <textarea id="edm-editor" autocomplete="off">$!file.body</textarea>
+
+        <div id="editor-loading">
+            <span>
+                <span class="loading-icon"><i class="fa fa-spinner fa-spin fa-4x fa-fw"></i></span>
+                <span class="loading-text">Initializing EDM Editor...</span>
+            </span>
+        </div>
+
+        <script type="text/javascript">
+            var allGroups = {
+                #foreach ($group in $page.find("/").allGroups)
+                '$group.name': #if ($group.title) '$group.title' #else '$group.name' #end,
+                #end
+            };
+            var useHash = "$!useHash";
+            $(function () {
+                initEdmEditorPage({
+                    fileName: '$fname',
+                    snippetsUrl: '_components?fileName=$fname',
+                    snippetsHandlersUrl: '${page.parent.href}_components?handlers&fileName=${params.fileName}',
+                    allGroups: allGroups,
+                    pagePath: '$!pagePath'
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,219 @@
+﻿body.content-editor-page {
+    padding-top: 50px !important;
+}
+
+/* ================================================================== */
+/* Legacy code for navbar
+/* ================================================================== */
+/* Navbar style */
+.content-editor-page > .navbar-fixed-top {
+    background: #222 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+}
+
+.content-editor-page > .navbar-fixed-top .navbar-header,
+.content-editor-page > .navbar-fixed-top .navbar-brand {
+    height: 50px !important;
+    line-height: 50px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    margin: 0 !important;
+}
+
+.content-editor-page > .navbar-fixed-top a {
+    height: 50px !important;
+    line-height: 50px !important;
+    color: #999 !important;
+    background-color: transparent !important;
+    padding: 0 15px !important;
+    margin: 0 !important;
+    border: 0 !important;
+}
+
+.content-editor-page > .navbar-fixed-top .navbar-nav {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.content-editor-page > .navbar-fixed-top .navbar-nav > li {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+.content-editor-page > .navbar-fixed-top .navbar-nav > li > a:hover {
+    color: #fff !important;
+    background-color: #080808 !important;
+    border: 0 !important;
+}
+
+.content-editor-page > .navbar-fixed-top .fa {
+    font-size: 20px !important;
+    line-height: 50px !important;
+}
+
+/* ================================================================== */
+/* Keditor
+/* ================================================================== */
+.content-editor-page #keditor-sidebar {
+    top: 50px;
+}
+
+/* ================================================================== */
+/* Closed nav */
+/* ================================================================== */
+.content-editor-nav.closed {
+    top: -50px;
+}
+
+.content-editor-nav.closed .content-editor-toggle {
+    top: 50px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.content-editor-nav.closed .content-editor-toggle .fa-angle-double-up {
+    display: none;
+}
+
+.content-editor-nav.closed .content-editor-toggle .fa-angle-double-down {
+    display: inline-block;
+}
+
+.content-editor-page .content-editor-nav.closed ~ #keditor-sidebar {
+    top: 0;
+}
+
+/* ================================================================== */
+/* Content editor nav */
+/* ================================================================== */
+.content-editor-nav {
+    position: fixed;
+    background: #222;
+    z-index: 1032;
+    top: 0;
+    left: 0;
+    right: 0;
+    font-size: 18px;
+    color: #fff;
+    font-family: Arial, Helvetica, san-serif;
+    line-height: 26px;
+    height: 50px;
+    transition: all .3s;
+}
+
+.content-editor-nav a {
+    color: #ccc;
+}
+
+.content-editor-nav a:hover,
+.content-editor-nav a:focus,
+.content-editor-nav a:active {
+    background: #000;
+    color: #fff;
+}
+
+.content-editor-nav .content-editor-toggle {
+    position: absolute;
+    top: 0;
+    height: 50px;
+    text-align: center;
+    background: #333;
+    line-height: 50px;
+    width: 20px;
+    transition: all .3s;
+}
+
+.content-editor-nav .content-editor-toggle .fa-angle-double-down {
+    display: none;
+}
+
+.content-editor-nav .content-editor-file,
+.content-editor-nav .content-editor-navbar li a {
+    display: block;
+    padding: 12px 20px;
+}
+
+.content-editor-nav .content-editor-file {
+    float: left;
+    padding-left: 40px;
+}
+
+.content-editor-nav .content-editor-navbar {
+    float: right;
+    margin: 0;
+    padding: 0;
+}
+
+.content-editor-nav .content-editor-navbar li {
+    float: left;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.content-editor-nav .content-editor-navbar li a .fa {
+    font-size: 20px !important;
+    line-height: 1 !important;
+}
+
+/* ================================================================== */
+/* Properties modal */
+/* ================================================================== */
+#modal-page-properties .input-group .form-control {
+    width: 50%;
+}
+
+#modal-page-properties .input-group.meta,
+#modal-page-properties .input-group.param {
+    margin-bottom: 5px;
+}
+
+/* ================================================================== */
+/* Loading */
+/* ================================================================== */
+#editor-loading {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 999999;
+    font-size: 18px;
+    color: #333;
+    font-family: Arial, Helvetica, san-serif !important;
+    line-height: 26px !important;
+}
+
+#editor-loading > span {
+    position: absolute;
+    top: 35%;
+    width: 100%;
+    left: 0;
+    text-align: center;
+}
+
+#editor-loading .loading-text {
+    display: block;
+    padding-top: 20px;
+}
+
+#editor-loading .loading-icon {
+    display: block;
+    height: 62px;
+    padding: 0;
+}
+
+#editor-loading i.fa {
+    font-size: 80px;
+}
+
+#editor-loading.loading {
+    background: rgba(255, 255, 255, .7);
+}
