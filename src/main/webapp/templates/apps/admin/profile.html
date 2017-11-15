@@ -168,7 +168,11 @@
                                             <h4 class="timeline-title">$action.itemTitle</h4>
                                         </div>
                                         <div class="timeline-body">
-                                            <p>$formatter.textFromHtml($!action.actionDesc)</p>
+                                            #if($action.actionDesc)
+                                            <p>$formatter.textFromHtml($action.actionDesc)</p>
+                                            #else
+                                            <p></p>
+                                            #end
                                             #if($action.path)
                                             <p>
                                                 <a href="$action.path" class="btn btn-sm btn-info pull-right">
