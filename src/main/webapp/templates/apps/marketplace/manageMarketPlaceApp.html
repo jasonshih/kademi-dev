@@ -38,8 +38,10 @@
                             <button type="button" data-title="$page.title" data-websitename="$!request.params.websiteName" data-websitebranch="$!request.params.websiteBranch" class="btn btn-lg btn-green btn-install-app pull-right">
                                 <span class="fa fa-check"></span>
                                 Install
-                                #if( $request.params.websiteName )
+                                #if( $request.params.websiteName && $request.params.websiteName != "" )
                                     in $request.params.websiteName
+                                #else
+                                    in account
                                 #end                              
                                 
                                 #if(!$page.price || $page.price == 0)
