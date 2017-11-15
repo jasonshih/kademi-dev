@@ -145,13 +145,13 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <span data-total="0" class="total-field">0.00</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
+                                    <span data-total="0" class="total-field">0.00</span><button style="float: right" onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                             #foreach($lineItem in $page.lineItems)
                             <tr data-item-id="$lineItem.id">
                                 <td>
-                                    <input name="description" placeholder="Item Description" class="form-control" type="text" value="$lineItem.description" />
+                                    <input name="description" placeholder="Item Description" class="form-control" type="text" value="$!lineItem.description" />
                                 </td>
                                 <td>
                                     <input name="account" placeholder="Account Name" class="form-control" type="text" value="$formatter.ifNull($lineItem.account, '')" />
@@ -179,7 +179,8 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span><button onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
+                                    <span data-total="$lineItem.amount" class="total-field">$lineItem.amount</span>
+                                    <button style="float: right" onclick="removeRow(event, this);"><i class="fa fa-trash"></i></button>
                                 </td>
                             </tr>
                             #end
@@ -252,16 +253,10 @@ active
             }
         });
 
-        $("#line-items").on("blur", "input", function () {
-            var row = $(this).parents("tr");
-
-            saveChangedRow(row);
-        });
-
         $("#line-items").on("keyup", "input", function (event) {
-            if (event.keyCode === 13) {
+            // on enter or tab
+            if (event.keyCode === 13 || event.keyCode === 9) {
                 var row = $(this).parents("tr");
-
                 saveChangedRow(row);
             }
         });
