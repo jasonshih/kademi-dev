@@ -80,7 +80,7 @@
                     month: date.getMonth(),
                     year: date.getYear(),
                     hour: date.getHours(),
-                    minute: date.getMinutes()
+                    minute: date.getMinutes()<10? "0"+date.getMinutes():date.getMinutes()
                 };
                 commentDetailString += '<abbr title="' + date.toISOString() + '" class="comment-time auxText small text-muted">' + toDisplayDateNoTime(dt) + '</abbr>';
 
