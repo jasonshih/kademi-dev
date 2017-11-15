@@ -1,0 +1,173 @@
+<div class="fuelux">
+    <div class="row collapse"  id="leadsImporterWizard" style="margin-bottom:30px">
+        <div class="col-lg-12">
+            <div class="wizard" id="liWizard">
+                <div class="steps-container">
+                    <ul class="steps">
+                        <li data-step="1" data-name="upload" class="active">
+                            <span class="badge">1</span>Upload
+                            <span class="chevron"></span>
+                        </li>
+                        <li data-step="2">
+                            <span class="badge">2</span>Select columns
+                            <span class="chevron"></span>
+                        </li>
+                        <li data-step="3" data-name="import">
+                            <span class="badge">3</span>Import
+                            <span class="chevron"></span>
+                        </li>
+                        <li data-step="4" data-name="processing">
+                            <span class="badge">4</span>Processing
+                            <span class="chevron"></span>
+                        </li>
+                        <li data-step="5" data-name="complete">
+                            <span class="badge">5</span>Complete
+                            <span class="chevron"></span>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="actions">
+                    <button type="button" class="btn btn-default btn-prev">
+                        <span class="glyphicon glyphicon-arrow-left"></span>Prev
+                    </button>
+                    <button type="button" class="btn btn-primary btn-next" data-last="Complete">Next
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                    </button>
+                </div>
+                <form method="post" action="$page.href">
+                    <div class="step-content">
+                        <div class="step-pane active sample-pane alert" data-step="1">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1" for="startRow">Funnel</label>
+                                            <div class="controls col-md-10">
+                                                <select name="funnelName" id="leadImporterFunnelName" class="form-control">
+                                                    #foreach( $funnel in $page.find("/leads/").funnels)
+                                                    <option value="$funnel.name">$funnel.name</option>
+                                                    #end
+                                                </select>                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1" for="startRow">Upload CSV File</label>
+                                            <div class="controls col-md-10">
+                                                <div id='btn-upload' class="pull-left"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="step-pane sample-pane alert" data-step="2">
+                            <h4>Select columns</h4>
+
+                            <input type="hidden" name="fileHash" value=""/>
+
+                            <p>Please select which destination field each column should be imported into:</p>
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-1" for="startRow">Start row</label>
+                                            <div class="controls col-md-2">
+                                                <input type="text" name="startRow" id="startRow" class="form-control" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="table-responsive" style="max-height: 300px">
+                                <table class="table table-bordered table-striped" id="importerTable" >
+                                    <thead>
+                                        <tr id="importerHead">
+                                            <th>Please wait...</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="importerBody">
+                                        <tr>
+                                            <td>Loading...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="step-pane sample-pane alert" data-step="3">
+                            <h4>Start importing</h4>
+                            <p>Press the button here to begin importing. This process imports at a rate of about 1000 rows per minute,
+                                so may take some time depending on the size of the file</p>
+                            <p class="beforeImportInfo text-info" style="margin-bottom: 5px"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+                                <span class="sr-only">Loading...</span></p>
+
+                            <div id="result">
+                                <button type="submit" class="btn btn-success">Import now</button>
+
+                                <span id="noValidRow">There are no valid row in the file, please review it</span>
+                                <span id="toManyErrors">There are to many errors in the file, please review it</span>
+
+                                <hr>
+
+                                <i>Any invalid records are displayed below. If you proceed these will not be imported, but you can download a list at the end to correct and reupload</i>
+                                <div class="table-responsive" style="max-height: 300px">
+                                    <table class="table table-bordered table-striped">
+                                        <tbody class="beforeImportInvalidRows">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="step-pane sample-pane alert" data-step="4">
+                            <h4>Import running</h4>
+                            <div class="progress" id="importProgressbar">
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                </div>
+                            </div>
+                            <div class="process-results">
+                                <p>
+                                    <strong>Process Status:</strong>
+                                    <strong id='job-status'></strong>
+                                </p>
+
+                                <button class="btn btn-danger" name="cancel" type="button" id="btn-cancel-import">Cancel Import</button>
+                            </div>
+
+                        </div>
+                        <div class="step-pane sample-pane alert" data-step="5">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>Number created</th>
+                                    <td class="createdProfiles"></td>
+                                </tr>
+                                <tr>
+                                    <th>Number updated:</th>
+                                    <td class="updatedProfiles"></td>
+                                </tr>
+                                <tr>
+                                    <th>Number with errors</th>
+                                    <td class="errorProfiles"></td>
+                                </tr>
+                                <tr>
+                                    <th>Errors file</th>
+                                    <td class="">
+                                        <a href="" class="errorRows btn btn-warning">
+                                            <span class="fa fa-download"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

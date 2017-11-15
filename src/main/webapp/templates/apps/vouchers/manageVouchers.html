@@ -4,10 +4,13 @@
     </head>
     <body>
         <div class="">
+            #if( $request.params.deleted )
+            #else
             <a href="#" class="btn btn-sm btn-success pull-right" data-toggle="modal" data-target="#sellVouchersModal" >
                 <i class="fa fa-dollar"></i> Sell vouchers
             </a>
-
+            #end
+            
             <div class="btn-group" id="voucher-type-buttons">
                 <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#createVoucherTypeModal" >
                     <i class="fa fa-plus"></i> Create new voucher type

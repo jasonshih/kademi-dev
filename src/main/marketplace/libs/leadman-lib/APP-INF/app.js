@@ -10,6 +10,8 @@ controllerMappings.addComponent("leadman/components", "countNewQuotes", "html", 
 controllerMappings.addComponent("leadman/components", "countAcceptedQuotes", "html", "Display number of accepted quotes", "Leadman App component");
 controllerMappings.addComponent("leadman/components", "countNewProposals", "html", "Display number of new proposals", "Leadman App component");
 
+controllerMappings.addComponent("leadman/components", "leadsImporterWizard", "html", "Import wizard for leads", "Leadman App component");
+
 // ============================================================================
 // Portlet
 // ============================================================================
