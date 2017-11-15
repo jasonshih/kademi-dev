@@ -9,7 +9,7 @@
         {
             "js": {
                 "group": "admin",
-                "path": "/theme/apps/contentEditor-lib/jquery.contentEditor.js"
+                "path": "/theme/apps/edmEditor-lib/jquery.edmEditor.js"
             }
         }
     ]

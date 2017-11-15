@@ -40,7 +40,7 @@ gulp.task('clean-snippets-examples', function () {
 // Components tasks
 // =========================================================================
 var buildComponents = function (typeType) {
-    return gulp.src('./src/' + typeType + '/keditor-component*.' + typeType)
+    return gulp.src(['./src/' + typeType + '/keditor-component-*.' + typeType])
         .pipe(plumber())
         .pipe(concat('keditor-components.' + typeType + ''))
         .pipe(rename({
@@ -57,13 +57,13 @@ gulp.task('build-js-components', function () {
 });
 
 var buildEdmComponents = function (typeType) {
-    return gulp.src('./src/' + typeType + '/keditor-edm-component*.' + typeType)
+    return gulp.src(['./src/' + typeType + '/keditor-edm-component-*.' + typeType])
         .pipe(plumber())
         .pipe(concat('keditor-edm-components.' + typeType + ''))
         .pipe(rename({
             suffix: '-' + pjson.version
         }))
-        .pipe(gulp.dest('./dist/' + typeType + '/'));
+        .pipe(gulp.dest('./dist/' + typeType + '/'))
 };
 
 gulp.task('build-css-edm-components', function () {
@@ -77,14 +77,14 @@ gulp.task('build-js-edm-components', function () {
 // Copy tasks
 // =========================================================================
 gulp.task('copy-css', function () {
-    return gulp.src('./src/css/keditor.css')
+    return gulp.src('./src/css/*.css')
         .pipe(rename({
             suffix: '-' + pjson.version
         }))
         .pipe(gulp.dest('./dist/css/'));
 });
 gulp.task('copy-js', function () {
-    return gulp.src('./src/js/keditor.js')
+    return gulp.src('./src/js/*.js')
         .pipe(rename({
             suffix: '-' + pjson.version
         }))

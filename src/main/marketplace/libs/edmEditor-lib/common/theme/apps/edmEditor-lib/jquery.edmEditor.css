@@ -1,0 +1,185 @@
+body {
+    background: none;
+    margin: 0;
+}
+
+/* ===========================================================================
+   Select groups
+   =========================================================================== */
+.checkboxes-list .checkbox {
+    min-height: 0;
+}
+
+.checkboxes-list .checkbox:first-child {
+    padding-top: 0;
+}
+
+.form-group .checkboxes-list {
+    margin-bottom: 0;
+}
+
+/* ==================================================================================
+   EDM Area
+   ================================================================================== */
+#edm-area {
+    min-width: 680px;
+}
+
+body.opened-keditor-sidebar #edm-area {
+    margin-right: 260px;
+}
+
+/* ==================================================================================
+   EDM header, body and footer
+   ================================================================================== */
+#edm-header,
+#edm-body,
+#edm-footer {
+    margin: 0 auto;
+    box-sizing: border-box;
+    min-height: 100px;
+    outline: 3px dashed #ccc;
+    outline-offset: 3px;
+    width: 600px;
+}
+
+#edm-body {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#edm-header,
+#edm-footer,
+#edm-body {
+    padding: 0;
+}
+
+#edm-header.empty,
+#edm-body.empty,
+#edm-footer.empty {
+    position: relative;
+}
+
+#edm-header.empty:before,
+#edm-body.empty:before,
+#edm-footer.empty:before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: bold;
+    color: #ccc;
+    transform: translate(-50%, -50%);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+#edm-header.empty:before {
+    content: "EDM Header";
+}
+
+#edm-body.empty:before {
+    content: "EDM Body";
+}
+
+#edm-footer.empty:before {
+    content: "EDM Footer";
+}
+
+.keditor-component .keditor-toolbar {
+    text-align: left;
+}
+
+/* ==================================================================================
+   EDM Setting
+   ================================================================================== */
+#edm-setting {
+    margin: 0 5px;
+}
+
+#edm-setting .panel {
+    border-radius: 0;
+    margin: 0;
+}
+
+#edm-setting .panel + .panel {
+    margin-top: 15px;
+}
+
+.row.row-sm {
+    margin: 0 -2px;
+}
+
+.row.row-sm > div {
+    padding: 0 2px;
+}
+
+/* ====================================================================================
+   Customize CKEditor
+/* ==================================================================================== */
+.cke_combo__format .cke_combo_text,
+.cke_combo__font .cke_combo_text,
+.cke_combo__fontsize .cke_combo_text,
+.cke_combo__lineheight .cke_combo_text {
+    width: auto;
+}
+
+/* ====================================================================================
+   Hide border of tables when CKEditor is enabled
+/* ==================================================================================== */
+.cke_show_borders table.cke_show_border,
+.cke_show_borders table.cke_show_border th,
+.cke_show_borders table.cke_show_border td {
+    border: 0 !important;
+}
+
+div.cke_float[id*="cke_keditor-section-"] {
+    max-width: none !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: auto !important;
+}
+
+body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-section-"] {
+    margin-right: 232px;
+    margin-top: 0;
+    margin-left: 0;
+}
+
+/* ====================================================================================
+   Headings settings
+/* ==================================================================================== */
+.form-group-heading .input-group + .input-group {
+    margin-top: 5px;
+}
+
+.form-group-heading .input-group .input-group-addon {
+    font-size: 80%;
+    padding: 6px 5px;
+}
+
+.form-group-heading .input-group .input-group-addon span {
+    display: block;
+    width: 55px;
+    text-align: center;
+}
+
+/* ====================================================================================
+   Customize KEditor
+/* ==================================================================================== */
+#keditor-sidebar {
+    opacity: 1;
+}
+
+.keditor-container-content {
+    height: 50px;
+    vertical-align: top;
+}
+
+/*Customize colorpicker for EDM*/
+.edm-color-picker {
+    border: 1px solid #ccc;
+    position: relative;
+}
