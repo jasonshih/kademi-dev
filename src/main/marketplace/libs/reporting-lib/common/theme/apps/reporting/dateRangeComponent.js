@@ -18,7 +18,7 @@
 
             $.getScriptOnce('/static/moment/2.17.1/moment.js', function () {
                 $.getScriptOnce('/static/daterangepicker/2.0.11/daterangepicker.js', function () {
-                    $.getScriptOnce('/static/jquery.pageDatePicker/1.0.0/jquery.pageDatePicker-1.0.0.js', function () {
+                    $.getScriptOnce('/static/jquery.pageDatePicker/1.0.3/jquery.pageDatePicker-1.0.3.js', function () {
                         self.initPicker();
                     });
                 });
