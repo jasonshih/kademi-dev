@@ -64,8 +64,8 @@
         tabTooltipEnabled: true,
         extraTabs: null,
         defaultComponentType: 'blank',
+        sidebarContainer: null,
         snippetsUrl: 'snippets/default/snippets.html',
-        snippetsListId: 'keditor-snippets-list',
         snippetsTooltipEnabled: true,
         snippetsTooltipPosition: 'left',
         snippetsFilterEnabled: true,
@@ -301,9 +301,6 @@
             iframeBody.html(originalContent);
         }
         
-        // In frame, have to use default snippets container
-        options.snippetsListId = KEditor.DEFAULTS.snippetsListId;
-        
         self.body = iframeBody;
         
         if (typeof options.onInitFrame === 'function') {
@@ -320,31 +317,29 @@
         var options = self.options;
         var body = self.body;
         body.addClass('opened-keditor-sidebar');
-        
-        if (options.snippetsListId === KEditor.DEFAULTS.snippetsListId) {
-            flog('Render default KEditor snippet container');
-            
-            body.append(
-                '<div id="keditor-sidebar" class="keditor-ui">' +
-                '   <a id="keditor-sidebar-toggler" class="keditor-ui"><i class="fa fa-chevron-right"></i></a>' +
-                '   <div id="keditor-snippets-list" class="keditor-ui"></div>' +
-                '   <div id="keditor-snippets-content" class="keditor-ui" style="display: none"></div>' +
-                '   <div id="keditor-setting-panel" class="keditor-ui">' +
-                '       <div id="keditor-setting-header" class="keditor-ui">' +
-                '           <span id="keditor-setting-title" class="keditor-ui"></span>' +
-                '           <a href="#" id="keditor-setting-closer" class="keditor-ui"><i class="fa fa-arrow-right"></i></a>' +
-                '       </div>' +
-                '       <div id="keditor-setting-body" class="keditor-ui">' +
-                '           <div id="keditor-setting-forms" class="keditor-ui"></div>' +
-                '       </div>' +
-                '   </div>' +
-                '</div>'
-            );
-            self.initSidebarToggler();
-        } else {
-            flog('Render KEditor snippets content after custom snippets list with id="' + options.snippetsListId + '"');
-            body.find('#' + options.snippetsListId).after('<div id="keditor-snippets-content" class="keditor-ui" style="display: none"></div>');
+        var sidebarContainer = body;
+        if (options.sidebarContainer) {
+            sidebarContainer = body.find(options.sidebarContainer);
         }
+        
+        flog('Render Keditor sidebar');
+        sidebarContainer.append(
+            '<div id="keditor-sidebar" class="keditor-ui">' +
+            '   <a id="keditor-sidebar-toggler" class="keditor-ui"><i class="fa fa-chevron-right"></i></a>' +
+            '   <div id="keditor-snippets-list" class="keditor-ui"></div>' +
+            '   <div id="keditor-snippets-content" class="keditor-ui" style="display: none"></div>' +
+            '   <div id="keditor-setting-panel" class="keditor-ui">' +
+            '       <div id="keditor-setting-header" class="keditor-ui">' +
+            '           <span id="keditor-setting-title" class="keditor-ui"></span>' +
+            '           <a href="#" id="keditor-setting-closer" class="keditor-ui"><i class="fa fa-arrow-right"></i></a>' +
+            '       </div>' +
+            '       <div id="keditor-setting-body" class="keditor-ui">' +
+            '           <div id="keditor-setting-forms" class="keditor-ui"></div>' +
+            '       </div>' +
+            '   </div>' +
+            '</div>'
+        );
+        self.initSidebarToggler();
         
         if (typeof options.snippetsUrl === 'string' && options.snippetsUrl.length > 0) {
             flog('Getting snippets form "' + options.snippetsUrl + '"...');
@@ -369,7 +364,7 @@
                     
                     if (options.snippetsTooltipEnabled || options.tabTooltipEnabled) {
                         flog('Initialize Bootstrap tooltip plugin');
-                        body.find('#' + options.snippetsListId).find('[data-toggle="tooltip"]').tooltip();
+                        body.find('#keditor-snippets-list').find('[data-toggle="tooltip"]').tooltip();
                     }
                     
                     if (typeof options.onReady === 'function') {
@@ -552,7 +547,7 @@
         self.snippetsContainerCategories = self.beautifyCategories(self.snippetsContainerCategories);
         self.snippetsComponentCategories = self.beautifyCategories(self.snippetsComponentCategories);
         
-        body.find('#' + options.snippetsListId).html(
+        body.find('#keditor-snippets-list').html(
             '<ul id="keditor-snippets-type-switcher" class="keditor-ui keditor-tabs">' +
             '    <li class="keditor-ui keditor-tab active"><a class="keditor-ui" href="#keditor-container-snippets-tab"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom"' : '') + ' title="' + options.tabContainersTitle + '">' + options.tabContainersText + '</a></li>' +
             '    <li class="keditor-ui keditor-tab"><a class="keditor-ui" href="#keditor-component-snippets-tab"' + (options.tabTooltipEnabled ? 'data-toggle="tooltip" data-placement="bottom"' : '') + ' title="' + options.tabComponentsTitle + '">' + options.tabComponentsText + '</a></li>' +
@@ -578,28 +573,34 @@
         return newArray.sort();
     };
     
+    KEditor.prototype.getConnectedForContainerSnippets = function () {
+        var self = this;
+        var options = self.options;
+        var body = self.body;
+        
+        var selector = '.keditor-content-area';
+        if (options.nestedContainerEnabled) {
+            selector += ',.keditor-container-content:not(.keditor-sub-container-content)';
+        }
+        
+        return body.find(selector);
+    };
+    
     KEditor.prototype.initSnippets = function () {
         flog('initSnippets');
         
         var self = this;
         var options = self.options;
         var body = self.body;
-        var snippetsList = body.find('#' + options.snippetsListId);
-        var containerSnippets = snippetsList.find('.keditor-snippet[data-type=container]');
-        var componentSnippets = snippetsList.find('.keditor-snippet[data-type^=component]');
-        var getConnectedSortable = function () {
-            var selector = '.keditor-content-area';
-            if (options.nestedContainerEnabled) {
-                selector += ',.keditor-container-content:not(.keditor-sub-container-content)';
-            }
-            return body.find(selector);
-        };
+        var snippetsList = body.find('#keditor-snippets-list');
+        var containerSnippets = self.containerSnippets = snippetsList.find('.keditor-snippet[data-type=container]');
+        var componentSnippets = self.componentSnippets = snippetsList.find('.keditor-snippet[data-type^=component]');
         
         flog('Initialize $.fn.draggable for container snippets list');
         containerSnippets.draggable({
             helper: 'clone',
             revert: 'invalid',
-            connectToSortable: getConnectedSortable(),
+            connectToSortable: self.getConnectedForContainerSnippets(),
             start: function () {
                 body.find('[contenteditable]').blur();
                 body.find('.showed-keditor-toolbar').removeClass('showed-keditor-toolbar');
@@ -611,7 +612,7 @@
             },
             stop: function () {
                 if (options.nestedContainerEnabled) {
-                    containerSnippets.draggable('option', 'connectToSortable', getConnectedSortable());
+                    containerSnippets.draggable('option', 'connectToSortable', self.getConnectedForContainerSnippets());
                 }
                 componentSnippets.draggable('option', 'connectToSortable', body.find('.keditor-container-content'));
                 
@@ -952,6 +953,7 @@
         contentArea.sortable({
             handle: '.keditor-toolbar-container:not(.keditor-toolbar-sub-container) .btn-container-reposition',
             items: '> section',
+            helper: 'clone',
             connectWith: '.keditor-content-area',
             axis: 'y',
             tolerance: 'pointer',
@@ -985,6 +987,10 @@
                     }
                     
                     self.initContainer(contentArea, container);
+                } else {
+                    if (helper) {
+                        helper.remove();
+                    }
                 }
                 
                 self.hideSettingPanel();
@@ -993,14 +999,20 @@
                     options.onContentChanged.call(self, event, contentArea);
                 }
                 
+                item.addClass('keditor-ui-dragging');
                 contentArea.removeClass('keditor-highlighted-dropzone');
             },
-            start: function () {
+            start: function (e, ui) {
                 body.addClass('highlighted-container-content');
+                ui.item.addClass('keditor-ui-dragging');
             },
-            stop: function () {
+            stop: function (e, ui) {
                 body.removeClass('highlighted-container-content');
                 contentArea.removeClass('keditor-highlighted-dropzone');
+                if (ui.helper) {
+                    ui.helper.remove();
+                }
+                ui.item.removeClass('keditor-ui-dragging');
             },
             over: function () {
                 contentArea.addClass('keditor-highlighted-dropzone');
@@ -1127,6 +1139,7 @@
         flog('Initialize $.fn.sortable for container content');
         containerContent.sortable({
             handle: '.btn-component-reposition, .btn-container-reposition',
+            helper: 'clone',
             items: '> section',
             connectWith: '.keditor-container-content',
             tolerance: 'pointer',
@@ -1185,6 +1198,9 @@
                         self.initComponent(contentArea, container, component);
                     }
                 } else {
+                    if (helper) {
+                        helper.remove();
+                    }
                     container = item.closest('.keditor-container');
                 }
                 
@@ -1201,14 +1217,21 @@
                     options.onContentChanged.call(self, event, contentArea);
                 }
                 
+                item.removeClass('keditor-ui-dragging');
                 contentArea.removeClass('keditor-highlighted-dropzone');
             },
-            start: function () {
+            start: function (e, ui) {
                 body.addClass('highlighted-container-content');
+                ui.item.addClass('keditor-ui-dragging');
             },
-            stop: function () {
+            stop: function (e, ui) {
                 body.removeClass('highlighted-container-content');
                 containerContent.removeClass('keditor-highlighted-dropzone');
+                
+                if (ui.helper) {
+                    ui.helper.remove();
+                }
+                ui.item.removeClass('keditor-ui-dragging');
             },
             over: function () {
                 containerContent.addClass('keditor-highlighted-dropzone');
@@ -1459,7 +1482,7 @@
             container.after(newContainer);
             self.convertToContainer(contentArea, newContainer);
             
-            var snippetsList = body.find('#' + options.snippetsListId);
+            var snippetsList = body.find('#keditor-snippets-list');
             var componentSnippets = snippetsList.find('.keditor-snippet[data-type^=component]');
             var currentLinkedContainerContents = componentSnippets.draggable('option', 'connectToSortable');
             componentSnippets.draggable('option', 'connectToSortable', currentLinkedContainerContents.add(newContainer.find('.keditor-container-content')));
@@ -1734,6 +1757,37 @@
         });
         
         return inArray ? result : result.join('\n');
+    };
+    
+    KEditor.prototype.setContent = function (content, contentArea) {
+        var self = this;
+        var options = self.options;
+        var body = self.body;
+        var target = options.iframeMode ? self.body : self.element;
+        
+        if (target.is('textarea')) {
+            target = $(target.attr('data-keditor-wrapper'));
+        }
+        
+        if (!contentArea) {
+            contentArea = target.children();
+        } else {
+            if (!contentArea.jquery) {
+                contentArea = target.find(contentArea);
+            }
+        }
+        
+        if (contentArea.length === 0) {
+            error('Content area does not exist!');
+        }
+        
+        contentArea.html(content);
+        self.initContentArea(contentArea);
+        
+        if (options.nestedContainerEnabled) {
+            self.containerSnippets.draggable('option', 'connectToSortable', self.getConnectedForContainerSnippets());
+        }
+        self.componentSnippets.draggable('option', 'connectToSortable', body.find('.keditor-container-content'));
     };
     
     KEditor.prototype.getOptions = function () {
