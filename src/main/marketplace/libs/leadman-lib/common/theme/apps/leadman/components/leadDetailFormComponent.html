@@ -66,22 +66,6 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label col-sm-4">Journey</label>
-                            <div class="col-sm-8">
-                                #set( $leadsFolder = $page.find("/leads") )
-                                <select id="" data-placeholder="Select a funnel" name="funnel" class="form-control immediateUpdate" style="width: 100%">
-                                    <option value="">[None]</option>
-                                    #foreach( $funnel in $leadsFolder.funnels )
-                                    $formatter.option($funnel.funnelRepo.id, $formatter.ifNull($funnel.title, $funnel.name), $page.funnel.funnelRepo.id)
-                                    #end
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="" style="padding: 15px">
                     #foreach($field in $page.extraFields)
                     <div class="col-sm-12 col-md-12 col-lg-6">
