@@ -11,7 +11,7 @@
         <form name="frmDetails" action="." method="post" class="form-horizontal">
             <div class="page-validation"></div>
             #set($isTemplate = $page.job.groupEmailType == "TEMPLATE")
-            
+
             <div class="btn-group pull-right page-action status-tools $page.status page-action" style="margin-left: 15px">
                 #if(!$isTemplate)
                 <a class="btn btn-success btn-sm Completed status-tool" style="width: inherit !important;">
@@ -121,6 +121,17 @@
                                     $formatter.option($website.id, $website.name, $page.themeSiteId)
                                     #end
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="timeToSend">Time to send</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="text" name="timeToSend" value="$!formatter.formatDateTime($page.timeToSend, $rootFolder.organisation.timezone)" placeholder="Time to send" data-date-format="DD/MM/YYYY HH:mm" data-date-viewmode="years" class="form-control date-time-picker" data-impact="timeToSend" />
+                                    <span class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -525,7 +536,7 @@
                         </div>
                     </div>
                     #end
-                    
+
                 </div>
             </div>
         </form>

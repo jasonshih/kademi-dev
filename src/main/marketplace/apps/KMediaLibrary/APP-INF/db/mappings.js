@@ -13,34 +13,24 @@
         MAPPING: {
             "properties": {
                 "id": {
-                    "type": "keyword",
-                    "fields": {
-                        "text": {
-                            "type": "text"
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "name": {
-                    "type": "keyword",
-                    "fields": {
-                        "text": {
-                            "type": "text"
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "title": {
-                    "type": "keyword",
+                    "type": "text",
                     "fields": {
                         "text": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
                 "caption": {
-                    "type": "keyword",
+                    "type": "text",
                     "fields": {
                         "text": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
@@ -53,15 +43,15 @@
                     }
                 },
                 "description": {
-                    "type": "keyword",
+                    "type": "text",
                     "fields": {
                         "text": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
                 "hash": {
-                    "type": "text"
+                    "type": "keyword"
                 },
                 "contentType": {
                     "type": "keyword",
@@ -109,36 +99,21 @@
         MAPPING: {
             "properties": {
                 "id": {
-                    "type": "keyword",
-                    "fields": {
-                        "text": {
-                            "type": "text"
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "name": {
-                    "type": "keyword",
-                    "fields": {
-                        "text": {
-                            "type": "text"
-                        }
-                    }
+                    "type": "keyword"
                 },
                 "title": {
-                    "type": "keyword",
+                    "type": "text",
                     "fields": {
                         "text": {
-                            "type": "text"
+                            "type": "keyword"
                         }
                     }
                 },
                 "parentCategory": {
-                    "type": "keyword",
-                    "fields": {
-                        "text": {
-                            "type": "text"
-                        }
-                    }
+                    "type": "keyword"
                 }
             }
         }

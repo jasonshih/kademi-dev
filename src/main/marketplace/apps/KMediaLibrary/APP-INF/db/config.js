@@ -1,5 +1,7 @@
 (function (g) {
 
+    g.APP_NAME = 'KMediaLibrary';
+
     function config() {
         var _self = this;
 

@@ -37,22 +37,6 @@
         return null;
     };
 
-    /**
-     * Redirect to an absolute URL
-     * 
-     * @param {type} page
-     * @param {type} params
-     * @returns {unresolved}
-     */
-    g.checkRedirect = function (page, params) {
-        var href = page.href;
-        if (!href.endsWith('/')) {
-            href = href + '/';
-        }
-
-        return views.redirectView(href);
-    };
-
     g.cropImage = function (name, params) {
         var hash = Utils.safeString(params.uploadedHref).replace('/_hashes/files/', '');
         var imageDim = fileManager.utils.getImageDimensions(hash);
@@ -73,4 +57,10 @@
         var fileExt = (Utils.isStringNotBlank(name) ? formatter.fileExt(name) : null);
         return fileManager.utils.cropImage(hash, x, y, w, h, fileExt);
     };
+
+    /*========== Segment Resolvers ==========*/
+    g.mediaItemResolver = function(){
+        
+    };
+    
 })(this);
