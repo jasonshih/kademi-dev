@@ -1,14 +1,9 @@
-#if($page)
 #if ( !$height )
 #set ( $height = 100 )
 #end
 
-#if( $bucket )
-#if (!$title)
-#set ( $title = "Points Activity")
-#end
-#else
-#set ( $title = "Points Activity")
+#if ( !$title )
+#set ( $title = "Points Activity" )
 #end
 
 <div class="panel panel-default panel-points-activity-chart">
@@ -25,21 +20,3 @@
         #end
     </div>
 </div>
-#else
-
-<!--<h1>App: rewardStore</h1>-->
-<!--<h2>Component: pointsActivity</h2>-->
-
-<div class="clearfix panel panel-default panel-points-activity-chart">
-    <div class="panel-heading">
-        <i class="fa fa-bar-chart"></i> Point Activity Title
-    </div>
-    <div class="panel-body" style="height: ${height}px;">
-        <div class="points-activity-chart" style="height: 100%;">
-            Please select your points bucket
-        </div>
-    </div>
-</div>
-#end
-
-
