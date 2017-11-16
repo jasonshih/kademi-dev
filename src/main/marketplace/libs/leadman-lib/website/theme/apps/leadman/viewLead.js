@@ -730,6 +730,12 @@
         })
     }
 
+    function initTags() {
+        $(document).on('leadClosed', function () {
+            reloadTags();
+        })
+    }
+
     // Run init functions
     $(function () {
         initViewLeadsPage();
@@ -750,5 +756,6 @@
         initUnlinkCompany();
         initLeadManEvents();
         initLeadActivity();
+        initTags();
     }
 })();

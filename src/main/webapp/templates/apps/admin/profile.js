@@ -219,13 +219,52 @@ function initNewMembershipForm() {
     });
     
     $("#modal-membership").find("form").forms({
+        validate: function (form) {
+            var groupInputs = form.find('.radio input[name=group]');
+            var arr = [];
+            groupInputs.each(function () {
+                if (this.checked){
+                    arr.push(this.value);
+                }
+            });
+            if (!arr.length){
+                return {
+                    error: 1,
+                    errorFields: ['group'],
+                    errorMessages: ['Please select a group']
+                };
+            }
+            return true;
+        },
         onSuccess: function (resp) {
             flog("done new membership", resp);
-            $("#modal-membership").modal('hide');
+            $("#modal-membership").find(".radio input").trigger('reset');
             reloadMemberships();
             Msg.info("Saved membership");
         }
     });
+
+    $("#modal-membership").on('input', '#groupFilter', function () {
+        if (!this.value){
+            $('#groupCheckboxesWrap').find('.membership').each(function () {
+                $(this).parent().removeClass('hide');
+            })
+        } else {
+            $('#groupCheckboxesWrap').find('.membership').each(function () {
+                $(this).parent().addClass('hide');
+            })
+            var s = this.value;
+            $('#groupCheckboxesWrap').find('.membership').each(function () {
+                var m = $(this).parent();
+                var groupName = m.find('input').val();
+                var groupTitle = m.find('label').text().trim();
+                if (groupName.indexOf(s) != -1 || groupTitle.indexOf(s) != -1){
+                    m.removeClass('hide');
+                }
+            });
+        }
+
+    })
 }
 
 function reloadMemberships() {
