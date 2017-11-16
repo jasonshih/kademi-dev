@@ -111,7 +111,7 @@
                                         <article class="page">
                                             <i class="clip-file-2"></i>
                                             <span class="article-name">$page.title</span>
-                                            <aside class="article-action">
+                                            <aside class="article-action">  
                                                 <div class="btn-group btn-group-sm">
                                                     #if ($isKEditor)
                                                         <a href="?contenteditor=${page.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page"><i class="fa fa-edit"></i></a>
@@ -120,8 +120,9 @@
                                                     #end
                                                     <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                                                     <ul class="dropdown-menu pull-right" role="menu">
-                                                        <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
-                                                        <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit source</a></li>
+                                                        <li><a href="?contenteditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit</a></li>
+                                                        <li><a href="?htmleditor=${page.name}" target="_blank" title="Edit page"><i class="fa fa-edit"></i> Edit (Classic editor)</a></li>
+                                                        <li><a href="texteditor?fileName=${page.name}" target="_blank" title="Edit page"><i class="fa fa-code"></i> Edit source</a></li>
                                                         <li><a href="${page.name}" class="btn-edit-page" title="Edit page"><i class="fa fa-edit"></i> Properties</a></li>
                                                         <li><a href="${page.name}?goto&gotoLogin=false" target="_blank" title="View page"><i class="clip-eye"></i> View</a></li>                                                        
                                                         <li><a href="${page.name}?goto" target="_blank" title="View page"><i class="clip-eye"></i> View (login)</a></li>
