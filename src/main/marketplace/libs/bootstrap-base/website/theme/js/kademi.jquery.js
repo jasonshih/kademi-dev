@@ -19,6 +19,7 @@
         });
     };
     
+    $.getScriptOnce.loaded = {};
 }(jQuery));
 
 (function ($) {

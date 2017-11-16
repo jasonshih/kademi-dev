@@ -5,20 +5,6 @@
  * @version: 0.0.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
-/**!
- * KEditor - Kademi content editor
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: 0.0.0
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
- */
-/**
- * KEditor accordion Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -211,13 +197,6 @@
 })(jQuery);
 
 
-/**
- * KEditor Audio Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -352,13 +331,6 @@
     
 })(jQuery);
 
-/**
- * KEditor Carousel Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -829,13 +801,6 @@
     }
     
 })(jQuery);
-/**
- * KEditor Form Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -1072,13 +1037,6 @@
     
 })(jQuery);
 
-/**
- * KEditor Google Map Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($, window) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -1298,13 +1256,6 @@
     
 })(jQuery, window);
 
-/**
- * KEditor Jumbotron Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var contentEditor = $.contentEditor;
@@ -1442,13 +1393,6 @@
 })(jQuery);
 
 
-/**
- * KEditor SVG Map Component (Australia)
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -1556,13 +1500,6 @@
     };
 })(jQuery);
 
-/**
- * KEditor Photo Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -1794,13 +1731,6 @@
     
 })(jQuery);
 
-/**
- * KEditor Text Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var contentEditor = $.contentEditor;
@@ -2071,13 +2001,6 @@
     
 })(jQuery);
 
-/**
- * KEditor Video Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -2298,13 +2221,6 @@
     };
 })(jQuery);
 
-/**
- * KEditor Vimeo Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;
@@ -2387,13 +2303,6 @@
     
 })(jQuery);
 
-/**
- * KEditor Youtube Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 (function ($) {
     var KEditor = $.keditor;
     var flog = KEditor.log;

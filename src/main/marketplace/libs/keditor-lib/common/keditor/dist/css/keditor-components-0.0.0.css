@@ -5,13 +5,6 @@
  * @version: 0.0.0
  * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap (optional), FontAwesome (optional)
  */
-/**
- * KEditor Text Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 /* ==================================================================================
    jwplayer preview
    ================================================================================== */
@@ -1135,13 +1128,6 @@ textarea {
   font-style: normal;
 }
 
-/**
- * KEditor KSVG map Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 /* ==================================================================================
    ksvgmap
    ================================================================================== */
@@ -1263,13 +1249,6 @@ svg {
   padding-left: 3px;
 }
 
-/**
- * KEditor Text Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 /* ==================================================================================
    CKEditor
    ================================================================================== */
@@ -1299,13 +1278,6 @@ body.opened-keditor-sidebar div.cke_float[id*="cke_keditor-component-content-"] 
   right: 255px;
 }
 
-/**
- * KEditor Text Component
- * @copyright: Kademi (http://kademi.co)
- * @author: Kademi (http://kademi.co)
- * @version: @{version}
- * @dependencies: $, $.fn.draggable, $.fn.droppable, $.fn.sortable, Bootstrap, FontAwesome (optional)
- */
 /* ==================================================================================
    jwplayer preview
    ================================================================================== */
