@@ -3,7 +3,11 @@
         {
             "appId": "ecommerce",
             "branch": ""
-        },
+        },        
+        {
+            "appId": "productsApp",
+            "branch": ""
+        },        
         {
             "appId": "ecommerce-lib",
             "branch": "1.0.9"
