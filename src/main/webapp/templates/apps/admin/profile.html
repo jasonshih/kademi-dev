@@ -3,7 +3,7 @@
         <title>Profile</title>
         <link href="profile.css" rel="stylesheet" type="text/css" />
         <link href="manageUser.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=1">//</script>
+        <script type="text/javascript" src="/theme/apps/admin/profile.js?v=2">//</script>
         <script type="text/javascript" src="manageUser.js">//</script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
         <style>
@@ -498,21 +498,36 @@
                             <div class="form-message alert alert-danger" style="display: none;"></div>
                             <div class="groups">
                                 <p>Please select a group and an organisation to make this user a member of</p>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <p>Select an org</p>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control required" name="orgId" id="orgId" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <p>Group filter</p>
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" name="groupFilter" id="groupFilter" />
+                                                    <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-
+                                <br>
                                 <div class="memberships-wrapper">
-                                    <div class="row blocks-wrapper memberships-list">
+                                    <div class="row blocks-wrapper memberships-list" id="groupCheckboxesWrap">
                                         #foreach($group in $groups)
-                                        #set($id = "radGroup_" + $group.name)
-                                        <div class="col-md-3">
-                                            <span class="block membership" title="$group.name">
-                                                <label class="block-name" for="$id">$formatter.radio($id, "group", false, $group.name) $group.name</label>
-                                            </span>
-                                        </div>
+                                        #showGroupTagCheckbox($group)
                                         #end
                                     </div>
                                 </div>
@@ -622,6 +637,33 @@
             </span>
             <a href="#" class="btn btn-xs text-muted btn-edit-membership" data-group-href="?membershipName=$m.name" title="Edit membership"><i class="fa fa-ellipsis-v"></i></a>
         </span>
+        #end
+
+        #macro( showGroupTagCheckbox $m)
+        #if( $m.groupType == "P" )
+        #set($icon = "clip-users" )
+        #set($type = "success" )
+        #elseif( $m.groupType == "S" )
+        #set($icon = "fa fa-trophy" )
+        #set($type = "info" )
+        #elseif( $m.groupType == "M" )
+        #set($icon = "fa fa-envelope" )
+        #set($type = "info" )
+        #else
+        #set($icon = "clip-users" )
+        #set($type = "success" )
+        #end
+
+        <div class="col-md-3">
+            <div class="block membership alert alert-$type">
+
+                <div class="radio">
+                    <label>
+                        <input style="top: 5px;" type="radio" name="group" value="$group.name"> <i class="$icon"></i> $formatter.ifNull($group.title, $group.name)
+                    </label>
+                </div>
+            </div>
+        </div>
         #end
     </body>
 </html>
