@@ -7,10 +7,7 @@
     ],
     "dependencies": [
         {
-            "js": {
-                "group": "admin",
-                "path": "/theme/apps/edmEditor-lib/jquery.edmEditor.js"
-            }
+
         }
     ]
 }
