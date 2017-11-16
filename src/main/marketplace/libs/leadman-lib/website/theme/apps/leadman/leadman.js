@@ -181,6 +181,7 @@ function initCloseDealModal() {
                 // anh
                 setTimeout(reloadDashboard, 400);
                 closeDealModal.modal('hide');
+                $(document).trigger('leadClosed');
             }
         });
     });
