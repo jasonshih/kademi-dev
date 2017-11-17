@@ -11,7 +11,7 @@
     #set($rewardName = $page.rewardStore.name)
 #end
 
-#set( $products = $app.call("findProducts", $page, $params, $rewardName, $numberOfProducts, $sort, $asc) )
+#set( $products = $app.call("findProducts", $page, $params, $reward, $numberOfProducts, $sort, $asc) )
 <div id="products-list" class="rewardStoreCategoryProductsComponent #if ($numberOfProducts) shouldLoadMore #end">
     #if( $products.hits.hits.size() == 0 )
         <p class="alert alert-info">No products were found matching the critieria</p>
