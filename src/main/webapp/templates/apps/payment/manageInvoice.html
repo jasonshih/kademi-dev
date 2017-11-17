@@ -10,10 +10,7 @@
                 <h2>
                     $page.title - $page.invoiceState
                     <div class="btn-group pull-right">
-                        <button type="submit" class="btn btn-sm btn-success">
-                            <i class="fa fa-arrow-circle-right"></i> Send Now
-                        </button>
-
+                        <a href="#" class="btn btn-sm btn-success" data-toggle="modal" data-target="#sendModal" ><i class="fa fa-arrow-circle-right"></i> Send Now</a>
                         <a href="invoicePreview.html?pdf" class="btn btn-sm btn-info">
                             <i class="fa fa-print"></i> Print
                         </a>
@@ -103,7 +100,7 @@
         <div class="panel-body">
             <div class="form-group">
                 <div class="container">
-                    <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px">
+                    <table id="line-items" class="table table-striped table-bordered col-sm-12 invoices-table" style="margin-top: 15px; z-index: 0;">
                         <thead>
                             <tr>
                                 <th class="description">Description</th>
@@ -212,6 +209,75 @@
     </div>
 </section>
 
+<div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Send Invoice</h4>
+            </div>
+            <form class="form-horizontal" method="POST" action=".">
+                <div class="modal-body">
+                    <input type="hidden" name="sendInvoice" value="true"/>
+                    <input type="hidden" name="invoiceId" value="$page.name"/>
+
+                    <div class="form-group">
+                        <label for="sendTo" class="col-sm-3 control-label">To</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="sendTo" name="sendTo" value="$!page.customer.email"/>
+                            <p class="form-text text-muted">
+                                If it's blank we are going to use the customer email, if there is one.
+                            </p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="from" class="col-sm-3 control-label">From</label>
+                        <div class="col-sm-8">
+                            $user.thisProfile.formattedName
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="replyTo" class="col-sm-3 control-label">Reply To</label>
+                        <div class="col-sm-8">
+                            $user.thisProfile.email
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject" class="col-sm-3 control-label">Subject</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control required" required="true" id="subject" name="subject" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" class="col-sm-3 control-label">Message</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" required="true" id="message" name="message"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="includePDF" class="col-sm-3 control-label">Include PDF attachment</label>
+                        <div class="col-sm-8">
+                            <input type='checkbox' class="form-control" id="includePDF" name="includePDF" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sendMeCopy" class="col-sm-3 control-label">Send me a copy</label>
+                        <div class="col-sm-8">
+                            <input type='checkbox' class="form-control" id="sendMeCopy" name="sendMeCopy" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                    <button class="btn btn-sm btn-primary" type="submit">Send Invoice</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div><!-- /.modal -->
+
 #macro(isActive $state)
 #if($request.params.state == $state)
 active            
@@ -236,6 +302,20 @@ active
         initGenericSearch('customer-search-input');
 
         initDateTimePickers();
+        initModalForm();
+
+        function initModalForm() {
+            var modal = $("#sendModal");
+            var form = modal.find(" form");
+
+            form.forms({
+                onSuccess: function (resp) {
+                    flog("done", resp);
+                    modal.modal('hide');
+                    Msg.success('Invoice was sent!');
+                }
+            });
+        }
 
         $(".old-supplier").each(function () {
             initGenericSearch($(this).prop("id"));
