@@ -162,28 +162,26 @@ function initNewLeadFromEmail() {
 
 function initCloseDealModal() {
     var closeDealModal = $("#closeDealModal");
-    closeDealModal.on('shown.bs.modal', function () {
-        closeDealModal.find("form").forms({
-            onSuccess: function (resp) {
-                Msg.info('Deal marked as closed');
-                if ($('#lead-cover').length) {
-                    $('#maincontentContainer').reloadFragment({
-                        whenComplete: function () {
-                            $('abbr.timeago').timeago();
-                            initLeadManEvents();
-                        }
-                    });
-                }
-                if ($('#all_contacts').length) {
-                    $('#all_contacts').html('');
-                    initLeadsDashLoading();
-                }
-                // anh
-                setTimeout(reloadDashboard, 400);
-                closeDealModal.modal('hide');
-                $(document).trigger('leadClosed');
+    closeDealModal.find("form").forms({
+        onSuccess: function (resp) {
+            Msg.info('Deal marked as closed');
+            if ($('#lead-cover').length) {
+                $('#maincontentContainer').reloadFragment({
+                    whenComplete: function () {
+                        $('abbr.timeago').timeago();
+                        initLeadManEvents();
+                    }
+                });
             }
-        });
+            if ($('#all_contacts').length) {
+                $('#all_contacts').html('');
+                setTimeout(initLeadsDashLoading, 400);
+            }
+            // anh
+            setTimeout(reloadDashboard, 400);
+            closeDealModal.modal('hide');
+            $(document).trigger('leadClosed');
+        }
     });
 }
 
@@ -428,10 +426,19 @@ function initLeadActions() {
         e.preventDefault();
         var href = $(this).attr('href');
         var closeDealModal = $("#closeDealModal");
-        closeDealModal.find('form').attr('action', href);
+        closeDealModal.reloadFragment({
+            url: href,
+            whenComplete: function (resp) {
+                closeDealModal.html($(resp).find('#closeDealModal').html());
+                var pickers = closeDealModal.find('.date-time');
+                flog("pickers", pickers);
+                pickers.datetimepicker({
+                    format: 'DD/MM/YYYY HH:mm'
+                });
+                initCloseDealModal();
+            }
+        });
         closeDealModal.modal();
-        //var href = $(this).attr("href");
-        //closeLead(href);
     });
 
     $(document.body).on("click", ".updateCreatedDate", function (e) {

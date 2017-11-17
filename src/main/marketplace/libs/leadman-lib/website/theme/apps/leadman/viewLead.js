@@ -609,7 +609,6 @@
 
         try {
             var data = JSON.parse($("#view-lead-tags").val());
-
             $.each(data, function (key, element) {
                 $('#view-lead-tags').tagsinput('add', {id: element.id, name: element.name}, {preventPost: true});
             });
@@ -732,7 +731,26 @@
 
     function initTags() {
         $(document).on('leadClosed', function () {
-            reloadTags();
+            setTimeout(reloadTags, 100);
+        })
+    }
+
+    function initClosingLead() {
+        var closeDealModal = $("#closeDealModal");
+        closeDealModal.on('show.bs.modal', function () {
+            closeDealModal.find('form').html('<p style="padding: 15px">Loading...</p>');
+            closeDealModal.reloadFragment({
+                url: window.location.pathname,
+                whenComplete: function (resp) {
+                    closeDealModal.html($(resp).find('#closeDealModal').html());
+                    var pickers = closeDealModal.find('.date-time');
+                    flog("pickers", pickers);
+                    pickers.datetimepicker({
+                        format: 'DD/MM/YYYY HH:mm'
+                    });
+                    initCloseDealModal();
+                }
+            });
         })
     }
 
@@ -757,5 +775,6 @@
         initLeadManEvents();
         initLeadActivity();
         initTags();
+        initClosingLead();
     }
 })();
