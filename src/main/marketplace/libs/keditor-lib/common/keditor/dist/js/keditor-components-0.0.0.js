@@ -1516,6 +1516,14 @@
                 img.css('vertical-align', 'middle');
             }
             
+            img.attr({
+                width: img.width(),
+                height: img.height()
+            }).css({
+                width: '',
+                height: ''
+            });
+            
             var options = keditor.options;
             if (typeof options.onComponentReady === 'function') {
                 options.onComponentReady.call(contentArea, component);
@@ -1530,7 +1538,6 @@
             flog('init "photo" settings', form, keditor);
             
             var self = this;
-            var options = keditor.options;
             
             return $.ajax({
                 url: '/static/keditor/componentPhotoSettings.html',
@@ -1542,18 +1549,7 @@
                     var txtLink = form.find('#photo-link');
                     txtLink.on('change', function () {
                         var link = this.value.trim();
-                        var pattern =  /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/;
-                        var span = txtLink.next();
-                        var formGroup = txtLink.closest('.form-group');
-                        
-                        if (pattern.test(link)) {
-                            keditor.getSettingComponent().find('a').attr('href', link);
-                            span.hide();
-                            formGroup.removeClass('has-error');
-                        } else {
-                            span.show();
-                            formGroup.addClass('has-error');
-                        }
+                        keditor.getSettingComponent().find('a').attr('href', link);
                     });
                     
                     var cbbTarget = form.find('#photo-target');
@@ -1617,7 +1613,7 @@
                             this.value = newWidth;
                         }
                         
-                        img.css({
+                        img.attr({
                             'width': newWidth,
                             'height': newHeight
                         });
@@ -1634,7 +1630,7 @@
                             this.value = newHeight;
                         }
                         
-                        img.css({
+                        img.attr({
                             'height': newHeight,
                             'width': newWidth
                         });
@@ -1652,10 +1648,11 @@
                             var src = '/_hashes/files/' + hash;
                             
                             $('<img />').attr('src', src).load(function () {
-                                img.attr('src', src).css({
+                                img.attr({
                                     width: this.width,
-                                    height: this.height
-                                })
+                                    height: this.height,
+                                    src: src
+                                });
                                 self.ratio = this.width / this.height;
                                 self.width = this.width;
                                 self.height = this.height;
