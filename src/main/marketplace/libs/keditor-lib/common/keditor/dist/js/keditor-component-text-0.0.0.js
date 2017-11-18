@@ -205,6 +205,16 @@
                         target.css('height', height);
                     });
                     
+                    form.find('.txt-min-height').on('change', function () {
+                        var minHeight = this.value || '';
+                        if (isNaN(minHeight)) {
+                            minHeight = '';
+                        }
+                        
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
+                        target.css('min-height', minHeight + 'px');
+                    });
+                    
                     form.find('.txt-max-height').on('change', function () {
                         var maxHeight = this.value || '';
                         if (isNaN(maxHeight)) {
@@ -225,6 +235,16 @@
                         target.css('width', width);
                     });
                     
+                    form.find('.txt-min-width').on('change', function () {
+                        var minWidth = this.value || '';
+                        if (isNaN(minWidth)) {
+                            minWidth = '';
+                        }
+                        
+                        var target = keditor.getSettingComponent().find('.keditor-component-text-content');
+                        target.css('min-width', minWidth + 'px');
+                    });
+                    
                     form.find('.txt-max-width').on('change', function () {
                         var maxWidth = this.value || '';
                         if (isNaN(maxWidth)) {
@@ -237,39 +257,41 @@
                 }
             });
         },
-
+        
         showSettingForm: function (form, component, keditor) {
             flog('showSettingForm "text" component', component);
-
+            
             var target = component.find('.keditor-component-text-content').get(0);
-
+            
             var imageUrl = target.style.backgroundImage;
             imageUrl = (imageUrl || '').replace(/^url\(['"]+(.+)['"]+\)$/, '$1');
             form.find('.background-image-previewer').attr('src', imageUrl !== 'none' && imageUrl !== '' ? imageUrl : '/static/images/photo_holder.png');
-
+            
             form.find('.select-bg-repeat').val(target.style.backgroundRepeat || 'repeat');
             form.find('.select-bg-position').val(target.style.backgroundPosition || '0% 0%');
             form.find('.select-bg-size').val(target.style.backgroundSize || 'auto');
-
+            
             form.find('.txt-bg-color').val(target.style.backgroundColor || '').trigger('update')
-
+            
             form.find('.txt-padding').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-
+                
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
             form.find('.txt-margin').each(function () {
                 var txt = $(this);
                 var styleName = txt.attr('data-style-name');
-
+                
                 txt.val((target.style[styleName] || '').replace('px', ''));
             });
-
+            
             form.find('.txt-height').val((target.style.height || '').replace('px', ''));
+            form.find('.txt-min-height').val((target.style.minHeight || '').replace('px', ''));
             form.find('.txt-max-height').val((target.style.maxHeight || '').replace('px', ''));
             form.find('.txt-width').val((target.style.width || '').replace('px', ''));
-            form.find('.txt-maxWith').val((target.style.maxWidth || '').replace('px', ''));
+            form.find('.txt-min-with').val((target.style.minWidth || '').replace('px', ''));
+            form.find('.txt-max-with').val((target.style.maxWidth || '').replace('px', ''));
         }
     };
     
