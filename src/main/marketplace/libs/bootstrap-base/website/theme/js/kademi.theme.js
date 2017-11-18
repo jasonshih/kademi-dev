@@ -119,6 +119,7 @@ function initLogin() {
  *
  * See /static/js/toolbars.js
  */
+var ADDED_EXTRA_CSS = false;
 function initHtmlEditors(elements, height, width, extraPlugins, removePlugins, callback) {
     var fullUrl = false;
     if ($.isPlainObject(height)) {
