@@ -1,0 +1,3 @@
+<controllers onAppEnabled="initKCommerceApp" >
+    <source>/APP-INF/app.js</source>  
+</controllers> 
