@@ -45,7 +45,7 @@
                             <i class="fa fa-search"></i>
                         </span>
             
-                        <input type="text" class="form-control selectOrgSearch" value="$!selectedOrg.title" placeholder="Search" />
+                        <input type="text" class="form-control selectOrgSearch" value="$formatter.cleanString($selectedOrg.title)" placeholder="Search" />
             
                         <div class="input-group-btn orgSelectorWrap">
                             <a data-orgId="$!selectedOrgId" href="#" class="btn btn-default btn-reporting-clear-selected-org">
