@@ -27,7 +27,7 @@
             flog('init "youtube" settings', form);
             
             return $.ajax({
-                url: '/static/keditor/componentYoutubeSettings.html',
+                url: '/keditor/componentYoutubeSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

@@ -120,7 +120,7 @@
             flog('init "accordion" settings', form);
 
             return $.ajax({
-                url: '/static/keditor/componentAccordionSettings.html',
+                url: '/keditor/componentAccordionSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

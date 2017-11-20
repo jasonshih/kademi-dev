@@ -87,7 +87,7 @@
             flog('initSettingForm "text" component');
             
             return $.ajax({
-                url: '/static/keditor/componentTextSettings.html',
+                url: '/keditor/componentTextSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

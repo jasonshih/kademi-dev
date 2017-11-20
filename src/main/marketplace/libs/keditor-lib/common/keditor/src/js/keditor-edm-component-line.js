@@ -12,7 +12,7 @@
             flog('init "line" settings', form);
     
             return $.ajax({
-                url: '/static/keditor/edmComponentLineSettings.html',
+                url: '/keditor/edmComponentLineSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

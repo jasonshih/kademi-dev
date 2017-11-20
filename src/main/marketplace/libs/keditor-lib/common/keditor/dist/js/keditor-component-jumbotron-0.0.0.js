@@ -62,7 +62,7 @@
             flog('init "jumbotron" settings', form);
             
             return $.ajax({
-                url: '/static/keditor/componentJumbotronSettings.html',
+                url: '/keditor/componentJumbotronSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

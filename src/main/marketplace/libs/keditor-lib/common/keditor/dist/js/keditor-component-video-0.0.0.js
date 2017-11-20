@@ -63,7 +63,7 @@
             var self = this;
             
             return $.ajax({
-                url: '/static/keditor/componentVideoSettings.html',
+                url: '/keditor/componentVideoSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

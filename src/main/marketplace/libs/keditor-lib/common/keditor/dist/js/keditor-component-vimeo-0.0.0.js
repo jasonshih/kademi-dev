@@ -27,7 +27,7 @@
             flog('init "vimeo" settings', form);
             
             return $.ajax({
-                url: '/static/keditor/componentVimeoSettings.html',
+                url: '/keditor/componentVimeoSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
