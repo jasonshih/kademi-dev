@@ -86,7 +86,7 @@
                             <td>$!item.recipient.firstName</td>
                             <td>$!item.recipient.surName</td>
                             <td>
-                                <abbr class="timeago" title="$!formatter.formatDateISO8601( $item.sendStatusDate, $rootFolder.organisation.timezone )">$!formatter.formatDateISO8601( $item.sendStatusDate, $rootFolder.organisation.timezone )</abbr>
+                                <abbr class="timeago" title="$!formatter.formatDateISO8601( $item.sendStatusDate, $rootFolder.organisation.timezone )">$!formatter.formatDateTime( $item.sendStatusDate, $rootFolder.organisation.timezone )</abbr>
                             </td>
                             <td>$item.subject</td>
                             <td>                                    
@@ -237,10 +237,7 @@
                 var url = url || window.location.pathname;
 
                 $("#email-items-body").reloadFragment({
-                    url: url,
-                    whenComplete: function () {
-                        $('#email-items-body').find('abbr.timeago').timeago();
-                    }
+                    url: url
                 });
             }
         </script>        
