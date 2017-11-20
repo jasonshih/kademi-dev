@@ -8,10 +8,17 @@ $(function () {
         }, 500);
     });
 
-    $('#supplier').on('change', function (e) {
-        doHistorySearch();
+    initSupplier();
+    $(document).on('click', '#btnClearSupplier', function (e) {
+        e.preventDefault();
+        $('#supplierWrap').reloadFragment({
+            url: window.location.pathname,
+            whenComplete: function () {
+                initSupplier();
+                doHistorySearch();
+            }
+        })
     });
-
 
     $("#newProduct").click(function (event) {
         event.preventDefault();
@@ -91,6 +98,14 @@ $(function () {
     });
 });
 
+function initSupplier() {
+    $(document).find('#supplierFinder').entityFinder({
+        type: 'organisation',
+        onSelectSuggestion: function () {
+            doHistorySearch();
+        }
+    });
+}
 function initTable() {
     $("#pointsFooter a").on('click', function (e) {
         e.preventDefault();
@@ -255,16 +270,16 @@ function getSearchValue(search, key) {
 function doHistorySearch() {
     flog('doHistorySearch');
 
-    Msg.info("Doing search...", 2000);
+    Msg.info("Doing search...", "manageProducts", 2000);
 
     var uri = URI(window.location);
 
     uri.setSearch('dataQuery', $("#data-query").val());
-    uri.setSearch('supplier', $("#supplier").val());
+    uri.setSearch('supplier', $("#supplierFinder").val());
 
     var data = {
         dataQuery: $("#data-query").val(),
-        supplier: $("#supplier").val()
+        supplier: $("#supplierFinder").val()
     };
     flog("data", data);
 
@@ -282,7 +297,7 @@ function doHistorySearch() {
         success: function (content) {
             flog('response', content);
 
-            Msg.success("Search complete", 2000);
+            Msg.info("Search complete", "manageProducts", 2000);
 
             var newBody = $(content).find("#productsTableContainer");
 
