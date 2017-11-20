@@ -33,7 +33,7 @@
             
             var self = this;
             return $.ajax({
-                url: '/static/keditor/edmComponentPhotoSettings.html',
+                url: '/keditor/edmComponentPhotoSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

@@ -37,7 +37,7 @@
             var self = this;
             
             return $.ajax({
-                url: '/static/keditor/componentGoogleMapSettings.html',
+                url: '/keditor/componentGoogleMapSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

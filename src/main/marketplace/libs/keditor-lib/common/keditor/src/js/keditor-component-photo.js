@@ -38,7 +38,7 @@
             var self = this;
             
             return $.ajax({
-                url: '/static/keditor/componentPhotoSettings.html',
+                url: '/keditor/componentPhotoSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
@@ -177,9 +177,6 @@
             var cbbTarget = form.find('#photo-target');
             var chkLinkable = form.find('#photo-linkable');
             
-            txtLink.next().hide();
-            txtLink.closest('.form-group').removeClass('has-error');
-            
             var panel = component.find('.photo-panel');
             var img = panel.find('img');
             
@@ -194,9 +191,9 @@
                 cbbTarget.prop('disabled', true).val('');
             }
             
-            var algin = panel.css('text-align');
-            if (algin !== 'right' || algin !== 'center') {
-                algin = 'left';
+            var align = panel.css('text-align');
+            if (align !== 'right' || align !== 'center') {
+                align = 'left';
             }
             
             var valign = img.css('vertical-align');
@@ -210,7 +207,7 @@
             } else {
                 cbbStyle.val('');
             }
-            inputAlign.val(algin);
+            inputAlign.val(align);
             inputVAlign.val(valign);
             inputResponsive.prop('checked', img.hasClass('img-responsive'));
             inputWidth.val(img.width());

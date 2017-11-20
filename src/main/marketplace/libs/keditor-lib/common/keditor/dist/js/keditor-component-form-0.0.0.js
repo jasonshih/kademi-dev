@@ -169,7 +169,7 @@
             var self = this;
             
             return $.ajax({
-                url: '/static/keditor/componentFormSettings.html',
+                url: '/keditor/componentFormSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

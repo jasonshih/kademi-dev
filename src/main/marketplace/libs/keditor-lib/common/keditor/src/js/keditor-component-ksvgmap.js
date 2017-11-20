@@ -72,7 +72,7 @@
             flog('init "svgmap" settings', form);
             
             return $.ajax({
-                url: '/static/keditor/componentKsvgMapSettings.html',
+                url: '/keditor/componentKsvgMapSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

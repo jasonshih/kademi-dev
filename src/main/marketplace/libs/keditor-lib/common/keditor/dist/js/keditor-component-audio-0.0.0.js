@@ -54,7 +54,7 @@
             flog('init "audio" settings', form);
             
             return $.ajax({
-                url: '/static/keditor/componentAudioSettings.html',
+                url: '/keditor/componentAudioSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {

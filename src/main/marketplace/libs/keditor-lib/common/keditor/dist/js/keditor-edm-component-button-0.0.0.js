@@ -19,7 +19,7 @@
             flog('init "button" settings', form);
     
             return $.ajax({
-                url: '/static/keditor/edmComponentButtonSettings.html',
+                url: '/keditor/edmComponentButtonSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
