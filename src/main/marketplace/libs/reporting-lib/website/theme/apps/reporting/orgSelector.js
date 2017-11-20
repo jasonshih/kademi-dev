@@ -38,7 +38,8 @@ $(function () {
                 dropdownMenuOrgSelector.data('loaded', true);
 
                 var groupNames = dropdownMenuOrgSelector.data('groupnames');
-                dropdownMenuOrgSelector.load('/queries?browseOrgs&groupNames=' + encodeURIComponent(groupNames));
+                var numOrgs = btn.parents('.org-selector').attr('data-numOrgs');
+                dropdownMenuOrgSelector.load('/queries?browseOrgs&numOrgs='+numOrgs+'&groupNames=' + encodeURIComponent(groupNames));
             }
         });
     }

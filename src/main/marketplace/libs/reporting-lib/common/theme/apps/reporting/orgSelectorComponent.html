@@ -15,11 +15,17 @@
     #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
+
+#if ($numOrgs && $numOrgs != '')
+#set ($numOrgsInt = $formatter.toInteger($numOrgs))
+#else
+#set ($numOrgsInt = 20)
+#end
+
 #if ($page)
     #if ($user)
         #set ($isShow = true)
-        #set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, ""))
-        
+        #set($beans = $applications.Reporting.listUserOrgs($numOrgsInt, $rootFolder.orgData, true, ""))
         #if ($beans.empty)
             #set ($isShow = false)
         #else
@@ -30,9 +36,9 @@
                 #end
             #end
         #end
-        
+
         #if ($isShow)
-            <div class="org-selector">
+            <div class="org-selector" data-numOrgs="$!numOrgsInt">
                 <div class="dropdown">
                     <div class="input-group">
                         <span class="input-group-addon">

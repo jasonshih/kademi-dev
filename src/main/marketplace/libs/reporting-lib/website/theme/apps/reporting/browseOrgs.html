@@ -19,7 +19,13 @@
     #set ($selectedOrg = $rootFolder.orgData.childOrg( $selectedOrgId ) )
 #end
 
-#set($beans = $applications.Reporting.listUserOrgs(20, $rootFolder.orgData, true, $groups))
+#if ($request.params.numOrgs && $request.params.numOrgs != '')
+    #set ($numOrgsInt = $formatter.toInteger($request.params.numOrgs))
+#else
+    #set ($numOrgsInt = 20)
+#end
+
+#set($beans = $applications.Reporting.listUserOrgs($numOrgsInt, $rootFolder.orgData, true, $groups))
 #if($beans.empty)
     <li><i class="fa fa-check" style="visibility: hidden"></i> No selections available</li>
 #else
