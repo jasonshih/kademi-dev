@@ -155,6 +155,7 @@ function initRowTemplate() {
             var date;
 
             if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
+                flog('Using Timezone: ', timezone);
                 date = moment.tz(millis[0], timezone);
             } else {
                 date = moment(millis[0]);
