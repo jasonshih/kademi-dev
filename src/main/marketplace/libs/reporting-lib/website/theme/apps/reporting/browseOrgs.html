@@ -37,7 +37,9 @@
 #macro(genList $b $padding)
     <li #if($padding && $padding > 0)style="padding-left: ${padding}px"#end>
         <a data-orgId="$b.orgId" href="#">
-            <i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> $b.title
+            <i class="fa fa-check" #if($selectedOrgId != $b.orgId)style="visibility: hidden"#end></i> 
+            $b.title 
+            <small class="text-muted">$b.orgId</small>
         </a>
     </li>
     #if($b.childOrgs && !$b.childOrgs.empty)
