@@ -152,7 +152,7 @@ function initRowTemplate() {
     template = Handlebars.compile(templateHtml);
     Handlebars.registerHelper('dateFromLong', function (millis) {
         if (millis) {
-            flog('millis', millis);
+            flog('millis', arguments);
             var date = new Date(millis[0]);
             return date.toISOString();
         } else {
