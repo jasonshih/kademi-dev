@@ -127,7 +127,7 @@ function doSearch() {
     var query = $("#email-query").val();
     var status = $("#status").val();
     var job = $("#job").val();
-    
+
     var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
     var uri = new URI(newURL);
     window.history.pushState('', document.title, uri.toString());
@@ -152,6 +152,7 @@ function initRowTemplate() {
     template = Handlebars.compile(templateHtml);
     Handlebars.registerHelper('dateFromLong', function (millis) {
         if (millis) {
+            flog('millis', millis);
             var date = new Date(millis[0]);
             return date.toISOString();
         } else {
