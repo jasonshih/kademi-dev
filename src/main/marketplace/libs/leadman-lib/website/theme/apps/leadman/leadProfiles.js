@@ -4,6 +4,68 @@ function initLeadUploads() {
 
     var form = $("#leadsImporterWizard form");
 
+
+    $("#leadImporterFunnelName").on("change", function () {
+        var funnelName = $(this).val();
+        flog("Selected funnel ", funnelName);
+        $('#uploadWrapper').html("<div id='btn-upload' class='pull-left'></div>");
+        if (funnelName !== undefined && funnelName !== "") {
+            var href = window.location.pathname + "?funnelName=" + funnelName;
+            flog("Upload href ", href);
+            $('#btn-upload').mupload({
+                url: href,
+                useJsonPut: false,
+                buttonText: '<i class="clip-folder"></i> Upload CSV',
+                oncomplete: function (resp, name, href) {
+                    flog("oncomplete", resp, name, href);
+
+                    var data = resp.result.data;
+                    flog("got data", data);
+                    var table = data.table;
+                    form.find("input[name=fileHash]").val(table.hash);
+                    var fields = data.destFields;
+                    var thead = $("#importerHead");
+                    thead.html("");
+                    flog("headers:", data.numCols);
+                    thead.append("<th>#</th>");
+                    for (var col = 0; col < data.numCols; col++) {
+                        var td = $("<th>");
+                        thead.append(td);
+                        var select = $("<select class='form-control' name='col" + col + "'>");
+                        select.append("<option value=''>[Do not import]</option>");
+
+                        for (var field in fields) {
+                            select.append("<option value='" + field + "'>" + fields[field] + "</option>");
+                        }
+
+                        td.append(select);
+                    }
+                    flog("done head", thead);
+
+                    var tbody = $("#importerBody");
+                    tbody.html("");
+                    var numRows = 0;
+                    $.each(table.rows, function (i, row) {
+                        if (numRows < 50) {
+                            numRows++;
+                            var tr = $("<tr>");
+                            tbody.append(tr);
+                            var td = $("<td>" + i + "</td>");
+                            tr.append(td);
+                            $.each(row, function (i, cell) {
+                                var td = $("<td>");
+                                td.html(cell);
+                                tr.append(td);
+                            });
+                        }
+                    });
+
+                    $('#liWizard').wizard("next");
+                }
+            });
+        }
+    });
+
     $('#liWizard').wizard();
     $('#leadsImporterWizard').on('show.bs.collapse', function () {
         var curStep = $('#liWizard').wizard('selectedItem');
@@ -130,13 +192,13 @@ function initLeadUploads() {
             var importerHead = $('#importerHead');
             var selectedCols = [];
             importerHead.find('select').each(function () {
-                if (this.value === 'email') {
+                if (this.value === 'leadProfileEmail') {
                     selectedCols.push(this.value);
                 }
             });
 
             if (selectedCols.length < 1) {
-                alert('Please select column data that contains email to continue');
+                alert('Please select column data that contains the lead email to continue');
                 importerHead.find('select').first().trigger('focus');
                 evt.preventDefault();
             }
@@ -159,7 +221,8 @@ function initLeadUploads() {
         },
         onError: function (resp, form, config) {
             Msg.error(resp.messages[0]);
-            doCheckProcessStatus();
+            flog("doLeadCheckProcessStatus");
+            doLeadCheckProcessStatus();
             $('#liWizard').wizard("next");
         },
         beforePostForm: function (form, config, data) {
@@ -168,59 +231,8 @@ function initLeadUploads() {
         },
         onSuccess: function (resp, form, config) {
             $('#liWizard').wizard("next");
-            doCheckProcessStatus();
-        }
-    });
-
-    $('#btn-upload').mupload({
-        url: window.location.pathname,
-        useJsonPut: false,
-        buttonText: '<i class="clip-folder"></i> Upload CSV',
-        oncomplete: function (resp, name, href) {
-            flog("oncomplete", resp, name, href);
-
-            var data = resp.result.data;
-            flog("got data", data);
-            var table = data.table;
-            form.find("input[name=fileHash]").val(table.hash);
-            var fields = data.destFields;
-            var thead = $("#importerHead");
-            thead.html("");
-            flog("headers:", data.numCols);
-            thead.append("<th>#</th>");
-            for (var col = 0; col < data.numCols; col++) {
-                var td = $("<th>");
-                thead.append(td);
-                var select = $("<select class='form-control' name='col" + col + "'>");
-                select.append("<option value=''>[Do not import]</option>");
-
-                for (var field in fields) {
-                    select.append("<option value='" + field + "'>" + fields[field] + "</option>");
-                }
-
-                td.append(select);
-            }
-            flog("done head", thead);
-
-            var tbody = $("#importerBody");
-            tbody.html("");
-            var numRows = 0;
-            $.each(table.rows, function (i, row) {
-                if (numRows < 50) {
-                    numRows++;
-                    var tr = $("<tr>");
-                    tbody.append(tr);
-                    var td = $("<td>" + i + "</td>");
-                    tr.append(td);
-                    $.each(row, function (i, cell) {
-                        var td = $("<td>");
-                        td.html(cell);
-                        tr.append(td);
-                    });
-                }
-            });
-
-            $('#liWizard').wizard("next");
+            flog("doLeadCheckProcessStatus");
+            doLeadCheckProcessStatus();
         }
     });
 
@@ -416,7 +428,7 @@ function initUploads() {
             doCheckProcessStatus();
         }
     });
-    
+
     //$("body").
 
     $('#btn-upload').mupload({
@@ -576,11 +588,15 @@ function doLeadSearch(forceSearch) {
 }
 
 function doCheckProcessStatus() {
-    checkProcessStatus();
+    checkProcessStatus($('#myWizard'));
 }
 
-function checkProcessStatus() {
-    flog("checkProcessStatus");
+function doLeadCheckProcessStatus() {
+    checkProcessStatus($('#liWizard'));
+}
+
+function checkProcessStatus(wizard) {
+    flog("checkProcessStatus -- wizard ", wizard);
     var jobTitle = $(".job-title");
     var resultStatus = $('#job-status');
     $.ajax({
@@ -588,44 +604,53 @@ function checkProcessStatus() {
         dataType: "json",
         url: window.location.pathname + "?importStatus",
         success: function (result) {
-            flog("success", result);
+            flog("checkProcessStatus success", result);
             if (result.status) {
                 resultStatus.text(result.messages[0]);
                 if (result.data) {
                     var state = result.data.state;
-                    flog("state", state);
+                    flog("checkProcessStatus state", state);
 
                     if (result.data.statusInfo.complete) {
                         var dt = result.data.statusInfo.completedDate;
-                        flog("Process Completed", dt);
+                        flog("checkProcessStatus Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
                         doLeadSearch(true);
                         if (typeof state.updatedProfiles !== 'undefined') {
-                            $('#myWizard').find('.updatedProfiles').text(state.updatedProfiles)
+                            wizard.find('.updatedProfiles').text(state.updatedProfiles)
+                        }
+                        if (typeof state.updatedCount !== 'undefined') {
+                            wizard.find('.updatedProfiles').text(state.updatedCount)
                         }
                         if (typeof state.createdProfiles !== 'undefined') {
-                            $('#myWizard').find('.createdProfiles').text(state.createdProfiles)
+                            wizard.find('.createdProfiles').text(state.createdProfiles)
+                        }
+                        if (typeof state.createdCount !== 'undefined') {
+                            wizard.find('.createdProfiles').text(state.createdCount)
                         }
                         if (typeof state.errorProfiles !== 'undefined') {
-                            $('#myWizard').find('.errorProfiles').text(state.errorProfiles)
+                            wizard.find('.errorProfiles').text(state.errorProfiles)
                         }
-                        flog("finished state", state, state.resultHash);
+                        if (typeof state.errorCount !== 'undefined') {
+                            wizard.find('.errorProfiles').text(state.errorCount)
+                        }
+                        flog("checkProcessStatus finished state", state, state.resultHash);
                         if (typeof state.resultHash !== 'undefined' && state.resultHash != null) {
                             var href = "/_hashes/files/" + state.resultHash + ".csv";
-                            $('#myWizard').find('.errorRows').prop("href", href).closest("a").show();
+                            wizard.find('.errorRows').prop("href", href).closest("a").show();
                         } else {
-                            $('#myWizard').find('.errorRows').closest("a").hide();
+                            wizard.find('.errorRows').closest("a").hide();
                         }
 
                         importWizardStarted = false;
 
-                        $('#myWizard').wizard("next");
+                        wizard.wizard("next");
 
                         return; // dont poll again
                     } else {
                         // running
-                        flog("Message", result.messages[0]);
+                        flog("checkProcessStatus Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
 
                         var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
@@ -633,6 +658,8 @@ function checkProcessStatus() {
                             percentComplete = 0;
                         }
                         percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
+
+                        flog("checkProcessStatus percentComplete", percentComplete);
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
 
                         jobTitle.text("Process running...");
@@ -642,7 +669,9 @@ function checkProcessStatus() {
                     // waiting to start
                     jobTitle.text("Waiting for process job to start ...");
                 }
-                window.setTimeout(doCheckProcessStatus, 2500);
+                window.setTimeout(function () {
+                    checkProcessStatus(wizard);
+                }, 2500);
 
             } else {
                 flog("No task");
