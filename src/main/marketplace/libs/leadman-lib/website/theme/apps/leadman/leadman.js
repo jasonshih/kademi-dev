@@ -1375,6 +1375,8 @@ function updateField(href, fieldName, fieldValue, form) {
             //     fieldLabel = label.text().replace(':', '');
             // }
             Msg.info("Saved");
+            // timeago
+            $('abbr.timeago').timeago();
             reloadTasks();
         },
         error: function (resp) {

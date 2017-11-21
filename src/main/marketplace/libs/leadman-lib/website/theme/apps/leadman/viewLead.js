@@ -725,7 +725,11 @@
 
     function initLeadActivity() {
         $(document).on('onLeadTimelineUpdate', function () {
-            $('#activity').reloadFragment();
+            $('#activity').reloadFragment({
+                whenComplete: function () {
+                    $('abbr.timeago').timeago();
+                }
+            });
         })
     }
 
