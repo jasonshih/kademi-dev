@@ -478,7 +478,8 @@ GroupStatusPolling.prototype.doPoll = function () {
                 _self.row.find('.groupEmail-opened').text(resp.data.opened);
                 _self.row.find('.groupEmail-converted').text(resp.data.converted);
 
-                var openRate = (resp.data.opened / resp.data.successful) * 100;
+                var open = (resp.data.opened / resp.data.successful) * 100;
+                var openRate = parseFloat(Math.round(open * 100) / 100).toFixed(1);
                 if (Number.isNaN(openRate)) {
                     openRate = '';
                 } else {

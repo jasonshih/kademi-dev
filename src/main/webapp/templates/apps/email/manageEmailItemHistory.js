@@ -127,7 +127,7 @@ function doSearch() {
     var query = $("#email-query").val();
     var status = $("#status").val();
     var job = $("#job").val();
-    
+
     var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
     var uri = new URI(newURL);
     window.history.pushState('', document.title, uri.toString());
@@ -150,9 +150,17 @@ var template;
 function initRowTemplate() {
     var templateHtml = $("#email-row-template").html();
     template = Handlebars.compile(templateHtml);
-    Handlebars.registerHelper('dateFromLong', function (millis) {
+    Handlebars.registerHelper('dateFromLong', function (millis, timezone) {
         if (millis) {
-            var date = new Date(millis[0]);
+            var date;
+
+            if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
+                flog('Using Timezone: ', timezone);
+                date = moment.tz(millis[0], timezone);
+            } else {
+                date = moment(millis[0]);
+            }
+
             return date.toISOString();
         } else {
             return "";
