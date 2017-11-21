@@ -85,7 +85,9 @@
                             <td><a href='/emails/$item.id'>$item.recipientAddress</a></td>
                             <td>$!item.recipient.firstName</td>
                             <td>$!item.recipient.surName</td>
-                            <td>$formatter.formatAge( $item.sendStatusDate )</td>
+                            <td>
+                                <abbr class="timeago" title="$!formatter.formatDateISO8601( $item.sendStatusDate, $rootFolder.organisation.timezone )">$!formatter.formatDateTime( $item.sendStatusDate, $rootFolder.organisation.timezone )</abbr>
+                            </td>
                             <td>$item.subject</td>
                             <td>                                    
                                 <acronym title="EDM-ID: $item.id" >
@@ -158,9 +160,8 @@
                 var href = window.location.pathname + "?maxResults=" + max + "&status=" + status;
                 window.history.pushState("", "Email log search", href);
                 flog("refreshWithOptions", href);
-                $("#email-items-body").reloadFragment({
-                    url: href
-                });
+
+                reloadEmailTable(href);
             }
 
             function submitEmailResets(chks) {
@@ -173,7 +174,7 @@
                         success: function (resp) {
                             flog('got results', resp);
                             Msg.info("Done");
-                            $("#email-items-body").reloadFragment();
+                            reloadEmailTable();
                         },
                         error: function (resp) {
                             Msg.error('Sorry, an error occured reseting the email items');
@@ -194,11 +195,7 @@
                         success: function (resp) {
                             flog('got results', resp);
                             Msg.info("Done");
-                            $("#email-items-body").reloadFragment({
-                                whenComplete: function () {
-
-                                }
-                            });
+                            reloadEmailTable();
                         },
                         error: function (resp) {
                             Msg.error('Sorry, an error occured reseting the email job');
@@ -234,6 +231,14 @@
                     }
                 }
                 return false;
+            }
+
+            function reloadEmailTable(url) {
+                var url = url || window.location.pathname;
+
+                $("#email-items-body").reloadFragment({
+                    url: url
+                });
             }
         </script>        
     </body>
