@@ -194,23 +194,15 @@
     var initCRUDOrg = function () {
         var $body = $(doc.body);
 
-        $body.on('click', '.btn-delete-org', function (e) {
+        $body.off('click', '.btn-delete-org').on('click', '.btn-delete-org', function (e) {
             e.preventDefault();
-
             var href = $(this).attr('href');
 
             confirmDelete(href, getFileName(href), function (resp) {
                 flog(resp);
-                setTimeout($('#searchResults').reloadFragment(), 5000);
-
+                $("#org-query").val("").trigger("change");
             });
         });
-
-//        $body.on('click', '.btn-edit-org', function(e) {
-//            e.preventDefault();
-//
-//            ModalEditOrg.show($(this).attr('href'));
-//        });
 
         $('.btn-add-org').on('click', function (e) {
             e.preventDefault();

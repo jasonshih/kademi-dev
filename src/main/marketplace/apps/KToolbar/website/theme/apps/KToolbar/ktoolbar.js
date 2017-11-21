@@ -157,12 +157,33 @@
             }
         })
     }
+
+    function initNavbarBorderColor() {
+        var value = $('.navbar-default-border').val();
+        if (value && value != 'darken(@navbar-default-bg, 6.5%)'){
+            $('.txtNavbarDefaultBorder').prop('disabled', false);
+            $('.navbar-default-border').prop('checked', false);
+        } else {
+            $('.txtNavbarDefaultBorder').prop('disabled', true);
+            $('.navbar-default-border').prop('checked', true);
+        }
+        $('.navbar-default-border').on('click', function () {
+            $('.txtNavbarDefaultBorder').prop('disabled', this.checked);
+            if (this.checked){
+                $('.navbar-default-border').val('');
+                $('.txtNavbarDefaultBorder').val('');
+                $('.txtNavbarDefaultBorder').parent().find('i').css('background-color', 'transparent');
+            }
+        })
+    }
+
     $(function () {
         initKToolbarInlineBtns();
         initKToolbarToggler();
         initKToolbarSideBar();
         initHeadingColor();
-        
+        initNavbarBorderColor();
+
         window.onbeforeunload = function () {
             var body = $("body");
             if (body.hasClass('content-changed')) {
