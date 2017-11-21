@@ -236,12 +236,11 @@ function initLeadUploads() {
         }
     });
 
-    $('#btn-cancel-import').on('click', function (e) {
+    $('#btn-cancel-lead-import').on('click', function (e) {
         e.preventDefault();
-
         $.ajax({
             type: 'post',
-            url: '/custs',
+            url: '/leads',
             data: {cancel: 'cancel'},
             success: function (data) {
                 Msg.success('Import task cancelled');
@@ -587,16 +586,22 @@ function doLeadSearch(forceSearch) {
     });
 }
 
+function doCheckCallBack() {
+    doSearch();
+}
 function doCheckProcessStatus() {
-    checkProcessStatus($('#myWizard'));
+    checkProcessStatus($('#myWizard'), doCheckCallBack);
 }
 
+function doLeadCheckCallBack() {
+    doSearch();
+}
 function doLeadCheckProcessStatus() {
-    checkProcessStatus($('#liWizard'));
+    checkProcessStatus($('#liWizard'), doLeadCheckCallBack);
 }
 
-function checkProcessStatus(wizard) {
-    flog("checkProcessStatus -- wizard ", wizard);
+function checkProcessStatus(wizard, callback) {
+    flog("checkProcessStatus -- wizard ", wizard, callback);
     var jobTitle = $(".job-title");
     var resultStatus = $('#job-status');
     $.ajax({
@@ -616,7 +621,6 @@ function checkProcessStatus(wizard) {
                         flog("checkProcessStatus Process Completed", dt);
                         jobTitle.text("Process finished at " + pad2(dt.hours) + ":" + pad2(dt.minutes));
 
-                        doLeadSearch(true);
                         if (typeof state.updatedProfiles !== 'undefined') {
                             wizard.find('.updatedProfiles').text(state.updatedProfiles)
                         }
@@ -646,19 +650,30 @@ function checkProcessStatus(wizard) {
                         importWizardStarted = false;
 
                         wizard.wizard("next");
+                        if (typeof callback !== 'undefined') {
+                            callback();
+                        }
 
                         return; // dont poll again
                     } else {
-                        // running
+
                         flog("checkProcessStatus Message", result.messages[0]);
                         resultStatus.text(result.messages[0]);
+                        var percentComplete;
 
-                        var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
+                        if (typeof state.totalRows !== 'undefined') {
+                            flog("checkProcessStatus rows ", state.totalRows, state.currentRow);
+                            percentComplete = (state.currentRow / state.totalRows) * 100;
+                        } else {
+                            flog("checkProcessStatus messages");
+                            var percentComplete = result.messages[0].split(' ').reverse()[0] / importTotalCount * 100;
+                        }
+
                         if (isNaN(percentComplete)) {
                             percentComplete = 0;
                         }
                         percentComplete = percentComplete * 0.9; // scale down to a max of 90% so the Org doesnt think they're finished when they're not.
-
+                        // running
                         flog("checkProcessStatus percentComplete", percentComplete);
                         $('#importProgressbar .progress-bar').attr('aria-valuenow', percentComplete).css('width', percentComplete + '%');
 
@@ -670,7 +685,7 @@ function checkProcessStatus(wizard) {
                     jobTitle.text("Waiting for process job to start ...");
                 }
                 window.setTimeout(function () {
-                    checkProcessStatus(wizard);
+                    checkProcessStatus(wizard, callback);
                 }, 2500);
 
             } else {
