@@ -153,12 +153,16 @@ function initRowTemplate() {
     Handlebars.registerHelper('dateFromLong', function (millis, timezone) {
         if (millis) {
             var date;
+            var time = millis[0];
+            if (typeof time === 'string' && time.endsWith('Z')) {
+                time = time.substring(0, time.length - 1);
+            }
 
             if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
                 flog('Using Timezone: ', timezone);
-                date = moment(millis[0]).tz(timezone);
+                date = moment.tz(time, timezone);
             } else {
-                date = moment(millis[0]);
+                date = moment(time);
             }
 
             return date.toISOString();
