@@ -161,7 +161,7 @@ function initRowTemplate() {
                 date = moment(millis[0]);
             }
 
-            return date.format();
+            return date.toISOString()();
         } else {
             return "";
         }
