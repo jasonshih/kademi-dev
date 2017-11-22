@@ -2,8 +2,8 @@
     <head>
         <title>$page.title</title>
         <script src="/static/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js">//</script>
-        <link href="manageCourses.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="manageCourses.js">//</script>
+        <link href="manageCourses.css?v=1" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="manageCourses.js?v=1">//</script>
         <script type="text/javascript" src="/static/js/managePublishing.js">//</script>
         <script type="text/javascript" src="/templates/themes/admin2/prompt.js">//</script>
     </head>
@@ -79,6 +79,12 @@
                     <div class="panel-heading">
                         <i class="fa fa-book"></i>
                         Courses
+                        <div class="input-group pull-right courseSearch">
+                            <input type="text" class="form-control" placeholder="Search courses">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
                     </div>
                     <div class="panel-body courses-wrapper clearfix">
                         <ul id="courses-list" class="courses-list">
@@ -133,6 +139,12 @@
                     <div class="panel-heading">
                         <i class="fa fa-file-o"></i>
                         Modules
+                        <div class="input-group pull-right courseSearch">
+                            <input type="text" class="form-control" placeholder="Search modules">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
                     </div>
                     <div class="panel-body modules-wrapper clearfix">
                         #set($levels = $page.closest("course").children.ofType.folder.sortByIntField("order").groupByField("level") )

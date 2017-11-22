@@ -31,18 +31,18 @@
             dataType: 'json',
             data: filterOptions,
             success: function (data) {
-                if (data.hits.hits.length > 0) {
-                    filterOptions.since = data.hits.hits[0].fields.date[0];
+                var hits = data.hits.hits;
+                if (hits.length > 0 && hits[0].fields && hits[0].fields.date && hits[0].fields.date[0]) {
+                    filterOptions.since = hits[0].fields.date[0];
                 }
                 
                 flog('lastLogDate', filterOptions);
-                $.each(data.hits.hits, function (i, n) {
+                $.each(hits, function (i, n) {
                     processReceivedLog(n.fields);
                 });
                 appendItems();
                 
                 var logsBody = $('#logsBody');
-                flog($('#autoScroll').is(':checked'))
                 if ($('#autoScroll').is(':checked')) {
                     logsBody.animate({
                         scrollTop: logsBody.prop('scrollHeight')
@@ -69,7 +69,6 @@
     }
     
     function processReceivedLog(c) {
-        
         var dt = moment(c.date[0]);
         var labelType = c.level[0].toLowerCase();
         
