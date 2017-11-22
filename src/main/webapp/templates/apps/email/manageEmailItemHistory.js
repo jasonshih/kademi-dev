@@ -160,7 +160,7 @@ function initRowTemplate() {
 
             if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
                 flog('Using Timezone: ', timezone);
-                date = moment.tz(time, timezone);
+                date = moment.tz(time, timezone).tz(moment.tz.guess());
             } else {
                 date = moment(time);
             }
