@@ -227,6 +227,7 @@
         initAssignToOrgType();
         aggFilter();
         initAggregations();
+        initMoveOrgFinder();
     };
 
 })(jQuery, window, document);
@@ -681,5 +682,11 @@ function aggSearch(input) {
 
     $('#aggregationsContainer').reloadFragment({
         url: window.location
+    });
+}
+
+function initMoveOrgFinder() {
+    $('#destOrgId').entityFinder({
+        type: 'organisation'
     });
 }
