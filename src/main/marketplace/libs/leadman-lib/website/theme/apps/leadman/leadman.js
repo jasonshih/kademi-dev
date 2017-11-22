@@ -1789,7 +1789,7 @@ function formatSecondsAsTime(secs, format) {
 }
 
 function initDeleteFile() {
-    $('#files').on('click', '.btn-delete-file', function (e) {
+    $('#files').on('click', '.btn-delete-lead-file', function (e) {
         e.preventDefault();
 
         var btn = $(this);

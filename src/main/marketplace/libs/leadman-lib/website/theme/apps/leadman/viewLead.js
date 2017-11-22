@@ -104,7 +104,6 @@
 
     function initFileUploads() {
         var modal = $('#uploadFileModal');
-        var form = modal.find('form');
 
         $('body').on('click', '.upload-files', function (e) {
             e.preventDefault();
@@ -112,13 +111,32 @@
             modal.modal('show');
         });
 
-        form.forms({
-            onSuccess: function (resp) {
-                Msg.info('Files Uploaded');
-                reloadFileList();
-                modal.modal('hide');
+        initUpload(modal);
+    }
+
+    function initUpload(modal) {
+        if (typeof Dropzone !== 'undefined') {
+            Dropzone.autoDiscover = false;
+            modal.find('.dropzone').dropzone({
+                paramName: 'files', // The name that will be used to transfer the file
+                maxFilesize: 2000.0, // MB
+                addRemoveLinks: true,
+                parallelUploads: 1,
+                uploadMultiple: true
+            });
+            var uploadFileDropzone = modal.find('#uploadFileDropzone');
+            if (uploadFileDropzone.length) {
+                var dz = Dropzone.forElement('#uploadFileDropzone');
+                flog('dropz', Dropzone, dz, dz.options.url);
+                dz.on('success', function (file) {
+                    flog('added file', file);
+                    reloadFileList();
+                });
+                dz.on('error', function (file, errorMessage) {
+                    Msg.error('An error occured uploading: ' + file.name + ' because: ' + errorMessage);
+                });
             }
-        });
+        }
     }
 
     function assignTo(name) {
