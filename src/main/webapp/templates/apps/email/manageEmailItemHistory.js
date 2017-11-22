@@ -165,7 +165,7 @@ function initRowTemplate() {
                 date = moment(time);
             }
 
-            return date.toISOString();
+            return date.format();
         } else {
             return "";
         }
