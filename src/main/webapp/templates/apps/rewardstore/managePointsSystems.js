@@ -10,6 +10,11 @@ function initManagePointsSystems() {
             window.location.href = resp.nextHref;
         }
     });
+    
+    $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
+        flog('initManagePointsSystems', startDate, endDate);
+        $('#table-pointsSystems').reloadFragment();
+    });
 }
 
 
