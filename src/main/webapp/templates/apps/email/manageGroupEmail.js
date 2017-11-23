@@ -479,18 +479,17 @@ GroupStatusPolling.prototype.doPoll = function () {
                 _self.row.find('.groupEmail-converted').text(resp.data.converted);
 
                 var open = (resp.data.opened / resp.data.successful) * 100;
-                var openRate = parseFloat(Math.round(open * 100) / 100).toFixed(1);
-                if (Number.isNaN(openRate)) {
-                    openRate = '';
-                } else {
+                var openRate = '';
+                if (!Number.isNaN(open)) {
+                    openRate = parseFloat(Math.round(open * 100) / 100).toFixed(1);
                     openRate += '%';
                 }
                 _self.row.find('.groupEmail-openRate').text(openRate);
-                
-                var convertedRate = (resp.data.converted / resp.data.successful) * 100;
-                if (Number.isNaN(convertedRate)) {
-                    convertedRate = '';
-                } else {
+
+                var converted = (resp.data.converted / resp.data.successful) * 100;
+                var convertedRate = '';
+                if (!Number.isNaN(converted)) {
+                    convertedRate = parseFloat(Math.round(converted * 100) / 100).toFixed(1);
                     convertedRate += '%';
                 }
                 _self.row.find('.groupEmail-conversionRate').text(convertedRate);
