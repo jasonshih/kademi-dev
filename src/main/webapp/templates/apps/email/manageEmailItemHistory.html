@@ -146,7 +146,9 @@
             <a href='/emails/{{fields.id}}'><i class='fa fa-envelope'></i></a>
             {{fields.subject}}
             </td>
-            <td><abbr title='{{dateFromLong fields.createdDate "$!rootFolder.organisation.timezone"}}' class='timeago'>{{dateFromLong fields.createdDate "$!rootFolder.organisation.timezone"}}</abbr></td>
+            <td>
+            <abbr title='{{dateFromLong fields.sendStatusDate "$!rootFolder.organisation.timezone"}}' class='timeago'>{{dateFromLong fields.sendStatusDate "$!rootFolder.organisation.timezone"}}</abbr>
+            </td>
             <td>{{fields.sendStatusText}}</td>
             <td>{{fields.baseEmailJob}}</td>
             <td><input data-edmid="{{fields.id}}" type="checkbox" name="markIgnored"/></td>
@@ -154,7 +156,7 @@
             {{/each}}
         </script>
 
-        <script type="text/javascript" src="/theme/apps/email/manageEmailItemHistory.js?_=100">//</script>
+        <script type="text/javascript" src="/theme/apps/email/manageEmailItemHistory.js?_=101">//</script>
         <script type="text/javascript">
             $(function () {
                 initManageEmailHistory();

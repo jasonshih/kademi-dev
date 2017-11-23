@@ -24,17 +24,20 @@
         <section id="manageReward" class="MainContent">
             <header>
                 #if ($page.groupProfileReport)
-                    <div class=""><h3>People without attendance $page.title</h3></div>
+                <div class=""><h3>People without attendance $page.title</h3></div>
                 #else
-                    <div class=""><h3>People attending $page.title</h3></div>
+                <div class=""><h3>People attending $page.title</h3></div>
                 #end
-                    
-                <div class="pull-right">    
+
+                <div class="pull-right"> 
+                    <button class="btn btn-sm btn-primary attendee-add" data-toggle="modal" data-target="#attendeeModal">Add a Attendee</button>
+                    <button class="btn btn-sm btn-default confirmAttendee" >Confirm Attendees</button>
+                    <button class="btn btn-sm btn-default generateInvoices" >Generate Invoices</button>
                     #if ($page.groupProfileReport)
-                        <a href="mailto:?bcc=${page.mailToList}" class="export btn-sm btn btn-default">Mail users</a>
+                    <a href="mailto:?bcc=${page.mailToList}" class="export btn-sm btn btn-default">Mail users</a>
                     #else
-                        <a href="attendees-${page.name}?csv" download="attendees-${page.name}.csv" class="export btn-sm btn btn-default">Export as CSV</a>
-                        <button class="btn-sm btn btn-default removeAttendees">Remove Selected</button>
+                    <a href="attendees-${page.name}?csv" download="attendees-${page.name}.csv" class="export btn-sm btn btn-default">Export as CSV</a>
+                    <button class="btn-sm btn btn-danger removeAttendees">Remove Selected</button>
                     #end
                 </div>
             </header>
@@ -47,13 +50,13 @@
                             <th>Organisation</th>
                             <th>Email</th>
                             #if (!$page.groupProfileReport)
-                                <th>Date registered</th>
-                                <th>Guest of</th>
-                                <td style="width: auto; text-align: right"><input type="checkbox" name="toRemoveId" class="entries selectAll"/></td>
+                            <th>Date registered</th>
+                            <th>Attendee of</th>
+                            <th style="width: auto; text-align: right"><input type="checkbox" name="toRemoveId" class="entries selectAll"/></th>
                             #end
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="attendeesTable">
                         #foreach($att in $page.attendeesAndGuests)
                         <tr>
                             <td class="partstat-$att.partStat">$att.partStat</td>
@@ -61,21 +64,21 @@
                             <td>$!att.orgName</td>
                             <td>$!att.email</td>
                             #if (!$page.groupProfileReport)
-                                <td>$formatter.formatDate($att.registeredDate)</td>
-                                <td>
-                                    #if( $att.guestOf )
-                                    <a href="$att.guestOf.href">
-                                        #if( $att.guestOf.firstName )
-                                        $att.guestOf.firstName 
-                                        #end
-                                        #if( $att.guestOf.surName )
-                                        $att.guestOf.surName
-                                        #end
-                                        ( $att.guestOf.email )
-                                    </a>
+                            <td>$formatter.formatDate($att.registeredDate)</td>
+                            <td>
+                                #if( $att.guestOf )
+                                <a href="$att.guestOf.href">
+                                    #if( $att.guestOf.firstName )
+                                    $att.guestOf.firstName 
                                     #end
-                                </td>
-                                <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
+                                    #if( $att.guestOf.surName )
+                                    $att.guestOf.surName
+                                    #end
+                                    ( $att.guestOf.email )
+                                </a>
+                                #end
+                            </td>
+                            <td style="text-align: right"><input type="checkbox" name="toRemoveId" value="$att.id"/></td>
                             #end    
                         </tr>
                         #end
@@ -83,46 +86,249 @@
                 </table>
             </div>			
         </section>
+
+        <div class="modal fade attendee-modal" id="attendeeModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Add a attendee</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="addAttendee" value="addAttendee" />
+                            <div class="form-group">
+                                <label for="firstName">First name</label>
+                                <input type="text" class="form-control" name="firstName" required='true' placeholder="Attendee's first name">
+                            </div>
+                            <div class="form-group">
+                                <label for="surName">Surname</label>
+                                <input type="text" class="form-control" name="surName" required='true' placeholder="Attendee's surname">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email address</label>
+                                <input type="email" class="form-control" name="email" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label for="orgId">Organisation</label>
+                                <input type="text" class="form-control required" name="orgId" id="orgId" autocomplete="off" value="$page.organisation.id" data-text="$page.organisation.formattedName" />
+                            </div>
+                            <div class="form-group">
+                                <label for="guestOf">Guest of</label>
+                                <input type="text" class="form-control required" name="guestOf" id="guestOf" autocomplete="off" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-sm btn-primary">Add attendee</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade invoice-modal" id="invoiceModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form role="form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Generate Invoice</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="addAttendee" value="addAttendee" />
+                            <div class="form-group">
+                                <label for="priceAttendee">Attendee price</label>
+                                <input type="text" class="form-control" id="priceAttendee" name="priceAttendee" required='true' placeholder="Attendee price">
+                            </div>
+                            <div class="form-group">
+                                <label for="priceGuest">Guest price</label>
+                                <input type="text" class="form-control" id="priceGuest" name="priceGuest" required='true' placeholder="Guest price">
+                            </div>
+                            <div class="form-group">
+                                <label for="discount">Discount %</label>
+                                <input type="text" class="form-control" id="discount" name="discount" required='true' placeholder="Discount %">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-sm btn-primary generate">Generate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <script>
-            jQuery(function() {
-                initRemoveAttendees();    
+            jQuery(function () {
+                initRemoveAttendees();
+                initConfirmAttendees();
+                initAddAttendeeModal();
+                initGenerateInvoices();
                 initSelectAll();
+                $("#guestOf").entityFinder({
+                    useActualId: true
+                });
             });
+
+            function getCheckBoxesSelected() {
+                var checkBoxes = $("#attendeesTable").find("td input:checked");
+                var ids = [];
+                $(checkBoxes).each(function (index) {
+                    ids.push($(this).val());
+                });
+                flog(ids);
+                return ids;
+            }
+
+
+            function initGenerateInvoices() {
+                $(".generateInvoices").click(function (e) {
+                    var checkBoxes = getCheckBoxesSelected();
+                    flog("checks", checkBoxes);
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the attendees you want to generate the invoices for by clicking the checkboxs to the right");
+                    } else {
+                        $("#invoiceModal").modal("show");
+                    }
+                });
+                $(".generate").click(function (e) {
+                    var checkBoxes = getCheckBoxesSelected();
+                    doGenerateInvoices(checkBoxes);
+                });
+
+            }
+            function doGenerateInvoices(checkBoxes) {
+                var modal = $("#invoiceModal");
+                var data = {
+                    generateInvoices: checkBoxes,
+                    priceAttendee: modal.find("#priceAttendee").val(),
+                    priceGuest: modal.find("#priceGuest").val(),
+                    discount: modal.find("#discount").val()
+                };
+                flog("Data to generate invoices ", data);
+                $.ajax({
+                    type: 'POST',
+                    data: data,
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Invoices generated ok.");
+                            $("#invoiceModal").modal("hide");
+                        } else {
+                            Msg.error("There was a problem generating the invoices. Please try again and contact the administrator if you still have problems");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error('err');
+                    }
+                });
+            }
+
             function initRemoveAttendees() {
-                $(".removeAttendees").click(function(e) {
+                $(".removeAttendees").click(function (e) {
                     var node = $(e.target);
-                    log("removeAttendees", node, node.is(":checked"));
+                    flog("removeAttendees", node, node.is(":checked"));
                     var checkBoxes = node.closest(".MainContent").find("table.attendees tbody td input:checked");
-                    log("checks", checkBoxes);
-                    if( checkBoxes.length === 0 ) {
+                    flog("checks", checkBoxes);
+                    if (checkBoxes.length === 0) {
                         Msg.error("Please select the attendees you want to remove by clicking the checkboxs to the right");
                     } else {
-                        if( confirm("Are you sure you want to remove " + checkBoxes.length + " attendees?") ) {
+                        if (confirm("Are you sure you want to remove " + checkBoxes.length + " attendees?")) {
                             doRemoveAttendees(checkBoxes);
                         }
                     }
                 });
             }
             function doRemoveAttendees(checkBoxes) {
+                var ids = getIds(checkBoxes);
+                var data = {toRemoveId: ids};
+                flog("Data to remove: ", data);
                 $.ajax({
                     type: 'POST',
-                    data: checkBoxes,
+                    data: data,
                     dataType: "json",
                     url: "",
-                    success: function(data) {
-                        log("success", data);
-                        if( data.status ) {
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
                             Msg.success("Removed entries ok");
                             $('#attendee-wrapper').reloadFragment();
                         } else {
                             Msg.error("There was a problem removing entries. Please try again and contact the administrator if you still have problems");
                         }
                     },
-                    error: function(resp) {
+                    error: function (resp) {
                         Msg.error('err');
                     }
-                });      
-            }            
+                });
+            }
+
+            function initAddAttendeeModal() {
+                var modal = $("#attendeeModal");
+                modal.find("form").forms({
+                    onSuccess: function (resp, form) {
+                        flog('attendeeModal form :: ', resp);
+                        if (resp === undefined || resp.status === false) {
+                            Msg.error('There was an error adding the attendee.');
+                        } else {
+                            modal.modal("hide");
+                            Msg.success('Attendee added successfully.');
+                            $("#attendeesTable").reloadFragment();
+                        }
+                    }
+                });
+            }
+
+            function getIds(checkBoxes) {
+                var ids = [];
+                $(checkBoxes).each(function (index) {
+                    ids.push($(this).val());
+                });
+                flog(ids);
+                return ids;
+            }
+
+            function doConfirmAttendees(checkBoxes) {
+                var ids = getIds(checkBoxes);
+                var data = {toConfirmId: ids};
+                flog("Data to confirm ", data);
+                $.ajax({
+                    type: 'POST',
+                    data: data,
+                    dataType: "json",
+                    url: "",
+                    success: function (data) {
+                        flog("success", data);
+                        if (data.status) {
+                            Msg.success("Attendees confirmed.");
+                            $('#attendee-wrapper').reloadFragment();
+                        } else {
+                            Msg.error("There was a problem confirming the attendess. Please try again and contact the administrator if you still have problems.");
+                        }
+                    },
+                    error: function (resp) {
+                        Msg.error('err');
+                    }
+                });
+            }
+            function initConfirmAttendees() {
+                $(".confirmAttendee").click(function (e) {
+                    var node = $(e.target);
+                    flog("confirm", node, node.is(":checked"));
+                    var checkBoxes = node.closest(".MainContent").find("table.attendees tbody td input:checked");
+                    flog("checks", checkBoxes);
+                    if (checkBoxes.length === 0) {
+                        Msg.error("Please select the attendees you want to confirm by clicking the checkboxs to the right");
+                    } else {
+                        if (confirm("Are you sure you want to confirm " + checkBoxes.length + " attendees?")) {
+                            doConfirmAttendees(checkBoxes);
+                        }
+                    }
+                });
+            }
         </script>
     </body>
 </html>
