@@ -382,38 +382,61 @@ function initProfileLeads() {
     var modal = $('#modalCreateLead');
     var form = $('#modalCreateLead form');
 
+    function initProfileLeadForm() {
+        modal.find('form').forms({
+            postUrl: '/leads',
+            validate: function (form, config) {
+                flog('validating ... ', form);
+                var ret = {
+                    error: 0,
+                    errorFields: [],
+                    errorMessages: []
+                };
+                var taskDescription = form.find('textarea[name=taskDescription]').val();
+                if (taskDescription !== undefined && taskDescription !== "") {
+                    var title = $("#title").val();
+                    if(title === undefined || title === ""){
+                        ret.error = 1;
+                        ret.errorFields.push($("#title"));
+                        ret.errorMessages.push("Please complete the task title.");
+                    }
+                }
+                flog("ret , ", ret);
+                return ret;
+            },
+            onSuccess: function (resp) {
+                if (resp.status){
+                    Msg.success('lead created')
+                    modal.modal('hide');
+                    setTimeout(function () {
+                        reloadActiveTab();
+                        modal.find('[name=funnel]').trigger('change');
+                    },100)
+                }
+            }
+        });
+
+        modal.find('[name=newOrgTitle]').entityFinder({
+            useActualId: true,
+            type: 'organisation'
+        });
+
+        modal.find('.btnCreateLead').click(function (e) {
+            e.preventDefault();
+
+            form.trigger('submit');
+        });
+
+        modal.find('#lead-fields-tab input[required]').each(function () {
+            $(this).removeAttr('required');
+        })
+    }
 
     $(document).on('change','#modalCreateLead [name=funnel]', function () {
         modal.reloadFragment({
             url: window.location.pathname + '?showTab=funnelsTab&leadName='+this.value,
             whenComplete: function () {
-                modal.find('form').forms({
-                    postUrl: '/leads',
-                    onSuccess: function (resp) {
-                        if (resp.status){
-                            Msg.success('lead created')
-                            modal.modal('hide');
-                            setTimeout(function () {
-                                reloadActiveTab();
-                            },100)
-                        }
-                    }
-                });
-
-                modal.find('[name=newOrgTitle]').entityFinder({
-                    useActualId: true,
-                    type: 'organisation'
-                });
-
-                modal.find('.btnCreateLead').click(function (e) {
-                    e.preventDefault();
-
-                    form.trigger('submit');
-                });
-
-                modal.find('#lead-fields-tab input[required]').each(function () {
-                    $(this).removeAttr('required');
-                })
+                initProfileLeadForm()
             }
         })
     });
