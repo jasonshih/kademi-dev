@@ -33,9 +33,10 @@
             <ul class="nav nav-tabs tab-bricky">
                 <li><a data-toggle="tab" href="#hibernate">Hibernate cache</a></li>
                 <li><a data-toggle="tab" href="#cache">Provider caches</a></li>
+                <li><a data-toggle="tab" href="#sql">SQL</a></li>
             </ul>
             <div class="tab-content">
-                
+
                 <div id="hibernate" class="tab-pane">
                     <table class="table table-striped">
                         <tbody>
@@ -103,7 +104,7 @@
                                 <th>SessionCloseCount</th>
                                 <td>$page.cacheStats.SessionCloseCount</td>
                             </tr>
-                            
+
                             <tr>
                                 <th>SessionOpenCount</th>
                                 <td>$page.cacheStats.SessionOpenCount</td>
@@ -120,24 +121,24 @@
                                 <th>PrepareStatementCount</th>
                                 <td>$page.cacheStats.PrepareStatementCount</td>
                             </tr>
-                            
-                            
-                            
+
+
+
                         </tbody>
                     </table>
-                    
+
                     <h2>Entities</h2>
                     <table class="table table-striped">
                         <tr>
                             <th>Entity</th>
-                            <th>Loads</th>                            
+                            <th>Loads</th>
                             <th>Fetches</th>
-                            
+
                             <th>Deletes</th>
                             <th>Inserts</th>
                             <th>Updates</th>
                             <th>OptimisticFailures</th>
-                            
+
                             <th>Hits</th>
                             <th>Misses</th>
                             <th>Puts</th>
@@ -145,9 +146,9 @@
                         </tr>
                         <tr>
                             <th  colspan="7">High volume query cache</th>
-                            #set( $secondLevelStats = false )                            
-                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )                            
-                            
+                            #set( $secondLevelStats = false )
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.query.highvolume") )
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -155,13 +156,13 @@
                             <td>$secondLevelStats.ElementCountInMemory</td>
                             #else
                             <td colspan="4">No second level cache</td>
-                            #end                            
+                            #end
                         </tr>
                         <tr>
                             <th  colspan="7">Standard query cache</th>
-                            #set( $secondLevelStats = false )                            
-                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )                            
-                            
+                            #set( $secondLevelStats = false )
+                            #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.org.hibernate.cache.internal.StandardQueryCache") )
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -169,22 +170,22 @@
                             <td>$secondLevelStats.ElementCountInMemory</td>
                             #else
                             <td colspan="4">No second level cache</td>
-                            #end                            
-                        </tr>                        
+                            #end
+                        </tr>
                         #foreach($entityName in $page.cacheStats.EntityNames)
                         #set( $entityStats =  $page.cacheStats.getEntityStatistics($entityName) )
-                                                
+
                         #set( $secondLevelStats = $page.cacheStats.getSecondLevelCacheStatistics("hibernate.$entityName") )
                         <tr>
                             <th>$entityName</th>
-                            <td>$entityStats.LoadCount</td>                            
+                            <td>$entityStats.LoadCount</td>
                             <td>$entityStats.FetchCount</td>
-                            
+
                             <td>$entityStats.DeleteCount</td>
                             <td>$entityStats.InsertCount</td>
                             <td>$entityStats.UpdateCount</td>
                             <td>$entityStats.OptimisticFailureCount</td>
-                            
+
                             #if( $secondLevelStats )
                             <td>$secondLevelStats.HitCount</td>
                             <td>$secondLevelStats.MissCount</td>
@@ -196,12 +197,12 @@
                         </tr>
                         #end
 
-                        
+
                     </table>
                 </div>
                 <div id="cache" class="tab-pane">
                     #set( $caches = $page.caches )
-                    
+
                     <div class="alert alert-info">
                         <h3>Cluster state</h3>
                         <ul class="list">
@@ -210,12 +211,12 @@
                         #end
                         </ul>
                     </div>
-                    
+
                     <form action="$page.href" method="POST">
                         <input type="hidden" name="flushCache" value="true"/>
                         <button class="btn btn-danger">Flush cache</button>
                     </form>
-                    
+
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -234,7 +235,26 @@
                             #end
                         </tbody>
                     </table>
-                </div>                
+                </div>
+                <div id="sql" class="tab-pane">
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>SQL</th>
+                                <th>Duration (ms)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach($sql in $page.slowQueries )
+                            <tr>
+                                <td>$sql.markedUpSql</td>
+                                <td>$sql.duration</td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </body>
