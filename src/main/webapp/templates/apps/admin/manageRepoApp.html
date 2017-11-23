@@ -3,25 +3,25 @@
         <title>Manage Repo App</title>
         <link rel="stylesheet" href="/static/dropzone/4.3.0/downloads/css/dropzone.css" />
         <link rel="stylesheet" href="/static/jasny-bootstrap/css/jasny-bootstrap.min.css">
-        <style>
+        <style type="text/css">
             .gallery-img {
                 display: block;
-            / / width: 400 px;
+                width: 400px;
                 height: 150px;
                 width: auto;
                 height: auto;
             }
-
+    
             .gallery-img img {
                 max-width: 400px;
                 max-height: 150px;
             }
 
-            .star-rating {
-                color: #555555;
-                cursor: default;
+            .reviewer-name {
+                font-size: 120%;
+                font-weight: 600;
             }
-
+    
             .app-logo {
                 display: inline-block;
                 max-height: 150px;
@@ -29,18 +29,18 @@
                 width: auto;
                 height: auto;
             }
-
+    
             .app-logo img {
                 max-height: 150px;
                 max-width: 320px;
                 width: auto;
                 height: auto;
             }
-
+    
             .app-logo .noLogo {
                 display: none !important;
             }
-
+    
             .app-banner {
                 display: inline-block;
                 max-width: 533px;
@@ -48,12 +48,12 @@
                 width: auto;
                 height: auto;
             }
-
+    
             .app-banner img {
                 max-width: 533px;
                 max-height: 200px;
             }
-
+    
             .app-banner .noBanner {
                 display: none !important;
             }
@@ -130,21 +130,28 @@
 
                 #if($marketItem)
                     <div class="tab-pane" id="reviews">
-                        <div class="row">
+                        <div class="discussion">
                             #set($reviews = $marketItem.appRatings)
                             #if(!$reviews || $reviews.empty)
-                                <div class="col-md-12">
-                                    No ratings have been submitted
-                                </div>
+                                <div class="no-reviews">No ratings have been submitted</div>
                             #else
                                 #foreach($review in $reviews)
-                                    <div class="col-md-12">
-                                        <hr />
-                                        #genRating($review.rating)
-                                        $review.reviewedBy.formattedName
-                                        from $review.organisation.formattedName
-                                        <span class="pull-right"><abbr title="$review.reviewedOn" class="timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
-                                        <p>$review.review</p>
+                                    <div class="other">
+                                        <div class="avatar">
+                                            #set($photoUrl = "/templates/apps/user/profile.png")
+                                            #if($review.reviewedBy.photoHash)
+                                                #set($photoUrl = "/_hashes/files/" + $review.reviewedBy.photoHash)
+                                            #end
+                                            <img src="$photoUrl" alt="$review.reviewedBy.formattedName" />
+                                        </div>
+                                        <div class="messages">
+                                            <p>
+                                                <span class="reviewer-name">$review.reviewedBy.formattedName</span> <small class="text-muted">(from $review.organisation.formattedName)</small>
+                                                <span class="small">reviewed <abbr title="$review.reviewedOn" class="comment-time timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                                #genRating($review.rating)
+                                            </p>
+                                            <p class="reviewer-review">"$review.review"</p>
+                                        </div>
                                     </div>
                                 #end
                             #end
@@ -202,7 +209,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Banner
-                                    <small>Recommended size 800x300 px</small>
+                                    <small>Recommended 800x400(px) size or 16:9 ratio</small>
                                 </label>
                                 <div class="col-sm-9" id="bannerImage">
                                     #set($banner = "/theme/apps/marketplace/no_banner.png")
@@ -227,7 +234,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Logo
-                                    <small>Recommended size 320x150 px</small>
+                                    <small>Recommended 320x180(px) size or 16:9 ratio</small>
                                 </label>
                                 <div class="col-sm-9" id="logoImage">
                                     #set($logo = "/theme/apps/marketplace/no_logo.png")
@@ -376,19 +383,13 @@
             </div>
         #end
 
-        <script src="/theme/assets/plugins/jquery-inputlimiter/jquery.inputlimiter.1.3.1.min.js">//
-        </script>
-
-        <script src="/static/jasny-bootstrap/js/jasny-bootstrap.min.js" type="text/javascript">//
-        </script>
-        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js">//
-        </script>
-        <script src="/theme/assets/js/pages-gallery.js">//
-        </script>
-        <script type="text/javascript" src="/theme/apps/admin/manageRepoApp.js">//
-        </script>
+        <script src="/theme/assets/plugins/jquery-inputlimiter/jquery.inputlimiter.1.3.1.min.js"></script>
+        <script src="/static/jasny-bootstrap/js/jasny-bootstrap.min.js" type="text/javascript"></script>
+        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js"></script>
+        <script src="/theme/assets/js/pages-gallery.js"></script>
+        <script type="text/javascript" src="/theme/apps/admin/manageRepoApp.js"></script>
         <script type="text/javascript" src="/static/bootstrap-upcrop-image/1.0/bootstrap-upcrop-image.js">//</script>
-        <script>
+        <script type="text/javascript">
             $(function () {
                 initManageRepoApp();
                 #if (!$marketItem)
@@ -396,8 +397,9 @@
                 #end
             });
         </script>
+        
         #macro(genRating $rating)
-            <p class="star-rating" title="$rating/5 stars">
+            <span class="star-rating" title="$rating/5 stars">
                 #foreach($i in [0..4])
                     #set($a = $rating - $i)
                     #if($a > 0.5)
@@ -408,7 +410,7 @@
                         <span class="fa fa-star-o"></span>
                     #end
                 #end
-            </p>
+            </span>
         #end
     </body>
 </html>

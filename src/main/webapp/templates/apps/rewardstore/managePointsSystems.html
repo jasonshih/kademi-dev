@@ -1,8 +1,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Manage Rewards</title>
-        <!--<link href="manageReward.css" rel="stylesheet" type="text/css" />-->
-        <script type="text/javascript" src="managePointsSystems.js">//</script>
     </head>
     <body>
         <section id="manageReward">
@@ -62,10 +60,11 @@
                                     <th># records</th>
                                     <th>Total debits</th>
                                     <th># records</th>
+                                    <th>Total Liability</th>
                                     <th class="action"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-pointsSystems">
                                 #foreach($r in $page.children.ofType.manageReward)
                                     <tr>
                                         <td><a href="$r.name">$r.rewardTitle</a></td>
@@ -78,10 +77,11 @@
                                                 #end
                                             #end
                                         </td>
-                                        <td>$formatter.formatUnits($r.totalPoints) points</td>
-                                        <td>$r.countPointsRecs</td>
-                                        <td>$formatter.formatUnits($r.totalDebits) points</td>
-                                        <td>$r.countDebitsRecs</td>
+                                        <td>$formatter.formatUnits($r.totalPoints($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
+                                        <td>$r.countPointsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate)</td>
+                                        <td>$formatter.formatUnits($r.totalDebits($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
+                                        <td>$r.countDebitsRecs($queryManager.commonStartDate, $queryManager.commonFinishDate)</td>
+                                        <td>$formatter.formatUnits($r.totalLiability($queryManager.commonStartDate, $queryManager.commonFinishDate)) points</td>
                                         <td class="action">
                                             <div class="btn-group btn-group-sm">
                                                 <a href="$r.name" class="btn btn-sm btn-primary btn-sm"> <i class="fa fa-edit"></i> Edit
@@ -125,6 +125,8 @@
                 <span class="block-name" title="$group.name">$group.name</span>
             </div>
         #end
+        
+        <script type="text/javascript" src="/theme/apps/rewardstore/managePointsSystems.js?_=101">//</script>
         <script type="text/javascript">
             $(function () {
                 initManagePointsSystems();

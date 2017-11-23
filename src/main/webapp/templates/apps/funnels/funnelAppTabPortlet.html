@@ -6,7 +6,7 @@
 <div class="panel panel-default">
     #set( $funnel = $applications.funnels.funnel($lead) )
     <div class="panel-heading">
-
+        <i class="fa fa-tasks" aria-hidden="true"></i>
         #if( $funnel )
             <a class="pull-left" href="/funnels/$funnel.name">
                 #if( $funnel.title )
@@ -263,22 +263,36 @@
                                     <textarea name="notes" class="form-control" style="height: 90px"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="row">
                                 <label class="control-label col-md-2" for="">Follow-up</label>
                                 <div class="col-md-4">
-                                    <div id="dueDate" class="input-group">
-                                        <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
-                                        <span class="input-group-addon">
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <div id="dueDate" class="input-group">
+                                                <input type="text" name="dueDate" class="form-control date-time" value="$formatter.formatDate($formatter.now) 08:00">
+                                                <span class="input-group-addon">
                                             <span class="fa fa-calendar"></span>
                                         </span>
-                                    </div>
-                                    <br />
+                                        </div>
 
-                                    <input type="text" name="title" id="title" class="form-control" placeholder="Task" />
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="title" id="title" class="form-control" placeholder="Task" />
+                                        </div>
+                                    </div>
+
                                 </div>
 
                                 <div class="col-md-6">
-                                    <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <textarea name="taskDescription" class="form-control" style="height: 95px" placeholder="Follow-up task details"></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
