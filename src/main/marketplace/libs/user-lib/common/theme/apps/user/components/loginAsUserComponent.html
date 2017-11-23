@@ -1,0 +1,7 @@
+#if($page)
+    #set($loginHref = "/users/" + $page.profile.name + "?gotoUser=$!loginasWebsite")
+#else
+    #set($loginHref = "#")
+#end
+
+<a href="$loginHref" target="_blank" class="btn btn-info"><i class="fa fa-user"></i>&nbsp;Login as..</a>

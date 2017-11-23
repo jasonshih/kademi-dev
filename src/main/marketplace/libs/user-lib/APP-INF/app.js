@@ -7,3 +7,4 @@ controllerMappings.addComponent("user/components", "recentUserRegistrations", "h
 controllerMappings.addComponent("user/components", "recentActiveUsers", "html", "Display recent active users", "User App component");
 controllerMappings.addComponent("user/components", "registrationsOverTime", "html", "Display a line graph of registrations over time", "User App component");
 controllerMappings.addComponent("user/components", "membersTable", "html", "Display a table of members", "User App component");
+controllerMappings.addComponent("user/components", "loginAsUser", ['lead', 'profile', 'user'], "Login as a user", "User App component");
