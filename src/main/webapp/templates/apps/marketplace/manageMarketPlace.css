@@ -1,14 +1,24 @@
-.app a,
-.app a:active,
-.app a:hover,
-.app a:focus,
-.app a:link {
-    color: #555555;
-    text-decoration: none;
+.market-app > a,
+.installed-app > a {
+    display: block;
+    color: #555;
+    text-decoration: none !important;
 }
 
-.caption {
-    height: 130px;
+.app-inner {
+    overflow: hidden;
+}
+
+.app-inner .embed-responsive-item {
+    background: no-repeat 50% 0% / contain;
+}
+
+.app-inner .no-logo .embed-responsive-item {
+    background: no-repeat 50% 50% / cover;
+}
+
+.app-inner .caption p {
+    height: 54px;
     overflow: hidden;
 }
 
@@ -16,28 +26,6 @@
     white-space: nowrap;
     margin-bottom: 5px;
     margin-top: 5px;
-}
-
-.caption .title .parag-end {
-    height: 25px;
-    width: 45px;
-    background-image: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(100%, rgba(255, 255, 255, 1)));
-    background-image: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=1, StartColorStr='#00ffffff', EndColorStr='#ffffff');
-    height: 25px;
-    max-height: 100%;
-    position: absolute;
-    right: 16px;
-    width: 50px;
-}
-
-.thumbnail img {
-    display: block;
-    width: auto;
-    height: auto;
-    max-height: 150px;
-    max-width: 320px;
 }
 
 .ratings {
