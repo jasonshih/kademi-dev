@@ -26,6 +26,9 @@
                 max-height: 200px;
                 overflow-y: scroll;
             }
+            .duration {
+                vertical-align: top !important;
+            }
         </style>
     </head>
     <body class="manageApplications appsContainer">
@@ -34,6 +37,7 @@
                 <li><a data-toggle="tab" href="#hibernate">Hibernate cache</a></li>
                 <li><a data-toggle="tab" href="#cache">Provider caches</a></li>
                 <li><a data-toggle="tab" href="#sql">SQL</a></li>
+                <li><a data-toggle="tab" href="#perRequestSql">Per request SQL</a></li>
             </ul>
             <div class="tab-content">
 
@@ -206,9 +210,9 @@
                     <div class="alert alert-info">
                         <h3>Cluster state</h3>
                         <ul class="list">
-                        #foreach($m in $page.clusterMembers)
-                        <li>$m</li>
-                        #end
+                            #foreach($m in $page.clusterMembers)
+                            <li>$m</li>
+                            #end
                         </ul>
                     </div>
 
@@ -241,19 +245,47 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>SQL</th>
                                 <th>Duration (ms)</th>
+                                <th>SQL</th>
                             </tr>
                         </thead>
                         <tbody>
                             #foreach($sql in $page.slowQueries )
                             <tr>
+                                <td class="duration">$sql.duration</td>
                                 <td>$sql.markedUpSql</td>
-                                <td>$sql.duration</td>
                             </tr>
                             #end
                         </tbody>
                     </table>
+                </div>
+                <div id="perRequestSql" class="tab-pane">
+                    <div class="container">
+
+                        #foreach($requestLogs in $page.perRequestLogs )
+                        <div class="row" data-toggle="collapse" data-target="#details-$requestLogs.id">
+                            <div class="col-md-6">
+                                <h2>$requestLogs.method | $requestLogs.url</h2>
+                            </div>
+                            <div class="col-md-2">
+                                <b>$formatter.formatNumericNoDecimal($requestLogs.requestSqlDuration) ms</b>
+                                <br/>
+                                <small class="muted">Total duration</small>
+                            </div>
+                            <div class="col-md-2">$formatter.formatDateTime($requestLogs.createdDate)</div>
+                            <div class="col-md-2">$requestLogs.queries.size() queries</div>
+                        </div>
+                        <div id="details-$requestLogs.id" class="collapse out">
+                            #foreach($sql in $requestLogs.queries )
+                            <div class="row">
+                                <div class="col-md-1">$formatter.formatNumericNoDecimal( $sql.duration) ms</div>
+                                <div class="col-md-11">$sql.markedUpSql</div>
+                            </div>
+                            #end
+                        </div>
+                        #end
+                        <hr/>
+                    </div>
                 </div>
             </div>
         </div>
