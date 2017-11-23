@@ -10,6 +10,10 @@
 }
 
 .app-inner .embed-responsive-item {
+    background: no-repeat 50% 0% / contain;
+}
+
+.app-inner .no-logo .embed-responsive-item {
     background: no-repeat 50% 50% / cover;
 }
 

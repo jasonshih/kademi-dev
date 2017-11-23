@@ -92,10 +92,12 @@
                 <a href="$appHref">
                     <div class="thumbnail app-inner">
                         #set($logo = "/theme/apps/marketplace/no_logo.png")
+                        #set($logoClass = "no-logo")
                         #if($app.logo)
-                            #set($logo = $app.href + $app.logo.name + "/alt-320-150.png")
+                            #set($logo = $app.href + $app.logo.name)
+                            #set($logoClass = "")
                         #end
-                        <div class="embed-responsive embed-responsive-16by9">
+                        <div class="embed-responsive embed-responsive-16by9 $!logoClass">
                             <div class="embed-responsive-item" style="background-image: url('$logo');"></div>
                         </div>
                         <div class="caption">
