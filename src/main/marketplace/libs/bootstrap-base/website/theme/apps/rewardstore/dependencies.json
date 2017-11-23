@@ -2,7 +2,7 @@
     "appDependencies": [
         {
             "appId": "rewardstore-lib",
-            "branch": "1.2.3"
+            "branch": "1.2.6"
         },
         {
             "appId": "nvd3-lib",
