@@ -1797,6 +1797,7 @@ function initDeleteFile() {
         var fname = btn.data('fname');
         confirmDelete(fname, fname, function () {
             tr.remove();
+            Msg.info('File deleted');
         });
     });
 }
