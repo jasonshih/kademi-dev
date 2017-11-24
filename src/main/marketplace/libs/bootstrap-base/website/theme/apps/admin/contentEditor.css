@@ -87,6 +87,12 @@
 .content-editor-nav .content-editor-file {
     float: left;
     padding-left: 40px;
+    max-width: 80%;
+    display: inline-block;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .content-editor-nav .content-editor-navbar {
