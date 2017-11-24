@@ -122,9 +122,9 @@
                                     </button>
                                     <div class="btn-group btn-group-sm">
                                         #if($type == "quiz")
-                                        <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
-                                            #else
-                                            <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit page">
+                                            <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
+                                        #else
+                                            <a href="?contenteditor=${modulePage.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page">
                                                 #end
                                                 <i class="fa fa-edit"></i>
                                                 Edit
