@@ -97,12 +97,12 @@
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-right selectEmail">
                                             #foreach($website in $page.websites)
-                                            <li><a href="#">noreply@$formatter.getDomainName($website, false)</a></li>
+                                            <li><a href="#">noreply@$formatter.getDomainName($website, false, false)</a></li>
                                             #end
                                         </ul>
                                     </div><!-- /btn-group -->
                                 </div><!-- /input-group -->
-                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank.</small>                                                                
+                                <small class="text-muted help-block">Eg <i>"Joe Bloggs" &lt;joe@bloggs.com&gt;</i>. You can leave this field blank.</small>
                             </div>
                         </div>
                         <div class="form-group">
@@ -472,7 +472,7 @@
                                             <h3>Total to Send</h3>
                                             <h5 id="groupEmail-totalToSend"></h5>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -480,7 +480,7 @@
                                             <h3>Generated</h3>
                                             <h5 id="groupEmail-totalGenerated"></h5>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -490,7 +490,7 @@
                                                 <h5 id="groupEmail-totalSuccessful"></h5>
                                             </a>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -500,7 +500,7 @@
                                                 <h5 id="groupEmail-totalRetrying"></h5>
                                             </a>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -510,7 +510,7 @@
                                                 <h5 id="groupEmail-totalFailed"></h5>
                                             </a>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -520,7 +520,7 @@
                                                 <h5 id="groupEmail-totalOpened"></h5>
                                             </a>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="panel panel-success">
@@ -530,7 +530,7 @@
                                                 <h5 id="groupEmail-totalConverted"></h5>
                                             </a>
                                         </div>
-                                    </div>  
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -681,8 +681,8 @@
 
         <script id="row-email-template" type="text/x-handlebars-template">
             <tr class="tr-{{id}}">
-            <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td> 
-            <td>{{from}}</td> 
+            <td class="{{statusText}}-{{id}}"><p class="label {{statusLabel}}"><span class="glyphicon {{statusIcon}}"></span>{{statusText}}</p></td>
+            <td>{{from}}</td>
             <td>{{to}}</td>
             <td>{{subject}}</td>
             <td>{{attempts}}</td>
@@ -701,7 +701,7 @@
                             <thead>
                                 <tr>
                                     <th>Status</th>
-                                    <th>From</th> 
+                                    <th>From</th>
                                     <th>To</th>
                                     <th>Subject</th>
                                     <th>Attempts</th>
@@ -723,7 +723,7 @@
                 var domains = {};
                 #foreach($website in $rootFolder.child("websites").children)
                         #if ($website.domainName && $website.name)
-                domains['$website.name'] = '$website.domainName';
+                domains['$website.name'] = '$website.domainName $website.class';
                         #end
                         #end
                 $("#availableDomains").val(JSON.stringify(domains));
