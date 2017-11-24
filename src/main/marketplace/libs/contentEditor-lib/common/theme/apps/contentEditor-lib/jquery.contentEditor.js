@@ -1,6 +1,6 @@
 (function ($) {
     var EDITOR_PATH = '/theme/apps/contentEditor-lib/';
-    var KEDITOR_PATH = '/keditor/dist/';
+    var KEDITOR_PATH = '/theme/apps/keditor-lib/dist/';
     
     $.fn.contentEditor = function (method) {
         if (methods[method]) {
