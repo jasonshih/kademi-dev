@@ -37,9 +37,9 @@
             }
         },
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/calendar/calendars.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/calendar/calendars.less"
             }
         },
         {
@@ -70,6 +70,12 @@
             "js": {
                 "group": "main",
                 "path": "/theme/apps/calendar/multiCalendars.js"
+            }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/calendar/eventManager.js"
             }
         }
     ]

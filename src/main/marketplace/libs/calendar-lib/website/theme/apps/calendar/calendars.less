@@ -1,0 +1,103 @@
+.calendars {
+    width: 100%;
+    
+    th {
+        text-align: left;
+    }
+    
+    th,
+    td {
+        padding: 5px;
+    }
+}
+
+.calendar-events {
+    margin-bottom: 50px;
+}
+
+.calendar-event-byline {
+    margin-bottom: 10px;
+}
+
+.calendar-events-item {
+    margin-bottom: 20px;
+    border-bottom: dotted lightgray 1px;
+}
+
+.calendar-events-header {
+    margin-bottom: 10px;
+}
+
+.calendar-event-text {
+    margin-bottom: 30px;
+}
+
+.calendar-event-content {
+    min-height: 0px;
+}
+
+.attendees {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+        display: block;
+        float: left;
+        width: 60px;
+        overflow: hidden;
+        padding: 0;
+        margin-right: 15px;
+        margin-bottom: 15px;
+        
+        a.profilePic {
+            display: block;
+            width: 60px;
+            text-align: center;
+            
+            img {
+                display: block;
+                height: 100%;
+            }
+        }
+        
+        a.user {
+            display: block;
+            width: 60px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        
+        .profilePic {
+            width: 52px;
+            height: 52px;
+            display: block;
+        }
+    }
+}
+
+.guests {
+    margin-left: 20px;
+}
+
+.fc-border-separate thead th.fc-day-header {
+    width: 14.28% !important;
+}
+
+.fc-day > div {
+    min-height: 0 !important;
+}
+
+.well-rsvp {
+    display: none;
+}
+
+#event-manager-form {
+    padding: 30px 0;
+    
+    .tab-pane {
+        border: solid @nav-tabs-border-color;
+        border-width: 0 1px 1px;
+    }
+}
