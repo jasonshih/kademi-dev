@@ -723,7 +723,7 @@
                 var domains = {};
                 #foreach($website in $rootFolder.child("websites").children)
                         #if ($website.domainName && $website.name)
-                domains['$website.name'] = '$website.domainName $website.class';
+                domains['$website.name'] = '$website.domainName';
                         #end
                         #end
                 $("#availableDomains").val(JSON.stringify(domains));
