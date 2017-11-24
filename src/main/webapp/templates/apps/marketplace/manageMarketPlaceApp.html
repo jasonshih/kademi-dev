@@ -94,7 +94,8 @@
                         <form accept-charset="UTF-8" id="reviewForm" action="" method="POST">
                             <input type="hidden" name="submitReview" value="submitReview" />
                             <p>
-                                <textarea class="form-control animated limited" maxLength="200" rows="2" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
+                                <textarea class="form-control animated" maxLength="200" rows="2" id="new-review" name="comment" placeholder="Enter your review here..."></textarea>
+                                <small class="help-block">Maximum is 200 characters</small>
                             </p>
                             <div class="row">
                                 <div class="col-xs-6">
@@ -114,6 +115,8 @@
                                 <li class="no-reviews">Be the first to review this app!</li>
                             #end
                             
+                            #set ($timezone = $!page.find('/').orgData.timezone)
+                            
                             #foreach($review in $page.appRatings)
                                 <li class="other">
                                     <div class="avatar">
@@ -126,7 +129,7 @@
                                     <div class="messages">
                                         <p>
                                             <span class="reviewer-name">$review.reviewedBy.formattedName</span>
-                                            <span class="small">reviewed <abbr title="$review.reviewedOn" class="comment-time timeago">$formatter.formatDateISO8601($review.reviewedOn)</abbr></span>
+                                            <span class="small">reviewed <abbr title="$formatter.formatDateISO8601($review.reviewedOn, $timezone)" class="comment-time timeago">$review.reviewedOn</abbr></span>
                                             #genRating($review.rating)
                                         </p>
                                         <p class="reviewer-review">"$review.review"</p>

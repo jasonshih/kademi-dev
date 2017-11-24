@@ -502,6 +502,20 @@ acronym[title] {
     }
 }
 
+.modal {
+    .container-inverse &,
+    .col-inverse &,
+    .jumbotron-inverse & {
+        color: @text-color;
+        
+        .modal-body {
+            a {
+                color: @link-color;
+            }
+        }
+    }
+}
+
 // ==================================================
 // Carousel components
 // ==================================================
