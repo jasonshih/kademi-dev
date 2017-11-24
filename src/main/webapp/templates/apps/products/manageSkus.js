@@ -326,6 +326,7 @@
             onCropComplete: function (resp) {
                 flog("onCropComplete:", resp, resp.nextHref);
                 reloadRow(modalUpCrop.attr('data-rowid'));
+                Msg.info("Crop success");
             },
             onContinue: function (resp) {
                 flog("onContinue:", resp, resp.result.nextHref);
