@@ -126,13 +126,19 @@
 
             var self = this;
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
-            form.find('.select-display').val(dataAttributes['data-display']);
-            form.find('.select-align').val(dataAttributes['data-align']);
-            form.find('.select-layout').val(dataAttributes['data-layout']);
-            form.find('.icon-size').val(dataAttributes['data-icon-size']);
+            form.find('.select-display').val(dataAttributes['data-display'] || 'icon-text');
+            form.find('.select-align').val(dataAttributes['data-align'] || 'left');
+            form.find('.select-layout').val(dataAttributes['data-layout'] || 'horizontal');
+            form.find('.icon-size').val(dataAttributes['data-icon-size'] || '32');
             form.find('.icon-size-wrapper').css('display', dataAttributes['data-display'] !== 'text' ? 'block' : 'none');
-            form.find('[name=icon-style][value="' + dataAttributes['data-icon-style'] + '"]').prop('checked', true);
-
+            var iconStyle = dataAttributes['data-icon-style'] || 'circle-color';
+            form.find('[name=icon-style][value="' + iconStyle + '"]').prop('checked', true);
+            if (!dataAttributes['data-facebook-enable']){
+                dataAttributes['data-facebook-enable'] = 'true';
+            }
+            if (!dataAttributes['data-twitter-enable']){
+                dataAttributes['data-twitter-enable'] = 'true';
+            }
             for (var i = 0, socialNetwork; socialNetwork = self.socialNetworks[i]; i++) {
                 form.find('[name=' + socialNetwork + '-enable]').prop('checked', dataAttributes['data-' + socialNetwork + '-enable'] === 'true');
                 form.find('[name=' + socialNetwork + '-text]').val(dataAttributes['data-' + socialNetwork + '-text']).prop('disabled', dataAttributes['data-' + socialNetwork + '-enable'] !== 'true');
