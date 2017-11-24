@@ -1,5 +1,4 @@
 function initMarketPlaceApp() {
-    initInputLimiter();
     initSubmitReview();
     initInstallApp();
     initMasonryAdapter();
@@ -15,14 +14,6 @@ function initMasonryAdapter() {
             $('.masonry-panel').masonry('layout');
             screenshotSwitcher.attr('data-masonry-adapted', 'true');
         }
-    });
-}
-
-function initInputLimiter() {
-    $('.limited').inputlimiter({
-        remText: 'You only have %n character%s remaining...',
-        remFullText: 'Stop typing! You\'re not allowed any more characters!',
-        limitText: 'You\'re allowed to input %n character%s into this field.'
     });
 }
 
@@ -70,23 +61,6 @@ function initInstallApp() {
             });
         });
     });
-}
-
-function genRating(rating) {
-    var r = '<span class="star-rating" title="' + rating + '/5 stars">';
-    for (var i = 0; i < 5; i++) {
-        var a = rating - i;
-        if (a > 0.5) {
-            r = r + '<span class="fa fa-star"></span>';
-        } else if (a == 0.5) {
-            r = r + '<span class="fa fa-star-half-o"></span>';
-        } else {
-            r = r + '<span class="fa fa-star-o"></span>';
-        }
-    }
-    r = r + '</span>';
-    
-    return r;
 }
 
 var __slice = [].slice;
