@@ -29,6 +29,15 @@
                 p.find('.panel-heading').attr('id', itemId);
                 p.find('.panel-collapse').attr('aria-labelledby', itemId).attr('id', panelCollapseId);
                 p.find('a[data-toggle]').attr('href', '#' + panelCollapseId).attr('aria-controls', '#' + panelCollapseId);
+
+                // backward compatibility
+                if (!p.find('a[data-toggle]').find('.accHeadingText').length){
+                    var headingText = $('<div class="accHeadingText" style="display: inline-block; width: 90%"></div>');
+                    var headingIcon = $('<div style="display: inline-block; width: 5%; float: right; text-align: right"><i class="fa fa-angle-double-down panelIconCollapsed"></i><i class="fa panelIconExpanded fa-angle-double-up"></i></div>')
+                    var text = p.find('a[data-toggle]').text().trim();
+                    headingText.text(text);
+                    p.find('a[data-toggle]').html('').append(headingText).append(headingIcon);
+                }
             });
 
             componentContent.find('.accordionWrap .panel-collapse').collapse('show');
