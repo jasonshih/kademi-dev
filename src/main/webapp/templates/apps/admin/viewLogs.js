@@ -36,7 +36,7 @@
 
                 flog('lastLogDate', filterOptions);
                 $.each(hits, function (i, n) {
-                    if( n.fields ) {
+                    if (n.fields) {
                         processReceivedLog(n.fields);
                     }
                 });
@@ -81,23 +81,23 @@
         }
 
         var row = $(
-            '<div class="' + labelType + ' col-row clearfix">' +
-            '    <div class="col-lvl"><span class="label label-' + labelType + '">' + c.level + '</span></div>' +
-            '    <div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
-            '    <div class="col-msg"></div>' +
-            '    <div class="col-date">' + dt.format('HH:mm:ss') + '</div>' +
-            '</div>'
-        );
+                '<div class="' + labelType + ' col-row clearfix">' +
+                '    <div class="col-lvl"><span class="label label-' + labelType + '">' + c.level + '</span></div>' +
+                '    <div class="col-user"><a target="_blank" class="userName" href="' + c.userHref + '">' + c.userName + '</a></div>' +
+                '    <div class="col-msg"></div>' +
+                '    <div class="col-date">' + dt.format('HH:mm:ss') + '</div>' +
+                '</div>'
+                );
         row.find('.col-msg').text(c.message);
 
         itemsToAppend.push(row);
 
         if (c.stackTrace && c.stackTrace !== null && c.stackTrace.length > 0) {
             row = $(
-                '<div class="col-row clearfix no-bordered">' +
-                '   <div class="causes"></div>' +
-                '</div>'
-            );
+                    '<div class="col-row clearfix no-bordered">' +
+                    '   <div class="causes"></div>' +
+                    '</div>'
+                    );
 
             var ul = $('<ul />');
             $.each(c.stackTrace, function (i, n) {
@@ -128,6 +128,8 @@
     window.initViewLogs = function (options) {
         clearTimeout(ajaxTimer);
         ajaxTimer = null;
+
+        enableLogging();
 
         maxLimit = options.maxLimit;
         filterOptions.size = maxLimit;
@@ -220,3 +222,21 @@
     }
 
 })(jQuery);
+
+function enableLogging() {
+    $.ajax({
+        type: 'POST',
+        url: window.location.pathname,
+        dataType: 'json',
+        data: {
+            startLogging : true
+        },
+        success: function (data) {
+            Msg.info("Logging enabled for this account");
+        },
+        error: function (resp) {
+            flog(arguments);
+            Msg.error('An error occured. Please check your internet connection');
+        }
+    });
+}
