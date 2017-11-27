@@ -123,21 +123,20 @@ function initMarkIgnored() {
 }
 
 function generateURL() {
-    var query = $("#email-query").val();
-    var status = $("#status").val();
-    var job = $("#job").val();
+    var url = new URI(window.location.href);
+    url.setQuery("q", $("#email-query").val());
+    url.setQuery("status", $("#status").val());
+    url.setQuery("job", $("#job").val());
 
-    var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
-    flog("URL ", newURL);
-    return newURL;
+    flog("URL ", url.toString());
+    return url;
 }
 
 function initCharts() {
-    var newURL = generateURL();
-    var uri = new URI(newURL);
+    var url = generateURL();
     $.ajax({
         type: "GET",
-        url: uri.toString() + "&emailStats",
+        url: url.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);
@@ -150,52 +149,14 @@ function initCharts() {
 
 function doSearch() {
     flog("doSearch");
-    var newURL = generateURL();
-    var uri = new URI(newURL);
-    window.history.pushState('', document.title, uri.toString());
+    var url = generateURL();
+    window.history.pushState('', document.title, url.toString());
     $("#table-emails").reloadFragment({
-        url: newURL,
+        url: url.toString(),
         whenComplete: function () {
             $('abbr.timeago').timeago();
-            initCharts();
         }
     });
-}
-
-var template;
-
-function initRowTemplate() {
-    var templateHtml = $("#email-row-template").html();
-    template = Handlebars.compile(templateHtml);
-    Handlebars.registerHelper('dateFromLong', function (millis, timezone) {
-        if (millis) {
-            var date;
-            var time = millis[0];
-            if (typeof time === 'string' && time.endsWith('Z')) {
-                time = time.substring(0, time.length - 1);
-            }
-
-            if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
-                flog('Using Timezone: ', timezone);
-                date = moment(time).tz(timezone);
-            } else {
-                date = moment(time);
-            }
-
-            return date.toISOString();
-        } else {
-            return "";
-        }
-    });
-}
-
-function renderRows(json) {
-    flog("renderRows", json, template);
-    var html = template(json);
-    var container = $("#history-table-body");
-    container.html(html);
-    flog("do timeago", $(".timeago", container));
-    container.find(".timeago").timeago();
 }
 
 function initPies(aggr) {
