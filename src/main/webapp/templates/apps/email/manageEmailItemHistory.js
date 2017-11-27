@@ -32,8 +32,10 @@ function initManageEmailHistory() {
     initSelectAll();
     initMarkIgnored();
 
-    initRowTemplate();
-    doSearch();
+    //initRowTemplate();
+    //doSearch();
+
+    initCharts();
 }
 
 function initMarkIgnored() {
@@ -120,27 +122,42 @@ function initMarkIgnored() {
 
 }
 
-
-function doSearch() {
-    flog("doSearch");
-
+function generateURL() {
     var query = $("#email-query").val();
     var status = $("#status").val();
     var job = $("#job").val();
 
     var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
-    var uri = new URI(newURL);
-    window.history.pushState('', document.title, uri.toString());
+    flog("URL ", newURL);
+    return newURL;
+}
 
+function initCharts() {
+    var newURL = generateURL();
+    var uri = new URI(newURL);
     $.ajax({
         type: "GET",
         url: uri.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);
-            renderRows(json);
             initHistogram(json.aggregations);
             initPies(json.aggregations);
+        }
+    });
+
+}
+
+function doSearch() {
+    flog("doSearch");
+    var newURL = generateURL();
+    var uri = new URI(newURL);
+    window.history.pushState('', document.title, uri.toString());
+    $("#table-emails").reloadFragment({
+        url: newURL,
+        whenComplete: function () {
+            $('abbr.timeago').timeago();
+            initCharts();
         }
     });
 }
