@@ -1,4 +1,6 @@
 $(document).ready(function () {
+    Msg.singletonForCategory = true;
+
     var editor = ace.edit("queryText");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/javascript");
@@ -15,17 +17,16 @@ $(document).ready(function () {
             url: "",
             success: function (data) {
                 flog("done save");
-                Msg.info("Saved");
+                Msg.info("Saved", "runningQuery");
                 if (callback) {
                     callback();
                 }
             },
             error: function (resp) {
-                Msg.error("An error occured while saving");
+                Msg.error("An error occured while saving", "runningQuery");
             }
         });
     }
-
 
     var heightUpdateFunction = function () {
 
@@ -66,12 +67,12 @@ $(document).ready(function () {
                 newHref += "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
             }
             flog("Saved, now run2", newHref);
-            Msg.info("Running..", newHref);
+            Msg.info("Running..", "runningQuery", newHref);
             $("#queryResults").reloadFragment({
                 url: newHref,
                 whenComplete: function () {
                     flog("Finished");
-                    Msg.info("Query executed");
+                    Msg.info("Query executed", "runningQuery");
                 }
             });
         });
@@ -84,20 +85,16 @@ $(document).ready(function () {
             endDate: endDate
         };
         var newHref = window.location.pathname + "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
-        Msg.info("Running...", newHref);
+        Msg.info("Running...", "runningQuery", newHref);
         $("#queryResults").reloadFragment({
             url: newHref,
             whenComplete: function () {
-                Msg.info("Query executed");
+                Msg.info("Query executed", "runningQuery");
             }
         });
     });
 
-
-
     $("body").on("click", ".saveQuery", function (e) {
         save();
     });
-
-
 });
