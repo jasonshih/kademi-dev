@@ -8,7 +8,7 @@ CKEDITOR.addTemplates('default', {
     templates: [
         {
             title: 'Expandable Panel (Default)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-default.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-default panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -23,7 +23,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Expandable Panel (Primary brand)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-primary.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-primary panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -38,7 +38,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Expandable Panel (Success Brand)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-success.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-success panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -53,7 +53,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Expandable Panel (Info brand)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-info.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-info panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -68,7 +68,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Expandable Panel (Danger brand)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-danger.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-danger panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -83,7 +83,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Expandable Panel (Warning brand)',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-warning.png',
             description: 'A panel which is initial hides the body content but show when click to chevron icon',
             html: '<div class="panel panel-warning panel-expandable-tpl">\n' +
             '    <div class="panel-heading">\n' +
@@ -98,7 +98,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Default',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-default.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-default">\n' +
             '    <div class="panel-heading">\n' +
@@ -113,7 +113,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Primary',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-primary.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-primary">\n' +
             '    <div class="panel-heading">\n' +
@@ -128,7 +128,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Success',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-success.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-success">\n' +
             '    <div class="panel-heading">\n' +
@@ -143,7 +143,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Info',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-info.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-info">\n' +
             '    <div class="panel-heading">\n' +
@@ -158,7 +158,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Warning',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-warning.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-warning">\n' +
             '    <div class="panel-heading">\n' +
@@ -173,7 +173,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Danger',
-            image: 'template-show-hide.png',
+            image: 'template-expandable-panel-danger.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-danger">\n' +
             '    <div class="panel-heading">\n' +

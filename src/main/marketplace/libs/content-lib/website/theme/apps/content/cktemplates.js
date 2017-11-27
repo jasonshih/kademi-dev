@@ -5,8 +5,9 @@ $(function () {
             e.preventDefault();
             var panel = $(this).closest('.panel');
             panel.find('.panel-body').slideToggle();
+            var that = this;
             setTimeout(function () {
-                $(this).find('i').toggleClass('fa-chevron-up fa-chevron-down');
+                $(that).find('i').toggleClass('fa-chevron-up fa-chevron-down');
             },700);
         });
     }
