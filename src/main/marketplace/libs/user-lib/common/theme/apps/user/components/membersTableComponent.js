@@ -116,12 +116,14 @@
             form.find('.show-paginator').prop("checked", toBool(dataAttributes['data-showpaginator']));
             form.find('.includeInactiveUsers').prop("checked", toBool(dataAttributes['data-inactive-users']));
             form.find('.select-query option').addClass('hide');
+            if (dataAttributes['data-columns']){
+                form.find('.table-columns').each(function () {
+                    if (dataAttributes['data-columns'].indexOf(this.value) != -1){
+                        this.checked = true;
+                    }
+                });
+            }
 
-            form.find('.table-columns').each(function () {
-                if (dataAttributes['data-columns'].indexOf(this.value) != -1){
-                    this.checked = true;
-                }
-            });
         }
     };
 
