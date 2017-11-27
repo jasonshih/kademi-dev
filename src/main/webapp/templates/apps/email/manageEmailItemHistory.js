@@ -32,8 +32,10 @@ function initManageEmailHistory() {
     initSelectAll();
     initMarkIgnored();
 
-    initRowTemplate();
-    doSearch();
+    //initRowTemplate();
+    //doSearch();
+
+    initCharts();
 }
 
 function initMarkIgnored() {
@@ -120,65 +122,41 @@ function initMarkIgnored() {
 
 }
 
+function generateURL() {
+    var url = new URI(window.location.href);
+    url.setQuery("q", $("#email-query").val());
+    url.setQuery("status", $("#status").val());
+    url.setQuery("job", $("#job").val());
 
-function doSearch() {
-    flog("doSearch");
+    flog("URL ", url.toString());
+    return url;
+}
 
-    var query = $("#email-query").val();
-    var status = $("#status").val();
-    var job = $("#job").val();
-
-    var newURL = window.location.pathname + "?q=" + query + "&status=" + status + "&job=" + job
-    var uri = new URI(newURL);
-    window.history.pushState('', document.title, uri.toString());
-
+function initCharts() {
+    var url = generateURL();
     $.ajax({
         type: "GET",
-        url: uri.toString() + "&emailStats",
+        url: url.toString() + "&emailStats",
         dataType: 'json',
         success: function (json) {
             flog('response', json);
-            renderRows(json);
             initHistogram(json.aggregations);
             initPies(json.aggregations);
         }
     });
+
 }
 
-var template;
-
-function initRowTemplate() {
-    var templateHtml = $("#email-row-template").html();
-    template = Handlebars.compile(templateHtml);
-    Handlebars.registerHelper('dateFromLong', function (millis, timezone) {
-        if (millis) {
-            var date;
-            var time = millis[0];
-            if (typeof time === 'string' && time.endsWith('Z')) {
-                time = time.substring(0, time.length - 1);
-            }
-
-            if (timezone !== null && typeof timezone === 'string' && timezone.length > 0) {
-                flog('Using Timezone: ', timezone);
-                date = moment(time).tz(timezone);
-            } else {
-                date = moment(time);
-            }
-
-            return date.toISOString();
-        } else {
-            return "";
+function doSearch() {
+    flog("doSearch");
+    var url = generateURL();
+    window.history.pushState('', document.title, url.toString());
+    $("#table-emails").reloadFragment({
+        url: url.toString(),
+        whenComplete: function () {
+            $('abbr.timeago').timeago();
         }
     });
-}
-
-function renderRows(json) {
-    flog("renderRows", json, template);
-    var html = template(json);
-    var container = $("#history-table-body");
-    container.html(html);
-    flog("do timeago", $(".timeago", container));
-    container.find(".timeago").timeago();
 }
 
 function initPies(aggr) {
