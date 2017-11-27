@@ -1,4 +1,6 @@
 $(function () {
+    Msg.singletonForCategory = true;
+
     var fields = [],
             TYPES = {
                 "AVG": "integer",
@@ -68,7 +70,7 @@ $(function () {
             flog($("#fieldsSelected"));
             var selected = $("#fieldsSelected").val();
             var newVal = selected.replace("," + field, "");
-            newVal = newVal.replace(field, "");
+            newVal = newVal.replace(field + ",", "");
             flog("{.btn-remove-th} -- newVal", newVal)
             $("#fieldsSelected").val(newVal);
             saveQuery();
@@ -77,7 +79,7 @@ $(function () {
     }
 
     function loadQueryData() {
-        Msg.info("Running...");
+        Msg.info("Running...", "runningQuery");
         var builder = $('#query-builder');
         flog("Loading query data...");
         $.ajax({
@@ -190,7 +192,7 @@ $(function () {
                 if (dateOptions) {
                     newHref += "?" + $.param(dateOptions); // from queryComponents.js, injected by ReportingApp
                 }
-                Msg.info("Saved.");
+                Msg.info("Saved.", "runningQuery");
                 $("#queryData").reloadFragment({
                     url: newHref,
                     whenComplete: function () {

@@ -38,6 +38,7 @@
                 <li><a data-toggle="tab" href="#cache">Provider caches</a></li>
                 <li><a data-toggle="tab" href="#sql">SQL</a></li>
                 <li><a data-toggle="tab" href="#perRequestSql">Per request SQL</a></li>
+                <li><a data-toggle="tab" href="#sqlStats">SQL Stats</a></li>
             </ul>
             <div class="tab-content">
 
@@ -286,6 +287,42 @@
                         #end
                         <hr/>
                     </div>
+                </div>
+
+                <div id="sqlStats" class="tab-pane">
+
+                    Unique from clauses: $page.mapOfStatsByFrom.size()
+                    <br/>
+                    Total duration: $page.totalDuration
+                    <br/>
+                    Executions: $page.executions
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Duration</th>
+                                <th>Count</th>
+                                <th>Avg</th>
+                                <th>From</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            #foreach( $stat in $page.mapOfStatsByFrom )
+                            <tr>
+                                <td>$stat.stats.totalDuration</td>
+                                <td>$stat.stats.count</td>
+                                <td>$stat.stats.averageDuration</td>
+                                <td>$stat.stats.from(100)</td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    $stat.sqlInfo.markedUpSql
+                                </td>
+                            </tr>
+                            #end
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
