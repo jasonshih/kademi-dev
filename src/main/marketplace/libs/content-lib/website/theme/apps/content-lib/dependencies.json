@@ -77,6 +77,12 @@
                 "group": "main",
                 "path": "/theme/apps/content/rating.js"
             }
+        },
+        {
+            "js": {
+                "group": "main",
+                "path": "/theme/apps/content/cktemplates.js"
+            }
         }
     ]
 }
