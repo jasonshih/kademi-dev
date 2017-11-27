@@ -98,7 +98,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Default',
-            image: 'template-expandable-panel-default.png',
+            image: 'template-panel-default.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-default">\n' +
             '    <div class="panel-heading">\n' +
@@ -113,7 +113,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Primary',
-            image: 'template-expandable-panel-primary.png',
+            image: 'template-panel-primary.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-primary">\n' +
             '    <div class="panel-heading">\n' +
@@ -128,7 +128,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Success',
-            image: 'template-expandable-panel-success.png',
+            image: 'template-panel-success.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-success">\n' +
             '    <div class="panel-heading">\n' +
@@ -143,7 +143,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Info',
-            image: 'template-expandable-panel-info.png',
+            image: 'template-panel-info.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-info">\n' +
             '    <div class="panel-heading">\n' +
@@ -158,7 +158,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Warning',
-            image: 'template-expandable-panel-warning.png',
+            image: 'template-panel-warning.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-warning">\n' +
             '    <div class="panel-heading">\n' +
@@ -173,7 +173,7 @@ CKEDITOR.addTemplates('default', {
         },
         {
             title: 'Panel Danger',
-            image: 'template-expandable-panel-danger.png',
+            image: 'template-panel-danger.png',
             description: 'Default bootstrap panel with heading and body',
             html: '<div class="panel panel-danger">\n' +
             '    <div class="panel-heading">\n' +
