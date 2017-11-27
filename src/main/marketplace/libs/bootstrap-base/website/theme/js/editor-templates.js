@@ -7,10 +7,184 @@ CKEDITOR.addTemplates('default', {
     imagesPath: "/theme/img/editor-icons/",
     templates: [
         {
-            title: 'Show/Hide Button',
+            title: 'Expandable Panel (Default)',
             image: 'template-show-hide.png',
-            description: 'A button which causes all following content to be initially hidden, and is only shown when clicked',
-            html: '<h6 type="button" class="btn btn-default btnHideFollowing"><span>Action here</span></h6>'
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-default panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Expandable Panel (Primary brand)',
+            image: 'template-show-hide.png',
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-primary panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Expandable Panel (Success Brand)',
+            image: 'template-show-hide.png',
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-success panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Expandable Panel (Info brand)',
+            image: 'template-show-hide.png',
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-info panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Expandable Panel (Danger brand)',
+            image: 'template-show-hide.png',
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-danger panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Expandable Panel (Warning brand)',
+            image: 'template-show-hide.png',
+            description: 'A panel which is initial hides the body content but show when click to chevron icon',
+            html: '<div class="panel panel-warning panel-expandable-tpl">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title <span role="button" class="pull-right cktemplate-btn-toggle-panel"><i class="fa fa-chevron-up"></i></span>\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Default',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-default">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Primary',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-primary">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Success',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-success">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Info',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-info">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Warning',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-warning">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
+        },
+        {
+            title: 'Panel Danger',
+            image: 'template-show-hide.png',
+            description: 'Default bootstrap panel with heading and body',
+            html: '<div class="panel panel-danger">\n' +
+            '    <div class="panel-heading">\n' +
+            '        Sample title\n' +
+            '    </div>\n' +
+            '    <div class="panel-body">\n' +
+            '        Lorem ipsum dolor sit amet, consectetur adipisicing elit. A consectetur dolorum facere minus molestiae neque,\n' +
+            '        optio reiciendis sunt unde voluptates. Ad animi, architecto doloremque exercitationem explicabo numquam quas\n' +
+            '        veniam voluptatem?\n' +
+            '    </div>\n' +
+            '</div>'
         },
         {
             title: 'Accentuated box',
@@ -60,6 +234,6 @@ CKEDITOR.addTemplates('default', {
             description: 'A table that gives you 2 columns',
             html: '<table width="100%" class="table"><tbody><tr><td width="33%"></td><td></td></tr></tbody></table><br/>'
         },
-    
+
     ]
 });
