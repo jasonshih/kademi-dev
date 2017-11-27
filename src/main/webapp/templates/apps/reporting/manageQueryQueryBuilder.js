@@ -68,7 +68,7 @@ $(function () {
             flog($("#fieldsSelected"));
             var selected = $("#fieldsSelected").val();
             var newVal = selected.replace("," + field, "");
-            newVal = newVal.replace(field, "");
+            newVal = newVal.replace(field + ",", "");
             flog("{.btn-remove-th} -- newVal", newVal)
             $("#fieldsSelected").val(newVal);
             saveQuery();
