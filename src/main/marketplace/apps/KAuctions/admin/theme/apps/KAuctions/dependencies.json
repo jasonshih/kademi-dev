@@ -3,6 +3,10 @@
         {
             "appId": "auctionApp",
             "branch" : ""
+        },
+        {
+            "appId": "user-lib",
+            "branch": "1.1.3"
         }
   ]
 }
