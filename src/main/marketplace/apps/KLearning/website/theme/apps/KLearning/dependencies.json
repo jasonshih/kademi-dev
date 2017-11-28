@@ -15,6 +15,10 @@
         {
             "appId": "forums-lib",
             "branch": "1.1.1"
+        },
+        {
+            "appId": "user-lib",
+            "branch": "1.1.3"
         }
   ]
 }
