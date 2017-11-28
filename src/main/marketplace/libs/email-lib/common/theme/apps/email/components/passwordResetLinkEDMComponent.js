@@ -4,13 +4,11 @@
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
-    KEditor.components['passwordResetLink'] = $.extend({}, KEditor.components['button'], {
+    KEditor.components['passwordResetLinkEDM'] = $.extend({}, KEditor.components['button'], {
         settingTitle: 'Password Reset Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('init "button" settings', form);
-
-            flog('init "button" settings', form);
+            flog('init "passwordResetLinkEDM" settings', form);
 
             return $.ajax({
                 url: '/static/keditor/edmComponentButtonSettings.html',
