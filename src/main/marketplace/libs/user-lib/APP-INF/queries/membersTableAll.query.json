@@ -3,6 +3,11 @@
         "bool": {
             "must": [
                 {
+                    "type": {
+                        "value": "profile"
+                    }
+                },
+                {
                     "terms": {
                         "parentOrgs": "$selectedOrgs"
                     }

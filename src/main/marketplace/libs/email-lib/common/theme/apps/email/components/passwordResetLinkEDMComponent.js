@@ -4,21 +4,19 @@
     var flog = KEditor.log;
 
     // BM: Would be nice if we can extend button, but not sure how to do that..
-    KEditor.components['passwordResetLink'] = $.extend({}, KEditor.components['button'], {
+    KEditor.components['passwordResetLinkEDM'] = $.extend({}, KEditor.components['button'], {
         settingTitle: 'Password Reset Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('init "button" settings', form);
-    
-            flog('init "button" settings', form);
-    
+            flog('init "passwordResetLinkEDM" settings', form);
+
             return $.ajax({
                 url: '/static/keditor/edmComponentButtonSettings.html',
                 type: 'get',
                 dataType: 'HTML',
                 success: function (resp) {
                     form.html(resp);
-    
+
                     form.find('.button-link').remove();
                     form.find('.form-horizontal').prepend(
                         '<div class="form-group">' +
@@ -55,27 +53,27 @@
                         '   </div>' +
                         '</div>'
                     );
-    
+
                     var colorPicker = form.find('.txt-bg-color');
                     edmEditor.initSimpleColorPicker(colorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-bg-color', color);
                         form.find('.txt-bg-color').val(color);
-        
+
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     var buttonColorPicker = form.find('#button-color');
                     edmEditor.initSimpleColorPicker(buttonColorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-color', color);
                         form.find('.button-color').val(color);
-        
+
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     var txtBorderRadius = form.find('#button-border-radius');
                     txtBorderRadius.on('change', function () {
                         var component = keditor.getSettingComponent();
@@ -83,77 +81,77 @@
                         component.attr('data-border-radius', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     form.find('.button-inner-padding').each(function () {
                         var input = $(this);
                         var dataCss = input.attr('data-css');
-        
+
                         edmEditor.initPaddingControl(input, function (value) {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
                             component.attr('data-inner-' + dataCss, value);
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
-    
+
                     form.find('.txt-padding').each(function () {
                         var input = $(this);
                         var dataCss = input.attr('data-css');
-        
+
                         edmEditor.initPaddingControl(input, function (value) {
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
                             component.attr('data-' + dataCss, value);
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
-    
+
                     var txtText = form.find('#button-text');
                     txtText.on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-        
+
                         component.attr('data-message', (this.value || '').trim());
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     var buttonTextColorPicker = form.find('#button-text-color');
                     edmEditor.initSimpleColorPicker(buttonTextColorPicker, function (color) {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
                         component.attr('data-button-text-color', color);
                         form.find('.button-text-color').val(color);
-        
+
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     var txtFontSize = form.find('#button-font-size');
                     txtFontSize.on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-        
+
                         component.attr('data-button-font-size', this.value > 0 ? this.value : 0);
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     var cbbFontFamily = form.find('#button-font-family');
                     cbbFontFamily.on('change', function () {
                         var component = keditor.getSettingComponent();
                         var dynamicElement = component.find('[data-dynamic-href]');
-        
+
                         component.attr('data-button-font-family', this.value);
                         keditor.initDynamicContent(dynamicElement);
                     });
-    
+
                     form.find('.btn-style').each(function () {
                         var btn = $(this);
                         var name = btn.attr('name');
-        
+
                         btn.on('click', function (e) {
                             e.preventDefault();
-            
+
                             var value = btn.attr('data-value');
                             if (btn.hasClass('active')) {
                                 btn.removeClass('active');
@@ -161,30 +159,30 @@
                             } else {
                                 btn.addClass('active');
                             }
-            
+
                             var component = keditor.getSettingComponent();
                             var dynamicElement = component.find('[data-dynamic-href]');
-            
+
                             component.attr('data-' + name, value);
                             keditor.initDynamicContent(dynamicElement);
                         });
                     });
-    
+
                     var btnsAlign = form.find('.btn-align');
                     btnsAlign.each(function () {
                         var btn = $(this);
                         var value = btn.attr('data-value');
-        
+
                         btn.on('click', function (e) {
                             e.preventDefault();
-            
+
                             if (!btn.hasClass('active')) {
                                 btnsAlign.removeClass('active');
                                 btn.addClass('active');
-                
+
                                 var component = keditor.getSettingComponent();
                                 var dynamicElement = component.find('[data-dynamic-href]');
-                
+
                                 component.attr('data-text-align', value);
                                 keditor.initDynamicContent(dynamicElement);
                             }
@@ -194,7 +192,7 @@
             });
         },
         showSettingForm: function (form, component, keditor) {
-            flog('showSettingForm "passwordResetLink" component');
+            flog('showSettingForm "passwordResetLink2" component');
 
             var dataAttributes = keditor.getDataAttributes(component, ['data-type'], false);
 

@@ -8,7 +8,7 @@
         settingTitle: 'Password Reset Settings',
 
         initSettingForm: function (form, keditor) {
-            flog('initSettingForm "passwordResetLink" component');
+            flog('initSettingForm "passwordResetLink1" component');
 
             form.append(this.settingFormHtml);
             form.find('.button-link').remove();
@@ -54,7 +54,7 @@
                 var dynamicElement = component.find('[data-dynamic-href]');
                 component.attr('data-bg-color', color);
                 form.find('.txt-bg-color').val(color);
-    
+
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -64,7 +64,7 @@
                 var dynamicElement = component.find('[data-dynamic-href]');
                 component.attr('data-color', color);
                 form.find('.button-color').val(color);
-        
+
                 keditor.initDynamicContent(dynamicElement);
             });
 
@@ -75,15 +75,15 @@
                 component.attr('data-border-radius', this.value);
                 keditor.initDynamicContent(dynamicElement);
             });
-            
+
             form.find('.button-inner-padding').each(function () {
                 var input = $(this);
                 var dataCss = input.attr('data-css');
-        
+
                 edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
                     var dynamicElement = component.find('[data-dynamic-href]');
-    
+
                     component.attr('data-inner-' + dataCss, value);
                     keditor.initDynamicContent(dynamicElement);
                 });
@@ -92,11 +92,11 @@
             form.find('.txt-padding').each(function () {
                 var input = $(this);
                 var dataCss = input.attr('data-css');
-    
+
                 edmEditor.initPaddingControl(input, function (value) {
                     var component = keditor.getSettingComponent();
                     var dynamicElement = component.find('[data-dynamic-href]');
-        
+
                     component.attr('data-' + dataCss, value);
                     keditor.initDynamicContent(dynamicElement);
                 });
@@ -117,7 +117,7 @@
                 var dynamicElement = component.find('[data-dynamic-href]');
                 component.attr('data-button-text-color', color);
                 form.find('.button-text-color').val(color);
-        
+
                 keditor.initDynamicContent(dynamicElement);
             });
 

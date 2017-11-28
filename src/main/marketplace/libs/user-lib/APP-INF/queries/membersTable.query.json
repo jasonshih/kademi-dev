@@ -3,6 +3,11 @@
         "bool": {
             "must": [
                 {
+                    "type": {
+                        "value": "profile"
+                    }
+                },
+                {
                     "range": {
                         "lastVisit": {
                             "gte": "$startDate",

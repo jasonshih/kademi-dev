@@ -7,11 +7,11 @@
         {
             "appId": "leadman-lib",
             "branch" : "1.6.4"
-        },             
+        },
         {
             "appId": "userDashboardApp",
             "branch" : ""
-        },        
+        },
         {
             "appId": "search",
             "branch" : ""
@@ -19,6 +19,10 @@
         {
             "appId": "search-lib",
             "branch" : "1.0.7"
-        }          
+        },
+        {
+            "appId": "user-lib",
+            "branch": "1.1.3"
+        }
   ]
 }
