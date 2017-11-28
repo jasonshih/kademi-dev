@@ -19,9 +19,9 @@
             </div>
             <div class="col-lg-6">
                 <div class="pull-right">
-                    <button class="btn btn-success" data-toggle="modal" data-target="#redeemVoucherModal">Redeem</button>
+                    <button class="btn btn-success" id="redeemVoucherModalBtn">Redeem</button>
                     <!--<button class="btn btn-success" data-toggle="modal" data-target="#allocateVoucherModal">Allocate</button>-->
-                    <button class="btn btn-danger" data-toggle="modal" data-target="#pendingVoucherModal">Change status</button>
+                    <button class="btn btn-danger" id="pendingVoucherModalBtn">Change status</button>
                 </div>
             </div>
         </div>
@@ -82,14 +82,15 @@
                     <p>
 
                         Redeeming organisation:
-                        <select name="redeemingOrg">
+                        <select name="redeemingOrg" class="form-control">
                             #foreach($org in $vrp.redeemingOrgs)
                             <option value="$org.id">$org.title</option>
                             #end
                         </select>
                     </p>
-                    <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
                     <input type="hidden" name="redeem"/>
+                    <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
+                    <input type="hidden" name="voucher-ids" id="voucher-ids"/>
 
                 </div>
                 <div class="modal-footer">
@@ -107,12 +108,22 @@
             <form class="form-horizontal" method="POST" action="" id="pendingVoucherForm">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title">Mark voucher as pending</h4>
+                    <h4 class="modal-title">Force status change</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="form-group">
+                        <label for="status" class="col-sm-3 control-label">New status:</label>
+                        <div class="col-sm-8">
+                            <select name="status"  class="form-control">
+                                <option value="">Not assigned</option>
+                                #foreach( $st in $page.statuses.entrySet() )
+                                <option value="$st.key">$st.value</option>
+                                #end
+                            </select>
+                        </div>
+                    </div>
                     <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
-                    <input type="hidden" name="status" value="P"/>
-
+                    <input type="hidden" name="voucher-ids" id="voucher-ids"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

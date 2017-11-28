@@ -4,8 +4,29 @@
 $(function () {
     initSearchVoucher();
     var table = $("#vouchers-table");
-
     var redeemVoucherModal = $("#redeemVoucherModal");
+
+    function getSelectedVouchers(table) {
+        var checks = table.find('tbody input:checked');
+        var ids = [];
+        checks.each(function (i) {
+            ids.push($(this).val());
+        });
+        return ids;
+    }
+
+    $("#redeemVoucherModalBtn").click(function () {
+        $("#voucher-ids").val();
+        var ids = getSelectedVouchers(table);
+        flog("Ids: ", ids);
+        if (ids.length > 0) {
+            $("#voucher-ids").val(ids);
+            redeemVoucherModal.modal("show");
+        } else {
+            Msg.error("Please select at least one voucher to redeem.");
+        }
+    });
+
     redeemVoucherModal.find("form").forms({
         onSuccess: function () {
             Msg.info("Redeemed ok");
@@ -21,6 +42,18 @@ $(function () {
     });
 
     var pendingVoucherModal = $("#pendingVoucherModal");
+    $("#pendingVoucherModalBtn").click(function () {
+        $("#voucher-ids").val();
+        var ids = getSelectedVouchers(table);
+        flog("Ids: ", ids);
+        if (ids.length > 0) {
+            $("#voucher-ids").val(ids);
+            pendingVoucherModal.modal("show");
+        } else {
+            Msg.error("Please select at least one voucher to change the status.");
+        }
+    });
+
     pendingVoucherModal.find("form").forms({
         onSuccess: function () {
             Msg.info("Set pending ok");
