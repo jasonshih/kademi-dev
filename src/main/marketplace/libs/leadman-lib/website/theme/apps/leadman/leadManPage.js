@@ -80,6 +80,10 @@
                     defaultContent: ""
                 },
                 {
+                    data: 'title',
+                    defaultContent: ""
+                },
+                {
                     data: 'organisation.title',
                     name: 'orgTitle',
                     defaultContent: ""
