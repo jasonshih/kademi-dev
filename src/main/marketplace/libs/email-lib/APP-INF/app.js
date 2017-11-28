@@ -8,5 +8,6 @@ controllerMappings.addComponent("email/components", "passwordResetLinkEDM")
         .addDefaultAtt("paddingBottom", "10px")
         .addDefaultAtt("paddingLeft", "10px")
         .addDefaultAtt("paddingRight", "10px")
-        .addDefaultAtt("message", "Reset your password");
+        .addDefaultAtt("message", "Reset your password")
+        .build();
 ;
