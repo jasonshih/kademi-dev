@@ -25,6 +25,10 @@
             "branch" : "1.0.7"
         },
         {
+            "appId": "userApp",
+            "branch": ""
+        },
+        {
             "appId": "user-lib",
             "branch": "1.1.3"
         }
