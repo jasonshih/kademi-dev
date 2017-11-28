@@ -329,7 +329,7 @@
                                     #foreach($debit in $paginator.records($page.debitPoints($paginator.start, $paginator.pageSize) ) )
                                     <tr>
                                         <td>$debit.numPoints</td>
-                                        <td>$formatter.formatDateTime($debit.issuedDate, $rootFolder.organisation.timezone) $rootFolder.organisation.timezone</td>
+                                        <td>$formatter.formatDateTime($debit.issuedDate, $rootFolder.organisation.timezone)</td>
                                         <td>
                                             #if( $debit.issuedTo )
                                             #if( $debit.issuedTo.asProfile() )
