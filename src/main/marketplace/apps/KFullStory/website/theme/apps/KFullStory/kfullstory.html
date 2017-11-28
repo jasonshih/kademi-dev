@@ -18,15 +18,14 @@ window['_fs_namespace'] = 'FS';
 $userResource
 <script type="text/javascript">
     window['_fs_ready'] = function () {
-        var sessionUrlAtTime = FS.getCurrentSessionURL(true);
-        if (sessionUrlAtTime) {
+        var sessionUrl = FS.getCurrentSessionURL();
+        if (sessionUrl) {
             $.ajax({
                 type: 'post',
                 dataType: 'json',
                 url: '/kfullstory/storeSession',
                 data: {
-                    session: sessionUrlAtTime,
-                    userId: '$!userResource.userId'
+                    session: sessionUrl
                 }
             });
         }
