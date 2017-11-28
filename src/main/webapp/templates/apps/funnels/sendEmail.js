@@ -153,7 +153,7 @@
                     .showLegend(false)
                     .labelType("percent");
 
-            var buckets = (aggr !== null ? aggr.buckets : []);
+            var buckets = (aggr !== null && aggr !== undefined) ? aggr.buckets : [];
 
             d3.select("#" + id + " svg")
                     .datum(buckets)
@@ -161,7 +161,7 @@
                     .call(chart);
 
             return chart;
-        });
+        });       
     }
 
     $(function () {
