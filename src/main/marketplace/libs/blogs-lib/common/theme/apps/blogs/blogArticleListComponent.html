@@ -180,11 +180,7 @@
         </div>
     #end
 #else
-    #if ($blog && $blog != "")
-        <p>No blog articles found</p>
-    #else
-        #if($page)
-            <div class="alert alert-warning"><strong>blogPageArticles</strong>: Could not render preview</div>
-        #end
+    #if(!$page)
+        <p class="alert alert-warning">No blog articles found</p>
     #end
 #end

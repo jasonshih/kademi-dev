@@ -6,6 +6,16 @@ function initProposalDetailsForm() {
     var modal = $("#addQuoteInProposalModal");
 
     if (modal.length > 0) {
+        modal.on('show.bs.modal', function () {
+            $('#quotesExpiryDates').reloadFragment({
+                whenComplete: function (resp) {
+                    var text = $(resp).find('#quotesExpiryDates').text();
+                    if (text){
+                        modal.find('#quoteExpiryDate').val(text.trim());
+                    }
+                }
+            })
+        });
         var form = modal.find("form");
 
         form.forms({
@@ -88,5 +98,9 @@ function initProposalDetailsForm() {
                 $('abbr.timeago').timeago();
             }
         });
+    }
+
+    function initQuoteFiles() {
+        $('#attachment').dropzone();
     }
 }

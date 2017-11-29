@@ -254,25 +254,22 @@
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title">Upload Files</h4>
                 </div>
-                <form method="post" action="$page.href" class="form-horizontal" enctype="multipart/form-data">
-                    <input type="hidden" name="addAttachment" value="addAttachment">
+
                     <div class="modal-body">
-                        <div class="form-group">
-                            <div class="col-md-9">
-                                <label for="exampleInputFile">File to Attach</label>
-                                <input name="files" type="file" class="required" id="exampleInputFile" />
-                                <br />
-                                <label for="exampleInputFile">Description</label>
-                                <input name="description" class="form-control" value="" placeholder="Leave Blank to Consider File name as description" />
-                            </div>
-                        </div>
+                        <form action="$page.href" class="dropzone dropzone-fullwidth" id="uploadFileDropzone">
+                            <input type="hidden" name="addAttachment" value="addAttachment">
+                            <!--<div class="form-group">-->
+                                <!--<label>Description</label>-->
+                                <!--<input name="description" class="form-control" value="" placeholder="Leave Blank to Consider File name as description" />-->
+                            <!--</div>-->
+                        </form>
+
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal" type="button">Exit</button>
 
-                        <button class="btn btn-primary" type="submit">Upload</button>
+                        <!--<button class="btn btn-primary" type="submit">Upload</button>-->
                     </div>
-                </form>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
