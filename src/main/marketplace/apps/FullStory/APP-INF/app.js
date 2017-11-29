@@ -83,7 +83,7 @@ function generateProfileTimeline(page, userResource, list) {
                 .icon('fa fa-play-circle')
                 .title('FullStory session is started')
                 .path(record.fields.session.value)
-                .inbound(false)
+                .inbound(true)
                 .date(formatter.parseDate(record.fields.savedDate.value))
                 .build();
             
