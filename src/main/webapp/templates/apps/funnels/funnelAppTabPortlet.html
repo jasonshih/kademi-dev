@@ -72,10 +72,12 @@
                             $formatter.formatDateTime($lead.lastAttainedDate, $page.organisation.timezone)
                         </abbr>
                     #else
+                    #if( $lead.lastAttainedDate )
                         Unknown last goal attained. Transitioned at
                         <abbr title="$formatter.formatDateISO8601($lead.lastAttainedDate, $page.organisation.timezone)" class="timeago">
                             $formatter.formatDateTime($lead.lastAttainedDate, $page.organisation.timezone)
                         </abbr>
+                    #end
                     #end
                 </td>
             </tr>
