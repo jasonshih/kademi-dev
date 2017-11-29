@@ -18,7 +18,7 @@
     </head>
     <body class="manageModulePages">
         #set ($isKEditor = false)
-        #if ($page.theme.editorName == "keditor")
+        #if ($page.closest("branch").theme.editorName == "keditor")
         #set ($isKEditor = true)
         #end
         #set($currentBranch = $page.closest("branch"))
@@ -122,635 +122,639 @@
                                     </button>
                                     <div class="btn-group btn-group-sm">
                                         #if($type == "quiz")
-                                            <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
-                                        #else
+                                        <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit quiz">
+                                            #else
+                                            #if($isKEditor)
                                             <a href="?contenteditor=${modulePage.name}" target="_blank" class="btn btn-sm btn-info" title="Edit page">
-                                                #end
-                                                <i class="fa fa-edit"></i>
-                                                Edit
-                                            </a>
-
-                                            <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-                                                <span class="caret"></span>
-                                            </button>
-                                            <ul class="dropdown-menu pull-right">
-                                                <li><a href="?contenteditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in Content Editor <i class="clip-new" style="color: red;"></i></a></li>
-                                                <li><a href="?htmleditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in HTML Editor</a></li>
-                                                <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li></li>
-                                                <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
-                                            </ul>
-                                    </div>
-                                </aside>
-                            </article>
-                            #end
-                        </div>
-                    </form>
-                </div>
-                <!-- End content of Module list tab -->
-                <!-- Start content of Module details tab -->
-                <div id="details" class="tab-pane Content TabContent">
-                    <form name="frmDetails" action="" method="post" class="Details form-horizontal" id="moduleDetailsForm">
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-sm btn-success pull-right">
-                                    <i class="fa fa-save"></i>
-                                    Save module
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-7">
-                                <div class="form-group">
-                                    <label for="name" class="control-label col-md-3">Code</label>
-                                    <div class="col-md-5">
-                                        <input type="text" id="name" class="form-control" name="name" value="$!page.name" placeholder="Module code Eg MOD001" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="title" class="control-label col-md-3">Module title</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="title" class="form-control" name="title" value="$!page.title" placeholder="Here is a module page title" />
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="learningTimeMins" class="control-label col-md-3">Learning time (mins)</label>
-                                    <div class="col-md-5">
-                                        <input type="text" id="learningTimeMins" class="form-control" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" />
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                            <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
-                                            <span class="input-group-btn">
-                                                <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="brief" class="control-label col-md-3">Description</label>
-                                    <div class="col-md-9">
-                                        <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="col-md-3 control-label">Expiry policy</label>
-                                    <div class="col-md-9">
-                                        <div class="input-group">
-                                            <input type="number" min="1" class="form-control" name="expiryMultiples" value="$!page.expiryMultiples" />
-                                            <input type="hidden" name="expiryFrequency" id="sFrequency" value="$!page.expiryFrequency" />
-                                            <div class="input-group-btn" id="frequency-group">
-                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$!page.expiryFrequency </span> <span class="caret"></span></button>
-                                                <ul class="dropdown-menu dropdown-menu-right">
-                                                    #foreach($f in $page.allFrequencies)
-                                                    <li><a href="#" data-value="$f">$f</a></li>
+                                                #else
+                                                <a role="button" href="${modulePage.name}" class="btn btn-sm btn-info btn-edit-page" title="Edit page">
                                                     #end
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <i>Module completion results will expire after the given time period</i>
-                                    </div>
-                                </div>                                
+                                                    #end
+                                                    <i class="fa fa-edit"></i>
+                                                    Edit
+                                                </a>
 
-                                <hr/>
-
-                                <div class="form-group">
-                                    <label for="" class="control-label col-md-3">Search fields</label>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="itemType" class="control-label col-md-3">Type</label>
-                                    <div class="col-md-3">
-                                        <input type="text" id="itemType" class="form-control" name="itemType" value="$!page.getParam('itemType')" placeholder="Top level category for search" />
-                                    </div>
-                                    <label for="category" class="control-label col-md-3">Category</label>
-                                    <div class="col-md-3">
-                                        <input type="text" class="form-control"  name="category" id="category" value="$!page.getParam('category')"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="tags" class="control-label col-md-3">Tags</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control"  name="tags" id="tags" value="$!page.getParam('tags')"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-5">
-                                <div class="panel panel-info">
-                                    <div class="panel-heading">
-                                        Actvity type
-                                    </div>
-                                    <div class="panel-body">
-                                        <div class="form-group">
-                                            <label for="instructorType" class="control-label col-md-4">Activity type</label>
-                                            <div class="col-md-8">
-                                                <select class="form-control" name="instructorType">
-                                                    $formatter.option( "", "No instructor (self paced)", $page.instructorType )
-                                                    $formatter.option( "ILT", "Instructor led training (ILT)", $page.instructorType )
-                                                    $formatter.option( "ASSIGN", "Assignment", $page.instructorType )
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                #if( $page.instructorType )
-                                <div class="panel panel-info">
-                                    <div class="panel-heading">
-                                        Scheduling
-                                    </div>
-                                    <div class="panel-body">                                
-                                        <div class="form-group">
-                                            <div class="col-md-3">
-                                                <button class="btn btn-success addEvent">
-                                                    <i class="fa fa-calendar-plus-o"></i>                                    
+                                                <button type="button" class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
+                                                    <span class="caret"></span>
                                                 </button>
-                                            </div>
-                                        </div>
-                                        #set( $events = $page.moduleCalEvents )
-                                        <table class="table table-striped">
-                                            <colgroup>
-                                                <col/>
-                                                <col/>
-                                                <col/>
-                                                <col style="width: 140px"/>
-                                            </colgroup>
-                                            <thead>
-                                                <th>
-                                                    #if( $page.ilt )
-                                                    Date
-                                                    #elseif( $page.assignment )
-                                                    Due
-                                                    #end
-                                                </th>
-                                                <th>
-                                                    #if( $page.ilt )
-                                                    Attending
-                                                    #elseif( $page.assignment )
-                                                    Assigned
-                                                    #end
-                                                </th>
-                                                <th>
-                                                    #if( $page.ilt )
-                                                    Attended
-                                                    #elseif( $page.assignment )
-                                                    Submitted
-                                                    #end
-                                                </th>
-                                                <th></th>
-                                            </thead>
-                                            <tbody id="modCalEventsBody">
-                                                #foreach($mce in $events)
-                                                <tr>
-                                                    #set( $event = $mce.calEvent )
-                                                    <td>
-                                                        <abbr class="timeago" title="$formatter.formatDateISO8601($event.startDate)">
-                                                            $event.startDate
-                                                        </abbr>
-
-                                                    </td>
-                                                    <td>
-                                                        $event.numAttendees() 
-                                                        #if( $event.maxAttendees )
-                                                        / $event.maxAttendees
-                                                        #end
-                                                    </td>
-                                                    <td>
-                                                        $mce.numSubmitted()
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-info">
-                                                                <i class="fa fa-calendar"></i>
-                                                            </a>
-                                                            <a href="$mce.id" class="btn btn-danger deleteEvent">
-                                                                <i class="fa fa-remove"></i>
-                                                            </a>                                                                                                                    
-                                                            <a href="activity-$mce.id" class="btn btn-info">
-                                                                <i class="fa fa-cog"></i>
-                                                            </a>                                                                                                                                                                                
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li><a href="?contenteditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in Content Editor <i class="clip-new" style="color: red;"></i></a></li>
+                                                    <li><a href="?htmleditor=${modulePage.name}" target="_blank"><i class="fa fa-edit"></i> Edit in HTML Editor</a></li>
+                                                    <li><a href="texteditor?fileName=${modulePage.name}" target="_blank" title="Edit as HTML"><i class="clip-code"></i> Edit as HTML</a></li></li>
+                                                    <li><a href="${modulePage.name}?goto" target="_blank" title="View page"><i class="fa fa-eye"></i> View</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="${modulePage.path}" class="btn-delete-page" title="Delete page"><i class="fa fa-times"></i> Delete</a></li>
+                                                </ul>
+                                                </div>
+                                                </aside>
+                                                </article>
+                                                #end
+                                                </div>
+                                                </form>
+                                                </div>
+                                                <!-- End content of Module list tab -->
+                                                <!-- Start content of Module details tab -->
+                                                <div id="details" class="tab-pane Content TabContent">
+                                                    <form name="frmDetails" action="" method="post" class="Details form-horizontal" id="moduleDetailsForm">
+                                                        <div class="form-group">
+                                                            <div class="col-md-12">
+                                                                <button type="submit" class="btn btn-sm btn-success pull-right">
+                                                                    <i class="fa fa-save"></i>
+                                                                    Save module
+                                                                </button>
+                                                            </div>
                                                         </div>
-                                                    </td>
-                                                </tr>
+
+                                                        <div class="row">
+                                                            <div class="col-md-7">
+                                                                <div class="form-group">
+                                                                    <label for="name" class="control-label col-md-3">Code</label>
+                                                                    <div class="col-md-5">
+                                                                        <input type="text" id="name" class="form-control" name="name" value="$!page.name" placeholder="Module code Eg MOD001" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="title" class="control-label col-md-3">Module title</label>
+                                                                    <div class="col-md-9">
+                                                                        <input type="text" id="title" class="form-control" name="title" value="$!page.title" placeholder="Here is a module page title" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="learningTimeMins" class="control-label col-md-3">Learning time (mins)</label>
+                                                                    <div class="col-md-5">
+                                                                        <input type="text" id="learningTimeMins" class="form-control" name="learningTimeMins" value="$!page.learningTimeMins" placeholder="Approximate number of minutes to complete the module" />
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="thumb" class="control-label col-md-3">Thumbnail (image)</label>
+                                                                    <div class="col-md-9">
+                                                                        <div class="input-group">
+                                                                            <input class="thumbnail-image form-control" type="text" id="thumb" name="thumb" value="$!page.rawThumb" placeholder="Path to a thumbnail for the module. Eg thumb.png" readonly="readonly" />
+                                                                            <span class="input-group-btn">
+                                                                                <button type="button" class="btn btn-success btn-select-thumb">Select file</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="brief" class="control-label col-md-3">Description</label>
+                                                                    <div class="col-md-9">
+                                                                        <textarea class="form-control"  name="brief" id="brief" rows="5">$!page.brief</textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label class="col-md-3 control-label">Expiry policy</label>
+                                                                    <div class="col-md-9">
+                                                                        <div class="input-group">
+                                                                            <input type="number" min="1" class="form-control" name="expiryMultiples" value="$!page.expiryMultiples" />
+                                                                            <input type="hidden" name="expiryFrequency" id="sFrequency" value="$!page.expiryFrequency" />
+                                                                            <div class="input-group-btn" id="frequency-group">
+                                                                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="btn-text">$!page.expiryFrequency </span> <span class="caret"></span></button>
+                                                                                <ul class="dropdown-menu dropdown-menu-right">
+                                                                                    #foreach($f in $page.allFrequencies)
+                                                                                    <li><a href="#" data-value="$f">$f</a></li>
+                                                                                    #end
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>
+                                                                        <i>Module completion results will expire after the given time period</i>
+                                                                    </div>
+                                                                </div>                                
+
+                                                                <hr/>
+
+                                                                <div class="form-group">
+                                                                    <label for="" class="control-label col-md-3">Search fields</label>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="itemType" class="control-label col-md-3">Type</label>
+                                                                    <div class="col-md-3">
+                                                                        <input type="text" id="itemType" class="form-control" name="itemType" value="$!page.getParam('itemType')" placeholder="Top level category for search" />
+                                                                    </div>
+                                                                    <label for="category" class="control-label col-md-3">Category</label>
+                                                                    <div class="col-md-3">
+                                                                        <input type="text" class="form-control"  name="category" id="category" value="$!page.getParam('category')"/>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="form-group">
+                                                                    <label for="tags" class="control-label col-md-3">Tags</label>
+                                                                    <div class="col-md-9">
+                                                                        <input type="text" class="form-control"  name="tags" id="tags" value="$!page.getParam('tags')"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <div class="panel panel-info">
+                                                                    <div class="panel-heading">
+                                                                        Actvity type
+                                                                    </div>
+                                                                    <div class="panel-body">
+                                                                        <div class="form-group">
+                                                                            <label for="instructorType" class="control-label col-md-4">Activity type</label>
+                                                                            <div class="col-md-8">
+                                                                                <select class="form-control" name="instructorType">
+                                                                                    $formatter.option( "", "No instructor (self paced)", $page.instructorType )
+                                                                                    $formatter.option( "ILT", "Instructor led training (ILT)", $page.instructorType )
+                                                                                    $formatter.option( "ASSIGN", "Assignment", $page.instructorType )
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                #if( $page.instructorType )
+                                                                <div class="panel panel-info">
+                                                                    <div class="panel-heading">
+                                                                        Scheduling
+                                                                    </div>
+                                                                    <div class="panel-body">                                
+                                                                        <div class="form-group">
+                                                                            <div class="col-md-3">
+                                                                                <button class="btn btn-success addEvent">
+                                                                                    <i class="fa fa-calendar-plus-o"></i>                                    
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                        #set( $events = $page.moduleCalEvents )
+                                                                        <table class="table table-striped">
+                                                                            <colgroup>
+                                                                                <col/>
+                                                                                <col/>
+                                                                                <col/>
+                                                                                <col style="width: 140px"/>
+                                                                            </colgroup>
+                                                                            <thead>
+                                                                                <th>
+                                                                                    #if( $page.ilt )
+                                                                                    Date
+                                                                                    #elseif( $page.assignment )
+                                                                                    Due
+                                                                                    #end
+                                                                                </th>
+                                                                                <th>
+                                                                                    #if( $page.ilt )
+                                                                                    Attending
+                                                                                    #elseif( $page.assignment )
+                                                                                    Assigned
+                                                                                    #end
+                                                                                </th>
+                                                                                <th>
+                                                                                    #if( $page.ilt )
+                                                                                    Attended
+                                                                                    #elseif( $page.assignment )
+                                                                                    Submitted
+                                                                                    #end
+                                                                                </th>
+                                                                                <th></th>
+                                                                            </thead>
+                                                                            <tbody id="modCalEventsBody">
+                                                                                #foreach($mce in $events)
+                                                                                <tr>
+                                                                                    #set( $event = $mce.calEvent )
+                                                                                    <td>
+                                                                                        <abbr class="timeago" title="$formatter.formatDateISO8601($event.startDate)">
+                                                                                            $event.startDate
+                                                                                        </abbr>
+
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        $event.numAttendees() 
+                                                                                        #if( $event.maxAttendees )
+                                                                                        / $event.maxAttendees
+                                                                                        #end
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        $mce.numSubmitted()
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="btn-group">
+                                                                                            <a href="/Calendars/$event.calendar.name/$event.name" class="btn btn-info">
+                                                                                                <i class="fa fa-calendar"></i>
+                                                                                            </a>
+                                                                                            <a href="$mce.id" class="btn btn-danger deleteEvent">
+                                                                                                <i class="fa fa-remove"></i>
+                                                                                            </a>                                                                                                                    
+                                                                                            <a href="activity-$mce.id" class="btn btn-info">
+                                                                                                <i class="fa fa-cog"></i>
+                                                                                            </a>                                                                                                                                                                                
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                #end
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                #end
+
+
+                                                            </div>
+                                                        </div>                            
+
+                                                        <hr/>
+
+                                                        <div class="form-group">
+                                                            <label for="message" class="control-label col-md-3">
+                                                                Completion message <br />
+                                                                <small>Enter a message that will appear at the end of this module once completed.</small>
+                                                            </label>
+                                                            <div class="col-md-9">
+                                                                <textarea class="htmleditor" cols="100" id="message" name="message" rows="10" placeholder="Enter your completion message here">$!page.completionMessage</textarea>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">
+                                                                Choose a certificate <br />
+                                                                <small>
+                                                                    <a href="${page.closest('organisation').href}certificates" target="_blank">Edit certificates</a>
+                                                                </small>
+                                                            </label>
+                                                            <div class="col-md-9">
+                                                                <button class="btn btn-warning btn-sm btn-add-cert #if($page.actions('certificate') == '[null,null,]')btn-add-first#end" type="button" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
+                                                                <div class="certificates-wrapper #if($page.actions('certificate') == '[null,null,]') hide #end">
+                                                                    #foreach($action in $page.actions("certificate"))
+                                                                    <div class="certificate clearfix">
+                                                                        <div class="input-group input-group-sm">
+                                                                            <label for="points$foreach.index" class="input-group-addon">CPD points</label>
+                                                                            <input type="text" class="form-control" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" />
+                                                                        </div>
+                                                                        <div class="input-group input-group-sm">
+                                                                            <select name="certificate$foreach.index" class="requiredIf form-control" data-basename="certificate">
+                                                                                <option value="">[No certificate]</option>
+                                                                                #foreach($cert in $page.certificates)
+                                                                                $formatter.option($cert.id, $cert.title, $action.itemId)
+                                                                                #end
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="btn-group btn-group-sm">
+                                                                            <a href="#" class="btn btn-sm btn-success btn-preview-certificate">Preview</a>
+                                                                            <a href="#" class="btn btn-sm btn-danger btn-delete-certificate"><i class="fa fa-times"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                    #end
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        #if($applications.get("rewards"))
+                                                        <div class="form-group">
+                                                            <label class="control-label col-md-3">
+                                                                Choose a reward<br />
+                                                                <small><a href="${page.closest('organisation').href}rewards" target="_blank">Edit rewards</a></small>
+                                                            </label>
+                                                            <div class="col-md-9">
+                                                                <button class="btn btn-warning btn-sm btn-add-reward #if($page.actions('reward') == '[null,null,]')btn-add-first#end" type="button" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
+                                                                <div class="rewards-wrapper #if($page.actions('reward') == '[null,null,]') hide #end">
+                                                                    #foreach($action in $page.actions("reward"))
+                                                                    <div class="reward clearfix">
+                                                                        <div class="input-group input-group-sm">
+                                                                            <label for="numRewards$foreach.index" class="input-group-addon">No. of rewards</label>
+                                                                            <input type="text" class="form-control requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/>
+                                                                        </div>
+                                                                        <div class="input-group input-group-sm">
+                                                                            <select name="reward$foreach.index" class="form-control requiredIf" data-basename="reward">
+                                                                                <option value="">[No reward]</option>
+                                                                                #foreach($r in $page.rewards)
+                                                                                $formatter.option($r.id, $r.title, $action.itemId)
+                                                                                #end
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="input-group input-group-sm">
+                                                                            <select name="pointTag$foreach.index" class="form-control" data-basename="pointTag">
+                                                                                <option value="">[No Tag]</option>
+                                                                                #foreach($p in $page.pointsTag)
+                                                                                $formatter.option($p.name, $p.title, $action.tag)
+                                                                                #end
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="btn-group btn-group-sm">
+                                                                            <a href="#" class="btn btn-sm btn-danger btn-delete-reward"><i class="fa fa-times"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                    #end
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        #end
+                                                        <div class="form-group">
+                                                            <div class="col-md-12">
+                                                                <button type="submit" class="btn btn-sm btn-success pull-right">
+                                                                    <i class="fa fa-save"></i>
+                                                                    Save module
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <!-- End content of Module details tab -->
+                                                <div id="activity" class="tab-pane Content TabContent">
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>User</th>
+                                                                <th>Started</th>
+                                                                <th>Last access</th>
+                                                                <th>Status</th>
+                                                                <th>Score</th>
+                                                                <th>Expiry</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="activityBody">
+                                                            #if( $page.paginator.isEmpty() )
+                                                            <td colspan="7">There are no results matching the selected date range and criteria</td>
+                                                            #else
+                                                            #foreach($p in $page.paginator.records)
+                                                            <tr>
+                                                                <td>
+                                                                    <a href="/manageUsers/$p.profile.id/">
+                                                                        $p.profile.formattedName
+                                                                    </a>                                        
+                                                                </td>
+                                                                <td>
+                                                                    $formatter.formatDateTime($p.createdDate)                                        
+                                                                </td>
+                                                                <td>                                        
+                                                                    $formatter.formatDateTime($p.modifiedDate)
+                                                                </td>
+                                                                <td>
+                                                                    #if( $p.completed )
+                                                                    <span class="label label-success">Complete</span>
+                                                                    #else
+                                                                    ${p.percentComplete}%
+                                                                    #end
+                                                                </td>
+                                                                <td>$!p.scorePerc</td>
+                                                                <td>
+                                                                    $!p.expiryDate
+                                                                    #if( $p.expired )
+                                                                    <span class="label label-danger">Expired</span>
+                                                                    #end
+                                                                </td>
+                                                            </tr>
+                                                            #end
+                                                            #end
+                                                        </tbody>
+                                                        <tfoot id="pointsFooter">
+                                                            <tr>
+                                                                <td colspan="6">
+                                                                    $!page.paginator.html
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>                        
+                                                    </table>
+                                                </div>
+                                                </div>
+                                                </div>
                                                 #end
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                #end
 
+                                                <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js">//</script>
 
-                            </div>
-                        </div>                            
-
-                        <hr/>
-
-                        <div class="form-group">
-                            <label for="message" class="control-label col-md-3">
-                                Completion message <br />
-                                <small>Enter a message that will appear at the end of this module once completed.</small>
-                            </label>
-                            <div class="col-md-9">
-                                <textarea class="htmleditor" cols="100" id="message" name="message" rows="10" placeholder="Enter your completion message here">$!page.completionMessage</textarea>
-                            </div>
-                        </div>
-                        <hr />
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3">
-                                Choose a certificate <br />
-                                <small>
-                                    <a href="${page.closest('organisation').href}certificates" target="_blank">Edit certificates</a>
-                                </small>
-                            </label>
-                            <div class="col-md-9">
-                                <button class="btn btn-warning btn-sm btn-add-cert #if($page.actions('certificate') == '[null,null,]')btn-add-first#end" type="button" title="Add certificate"><i class="fa fa-plus"></i> <span>Add</span></button>
-                                <div class="certificates-wrapper #if($page.actions('certificate') == '[null,null,]') hide #end">
-                                    #foreach($action in $page.actions("certificate"))
-                                    <div class="certificate clearfix">
-                                        <div class="input-group input-group-sm">
-                                            <label for="points$foreach.index" class="input-group-addon">CPD points</label>
-                                            <input type="text" class="form-control" value="$!action.number" id="points$foreach.index" name="points$foreach.index" data-basename="points" />
-                                        </div>
-                                        <div class="input-group input-group-sm">
-                                            <select name="certificate$foreach.index" class="requiredIf form-control" data-basename="certificate">
-                                                <option value="">[No certificate]</option>
-                                                #foreach($cert in $page.certificates)
-                                                $formatter.option($cert.id, $cert.title, $action.itemId)
-                                                #end
-                                            </select>
-                                        </div>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="#" class="btn btn-sm btn-success btn-preview-certificate">Preview</a>
-                                            <a href="#" class="btn btn-sm btn-danger btn-delete-certificate"><i class="fa fa-times"></i></a>
-                                        </div>
-                                    </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        #if($applications.get("rewards"))
-                        <div class="form-group">
-                            <label class="control-label col-md-3">
-                                Choose a reward<br />
-                                <small><a href="${page.closest('organisation').href}rewards" target="_blank">Edit rewards</a></small>
-                            </label>
-                            <div class="col-md-9">
-                                <button class="btn btn-warning btn-sm btn-add-reward #if($page.actions('reward') == '[null,null,]')btn-add-first#end" type="button" title="Add reward"><i class="fa fa-plus"></i> <span>Add</span></button>
-                                <div class="rewards-wrapper #if($page.actions('reward') == '[null,null,]') hide #end">
-                                    #foreach($action in $page.actions("reward"))
-                                    <div class="reward clearfix">
-                                        <div class="input-group input-group-sm">
-                                            <label for="numRewards$foreach.index" class="input-group-addon">No. of rewards</label>
-                                            <input type="text" class="form-control requiredIf" value="$!action.number" id="numRewards$foreach.index" name="numRewards$foreach.index" data-basename="numRewards"/>
-                                        </div>
-                                        <div class="input-group input-group-sm">
-                                            <select name="reward$foreach.index" class="form-control requiredIf" data-basename="reward">
-                                                <option value="">[No reward]</option>
-                                                #foreach($r in $page.rewards)
-                                                $formatter.option($r.id, $r.title, $action.itemId)
-                                                #end
-                                            </select>
-                                        </div>
-                                        <div class="input-group input-group-sm">
-                                            <select name="pointTag$foreach.index" class="form-control" data-basename="pointTag">
-                                                <option value="">[No Tag]</option>
-                                                #foreach($p in $page.pointsTag)
-                                                $formatter.option($p.name, $p.title, $action.tag)
-                                                #end
-                                            </select>
-                                        </div>
-                                        <div class="btn-group btn-group-sm">
-                                            <a href="#" class="btn btn-sm btn-danger btn-delete-reward"><i class="fa fa-times"></i></a>
-                                        </div>
-                                    </div>
-                                    #end
-                                </div>
-                            </div>
-                        </div>
-                        <hr />
-                        #end
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <button type="submit" class="btn btn-sm btn-success pull-right">
-                                    <i class="fa fa-save"></i>
-                                    Save module
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- End content of Module details tab -->
-                <div id="activity" class="tab-pane Content TabContent">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>User</th>
-                                <th>Started</th>
-                                <th>Last access</th>
-                                <th>Status</th>
-                                <th>Score</th>
-                                <th>Expiry</th>
-                            </tr>
-                        </thead>
-                        <tbody id="activityBody">
-                            #if( $page.paginator.isEmpty() )
-                            <td colspan="7">There are no results matching the selected date range and criteria</td>
-                            #else
-                            #foreach($p in $page.paginator.records)
-                            <tr>
-                                <td>
-                                    <a href="/manageUsers/$p.profile.id/">
-                                        $p.profile.formattedName
-                                    </a>                                        
-                                </td>
-                                <td>
-                                    $formatter.formatDateTime($p.createdDate)                                        
-                                </td>
-                                <td>                                        
-                                    $formatter.formatDateTime($p.modifiedDate)
-                                </td>
-                                <td>
-                                    #if( $p.completed )
-                                    <span class="label label-success">Complete</span>
-                                    #else
-                                    ${p.percentComplete}%
-                                    #end
-                                </td>
-                                <td>$!p.scorePerc</td>
-                                <td>
-                                    $!p.expiryDate
-                                    #if( $p.expired )
-                                    <span class="label label-danger">Expired</span>
-                                    #end
-                                </td>
-                            </tr>
-                            #end
-                            #end
-                        </tbody>
-                        <tfoot id="pointsFooter">
-                            <tr>
-                                <td colspan="6">
-                                    $!page.paginator.html
-                                </td>
-                            </tr>
-                        </tfoot>                        
-                    </table>
-                </div>
-            </div>
-        </div>
-        #end
-
-        <script src="/static/dropzone/4.3.0/downloads/dropzone.min.js">//</script>
-
-        <div id="modal-upload-scorm" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                        <h4 class="modal-title">Upload Scorm File</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadScormFileDropzone"></form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-add-event" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                        <h4 class="modal-title">Create module event</h4>
-                    </div>
-                    <form action="${page.href}" class="form-horizontal" id="addEventForm">
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="eventTitle" class="control-label col-md-2">Title</label>
-                                <div class="col-md-10">
-                                    <input type="text" id="eventTitle" class="form-control" name="eventTitle" value="$!page.title" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="calendar" class="control-label col-md-2">Calendar</label>
-                                <div class="col-md-6">
-                                    <select class="form-control" name="calendar">                                   
-                                        #foreach($calendar in $rootFolder.organisation.calendars)
-                                        $formatter.option( $calendar.name, $calendar.title, "" )
-                                        #end                                    
-                                    </select>                                
-                                    <a href="/Calendars/"><i>Manage calendars here</i></a>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="description" class="control-label col-md-2">Description</label>
-                                <div class="col-md-10">
-                                    <input type="text" id="description" class="form-control" name="description" value=""  />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="startDate" class="control-label col-md-2">
-                                    #if( $page.instructorType == "ILT" )
-                                    Start
-                                    #else
-                                    Due date
-                                    #end
-                                </label>
-                                <div class="col-md-4">
-                                    <input type="text" id="startDate" class="form-control" name="startDate" value="" />                                    
-                                </div>
-
-                                <label for="cohort" class="control-label col-md-2">Cohort</label>
-                                <div class="col-md-4">
-                                    <input type="text" id="cohort" class="form-control" name="cohort" value="" />
-                                </div>                                
-                            </div>
-
-                            #if( $page.instructorType == "ILT" )
-                            <div class="form-group">
-                                <label for="endDate" class="control-label col-md-2">Finish</label>
-                                <div class="col-md-4">
-                                    <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
-                                </div>
-
-                                <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
-                                <div class="col-md-4">
-                                    <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
-                                </div>
-                            </div>
-                            #end
-
-                            <div class="form-group">
-                                <label for="location" class="control-label col-md-2">Location</label>
-                                <div class="col-md-10">
-                                    <input type="text" id="location" class="form-control" name="location" value="" />
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-add-page" class="modal #if ($isKEditor) modal-full #end fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog #if (!$isKEditor) modal-lg #end">
-                <div class="modal-content">
-                    <form method="POST" action="." class="form-horizontal" style="height: 100%;">
-                        <input type="hidden" name="pageName" />
-                        <input type="hidden" name="order" />
-                        <input type="hidden" name="template" value="learner/modulePage" />
-                        <div class="modal-header">
-                            <div class="row">
-                                <div class="col-sm-11">
-                                    <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
-                                </div>
-                                <div class="col-sm-1" style="padding-top: 8px;">
-                                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                                </div>
-                            </div>
-                        </div>
-                        #if ($isKEditor)
-                        <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
-                            <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
-                        </div>
-                        #else
-                        <div class="modal-body">
-                            <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        #end
-                        <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
-                            <button class="btn btn-sm btn-primary btn-save btn-img" type="submit">Save <img class="ajax-loader" src="/static/common/loading.gif" />
-                            </button>
-                            <button class="btn btn-sm btn-primary btn-save-close btn-img" type="submit">Save & Close
-                                <img class="ajax-loader" src="/static/common/loading.gif" />
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-add-quiz" class="modal fade" aria-hidden="true" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
-                        <h4 class="modal-title">Add/edit quiz</h4>
-                    </div>
-                    <form method="POST" action="." class="form-horizontal">
-                        <div class="modal-body">
-                            <div class="form-message alert alert-danger" style="display: none;"></div>
-                            <input type="hidden" name="pageName" />
-                            <input type="hidden" name="order" />
-                            <input type="hidden" name="template" value="learner/quizPage" />
-                            <div class="tabbable">
-                                <ul class="nav nav-tabs tab-bricky">
-                                    <li><a data-toggle="tab" href="#questions">Questions</a></li>
-                                    <li><a data-toggle="tab" href="#options">Options</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="questions" class="tab-pane">
-                                        <div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="form-group">
-                                                    <label for="quizTitle" class="control-label col-sm-3">Enter quiz title</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                                                <div id="modal-upload-scorm" class="modal fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-dialog modal-md">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                                <h4 class="modal-title">Upload Scorm File</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="${page.href}" class="dropzone dropzone-fullwidth" id="uploadScormFileDropzone"></form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-sm-4">
-                                                <div class="btn-group">
-                                                    <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
-                                                        <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu pull-right">
-                                                        <li><a href="#" data-type="multiple">Multiple choice</a></li>
-                                                        <li><a href="#" data-type="multi-answer">Multiple choice with multi-answers</a></li>
-                                                        <li><a href="#" data-type="textbox">Textbox</a></li>
-                                                    </ul>
+
+                                                <div id="modal-add-event" class="modal fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-dialog modal-md">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                                <h4 class="modal-title">Create module event</h4>
+                                                            </div>
+                                                            <form action="${page.href}" class="form-horizontal" id="addEventForm">
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="eventTitle" class="control-label col-md-2">Title</label>
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" id="eventTitle" class="form-control" name="eventTitle" value="$!page.title" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="calendar" class="control-label col-md-2">Calendar</label>
+                                                                        <div class="col-md-6">
+                                                                            <select class="form-control" name="calendar">                                   
+                                                                                #foreach($calendar in $rootFolder.organisation.calendars)
+                                                                                $formatter.option( $calendar.name, $calendar.title, "" )
+                                                                                #end                                    
+                                                                            </select>                                
+                                                                            <a href="/Calendars/"><i>Manage calendars here</i></a>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="description" class="control-label col-md-2">Description</label>
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" id="description" class="form-control" name="description" value=""  />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="startDate" class="control-label col-md-2">
+                                                                            #if( $page.instructorType == "ILT" )
+                                                                            Start
+                                                                            #else
+                                                                            Due date
+                                                                            #end
+                                                                        </label>
+                                                                        <div class="col-md-4">
+                                                                            <input type="text" id="startDate" class="form-control" name="startDate" value="" />                                    
+                                                                        </div>
+
+                                                                        <label for="cohort" class="control-label col-md-2">Cohort</label>
+                                                                        <div class="col-md-4">
+                                                                            <input type="text" id="cohort" class="form-control" name="cohort" value="" />
+                                                                        </div>                                
+                                                                    </div>
+
+                                                                    #if( $page.instructorType == "ILT" )
+                                                                    <div class="form-group">
+                                                                        <label for="endDate" class="control-label col-md-2">Finish</label>
+                                                                        <div class="col-md-4">
+                                                                            <input type="text" id="endDate" class="form-control" name="endDate" value=""  />
+                                                                        </div>
+
+                                                                        <label for="maxAttendees" class="control-label col-md-2">Max Attendees</label>
+                                                                        <div class="col-md-4">
+                                                                            <input type="text" id="maxAttendees" class="form-control" name="maxAttendees" value="" />
+                                                                        </div>
+                                                                    </div>
+                                                                    #end
+
+                                                                    <div class="form-group">
+                                                                        <label for="location" class="control-label col-md-2">Location</label>
+                                                                        <div class="col-md-10">
+                                                                            <input type="text" id="location" class="form-control" name="location" value="" />
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                                    <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div id="quiz-questions"></div>
-                                    </div>
 
-                                    <div id="options" class="tab-pane">
-                                        <div class="form-group">
-                                            <label for="batchMode" class="control-label col-sm-4">Batch mode</label>
-                                            <div class="col-sm-6">
-                                                <select name="batchMode" id="batchMode">
-                                                    <option value="">Ask all</option>
-                                                    <option value="random">Random</option>
-                                                    <option value="sequential">Sequential</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="batchSize" class="control-label col-sm-4">Batch size</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" name="batchSize" id="batchSize" class="form-control" value="" placeholder="" />
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="maxAttempts" class="control-label col-sm-4">Maximum attempts</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" name="maxAttempts" id="maxAttempts" class="form-control" value="" placeholder="" />
-                                                <span class="help-block small text-muted">If leave it blank, default value will be <b>1000</b></span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="passMarkPerc" class="control-label col-sm-4">Pass mark %</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" name="passMarkPerc" id="passMarkPerc" class="form-control" value="" placeholder="" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
-                            <button class="btn btn-sm btn-primary" type="submit">Save</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+                                                <div id="modal-add-page" class="modal #if ($isKEditor) modal-full #end fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-dialog #if (!$isKEditor) modal-lg #end">
+                                                        <div class="modal-content">
+                                                            <form method="POST" action="." class="form-horizontal" style="height: 100%;">
+                                                                <input type="hidden" name="pageName" />
+                                                                <input type="hidden" name="order" />
+                                                                <input type="hidden" name="template" value="learner/modulePage" />
+                                                                <div class="modal-header">
+                                                                    <div class="row">
+                                                                        <div class="col-sm-11">
+                                                                            <input type="text" name="pageTitle" id="pageTitle" class="required form-control" value="" placeholder="A title for the new page" />
+                                                                        </div>
+                                                                        <div class="col-sm-1" style="padding-top: 8px;">
+                                                                            <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                #if ($isKEditor)
+                                                                <div class="modal-body embed-responsive" style="height: calc(100% - 65px - 61px);">
+                                                                    <iframe id="editor-frame" class="embed-responsive-item" src=""></iframe>
+                                                                </div>
+                                                                #else
+                                                                <div class="modal-body">
+                                                                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-12">
+                                                                            <textarea name="body" id="body" class="htmleditor toolbar-Full" style="width: 800px"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                #end
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                                    <button class="btn btn-sm btn-primary btn-img btn-history" type="button">History <img class="ajax-loader" src="/static/common/loading.gif"/></button>
+                                                                    <button class="btn btn-sm btn-primary btn-save btn-img" type="submit">Save <img class="ajax-loader" src="/static/common/loading.gif" />
+                                                                    </button>
+                                                                    <button class="btn btn-sm btn-primary btn-save-close btn-img" type="submit">Save & Close
+                                                                        <img class="ajax-loader" src="/static/common/loading.gif" />
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-        <script type="text/javascript" >
-            var isKEditor = $isKEditor;
-            $(function () {
-                initManageModule("../../..", '$page.themePath');
-            });
-        </script>
-    </body>
-</html>
+                                                <div id="modal-add-quiz" class="modal fade" aria-hidden="true" tabindex="-1">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">&times;</button>
+                                                                <h4 class="modal-title">Add/edit quiz</h4>
+                                                            </div>
+                                                            <form method="POST" action="." class="form-horizontal">
+                                                                <div class="modal-body">
+                                                                    <div class="form-message alert alert-danger" style="display: none;"></div>
+                                                                    <input type="hidden" name="pageName" />
+                                                                    <input type="hidden" name="order" />
+                                                                    <input type="hidden" name="template" value="learner/quizPage" />
+                                                                    <div class="tabbable">
+                                                                        <ul class="nav nav-tabs tab-bricky">
+                                                                            <li><a data-toggle="tab" href="#questions">Questions</a></li>
+                                                                            <li><a data-toggle="tab" href="#options">Options</a></li>
+                                                                        </ul>
+                                                                        <div class="tab-content">
+                                                                            <div id="questions" class="tab-pane">
+                                                                                <div class="row">
+                                                                                    <div class="col-sm-8">
+                                                                                        <div class="form-group">
+                                                                                            <label for="quizTitle" class="control-label col-sm-3">Enter quiz title</label>
+                                                                                            <div class="col-sm-9">
+                                                                                                <input type="text" name="pageTitle" id="quizTitle" class="form-control" value="" placeholder="A title for the new page" />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-sm-4">
+                                                                                        <div class="btn-group">
+                                                                                            <button class="btn btn-sm btn-success btn-add-question dropdown-toggle" data-toggle="dropdown">
+                                                                                                <i class="fa fa-plus"></i> Add a question <span class="caret"></span>
+                                                                                            </button>
+                                                                                            <ul class="dropdown-menu pull-right">
+                                                                                                <li><a href="#" data-type="multiple">Multiple choice</a></li>
+                                                                                                <li><a href="#" data-type="multi-answer">Multiple choice with multi-answers</a></li>
+                                                                                                <li><a href="#" data-type="textbox">Textbox</a></li>
+                                                                                            </ul>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div id="quiz-questions"></div>
+                                                                            </div>
+
+                                                                            <div id="options" class="tab-pane">
+                                                                                <div class="form-group">
+                                                                                    <label for="batchMode" class="control-label col-sm-4">Batch mode</label>
+                                                                                    <div class="col-sm-6">
+                                                                                        <select name="batchMode" id="batchMode">
+                                                                                            <option value="">Ask all</option>
+                                                                                            <option value="random">Random</option>
+                                                                                            <option value="sequential">Sequential</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="batchSize" class="control-label col-sm-4">Batch size</label>
+                                                                                    <div class="col-sm-6">
+                                                                                        <input type="text" name="batchSize" id="batchSize" class="form-control" value="" placeholder="" />
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="maxAttempts" class="control-label col-sm-4">Maximum attempts</label>
+                                                                                    <div class="col-sm-6">
+                                                                                        <input type="text" name="maxAttempts" id="maxAttempts" class="form-control" value="" placeholder="" />
+                                                                                        <span class="help-block small text-muted">If leave it blank, default value will be <b>1000</b></span>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label for="passMarkPerc" class="control-label col-sm-4">Pass mark %</label>
+                                                                                    <div class="col-sm-6">
+                                                                                        <input type="text" name="passMarkPerc" id="passMarkPerc" class="form-control" value="" placeholder="" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn-sm btn-default" data-dismiss="modal" type="button">Close</button>
+                                                                    <button class="btn btn-sm btn-primary" type="submit">Save</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <script type="text/javascript" >
+                                                    var isKEditor = $isKEditor;
+                                                    $(function () {
+                                                        initManageModule("../../..", '$page.themePath');
+                                                    });
+                                                </script>
+                                                </body>
+                                                </html>
