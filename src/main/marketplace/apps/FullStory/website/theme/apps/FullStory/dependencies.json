@@ -9,7 +9,7 @@
         {
             "js": {
                 "group": "main",
-                "path": "/theme/apps/KFullStory/kfullstory.js"
+                "path": "/theme/apps/FullStory/fullstory.js"
             }
         }
     ]

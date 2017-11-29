@@ -1,10 +1,10 @@
-<controllers onAppEnabled="initKFullStory">
+<controllers onAppEnabled="initFullStory">
     <source>/APP-INF/config.js</source>
     <source>/APP-INF/utils.js</source>
     <source>/APP-INF/dbUtils.js</source>
     <source>/APP-INF/app.js</source>
 
-    <settings enabled="true" path="/theme/apps/KFullStory/settings.html">
+    <settings enabled="true" path="/theme/apps/FullStory/settings.html">
         <function>saveSettings</function>
     </settings>
 </controllers>

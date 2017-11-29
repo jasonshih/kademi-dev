@@ -1,6 +1,6 @@
-var APP_NAME = 'KFullStory';
-var DB_NAME = 'KFullStory';
-var DB_TITLE = 'KFullStory';
+var APP_NAME = 'FullStory';
+var DB_NAME = 'FullStory';
+var DB_TITLE = 'FullStory';
 var dbType = 'json';
 
 var recordMapping = {

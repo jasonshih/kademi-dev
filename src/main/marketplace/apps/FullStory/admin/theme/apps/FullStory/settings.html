@@ -1,0 +1,7 @@
+#set ($fullstoryOrgId = $!page.getAppSetting($app.instanceId, 'fullstoryOrgId'))
+<div class="form-group">
+    <label class="col-sm-4 control-label" for="fullstory-org-id">Org ID</label>
+    <div class="col-sm-7">
+        <input type="text" id="fullstory-org-id" class="form-control" name="fullstoryOrgId" value="$!fullstoryOrgId" />
+    </div>
+</div>
