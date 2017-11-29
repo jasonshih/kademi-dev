@@ -101,7 +101,9 @@
                                 </tr>
                             </thead>
                             <tbody id="products-list">
-                                #set($products = $page.searchProducts($request.params.query, $request.params.showAll, $request.params.orgId))
+                                #set($paginator = $page.paginator)
+                                #set( $products = $paginator.records )
+                                
                                 #if( $products.isEmpty() )
                                 <tr>
                                     <td colspan="6">No products were found matching the critieria</td>
