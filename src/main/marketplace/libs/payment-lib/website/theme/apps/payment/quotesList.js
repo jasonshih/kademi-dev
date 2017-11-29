@@ -33,10 +33,9 @@
             url: href,
             whenComplete: function () {
                 $('abbr.timeago').timeago();
-                initQuoteTable();
             }
         });
-    };
+    }
 
     function initDateTimePicker() {
         var date = new Date();

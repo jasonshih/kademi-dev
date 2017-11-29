@@ -98,15 +98,15 @@
                                                                         #end
                                                                     </td>
                                                                     <td><a href="#">$v.name</a></td>
-                                                                    <td>$v.title</td>
-                                                                    <td>$formatter.ifNull($v.vendor.formattedName, '-')</td>
-                                                                    <td>$formatter.ifNull($v.customer.formattedName, '-')</td>
-                                                                    <td>$v.subTotal</td>
-                                                                    <td>$v.tax</td>
-                                                                    <td>$v.total</td>
-                                                                    <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$v.issuedDate</abbr></td>
+                                                                    <td>$!v.title</td>
+                                                                    <td>$!formatter.ifNull($v.vendor.formattedName, '-')</td>
+                                                                    <td>$!formatter.ifNull($v.customer.formattedName, '-')</td>
+                                                                    <td>$!v.subTotal</td>
+                                                                    <td>$!v.tax</td>
+                                                                    <td>$!v.total</td>
+                                                                    <td><abbr title="$formatter.formatDateISO8601($v.issuedDate)" class="timeago">$!v.issuedDate</abbr></td>
                                                                     #if ($v.expiryDate)
-                                                                        <td><abbr title="$formatter.formatDateISO8601($v.expiryDate)" class="timeago">$v.expiryDate</abbr></td>
+                                                                        <td><abbr title="$formatter.formatDateISO8601($v.expiryDate)" class="timeago">$!v.expiryDate</abbr></td>
                                                                     #else
                                                                         <td>-</td>
                                                                     #end
