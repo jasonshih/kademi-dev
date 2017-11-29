@@ -1,9 +1,9 @@
 {
     "dependencies": [
         {
-            "css": {
-                "cssMedia": "all",
-                "path": "/theme/apps/content/socialLinks.css"
+            "less": {
+                "lessMedia": "all",
+                "path": "/theme/apps/content/socialLinks.less"
             }
         },
         {
