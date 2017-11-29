@@ -43,9 +43,9 @@ function initManagePointsSystem() {
     $(document.body).on('pageDateChanged', function (e, startDate, endDate) {
         searchOptions.startDate = startDate;
         searchOptions.endDate = endDate;
-        if (window.location.hash.indexOf('#points') != -1){
+        if (window.location.hash.indexOf('#points') != -1 || window.location.hash.indexOf('#debits') != -1) {
             doHistorySearch();
-        } else if (window.location.hash.indexOf('#leaderboard') != -1){
+        } else if (window.location.hash.indexOf('#leaderboard') != -1) {
             doLeaderboardSearch();
         }
     });
@@ -55,12 +55,12 @@ function initTabs() {
     $('.TabNav a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         var href = $(this).attr('href');
         var clicked = $(this).hasClass('clicked');
-        if (!clicked){
+        if (!clicked) {
             $(this).addClass('clicked');
-            if (href == "#points"){
+            if (href == "#points") {
                 doHistorySearch();
             }
-            if (href == "#leaderboard"){
+            if (href == "#leaderboard") {
                 doLeaderboardSearch();
             }
         }
@@ -372,6 +372,9 @@ function doHistorySearch() {
 
     var target = $("#tablePointsBody");
     var pointsFooter = $("#pointsFooter");
+    var debitTarget = $("#debitsTableBody");
+    var debitFooterTarget = $("#debitsPaginator");
+    
     target.load();
 
     $.ajax({
@@ -382,11 +385,12 @@ function doHistorySearch() {
             flog('response', content);
             setTimeout(function () {
                 Msg.success("Search completed", 'managePointsSystem', 1000);
-            },1000)
+            }, 1000);
+
+            history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
+
             var newBody = $(content).find("#tablePointsBody");
             target.replaceWith(newBody);
-            history.pushState(null, null, window.location.pathname + uri.search() + window.location.hash);
-            $("abbr.timeago").timeago();
             var newFooter = $(content).find("#pointsFooter .pagination").html();
             var newRightFooter = $(content).find("#pointsFooter .pagination").parent().siblings().html();
             if (!newFooter)
@@ -395,6 +399,19 @@ function doHistorySearch() {
                 newRightFooter = '';
             pointsFooter.find('.pagination').html(newFooter);
             pointsFooter.find('.pagination').parent().siblings().html(newRightFooter);
+
+            var debitBody = $(content).find("#debitsTableBody");
+            debitTarget.replaceWith(debitBody);
+            var debitFooter = $(content).find("#debitsPaginator .pagination").html();
+            var newRightDebitFooter = $(content).find("#debitsPaginator .pagination").parent().siblings().html();
+            if (!newFooter)
+                newFooter = '';
+            if (!newRightFooter)
+                newRightFooter = '';
+            debitFooterTarget.find('.pagination').html(debitFooter);
+            debitFooterTarget.find('.pagination').parent().siblings().html(newRightDebitFooter);
+
+            $("abbr.timeago").timeago();
             flog("done insert and timeago", $("abbr.timeago"));
         }
     });
