@@ -11,6 +11,9 @@
 #set($showExtraFields = false)
 #end
 
+#set( $rightKindOfPage = $page.is("dashboard") )
+
+#if( $rightKindOfPage )
 #set($isInGroup = $currentUser.isInGroup($groupName, $org))
 #if( $isInGroup == false )
 <div id="modal-confirm-details" class="modal fade" aria-hidden="true">
@@ -24,50 +27,43 @@
                 <div class="modal-body">
                     <input type="hidden" value="$groupName" id="groupName"/>
                     <input type="hidden" value="$websiteRootFolder.externalUrl" id="websiteURL"/>
-                    <div class="form-group">
-                        <label for="" class="control-label col-md-3">UserId:</label>
 
-                        <div class="col-md-9">
-                            <input type="text" disabled="disabled" id="userName" class="form-control" value="$!currentUser.name" />
-                            <small>Kademi ID: $currentUser.id</small>
-                        </div>
-                    </div>
                     <div class="form-group">
-                        <label for="nickName" class="control-label col-md-3">Nickname:</label>
+                        <label for="nickName" class="control-label col-md-3">Display name:</label>
                         <div class="col-md-9">
-                            <input type="text" name="nickName" id="nickName" class="form-control" value="$!currentUser.nickName" />
-                            <small>Display name, used when the user's real name should be hidden</small>
+                            <input type="text" name="nickName" id="nickName" class="form-control required" value="$!currentUser.nickName" />
+                            <small>Your name as you want to appear to others in this site</small>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email" class="control-label col-md-3">Email:</label>
                         <div class="col-md-9">
-                            <input type="text" name="email" id="email" class="form-control" value="$!currentUser.email" />
+                            <input type="text" name="email" id="email" class="form-control required" value="$!currentUser.email" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="phone" class="control-label col-md-3">Phone</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" name="phone" id="phone" value="$!currentUser.phone" />
+                            <input type="text" class="form-control required" name="phone" id="phone" value="$!currentUser.phone" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="firstName" class="control-label col-md-3">First name</label>
                         <div class="col-md-9">
-                            <input type="text" name="firstName" id="firstName" class="form-control" value="$!currentUser.firstName" />
+                            <input type="text" name="firstName" id="firstName" class="form-control required" value="$!currentUser.firstName" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="surName" class="control-label col-md-3">Surname</label>
                         <div class="col-md-9">
-                            <input type="text" name="surName" id="surName" class="form-control" value="$!currentUser.surName" />
+                            <input type="text" name="surName" id="surName" class="form-control required" value="$!currentUser.surName" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="birthDate" class="control-label col-md-3">Birth Date</label>
                         <div class="col-md-9">
                             <div class="input-group">
-                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control pageDatePicker" />
+                                <input type="text" name="birthDate" id="birthDate" placeholder="Birth Date" data-format="DD/MM/YYYY" value="$!formatter.formatDate($currentUser.birthDate)" class="form-control pageDatePicker required" />
                                 <span class="input-group-addon"> <i class="fa fa-calendar"></i> </span>
                             </div>
                         </div>
@@ -87,6 +83,15 @@
                     </div>
                     #end
                     #end
+
+                    <div class="form-group">
+                        <label for="" class="control-label col-md-3">UserId:</label>
+
+                        <div class="col-md-9">
+                            <input type="text" disabled="disabled" id="userName" class="form-control" value="$!currentUser.name" />
+                            <small>Kademi ID: $currentUser.id</small>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="modal-footer">
@@ -105,6 +110,7 @@
         </div>
     </div>
 </div>
+#end
 #end
 
 

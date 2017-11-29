@@ -6,7 +6,7 @@
                     log("done", resp);
                     $(".presend").fhide();
                     $(".postsend").fshow();
-                    window.location = "/profile/";
+                    window.location = "/dashboard";
                 }
             });
             if ($("#token").val()) {
@@ -14,5 +14,5 @@
             }
         }
     });
-    
+
 })(jQuery);
