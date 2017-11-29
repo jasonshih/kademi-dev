@@ -129,8 +129,14 @@
             #end
 
             <p class="lead">
-                Journey: <a href="/funnels/$page.funnel.name">$page.funnel.title</a>
-                , started 
+                Journey: <a href="/funnels/$page.funnel.name">
+                    #if( $page.funnel.title )
+                    $page.funnel.title
+                    #else
+                    $page.funnel.name
+                    #end
+                </a>
+                , started
                 <abbr title="$formatter.formatDateISO8601($page.createDate)" class="info timeago">$page.createDate</abbr>
             </p>
 
@@ -510,7 +516,7 @@
                                 </li>
                                 #end
 
-                            </ul>                        
+                            </ul>
                         </div>
                     </div>
 

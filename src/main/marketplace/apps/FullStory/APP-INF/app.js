@@ -1,8 +1,8 @@
 // ============================================================================
 // On Enable
 // ============================================================================
-function initKFullStory(orgRoot, webRoot, enabled) {
-    log.info("initKFullStory: orgRoot={} app={}", orgRoot);
+function initFullStory(orgRoot, webRoot, enabled) {
+    log.info("initFullStory: orgRoot={} app={}", orgRoot);
     
     if (webRoot) {
         var jsonDB = orgRoot.find(JSON_DB)
@@ -29,11 +29,11 @@ function initKFullStory(orgRoot, webRoot, enabled) {
 }
 
 // ============================================================================
-// /kfullstory/storeSession
+// /fullstory/storeSession
 // ============================================================================
 controllerMappings
     .websiteController()
-    .path("/kfullstory/storeSession")
+    .path("/fullstory/storeSession")
     .enabled(true)
     .isPublic(true)
     .addMethod("POST", "saveSession")
@@ -81,8 +81,8 @@ function generateProfileTimeline(page, userResource, list) {
                 .profile(userResource)
                 .category('info')
                 .icon('fa fa-play-circle')
-                .desc('Your session url: ' + record.fields.session.value)
                 .title('FullStory session is started')
+                .path(record.fields.session.value)
                 .inbound(false)
                 .date(formatter.parseDate(record.fields.savedDate.value))
                 .build();
@@ -149,9 +149,9 @@ function saveSession(page, params) {
 function saveSettings(page, params) {
     log.info('saveSettings > page={}, params={}', page, params);
     
-    var kfullstoryOrgId = params.kfullstoryOrgId || '';
+    var fullstoryOrgId = params.fullstoryOrgId || '';
     
-    page.setAppSetting(APP_NAME, 'kfullstoryOrgId', kfullstoryOrgId);
+    page.setAppSetting(APP_NAME, 'fullstoryOrgId', fullstoryOrgId);
     
     return views.jsonResult(true);
 }
@@ -191,13 +191,13 @@ function getAppSettings(page) {
 controllerMappings
     .websitePortletController()
     .portletSection('header')
-    .templatePath('/theme/apps/KFullStory/kfullstory.html')
-    .method('getKFullStory')
+    .templatePath('/theme/apps/FullStory/fullstory.html')
+    .method('getFullStory')
     .enabled(true)
     .build();
 
-function getKFullStory(page, params, context) {
-    log.info('getKFullStory');
+function getFullStory(page, params, context) {
+    log.info('getFullStory');
     
     var appSettings = getAppSettings(page);
     
