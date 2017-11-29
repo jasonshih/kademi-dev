@@ -20,7 +20,7 @@ $(function () {
         var ids = getSelectedVouchers(table);
         flog("Ids: ", ids);
         if (ids.length > 0) {
-            $("#voucher-ids").val(ids);
+            $(".voucher-ids").val(ids);
             redeemVoucherModal.modal("show");
         } else {
             Msg.error("Please select at least one voucher to redeem.");
@@ -47,7 +47,7 @@ $(function () {
         var ids = getSelectedVouchers(table);
         flog("Ids: ", ids);
         if (ids.length > 0) {
-            $("#voucher-ids").val(ids);
+            $(".voucher-ids").val(ids);
             pendingVoucherModal.modal("show");
         } else {
             Msg.error("Please select at least one voucher to change the status.");
@@ -56,7 +56,7 @@ $(function () {
 
     pendingVoucherModal.find("form").forms({
         onSuccess: function () {
-            Msg.info("Set pending ok");
+            Msg.info("Status changed ok");
             pendingVoucherModal.modal('hide');
             reloadVouchers();
         }
@@ -113,6 +113,7 @@ function doSearch() {
 }
 
 function reloadVouchers() {
+    flog("reloadVouchers");
     $("#vouchers-table-body").reloadFragment({
         url: window.location.href,
         whenComplete: function () {

@@ -11,10 +11,10 @@
                 <div class="input-group" id="voucher-query-container">
                     <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
                     <span class="input-group-btn">
-                                <button class="btn btn-default btnClearQueryVoucher" type="button">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            </span>
+                        <button class="btn btn-default btnClearQueryVoucher" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -37,32 +37,32 @@
                     <col width="100px" />
                 </colgroup>
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>By</th>
-                    <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>By</th>
+                        <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
+                    </tr>
                 </thead>
                 <tbody id="vouchers-table-body">
-                #if( $vrp.vouchers.empty )
-                <tr>
-                    <td colspan="6">No vouchers</td>
-                </tr>
-                #else
-                #foreach($v in $vrp.vouchers)
-                <tr>
-                    <td><a href='/vouchers/$v.voucherTypeCode/$v.voucherId'>$v.voucherId</a></td>
-                    <td>$v.voucherTypeTitle</td>
-                    <td>$!vrp.statusText($v.status)</td>
-                    <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
-                    <td>$!v.statusChangedBy.name</td>
-                    <td><input type="checkbox" name="voucher-ids" value="$v.id" /></td>
-                </tr>
-                #end
-                #end
+                    #if( $vrp.vouchers.empty )
+                    <tr>
+                        <td colspan="6">No vouchers</td>
+                    </tr>
+                    #else
+                    #foreach($v in $vrp.vouchers)
+                    <tr>
+                        <td><a href='/vouchers/$v.voucherTypeCode/$v.voucherId'>$v.voucherId</a></td>
+                        <td>$v.voucherTypeTitle</td>
+                        <td>$!vrp.statusText($v.status)</td>
+                        <td><abbr title="$formatter.formatDateISO8601($v.statusDate)" class="timeago">$!v.statusDate</abbr></td>
+                        <td>$!v.statusChangedBy.name</td>
+                        <td><input type="checkbox" name="voucher-ids" value="$v.id" /></td>
+                    </tr>
+                    #end
+                    #end
                 </tbody>
             </table>
         </div>
@@ -88,9 +88,9 @@
                             #end
                         </select>
                     </p>
-                    <input type="hidden" name="redeem"/>
+                    <input type="hidden" name="redeem" value="redeem"/>
                     <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
-                    <input type="hidden" name="voucher-ids" id="voucher-ids"/>
+                    <input type="hidden" name="voucher-ids" class="voucher-ids"/>
 
                 </div>
                 <div class="modal-footer">
@@ -123,11 +123,11 @@
                         </div>
                     </div>
                     <textarea name="notes" id="notes" rows="5" style="width: 100%" placeholder="Optional notes" ></textarea>
-                    <input type="hidden" name="voucher-ids" id="voucher-ids"/>
+                    <input type="hidden" name="voucher-ids" class="voucher-ids"/>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Set pending</button>
+                    <button type="submit" class="btn btn-primary">Change</button>
                 </div>
             </form>
         </div>
@@ -148,10 +148,10 @@ Vouchers app is not enabled
                 <div class="input-group" id="voucher-query-container">
                     <input type="text" id="voucher-query" name="voucherQuery" value="$!request.params.voucher-query" class="form-control" placeholder="Search for a voucher by code" />
                     <span class="input-group-btn">
-                                <button class="btn btn-default btnClearQueryVoucher" type="button">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </button>
-                            </span>
+                        <button class="btn btn-default btnClearQueryVoucher" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
                 </div>
             </div>
             <div class="col-lg-6">
@@ -174,19 +174,19 @@ Vouchers app is not enabled
                     <col width="100px" />
                 </colgroup>
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>By</th>
-                    <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>By</th>
+                        <th><input type="checkbox" name="voucher-ids" class="chk-all" /></th>
+                    </tr>
                 </thead>
                 <tbody id="vouchers-table-body">
-                <tr>
-                    <td colspan="6">No vouchers</td>
-                </tr>
+                    <tr>
+                        <td colspan="6">No vouchers</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
