@@ -141,7 +141,7 @@
                                 <a href='/emails/$i.id'><i class='fa fa-envelope'></i></a>$i.subject
                             </td>
                             <td>
-                                <abbr title='$i.sendStatusDate' class='timeago'>$i.sendStatusDate</abbr>
+                                <abbr title='$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)' class='timeago'>$formatter.formatDateISO8601($i.sendStatusDate, $!rootFolder.organisation.timezone)</abbr>
                             </td>
                             <td>$i.sendStatusText</td>
                             <td>$!i.baseEmailJob</td>
