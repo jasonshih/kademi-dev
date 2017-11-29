@@ -49,31 +49,33 @@
             .enabled(true)
             .build();
 
+
     controllerMappings
             .websiteController()
             .path('/confirm-details')
             .addMethod('POST', 'updateUser')
+            .isPublic(true)
             .postPriviledge('READ_CONTENT')
             .enabled(true)
             .build();
 
     g.updateUser = function (page, params) {
         log.info('updateUser > page={}, params={}', page, params);
-        
+
         var userName = params.userName;
         var groupName = params.groupName;
         var result = {
             status: true
         };
-        
+
         try{
             var orgData = page.closest("website").getOrgData();
             var group = orgData.createGroup(groupName);
         }catch(e){
             //Group exists
         }
-        
-        try {           
+
+        try {
             securityManager.addToGroup(userName, groupName);
         } catch (e) {
             log.error('Error when updating user: ' + e);
