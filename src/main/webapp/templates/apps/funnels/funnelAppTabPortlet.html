@@ -82,6 +82,17 @@
                 </td>
             </tr>
 
+            #if( $lead.closedDate )
+            <tr>
+                <td>Closed date</td>
+                <td>
+                        <abbr title="$formatter.formatDateISO8601($lead.closedDate, $page.organisation.timezone)" class="timeago">
+                            $formatter.formatDateTime($lead.closedDate, $page.organisation.timezone)
+                        </abbr>
+                        (<small class="text-muted">Current time: $formatter.formatDateTime($formatter.now, $page.organisation.timezone)</small>)
+                </td>
+            </tr>
+            #else
             <tr>
                 <td>Timer</td>
                 <td>
@@ -117,6 +128,7 @@
                     #end
                 </td>
             </tr>
+            #end
 
 
         </table>
