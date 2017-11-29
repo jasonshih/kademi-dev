@@ -2,11 +2,24 @@
     <div class="panel-body">
         <div id="details">
             <h4 class="page-header">Details - $page.funnelTitle</h4>
-            
-            <textarea id="description" class="form-control" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
-            
+
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2">Lead Title:</label>
+                            <div class="col-sm-10">
+                                <input type="text" value="$!page.leadTitle" name="leadTitle" class="form-control immediateUpdate"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <textarea id="description" class="form-control immediateUpdate" placeholder="Description" name="description" style="height: 100px">$!page.description</textarea>
+
             <hr/>
-            
+
             <div class="form-horizontal">
                 <div class="row">
                     <div class="col-sm-6">
@@ -67,15 +80,15 @@
                 </div>
                 <div class="row">
                     <div class="" style="padding: 15px">
-                    #foreach($field in $page.extraFields)
-                    <div class="col-sm-12 col-md-12 col-lg-6">
-                        <div class="form-group" style="padding-right: 15px">
-                            <label class="control-label col-sm-4">$field.title:</label>
-                            $field.html($field.value, ' immediateUpdate', 'extraField_')
-                            <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>-->
+                        #foreach($field in $page.extraFields)
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+                            <div class="form-group" style="padding-right: 15px">
+                                <label class="control-label col-sm-4">$field.title:</label>
+                                $field.html($field.value, ' immediateUpdate', 'extraField_')
+                                <!--<input type="text" value="$!field.value" name="extraField_$field.name" class="form-control immediateUpdate $formatter.ifTrue($field.required, 'required', '')"/>-->
+                            </div>
                         </div>
-                    </div>
-                    #end
+                        #end
                     </div>
                 </div>
 

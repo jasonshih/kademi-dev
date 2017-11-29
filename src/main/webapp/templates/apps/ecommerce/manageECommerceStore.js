@@ -82,7 +82,7 @@ function initRemoveSelected() {
                 });
 
                 if (ids.length > 0) {
-                    Kalert.confirm("You want to remove " + ids.length + "products from the store?", function () {
+                    Kalert.confirm("You want to remove " + ids.length + " products from the store?", function () {
                         updateProductSelected(ids.join(','), false);
                     });
                 }
