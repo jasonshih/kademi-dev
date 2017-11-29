@@ -243,8 +243,9 @@
                                 #foreach($points in $page.paginator.records)
                                 <tr>
                                     <td>$points.numPoints</td>
+                                    
                                     <td>$formatter.formatDateTime($points.issuedDate, $rootFolder.organisation.timezone)</td>
-                                    <td>$formatter.formatDateTime($points.expiryDate, $rootFolder.organisation.timezone)</td>
+                                    <td>$!formatter.formatDateTime($points.expiryDate, $rootFolder.organisation.timezone)</td>
                                     <td>
                                         #if( $points.issuedTo )
                                         #if( $points.issuedTo.asProfile() )
