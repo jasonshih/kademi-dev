@@ -1,0 +1,12 @@
+{
+  "appDependencies": [
+        {
+            "appId": "paymentApp",
+            "branch" : ""
+        },
+        {
+            "appId": "payment-lib",
+            "branch": "1.0.7"
+        }
+  ]
+}
