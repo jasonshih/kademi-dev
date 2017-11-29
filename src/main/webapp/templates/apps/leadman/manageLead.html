@@ -66,12 +66,13 @@
                     <h2>
                         #if($page.leadOrg)
                         #if($page.profile)
-                        $page.customerDescription ($page.leadOrg.formattedName)
+                        <a href="/manageUsers/$page.profile.id/">$page.customerDescription</a>
+                        ($page.leadOrg.formattedName)
                         #else
-                        <$page.leadOrg.formattedName
+                        $page.leadOrg.formattedName
                         #end
                         #elseif( $page.profile )
-                        $page.customerDescription
+                        <a href="/manageUsers/$page.profile.id/">$page.customerDescription</a>
                         #else
                         $page.customerDescription
                         #end

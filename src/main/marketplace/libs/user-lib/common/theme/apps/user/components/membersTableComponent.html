@@ -17,8 +17,8 @@
 #set ($resp = $queryManager.runQuery("membersTable"))
 #end
 
-#set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "points", "pointsDebit"])
-#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "points": "Points Balance", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
+#set ($fields = ["lastVisit", "firstName", "surName", "email", "phone", "groupNames", "orgName", "parentOrg", "orgAddress", "groupName", "createdDate", "pointsBalance", "pointsDebit"])
+#set ($fieldsNames = {"lastVisit": "Last active", "firstName": "First name", "surName": "Last name", "email": "Email", "phone": "Phone", "groupNames": "Primary groups", "orgName": "Organisation name", "orgAddress": "Organisation address", "groupName": "Group", "pointsBalance": "Points Balance", "pointsDebit": "Spent points", "createdDate": "Date registered", "parentOrg": "Parent Org"})
 
 <div class="panel panel-default" style="height: $!{height}px; min-height: 0; overflow-y: auto" data-items-per-page="$!itemsPerPage">
     <div class="panel-heading">
@@ -42,7 +42,7 @@
                     <tr>
                         #foreach( $f in $fields )
                         #if ($columns && $columns.contains($f))
-                        #if ($f == "points")
+                        #if ($f == "pointsBalance")
                             #if ($row.source.points.size() > 0)
                             <td>$!row.source.points[0].get($pointsBucket)</td>
                             #else
@@ -108,7 +108,17 @@
                             </table>
                         </td>
                         #elseif($f == "createdDate")
-                        <td>$formatter.formatDate($formatter.toDate($!row.source.get($f)))</td>
+                        <td>
+                            <table>
+                                <tbody>
+                                #foreach ($m in $row.source.memberships)
+                                <tr>
+                                    <td>$formatter.formatDate($formatter.toDate($m.get("createdDate")))</td>
+                                </tr>
+                                #end
+                                </tbody>
+                            </table>
+                        </td>
                         #elseif($f == "pointsDebit")
                         <td>
                             #foreach($b in $pointsDebitBucket)
