@@ -3,9 +3,15 @@
 
     g._saveSettings = function (page, params) {
         var groupName = params.groupName || '';
+        var showTC = params.showTC || '';
+        var tcURL = params.tcURL || '';
+        var tcText = params.tcText || '';
         var showExtraFields = params.showExtraFields || '';
 
         page.setAppSetting(APP_NAME, 'groupName', groupName);
+        page.setAppSetting(APP_NAME, 'showTC', showTC);
+        page.setAppSetting(APP_NAME, 'tcURL', tcURL);
+        page.setAppSetting(APP_NAME, 'tcText', tcText);
         page.setAppSetting(APP_NAME, 'showExtraFields', showExtraFields);
 
         return views.jsonResult(true);
@@ -68,10 +74,10 @@
             status: true
         };
 
-        try{
+        try {
             var orgData = page.closest("website").getOrgData();
             var group = orgData.createGroup(groupName);
-        }catch(e){
+        } catch (e) {
             //Group exists
         }
 
