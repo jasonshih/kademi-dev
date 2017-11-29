@@ -26,13 +26,15 @@
             <input class="required form-control" required="true" type="email" name="email" id="email" placeholder="Your email address" />
         </div>
     </div>
+
+    #if ($displayName)
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="nickName">Nickname</label>
         <div class="col-md-9">
             <input class="required form-control" type="text" name="nickName" id="nickName" placeholder="Your nickname for others to see" />
         </div>
     </div>
-    #if ($displayName)
+
     <div class="form-group">
         <label class="control-label col-md-3" style="$!labelAlign" for="firstName">First name</label>
 
