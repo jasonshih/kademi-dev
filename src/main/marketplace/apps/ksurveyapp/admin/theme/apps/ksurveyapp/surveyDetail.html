@@ -134,7 +134,7 @@
                                     </h3></div>
                                     <div class="panel-body">
                                         <div class="question-body">$!question.source.body</div>
-                                        <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
+                                        <p><strong>Question type:</strong> <span class="question-type">$!page.controllerMappings.call('getQuestionType',$question.source.type)</span>
                                         </p>
                                         <p><strong>Mandatory:</strong> #if ($question.source.required == "true") Yes #else No #end</p>
                                         #if($question.source.type != '1')
