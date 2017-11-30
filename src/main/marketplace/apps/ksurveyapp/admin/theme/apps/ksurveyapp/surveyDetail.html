@@ -327,7 +327,7 @@
                                     <div class="panel-body">
                                         <div class="question-body">$!question.source.body</div>
 
-                                        <p><strong>Question type:</strong> <span class="question-type">$page.controllerMappings.call('getQuestionType',$question.source.type)</span>
+                                        <p><strong>Question type:</strong> <span class="question-type">$!page.controllerMappings.call('getQuestionType',$question.source.type)</span>
                                         </p>
                                         #if($question.source.type!='1')
                                             <p class="clearfix"><strong>Answers Result</strong></p>
